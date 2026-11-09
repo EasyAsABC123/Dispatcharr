@@ -27,7 +27,7 @@ impl StreamEngine {
             .channel_clients(id)
             .await
             .map_err(|_| PlaybackError::new(503, "Client metadata unavailable"))?;
-        Ok(Some(project_status_at(
+        let mut status = project_status_at(
             id,
             &meta,
             index,
@@ -37,7 +37,16 @@ impl StreamEngine {
                 .duration_since(UNIX_EPOCH)
                 .unwrap_or_default()
                 .as_secs_f64(),
-        )))
+        );
+        if detailed {
+            if let Some(inputs) = &self.inner.inputs {
+                status["buffer_stats"] = inputs
+                    .buffer_diagnostics(id, index)
+                    .await
+                    .map_err(|_| PlaybackError::new(503, "Buffer diagnostics unavailable"))?;
+            }
+        }
+        Ok(Some(status))
     }
 }
 pub fn project_status_at(
@@ -107,8 +116,8 @@ pub fn project_status_at(
             info["state_duration"] = json!(now - v);
         }
         info["clients"] = json!(clients);
-        // Native Rust keeps chunks in bounded shared memory. Legacy Redis chunk
-        // diagnostics correctly report no Redis payload keys; do not fabricate them.
+        // Fallback for engines without a shared input store. The application
+        // replaces this with an actual bounded Redis sample above.
         info["buffer_stats"] = json!({"chunks":index,"diagnostics":if index>0{json!({"all_buffer_keys":[],"total_buffer_keys":0})}else{json!({})},"latest_chunk_ttl":-2});
     } else {
         let concise:Vec<Value>=clients.into_iter().take(10).map(|client|{

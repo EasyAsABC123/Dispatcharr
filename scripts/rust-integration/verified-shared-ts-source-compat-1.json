@@ -1,0 +1,881 @@
+{
+  "scope": "two-worker-native-TS-functional-contracts",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "candidate_build_manifest": "artifacts/rust/candidate-build-m2-source-compat-1/build.json",
+  "candidate_build_manifest_sha256": "8d55601effde90d581822d4ad00a25240c4930b60871fce2e2bd8e59cea03665",
+  "cases": [
+    {
+      "backend": "candidate",
+      "case": "shared-demand",
+      "shared": {
+        "owner": "rust:9c816b5c-49d3-4563-8e92-439c0c4f5c2c",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 15,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "connecting"
+      },
+      "cleanup_seconds": 4.184819310998137,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "readers": [
+        {
+          "bytes": 1023472,
+          "media_bytes": 670972,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1535960,
+          "media_bytes": 997340,
+          "packets": 8170,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "decoders": [
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        },
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "2fe06047ccca590897d656093d9b793a38b2591ac615bf006720b670cdaf4080"
+        }
+      ]
+    },
+    {
+      "backend": "candidate",
+      "case": "stop",
+      "shared": {
+        "owner": "rust:dbfcd40d-fb6c-4be3-a124-2c7d392f39e6",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 15,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "connecting"
+      },
+      "cleanup_seconds": 0.7698554029993829,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "readers": [
+        {
+          "bytes": 1023660,
+          "media_bytes": 670972,
+          "packets": 5445,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        },
+        {
+          "bytes": 1023472,
+          "media_bytes": 670972,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "decoders": [
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "b96409425ab5c092b6f2af4903d5cd97f0e62e32b48179c2ed64ec17b7076e2f"
+        },
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        }
+      ]
+    },
+    {
+      "backend": "candidate",
+      "case": "owner-crash",
+      "shared": {
+        "owner": "rust:dc297826-f868-4554-834d-5c8a4ffbc2a6",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 15,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "connecting"
+      },
+      "crash_no_automatic_takeover": true,
+      "cleanup_seconds": 26.647454695004853,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "readers": [
+        {
+          "bytes": 1023472,
+          "media_bytes": 670972,
+          "packets": 5444,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [
+            "IncompleteRead"
+          ],
+          "http_status": 200,
+          "content_type": "video/mp2t",
+          "http_error_status": null
+        },
+        {
+          "bytes": 1033436,
+          "media_bytes": 670972,
+          "packets": 5497,
+          "sync_errors": 0,
+          "partial_bytes": 0,
+          "ended": true,
+          "errors": [],
+          "http_status": 200,
+          "content_type": "video/mp2t"
+        }
+      ],
+      "decoders": [
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        },
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "13571ebcc4984a05d33d80f79c8cc4b2bf17a46afe3cf474f9f717d12577a3f6"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "name": "candidate:immutable-image",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "candidate-replica:immutable-image",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "candidate:HEAD-and-AllowAny-credentials",
+      "passed": true,
+      "details": [
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "credentials": "anonymous",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": null
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "credentials": "valid",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "anonymous",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "anonymous",
+          "status": 410,
+          "expected": 410,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"error\":\"Session expired\"}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"detail\":\"Given token not valid for any token type\",\"code\":\"token_not_valid\",\"messages\":[{\"token_class\":\"AccessToken\",\"token_type\":\"access\",\"message\":\"Token is invalid\"}]}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "valid",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "valid",
+          "status": 410,
+          "expected": 410,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"error\":\"Session expired\"}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "anonymous",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "anonymous",
+          "status": 410,
+          "expected": 410,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"error\":\"Session expired\"}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"detail\":\"Given token not valid for any token type\",\"code\":\"token_not_valid\",\"messages\":[{\"token_class\":\"AccessToken\",\"token_type\":\"access\",\"message\":\"Token is invalid\"}]}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "valid",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "valid",
+          "status": 410,
+          "expected": 410,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"error\":\"Session expired\"}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "credentials": "anonymous",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": null
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": null
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "credentials": "valid",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": null
+          },
+          "body": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "candidate:HEAD-and-AllowAny-credentials",
+      "passed": true,
+      "details": [
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "credentials": "anonymous",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": null
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "credentials": "valid",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "anonymous",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "anonymous",
+          "status": 410,
+          "expected": 410,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"error\":\"Session expired\"}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"detail\":\"Given token not valid for any token type\",\"code\":\"token_not_valid\",\"messages\":[{\"token_class\":\"AccessToken\",\"token_type\":\"access\",\"message\":\"Token is invalid\"}]}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "valid",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "credentials": "valid",
+          "status": 410,
+          "expected": 410,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"error\":\"Session expired\"}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "anonymous",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "anonymous",
+          "status": 410,
+          "expected": 410,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"error\":\"Session expired\"}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"detail\":\"Given token not valid for any token type\",\"code\":\"token_not_valid\",\"messages\":[{\"token_class\":\"AccessToken\",\"token_type\":\"access\",\"message\":\"Token is invalid\"}]}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "valid",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "credentials": "valid",
+          "status": 410,
+          "expected": 410,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": "GET, OPTIONS"
+          },
+          "body": "{\"error\":\"Session expired\"}",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "credentials": "anonymous",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": null
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "credentials": "invalid",
+          "status": 401,
+          "expected": 401,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": null
+          },
+          "body": "",
+          "passed": true
+        },
+        {
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "credentials": "valid",
+          "status": 405,
+          "expected": 405,
+          "headers": {
+            "Content-Type": "application/json",
+            "WWW-Authenticate": null,
+            "Allow": null
+          },
+          "body": "",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "candidate:method-probes-no-upstream",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "candidate:shared-demand:one-origin-and-provider",
+      "passed": true,
+      "details": {
+        "owner": "rust:9c816b5c-49d3-4563-8e92-439c0c4f5c2c",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 15,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "connecting"
+      }
+    },
+    {
+      "name": "candidate:follower-keeps-owner",
+      "passed": true,
+      "details": {
+        "owner": "rust:9c816b5c-49d3-4563-8e92-439c0c4f5c2c",
+        "provider_slots": 1,
+        "clients": 1,
+        "metadata_fields": 15,
+        "input_index": 6,
+        "timestamps": 6,
+        "state": "active"
+      }
+    },
+    {
+      "name": "candidate:shared-demand:packet-sync",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "candidate:shared-demand:actual-decoder",
+      "passed": true,
+      "details": [
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        },
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "2fe06047ccca590897d656093d9b793a38b2591ac615bf006720b670cdaf4080"
+        }
+      ]
+    },
+    {
+      "name": "candidate:stop:one-origin-and-provider",
+      "passed": true,
+      "details": {
+        "owner": "rust:dbfcd40d-fb6c-4be3-a124-2c7d392f39e6",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 15,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "connecting"
+      }
+    },
+    {
+      "name": "candidate:follower-global-stop-response",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "body": {
+          "message": "Channel stop request sent",
+          "channel_id": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "previous_state": {
+            "state": "connecting"
+          }
+        }
+      }
+    },
+    {
+      "name": "candidate:stop:packet-sync",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "candidate:stop:actual-decoder",
+      "passed": true,
+      "details": [
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "b96409425ab5c092b6f2af4903d5cd97f0e62e32b48179c2ed64ec17b7076e2f"
+        },
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        }
+      ]
+    },
+    {
+      "name": "candidate:owner-crash:one-origin-and-provider",
+      "passed": true,
+      "details": {
+        "owner": "rust:dc297826-f868-4554-834d-5c8a4ffbc2a6",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 15,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "connecting"
+      }
+    },
+    {
+      "name": "candidate:owner-crash-resource-recovery",
+      "passed": true,
+      "details": {
+        "deadline_seconds": 35.0,
+        "state": {
+          "owner": null,
+          "provider_slots": 0,
+          "clients": 0,
+          "metadata_fields": 0,
+          "input_index": null,
+          "timestamps": 0,
+          "state": null
+        }
+      }
+    },
+    {
+      "name": "candidate:crash-does-not-invent-takeover",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "candidate:owner-crash:packet-sync",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "candidate:owner-crash:actual-decoder",
+      "passed": true,
+      "details": [
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        },
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "13571ebcc4984a05d33d80f79c8cc4b2bf17a46afe3cf474f9f717d12577a3f6"
+        }
+      ]
+    }
+  ],
+  "cleanup": "isolated Compose project removed",
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "candidate_image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+  "candidate_source_tree_sha256": "9610d95e612c3736113eadb97bb7322b6d0a91d7064d13133334b57f21344dcc",
+  "artifact": "artifacts/rust/m2-source-compat-replica-1/shared-ts.json"
+}

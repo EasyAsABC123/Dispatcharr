@@ -83,13 +83,24 @@ impl Channel {
     }
 
     pub fn publish_marked(&self, data: Arc<[u8]>, discontinuity: bool) -> Result<u64, Error> {
+        self.publish_received(data, discontinuity, Instant::now().into_std())
+    }
+
+    /// Replay a shared input chunk at its original receive age, preserving
+    /// time-based viewer positioning and retention on a follower process.
+    pub fn publish_received(
+        &self,
+        data: Arc<[u8]>,
+        discontinuity: bool,
+        received_at: std::time::Instant,
+    ) -> Result<u64, Error> {
         let sequence = {
             let mut state = self.inner.state.lock().unwrap();
             state
                 .buffer
                 .as_mut()
                 .ok_or(Error::Stopped)?
-                .push_marked(data, Instant::now().into_std(), discontinuity)
+                .push_marked(data, received_at, discontinuity)
                 .map_err(Error::Buffer)?
         };
         self.inner.changed.notify_waiters();
@@ -208,6 +219,17 @@ impl CancelHandle {
 }
 
 impl Viewer {
+    /// Choose the source-compatible position after initialization without
+    /// releasing or reacquiring this viewer's admission slot.
+    pub fn reposition(&mut self, behind: Duration) -> Result<(), Error> {
+        let mut state = self.inner.state.lock().unwrap();
+        let buffer = state.buffer.as_mut().ok_or(Error::Stopped)?;
+        let now = Instant::now().into_std();
+        buffer.expire(now);
+        self.sequence = buffer.start_sequence(now, behind);
+        Ok(())
+    }
+
     pub fn cancel_handle(&self) -> CancelHandle {
         CancelHandle {
             cancelled: self.cancelled.clone(),

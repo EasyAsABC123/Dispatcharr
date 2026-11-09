@@ -1,0 +1,13 @@
+# Merge with docker/compose.rust-playback.yml; disposable test fixture only.
+services:
+  baseline:
+    ports: ["127.0.0.1::5432", "127.0.0.1::6379"]
+    volumes:
+      - ../scripts/rust-vod-contracts:/vod-verification:ro
+      - ../scripts/rust-timeshift-contracts:/timeshift-verification:ro
+  origin:
+    entrypoint: [/dispatcharrpy/bin/python, /vod-verification/origin.py]
+    volumes:
+      - ../scripts/rust-vod-contracts:/vod-verification:ro
+      - ../scripts/rust-timeshift-contracts:/timeshift-verification:ro
+    # Origin remains HTTP only; no host provider credentials are used.

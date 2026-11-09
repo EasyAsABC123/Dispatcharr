@@ -6,7 +6,7 @@ use axum::{
     routing::post,
     Json, Router,
 };
-use dispatcharr_contracts::PlaybackRequest;
+use dispatcharr_contracts::{ChannelControl, PlaybackRequest};
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -73,6 +73,7 @@ pub struct AuthService {
     config: AuthConfig,
     attempts: Arc<Mutex<AttemptHistory>>,
     password_workers: Arc<tokio::sync::Semaphore>,
+    pub(crate) channel_control: Option<Arc<dyn ChannelControl>>,
 }
 
 type AttemptHistory = HashMap<(IpAddr, &'static str), VecDeque<Instant>>;
@@ -84,11 +85,24 @@ impl AuthService {
             config,
             attempts: Arc::new(Mutex::new(HashMap::new())),
             password_workers: Arc::new(tokio::sync::Semaphore::new(4)),
+            channel_control: None,
         }
+    }
+
+    /// Preserve ordinary constructor compatibility; media ownership remains in
+    /// the application rather than coupling the SQL store to a playback engine.
+    pub fn with_channel_control(mut self, control: Arc<dyn ChannelControl>) -> Self {
+        self.channel_control = Some(control);
+        self
     }
 
     pub fn router(self) -> Router {
         let accounts = crate::accounts::router(self.clone());
+        let core = crate::core_reads::router(self.clone());
+        let channel_profiles = crate::channel_profiles::router(self.clone());
+        let channels = crate::channels::router(self.clone());
+        let channel_groups = crate::channel_groups::router(self.clone());
+        let streams = crate::streams::router(self.clone());
         Router::new()
             .route("/api/accounts/token/", post(login))
             .route("/api/accounts/auth/login/", post(login))
@@ -96,6 +110,11 @@ impl AuthService {
             .route("/api/accounts/auth/logout/", post(logout))
             .with_state(self)
             .merge(accounts)
+            .merge(core)
+            .merge(channel_profiles)
+            .merge(channels)
+            .merge(channel_groups)
+            .merge(streams)
     }
 
     pub fn client_ip(&self, request: &PlaybackRequest) -> IpAddr {

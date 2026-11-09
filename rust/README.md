@@ -16,12 +16,16 @@ and [Compose verification guide](../docs/rust-local-verification.md).
 * `clients`: atomic viewer admission, legacy metadata, batched telemetry, and HLS capabilities.
 * `stream-http`: shared native TS ingestion, ordered failover, HTTP delivery, and controls.
 * `hls-core` and `hls-http`: segmenter and bounded capability-session transport.
+* `input-store` and `output-store`: bounded, fenced Redis media sharing between workers.
+* `fmp4-core` and `fmp4-http`: source-compatible fragment framing and shared FFmpeg remux.
+* `vod-http`: native byte ranges, session admission, and provider cleanup.
+* `timeshift-core` and `timeshift-http`: catch-up date helpers and API session foundation.
 * `store`: PostgreSQL reads, Django-compatible authentication, and account APIs.
-* `app`: HTTP composition, readiness, and optional existing React static files.
+* `app`: HTTP composition, readiness, bounded shutdown and unchanged React packaging.
 
 The real-schema [Compose probe](../scripts/rust-integration/README.md) exercises
-implemented contracts against the original backend. Native VOD work is being
-integrated separately; timeshift and the remaining backend subsystems remain
+implemented contracts against the original backend. Native VOD is integrated;
+timeshift media transport and the remaining backend subsystems remain
 open milestone gates.
 
 The [verification summary](../docs/rust-verification-evidence.json) distinguishes

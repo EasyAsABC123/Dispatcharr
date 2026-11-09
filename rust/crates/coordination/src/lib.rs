@@ -16,6 +16,13 @@ use tokio::{
     time,
 };
 
+#[derive(Clone, Copy)]
+enum OwnerScope {
+    Live,
+    Vod,
+    Timeshift,
+}
+
 #[derive(Clone, Debug)]
 pub struct LeaseConfig {
     /// Rust ledger namespace; shared Python owner/profile keys are never prefixed.
@@ -126,6 +133,58 @@ pub struct Lease {
     inner: Arc<LeaseInner>,
 }
 
+// Created before ACQUIRE is queued. Its permit travels with the oneshot
+// result, so canceling a receiver cannot release admission before cleanup.
+struct AcquireDelivery {
+    coordinator: Coordinator,
+    keys: Keys,
+    token: String,
+    permit: Option<tokio::sync::OwnedSemaphorePermit>,
+    lease: Option<Lease>,
+    armed: bool,
+}
+impl AcquireDelivery {
+    fn finish(mut self) -> Lease {
+        self.armed = false;
+        self.lease.take().expect("successful lease delivery")
+    }
+}
+impl Drop for AcquireDelivery {
+    fn drop(&mut self) {
+        if !self.armed {
+            return;
+        }
+        if let Some(lease) = self.lease.take() {
+            lease.inner.release_started.store(true, Ordering::Release);
+            lease.inner.stop.send_replace(true);
+            lease.inner.lost.send_replace(true);
+        }
+        let Some(permit) = self.permit.take() else {
+            return;
+        };
+        let coordinator = self.coordinator.clone();
+        let keys = self.keys.clone();
+        let token = self.token.clone();
+        if let Ok(runtime) = tokio::runtime::Handle::try_current() {
+            runtime.spawn(async move {
+                let _admission = permit;
+                let mut connection = coordinator.inner.connection.clone();
+                // No caller deadline around this future: the actual Redis
+                // response/disconnect releases its bounded operation budget.
+                let _: Result<i64, redis::RedisError> = coordinator
+                    .inner
+                    .release
+                    .key(keys.owner)
+                    .key(keys.ledger)
+                    .key(keys.index)
+                    .arg(token)
+                    .invoke_async(&mut connection)
+                    .await;
+            });
+        }
+    }
+}
+
 impl Coordinator {
     pub async fn connect(url: &str, config: LeaseConfig) -> Result<Self, Error> {
         if config.namespace.is_empty()
@@ -183,17 +242,32 @@ impl Coordinator {
         Ok(Self { inner })
     }
 
+    /// Snapshot of admitted Redis work, including detached acquisition cleanup.
+    /// Shutdown callers must first stop new admissions in their service scopes.
+    pub fn is_idle(&self) -> bool {
+        self.inner.commands.available_permits() == self.inner.config.max_inflight_commands
+    }
+
     pub async fn acquire(&self, request: AcquireRequest) -> Result<Lease, Error> {
-        self.acquire_scoped(request,false).await
+        self.acquire_scoped(request, OwnerScope::Live).await
     }
 
     /// VOD sessions share provider counters but never masquerade as live channel
     /// owners. The same fenced ledger/reaper handles both owner namespaces.
-    pub async fn acquire_vod(&self,request:AcquireRequest)->Result<Lease,Error> {
-        self.acquire_scoped(request,true).await
+    pub async fn acquire_vod(&self, request: AcquireRequest) -> Result<Lease, Error> {
+        self.acquire_scoped(request, OwnerScope::Vod).await
     }
 
-    async fn acquire_scoped(&self,request:AcquireRequest,vod:bool)->Result<Lease,Error> {
+    /// Archived playback shares provider quotas without creating a live owner.
+    pub async fn acquire_timeshift(&self, request: AcquireRequest) -> Result<Lease, Error> {
+        self.acquire_scoped(request, OwnerScope::Timeshift).await
+    }
+
+    async fn acquire_scoped(
+        &self,
+        request: AcquireRequest,
+        scope: OwnerScope,
+    ) -> Result<Lease, Error> {
         if request.channel_id.is_empty()
             || request.channel_id.len() > 256
             || request
@@ -208,9 +282,44 @@ impl Coordinator {
         {
             return Err(Error::InvalidRequest);
         }
+        // Only admitted operations get a detached supervisor. The supervisor
+        // owns its command budget until the real reply and fenced cleanup,
+        // even when the caller cancels or its deadline expires.
+        let permit = self.permit().await?;
+        let coordinator = self.clone();
+        let (sender, receiver) = tokio::sync::oneshot::channel();
+        tokio::spawn(async move {
+            let result = coordinator.acquire_admitted(request, scope, permit).await;
+            let _ = sender.send(result); // Undelivered guard performs fenced cleanup.
+        });
+        let delivery = time::timeout(self.inner.config.command_timeout, receiver)
+            .await
+            .map_err(|_| Error::RedisUnavailable)?
+            .map_err(|_| Error::RedisUnavailable)??;
+        Ok(delivery.finish())
+    }
+
+    async fn acquire_admitted(
+        &self,
+        request: AcquireRequest,
+        scope: OwnerScope,
+        permit: tokio::sync::OwnedSemaphorePermit,
+    ) -> Result<AcquireDelivery, Error> {
         let token = format!("rust:{}", uuid::Uuid::new_v4());
         let keys = Keys {
-            owner: if vod {format!("{}:vod:session:{}:owner",self.inner.config.namespace,request.channel_id)}else{format!("live:channel:{}:owner", request.channel_id)},
+            owner: match scope {
+                OwnerScope::Live => format!("live:channel:{}:owner", request.channel_id),
+                OwnerScope::Vod | OwnerScope::Timeshift => {
+                    let name = match scope {
+                        OwnerScope::Vod => "vod",
+                        _ => "timeshift",
+                    };
+                    format!(
+                        "{}:{name}:session:{}:owner",
+                        self.inner.config.namespace, request.channel_id
+                    )
+                }
+            },
             ledger: format!("{}:lease:{}", self.inner.config.namespace, token),
             index: format!("{}:leases", self.inner.config.namespace),
         };
@@ -223,36 +332,44 @@ impl Coordinator {
             .credential_pool
             .as_ref()
             .map_or(0, |pool| pool.max_streams);
-        let _permit = self.permit().await?;
         let mut connection = self.inner.connection.clone();
-        let result: (i64, u64) = time::timeout(
-            self.inner.config.command_timeout,
-            self.inner
-                .acquire
-                .key(&keys.owner)
-                .key(&keys.ledger)
-                .key(&keys.index)
-                .key(format!("profile_connections:{profile}"))
-                .key(credential_key)
-                .key(format!("profile_credential_release:{profile}"))
-                .key(format!("{}:fence", self.inner.config.namespace))
-                .arg(&token)
-                .arg(self.inner.config.ttl.as_millis() as u64)
-                .arg(request.provider_max_streams)
-                .arg(credential_maximum)
-                .arg(self.inner.config.reap_batch)
-                .invoke_async(&mut connection),
-        )
-        .await
-        .map_err(|_| Error::RedisUnavailable)?
-        .map_err(|_| Error::RedisUnavailable)?;
-        match result.0 {
-            -1 => return Err(Error::OwnerHeld),
-            -2 => return Err(Error::ProfileFull),
-            -3 => return Err(Error::CredentialFull),
-            -4 => return Err(Error::CredentialConflict),
-            1 => {}
-            _ => return Err(Error::RedisUnavailable),
+        let mut delivery = AcquireDelivery {
+            coordinator: self.clone(),
+            keys: keys.clone(),
+            token: token.clone(),
+            permit: Some(permit),
+            lease: None,
+            armed: true,
+        };
+        let result: (i64, u64) = self
+            .inner
+            .acquire
+            .key(&keys.owner)
+            .key(&keys.ledger)
+            .key(&keys.index)
+            .key(format!("profile_connections:{profile}"))
+            .key(credential_key)
+            .key(format!("profile_credential_release:{profile}"))
+            .key(format!("{}:fence", self.inner.config.namespace))
+            .arg(&token)
+            .arg(self.inner.config.ttl.as_millis() as u64)
+            .arg(request.provider_max_streams)
+            .arg(credential_maximum)
+            .arg(self.inner.config.reap_batch)
+            .invoke_async(&mut connection)
+            .await
+            .map_err(|_| Error::RedisUnavailable)?;
+        if result.0 != 1 {
+            // A definitive negative result allocated nothing. An I/O failure
+            // above leaves the guard armed because Redis may have applied Lua.
+            delivery.armed = false;
+            return Err(match result.0 {
+                -1 => Error::OwnerHeld,
+                -2 => Error::ProfileFull,
+                -3 => Error::CredentialFull,
+                -4 => Error::CredentialConflict,
+                _ => Error::RedisUnavailable,
+            });
         }
         let (stop, _) = watch::channel(false);
         let (lost, _) = watch::channel(false);
@@ -286,7 +403,8 @@ impl Coordinator {
                 }
             });
         }
-        Ok(Lease { inner })
+        delivery.lease = Some(Lease { inner });
+        Ok(delivery)
     }
 
     async fn permit(&self) -> Result<tokio::sync::OwnedSemaphorePermit, Error> {

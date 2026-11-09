@@ -1,0 +1,10 @@
+[package]
+name="dispatcharr-input-store"
+version.workspace=true
+edition.workspace=true
+license.workspace=true
+[dependencies]
+dispatcharr-output-store={path="../output-store"}
+redis={version="0.32",features=["tokio-comp"]}
+serde_json="1"
+tokio={version="1",features=["sync","time","rt-multi-thread","macros"]}

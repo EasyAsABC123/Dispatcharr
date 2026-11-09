@@ -19,12 +19,17 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--tag', default='dispatcharr-rust-candidate:milestone2')
     parser.add_argument('--timeout', type=int, default=600)
+    parser.add_argument('--target',choices=['frontend-tests'],help='Validate unchanged React tests without building the app runtime')
     args = parser.parse_args()
     destination = args.output.resolve()
     destination.mkdir(parents=True, exist_ok=True)
     if any(destination.iterdir()):
         parser.error('output must be empty')
     paths = [ROOT / 'LICENSE', ROOT / 'ATTRIBUTION.md']
+    # Preserve the original React source and lockfile; exclude untracked local
+    # environment files and build/dependency artifacts from the image.
+    tracked_frontend = subprocess.check_output(['git','ls-files','-z','--','frontend'],cwd=ROOT).split(b'\0')
+    paths.extend(ROOT / os.fsdecode(path) for path in tracked_frontend if path)
     paths.extend(path for path in (ROOT / 'rust').rglob('*') if path.is_file()
                  and not set(path.relative_to(ROOT / 'rust').parts) & {'target', '.git', '__pycache__'})
     # Hash the same in-memory bytes that enter the tar; later source edits cannot
@@ -36,7 +41,7 @@ def main():
               'source_tree_sha256': source_sha, 'source_sha256': hashes,
               'git_revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
               'worktree_status': subprocess.check_output(['git', 'status', '--short'], cwd=ROOT, text=True),
-              'source_scope': 'immutable rust tree plus LICENSE and ATTRIBUTION.md; excludes build artifacts'}
+              'source_scope': 'immutable Rust tree, tracked unchanged React frontend, LICENSE and ATTRIBUTION.md; excludes local environment/dependency/build artifacts'}
     status = 1
     with tempfile.TemporaryFile() as archive:
         with tarfile.open(fileobj=archive, mode='w') as tar:
@@ -47,6 +52,7 @@ def main():
         archive.seek(0)
         command = ['docker', 'build', '-f', 'rust/Dockerfile.app', '-t', args.tag,
                    '--label', 'org.opencontainers.image.source-tree-sha256=' + source_sha, '-']
+        if args.target:command[-1:-1]=['--target',args.target]
         report['command'] = command
         began = time.monotonic()
         try:
@@ -59,6 +65,20 @@ def main():
             inspected = json.loads(subprocess.check_output(['docker', 'image', 'inspect', args.tag], text=True, timeout=30))[0]
             if inspected['Config']['Labels'].get('org.opencontainers.image.source-tree-sha256') != source_sha:
                 raise RuntimeError('Image source label mismatch')
+            if args.target=='frontend-tests':
+                frontend_tests=subprocess.check_output(['docker','run','--rm','--network','none','--entrypoint','cat',args.tag,'/verification-results/frontend-tests.json'],text=True,timeout=30)
+                (destination/'frontend-tests.json').write_text(frontend_tests)
+                frontend=json.loads(frontend_tests)
+                report['frontend_tests']={key:frontend.get(key) for key in ('numTotalTests','numPassedTests','numFailedTests','numPendingTests','numTotalTestSuites','numPassedTestSuites','success')}
+                if frontend.get('success') is not True:raise RuntimeError('Original frontend tests did not pass')
+            else:
+                runtime = ['docker','run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges']
+                report['ffmpeg_version'] = subprocess.check_output(runtime+['--entrypoint','ffmpeg',args.tag,'-version'],text=True,timeout=30).splitlines()[0]
+                packages = subprocess.check_output(runtime+['--entrypoint','cat',args.tag,'/usr/share/doc/dispatcharr/runtime-packages.txt'],text=True,timeout=30)
+                (destination/'runtime-packages.txt').write_text(packages)
+                report['runtime_packages_sha256'] = hashlib.sha256(packages.encode()).hexdigest()
+                report['runtime_packages_frozen'] = True
+                report['media_runtime_scope'] = 'Exact pinned original FFmpeg/ffprobe ELF closure in isolated prefix; no Python runtime copied'
             report.update(passed=True, image_id=inspected['Id'], platform=inspected['Os'] + '/' + inspected['Architecture'])
             status = 0
         except (OSError, ValueError, subprocess.SubprocessError, RuntimeError) as error:

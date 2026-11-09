@@ -64,8 +64,26 @@ python3 rust/crates/coordination/tests/run-redis.py --output /tmp/redis-test-new
 ```
 
 The runner starts disposable Redis from a digest-pinned cached application image,
-publishes a loopback-only ephemeral port, runs the eight ignored-by-default real
+publishes a loopback-only ephemeral port, runs the ten ignored-by-default real
 Redis tests with `REDIS_TEST_URL` and (with `--http`) four real Redis/HTTP handoff
 tests, and removes only that named container. Raw output
 and exit evidence are preserved. Core-only `cargo test` reports these tests as
 ignored; it does not count them as passes. No fake Redis implementation is used.
+
+Acquisition cancellation is supervised before Redis receives Lua. The command
+permit travels with the pending lease through actual Redis completion, oneshot
+result delivery and token-fenced cleanup; caller cancellation/deadlines do not
+release it early. The real TCP delayed-response regression separately delays
+ACQUIRE and cleanup RELEASE replies for live and VOD, proving that capacity is
+not reused during either delay. Detached work is bounded by command admission.
+A permanently unresponsive Redis connection retains those bounded permits until
+it replies or disconnects; caller deadlines still return an unavailable error.
+No immediate quota-release guarantee is possible during a Redis/network outage;
+ledger expiry and a healthy reaper remain the recovery path.
+
+Timeshift uses `acquire_timeshift` with a distinct namespaced archive-session
+owner key. Live, VOD and Timeshift share the legacy provider/credential quota
+counters and fenced expiry ledger. Real Redis scope tests verify no phantom
+live owners and bidirectional provider-capacity competition. The delayed-reply
+cancellation regression now covers all three scopes, both caller cancellation
+and caller deadline (six variants), including pending cleanup RELEASE replies.

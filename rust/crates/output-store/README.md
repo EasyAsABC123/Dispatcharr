@@ -31,7 +31,7 @@ A stalled socket intentionally keeps those permits and rejects further work
 at capacity. This avoids an unbounded queue of abandoned media responses.
 No automatic reconnect or stalled-socket recovery is claimed yet.
 
-Defaults allow 16 concurrent operations, 32 MiB per chunk/init read, 256 MiB of
+Defaults allow 16 concurrent operations and 1,024 bounded queued operations, 32 MiB per chunk/init read, 256 MiB of
 held read data, 256 chunks / 256 MiB per output channel, 60-second ownership TTL,
 and 100-second chunk TTL. Open segmenters and HTTP-local caches have independent
 limits. State and init expire after one hour; owner-fenced release removes all

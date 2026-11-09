@@ -349,6 +349,9 @@ def main():
                                 time.sleep(.25)
                         else:
                             execute(compose + ['up', '-d', '--no-deps', '--no-build', args.candidate_service], timeout=60)
+                            # Docker may allocate a new host port after stop/start.
+                            target = endpoint(args.candidate_service, args.candidate_port)
+                            probe_reset['candidate_endpoint_refreshed'] = True
                             deadline = time.monotonic() + 60
                             while True:
                                 try:

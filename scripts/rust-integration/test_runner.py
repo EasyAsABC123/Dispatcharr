@@ -11,6 +11,12 @@ runner=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
 
 class IntegrationRunnerTests(unittest.TestCase):
+    def test_suite_selection_is_explicit_canonical_and_cannot_silently_skip_typos(self):
+        self.assertEqual(runner.contract_suites('all'),list(runner.CONTRACT_SUITES))
+        self.assertEqual(runner.contract_suites('groups,core'),['core','groups'])
+        for value in ('','unknown','core,core','all,groups'):
+            with self.assertRaises(ValueError):runner.contract_suites(value)
+
     def test_keep_preserves_source_mount_and_records_cleanup_path(self):
         with tempfile.TemporaryDirectory() as output:
             report={'passed':True}

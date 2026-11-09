@@ -1,0 +1,25 @@
+[package]
+name = "dispatcharr-timeshift-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+bytes = "1"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+axum = "0.8"
+base64 = "0.22"
+dispatcharr-contracts = { path = "../contracts" }
+dispatcharr-output-store = { path = "../output-store" }
+dispatcharr-store = { path = "../store" }
+dispatcharr-timeshift-core = { path = "../timeshift-core" }
+serde_json = "1"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres", "uuid"] }
+tokio = { version = "1", features = ["rt", "sync", "macros", "time"] }
+uuid = { version = "1", features = ["v4"] }
+url = "2"
+
+[dev-dependencies]
+redis = { version = "0.32", features = ["tokio-comp"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
+tokio = { version = "1", features = ["rt-multi-thread", "net"] }

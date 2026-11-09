@@ -1,0 +1,91 @@
+{
+  "format_version": 1,
+  "scope": "M4 Timeshift helper and native session prototype contracts only",
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "checks": {
+    "original_python_pure_helper_vectors": {
+      "passed": true,
+      "vectors": 207,
+      "tests": 3
+    },
+    "original_python_native_session_capture": {
+      "capture_complete": true,
+      "cases": 24,
+      "cleanup_passed": true
+    },
+    "native_session_real_redis_loopback": {
+      "passed": true,
+      "tests": 4,
+      "source_wire_cases_matched": 22,
+      "authorization_resolver": "fake only in host contract tests"
+    },
+    "actual_django_store_auth_redis_http": {
+      "passed": true,
+      "tests": 1,
+      "authorization_resolver": "real Store/AuthService and actual JWT",
+      "evidence": "artifacts/rust/m4-native-latest-coupling-decode/vod-contracts.json",
+      "cleanup_passed": true,
+      "also_covers": [
+        "default-profile provider timezone",
+        "real EPG duration and fallback",
+        "seven provider URL descriptors",
+        "client duration precedence"
+      ]
+    },
+    "strict_clippy_all_targets": {
+      "passed": true
+    },
+    "native_archive_provider_http": {
+      "passed": true,
+      "tests": 4,
+      "scope": "standalone bounded transport; not app media routes"
+    },
+    "source_native_archive_media": {
+      "passed": true,
+      "cases": 6,
+      "strict_audio_and_video_decode_cases": 3,
+      "frames_per_case": 74,
+      "cleanup_passed": true,
+      "evidence": "scripts/rust-timeshift-contracts/python-media-goldens.json"
+    },
+    "archive_fixture_validation": {
+      "passed": true,
+      "tests": 2
+    },
+    "timeshift_owner_quota_scope": {
+      "passed": true,
+      "tests": 1,
+      "cancellation_variants": 2,
+      "scope": "owner namespace isolated; provider quota shared with live"
+    }
+  },
+  "post_test_source_sha256": {
+    "rust/crates/timeshift-core/src/lib.rs": "dda203bbbe6394ec8667aa98a2be080b09815a600fdd83e3ad48eac9f6afdfb8",
+    "rust/crates/timeshift-core/tests/python_vectors.rs": "2f976f2a34eada7f6e5c3c404c6c66865ba21111996b0a00c27808f5d03e11e1",
+    "rust/crates/timeshift-http/src/lib.rs": "5466970182e0e459616f3201d038af0d3afa51fb42f1f84148c8d3728b572d00",
+    "rust/crates/timeshift-http/src/resolver.rs": "148060a0cbf6e26115a0fcd509eee83cbabfa95dcb7ba213f4820aac8dfef792",
+    "rust/crates/timeshift-http/src/routes.rs": "fc7b1a10729793401e983f7268567df3fb875e9d8d76c243ba3288b14aeb992e",
+    "rust/crates/timeshift-http/src/sessions.rs": "f2b907586aeb4795a7654fe2e5ad0380a27fbd9b570fb465b0eedc851b6fe770",
+    "rust/crates/timeshift-http/tests/sessions.rs": "4a078bd5268ab31f73f308a3b854b2938745df2d093e8e45e14ddafc40db0087",
+    "rust/crates/timeshift-http/tests/sql.rs": "5b5a1037ec01dcc35b1d39e8b0abbf974e72cad0394251eee0abc1986708ab33",
+    "rust/crates/timeshift-http/src/playback_source.rs": "6410ad57d8fe68fd2414fc514bdeda401962798faaa224cfc234bd42a66bf286",
+    "rust/crates/timeshift-http/src/upstream.rs": "09d475ae243037a35ed973f32a3ea823866589ae57e5513921b81fe701575523",
+    "rust/crates/timeshift-http/tests/upstream.rs": "4bc661374c7038fbf885191e65c01a830aaed31e9f29e6bcdcacd5dfa5ca195f"
+  },
+  "source_hash_note": "Working-tree hashes; not an immutable candidate Docker image binding. Actual-schema test separately links evolving Store/Auth crates.",
+  "normalizations": [
+    "Opaque session capability and handshake deadline normalized",
+    "Allow methods compared as an unordered set"
+  ],
+  "remaining_gates": [
+    "app routing and source-bound candidate Docker comparison",
+    "native/XC playback and actual media decoder",
+    "provider profile/server-group rotation and seven-format HTTP fallback",
+    "busy pool seeks/reconnects/stream generations and grace cleanup",
+    "complete position/statistics/WebSocket effects",
+    "serializer/content-type/OPTIONS and unusual timestamp variants",
+    "shared user limits and provider reservation/failure matrix",
+    "performance characterization"
+  ]
+}

@@ -1,0 +1,780 @@
+{
+  "scope": "source wire/lifecycle characterization; partial runs remain explicitly failed",
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "evidence": {
+    "m2-cold-wire-2": {
+      "artifact": "artifacts/rust/m2-cold-wire-2/cold-ts.json",
+      "passed": true,
+      "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "observations": [
+        {
+          "status": 200,
+          "elapsed_seconds": 50.05701766799757,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        },
+        {
+          "status": 200,
+          "elapsed_seconds": 50.14512584300246,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        },
+        {
+          "status": 200,
+          "elapsed_seconds": 50.04877802300325,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        },
+        {
+          "status": 502,
+          "elapsed_seconds": 2.016920463000133,
+          "bytes": 48,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "48"
+          },
+          "body_sha256": "bf945d3ca16378a7f762b279b11f692c9c9f89223940a0e6d074cea3b138a0b9"
+        },
+        {
+          "status": 504,
+          "elapsed_seconds": 30.004309538999223,
+          "bytes": 43,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "43"
+          },
+          "body_sha256": "debc52bb6a6b24fa631e3233746917dc53f55b4c732a445b556ffa970147de51"
+        },
+        {
+          "status": 502,
+          "elapsed_seconds": 2.0098676909983624,
+          "bytes": 48,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "48"
+          },
+          "body_sha256": "bf945d3ca16378a7f762b279b11f692c9c9f89223940a0e6d074cea3b138a0b9"
+        }
+      ]
+    },
+    "m2-cold-lifecycle-default-1": {
+      "artifact": "artifacts/rust/m2-cold-lifecycle-default-1/cold-lifecycle.json",
+      "passed": false,
+      "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "observations": [
+        {
+          "label": "user-limit-rejection",
+          "status": 429,
+          "elapsed_seconds": 0.006337038998026401,
+          "bytes": 65,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "65"
+          },
+          "body_sha256": "ee12d1ae94fffd7d5a16c7745a36ffc0a802a398d86c8d54b87a6f3c9f3b24e4"
+        },
+        {
+          "label": "provider-full-rejection",
+          "status": 503,
+          "elapsed_seconds": 2.9301322149985936,
+          "bytes": 91,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "91"
+          },
+          "body_sha256": "517a44333ca91c563e96576ca0683a0e62be065cad6b47313e55b3af9c2d83b5"
+        },
+        {
+          "label": "invalid-auth-rejection",
+          "status": 401,
+          "elapsed_seconds": 0.001485002001572866,
+          "bytes": 172,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172"
+          },
+          "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60"
+        },
+        {
+          "label": "fresh-stalled",
+          "status": 200,
+          "elapsed_seconds": 51.49754467100138,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        },
+        {
+          "label": "existing-initializing",
+          "status": 200,
+          "elapsed_seconds": 54.95716750599968,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        }
+      ]
+    },
+    "m2-cold-lifecycle-short-1": {
+      "artifact": "artifacts/rust/m2-cold-lifecycle-short-1/cold-lifecycle.json",
+      "passed": false,
+      "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "observations": [
+        {
+          "label": "user-limit-rejection",
+          "status": 429,
+          "elapsed_seconds": 0.006046491995221004,
+          "bytes": 65,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "65"
+          },
+          "body_sha256": "ee12d1ae94fffd7d5a16c7745a36ffc0a802a398d86c8d54b87a6f3c9f3b24e4"
+        },
+        {
+          "label": "provider-full-rejection",
+          "status": 503,
+          "elapsed_seconds": 2.9379701090001618,
+          "bytes": 91,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "91"
+          },
+          "body_sha256": "517a44333ca91c563e96576ca0683a0e62be065cad6b47313e55b3af9c2d83b5"
+        },
+        {
+          "label": "invalid-auth-rejection",
+          "status": 401,
+          "elapsed_seconds": 0.001481351995607838,
+          "bytes": 172,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172"
+          },
+          "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60"
+        },
+        {
+          "label": "fresh-stalled",
+          "status": 200,
+          "elapsed_seconds": 6.1229764629970305,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        },
+        {
+          "label": "existing-initializing",
+          "status": 200,
+          "elapsed_seconds": 7.000103842001408,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        }
+      ]
+    },
+    "m2-cold-warm-transitions-1": {
+      "artifact": "artifacts/rust/m2-cold-warm-transitions-1/cold-lifecycle.json",
+      "passed": true,
+      "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "observations": [
+        {
+          "label": "existing-active-head",
+          "status": 200,
+          "elapsed_seconds": 13.53559117399709,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close"
+          },
+          "body_sha256": "7e965163d3b7b2a214eab4f8b51920af50da1b428d427e277d2010ecd758f8b5"
+        }
+      ]
+    },
+    "m2-playback-head-source-1": {
+      "artifact": "artifacts/rust/m2-playback-head-source-1/cold-lifecycle.json",
+      "passed": true,
+      "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "observations": [
+        {
+          "label": "anonymous",
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "status": 405,
+          "elapsed_seconds": 1.3206705560005503,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "41",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "invalid",
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "status": 401,
+          "elapsed_seconds": 0.004920508996292483,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "valid",
+          "method": "HEAD",
+          "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+          "status": 405,
+          "elapsed_seconds": 0.0028779209969798103,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "41",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "anonymous",
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "status": 405,
+          "elapsed_seconds": 0.0011299019970465451,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "41",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "status": 410,
+          "elapsed_seconds": 0.0014644620023318566,
+          "bytes": 28,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "28",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "025921df85a194335acf7f77557809271c7f9350aa753e9c611fc5c55063ea00"
+        },
+        {
+          "label": "invalid",
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "status": 401,
+          "elapsed_seconds": 0.0010956810001516715,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "invalid",
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "status": 401,
+          "elapsed_seconds": 0.00104937899595825,
+          "bytes": 172,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60"
+        },
+        {
+          "label": "valid",
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "status": 405,
+          "elapsed_seconds": 0.0020210269940434955,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "41",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "valid",
+          "method": "GET",
+          "path": "/proxy/hls/missing/index.m3u8",
+          "status": 410,
+          "elapsed_seconds": 0.0021360109967645258,
+          "bytes": 28,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "28",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "025921df85a194335acf7f77557809271c7f9350aa753e9c611fc5c55063ea00"
+        },
+        {
+          "label": "anonymous",
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "status": 405,
+          "elapsed_seconds": 0.0012693459939328022,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "41",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "status": 410,
+          "elapsed_seconds": 0.0012637649997486733,
+          "bytes": 28,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "28",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "025921df85a194335acf7f77557809271c7f9350aa753e9c611fc5c55063ea00"
+        },
+        {
+          "label": "invalid",
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "status": 401,
+          "elapsed_seconds": 0.0013036070013185963,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "invalid",
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "status": 401,
+          "elapsed_seconds": 0.0012475549956434406,
+          "bytes": 172,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60"
+        },
+        {
+          "label": "valid",
+          "method": "HEAD",
+          "path": "/proxy/hls/missing/1.ts",
+          "status": 405,
+          "elapsed_seconds": 0.0019146439954056405,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "41",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "valid",
+          "method": "GET",
+          "path": "/proxy/hls/missing/1.ts",
+          "status": 410,
+          "elapsed_seconds": 0.0019018740058527328,
+          "bytes": 28,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "28",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "025921df85a194335acf7f77557809271c7f9350aa753e9c611fc5c55063ea00"
+        },
+        {
+          "label": "anonymous",
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "status": 401,
+          "elapsed_seconds": 0.0025095710007008165,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "58",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "invalid",
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "status": 401,
+          "elapsed_seconds": 0.0011446019998402335,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "label": "valid",
+          "method": "HEAD",
+          "path": "/proxy/ts/status",
+          "status": 405,
+          "elapsed_seconds": 0.002067508001346141,
+          "bytes": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "41",
+            "Allow": "GET, OPTIONS"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "m2-cold-fail-transitions-1": {
+      "artifact": "artifacts/rust/m2-cold-fail-transitions-1/cold-lifecycle.json",
+      "passed": true,
+      "cold_mode": "fail",
+      "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "snapshots": [
+        {
+          "at_seconds": 1.5258472170025925,
+          "state": "connecting",
+          "client_count": 2,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000222_7038",
+              "last_active": "1794224000.2422013",
+              "connected_at": "1794224000.2422013",
+              "user": "3"
+            },
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 5.0379429630047525,
+          "state": "connecting",
+          "client_count": 2,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000222_7038",
+              "last_active": "1794224000.2422013",
+              "connected_at": "1794224000.2422013",
+              "user": "3"
+            },
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 8.005303057005221,
+          "state": "connecting",
+          "client_count": 2,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000222_7038",
+              "last_active": "1794224000.2422013",
+              "connected_at": "1794224000.2422013",
+              "user": "3"
+            },
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 12.07514684900525,
+          "state": "connecting",
+          "client_count": 2,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000222_7038",
+              "last_active": "1794224000.2422013",
+              "connected_at": "1794224000.2422013",
+              "user": "3"
+            },
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 20.048696964004193,
+          "state": "connecting",
+          "client_count": 2,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000222_7038",
+              "last_active": "1794224000.2422013",
+              "connected_at": "1794224000.2422013",
+              "user": "3"
+            },
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 30.023504913006036,
+          "state": "connecting",
+          "client_count": 2,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000222_7038",
+              "last_active": "1794224000.2422013",
+              "connected_at": "1794224000.2422013",
+              "user": "3"
+            },
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 40.09849114000099,
+          "state": "connecting",
+          "client_count": 2,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000222_7038",
+              "last_active": "1794224000.2422013",
+              "connected_at": "1794224000.2422013",
+              "user": "3"
+            },
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 50.07199209800456,
+          "state": "connecting",
+          "client_count": 2,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000222_7038",
+              "last_active": "1794224000.2422013",
+              "connected_at": "1794224000.2422013",
+              "user": "3"
+            },
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 55.043713405000744,
+          "state": "connecting",
+          "client_count": 1,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": [
+            {
+              "id": "client_1794224000420_2409",
+              "last_active": "1794224000.4224422",
+              "connected_at": "1794224000.4224422",
+              "user": "0"
+            }
+          ]
+        },
+        {
+          "at_seconds": 56.511367806000635,
+          "state": "connecting",
+          "client_count": 0,
+          "error_message": "",
+          "input_index": 0,
+          "owner": "1ff193fafb14:270",
+          "profile_slots": 1,
+          "clients": {}
+        }
+      ],
+      "observations": [
+        {
+          "label": "user-limit-rejection",
+          "status": 429,
+          "elapsed_seconds": 0.0066632870002649724,
+          "bytes": 65,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "65",
+            "Allow": "OPTIONS, GET"
+          },
+          "body_sha256": "ee12d1ae94fffd7d5a16c7745a36ffc0a802a398d86c8d54b87a6f3c9f3b24e4"
+        },
+        {
+          "label": "provider-full-rejection",
+          "status": 503,
+          "elapsed_seconds": 2.9390958879957907,
+          "bytes": 91,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "91",
+            "Allow": "OPTIONS, GET"
+          },
+          "body_sha256": "517a44333ca91c563e96576ca0683a0e62be065cad6b47313e55b3af9c2d83b5"
+        },
+        {
+          "label": "invalid-auth-rejection",
+          "status": 401,
+          "elapsed_seconds": 0.0014953319987398572,
+          "bytes": 172,
+          "headers": {
+            "Content-Type": "application/json",
+            "Content-Length": "172",
+            "WWW-Authenticate": "Bearer realm=\"api\"",
+            "Allow": "OPTIONS, GET"
+          },
+          "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60"
+        },
+        {
+          "label": "fresh-stalled",
+          "status": 200,
+          "elapsed_seconds": 51.405332330999954,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close",
+            "Allow": "OPTIONS, GET"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        },
+        {
+          "label": "existing-initializing",
+          "status": 200,
+          "elapsed_seconds": 54.88956941300421,
+          "bytes": 188,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Cache-Control": "no-cache",
+            "Connection": "close",
+            "Allow": "OPTIONS, GET"
+          },
+          "body_sha256": "923618419ef5b93c97396a5bc5f2e834016f2e3fdf71cb6f64b5320b5f641f3a"
+        }
+      ]
+    }
+  }
+}

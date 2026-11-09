@@ -3,7 +3,7 @@ use num_bigint::BigInt;
 use serde_json::{Number, Value};
 use std::str::FromStr;
 
-fn float_string(value: f64) -> String {
+pub(crate) fn float_string(value: f64) -> String {
     if value == 0.0 {
         return if value.is_sign_negative() {
             "-0.0".into()

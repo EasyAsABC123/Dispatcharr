@@ -77,8 +77,13 @@ tests (ten core, ten runtime), 20 Python tool tests, and 1,806 differential case
 in Compose, with successful cleanup. The runtime includes a four-worker stress
 test in which 100 readers each receive all 1,000 published sequences.
 
-The Compose service is a finite test job rather than an HTTP application, so
-there is no application health endpoint or React playback smoke test yet.
+That core Compose service is a finite test job. The separate application image
+now exposes `/health/ready`, serves a production build of the unchanged React
+source, and runs native playback/API probes against the original migrated schema.
+The original React suite passed all 6,567 tests in pinned Node Docker packaging
+([source-bound evidence](../scripts/rust-integration/verified-unchanged-react-tests-1.json)).
+This verifies the unchanged frontend tests; browser workflows against every Rust
+backend route remain an acceptance gate.
 
 For faster host iteration, explicitly select the pinned toolchain. Cargo invoked
 from the repository root does not discover a toolchain file nested in `rust/`

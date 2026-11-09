@@ -1,0 +1,527 @@
+{
+  "attribution": "Dispatcharr original authors and contributors retain full credit. See ../../ATTRIBUTION.md.",
+  "scope": "focused real PostgreSQL stream management reads/filters/pagination/provider protections/CRUD/hash/JSON/bulk deletion/catchup relations plus foundational auth/schema/decoded-media gates",
+  "passed": true,
+  "checks_passed": 120,
+  "checks_total": 120,
+  "new_stream_contract_checks": 102,
+  "contract_suites": [
+    "streams"
+  ],
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "candidate_image": "dispatcharr-rust-candidate:m5-streams-2",
+  "candidate_image_binding": {
+    "image_id": "sha256:d70f8a0cfc40719ccb6892620747affccdd06b62f69a546e1e086a34badaf684",
+    "source_tree_sha256": "a805e52634a781c5797440d86edad26a95133e69c4e8f207dacf289d20cc5093",
+    "manifest_verified": true
+  },
+  "raw_report_sha256": "799e99c417e2dc6fe93192716da19e09a6c6b5184d80502028ec5fe04c8003e9",
+  "build_manifest_sha256": "ce1637ce88a8f6de2f5690819f137ffce108111572ccc6c4b54c74a0c982f54d",
+  "executed_tool_source_sha256": "dea50c4a19f067a7063bdb1a48e9318c48fb18c9beb9db72ab78ba8cbe5b5aba",
+  "tool_scope": "Captured account probes, integration helpers, baseline/playback fixtures and Compose files; all later imports and container script mounts use this copy.",
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "application_performance_verified": false,
+  "normalization": [
+    "Generated stream root IDs in independent CRUD lifecycles only.",
+    "Generated custom hash replaced only when it equals SHA256(custom_stream_<that generated ID>); shared fixture hashes remain exact.",
+    "Automatic updated_at timestamps validate as recent UTC before normalization; explicit last_seen and stream_stats_updated_at fixture values remain exact.",
+    "Only pagination next/previous test-server origins are normalized; filters, types, relation IDs, stats JSON and other URLs remain exact."
+  ],
+  "check_results": [
+    {
+      "name": "status-parity:/proxy/ts/status",
+      "passed": true
+    },
+    {
+      "name": "status-parity:/proxy/ts/stream/not-a-channel",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/users/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/users/me/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/groups/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/permissions/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/api-keys/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/users/me/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/api-keys/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/users/",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:admin",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:viewer",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:inactive",
+      "passed": true
+    },
+    {
+      "name": "django-password-auth",
+      "passed": true
+    },
+    {
+      "name": "rust-tokens-accepted-by-django",
+      "passed": true
+    },
+    {
+      "name": "django-refresh-accepted-by-rust",
+      "passed": true
+    },
+    {
+      "name": "rust-real-media-decoder",
+      "passed": true
+    },
+    {
+      "name": "invalid-presented-token-rejected",
+      "passed": true
+    },
+    {
+      "name": "streams:list-admin",
+      "passed": true
+    },
+    {
+      "name": "streams:list-standard",
+      "passed": true
+    },
+    {
+      "name": "streams:list-viewer",
+      "passed": true
+    },
+    {
+      "name": "streams:list-inactive",
+      "passed": true
+    },
+    {
+      "name": "streams:list-None",
+      "passed": true
+    },
+    {
+      "name": "streams:read-name",
+      "passed": true
+    },
+    {
+      "name": "streams:read-search",
+      "passed": true
+    },
+    {
+      "name": "streams:read-group",
+      "passed": true
+    },
+    {
+      "name": "streams:read-group-name-exact",
+      "passed": true
+    },
+    {
+      "name": "streams:read-group-name-not-substring",
+      "passed": true
+    },
+    {
+      "name": "streams:read-account-id",
+      "passed": true
+    },
+    {
+      "name": "streams:read-account-name",
+      "passed": true
+    },
+    {
+      "name": "streams:read-active-false-empty",
+      "passed": true
+    },
+    {
+      "name": "streams:read-tvg",
+      "passed": true
+    },
+    {
+      "name": "streams:read-assigned",
+      "passed": true
+    },
+    {
+      "name": "streams:read-unassigned",
+      "passed": true
+    },
+    {
+      "name": "streams:read-hide-stale",
+      "passed": true
+    },
+    {
+      "name": "streams:read-catchup",
+      "passed": true
+    },
+    {
+      "name": "streams:read-radio",
+      "passed": true
+    },
+    {
+      "name": "streams:read-page-first",
+      "passed": true
+    },
+    {
+      "name": "streams:read-page-second",
+      "passed": true
+    },
+    {
+      "name": "streams:read-page-last",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-name",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-account",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-group",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-tvg",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-invalid-fallback",
+      "passed": true
+    },
+    {
+      "name": "streams:read-ids-bypass",
+      "passed": true
+    },
+    {
+      "name": "streams:standard-ids-bypass-url-redacted",
+      "passed": true
+    },
+    {
+      "name": "streams:ids-action",
+      "passed": true
+    },
+    {
+      "name": "streams:ids-action-ignores-list-ids-param",
+      "passed": true
+    },
+    {
+      "name": "streams:ids-action-filtered",
+      "passed": true
+    },
+    {
+      "name": "streams:detail-21",
+      "passed": true
+    },
+    {
+      "name": "streams:detail-24",
+      "passed": true
+    },
+    {
+      "name": "streams:detail-2147483647",
+      "passed": true
+    },
+    {
+      "name": "streams:detail-not-a-number",
+      "passed": true
+    },
+    {
+      "name": "streams:unknown-ids-404",
+      "passed": true
+    },
+    {
+      "name": "streams:invalid-page",
+      "passed": true
+    },
+    {
+      "name": "streams:nul-search",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-0",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-1",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-10",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-11",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-12",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-2",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-3",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-4",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-5",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-6",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-7",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-8",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-9",
+      "passed": true
+    },
+    {
+      "name": "streams:bulk-empty",
+      "passed": true
+    },
+    {
+      "name": "streams:bulk-includes-inactive",
+      "passed": true
+    },
+    {
+      "name": "streams:bulk-rows-deleted",
+      "passed": true
+    },
+    {
+      "name": "streams:clear-hash-no-update-regeneration",
+      "passed": true
+    },
+    {
+      "name": "streams:cleared-hash-get",
+      "passed": true
+    },
+    {
+      "name": "streams:create-bulk-extra",
+      "passed": true
+    },
+    {
+      "name": "streams:create-manual",
+      "passed": true
+    },
+    {
+      "name": "streams:create-protected",
+      "passed": true
+    },
+    {
+      "name": "streams:custom-after-flag-can-rename",
+      "passed": true
+    },
+    {
+      "name": "streams:custom-move-to-inactive-account",
+      "passed": true
+    },
+    {
+      "name": "streams:delete-manual",
+      "passed": true
+    },
+    {
+      "name": "streams:delete-missing",
+      "passed": true
+    },
+    {
+      "name": "streams:delete-rollup-and-links",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-bulk-standard",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-bulk-viewer",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-delete-standard",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-delete-viewer",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-update-standard",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-update-viewer",
+      "passed": true
+    },
+    {
+      "name": "streams:generated-hash-following-get",
+      "passed": true
+    },
+    {
+      "name": "streams:inactive-ids-get-visible",
+      "passed": true
+    },
+    {
+      "name": "streams:inactive-normal-get-hidden",
+      "passed": true
+    },
+    {
+      "name": "streams:long-logo-text",
+      "passed": true
+    },
+    {
+      "name": "streams:nullable-relations-empty",
+      "passed": true
+    },
+    {
+      "name": "streams:provider-other-fields-mutable",
+      "passed": true
+    },
+    {
+      "name": "streams:provider-readonly-fields",
+      "passed": true
+    },
+    {
+      "name": "streams:provider-switch-custom-flag",
+      "passed": true
+    },
+    {
+      "name": "streams:put-empty-preserves",
+      "passed": true
+    },
+    {
+      "name": "streams:read-deleted",
+      "passed": true
+    },
+    {
+      "name": "streams:readonly-id-timestamp",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-0",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-1",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-2",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-3",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-4",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-5",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-6",
+      "passed": true
+    },
+    {
+      "name": "streams:restore-valid-url",
+      "passed": true
+    },
+    {
+      "name": "streams:stream-save-preserves-old-channel-rollup",
+      "passed": true
+    },
+    {
+      "name": "streams:toggle-catchup-field",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-boolean-integer",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-current-viewers",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-null-last-seen",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-profile",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-timestamp",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-url",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-blank-name",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-duplicate-hash",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-json-file-path",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-null-name",
+      "passed": true
+    }
+  ],
+  "prior_failed_trial": {
+    "raw_report_sha256": "36c54a939a816c9b7a48ffd19f5cb1d6d488652e09c06156933d74380c64dc4f",
+    "checks_total": 58,
+    "failure": "Reference lifecycle assertion assumed generated hash was visible only on subsequent GET. Source post-save updates the instance and DB, so CREATE already returns it. Rust response and probe corrected before the120-check pass."
+  },
+  "remaining_gates": [
+    "Fresh combined image must revalidate all previous416 contracts together with this102-contract addition because batched channel rollup code is shared.",
+    "Uploaded stream files/multipart storage remain explicit501; rare filter coercion/HTML500 renderer parity remains incomplete.",
+    "Additional bulk rename/filter/preview/stat actions and native stream-hash playback/preview need separate implementation and coverage.",
+    "Core settings/profile/user-agent mutations, EPG/DVR/jobs, compact auto numbering and other unported backend APIs remain incomplete.",
+    "TS initial full-chunk buffering, partial flush and startup latency alignment are separately being audited; decoded media does not establish those timing/retention semantics.",
+    "Optional credential-authentication HEAD behavior was added after this image snapshot and requires a combined actual-store HTTP probe.",
+    "No CPU or memory gain claim; repeated equivalent-work Docker resource comparison remains required."
+  ]
+}

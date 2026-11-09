@@ -9,7 +9,15 @@ end
 if kind(KEYS[1])~='none' or (kind(KEYS[2])~='none' and kind(KEYS[2])~='set') then
   return {'CORRUPT'}
 end
+if redis.call('EXISTS',KEYS[4])==1 then return {'STOPPED'} end
 local data=cjson.decode(ARGV[1])
+-- Read the input era before any preemption or client mutation. Pending jobs
+-- executed after an owner bind observe the current owner directly.
+local owner_key='live:channel:'..tostring(data.channel_id)..':owner'
+local owner_kind=kind(owner_key)
+if owner_kind~='none' and owner_kind~='string' then return {'CORRUPT'} end
+if redis.call('STRLEN',owner_key)>256 then return {'CORRUPT'} end
+data.rust_input_owner=redis.call('GET',owner_key) or ''
 local policy=cjson.decode(ARGV[2])
 local limit=tonumber(ARGV[3])
 local ttl=tonumber(ARGV[4])
@@ -131,6 +139,7 @@ return 1
 "#;
 
 pub const RELEASE: &str = r#"
+if redis.call('EXISTS',KEYS[1])==0 then redis.call('SREM',KEYS[2],ARGV[2]);return 0 end
 if redis.call('HGET',KEYS[1],'rust_token')~=ARGV[1] then return 0 end
 local token=redis.call('HGET',KEYS[1],'hls_token')
 if token then redis.call('DEL','live:hls:session:'..token) end

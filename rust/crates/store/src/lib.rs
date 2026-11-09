@@ -5,11 +5,21 @@ mod accounts;
 mod admin_writes;
 mod app_data;
 mod auth;
+mod channel_groups;
+mod channel_memberships;
+mod channel_profiles;
+mod channel_writes;
+mod channels;
+mod core_reads;
 mod json_compat;
 mod passwords;
 mod playback;
+mod stream_validation;
+mod stream_writes;
+mod streams;
 
 pub use auth::{AuthConfig, AuthService, Claims, TokenPair};
+pub use channels::ChannelIdentity;
 pub use passwords::verify_password;
 pub use playback::{ProviderStream, ResolvedChannel};
 

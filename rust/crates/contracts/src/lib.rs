@@ -129,6 +129,14 @@ impl PlaybackError {
     }
 }
 
+/// Optional channel-deletion hook. The application supplies distributed media
+/// teardown; the store calls it outside its deletion transaction. The original
+/// Dispatcharr stop-before-delete path is best-effort and still deletes an
+/// inactive channel or one whose teardown reports an error.
+pub trait ChannelControl: Send + Sync + 'static {
+    fn stop_channel(&self, channel_id: String) -> BoxFuture<'_, Result<(), PlaybackError>>;
+}
+
 /// Authorization is evaluated for every viewer, before an existing channel may
 /// be reused. Resolution does not itself start an upstream or claim a provider
 /// slot. Capacity-limited providers require an explicit atomic reservation layer.
@@ -137,6 +145,28 @@ pub trait PlaybackResolver: Send + Sync + 'static {
         &self,
         request: PlaybackRequest,
     ) -> BoxFuture<'_, Result<PlaybackSource, PlaybackError>>;
+    /// DRF authenticates presented credentials even on AllowAny capability routes.
+    /// Adapters without an authenticator must not silently accept credentials.
+    fn authenticate_optional(
+        &self,
+        request: PlaybackRequest,
+    ) -> BoxFuture<'_, Result<(), PlaybackError>> {
+        Box::pin(async move {
+            let recognized = request.header("x-api-key").is_some()
+                || request.header("authorization").is_some_and(|value| {
+                    let scheme = value.split_whitespace().next().unwrap_or("");
+                    scheme.eq_ignore_ascii_case("Bearer") || scheme.eq_ignore_ascii_case("ApiKey")
+                });
+            if recognized {
+                Err(PlaybackError::new(
+                    501,
+                    "Credential authentication unavailable",
+                ))
+            } else {
+                Ok(())
+            }
+        })
+    }
     fn authorize_admin(&self, request: PlaybackRequest)
         -> BoxFuture<'_, Result<(), PlaybackError>>;
     fn authorize_hls_owner(

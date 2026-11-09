@@ -1,0 +1,115 @@
+{
+  "format_version": 1,
+  "scope": "M4 native VOD prototype correctness contracts; not application parity",
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "checks": {
+    "scoped_vod_coordination_real_redis": {
+      "passed": true,
+      "tests": 1
+    },
+    "native_vod_http_real_loopback_redis": {
+      "passed": true,
+      "tests": 15
+    },
+    "mixed_live_vod_user_admission_real_redis": {
+      "passed": true,
+      "tests": 2
+    },
+    "actual_seeded_django_postgresql_resolver": {
+      "passed": true,
+      "tests": 1,
+      "evidence": "artifacts/rust/m4-native-latest-coupling-decode/vod-contracts.json"
+    },
+    "source_native_vod_wire_characterization": {
+      "passed": true,
+      "cases": 7,
+      "evidence": "scripts/rust-vod-contracts/python-goldens.json"
+    },
+    "strict_clippy_vod_clients_all_targets": {
+      "passed": true
+    },
+    "acquisition_cancel_delayed_redis_reply": {
+      "passed": true,
+      "tests": 1,
+      "variants": [
+        "live/cancel",
+        "live/deadline",
+        "vod/cancel",
+        "vod/deadline",
+        "timeshift/cancel",
+        "timeshift/deadline"
+      ],
+      "assertions": [
+        "command budget held during delayed ACQUIRE reply",
+        "command budget held during delayed cleanup RELEASE reply",
+        "no leaked provider reservation",
+        "successor acquisition succeeds"
+      ]
+    },
+    "strict_clippy_coordination_all_targets": {
+      "passed": true
+    },
+    "graceful_shutdown_held_unread_bodies": {
+      "passed": true,
+      "bodies": 8,
+      "assertions": [
+        "metadata removed and provider slot zero before any body read/drop",
+        "new admission rejected503",
+        "idempotent shutdown",
+        "shutdown completed before the two-second test deadline with healthy Redis"
+      ]
+    },
+    "unsupported_transform_does_not_silently_select_identity_fallback": {
+      "passed": true,
+      "evidence": "artifacts/rust/m4-vod-unsupported-transform-guard/vod-contracts.json",
+      "cleanup_passed": true
+    },
+    "native_vod_iri_location_compatibility": {
+      "passed": true,
+      "tests": 2,
+      "oracle": "pinned original Django iri_to_uri Unicode/control character outputs",
+      "also_covers": "Measured duplicated bare-profile alias and zero-profile truthiness"
+    },
+    "source_bound_candidate_compose_native_wire_decode": {
+      "passed": true,
+      "cases": 7,
+      "differences": 0,
+      "audio_and_video_decoded": true,
+      "baseline_video_frames": 75,
+      "candidate_video_frames": 75,
+      "cleanup_passed": true,
+      "evidence": "scripts/rust-vod-contracts/verified-compose.json"
+    },
+    "source_bare_profile_with_built_react": {
+      "captured": true,
+      "follow_status": 200,
+      "media": false,
+      "candidate_image_alias_parity_verified": false,
+      "evidence": "scripts/rust-vod-contracts/profile-alias-characterization.json"
+    }
+  },
+  "post_test_source_sha256": {
+    "rust/crates/clients/src/vod.rs": "212aabe259c45bc3e52b36e3464e5bd6fa1389acac132c1d4223d0bd117810a0",
+    "rust/crates/clients/tests/vod.rs": "1ab74b74f09b27869562be8dc2721be22355f1aa396e506930ba9065d0cf2b36",
+    "rust/crates/coordination/src/lib.rs": "cdeae6706f0ff04068df6d46266c432abf6fd634e9231c07ee12dec57ebdfc5f",
+    "rust/crates/coordination/tests/acquire_cancel.rs": "734ad12413641233d75a73654fd7a07851512f706a4a8125440d8cb0f9b1e51c",
+    "rust/crates/vod-http/src/engine.rs": "d8cb4a9b3f52457f7ac03eed72adbbd85b84bc315338f85accbffc61ee33f919",
+    "rust/crates/vod-http/src/lib.rs": "298c7d39065196a862800695d90c36de0573ddf9519c7db274461be179fd4860",
+    "rust/crates/vod-http/src/resolver.rs": "b6e2b6d072dd458e0c3a1391cb07c3743bcfeac6d7effd081d98c247d9ce7d7f",
+    "rust/crates/vod-http/src/sessions.rs": "3173b8f95b9b6ef42c36badb5304e27098826628b9c120d1eab08b4d92ee01f8",
+    "rust/crates/vod-http/tests/http.rs": "a8d4fbc91f310e1e01da2d198f769120ed91951d635a992b00f19e610f31b334",
+    "rust/crates/vod-http/tests/sql.rs": "f27f4fd81595e2dbe881ce2bb575c7a23f7e494ea2c19d96f309b77cece4f53c"
+  },
+  "source_hash_note": "Working-tree source hashes, not an immutable candidate Docker build binding. SQL test shares independently maintained Store/Auth crates.",
+  "remaining_gates": [
+    "source-bound Rust application Compose native wire comparison",
+    "cold and malformed Range corner cases",
+    "authenticated browser/session handoff differential probes",
+    "legacy and Rust cross-worker session fencing/adoption",
+    "account profile transform/server-group variants",
+    "complete statistics/WebSocket event side effects",
+    "setup-cancellation/crash matrix",
+    "Docker decoded end-to-end playback and resource/performance matrix"
+  ]
+}

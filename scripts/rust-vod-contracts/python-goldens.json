@@ -1,0 +1,194 @@
+{
+  "format_version": 1,
+  "scope": "original Python native XC VOD wire contracts",
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "performance_verified": false,
+  "parity_verified": false,
+  "wire": {
+    "format_version": 1,
+    "scope": "native XC VOD file wire characterization",
+    "performance_verified": false,
+    "parity_verified": false,
+    "events": [
+      {
+        "case": "head",
+        "mint": {
+          "status": 405,
+          "headers": {
+            "content-type": "application/json",
+            "allow": "GET, OPTIONS",
+            "content-length": "41"
+          }
+        },
+        "status": 405,
+        "headers": {
+          "content-type": "application/json",
+          "allow": "GET, OPTIONS",
+          "content-length": "41"
+        },
+        "bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "case": "full",
+        "mint": {
+          "status": 301,
+          "headers": {
+            "location": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+            "cache-control": "private, max-age=21600",
+            "content-type": "text/html; charset=utf-8",
+            "allow": "GET, OPTIONS",
+            "content-length": "0"
+          }
+        },
+        "status": 200,
+        "headers": {
+          "content-type": "video/mp4",
+          "cache-control": "no-cache",
+          "accept-ranges": "bytes",
+          "content-length": "4299455",
+          "allow": "GET, OPTIONS"
+        },
+        "bytes": 4299455,
+        "body_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c"
+      },
+      {
+        "case": "first-range",
+        "mint": {
+          "status": 301,
+          "headers": {
+            "location": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+            "cache-control": "private, max-age=21600",
+            "content-type": "text/html; charset=utf-8",
+            "allow": "GET, OPTIONS",
+            "content-length": "0"
+          }
+        },
+        "status": 206,
+        "headers": {
+          "content-type": "video/mp4",
+          "cache-control": "no-cache",
+          "accept-ranges": "bytes",
+          "content-length": "256",
+          "content-range": "bytes 0-255/4299455",
+          "allow": "GET, OPTIONS"
+        },
+        "bytes": 256,
+        "body_sha256": "b2554114e1fb18c79d224041e146a457a306f3d8d0ce272d35f5369d19627ab2"
+      },
+      {
+        "case": "middle-range",
+        "mint": {
+          "status": 301,
+          "headers": {
+            "location": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+            "cache-control": "private, max-age=21600",
+            "content-type": "text/html; charset=utf-8",
+            "allow": "GET, OPTIONS",
+            "content-length": "0"
+          }
+        },
+        "status": 206,
+        "headers": {
+          "content-type": "video/mp4",
+          "cache-control": "no-cache",
+          "accept-ranges": "bytes",
+          "content-length": "256",
+          "content-range": "bytes 1000-1255/4299455",
+          "allow": "GET, OPTIONS"
+        },
+        "bytes": 256,
+        "body_sha256": "a481e6d191f0f6d9f9367d8b8c3d6ac63c6026e215b8ee28b1c87b4e75705c26"
+      },
+      {
+        "case": "suffix-range",
+        "mint": {
+          "status": 301,
+          "headers": {
+            "location": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+            "cache-control": "private, max-age=21600",
+            "content-type": "text/html; charset=utf-8",
+            "allow": "GET, OPTIONS",
+            "content-length": "0"
+          }
+        },
+        "status": 206,
+        "headers": {
+          "content-type": "video/mp4",
+          "cache-control": "no-cache",
+          "accept-ranges": "bytes",
+          "content-length": "257",
+          "content-range": "bytes 0-256/4299455",
+          "allow": "GET, OPTIONS"
+        },
+        "bytes": 257,
+        "body_sha256": "27e1b5dfd1faeb5cd0d2146c2853949b2ec4ce9086d57feb48399bd1891e2c01"
+      },
+      {
+        "case": "unsatisfiable",
+        "mint": {
+          "status": 301,
+          "headers": {
+            "location": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+            "cache-control": "private, max-age=21600",
+            "content-type": "text/html; charset=utf-8",
+            "allow": "GET, OPTIONS",
+            "content-length": "0"
+          }
+        },
+        "status": 416,
+        "headers": {
+          "content-type": "text/html; charset=utf-8",
+          "allow": "GET, OPTIONS",
+          "content-length": "31"
+        },
+        "bytes": 31,
+        "body_sha256": "8624b5786db01b65bd45cace0c8295c4abc20ce95a717f74728c5e1eda0da1a8"
+      },
+      {
+        "case": "if-range-mismatch",
+        "mint": {
+          "status": 301,
+          "headers": {
+            "location": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+            "cache-control": "private, max-age=21600",
+            "content-type": "text/html; charset=utf-8",
+            "allow": "GET, OPTIONS",
+            "content-length": "0"
+          }
+        },
+        "status": 206,
+        "headers": {
+          "content-type": "video/mp4",
+          "cache-control": "no-cache",
+          "accept-ranges": "bytes",
+          "content-length": "256",
+          "content-range": "bytes 0-255/4299455",
+          "allow": "GET, OPTIONS"
+        },
+        "bytes": 256,
+        "body_sha256": "b2554114e1fb18c79d224041e146a457a306f3d8d0ce272d35f5369d19627ab2"
+      }
+    ]
+  },
+  "fixture": {
+    "fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "fixture_bytes": 4299455,
+    "duration_seconds": 30,
+    "video": "h264",
+    "audio": "aac",
+    "etag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\"",
+    "requests": 5,
+    "head_requests": 0,
+    "bytes": 4300480
+  },
+  "observed_source_defects": [
+    "Suffix bytes=-256 returns the first 257 bytes (Content-Range bytes 0-256), not the final 256 bytes.",
+    "If-Range mismatch is ignored and returns partial206.",
+    "Unsatisfiable Range returns416 without Content-Range."
+  ],
+  "rust_policy": "Default literal compatibility preserves measured Python suffix, If-Range and 416 behavior. These quirks are not silently corrected during the 1:1 migration."
+}

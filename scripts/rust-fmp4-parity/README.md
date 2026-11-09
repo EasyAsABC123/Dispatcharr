@@ -17,3 +17,18 @@ baseline H264/AAC stream. Oversized input and retained fragments fail closed in
 Rust; those explicit bounds have separate unit tests. EOF tails remain byte-for-byte
 compatible, including truncated tails, and need independent decoder validation.
 These are component checks, not FFmpeg runtime or application parity evidence.
+
+Run native HTTP/remux gates with disposable Docker Redis and local FFmpeg:
+
+```sh
+python scripts/rust-fmp4-parity/http.py --output artifacts/rust/fmp4-http \
+  --fixture /path/to/h264-aac.ts --fixture /path/to/h264-ac3.ts
+```
+
+This records FFmpeg version, fixture/source hashes and cleanup. It executes three
+tests per fixture: 100-viewer fanout with a held slow frame, shared upstream with late joining, and explicit shutdown while
+an output frame is held. Both decode mapped video and audio and check process
+reaping. The source bytes are captured into an immutable temporary workspace before
+compilation so parallel migration edits cannot change the tested source.
+The local decoder version is recorded; container runtime verification
+is a separate Compose gate.

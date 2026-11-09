@@ -41,6 +41,42 @@ def resources(ids):
                             'memory_bytes': memory_bytes(r['MemUsage'])} for r in rows]}
 
 
+def parse_process_rss(raw):
+    """RSS is diagnostic: summing it can count shared PostgreSQL pages twice."""
+    if len(raw.encode()) > 1024 * 1024:
+        raise ValueError('Process sample exceeds1MiB')
+    lines = raw.splitlines()
+    if not lines or lines[0].split() != ['PID', 'COMMAND', 'RSS']:
+        raise ValueError('Unexpected Docker top RSS columns')
+    if len(lines) > 4097:
+        raise ValueError('Process sample exceeds4096 rows')
+    rows = []
+    for line in lines[1:]:
+        parts = line.split()
+        if len(parts) < 3 or not parts[0].isdigit() or not parts[-1].isdigit():
+            raise ValueError('Invalid Docker top RSS row')
+        name = ' '.join(parts[1:-1])
+        if len(name) > 256:
+            raise ValueError('Process name exceeds256 characters')
+        rows.append({'pid': int(parts[0]), 'name': name, 'rss_bytes': int(parts[-1]) * 1024})
+    return rows
+
+
+def process_resources(ids):
+    began = time.monotonic()
+    containers = []
+    if len(ids) > 16:
+        raise ValueError('Process observer supports at most16 containers')
+    for identifier in ids:
+        raw = subprocess.check_output(['docker', 'top', identifier, '-eo', 'pid,comm,rss'],
+                                      text=True, timeout=3)
+        rows = parse_process_rss(raw)
+        containers.append({'id': identifier, 'processes': rows,
+                           'process_rss_bytes_sum_diagnostic': sum(row['rss_bytes'] for row in rows)})
+    return {'containers': containers, 'observer_seconds': time.monotonic() - began,
+            'note': 'Diagnostic RSS sums may double-count shared pages; Docker working-memory remains the primary memory metric.'}
+
+
 def viewer(url, deadline, timeout, slow_delay):
     result = {'bytes': 0, 'requests': 0, 'errors': 0, 'empty_responses': 0,
               'first_byte_ms': []}
@@ -80,9 +116,14 @@ def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1, wa
     stop = threading.Event()
 
     def sample():
+        next_process_sample = 0.0
         while not stop.is_set() and time.monotonic() < deadline:
             try:
                 row = resources(ids)
+                row['memory_metric'] = 'Docker stats working-memory usage, not process RSS'
+                if time.monotonic() >= next_process_sample:
+                    row['process_rss_diagnostic'] = process_resources(ids)
+                    next_process_sample = time.monotonic() + 5
                 row['at_seconds_remaining'] = max(0, deadline - time.monotonic())
                 if time.monotonic() < deadline:
                     samples.append(row)

@@ -1,0 +1,54 @@
+{
+  "scope": "native VOD bare-profile alias source characterization",
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "results": [
+    {
+      "profile_id": 2,
+      "mint_status": 301,
+      "mint_headers": {
+        "location": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/2/<session>/2/",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "allow": "OPTIONS, GET",
+        "content-length": "0"
+      },
+      "follow_status": 200,
+      "follow_headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "858"
+      },
+      "follow_bytes": 858,
+      "follow_body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a"
+    },
+    {
+      "profile_id": 0,
+      "mint_status": 301,
+      "mint_headers": {
+        "location": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/0/<session>",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "allow": "OPTIONS, GET",
+        "content-length": "0"
+      },
+      "follow_status": 200,
+      "follow_headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "858"
+      },
+      "follow_bytes": 858,
+      "follow_body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a"
+    }
+  ],
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_frontend_fixture": {
+    "image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+    "index_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+    "purpose": "Remove missing-template confound when source redirects fall through React catch-all"
+  },
+  "follow_status_contract_accepted": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m4-vod-source-alias-built-react-1/vod-contracts.json",
+  "note": "Built unchanged React removes the earlier missing-template fixture confound: duplicated-profile redirect returns React200, not media. Frozen pre-fix candidate differs in alias Location and serves MP4; working-tree helper now preserves measured Location but awaits a new frozen image test.",
+  "seven_case_normalization_note": "Source Allow header order changes across Python processes. Raw comparison preserved in artifact failed only this unordered header; separately saved normalized-wire-comparison.json reports seven-case match. No other header/body mismatch normalized."
+}

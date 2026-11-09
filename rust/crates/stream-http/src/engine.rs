@@ -5,6 +5,7 @@ use dispatcharr_contracts::{
     PlaybackCandidate, PlaybackError, PlaybackSource, PlaybackViewer, UserLimitPolicy,
 };
 use dispatcharr_coordination::{AcquireRequest, Coordinator, ProviderReservation};
+use dispatcharr_input_store::InputStore;
 use dispatcharr_stream_core::ts::{DiscontinuityMarker, PacketAssembler, PACKET_SIZE};
 use dispatcharr_stream_runtime::{Channel, OwnedChunk, OwnedDelivery, Viewer};
 use futures_util::StreamExt;
@@ -14,13 +15,13 @@ use std::{
     io,
     pin::Pin,
     sync::{
-        atomic::{AtomicBool, AtomicU64, Ordering},
+        atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering},
         Arc, Mutex, Weak,
     },
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 use tokio::{
-    sync::{watch, OwnedSemaphorePermit, Semaphore},
+    sync::{watch, Notify, OwnedSemaphorePermit, Semaphore},
     time::{self, Instant},
 };
 
@@ -35,6 +36,14 @@ pub struct EngineConfig {
     pub connect_timeout: Duration,
     pub read_timeout: Duration,
     pub startup_timeout: Duration,
+    /// Number of canonical input chunks required before startup is ready.
+    pub initial_buffer_chunks: u64,
+    /// Low-latency component mode. The application disables periodic and EOF
+    /// partial-chunk writes to match the original full-chunk input buffer.
+    pub flush_partial_chunks: bool,
+    /// Original native TS initialization waits, media error packets and
+    /// post-readiness positioning. Internal format processors keep errors typed.
+    pub source_initialization: bool,
     pub retry_delay: Duration,
     /// Retries after the initial request; a complete upstream EOF also counts.
     pub max_retries: usize,
@@ -59,6 +68,9 @@ impl Default for EngineConfig {
             connect_timeout: Duration::from_secs(10),
             read_timeout: Duration::from_secs(10),
             startup_timeout: Duration::from_secs(30),
+            initial_buffer_chunks: 1,
+            flush_partial_chunks: true,
+            source_initialization: false,
             retry_delay: Duration::from_millis(500),
             // Python MAX_RETRIES=3 counts total attempts; this field counts
             // retries after the initial attempt, so 2 gives the same budget.
@@ -93,6 +105,9 @@ pub(crate) struct Inner {
     slots: Arc<Semaphore>,
     coordinator: Option<Coordinator>,
     pub(crate) clients: Option<ClientStore>,
+    pub(crate) inputs: Option<InputStore>,
+    workers: AtomicUsize,
+    workers_done: Notify,
 }
 
 #[derive(Clone, Debug)]
@@ -114,6 +129,11 @@ struct Session {
     started_at: f64,
     current: Mutex<PlaybackCandidate>,
     connecting: AtomicBool,
+    following: AtomicBool,
+    idle_watching: AtomicBool,
+    native_initializing: AtomicBool,
+    upstream_admitted: AtomicBool,
+    publisher: Mutex<Option<(InputStore, String)>>,
     _permit: OwnedSemaphorePermit,
 }
 
@@ -148,6 +168,21 @@ impl StreamEngine {
         coordinator: Option<Coordinator>,
         clients: Option<ClientStore>,
     ) -> Result<Self, PlaybackError> {
+        Self::new_with_shared_inputs(config, coordinator, clients, None)
+    }
+
+    pub fn new_with_shared_inputs(
+        config: EngineConfig,
+        coordinator: Option<Coordinator>,
+        clients: Option<ClientStore>,
+        inputs: Option<InputStore>,
+    ) -> Result<Self, PlaybackError> {
+        if inputs.is_some() && (coordinator.is_none() || clients.is_none()) {
+            return Err(PlaybackError::new(
+                500,
+                "Shared input requires coordination and client metadata",
+            ));
+        }
         if config.max_channels == 0
             || config.max_channels > Semaphore::MAX_PERMITS
             || config.max_viewers_per_channel == 0
@@ -160,6 +195,7 @@ impl StreamEngine {
             || config.connect_timeout.is_zero()
             || config.read_timeout.is_zero()
             || config.startup_timeout.is_zero()
+            || config.initial_buffer_chunks == 0
             || config.retry_window.is_zero()
             || config.stable_connection_threshold.is_zero()
             || config.rotation_cooldown.is_zero()
@@ -184,6 +220,9 @@ impl StreamEngine {
                 slots,
                 coordinator,
                 clients,
+                inputs,
+                workers: AtomicUsize::new(0),
+                workers_done: Notify::new(),
             }),
         })
     }
@@ -194,6 +233,7 @@ impl StreamEngine {
         Response::builder()
             .header("Content-Type", "video/mp2t")
             .header("Cache-Control", "no-cache")
+            .header("Connection", "close")
             .body(Body::from_stream(
                 stream.map(|result| result.map(|frame| frame.data)),
             ))
@@ -245,6 +285,7 @@ impl StreamEngine {
             ));
         }
         let key = source.channel_id.clone();
+        let startup_behind = source.startup_behind;
         let client = if let Some(clients) = self.inner.clients.as_ref().filter(|_| register_client)
         {
             let viewer = source.viewer.clone().unwrap_or(PlaybackViewer {
@@ -267,6 +308,9 @@ impl StreamEngine {
         let (session, viewer, created) = {
             let mut sessions = self.inner.sessions.lock().unwrap();
             if let Some(session) = sessions.get(&key) {
+                if register_client && self.inner.config.source_initialization {
+                    session.native_initializing.store(true, Ordering::Release);
+                }
                 if session.source.profile_id != source.profile_id {
                     return Err(PlaybackError::new(
                         409,
@@ -309,13 +353,23 @@ impl StreamEngine {
                     started_at: epoch_seconds(),
                     current,
                     connecting: AtomicBool::new(true),
+                    following: AtomicBool::new(false),
+                    idle_watching: AtomicBool::new(false),
+                    native_initializing: AtomicBool::new(
+                        register_client && self.inner.config.source_initialization,
+                    ),
+                    upstream_admitted: AtomicBool::new(false),
+                    publisher: Mutex::new(None),
                     _permit: permit,
                 });
                 sessions.insert(key.clone(), session.clone());
+                // Count before releasing the registry lock so shutdown cannot
+                // report quiescence before this newly created worker starts.
+                self.inner.workers.fetch_add(1, Ordering::AcqRel);
                 (session, viewer, true)
             }
         };
-        let state = TransportState {
+        let mut state = TransportState {
             viewer,
             client,
             _guard: ViewerGuard {
@@ -327,7 +381,11 @@ impl StreamEngine {
         if created {
             let weak = Arc::downgrade(&self.inner);
             let running = session.clone();
-            tokio::spawn(async move { run_upstream(weak, key, running).await });
+            let worker = WorkerCount(self.inner.clone());
+            tokio::spawn(async move {
+                let _worker = worker;
+                run_upstream(weak, key, running).await
+            });
         }
         let mut startup = session.startup.subscribe();
         let ready = async {
@@ -343,9 +401,56 @@ impl StreamEngine {
                 }
             }
         };
-        time::timeout(self.inner.config.startup_timeout, ready)
-            .await
-            .map_err(|_| PlaybackError::new(504, "Stream initialization timed out"))??;
+        if register_client && self.inner.config.source_initialization {
+            tokio::pin!(ready);
+            let mut client_stop = state.client.as_ref().map(ClientLease::stopped);
+            let stopped = async {
+                match client_stop.as_mut() {
+                    Some(control) => {
+                        if !*control.borrow() {
+                            let _ = control.changed().await;
+                        }
+                    }
+                    None => std::future::pending::<()>().await,
+                }
+            };
+            let outcome = tokio::select! {
+                biased;
+                _=stopped=>{
+                    if !session.upstream_admitted.load(Ordering::Acquire) {
+                        time::timeout(self.inner.config.startup_timeout,&mut ready).await
+                            .map_err(|_|PlaybackError::new(504,"Stream initialization timed out"))??;
+                    }
+                    Some("Error: Client disconnected")
+                },
+                result=time::timeout(self.inner.config.startup_timeout,&mut ready)=>match result {
+                    Ok(Ok(()))=>None,
+                    Ok(Err(_)) if session.upstream_admitted.load(Ordering::Acquire)=>Some("Error: Channel is stopping"),
+                    Ok(Err(failure))=>return Err(failure),
+                    Err(_)=>Some("Error: Initialization timeout"),
+                }
+            };
+            if let Some(message) = outcome {
+                let frame = InitializationFrame {
+                    data: initialization_packet(message),
+                    _state: state,
+                };
+                return Ok(Box::pin(futures_util::stream::once(async move {
+                    Ok(MediaFrame {
+                        data: Bytes::from_owner(frame),
+                        discontinuity: false,
+                    })
+                })));
+            }
+            state
+                .viewer
+                .reposition(startup_behind)
+                .map_err(runtime_error)?;
+        } else {
+            time::timeout(self.inner.config.startup_timeout, ready)
+                .await
+                .map_err(|_| PlaybackError::new(504, "Stream initialization timed out"))??;
+        }
         let keepalive_interval = self.inner.config.keepalive_interval;
         let max_keepalive_duration = self.inner.config.max_keepalive_duration;
         let stream = async_stream::stream! {
@@ -400,6 +505,9 @@ impl StreamEngine {
                     profile_id: session.source.profile_id,
                     provider_profile_id: current.provider_profile_id,
                     state: match *session.startup.borrow() {
+                        Startup::Pending if session.upstream_admitted.load(Ordering::Acquire) => {
+                            "connecting"
+                        }
                         Startup::Pending => "initializing",
                         Startup::Ready if session.connecting.load(Ordering::Relaxed) => "buffering",
                         Startup::Ready => "active",
@@ -433,6 +541,56 @@ impl StreamEngine {
         for session in sessions.into_values() {
             session.stop.send_replace(true);
             session.channel.stop();
+        }
+    }
+
+    pub async fn shutdown_wait(&self, timeout: Duration) -> bool {
+        self.shutdown();
+        time::timeout(timeout, async {
+            loop {
+                let notified = self.inner.workers_done.notified();
+                tokio::pin!(notified);
+                notified.as_mut().enable();
+                if self.inner.workers.load(Ordering::Acquire) == 0
+                    && self
+                        .inner
+                        .coordinator
+                        .as_ref()
+                        .is_none_or(Coordinator::is_idle)
+                {
+                    return;
+                }
+                tokio::select! {_=notified=>{},_=time::sleep(Duration::from_millis(20))=>{}}
+            }
+        })
+        .await
+        .is_ok()
+    }
+
+    pub async fn stop_global(&self, channel: &str) -> Result<bool, PlaybackError> {
+        let Some(clients) = self.inner.clients.as_ref() else {
+            return Ok(self.stop(channel));
+        };
+        let shared = clients.request_channel_stop(channel).await;
+        let local = self.stop(channel);
+        match shared {
+            Ok(shared) => Ok(shared || local),
+            Err(_) if local => Ok(true),
+            Err(error) => Err(client_error(error, 0)),
+        }
+    }
+
+    pub async fn has_channel(&self, channel: &str) -> Result<bool, PlaybackError> {
+        if self.inner.sessions.lock().unwrap().contains_key(channel) {
+            return Ok(true);
+        }
+        match &self.inner.clients {
+            Some(clients) => clients
+                .channel_snapshot(channel)
+                .await
+                .map(|snapshot| snapshot.is_some())
+                .map_err(|error| client_error(error, 0)),
+            None => Ok(false),
         }
     }
 
@@ -487,6 +645,23 @@ struct FrameOwner {
     _guard: ViewerGuard,
 }
 
+struct InitializationFrame {
+    data: [u8; 188],
+    _state: TransportState,
+}
+impl AsRef<[u8]> for InitializationFrame {
+    fn as_ref(&self) -> &[u8] {
+        &self.data
+    }
+}
+fn initialization_packet(message: &str) -> [u8; 188] {
+    let mut packet = KEEPALIVE_PACKET;
+    let bytes = message.as_bytes();
+    let count = bytes.len().min(180);
+    packet[4..4 + count].copy_from_slice(&bytes[..count]);
+    packet
+}
+
 impl AsRef<[u8]> for FrameOwner {
     fn as_ref(&self) -> &[u8] {
         self.chunk.as_ref()
@@ -521,32 +696,232 @@ struct ViewerGuard {
 
 impl Drop for ViewerGuard {
     fn drop(&mut self) {
-        if self.session.channel.viewer_count() != 0 {
+        if *self.session.stop.borrow()
+            || self.session.channel.viewer_count() != 0
+            || self.session.idle_watching.swap(true, Ordering::AcqRel)
+        {
             return;
         }
         let weak = self.inner.clone();
         let session = self.session.clone();
         let key = self.key.clone();
-        // Runtime shutdown can drop response bodies without an executor.
         if let Ok(runtime) = tokio::runtime::Handle::try_current() {
             runtime.spawn(async move {
-                time::sleep(session.source.shutdown_delay).await;
-                let Some(inner) = weak.upgrade() else {
-                    session.channel.stop();
-                    return;
-                };
-                let mut sessions = inner.sessions.lock().unwrap();
-                if session.channel.viewer_count() == 0
-                    && sessions
-                        .get(&key)
-                        .is_some_and(|current| Arc::ptr_eq(current, &session))
-                {
-                    sessions.remove(&key);
-                    session.stop.send_replace(true);
-                    session.channel.stop();
+                let mut stop = session.stop.subscribe();
+                let mut empty_since = None;
+                let idle_began = Instant::now();
+                loop {
+                    if *stop.borrow() {
+                        break;
+                    }
+                    if session.channel.viewer_count() > 0 {
+                        session.idle_watching.store(false, Ordering::Release);
+                        // Close the last-drop/reset race without creating duplicate watchers.
+                        if session.channel.viewer_count() == 0
+                            && session
+                                .idle_watching
+                                .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+                                .is_ok()
+                        {
+                            continue;
+                        }
+                        return;
+                    }
+                    let Some(inner) = weak.upgrade() else {
+                        session.channel.stop();
+                        break;
+                    };
+                    let shared_owner =
+                        inner.inputs.is_some() && !session.following.load(Ordering::Acquire);
+                    let remote_demand = if shared_owner {
+                        if let Some(clients) = &inner.clients {
+                            match clients.channel_client_count(&key).await {
+                                Ok(count) => count > 0,
+                                Err(_) => false,
+                            }
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    };
+                    if remote_demand {
+                        empty_since = None;
+                    } else {
+                        let began = *empty_since.get_or_insert_with(Instant::now);
+                        if began.elapsed() >= session.source.shutdown_delay {
+                            let mut sessions = inner.sessions.lock().unwrap();
+                            if session.channel.viewer_count() == 0
+                                && sessions
+                                    .get(&key)
+                                    .is_some_and(|current| Arc::ptr_eq(current, &session))
+                            {
+                                sessions.remove(&key);
+                                session.stop.send_replace(true);
+                                session.channel.stop();
+                                break;
+                            }
+                        }
+                    }
+                    let remote_poll = if idle_began.elapsed() < Duration::from_millis(100) {
+                        Duration::from_millis(5)
+                    } else {
+                        Duration::from_secs(1)
+                    };
+                    let wait = empty_since.map_or(remote_poll, |began| {
+                        session
+                            .source
+                            .shutdown_delay
+                            .saturating_sub(began.elapsed())
+                            .min(Duration::from_secs(1))
+                    });
+                    tokio::select! {_=stop.changed()=>break,_=time::sleep(wait)=>{}}
                 }
+                session.idle_watching.store(false, Ordering::Release);
             });
+        } else {
+            self.session.idle_watching.store(false, Ordering::Release);
         }
+    }
+}
+
+async fn run_follower(
+    inner: &Inner,
+    session: &Arc<Session>,
+    stop: &mut watch::Receiver<bool>,
+) -> PlaybackError {
+    let store = inner
+        .inputs
+        .as_ref()
+        .expect("shared follower requires input store");
+    let mut owner: Option<String> = None;
+    let mut cursor: Option<u64> = None;
+    let mut last_snapshot: Option<Instant> = None;
+    let mut last_media = Instant::now();
+    loop {
+        if *stop.borrow() {
+            return PlaybackError::new(503, "Stream stopped");
+        }
+        if cursor.is_none()
+            || last_snapshot.is_none_or(|time| time.elapsed() >= Duration::from_secs(1))
+        {
+            let snapshot = tokio::select! {_=stop.changed()=>return PlaybackError::new(503,"Stream stopped"),snapshot=store.snapshot(&session.source.channel_id)=>snapshot};
+            match snapshot {
+                Ok(snapshot) => {
+                    let Some(current) = &snapshot.owner else {
+                        if let Some(previous) = &owner {
+                            if let Some(clients) = &inner.clients {
+                                let _ = clients
+                                    .stop_abandoned_channel(&session.source.channel_id, previous)
+                                    .await;
+                            }
+                            let _ = store
+                                .cleanup_abandoned(&session.source.channel_id, previous)
+                                .await;
+                        }
+                        return PlaybackError::new(503, "Channel owner stopped");
+                    };
+                    if owner.as_ref().is_some_and(|previous| previous != current) {
+                        return PlaybackError::new(503, "Channel owner changed");
+                    }
+                    if owner.is_none() {
+                        if let Some(clients) = &inner.clients {
+                            if clients
+                                .bind_local_owner(&session.source.channel_id, current)
+                                .await
+                                .is_err()
+                            {
+                                return PlaybackError::new(
+                                    503,
+                                    "Channel admission binding unavailable",
+                                );
+                            }
+                        }
+                    }
+                    if cursor.is_none() {
+                        cursor = Some(if session.source.startup_behind.is_zero() {
+                            snapshot.index
+                        } else {
+                            snapshot
+                                .cursor_for_age(
+                                    session.source.startup_behind.as_secs_f64(),
+                                    epoch_seconds(),
+                                )
+                                .unwrap_or(snapshot.index)
+                        });
+                    }
+                    if let Some(first) = snapshot.chunks.iter().min_by_key(|stamp| stamp.sequence) {
+                        if first.sequence > cursor.unwrap().saturating_add(1) {
+                            cursor = Some(first.sequence - 1);
+                        }
+                    }
+                    if snapshot.index < cursor.unwrap() {
+                        return PlaybackError::new(503, "Channel input restarted");
+                    }
+                    owner = Some(current.clone());
+                    last_snapshot = Some(Instant::now());
+                }
+                Err(dispatcharr_input_store::Error::Capacity) => {
+                    tokio::select! {_=stop.changed()=>return PlaybackError::new(503,"Stream stopped"),_=time::sleep(inner.config.flush_interval)=>{}}
+                    continue;
+                }
+                Err(_) => return PlaybackError::new(503, "Shared channel input unavailable"),
+            }
+        }
+        let next = cursor.unwrap().saturating_add(1);
+        let read = tokio::select! {_=stop.changed()=>return PlaybackError::new(503,"Stream stopped"),read=store.get(&session.source.channel_id,next)=>read};
+        match read {
+            Ok(Some(bytes)) => {
+                if owner.as_deref() != Some(bytes.owner.as_str()) {
+                    return PlaybackError::new(503, "Channel owner changed");
+                }
+                let data: Arc<[u8]> = Arc::from(bytes.as_ref());
+                let sequence = bytes.sequence;
+                let timestamp = bytes.received_at;
+                let discontinuity = bytes.discontinuity;
+                // The ring has its own admission/retention bound. Release the
+                // transient Redis read lease before publishing the bounded copy.
+                drop(bytes);
+                let now = Instant::now().into_std();
+                let age = (epoch_seconds() - timestamp).clamp(0.0, 3600.0);
+                let received = now.checked_sub(Duration::from_secs_f64(age)).unwrap_or(now);
+                session
+                    .received_bytes
+                    .fetch_add(data.len() as u64, Ordering::Relaxed);
+                if session
+                    .channel
+                    .publish_received(data, discontinuity, received)
+                    .is_err()
+                {
+                    return PlaybackError::new(503, "Stream stopped");
+                }
+                cursor = Some(sequence);
+                session.buffer_index.store(sequence, Ordering::Relaxed);
+                session
+                    .last_data_ms
+                    .store((timestamp * 1000.0) as u64, Ordering::Relaxed);
+                session.connecting.store(false, Ordering::Relaxed);
+                if sequence >= inner.config.initial_buffer_chunks {
+                    session.startup.send_replace(Startup::Ready);
+                }
+                last_media = Instant::now();
+                continue;
+            }
+            Ok(None) | Err(dispatcharr_input_store::Error::Capacity) => {}
+            Err(_) => return PlaybackError::new(503, "Shared channel input unavailable"),
+        }
+        if last_media.elapsed() >= inner.config.max_keepalive_duration {
+            return PlaybackError::new(504, "Shared channel input timed out");
+        }
+        tokio::select! {_=stop.changed()=>return PlaybackError::new(503,"Stream stopped"),_=time::sleep(inner.config.flush_interval)=>{}}
+    }
+}
+
+struct WorkerCount(Arc<Inner>);
+impl Drop for WorkerCount {
+    fn drop(&mut self) {
+        self.0.workers.fetch_sub(1, Ordering::AcqRel);
+        self.0.workers_done.notify_waiters();
     }
 }
 
@@ -565,6 +940,15 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
         };
         match acquired {
             Ok(lease) => Some(lease),
+            Err(dispatcharr_coordination::Error::OwnerHeld) if inner.inputs.is_some() => {
+                session.following.store(true, Ordering::Release);
+                let failure = run_follower(&inner, &session, &mut stop).await;
+                if let Some(clients) = &inner.clients {
+                    let _ = clients.stop_local_channel(&key).await;
+                }
+                finish_session(&inner, &key, &session, failure);
+                return;
+            }
             Err(error) => {
                 finish_session(&inner, &key, &session, coordination_error(error));
                 return;
@@ -573,13 +957,22 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
     } else {
         None
     };
+    if let (Some(clients), Some(lease)) = (&inner.clients, &lease) {
+        if clients.bind_local_owner(&key, lease.token()).await.is_err() {
+            session.stop.send_replace(true);
+        }
+    }
+    if let (Some(inputs), Some(lease)) = (&inner.inputs, &lease) {
+        *session.publisher.lock().unwrap() = Some((inputs.clone(), lease.token().to_owned()));
+    }
     let metadata_task = inner.clients.as_ref().map(|clients| {
         let clients = clients.clone();
         let session = session.clone();
         let owner = lease
             .as_ref()
             .map_or(String::new(), |lease| lease.token().to_owned());
-        tokio::spawn(async move { channel_metadata_worker(clients, session, owner).await })
+        let shared = inner.inputs.is_some();
+        tokio::spawn(async move { channel_metadata_worker(clients, session, owner, shared).await })
     });
     let (_unleased_guard, unleased_watch) = watch::channel(false);
     let mut lost = lease.as_ref().map_or(unleased_watch, |lease| lease.lost());
@@ -596,6 +989,8 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
     let mut retry = crate::retry::RetryState::new();
     let mut current = 0;
     let mut attempts = 0u64;
+    let mut last_candidate = None;
+    let mut input = InputAccumulator::new(inner.config.chunk_bytes);
     let mut last_error = PlaybackError::new(502, "Upstream did not provide stream data");
     'session: loop {
         if *stop.borrow() || *lost.borrow() {
@@ -645,6 +1040,7 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
         match reservation {
             Err(error) => last_error = error,
             Ok(()) => {
+                session.upstream_admitted.store(true, Ordering::Release);
                 *session.current.lock().unwrap() = candidate.clone();
                 loop {
                     if *stop.borrow() || *lost.borrow() {
@@ -660,7 +1056,12 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
                     if attempts > 0 {
                         session.reconnects.fetch_add(1, Ordering::Relaxed);
                     }
-                    let discontinuity = attempts > 0;
+                    let discontinuity = if inner.config.source_initialization {
+                        last_candidate.is_some_and(|previous| previous != current)
+                    } else {
+                        attempts > 0
+                    };
+                    last_candidate = Some(current);
                     attempts = attempts.saturating_add(1);
                     drive_candidate(
                         &inner,
@@ -668,6 +1069,7 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
                         candidate,
                         current,
                         discontinuity,
+                        &mut input,
                         &mut retry,
                         &mut stop,
                         &mut lost,
@@ -686,10 +1088,15 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
                 }
                 // drive_candidate returned, so its Response/socket is dropped
                 // before the old slot is freed. Keep the same owner/fence.
+                let final_initializing_source = session.native_initializing.load(Ordering::Acquire)
+                    && matches!(*session.startup.borrow(), Startup::Pending)
+                    && (0..candidates.len()).all(|index| retry.tried.contains(&index));
                 if let Some(lease) = &lease {
-                    if let Err(error) = lease.release_provider().await {
-                        last_error = coordination_error(error);
-                        break 'session;
+                    if !final_initializing_source {
+                        if let Err(error) = lease.release_provider().await {
+                            last_error = coordination_error(error);
+                            break 'session;
+                        }
                     }
                 }
             }
@@ -721,8 +1128,22 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
     if *lost.borrow() {
         last_error = PlaybackError::new(503, "Channel ownership was lost");
     }
+    if session.native_initializing.load(Ordering::Acquire)
+        && session.upstream_admitted.load(Ordering::Acquire)
+        && matches!(*session.startup.borrow(), Startup::Pending)
+        && !*stop.borrow()
+        && !*lost.borrow()
+    {
+        // Exhausted cold inputs remain an initializing channel until native
+        // viewer ghost/initialization expiry and the ordinary idle teardown.
+        // Waiting on controls performs no retry loop or payload allocation.
+        tokio::select! {_=stop.changed()=>{},_=lost.changed()=>{}}
+    }
     session.channel.stop();
     session.stop.send_replace(true);
+    if let Some(clients) = &inner.clients {
+        let _ = clients.stop_local_channel(&key).await;
+    }
     if let Some(mut task) = metadata_task {
         if time::timeout(Duration::from_secs(4), &mut task)
             .await
@@ -733,7 +1154,16 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
         }
     }
     if let Some(lease) = lease {
+        if let Some(inputs) = &inner.inputs {
+            let _ = inputs
+                .cleanup(&session.source.channel_id, lease.token())
+                .await;
+        }
+        let owner = lease.token().to_owned();
         let _ = lease.release().await;
+        if let Some(clients) = &inner.clients {
+            let _ = clients.clear_channel_stop(&key, &owner).await;
+        }
     }
     finish_session(&inner, &key, &session, last_error);
 }
@@ -753,18 +1183,45 @@ fn epoch_seconds() -> f64 {
 }
 
 impl Session {
-    fn publish_data(
+    async fn publish_data(
         &self,
         data: Arc<[u8]>,
         discontinuity: bool,
     ) -> Result<u64, dispatcharr_stream_runtime::Error> {
-        let index = self.channel.publish_marked(data, discontinuity)?;
+        let publisher = self.publisher.lock().unwrap().clone();
+        let shared = if let Some((store, owner)) = &publisher {
+            match store
+                .put(
+                    &self.source.channel_id,
+                    owner,
+                    &data,
+                    epoch_seconds(),
+                    discontinuity,
+                )
+                .await
+            {
+                Ok(sequence) => Some(sequence),
+                Err(_) => {
+                    self.stop.send_replace(true);
+                    return Err(dispatcharr_stream_runtime::Error::Stopped);
+                }
+            }
+        } else {
+            None
+        };
+        let local = self.channel.publish_marked(data, discontinuity)?;
+        let index = shared.unwrap_or(local);
         self.buffer_index.store(index, Ordering::Relaxed);
         Ok(index)
     }
 }
 
-async fn channel_metadata_worker(clients: ClientStore, session: Arc<Session>, owner: String) {
+async fn channel_metadata_worker(
+    clients: ClientStore,
+    session: Arc<Session>,
+    owner: String,
+    shared: bool,
+) {
     let fence = if owner.is_empty() {
         uuid_fence()
     } else {
@@ -780,7 +1237,17 @@ async fn channel_metadata_worker(clients: ClientStore, session: Arc<Session>, ow
             break;
         }
         tokio::select! {_=stop.changed()=>break,_=timer.tick()=>{}}
+        if clients
+            .channel_is_stopping(&session.source.channel_id)
+            .await
+            .unwrap_or(true)
+        {
+            session.stop.send_replace(true);
+            session.channel.stop();
+            break;
+        }
         let state = match &*session.startup.borrow() {
+            Startup::Pending if session.upstream_admitted.load(Ordering::Acquire) => "connecting",
             Startup::Pending => "initializing",
             Startup::Failed(_) => "error",
             Startup::Ready if session.connecting.load(Ordering::Relaxed) => "buffering",
@@ -824,29 +1291,57 @@ async fn channel_metadata_worker(clients: ClientStore, session: Arc<Session>, ow
         ] {
             fields.insert(name.into(), value);
         }
-        if clients
-            .publish_channel(
-                &session.source.channel_id,
-                &owner,
-                &fence,
-                &fields,
-                session.buffer_index.load(Ordering::Relaxed),
-            )
-            .await
-            .is_err()
-        {
+        let published = if shared {
+            clients
+                .publish_channel_shared(&session.source.channel_id, &owner, &fence, &fields)
+                .await
+        } else {
+            clients
+                .publish_channel(
+                    &session.source.channel_id,
+                    &owner,
+                    &fence,
+                    &fields,
+                    session.buffer_index.load(Ordering::Relaxed),
+                )
+                .await
+        };
+        if published.is_err() {
             session.stop.send_replace(true);
             session.channel.stop();
             break;
         }
     }
-    let _ = clients
-        .remove_channel(&session.source.channel_id, &fence)
-        .await;
+    if shared {
+        let _ = clients
+            .remove_channel_shared(&session.source.channel_id, &fence)
+            .await;
+    } else {
+        let _ = clients
+            .remove_channel(&session.source.channel_id, &fence)
+            .await;
+    }
 }
 
 fn uuid_fence() -> String {
     format!("local-{}", uuid::Uuid::new_v4())
+}
+
+struct InputAccumulator {
+    assembler: PacketAssembler,
+    marker: DiscontinuityMarker,
+    chunk: Vec<u8>,
+    mark_chunk: bool,
+}
+impl InputAccumulator {
+    fn new(bytes: usize) -> Self {
+        Self {
+            assembler: PacketAssembler::default(),
+            marker: DiscontinuityMarker::default(),
+            chunk: Vec::with_capacity(bytes),
+            mark_chunk: false,
+        }
+    }
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -856,10 +1351,31 @@ async fn drive_candidate(
     candidate: &PlaybackCandidate,
     current: usize,
     discontinuity: bool,
+    input: &mut InputAccumulator,
     retry: &mut crate::retry::RetryState,
     stop: &mut watch::Receiver<bool>,
     lost: &mut watch::Receiver<bool>,
 ) {
+    if !inner.config.source_initialization {
+        *input = InputAccumulator::new(inner.config.chunk_bytes);
+    } else if discontinuity && !input.chunk.is_empty() {
+        let data = std::mem::replace(
+            &mut input.chunk,
+            Vec::with_capacity(inner.config.chunk_bytes),
+        );
+        if session
+            .publish_data(data.into(), input.mark_chunk)
+            .await
+            .is_err()
+        {
+            return;
+        }
+    }
+    if discontinuity {
+        input.assembler.reset();
+        input.marker.arm();
+        input.mark_chunk = true;
+    }
     let mut request = inner
         .client
         .get(&candidate.url)
@@ -876,13 +1392,12 @@ async fn drive_candidate(
         return;
     }
     let mut bytes = response.bytes_stream();
-    let mut assembler = PacketAssembler::default();
-    let mut marker = DiscontinuityMarker::default();
-    let mut mark_chunk = discontinuity;
-    if discontinuity {
-        marker.arm();
-    }
-    let mut chunk = Vec::with_capacity(inner.config.chunk_bytes);
+    let InputAccumulator {
+        assembler,
+        marker,
+        mark_chunk,
+        chunk,
+    } = input;
     let mut first_media = None;
     let mut stable_noted = false;
     let mut flush = time::interval_at(
@@ -901,27 +1416,37 @@ async fn drive_candidate(
                 session.received_bytes.fetch_add(frame.len() as u64, Ordering::Relaxed);
                 session.last_data_ms.store((epoch_seconds()*1000.0) as u64,Ordering::Relaxed);
                 let mut failed = false;
-                assembler.feed(&frame, |packet| {
-                    let mut packet = *packet;
-                    marker.stamp(&mut packet);
-                    chunk.extend_from_slice(&packet);
-                    if chunk.len() == inner.config.chunk_bytes {
-                        let data: Arc<[u8]> = std::mem::replace(&mut chunk,
-                            Vec::with_capacity(inner.config.chunk_bytes)).into();
-                        if session.publish_data(data,mark_chunk).is_err() { failed = true; }
-                        mark_chunk=false;
-                        marker.disarm();
-                        published = true;
+                // One packet-aligned input window can finish at most one
+                // publish chunk. Await Redis before processing the next window;
+                // never accumulate an unbounded queue from a large HTTP frame.
+                for input in frame.chunks(inner.config.chunk_bytes){
+                    let mut ready=None;
+                    assembler.feed(input, |packet| {
+                        let mut packet = *packet;
+                        marker.stamp(&mut packet);
+                        chunk.extend_from_slice(&packet);
+                        if chunk.len() == inner.config.chunk_bytes {
+                            let data: Arc<[u8]> = std::mem::replace(chunk,
+                                Vec::with_capacity(inner.config.chunk_bytes)).into();
+                            debug_assert!(ready.is_none());
+                            ready=Some((data,*mark_chunk));
+                            *mark_chunk=false;
+                            marker.disarm();
+                        }
+                    });
+                    if let Some((data,discontinuity))=ready{
+                        if session.publish_data(data,discontinuity).await.is_err(){failed=true;break;}
+                        published=true;
                     }
-                });
+                }
                 if failed { break; }
             }
-            _ = flush.tick() => {
+            _ = flush.tick(), if inner.config.flush_partial_chunks => {
                 if !chunk.is_empty() {
-                    let data: Arc<[u8]> = std::mem::replace(&mut chunk,
+                    let data: Arc<[u8]> = std::mem::replace(chunk,
                         Vec::with_capacity(inner.config.chunk_bytes)).into();
-                    if session.publish_data(data,mark_chunk).is_err() { break; }
-                    mark_chunk=false;
+                    if session.publish_data(data,*mark_chunk).await.is_err() { break; }
+                    *mark_chunk=false;
                     marker.disarm();
                     published = true;
                 }
@@ -931,21 +1456,29 @@ async fn drive_candidate(
             retry.had_media = true;
             let began = *first_media.get_or_insert_with(Instant::now);
             session.connecting.store(false, Ordering::Relaxed);
-            session.startup.send_replace(Startup::Ready);
+            if session.buffer_index.load(Ordering::Relaxed) >= inner.config.initial_buffer_chunks {
+                session.startup.send_replace(Startup::Ready);
+            }
             if !stable_noted && began.elapsed() >= inner.config.stable_connection_threshold {
                 retry.stable(current);
                 stable_noted = true;
             }
         }
     }
-    if !chunk.is_empty()
+    if inner.config.flush_partial_chunks
+        && !chunk.is_empty()
         && !*stop.borrow()
         && !*lost.borrow()
-        && session.publish_data(chunk.into(), mark_chunk).is_ok()
+        && session
+            .publish_data(std::mem::take(chunk).into(), *mark_chunk)
+            .await
+            .is_ok()
     {
         retry.had_media = true;
         session.connecting.store(false, Ordering::Relaxed);
-        session.startup.send_replace(Startup::Ready);
+        if session.buffer_index.load(Ordering::Relaxed) >= inner.config.initial_buffer_chunks {
+            session.startup.send_replace(Startup::Ready);
+        }
     }
 }
 

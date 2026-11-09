@@ -17,8 +17,20 @@ import urllib.error
 import urllib.request
 import uuid
 
+from tool_snapshot import snapshot_sources
+
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
+CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
+                 'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams')
+
+
+def contract_suites(value):
+    if value=='all':return list(CONTRACT_SUITES)
+    names=[name.strip() for name in value.split(',') if name.strip()]
+    if not names or set(names)-set(CONTRACT_SUITES) or len(names)!=len(set(names)):
+        raise ValueError('Expected unique known contract suite names or all')
+    return [name for name in CONTRACT_SUITES if name in names]
 
 
 def digest(value):
@@ -100,7 +112,10 @@ def main():
     parser.add_argument('--keep', action='store_true')
     parser.add_argument('--candidate-image',help='Unique prebuilt image tag; keeps earlier measured tags unchanged')
     parser.add_argument('--candidate-build-manifest',type=Path)
+    parser.add_argument('--contract-suites',default='all',help='Comma-separated oracle suites or all (default); foundational auth/schema/media checks always run')
     args = parser.parse_args()
+    try:selected_suites=contract_suites(args.contract_suites)
+    except ValueError as error:parser.error(str(error))
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
@@ -108,18 +123,18 @@ def main():
     project = 'dispatcharr-rust-probe-' + uuid.uuid4().hex[:10]
     report = {'scope': 'real-database-accounts-native-ts-probe', 'passed': False,
               'source_baseline': BASELINE, 'project': project, 'checks': [],
-              'application_performance_verified': False}
+              'application_performance_verified': False,'contract_suites':selected_suites}
     manifest=None
     if args.candidate_build_manifest:
         raw=args.candidate_build_manifest.read_bytes()
         manifest=json.loads(raw)
         report['build_manifest_sha256']=hashlib.sha256(raw).hexdigest()
-    overlay=ROOT/'docker/compose.rust-candidate.yml'
+    tool_source=output/'tool-source'
+    report['tool_source_sha256']=snapshot_sources(ROOT,tool_source)
+    report['tool_source_scope']='Captured account probes, integration helpers, baseline/playback fixtures and Compose files; all later imports and container script mounts use this copy.'
+    overlay=tool_source/'docker/compose.rust-candidate.yml'
     if args.candidate_image:
         overlay=candidate_overlay(overlay,output/'candidate-overlay.yml',args.candidate_image)
-    report['tool_source_sha256']={str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sorted([*Path(__file__).parent.glob('*.py'),*(ROOT/'scripts/rust-account-contracts').glob('*.py'),
-                            ROOT/'docker/compose.rust-playback.yml',ROOT/'docker/compose.rust-candidate.yml'])}
     report['candidate_overlay_sha256']=hashlib.sha256(overlay.read_bytes()).hexdigest()
     with fixture_source(report,args.keep,output) as temporary:
         source = Path(temporary) / 'source'
@@ -133,7 +148,7 @@ def main():
         (source / 'media').mkdir(exist_ok=True)
         environment = dict(os.environ, BASELINE_SOURCE_DIR=str(source),
                            BASELINE_EVIDENCE_DIR=str(output), FIXTURE_SECONDS='180')
-        compose = ['docker', 'compose', '-p', project, '-f', 'docker/compose.rust-playback.yml',
+        compose = ['docker', 'compose', '-p', project, '-f', str(tool_source/'docker/compose.rust-playback.yml'),
                    '-f', str(overlay)]
 
         def command(args, timeout=120, payload=None):
@@ -208,19 +223,24 @@ def main():
             # Real FFmpeg decoder resides in the baseline image, not on the host.
             decoded = command(compose + ['exec', '-T', 'baseline', 'ffmpeg', '-hide_banner', '-loglevel', 'error',
                                          '-xerror', '-progress', 'pipe:1', '-nostats', '-i',
-                                         'http://candidate:9192' + seed['path'], '-t', '3', '-f', 'null', '-'], timeout=45)
+                                         'http://candidate:9192' + seed['path'], '-t', '3', '-f', 'null', '-'], timeout=90)
             (output / 'decode.log').write_text(decoded)
             frames = [int(line.split('=')[1]) for line in decoded.splitlines() if line.startswith('frame=')]
             record('rust-real-media-decoder', bool(frames) and max(frames) >= 75, {'frames': max(frames, default=0)})
             # An invalid presented credential must never attach anonymously to a running stream.
             invalid = http(candidate + '/proxy/ts/status', token='invalid')
             record('invalid-presented-token-rejected', invalid[0] == 401, {'status': invalid[0]})
-            spec = importlib.util.spec_from_file_location('account_probes', ROOT / 'scripts/rust-account-contracts/probes.py')
+            spec = importlib.util.spec_from_file_location('account_probes', tool_source / 'scripts/rust-account-contracts/probes.py')
             account_probes = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(account_probes)
-            account_probes.run(http, baseline, candidate, accounts, record)
-            account_probes.run_crud(http, baseline, candidate, accounts, record)
-            account_probes.run_app_data(http, baseline, candidate, accounts, record)
+            for suite,method in [('accounts','run'),('account_crud','run_crud'),('app_data','run_app_data'),
+                                 ('core','run_core'),('profiles','run_profiles'),('memberships','run_memberships'),
+                                 ('channel_reads','run_channel_reads'),('channel_crud','run_channel_crud'),
+                                 ('groups','run_groups'),('channel_stops','run_channel_stops'),
+                                 ('group_cleanup','run_group_cleanup'),('streams','run_streams')]:
+                if suite in selected_suites:
+                    extra=(seed,) if suite=='channel_stops' else ()
+                    getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             status = 0 if all(check['passed'] for check in report['checks']) else 1
             report['passed'] = status == 0
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:

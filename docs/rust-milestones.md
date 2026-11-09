@@ -27,6 +27,32 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | Planned | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 
 Current evidence is described in the [local verification guide](rust-local-verification.md).
+The unchanged original React suite passed 6,567 tests in pinned Docker packaging,
+and the application image now bundles its production build. This does not close
+browser workflow parity. Real-schema management coverage reached 405 integrated
+checks, plus 11 unique checks from a focused cleanup suite, followed by
+[518 combined checks](../scripts/rust-integration/verified-integration-m5-full-518.json)
+after stream management was added. Two-replica TS probes
+passed shared demand, global stop and owner-crash cleanup with strict decoding.
+The earlier Rust image needed 87.1 seconds for owner-crash cleanup; the new image
+needed 26.6 seconds in the same functional probe, with all six captures decoded.
+This is an observed cleanup-latency comparison between partial Rust images,
+separate from CPU and memory acceptance. Packaged React navigation, production
+assets, JSON API fallbacks, and SIGTERM with unread media and incomplete HTTP
+headers also [passed](../scripts/rust-integration/verified-runtime-shutdown-1.json).
+The process exited successfully in 12.14 seconds and drained the channel's
+owner, clients, metadata and input index before closing retained connections.
+
+Cold initialization remains an explicit M2 gap: the unchanged source can wait
+about 50 seconds, then return HTTP 200 with one 188-byte TS error packet; the
+earlier Rust image returned JSON 502/504. The new source-bound image includes
+four-full-chunk readiness, live positioning after readiness, and native cold
+error packets; targeted real-Redis tests pass. Default-timeout wire comparisons
+are being re-run. User/provider capacity and invalid
+credentials are distinct pre-stream JSON errors. Source-ready state also requires
+four buffered chunks. These contracts must be matched before accepting a native
+TS performance comparison. No application resource savings are established yet.
+
 The core Compose run has passed, the load-harness Compose selftest has passed,
 and Python baseline runs have passed (48 focused tests and a separate broader
 526-test proxy suite, followed by all 3,362 tests of the unchanged upstream suite; see

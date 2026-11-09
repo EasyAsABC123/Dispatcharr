@@ -1,0 +1,118 @@
+{
+  "scope": "native HLS and fMP4 full Compose protocol/decoder gates",
+  "passed": true,
+  "milestone_complete": false,
+  "application_performance_verified": false,
+  "evidence_path": "artifacts/rust/m3-shared-hls-fmp4-compose-1/run.json",
+  "candidate_build_manifest": "artifacts/rust/candidate-build-m3-shared-hls-fmp4-2/build.json",
+  "candidate_image_id": "sha256:677191703b6164358e0e60a036ca450a19fd050e5c7fd15d904d85283d79be45",
+  "candidate_source_tree_sha256": "cdbd0848a95ab509d85eada93df36b8f859e29fd4cabd2d7ccadf630fc915a8d",
+  "ffmpeg_version": "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers",
+  "runtime_media_frozen": null,
+  "runtime_media_manifest_sha256": null,
+  "functional_probes": [
+    {
+      "backend": "baseline",
+      "probe": "hls",
+      "exit_code": 0,
+      "directory": "baseline-hls",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 317,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 5,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 377,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "protocol_scope": "backend live hls",
+      "decoder_exit_code": 0,
+      "decoder_frames": 74,
+      "video_and_audio_verified": true
+    },
+    {
+      "backend": "baseline",
+      "probe": "fmp4",
+      "exit_code": 0,
+      "directory": "baseline-fmp4",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 377,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 8,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 499,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "protocol_scope": "backend live fmp4",
+      "decoder_exit_code": 0,
+      "decoder_frames": 74,
+      "video_and_audio_verified": true
+    },
+    {
+      "backend": "candidate",
+      "probe": "hls",
+      "exit_code": 0,
+      "directory": "candidate-hls",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 499,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 7,
+        "redis_clear_result": "OK",
+        "candidate_endpoint_refreshed": true
+      },
+      "protocol_scope": "backend live hls",
+      "decoder_exit_code": 0,
+      "decoder_frames": 74,
+      "video_and_audio_verified": true
+    },
+    {
+      "backend": "candidate",
+      "probe": "fmp4",
+      "exit_code": 0,
+      "directory": "candidate-fmp4",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 499,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 2,
+        "redis_clear_result": "OK",
+        "candidate_endpoint_refreshed": true
+      },
+      "protocol_scope": "backend live fmp4",
+      "decoder_exit_code": 0,
+      "decoder_frames": 74,
+      "video_and_audio_verified": true
+    }
+  ],
+  "cleanup": "isolated project removed"
+}

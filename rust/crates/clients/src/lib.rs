@@ -1,7 +1,11 @@
 //! Live client metadata, stream-limit admission, and bounded batched telemetry.
 //! Original Dispatcharr author credit and retained license: ATTRIBUTION.md.
+mod admission;
+mod channel;
+mod era;
 mod hls;
 mod scripts;
+pub mod vod;
 pub use hls::HlsSessionInfo;
 
 use dispatcharr_contracts::PlaybackViewer;
@@ -60,6 +64,9 @@ pub enum Error {
 }
 
 struct Inner {
+    runtime: tokio::runtime::Handle,
+    control_slots: Arc<Semaphore>,
+    control_queue: Arc<Semaphore>,
     connection: MultiplexedConnection,
     config: ClientConfig,
     clients: Mutex<HashMap<String, Weak<ClientInner>>>,
@@ -75,6 +82,7 @@ pub struct ClientStore {
 }
 
 struct ClientInner {
+    runtime: tokio::runtime::Handle,
     store: Weak<Inner>,
     connection: MultiplexedConnection,
     config: ClientConfig,
@@ -90,7 +98,10 @@ struct ClientInner {
     last_flush_bytes: AtomicU64,
     stop: watch::Sender<bool>,
     released: AtomicBool,
-    _permit: OwnedSemaphorePermit,
+    registered: AtomicBool,
+    cleanup_done: watch::Sender<bool>,
+    cleanup_error: Arc<AtomicBool>,
+    _permit: Arc<OwnedSemaphorePermit>,
 }
 
 #[derive(Clone)]
@@ -128,8 +139,32 @@ impl ClientStore {
         fields: &BTreeMap<String, String>,
         index: u64,
     ) -> Result<(), Error> {
+        self.publish_channel_fields(channel, owner, fence, fields, Some(index))
+            .await
+    }
+
+    /// Shared input publication owns its index; telemetry must not rewind it.
+    pub async fn publish_channel_shared(
+        &self,
+        channel: &str,
+        owner: &str,
+        fence: &str,
+        fields: &BTreeMap<String, String>,
+    ) -> Result<(), Error> {
+        self.publish_channel_fields(channel, owner, fence, fields, None)
+            .await
+    }
+    async fn publish_channel_fields(
+        &self,
+        channel: &str,
+        owner: &str,
+        fence: &str,
+        fields: &BTreeMap<String, String>,
+        index: Option<u64>,
+    ) -> Result<(), Error> {
         let script = Script::new(
             r#"
+if redis.call('EXISTS',KEYS[5])==1 then return 0 end
 local current=redis.call('GET',KEYS[2])
 if (ARGV[1]~='' and current~=ARGV[1]) or (ARGV[1]=='' and current) then return 0 end
 if redis.call('HGET',KEYS[1],'rust_token')~=ARGV[2] then redis.call('DEL',KEYS[1]) end
@@ -137,7 +172,7 @@ local fields=cjson.decode(ARGV[3])
 for key,value in pairs(fields) do redis.call('HSET',KEYS[1],key,value) end
 redis.call('HSET',KEYS[1],'rust_token',ARGV[2])
 redis.call('PEXPIRE',KEYS[1],ARGV[5])
-redis.call('SET',KEYS[3],ARGV[4],'PX',ARGV[5])
+if ARGV[4]~='' then redis.call('SET',KEYS[3],ARGV[4],'PX',ARGV[5]) end
 redis.call('SET',KEYS[4],ARGV[6],'PX',ARGV[5])
 return 1
 "#,
@@ -153,10 +188,11 @@ return 1
                     "live:worker:{}:heartbeat",
                     self.inner.config.worker_id
                 ))
+                .key(format!("live:channel:{channel}:stopping"))
                 .arg(owner)
                 .arg(fence)
                 .arg(serde_json::to_string(fields).map_err(|_| Error::InvalidClient)?)
-                .arg(index)
+                .arg(index.map_or(String::new(), |value| value.to_string()))
                 .arg(self.inner.config.ttl.as_millis() as u64)
                 .arg(now())
                 .invoke_async(&mut connection),
@@ -172,7 +208,18 @@ return 1
     }
 
     pub async fn remove_channel(&self, channel: &str, fence: &str) -> Result<(), Error> {
-        let script=Script::new("if redis.call('HGET',KEYS[1],'rust_token')~=ARGV[1] then return 0 end redis.call('DEL',KEYS[1],KEYS[2]) return 1");
+        self.remove_channel_fields(channel, fence, true).await
+    }
+    pub async fn remove_channel_shared(&self, channel: &str, fence: &str) -> Result<(), Error> {
+        self.remove_channel_fields(channel, fence, false).await
+    }
+    async fn remove_channel_fields(
+        &self,
+        channel: &str,
+        fence: &str,
+        remove_index: bool,
+    ) -> Result<(), Error> {
+        let script=Script::new("if redis.call('HGET',KEYS[1],'rust_token')~=ARGV[1] then return 0 end if ARGV[2]=='1' then redis.call('DEL',KEYS[1],KEYS[2]) else redis.call('DEL',KEYS[1]) end return 1");
         let mut connection = self.inner.connection.clone();
         let _: i64 = time::timeout(
             self.inner.config.command_timeout,
@@ -180,6 +227,7 @@ return 1
                 .key(format!("live:channel:{channel}:metadata"))
                 .key(format!("live:channel:{channel}:input:buffer:index"))
                 .arg(fence)
+                .arg(if remove_index { "1" } else { "0" })
                 .invoke_async(&mut connection),
         )
         .await
@@ -327,6 +375,9 @@ return 1
         .map_err(|_| Error::RedisUnavailable)?
         .map_err(|_| Error::RedisUnavailable)?;
         let inner = Arc::new(Inner {
+            runtime: tokio::runtime::Handle::current(),
+            control_slots: Arc::new(Semaphore::new(32)),
+            control_queue: Arc::new(Semaphore::new(1024)),
             connection,
             slots: Arc::new(Semaphore::new(config.max_clients)),
             config,
@@ -351,6 +402,13 @@ return 1
                     map.retain(|_, client| client.strong_count() > 0);
                     map.values().filter_map(Weak::upgrade).collect::<Vec<_>>()
                 };
+                let clients = clients
+                    .into_iter()
+                    .filter(|client| {
+                        client.registered.load(Ordering::Acquire)
+                            && !client.released.load(Ordering::Acquire)
+                    })
+                    .collect::<Vec<_>>();
                 if clients.is_empty() {
                     continue;
                 }
@@ -418,7 +476,9 @@ return 1
         // Redis metadata. Cancelling an HTTP request after Redis applied Lua
         // must not leave a new admission behind until its TTL.
         let (stop_watch, _) = watch::channel(false);
+        let (cleanup_done, _) = watch::channel(false);
         let inner = Arc::new(ClientInner {
+            runtime: self.inner.runtime.clone(),
             store: Arc::downgrade(&self.inner),
             connection: self.inner.connection.clone(),
             config: self.inner.config.clone(),
@@ -434,48 +494,45 @@ return 1
             last_flush_bytes: AtomicU64::new(0),
             stop: stop_watch,
             released: AtomicBool::new(false),
-            _permit: permit,
+            registered: AtomicBool::new(false),
+            cleanup_done,
+            cleanup_error: Arc::new(AtomicBool::new(false)),
+            _permit: Arc::new(permit),
         });
-        let mut connection = self.inner.connection.clone();
-        let result: Vec<String> = time::timeout(
-            self.inner.config.command_timeout,
-            self.inner
-                .register
-                .key(&metadata)
-                .key(&set)
-                .key(&stop)
-                .arg(data.to_string())
-                .arg(policy.to_string())
-                .arg(viewer.stream_limit)
-                .arg(self.inner.config.ttl.as_millis() as u64)
-                .arg(self.inner.config.admission_scan_limit)
-                .arg(&id)
-                .invoke_async(&mut connection),
-        )
-        .await
-        .map_err(|_| Error::RedisUnavailable)?
-        .map_err(|_| Error::RedisUnavailable)?;
-        match result.first().map(String::as_str) {
-            Some("OK") => {}
-            Some("LIMIT") => return Err(Error::UserLimit),
-            Some("SCAN_LIMIT") => return Err(Error::ScanLimit),
-            Some("CORRUPT") => return Err(Error::CorruptMetadata),
-            _ => return Err(Error::RedisUnavailable),
-        }
-        let stopped = {
+        {
             let mut clients = self.inner.clients.lock().unwrap();
             if self.inner.stopped.load(Ordering::Acquire) {
-                true
-            } else {
-                clients.insert(id, Arc::downgrade(&inner));
-                false
+                inner.released.store(true, Ordering::Release);
+                inner.cleanup_done.send_replace(true);
+                return Err(Error::Stopped);
             }
-        };
-        if stopped {
-            let _ = release(&inner).await;
-            return Err(Error::Stopped);
+            clients.insert(inner.id.clone(), Arc::downgrade(&inner));
         }
-        Ok(ClientLease { inner })
+        let request = admission::Registration {
+            keys: [
+                metadata,
+                set,
+                stop,
+                format!("live:channel:{channel}:stopping"),
+            ],
+            data: data.to_string(),
+            policy: policy.to_string(),
+            stream_limit: viewer.stream_limit,
+        };
+        let task =
+            self.inner
+                .runtime
+                .spawn(admission::register_job(self.inner.clone(), inner, request));
+        time::timeout(self.inner.config.command_timeout, task)
+            .await
+            .map_err(|_| Error::RedisUnavailable)?
+            .map_err(|_| Error::RedisUnavailable)?
+    }
+
+    /// Stop this worker's clients without requiring their HTTP bodies to poll.
+    /// Other workers and other channels retain their own token-fenced records.
+    pub async fn stop_local_channel(&self, channel: &str) -> Result<usize, Error> {
+        admission::stop_local_channel(self.inner.clone(), channel).await
     }
 
     pub async fn stop_client(&self, channel: &str, id: &str) -> Result<bool, Error> {
@@ -489,7 +546,7 @@ return 1
             return Err(Error::InvalidClient);
         }
         let (metadata, _, stop) = keys(channel, id);
-        let script=Script::new("if redis.call('EXISTS',KEYS[1])==0 then return 0 end redis.call('SET',KEYS[2],'admin','EX',60) return 1");
+        let script=Script::new("local exists=redis.call('EXISTS',KEYS[1]);redis.call('SET',KEYS[2],'true','EX',30);return exists");
         let mut connection = self.inner.connection.clone();
         let result: i64 = time::timeout(
             self.inner.config.command_timeout,
@@ -498,6 +555,7 @@ return 1
         .await
         .map_err(|_| Error::RedisUnavailable)?
         .map_err(|_| Error::RedisUnavailable)?;
+        let mut locally_processed = false;
         if result == 1 {
             let local = self
                 .inner
@@ -509,9 +567,10 @@ return 1
             if let Some(local) = local.filter(|client| client.channel == channel) {
                 local.stop.send_replace(true);
                 release(&local).await?;
+                locally_processed = true;
             }
         }
-        Ok(result == 1)
+        Ok(locally_processed)
     }
 
     pub async fn shutdown(&self) {
@@ -601,25 +660,7 @@ async fn flush(inner: &Inner, clients: &[Arc<ClientInner>]) -> Result<(), Error>
 }
 
 async fn release(client: &ClientInner) -> Result<(), Error> {
-    if client.released.swap(true, Ordering::AcqRel) {
-        return Ok(());
-    }
-    let (metadata, set, stop) = keys(&client.channel, &client.id);
-    let mut connection = client.connection.clone();
-    let result: Result<i64, _> = time::timeout(
-        client.config.command_timeout,
-        Script::new(scripts::RELEASE)
-            .key(metadata)
-            .key(set)
-            .key(stop)
-            .arg(&client.token)
-            .arg(&client.id)
-            .invoke_async(&mut connection),
-    )
-    .await
-    .map_err(|_| Error::RedisUnavailable)?;
-    result.map_err(|_| Error::RedisUnavailable)?;
-    Ok(())
+    admission::release(client).await
 }
 
 impl ClientLease {
@@ -646,31 +687,6 @@ impl ClientLease {
 
 impl Drop for ClientInner {
     fn drop(&mut self) {
-        if let Some(store) = self.store.upgrade() {
-            store.clients.lock().unwrap().remove(&self.id);
-        }
-        if self.released.swap(true, Ordering::AcqRel) {
-            return;
-        }
-        if let Ok(runtime) = tokio::runtime::Handle::try_current() {
-            let (metadata, set, stop) = keys(&self.channel, &self.id);
-            let token = self.token.clone();
-            let id = self.id.clone();
-            let timeout = self.config.command_timeout;
-            let mut connection = self.connection.clone();
-            runtime.spawn(async move {
-                let _: Result<Result<i64, redis::RedisError>, _> = time::timeout(
-                    timeout,
-                    Script::new(scripts::RELEASE)
-                        .key(metadata)
-                        .key(set)
-                        .key(stop)
-                        .arg(token)
-                        .arg(id)
-                        .invoke_async(&mut connection),
-                )
-                .await;
-            });
-        }
+        admission::drop_client(self);
     }
 }

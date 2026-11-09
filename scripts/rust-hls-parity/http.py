@@ -16,25 +16,39 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--docker', default='docker')
     parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--suite', choices=['http', 'output', 'inspect'], default='http')
+    parser.add_argument('--suite', choices=['http', 'output', 'inspect', 'shutdown', 'input', 'admission', 'era'], default='http')
     parser.add_argument('--fixture', type=Path, help='Real valid TS fixture; decode each HTTP segment independently')
     args = parser.parse_args()
+    if args.fixture and args.suite != 'http':
+        parser.error('--fixture is only valid for the HTTP media suite')
     args.output.mkdir(parents=True, exist_ok=True)
     if any(args.output.iterdir()):
         parser.error('output must be empty')
     name = 'dispatcharr-hls-test-' + uuid.uuid4().hex[:12]
     inputs = [ROOT / 'rust/Cargo.lock', ROOT / 'rust/Cargo.toml', Path(__file__).resolve()]
-    for crate in ('hls-http', 'hls-core', 'stream-http', 'stream-core', 'stream-runtime', 'contracts', 'clients', 'output-store'):
+    suites = {
+        'input': ('input-store', 'output-store'),
+        'output': ('output-store',),
+        'inspect': ('clients', 'contracts'),
+        'admission': ('clients','contracts'),
+        'era': ('clients','contracts'),
+        'http': ('hls-http', 'hls-core', 'stream-http', 'stream-core', 'stream-runtime', 'contracts', 'clients', 'output-store', 'coordination'),
+        'shutdown': ('hls-http', 'hls-core', 'stream-http', 'stream-core', 'stream-runtime', 'contracts', 'clients', 'output-store', 'coordination'),
+    }
+    for crate in suites[args.suite]:
         inputs += list((ROOT / 'rust/crates' / crate).rglob('*.rs'))
         inputs += list((ROOT / 'rust/crates' / crate).rglob('Cargo.toml'))
+    if args.suite == 'input':
+        inputs.append(ROOT / 'apps/proxy/live_proxy/input/buffer.py')
     hashes = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(inputs)}
-    evidence = {'scope': 'HLS capability HTTP transport with real Redis and loopback origin',
+    scope = {'input': 'shared TS input storage with real Redis', 'output': 'shared output storage with real Redis', 'era': 'client input-era fencing with real Redis', 'admission': 'client admission and local cleanup with real Redis', 'inspect': 'read-only HLS session inspection with real Redis', 'shutdown': 'HLS global shutdown with real Redis and loopback HTTP', 'http': 'HLS capability HTTP transport with real Redis and loopback origin'}[args.suite]
+    evidence = {'scope': scope,
                 'application_performance_verified': False, 'milestone_complete': False,
                 'image': IMAGE, 'source_sha256': hashes, 'passed': False}
-    package, target = {'http': ('dispatcharr-hls-http', 'http'), 'output': ('dispatcharr-output-store', 'redis'), 'inspect': ('dispatcharr-clients', 'redis')}[args.suite]
+    package, target = {'http': ('dispatcharr-hls-http', 'http'), 'output': ('dispatcharr-output-store', 'redis'), 'inspect': ('dispatcharr-clients', 'redis'), 'shutdown': ('dispatcharr-hls-http', 'shutdown'), 'input': ('dispatcharr-input-store', 'redis'), 'admission': ('dispatcharr-clients','admission'), 'era': ('dispatcharr-clients','era')}[args.suite]
     command = ['cargo', 'test', '--manifest-path', str(ROOT / 'rust/Cargo.toml'), '-p',
                package, '--locked', '--offline', '--test', target, '--', '--ignored']
-    if args.suite == 'output':
+    if args.suite in ('output', 'input'):
         command += ['--test-threads=1']
     if args.suite == 'inspect':
         command += ['hls_readonly_inspection']

@@ -1,8 +1,9 @@
 //! Bounded Redis output buffer ported from Dispatcharr's OutputStreamBuffer.
 //! All original application credit belongs to upstream Dispatcharr authors.
-use redis::{aio::MultiplexedConnection, AsyncConnectionConfig, Script};
+pub mod transport;
 use std::{sync::Arc, time::Duration};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
+use transport::{RedisTransport, TransportConfig};
 
 #[derive(Clone, Debug)]
 pub struct OutputConfig {
@@ -11,6 +12,7 @@ pub struct OutputConfig {
     pub max_segments: usize,
     pub max_read_bytes: usize,
     pub max_operations: usize,
+    pub max_queued_operations: usize,
     pub command_timeout: Duration,
     pub owner_ttl: Duration,
     pub chunk_ttl: Duration,
@@ -23,6 +25,7 @@ impl Default for OutputConfig {
             max_segments: 256,
             max_read_bytes: 256 * 1024 * 1024,
             max_operations: 16,
+            max_queued_operations: 1024,
             command_timeout: Duration::from_secs(3),
             owner_ttl: Duration::from_secs(60),
             chunk_ttl: Duration::from_secs(100),
@@ -43,9 +46,8 @@ pub struct OutputStore {
     inner: Arc<Inner>,
 }
 struct Inner {
-    connection: MultiplexedConnection,
+    transport: RedisTransport,
     config: OutputConfig,
-    operations: Arc<Semaphore>,
     read_bytes: Arc<Semaphore>,
 }
 #[derive(Clone)]
@@ -102,42 +104,44 @@ fn valid_token(token: &str) -> bool {
 }
 impl OutputStore {
     pub async fn connect(url: &str, config: OutputConfig) -> Result<Self, Error> {
-        if config.max_segment_bytes == 0
+        if config.max_read_bytes > Semaphore::MAX_PERMITS
+            || config.max_channel_bytes > u32::MAX as usize
+            || config.max_segment_bytes == 0
             || config.max_segment_bytes > u32::MAX as usize
             || config.max_read_bytes > u32::MAX as usize
             || config.max_read_bytes < config.max_segment_bytes
             || config.max_channel_bytes < config.max_segment_bytes
             || config.max_segments == 0
             || config.max_segments > 4096
+            || config.max_queued_operations == 0
+            || config.max_queued_operations > 65536
             || config.max_operations == 0
             || config.max_operations > 65536
             || config.command_timeout.is_zero()
-            || config.owner_ttl.is_zero()
+            || config.owner_ttl.as_millis() < 1
             || config.owner_ttl > Duration::from_secs(3600)
-            || config.chunk_ttl.is_zero()
+            || config.chunk_ttl.as_millis() < 1
             || config.chunk_ttl > Duration::from_secs(3600)
         {
             return Err(Error::Configuration);
         }
-        let client = redis::Client::open(url).map_err(|_| Error::Configuration)?;
-        let connection = client
-            .get_multiplexed_async_connection_with_config(
-                &AsyncConnectionConfig::new().set_connection_timeout(config.command_timeout),
-            )
-            .await
-            .map_err(|_| Error::Unavailable)?;
+        let transport = RedisTransport::connect(
+            url,
+            TransportConfig {
+                max_operations: config.max_operations,
+                max_queued_operations: config.max_queued_operations,
+                command_timeout: config.command_timeout,
+            },
+        )
+        .await?;
         Ok(Self {
             inner: Arc::new(Inner {
-                connection,
-                operations: Arc::new(Semaphore::new(config.max_operations)),
+                transport,
                 read_bytes: Arc::new(Semaphore::new(config.max_read_bytes)),
                 config,
             }),
         })
     }
-    /// Caller cancellation or deadline detaches a bounded supervised operation.
-    /// The task retains admission until Redis actually responds or disconnects;
-    /// dropping a timed-out multiplexed response future would release too early.
     async fn command<T: redis::FromRedisValue + Send + 'static, G: Send + 'static>(
         &self,
         source: &str,
@@ -145,40 +149,10 @@ impl OutputStore {
         args: &[&[u8]],
         guard: G,
     ) -> Result<(T, G), Error> {
-        let operation = self
-            .inner
-            .operations
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| Error::Capacity)?;
-        let script = Script::new(source);
-        let keys = keys.to_vec();
-        let args: Vec<Vec<u8>> = args.iter().map(|value| value.to_vec()).collect();
-        let mut connection = self.inner.connection.clone();
-        let task = tokio::spawn(async move {
-            let mut invocation = script.prepare_invoke();
-            for key in keys {
-                invocation.key(key);
-            }
-            for arg in args {
-                invocation.arg(arg);
-            }
-            let result: Result<T, redis::RedisError> =
-                invocation.invoke_async(&mut connection).await;
-            (result, guard, operation)
-        });
-        let (result, guard, _operation) =
-            tokio::time::timeout(self.inner.config.command_timeout, task)
-                .await
-                .map_err(|_| Error::Unavailable)?
-                .map_err(|_| Error::Unavailable)?;
-        result.map(|value| (value, guard)).map_err(|error| {
-            if error.to_string().contains("CORRUPT") {
-                Error::Corrupt
-            } else {
-                Error::Unavailable
-            }
-        })
+        self.inner
+            .transport
+            .command(source, keys, args, guard)
+            .await
     }
     async fn invoke<T: redis::FromRedisValue + Send + 'static>(
         &self,

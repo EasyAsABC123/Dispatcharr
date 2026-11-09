@@ -1,0 +1,2184 @@
+{
+  "attribution": "Dispatcharr original authors and contributors retain full credit. See ../../ATTRIBUTION.md.",
+  "scope": "Combined compatibility oracle for the implemented Rust backend slice: account/auth/core reads, users/groups/app data, channel/profile/membership/stream management, provider-group ownership, cleanup/FK effects and actual native TS stop/delete/decoded media. Backend parity remains incomplete.",
+  "passed": true,
+  "checks_passed": 518,
+  "checks_total": 518,
+  "contract_suites": [
+    "accounts",
+    "account_crud",
+    "app_data",
+    "core",
+    "profiles",
+    "memberships",
+    "channel_reads",
+    "channel_crud",
+    "groups",
+    "channel_stops",
+    "group_cleanup",
+    "streams"
+  ],
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "candidate_image": "dispatcharr-rust-candidate:m2-source-compat-1",
+  "candidate_image_binding": {
+    "image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+    "source_tree_sha256": "9610d95e612c3736113eadb97bb7322b6d0a91d7064d13133334b57f21344dcc",
+    "manifest_verified": true
+  },
+  "raw_report_sha256": "e45482bf55870d3c2a3e4b1472886451223f189c83cda7821c7233f4a48b7140",
+  "build_manifest_sha256": "8d55601effde90d581822d4ad00a25240c4930b60871fce2e2bd8e59cea03665",
+  "executed_tool_source_sha256": "255fe9c9875e08e995c88334a0b8c54deeae12d3ff2610207fed94670be5f1ff",
+  "captured_tool_files": 75,
+  "tool_scope": "Captured account probes, integration helpers, baseline/playback fixtures and Compose files; all later imports and container script mounts use this copy.",
+  "application_performance_verified": false,
+  "cleanup_at_api_probe_completion": null,
+  "fixture_retained_for_authorized_runtime_followup": true,
+  "normalization": [
+    "Generated root User/Group/Profile IDs in independent lifecycles; fixed shared provider/demoted-group IDs remain exact.",
+    "Generated stream IDs/custom hashes only when hash exactly derives from that ID; automatic updated_at validated recent UTC.",
+    "Generated channel IDs/UUIDs only, read-only identity preservation checked before normalization.",
+    "Pagination next/previous fixture origin only.",
+    "deleted_groups sorted only because repeated Django reference lifecycles changed raw ordering; exact names/multiplicity/counts/messages/FK effects remain strict."
+  ],
+  "native_stop_before_delete": [
+    {
+      "name": "channel-stop:inactive-stop-delete",
+      "passed": true,
+      "details": {
+        "python": {
+          "passed": true,
+          "delete_status": 204,
+          "packets_checked": 0
+        },
+        "rust": {
+          "passed": true,
+          "delete_status": 204,
+          "packets_checked": 0
+        }
+      }
+    },
+    {
+      "name": "channel-stop:active-stop-delete",
+      "passed": true,
+      "details": {
+        "python": {
+          "passed": true,
+          "delete_status": 204,
+          "packets_checked": 20,
+          "stream_ended": true,
+          "initial_media_ms": 4579.459
+        },
+        "rust": {
+          "passed": true,
+          "delete_status": 204,
+          "packets_checked": 20,
+          "stream_ended": true,
+          "initial_media_ms": 4096.177
+        }
+      }
+    },
+    {
+      "name": "channel-stop:active-delete-keeps-stream",
+      "passed": true,
+      "details": {
+        "python": {
+          "passed": true,
+          "delete_status": 204,
+          "packets_checked": 20,
+          "stream_continued": true,
+          "initial_media_ms": 4576.788
+        },
+        "rust": {
+          "passed": true,
+          "delete_status": 204,
+          "packets_checked": 20,
+          "stream_continued": true,
+          "initial_media_ms": 4096.189
+        }
+      }
+    }
+  ],
+  "check_results": [
+    {
+      "name": "status-parity:/proxy/ts/status",
+      "passed": true
+    },
+    {
+      "name": "status-parity:/proxy/ts/stream/not-a-channel",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/users/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/users/me/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/groups/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/permissions/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/api-keys/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/users/me/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/api-keys/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/users/",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:admin",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:viewer",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:inactive",
+      "passed": true
+    },
+    {
+      "name": "django-password-auth",
+      "passed": true
+    },
+    {
+      "name": "rust-tokens-accepted-by-django",
+      "passed": true
+    },
+    {
+      "name": "django-refresh-accepted-by-rust",
+      "passed": true
+    },
+    {
+      "name": "rust-real-media-decoder",
+      "passed": true
+    },
+    {
+      "name": "invalid-presented-token-rejected",
+      "passed": true
+    },
+    {
+      "name": "accounts:firstname-only-preserves-null",
+      "passed": true
+    },
+    {
+      "name": "accounts:omitted-custom-properties-preserved",
+      "passed": true
+    },
+    {
+      "name": "accounts:owner-patch-body",
+      "passed": true
+    },
+    {
+      "name": "accounts:owner-privilege-protection-and-null-delete",
+      "passed": true
+    },
+    {
+      "name": "accounts:null-properties-merge",
+      "passed": true
+    },
+    {
+      "name": "accounts:invalid-nav",
+      "passed": true
+    },
+    {
+      "name": "accounts:invalid-properties-type",
+      "passed": true
+    },
+    {
+      "name": "accounts:invalid-email",
+      "passed": true
+    },
+    {
+      "name": "accounts:oversized-name",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generation-shape:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-cross-auth:python:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-cross-auth:python:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:revoked-key-rejected:python:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:revoked-key-rejected:python:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generation-shape:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-cross-auth:rust:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-cross-auth:rust:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:revoked-key-rejected:rust:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:revoked-key-rejected:rust:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generation-response-parity",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generate-other-user",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generate-explicit-self",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generate-malformed-user-id",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generate-anonymous",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke-other-user",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke-explicit-self",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke-malformed-user-id",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke-anonymous",
+      "passed": true
+    },
+    {
+      "name": "accounts:denied-key-actions-preserve-other-user",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-shape:python",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-dependent-fixture:python",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-shape:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-dependent-fixture:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:rust-password-accepted:python",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:rust-password-accepted:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:old-password-rejected",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:bad-credentials-property",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:bad-profile-allowlist",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:bad-profile-type",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:create",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:delete-missing",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:duplicate-username",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:missing-profile",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:missing-put-username",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:patch",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:put",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:read",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:read-deleted",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:relink-before-delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:viewer-denied-delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:viewer-denied-update",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:bad-permission-type",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:create",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:delete-missing",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:duplicate-name",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:missing-permission",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:missing-put-permissions",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:patch",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:put",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:read",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:read-deleted",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:viewer-denied-delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:viewer-denied-update",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-create-denied:viewer",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-create-denied:anonymous",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group-create-denied:viewer",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group-create-denied:anonymous",
+      "passed": true
+    },
+    {
+      "name": "app-data:fill-total-quota:python",
+      "passed": true
+    },
+    {
+      "name": "app-data:fill-app-count:python",
+      "passed": true
+    },
+    {
+      "name": "app-data:concurrent-quota:python",
+      "passed": true
+    },
+    {
+      "name": "app-data:fill-total-quota:rust",
+      "passed": true
+    },
+    {
+      "name": "app-data:fill-app-count:rust",
+      "passed": true
+    },
+    {
+      "name": "app-data:concurrent-quota:rust",
+      "passed": true
+    },
+    {
+      "name": "app-data:admin-other-owner-read",
+      "passed": true
+    },
+    {
+      "name": "app-data:after-delete-missing",
+      "passed": true
+    },
+    {
+      "name": "app-data:anonymous-denied",
+      "passed": true
+    },
+    {
+      "name": "app-data:app-count-summary",
+      "passed": true
+    },
+    {
+      "name": "app-data:clear-before-app-count",
+      "passed": true
+    },
+    {
+      "name": "app-data:clear-before-total-quota",
+      "passed": true
+    },
+    {
+      "name": "app-data:compact-byte-summary",
+      "passed": true
+    },
+    {
+      "name": "app-data:delete-before-app-insert",
+      "passed": true
+    },
+    {
+      "name": "app-data:delete-key",
+      "passed": true
+    },
+    {
+      "name": "app-data:delete-key-idempotent",
+      "passed": true
+    },
+    {
+      "name": "app-data:final-clear",
+      "passed": true
+    },
+    {
+      "name": "app-data:final-empty-list",
+      "passed": true
+    },
+    {
+      "name": "app-data:get-valid-json",
+      "passed": true
+    },
+    {
+      "name": "app-data:initial-empty-list",
+      "passed": true
+    },
+    {
+      "name": "app-data:insert-after-app-delete",
+      "passed": true
+    },
+    {
+      "name": "app-data:insert-after-reducing-total",
+      "passed": true
+    },
+    {
+      "name": "app-data:invalid-key",
+      "passed": true
+    },
+    {
+      "name": "app-data:missing-key",
+      "passed": true
+    },
+    {
+      "name": "app-data:numeric-idempotent-get",
+      "passed": true
+    },
+    {
+      "name": "app-data:numeric-idempotent-size",
+      "passed": true
+    },
+    {
+      "name": "app-data:other-owner-denied",
+      "passed": true
+    },
+    {
+      "name": "app-data:owner-numeric-alias",
+      "passed": true
+    },
+    {
+      "name": "app-data:post-contention-clear",
+      "passed": true
+    },
+    {
+      "name": "app-data:post-contention-empty",
+      "passed": true
+    },
+    {
+      "name": "app-data:put-bool",
+      "passed": true
+    },
+    {
+      "name": "app-data:put-equal-number",
+      "passed": true
+    },
+    {
+      "name": "app-data:put-valid-json",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-app-count",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-array",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-body-size",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-depth",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-nul-key",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-nul-value",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-total-quota",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-value-size",
+      "passed": true
+    },
+    {
+      "name": "app-data:replace-at-app-count",
+      "passed": true
+    },
+    {
+      "name": "app-data:replace-at-total-quota",
+      "passed": true
+    },
+    {
+      "name": "app-data:total-quota-summary",
+      "passed": true
+    },
+    {
+      "name": "app-data:unknown-target-admin",
+      "passed": true
+    },
+    {
+      "name": "app-data:unknown-target-nonadmin",
+      "passed": true
+    },
+    {
+      "name": "core-read:settings:admin",
+      "passed": true
+    },
+    {
+      "name": "core-read:settings:standard",
+      "passed": true
+    },
+    {
+      "name": "core-read:settings:standard:detail:14",
+      "passed": true
+    },
+    {
+      "name": "core-read:settings:standard:detail:2147483647",
+      "passed": true
+    },
+    {
+      "name": "core-read:settings:standard:detail:not-a-number",
+      "passed": true
+    },
+    {
+      "name": "core-read:settings:viewer",
+      "passed": true
+    },
+    {
+      "name": "core-read:settings:inactive",
+      "passed": true
+    },
+    {
+      "name": "core-read:settings:None",
+      "passed": true
+    },
+    {
+      "name": "core-read:useragents:admin",
+      "passed": true
+    },
+    {
+      "name": "core-read:useragents:standard",
+      "passed": true
+    },
+    {
+      "name": "core-read:useragents:standard:detail:2",
+      "passed": true
+    },
+    {
+      "name": "core-read:useragents:standard:detail:2147483647",
+      "passed": true
+    },
+    {
+      "name": "core-read:useragents:standard:detail:not-a-number",
+      "passed": true
+    },
+    {
+      "name": "core-read:useragents:viewer",
+      "passed": true
+    },
+    {
+      "name": "core-read:useragents:inactive",
+      "passed": true
+    },
+    {
+      "name": "core-read:useragents:None",
+      "passed": true
+    },
+    {
+      "name": "core-read:streamprofiles:admin",
+      "passed": true
+    },
+    {
+      "name": "core-read:streamprofiles:standard",
+      "passed": true
+    },
+    {
+      "name": "core-read:streamprofiles:standard:detail:3",
+      "passed": true
+    },
+    {
+      "name": "core-read:streamprofiles:standard:detail:2147483647",
+      "passed": true
+    },
+    {
+      "name": "core-read:streamprofiles:standard:detail:not-a-number",
+      "passed": true
+    },
+    {
+      "name": "core-read:streamprofiles:viewer",
+      "passed": true
+    },
+    {
+      "name": "core-read:streamprofiles:inactive",
+      "passed": true
+    },
+    {
+      "name": "core-read:streamprofiles:None",
+      "passed": true
+    },
+    {
+      "name": "core-read:outputprofiles:admin",
+      "passed": true
+    },
+    {
+      "name": "core-read:outputprofiles:standard",
+      "passed": true
+    },
+    {
+      "name": "core-read:outputprofiles:standard:detail:1",
+      "passed": true
+    },
+    {
+      "name": "core-read:outputprofiles:standard:detail:2147483647",
+      "passed": true
+    },
+    {
+      "name": "core-read:outputprofiles:standard:detail:not-a-number",
+      "passed": true
+    },
+    {
+      "name": "core-read:outputprofiles:viewer",
+      "passed": true
+    },
+    {
+      "name": "core-read:outputprofiles:inactive",
+      "passed": true
+    },
+    {
+      "name": "core-read:outputprofiles:None",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:bad-name",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:cascade-user-membership",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:create-default",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:create-empty",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:delete",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:denied-delete-inactive",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:denied-delete-standard",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:denied-delete-viewer",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:duplicate-conflict-before-missing-source",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:duplicate-default",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:duplicate-empty",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:duplicate-missing-name",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:duplicate-name",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:ignored-start-empty-on-update",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:missing-name",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:null-start-empty",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:put-required",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:read-deleted",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:readonly-channels",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:rename",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:retrieve",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:standard-assigned",
+      "passed": true
+    },
+    {
+      "name": "channel-profiles:standard-unassigned",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:after-duplicate-existing-last-value",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:after-invalid-disabled-state",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-after-invalid-proves-row",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-anonymous",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-bad-enabled",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-bad-fractional-id",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-boolean-id",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-create",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-denied-standard",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-denied-viewer",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-duplicate-existing",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-empty-list",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-final-state",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-large-invalid-id",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-missing-list",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-missing-nested-fields",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-nested-errors",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-null-item",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-null-list",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-oversized-integer-string",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-update",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-wrong-list-type",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:bulk-wrong-nested-type",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:invalid-bulk-preserves-previous-state",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-anonymous",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-assigned-standard",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-assigned-viewer",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-bool-pk",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-channel-string-pk",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-empty-body",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-empty-pk",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-float-boolean",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-invalid-creates-disabled",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-invalid-pk-string",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-missing-channel",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-missing-profile",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-null-fields",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-unassigned-standard",
+      "passed": true
+    },
+    {
+      "name": "profile-memberships:single-unassigned-viewer",
+      "passed": true
+    },
+    {
+      "name": "channel-read:list-admin",
+      "passed": true
+    },
+    {
+      "name": "channel-read:list-standard",
+      "passed": true
+    },
+    {
+      "name": "channel-read:list-viewer",
+      "passed": true
+    },
+    {
+      "name": "channel-read:list-inactive",
+      "passed": true
+    },
+    {
+      "name": "channel-read:list-None",
+      "passed": true
+    },
+    {
+      "name": "channel-read:all",
+      "passed": true
+    },
+    {
+      "name": "channel-read:hidden",
+      "passed": true
+    },
+    {
+      "name": "channel-read:nested-streams",
+      "passed": true
+    },
+    {
+      "name": "channel-read:name-filter",
+      "passed": true
+    },
+    {
+      "name": "channel-read:search",
+      "passed": true
+    },
+    {
+      "name": "channel-read:quoted-search",
+      "passed": true
+    },
+    {
+      "name": "channel-read:only-streamless",
+      "passed": true
+    },
+    {
+      "name": "channel-read:truthy-false-streamless",
+      "passed": true
+    },
+    {
+      "name": "channel-read:only-stale",
+      "passed": true
+    },
+    {
+      "name": "channel-read:only-overrides",
+      "passed": true
+    },
+    {
+      "name": "channel-read:only-catchup",
+      "passed": true
+    },
+    {
+      "name": "channel-read:only-radio",
+      "passed": true
+    },
+    {
+      "name": "channel-read:no-epg",
+      "passed": true
+    },
+    {
+      "name": "channel-read:epg-name",
+      "passed": true
+    },
+    {
+      "name": "channel-read:group-name",
+      "passed": true
+    },
+    {
+      "name": "channel-read:order-number",
+      "passed": true
+    },
+    {
+      "name": "channel-read:order-name",
+      "passed": true
+    },
+    {
+      "name": "channel-read:order-group",
+      "passed": true
+    },
+    {
+      "name": "channel-read:order-epg",
+      "passed": true
+    },
+    {
+      "name": "channel-read:order-invalid-fallback",
+      "passed": true
+    },
+    {
+      "name": "channel-read:page-first",
+      "passed": true
+    },
+    {
+      "name": "channel-read:page-second",
+      "passed": true
+    },
+    {
+      "name": "channel-read:page-last",
+      "passed": true
+    },
+    {
+      "name": "channel-read:page-size-bad-fallback",
+      "passed": true
+    },
+    {
+      "name": "channel-read:page-size-max",
+      "passed": true
+    },
+    {
+      "name": "channel-read:nul-search-validation",
+      "passed": true
+    },
+    {
+      "name": "channel-read:invalid-page",
+      "passed": true
+    },
+    {
+      "name": "channel-read:zero-page",
+      "passed": true
+    },
+    {
+      "name": "channel-read:missing-page",
+      "passed": true
+    },
+    {
+      "name": "channel-read:admin-detail-11",
+      "passed": true
+    },
+    {
+      "name": "channel-read:admin-detail-12",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-adult-detail",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-high-detail-hidden",
+      "passed": true
+    },
+    {
+      "name": "channel-read:missing-detail",
+      "passed": true
+    },
+    {
+      "name": "channel-read:malformed-detail",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-nested-no-provider-url",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-hide-adult-list",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-hide-adult-detail",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-assigned-profile-only",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-explicit-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-show-disabled-retains-own-scope",
+      "passed": true
+    },
+    {
+      "name": "channel-read:standard-other-profile-hidden",
+      "passed": true
+    },
+    {
+      "name": "channel-read:admin-explicit-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-read:admin-explicit-show-disabled",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:bad-boolean-user-level",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:bad-empty-group",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:bad-name-and-override",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:bad-null-group",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:bad-stream-list",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:bad-stream-reference",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:bad-zero-stream-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:clear-all-streams",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:clear-all-streams-get",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-auto",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-default",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-duplicate-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-explicit-empty",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-explicit-one",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-false-sentinel",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-invalid-profile-type",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-missing-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-null-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-override-reservation-default",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-primary",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-sentinel-zero",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:create-string-one",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:default-number-subsequent-get-default",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:default-number-subsequent-get-explicit-empty",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:default-number-subsequent-get-explicit-one",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:default-number-subsequent-get-false-sentinel",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:default-number-subsequent-get-sentinel-zero",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:default-number-subsequent-get-string-one",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:delete-auto",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:delete-missing-404",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:delete-primary",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:deleted-auto-404",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:deleted-primary-404",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:denied-delete-standard",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:denied-delete-viewer",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:denied-patch-standard",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:denied-patch-viewer",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:empty-nullable-relations",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:hidden-detail-readable",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:invalid-create-manual-override",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:invalid-create-missing-name",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:invalid-create-multiple-validation-errors",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:invalid-create-name-too-long",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:manual-channel-claims-group",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:manual-clear-override-allowed",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:manual-override-rejected",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:memberships-default",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:memberships-explicit-empty",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:memberships-explicit-one",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:memberships-false-sentinel",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:memberships-sentinel-zero",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:memberships-string-one",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-all-null-drops-row",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-clear-get",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-empty-noop",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-explicit-null-delete",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-get",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-invalid-number",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-invalid-reference",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-number-reserved-get",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-partial-clear",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:override-recreate",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:primary-empty-memberships",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:primary-get",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:profile-error-commits-channel-duplicate-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:profile-error-commits-channel-invalid-profile-type",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:profile-error-commits-channel-missing-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:profile-error-commits-channel-null-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:profile-error-no-memberships-duplicate-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:profile-error-no-memberships-invalid-profile-type",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:profile-error-no-memberships-missing-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:profile-error-no-memberships-null-profile",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:put-name-required",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:readonly-id-uuid",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:remove-catchup-stream",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:remove-catchup-stream-get",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:replace-scalars",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:reverse-stream-order",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:reverse-stream-order-get",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:unknown-fields-noop",
+      "passed": true
+    },
+    {
+      "name": "channel-crud:update-filter-before-rename",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:list-admin",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:list-standard",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:list-viewer",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:list-inactive",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:list-None",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:detail-1",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:detail-2",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:detail-2147483647",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:detail-not-a-number",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:auto-preserved",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:blank-name",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:claim-empty",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:claim-provider",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:claimed-old-now-blocked",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:claimed-provider-rename-demotes",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:create",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:delete",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:delete-associated-denied",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:delete-missing",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:delete-renamed-manual",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:demoted-provider-retrieve",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:denied-claim-standard",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:denied-claim-viewer",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:denied-update-standard",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:denied-update-viewer",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:duplicate-name",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:manual-moved",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:missing-name",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:null-name",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:provider-only-delete-denied",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:provider-only-update-denied",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:provider-only-validation-denied-first",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:put-name-required",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:read-deleted",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:readonly-fields",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:rename",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:renamed-manual-retrieve",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:retrieve",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:standard-list-visible-channel-count",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:standard-retrieve-includes-all-channel-count",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:unclaim-associated-denied",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:unclaim-empty",
+      "passed": true
+    },
+    {
+      "name": "channel-groups:unclaim-provider",
+      "passed": true
+    },
+    {
+      "name": "channel-stop:inactive-stop-delete",
+      "passed": true
+    },
+    {
+      "name": "channel-stop:active-stop-delete",
+      "passed": true
+    },
+    {
+      "name": "channel-stop:active-delete-keeps-stream",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:reference-repeat-unordered-names",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:already-clean-empty",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:anonymous-denied",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:default-removes-only-loose",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:denied-standard",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:denied-viewer",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:include-custom",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:raw-channel-set-null",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:spaced-true-is-false",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:stream-set-null",
+      "passed": true
+    },
+    {
+      "name": "group-cleanup:unrelated-group-identities-preserved",
+      "passed": true
+    },
+    {
+      "name": "streams:list-admin",
+      "passed": true
+    },
+    {
+      "name": "streams:list-standard",
+      "passed": true
+    },
+    {
+      "name": "streams:list-viewer",
+      "passed": true
+    },
+    {
+      "name": "streams:list-inactive",
+      "passed": true
+    },
+    {
+      "name": "streams:list-None",
+      "passed": true
+    },
+    {
+      "name": "streams:read-name",
+      "passed": true
+    },
+    {
+      "name": "streams:read-search",
+      "passed": true
+    },
+    {
+      "name": "streams:read-group",
+      "passed": true
+    },
+    {
+      "name": "streams:read-group-name-exact",
+      "passed": true
+    },
+    {
+      "name": "streams:read-group-name-not-substring",
+      "passed": true
+    },
+    {
+      "name": "streams:read-account-id",
+      "passed": true
+    },
+    {
+      "name": "streams:read-account-name",
+      "passed": true
+    },
+    {
+      "name": "streams:read-active-false-empty",
+      "passed": true
+    },
+    {
+      "name": "streams:read-tvg",
+      "passed": true
+    },
+    {
+      "name": "streams:read-assigned",
+      "passed": true
+    },
+    {
+      "name": "streams:read-unassigned",
+      "passed": true
+    },
+    {
+      "name": "streams:read-hide-stale",
+      "passed": true
+    },
+    {
+      "name": "streams:read-catchup",
+      "passed": true
+    },
+    {
+      "name": "streams:read-radio",
+      "passed": true
+    },
+    {
+      "name": "streams:read-page-first",
+      "passed": true
+    },
+    {
+      "name": "streams:read-page-second",
+      "passed": true
+    },
+    {
+      "name": "streams:read-page-last",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-name",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-account",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-group",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-tvg",
+      "passed": true
+    },
+    {
+      "name": "streams:read-order-invalid-fallback",
+      "passed": true
+    },
+    {
+      "name": "streams:read-ids-bypass",
+      "passed": true
+    },
+    {
+      "name": "streams:standard-ids-bypass-url-redacted",
+      "passed": true
+    },
+    {
+      "name": "streams:ids-action",
+      "passed": true
+    },
+    {
+      "name": "streams:ids-action-ignores-list-ids-param",
+      "passed": true
+    },
+    {
+      "name": "streams:ids-action-filtered",
+      "passed": true
+    },
+    {
+      "name": "streams:detail-26",
+      "passed": true
+    },
+    {
+      "name": "streams:detail-29",
+      "passed": true
+    },
+    {
+      "name": "streams:detail-2147483647",
+      "passed": true
+    },
+    {
+      "name": "streams:detail-not-a-number",
+      "passed": true
+    },
+    {
+      "name": "streams:unknown-ids-404",
+      "passed": true
+    },
+    {
+      "name": "streams:invalid-page",
+      "passed": true
+    },
+    {
+      "name": "streams:nul-search",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-0",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-1",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-10",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-11",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-12",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-2",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-3",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-4",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-5",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-6",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-7",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-8",
+      "passed": true
+    },
+    {
+      "name": "streams:accepted-url-9",
+      "passed": true
+    },
+    {
+      "name": "streams:bulk-empty",
+      "passed": true
+    },
+    {
+      "name": "streams:bulk-includes-inactive",
+      "passed": true
+    },
+    {
+      "name": "streams:bulk-rows-deleted",
+      "passed": true
+    },
+    {
+      "name": "streams:clear-hash-no-update-regeneration",
+      "passed": true
+    },
+    {
+      "name": "streams:cleared-hash-get",
+      "passed": true
+    },
+    {
+      "name": "streams:create-bulk-extra",
+      "passed": true
+    },
+    {
+      "name": "streams:create-manual",
+      "passed": true
+    },
+    {
+      "name": "streams:create-protected",
+      "passed": true
+    },
+    {
+      "name": "streams:custom-after-flag-can-rename",
+      "passed": true
+    },
+    {
+      "name": "streams:custom-move-to-inactive-account",
+      "passed": true
+    },
+    {
+      "name": "streams:delete-manual",
+      "passed": true
+    },
+    {
+      "name": "streams:delete-missing",
+      "passed": true
+    },
+    {
+      "name": "streams:delete-rollup-and-links",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-bulk-standard",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-bulk-viewer",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-delete-standard",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-delete-viewer",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-update-standard",
+      "passed": true
+    },
+    {
+      "name": "streams:denied-update-viewer",
+      "passed": true
+    },
+    {
+      "name": "streams:generated-hash-following-get",
+      "passed": true
+    },
+    {
+      "name": "streams:inactive-ids-get-visible",
+      "passed": true
+    },
+    {
+      "name": "streams:inactive-normal-get-hidden",
+      "passed": true
+    },
+    {
+      "name": "streams:long-logo-text",
+      "passed": true
+    },
+    {
+      "name": "streams:nullable-relations-empty",
+      "passed": true
+    },
+    {
+      "name": "streams:provider-other-fields-mutable",
+      "passed": true
+    },
+    {
+      "name": "streams:provider-readonly-fields",
+      "passed": true
+    },
+    {
+      "name": "streams:provider-switch-custom-flag",
+      "passed": true
+    },
+    {
+      "name": "streams:put-empty-preserves",
+      "passed": true
+    },
+    {
+      "name": "streams:read-deleted",
+      "passed": true
+    },
+    {
+      "name": "streams:readonly-id-timestamp",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-0",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-1",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-2",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-3",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-4",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-5",
+      "passed": true
+    },
+    {
+      "name": "streams:rejected-url-6",
+      "passed": true
+    },
+    {
+      "name": "streams:restore-valid-url",
+      "passed": true
+    },
+    {
+      "name": "streams:stream-save-preserves-old-channel-rollup",
+      "passed": true
+    },
+    {
+      "name": "streams:toggle-catchup-field",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-boolean-integer",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-current-viewers",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-null-last-seen",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-profile",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-timestamp",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-bad-url",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-blank-name",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-duplicate-hash",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-json-file-path",
+      "passed": true
+    },
+    {
+      "name": "streams:validation-null-name",
+      "passed": true
+    }
+  ],
+  "remaining_gates": [
+    "Core settings/user-agent/stream-profile/output-profile writes require source validation/cache/job/notification effects.",
+    "New EPG channel/override assignment, compact auto numbering and recording-owned deletion remain explicit501 until relevant worker/locking/DVR side effects ported.",
+    "Multipart uploads/files, additional stream/channel/provider bulk actions and native stream-hash preview remain incomplete.",
+    "Channel stream/stats relation routes and realtime/event workflows are next and postdate this image snapshot.",
+    "SQLite, extra password hashers/upgrades, distributed auth throttle/setup/proxy sign-in and uncommon parser/filter/HTML500 error behavior remain compatibility gaps.",
+    "Separate protocol/replica/HEAD/UI/shutdown evidence must be bound to this image; this API report alone does not establish those gates.",
+    "No performance gains claimed. Repeated equivalent-work Docker resource trials and their readiness/cancellation controls remain required."
+  ]
+}

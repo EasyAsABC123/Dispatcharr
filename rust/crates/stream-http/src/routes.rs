@@ -2,7 +2,7 @@ use crate::StreamEngine;
 use axum::body::Bytes;
 use axum::{
     extract::{ConnectInfo, Path, Query, State},
-    http::{HeaderMap, StatusCode},
+    http::{header, HeaderMap, StatusCode},
     response::{IntoResponse, Response},
     routing::{get, post},
     Extension, Json, Router,
@@ -23,7 +23,7 @@ impl StreamEngine {
     pub fn router(&self, resolver: Arc<dyn PlaybackResolver>) -> Router {
         self.controls_router(resolver.clone()).route(
             "/proxy/ts/stream/{channel_id}",
-            get(stream).with_state(App {
+            get(stream).head(stream_head).with_state(App {
                 engine: self.clone(),
                 resolver,
             }),
@@ -32,10 +32,19 @@ impl StreamEngine {
 
     pub fn controls_router(&self, resolver: Arc<dyn PlaybackResolver>) -> Router {
         Router::new()
-            .route("/proxy/ts/status", get(status))
-            .route("/proxy/ts/stop_client/{channel_id}", post(stop_client))
-            .route("/proxy/ts/status/{channel_id}", get(channel_status))
-            .route("/proxy/ts/stop/{channel_id}", post(stop).delete(stop))
+            .route("/proxy/ts/status", get(status).head(admin_head))
+            .route(
+                "/proxy/ts/stop_client/{channel_id}",
+                post(stop_client).head(admin_channel_head),
+            )
+            .route(
+                "/proxy/ts/status/{channel_id}",
+                get(channel_status).head(admin_channel_head),
+            )
+            .route(
+                "/proxy/ts/stop/{channel_id}",
+                post(stop).delete(stop).head(admin_channel_head),
+            )
             .with_state(App {
                 engine: self.clone(),
                 resolver,
@@ -72,13 +81,76 @@ fn request(
 }
 
 fn error(error: PlaybackError) -> Response {
-    (
+    let unauthorized = error.status == 401;
+    let mut response = (
         StatusCode::from_u16(error.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
         Json(error.body),
     )
-        .into_response()
+        .into_response();
+    if unauthorized {
+        response.headers_mut().insert(
+            header::WWW_AUTHENTICATE,
+            "Bearer realm=\"api\"".parse().unwrap(),
+        );
+    }
+    response
 }
 
+async fn stream_head(
+    State(app): State<App>,
+    Path(id): Path<String>,
+    Query(query): Query<Vec<(String, String)>>,
+    headers: HeaderMap,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+) -> Response {
+    let result = async {
+        app.resolver
+            .authenticate_optional(request(id, query, headers, peer)?)
+            .await?;
+        Err::<(), _>(PlaybackError {
+            status: 405,
+            body: serde_json::json!({"detail":"Method \"HEAD\" not allowed."}),
+        })
+    }
+    .await;
+    error(result.unwrap_err())
+}
+async fn admin_head(
+    State(app): State<App>,
+    Query(query): Query<Vec<(String, String)>>,
+    headers: HeaderMap,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+) -> Response {
+    admin_head_result(app, String::new(), query, headers, peer).await
+}
+async fn admin_channel_head(
+    State(app): State<App>,
+    Path(id): Path<String>,
+    Query(query): Query<Vec<(String, String)>>,
+    headers: HeaderMap,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+) -> Response {
+    admin_head_result(app, id, query, headers, peer).await
+}
+async fn admin_head_result(
+    app: App,
+    id: String,
+    query: Vec<(String, String)>,
+    headers: HeaderMap,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+) -> Response {
+    let result = async {
+        app.resolver
+            .authorize_admin(request(id, query, headers, peer)?)
+            .await?;
+        Err::<(), _>(PlaybackError {
+            status: 405,
+            body: serde_json::json!({"detail":"Method \"HEAD\" not allowed."}),
+        })
+    }
+    .await;
+    error(result.unwrap_err())
+}
 async fn stream(
     State(app): State<App>,
     Path(id): Path<String>,
@@ -162,10 +234,30 @@ async fn stop(
     if let Err(failure) = app.resolver.authorize_admin(request).await {
         return error(failure);
     }
-    if app.engine.stop(&id) {
-        Json(serde_json::json!({"message":"Channel stop request sent", "channel_id": id, "previous_state":"active"})).into_response()
+    let previous = app
+        .engine
+        .legacy_status(&id, false)
+        .await
+        .ok()
+        .flatten()
+        .and_then(|info| {
+            info.get("state")
+                .and_then(serde_json::Value::as_str)
+                .map(|state| serde_json::json!({"state":state}))
+        })
+        .unwrap_or(serde_json::Value::Null);
+    let stopped = match app.engine.stop_global(&id).await {
+        Ok(stopped) => stopped,
+        Err(reason) => return error(reason),
+    };
+    if stopped {
+        Json(serde_json::json!({"message":"Channel stop request sent", "channel_id": id, "previous_state":previous})).into_response()
     } else {
-        error(PlaybackError::new(404, &format!("Channel {id} not found")))
+        (
+            StatusCode::NOT_FOUND,
+            Json(serde_json::json!({"error":"Channel not found"})),
+        )
+            .into_response()
     }
 }
 
@@ -205,12 +297,11 @@ async fn stop_client(
         )
             .into_response();
     };
-    if !app
-        .engine
-        .status()
-        .iter()
-        .any(|channel| channel.channel_id == id)
-    {
+    let exists = match app.engine.has_channel(&id).await {
+        Ok(exists) => exists,
+        Err(reason) => return error(reason),
+    };
+    if !exists {
         return (
             StatusCode::NOT_FOUND,
             Json(serde_json::json!({"error":"Channel not found"})),

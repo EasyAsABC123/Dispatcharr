@@ -4,8 +4,10 @@ use crate::gateway::{
 };
 use axum::{
     body::Body,
+    extract::Request,
     extract::{ConnectInfo, Path, State},
-    http::{header, HeaderMap, StatusCode},
+    http::{header, HeaderMap, Method, StatusCode},
+    middleware::{self, Next},
     response::{IntoResponse, Response},
     routing::{delete, get},
     Extension, Json, Router,
@@ -29,17 +31,80 @@ impl HlsGateway {
             .route("/proxy/hls/{token}/index.m3u8", get(playlist))
             .route("/proxy/hls/{token}/{segment}", get(segment))
             .route("/api/proxy/hls/sessions/{token}/", delete(stop_session))
+            .layer(middleware::from_fn_with_state(self.clone(), authenticate))
             .with_state(self.clone())
     }
 }
+async fn authenticate(state: State<HlsGateway>, request: Request, next: Next) -> Response {
+    let allow = if request.uri().path().starts_with("/api/") {
+        "DELETE, OPTIONS"
+    } else {
+        "GET, OPTIONS"
+    };
+    let mut response = authenticate_inner(state, request, next).await;
+    response
+        .headers_mut()
+        .insert(header::ALLOW, allow.parse().unwrap());
+    response
+}
+async fn authenticate_inner(
+    State(gateway): State<HlsGateway>,
+    request: Request,
+    next: Next,
+) -> Response {
+    let headers = request.headers();
+    for name in ["authorization", "x-api-key"] {
+        if headers.get_all(name).iter().count() > 1
+            || headers
+                .get_all(name)
+                .iter()
+                .any(|value| value.to_str().is_err())
+        {
+            return error(failure(401, "Invalid authentication header"));
+        }
+    }
+    let peer_ip = request
+        .extensions()
+        .get::<ConnectInfo<SocketAddr>>()
+        .map_or(IpAddr::V4(Ipv4Addr::UNSPECIFIED), |peer| peer.0.ip());
+    let auth = PlaybackRequest {
+        channel_id: String::new(),
+        query: Vec::new(),
+        peer_ip,
+        headers: headers
+            .iter()
+            .filter_map(|(name, value)| {
+                Some((name.as_str().to_owned(), value.to_str().ok()?.to_owned()))
+            })
+            .collect(),
+    };
+    if let Err(reason) = gateway.inner.resolver.authenticate_optional(auth).await {
+        return error(reason);
+    }
+    if request.method() == Method::HEAD {
+        return error(PlaybackError {
+            status: 405,
+            body: serde_json::json!({"detail":"Method \"HEAD\" not allowed."}),
+        });
+    }
+    next.run(request).await
+}
 fn error(error: PlaybackError) -> Response {
-    (
+    let unauthorized = error.status == 401;
+    let mut response = (
         StatusCode::from_u16(error.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
         Json(error.body),
     )
-        .into_response()
+        .into_response();
+    if unauthorized {
+        response.headers_mut().insert(
+            header::WWW_AUTHENTICATE,
+            "Bearer realm=\"api\"".parse().unwrap(),
+        );
+    }
+    response
 }
-fn body(body: Body, content_type: &'static str) -> Response {
+pub(crate) fn body(body: Body, content_type: &'static str) -> Response {
     let mut response = Response::new(body);
     response
         .headers_mut()
@@ -64,8 +129,15 @@ async fn playlist(State(gateway): State<HlsGateway>, Path(token): Path<String>) 
     }
 }
 async fn playlist_result(gateway: HlsGateway, token: String) -> Result<Response, PlaybackError> {
+    if gateway.inner.outputs.is_some() {
+        return crate::shared::playlist(gateway.inner.clone(), token).await;
+    }
+    let local = crate::gateway::lock(&gateway.inner.sessions)
+        .get(&token)
+        .cloned()
+        .ok_or_else(|| failure(410, "Session expired"))?;
+    let permit = request_permit(&local)?;
     let session = gateway.inner.lookup(&token).await?;
-    let permit = request_permit(&session)?;
     if let Some(payload) = session.playlist()? {
         return Ok(body(
             Body::from(response_bytes(payload, session, permit)),
@@ -178,6 +250,13 @@ async fn segment(
     Path((token, name)): Path<(String, String)>,
 ) -> Response {
     let result = async {
+        if gateway.inner.outputs.is_some() {
+            let seq = name
+                .strip_suffix(".ts")
+                .and_then(|value| value.parse::<u64>().ok())
+                .ok_or_else(|| failure(404, "Segment expired"))?;
+            return crate::shared::segment(gateway.inner.clone(), token, seq).await;
+        }
         let session = gateway.inner.lookup(&token).await?;
         let permit = request_permit(&session)?;
         let seq = name

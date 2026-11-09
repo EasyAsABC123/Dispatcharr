@@ -11,6 +11,7 @@ use dispatcharr_contracts::{PlaybackError, PlaybackResolver, PlaybackSource};
 use dispatcharr_hls_core::{
     render_media_playlist, Segment, SegmentDescriptor, SegmenterConfig, TSSegmenter,
 };
+use dispatcharr_output_store::{OutputLease, OutputStore};
 use dispatcharr_stream_http::StreamEngine;
 use futures_util::StreamExt;
 use serde_json::json;
@@ -64,12 +65,14 @@ pub(crate) struct Inner {
     pub clients: ClientStore,
     pub resolver: Arc<dyn PlaybackResolver>,
     pub config: GatewayConfig,
+    pub outputs: Option<OutputStore>,
+    pub remote: Mutex<HashMap<String, std::sync::Weak<crate::shared::RemoteSession>>>,
     managers: Mutex<HashMap<String, Arc<Manager>>>,
     pub sessions: Mutex<HashMap<String, Arc<Session>>>,
     manager_slots: Arc<Semaphore>,
-    session_slots: Arc<Semaphore>,
-    bytes: Arc<Semaphore>,
-    stopped: AtomicBool,
+    pub session_slots: Arc<Semaphore>,
+    pub bytes: Arc<Semaphore>,
+    pub stopped: AtomicBool,
 }
 pub(crate) struct Session {
     pub token: String,
@@ -90,6 +93,7 @@ pub(crate) struct Manager {
     demand: AtomicUsize,
     admission: Arc<OwnedSemaphorePermit>,
     behind: f64,
+    output_lease: Mutex<Option<OutputLease>>,
 }
 pub(crate) struct ManagerState {
     pub playlist: Option<Arc<Payload>>,
@@ -126,7 +130,7 @@ impl AsRef<[u8]> for FrameOwner {
         self.payload.as_ref().as_ref()
     }
 }
-fn lock<T>(value: &Mutex<T>) -> std::sync::MutexGuard<'_, T> {
+pub(crate) fn lock<T>(value: &Mutex<T>) -> std::sync::MutexGuard<'_, T> {
     value.lock().unwrap_or_else(|error| error.into_inner())
 }
 pub(crate) fn wall_time() -> f64 {
@@ -150,7 +154,15 @@ impl HlsGateway {
         resolver: Arc<dyn PlaybackResolver>,
         config: GatewayConfig,
     ) -> Result<Self, PlaybackError> {
-        if config.max_managers == 0
+        if [
+            config.max_managers,
+            config.max_sessions,
+            config.max_requests_per_session,
+            config.max_retained_bytes,
+        ]
+        .iter()
+        .any(|value| *value > Semaphore::MAX_PERMITS)
+            || config.max_managers == 0
             || config.max_sessions == 0
             || config.max_retained_bytes == 0
             || config.max_retained_bytes > u32::MAX as usize
@@ -174,11 +186,21 @@ impl HlsGateway {
                 session_slots: Arc::new(Semaphore::new(config.max_sessions)),
                 bytes: Arc::new(Semaphore::new(config.max_retained_bytes)),
                 config,
+                outputs: None,
+                remote: Mutex::new(HashMap::new()),
                 managers: Mutex::new(HashMap::new()),
                 sessions: Mutex::new(HashMap::new()),
                 stopped: AtomicBool::new(false),
             }),
         })
+    }
+    /// Shared legacy Redis media storage enables cross-replica capability reads.
+    /// Configure before cloning or starting the gateway.
+    pub fn with_output_store(mut self, outputs: OutputStore) -> Result<Self, PlaybackError> {
+        let inner =
+            Arc::get_mut(&mut self.inner).ok_or_else(|| failure(500, "Gateway already shared"))?;
+        inner.outputs = Some(outputs);
+        Ok(self)
     }
     /// The caller must resolve and authorize the source before minting a token.
     pub async fn mint(&self, source: PlaybackSource) -> Result<Response<Body>, PlaybackError> {
@@ -247,10 +269,29 @@ impl HlsGateway {
             let mut stopped = session.client.stopped();
             loop {
                 tokio::select! { _=tokio::time::sleep(Duration::from_millis(250))=>{}, _=stopped.changed()=>{} }
-                if *stopped.borrow()
-                    || session.expired.load(Ordering::Acquire)
-                    || lock(&session.touched).elapsed() >= inner.config.session_idle_timeout
-                {
+                if *stopped.borrow() || session.expired.load(Ordering::Acquire) {
+                    break;
+                }
+                if lock(&session.touched).elapsed() >= inner.config.session_idle_timeout {
+                    if inner.outputs.is_some() {
+                        match inner.clients.inspect_hls_session(&session.token).await {
+                            Ok(Some(info))
+                                if info
+                                    .metadata
+                                    .get("last_active")
+                                    .and_then(|value| value.parse::<f64>().ok())
+                                    .is_some_and(|active| {
+                                        wall_time() - active
+                                            < inner.config.session_idle_timeout.as_secs_f64()
+                                    }) =>
+                            {
+                                *lock(&session.touched) = Instant::now();
+                                continue;
+                            }
+                            Err(_) => continue,
+                            _ => {}
+                        }
+                    }
                     break;
                 }
             }
@@ -269,18 +310,29 @@ impl HlsGateway {
     }
     pub async fn shutdown(&self) {
         self.inner.stopped.store(true, Ordering::Release);
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(5);
         let managers: Vec<_> = lock(&self.inner.managers).values().cloned().collect();
-        let sessions: Vec<_> = lock(&self.inner.sessions).values().cloned().collect();
-        for session in sessions {
-            self.inner.expire(&session).await;
-        }
-        for manager in managers {
+        for manager in &managers {
             manager.stop.send_replace(true);
-            let mut done = manager.done.subscribe();
-            if !*done.borrow() {
-                let _ = tokio::time::timeout(Duration::from_secs(5), done.changed()).await;
-            }
+            manager.notify.notify_waiters();
         }
+        let sessions: Vec<_> = lock(&self.inner.sessions).values().cloned().collect();
+        let _ = tokio::time::timeout_at(deadline, async {
+            futures_util::stream::iter(sessions)
+                .for_each_concurrent(32, |session| async move {
+                    self.inner.expire(&session).await;
+                })
+                .await;
+            futures_util::stream::iter(managers)
+                .for_each_concurrent(32, |manager| async move {
+                    let mut done = manager.done.subscribe();
+                    if !*done.borrow() {
+                        let _ = done.changed().await;
+                    }
+                })
+                .await;
+        })
+        .await;
     }
 }
 impl Inner {
@@ -308,6 +360,7 @@ impl Inner {
             demand: AtomicUsize::new(0),
             admission,
             behind: source.startup_behind.as_secs_f64(),
+            output_lease: Mutex::new(None),
             state: Mutex::new(ManagerState {
                 playlist: None,
                 dead: false,
@@ -336,11 +389,19 @@ impl Inner {
                 sessions.remove(&session.token);
             }
         }
-        if session.manager.demand.fetch_sub(1, Ordering::AcqRel) == 1 {
+        let last = session.manager.demand.fetch_sub(1, Ordering::AcqRel) == 1;
+        if last && self.outputs.is_none() {
             session.manager.stop.send_replace(true);
             session.manager.notify.notify_waiters();
         }
         let _ = session.client.release().await;
+        if last
+            && self.outputs.is_some()
+            && matches!(self.has_demand(&session.manager.channel).await, Ok(false))
+        {
+            session.manager.stop.send_replace(true);
+            session.manager.notify.notify_waiters();
+        }
     }
     pub(crate) async fn lookup(&self, token: &str) -> Result<Arc<Session>, PlaybackError> {
         let session = lock(&self.sessions)
@@ -382,37 +443,82 @@ impl Inner {
             _manager: manager.admission.clone(),
         }))
     }
+    async fn has_demand(&self, channel: &str) -> Result<bool, PlaybackError> {
+        let clients = self
+            .clients
+            .channel_clients(channel)
+            .await
+            .map_err(|_| failure(503, "HLS demand unavailable"))?;
+        Ok(clients.iter().any(|client| {
+            client.get("output_format").and_then(|value| value.as_str()) == Some("hls")
+        }))
+    }
+    async fn follow_manager(
+        &self,
+        manager: &Arc<Manager>,
+        cancelled: &mut watch::Receiver<bool>,
+    ) -> Result<(), PlaybackError> {
+        // Capability reads fetch the shared descriptor directly. A follower needs
+        // no media cache or polling loop; retain only its real client leases.
+        let mut idle = 0;
+        loop {
+            tokio::select! {_=cancelled.changed()=>return Ok(()),_=tokio::time::sleep(Duration::from_secs(10))=>{}}
+            if self.has_demand(&manager.channel).await? {
+                idle = 0;
+            } else {
+                idle += 1;
+                if idle >= 2 {
+                    return Ok(());
+                }
+            }
+        }
+    }
     async fn run_manager(self: Arc<Self>, manager: Arc<Manager>, source: PlaybackSource) {
         let mut cancelled = manager.stop.subscribe();
         let result=async {
             if *cancelled.borrow() {return Ok(());}
-            let mut input=tokio::select! {result=self.engine.open_input(source)=>result?, _=cancelled.changed()=>return Ok(())};
-            if !self.clients.claim_output_owner(&manager.channel,"hls",&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS output is owned by another worker"));}
+            if let Some(outputs)=&self.outputs {
+                match outputs.claim(&manager.channel,"hls",&manager.fence).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {
+                    Some(lease)=>{
+                        let snapshot=outputs.snapshot(&manager.channel,"hls").await.map_err(|_|failure(503,"HLS state unavailable"))?;
+                        {let mut state=lock(&manager.state);state.seq=snapshot.index+1;
+                            if let Some(descriptor)=snapshot.descriptor {let (window,disc_seq,_,ts)=crate::shared::descriptor(&descriptor,self.config.max_stored_segments)?;state.window=window.into();state.disc_seq=disc_seq;state.ts=ts;}
+                        }
+                        *lock(&manager.output_lease)=Some(lease.clone());lease.set_state("initializing").await.map_err(|_|failure(503,"HLS state unavailable"))?;
+                    },
+                    None=>return self.follow_manager(&manager,&mut cancelled).await,
+                }
+            }
+            let mut input=tokio::select! {result=self.engine.open_input(source)=>result?,_=cancelled.changed()=>return Ok(())};
+            if self.outputs.is_none()&&!self.clients.claim_output_owner(&manager.channel,"hls",&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS output is owned by another worker"));}
             lock(&manager.state).ready=Some(Instant::now());manager.notify.notify_waiters();
+            let lease=lock(&manager.output_lease).clone();if let Some(lease)=lease {lease.set_state("active").await.map_err(|_|failure(503,"HLS state unavailable"))?;}
             let mut segmenter=TSSegmenter::new(SegmenterConfig {target_duration:3.9,max_segment_duration:Some(6.45),max_segment_bytes:self.config.max_segment_bytes,..Default::default()}).map_err(|_|failure(500,"Segmenter unavailable"))?;
-            let mut tick=tokio::time::interval(Duration::from_secs(1));let mut renew=Instant::now();
+            if lock(&manager.state).seq>1 {segmenter.flag_discontinuity();}
+            let mut tick=tokio::time::interval(Duration::from_secs(1));let mut renew=Instant::now();let mut idle_checks=0;
             loop {tokio::select! {
                 _=cancelled.changed()=>break,
                 _=tick.tick()=>{
-                    self.publish(&manager,None).await?;
                     if renew.elapsed()>=Duration::from_secs(10) {
-                        if !self.clients.renew_output_owner(&manager.channel,"hls",&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS ownership lost"));}
+                        if self.outputs.is_some() {if self.has_demand(&manager.channel).await? {idle_checks=0;}else {idle_checks+=1;if idle_checks>=2 {break;}}}
+                        self.publish(&manager,None).await?;
+                        let lease=lock(&manager.output_lease).clone();
+                        if let Some(lease)=lease {lease.renew().await.map_err(|_|failure(503,"HLS ownership lost"))?;}
+                        else if !self.clients.renew_output_owner(&manager.channel,"hls",&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS ownership lost"));}
                         renew=Instant::now();
                     }
                 },
                 frame=input.next()=>{
                     let Some(frame)=frame else {break;};let frame=frame.map_err(|_|failure(502,"Upstream failed"))?;
                     if frame.discontinuity {if let Some(segment)=segmenter.flag_discontinuity() {self.publish(&manager,Some(segment)).await?;}}
-                    // Runtime chunks are bounded. Split even larger future adapters before feeding the component.
                     for chunk in frame.data.chunks(64*1024) {
-                        let segments=segmenter.feed(chunk).map_err(|_|failure(503,"HLS segment capacity exhausted"))?;
-                        for segment in segments {self.publish(&manager,Some(segment)).await?;}
+                        for segment in segmenter.feed(chunk).map_err(|_|failure(503,"HLS segment capacity exhausted"))? {self.publish(&manager,Some(segment)).await?;}
                     }
                 }
             }}
             Ok::<(),PlaybackError>(())
         }.await;
-        let _ = result; // Transport state is exposed through playlist/segment errors, never a parity claim.
+        let _ = result;
         {
             let mut state = lock(&manager.state);
             state.dead = true;
@@ -421,10 +527,15 @@ impl Inner {
             state.window.clear();
         }
         manager.notify.notify_waiters();
-        let _ = self
-            .clients
-            .release_output_owner(&manager.channel, "hls", &manager.fence)
-            .await;
+        let lease = lock(&manager.output_lease).take();
+        if let Some(lease) = lease {
+            let _ = lease.release().await;
+        } else if self.outputs.is_none() {
+            let _ = self
+                .clients
+                .release_output_owner(&manager.channel, "hls", &manager.fence)
+                .await;
+        }
         {
             let mut managers = lock(&self.managers);
             if managers
@@ -439,9 +550,16 @@ impl Inner {
             .filter(|session| Arc::ptr_eq(&session.manager, &manager))
             .cloned()
             .collect();
-        for session in sessions {
-            self.expire(&session).await;
-        }
+        let _ = tokio::time::timeout(
+            Duration::from_secs(3),
+            futures_util::stream::iter(sessions).for_each_concurrent(32, |session| {
+                let inner = self.clone();
+                async move {
+                    inner.expire(&session).await;
+                }
+            }),
+        )
+        .await;
         manager.done.send_replace(true);
     }
     async fn publish(
@@ -449,6 +567,34 @@ impl Inner {
         manager: &Arc<Manager>,
         segment: Option<Segment>,
     ) -> Result<(), PlaybackError> {
+        let shared_seq = if let Some(segment) = segment.as_ref() {
+            let lease = lock(&manager.output_lease).clone();
+            if let Some(lease) = lease {
+                Some(
+                    lease
+                        .put(&segment.data, wall_time())
+                        .await
+                        .map_err(|_| failure(503, "HLS segment storage unavailable"))?,
+                )
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+        let shared_scores = if let Some(outputs) = &self.outputs {
+            Some(
+                outputs
+                    .snapshot(&manager.channel, "hls")
+                    .await
+                    .map_err(|_| failure(503, "HLS state unavailable"))?
+                    .segments
+                    .into_iter()
+                    .collect::<BTreeMap<_, _>>(),
+            )
+        } else {
+            None
+        };
         let (playlist, descriptor) = {
             let mut state = lock(&manager.state);
             let now = Instant::now();
@@ -457,16 +603,20 @@ impl Inner {
                 if state.stored.len() >= self.config.max_stored_segments {
                     return Err(failure(503, "HLS segment capacity exhausted"));
                 }
-                let payload = self.payload(manager, segment.data)?;
-                let seq = state.seq;
-                state.seq += 1;
-                state.stored.insert(
-                    seq,
-                    Stored {
-                        payload,
-                        created: now,
-                    },
-                );
+                let seq = shared_seq.unwrap_or(state.seq);
+                state.seq = seq + 1;
+                if shared_seq.is_none() {
+                    let payload = self.payload(manager, segment.data)?;
+                    state.stored.insert(
+                        seq,
+                        Stored {
+                            payload,
+                            created: now,
+                        },
+                    );
+                }
+                // Shared Redis media is not duplicated in an HTTP-local segment cache.
+
                 state.window.push_back(SegmentDescriptor {
                     seq,
                     duration: segment.duration,
@@ -479,11 +629,12 @@ impl Inner {
             state
                 .stored
                 .retain(|_, stored| stored.created.elapsed() < self.config.segment_ttl);
-            while state
-                .window
-                .front()
-                .is_some_and(|head| !state.stored.contains_key(&head.seq))
-            {
+            while state.window.front().is_some_and(|head| {
+                shared_scores.as_ref().map_or_else(
+                    || !state.stored.contains_key(&head.seq),
+                    |scores| !scores.contains_key(&head.seq),
+                )
+            }) {
                 if state.window.pop_front().unwrap().discontinuity {
                     state.disc_seq += 1;
                 }
@@ -491,6 +642,11 @@ impl Inner {
             }
             while state.window.len() > 1
                 && state.window.front().is_some_and(|head| {
+                    if let Some(scores) = &shared_scores {
+                        return scores.get(&head.seq).is_none_or(|stamp| {
+                            wall_time() - stamp >= self.config.segment_ttl.as_secs_f64() - 4.0
+                        });
+                    }
                     state.stored.get(&head.seq).is_none_or(|stored| {
                         stored.created.elapsed() >= self.config.segment_ttl - Duration::from_secs(4)
                     })
@@ -521,7 +677,13 @@ impl Inner {
                 "target":4.0,"adv_target":6,"start_behind":manager.behind,"disc_seq":state.disc_seq,"ts":state.ts});
             (playlist, descriptor)
         };
-        if !self
+        let lease = lock(&manager.output_lease).clone();
+        if let Some(lease) = lease {
+            lease
+                .publish(&descriptor)
+                .await
+                .map_err(|_| failure(503, "HLS ownership lost"))?;
+        } else if !self
             .clients
             .publish_output_playlist(
                 &manager.channel,

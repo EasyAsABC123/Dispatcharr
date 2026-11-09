@@ -477,3 +477,52 @@ async fn hls_readonly_inspection_validates_binding_without_activity_or_ttl_refre
     lease.release().await.unwrap();
     store.shutdown().await;
 }
+
+#[tokio::test]
+#[ignore = "requires disposable Redis; execute run-redis.py --clients"]
+async fn channel_stop_cancels_all_formats_caps_and_admission_but_respects_owner_fence() {
+    let first = store().await;
+    let second = store().await;
+    let mut user = user();
+    user.stream_limit = 0;
+    let channel = channel();
+    let mut redis = connection().await;
+    let owner = uuid::Uuid::new_v4().to_string();
+    let _: () = redis
+        .set(format!("live:channel:{channel}:owner"), &owner)
+        .await
+        .unwrap();
+    let ts = first.register(&channel, &user, "mpegts").await.unwrap();
+    let fmp4 = first.register(&channel, &user, "fmp4").await.unwrap();
+    let hls = first.register(&channel, &user, "hls").await.unwrap();
+    let token = "z".repeat(32);
+    hls.bind_hls_token(&token, user.user_id).await.unwrap();
+    assert!(second.request_channel_stop(&channel).await.unwrap());
+    assert_eq!(second.channel_client_count(&channel).await.unwrap(), 0);
+    assert!(second.get_hls_session(&token).await.unwrap().is_none());
+    assert!(matches!(
+        first.register(&channel, &user, "mpegts").await,
+        Err(Error::Stopped)
+    ));
+    for lease in [&ts, &fmp4, &hls] {
+        let mut stop = lease.stopped();
+        tokio::time::timeout(Duration::from_secs(2), stop.wait_for(|flag| *flag))
+            .await
+            .unwrap()
+            .unwrap();
+    }
+    first.clear_channel_stop(&channel, &owner).await.unwrap();
+    assert!(first.channel_is_stopping(&channel).await.unwrap());
+    let _: usize = redis
+        .del(format!("live:channel:{channel}:owner"))
+        .await
+        .unwrap();
+    first.clear_channel_stop(&channel, "stale").await.unwrap();
+    assert!(first.channel_is_stopping(&channel).await.unwrap());
+    first.clear_channel_stop(&channel, &owner).await.unwrap();
+    assert!(!first.channel_is_stopping(&channel).await.unwrap());
+    let fresh = first.register(&channel, &user, "mpegts").await.unwrap();
+    fresh.release().await.unwrap();
+    first.shutdown().await;
+    second.shutdown().await;
+}

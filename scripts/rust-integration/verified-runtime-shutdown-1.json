@@ -1,0 +1,119 @@
+{
+  "scope": "packaged-React-and-bounded-process-shutdown",
+  "passed": true,
+  "checks": [
+    {
+      "name": "bundled-react-index",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "served-index-matches-image",
+      "passed": true,
+      "details": {
+        "sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a"
+      }
+    },
+    {
+      "name": "react-navigation-fallback",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "production-assets-present",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "production-asset-served",
+      "passed": true,
+      "details": {
+        "bytes": 2654224
+      }
+    },
+    {
+      "name": "production-asset-served",
+      "passed": true,
+      "details": {
+        "bytes": 227833
+      }
+    },
+    {
+      "name": "unimplemented-api-is-json404",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "head-auth-before-media:/proxy/ts/stream/not-a-channel",
+      "passed": true,
+      "details": {
+        "status": 405
+      }
+    },
+    {
+      "name": "head-auth-before-media:/proxy/hls/not-a-token/index.m3u8",
+      "passed": true,
+      "details": {
+        "status": 405
+      }
+    },
+    {
+      "name": "head-auth-before-media:/proxy/ts/status",
+      "passed": true,
+      "details": {
+        "status": 401
+      }
+    },
+    {
+      "name": "head-auth-before-media:/proxy/ts/stream/not-a-channel",
+      "passed": true,
+      "details": {
+        "status": 401
+      }
+    },
+    {
+      "name": "head-opens-no-origin",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "held-native-response-is-ts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "sigterm-with-unread-body-and-partial-headers",
+      "passed": true,
+      "details": {
+        "elapsed_seconds": 12.141730011004256,
+        "exit_code": "0"
+      }
+    },
+    {
+      "name": "native-owner-clients-metadata-input-drained",
+      "passed": true,
+      "details": {
+        "remaining_counts": [
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      }
+    }
+  ],
+  "project": "dispatcharr-rust-probe-6bc9030b6a",
+  "candidate_image_binding": {
+    "image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+    "source_tree_sha256": "9610d95e612c3736113eadb97bb7322b6d0a91d7064d13133334b57f21344dcc",
+    "manifest_verified": true
+  },
+  "integration_report_sha256": "e45482bf55870d3c2a3e4b1472886451223f189c83cda7821c7233f4a48b7140",
+  "probe_sha256": "eaba38dc854b4cfb98421f3fbb962a6c23acbab2dced22813ed4ce53473844e1",
+  "application_performance_verified": false,
+  "candidate_log_sha256": "8d37d72990040ba41ab9de72cc2f29b77673885f45bac11802571a91f10fbb96",
+  "cleanup": "owned integration project and temporary source removed",
+  "raw_evidence_directory": "artifacts/rust/m9-runtime-shutdown-1",
+  "raw_report_sha256": "9fb145d0948727b035361475671e4f0b1bf8201f75d3156094807388d7c2af44",
+  "attribution": "Original Dispatcharr authors and contributors retain full application and React credit. See ATTRIBUTION.md."
+}

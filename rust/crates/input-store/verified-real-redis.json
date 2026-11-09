@@ -1,0 +1,39 @@
+{
+  "scope": "HLS capability HTTP transport with real Redis and loopback origin",
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_sha256": {
+    "apps/proxy/live_proxy/input/buffer.py": "4c055a0e4194493a55749b8941bdaf6a07cf2fcc0faf1baf6890630eba148fb0",
+    "rust/Cargo.lock": "3e8f2e4c21937618d8dc3848c3b90d6b39be78ba1e509a5fe0664d4a6a5178fe",
+    "rust/Cargo.toml": "04def6d674dcf8fbfc377ad9b34b1da3431f09ea40ed9bc01098d0166d30ae08",
+    "rust/crates/input-store/Cargo.toml": "4d111b41fec7c6e0ba648d4d1cc34276b156a4250310e7a19741893c45491646",
+    "rust/crates/input-store/src/lib.rs": "099e7dbc7fd38c3d0ac13e9250649da9ae0d5a6d17c8f6453ac82ae190df0234",
+    "rust/crates/input-store/tests/redis.rs": "c3d16ec197c54c76883887dea09a628ef61bff7f32f574e6656f9e0dc1b3baaa",
+    "rust/crates/output-store/Cargo.toml": "641b618c529a771d78c7b41941ce317f1101398f2a410729d165f788782ad61e",
+    "rust/crates/output-store/src/lib.rs": "500349bd767b2001962bc641d96d62fa77682a352a85103c5849541ef6122ffa",
+    "rust/crates/output-store/src/transport.rs": "412145be4815653b6f89e3e6a6bd4bc28ba58c48bdd3e9d9e40ed7135f18146c",
+    "rust/crates/output-store/tests/redis.rs": "bd77f6d30c6cd2779722dc9e649138714b9b698b0dc99670dcd2e67d8dfd01db",
+    "scripts/rust-hls-parity/http.py": "0b34b0acfa4e43089b206becb870da7497cc8370e219f048abad51418a35da67"
+  },
+  "passed": true,
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "/home/justin/github/Dispatcharr/rust/Cargo.toml",
+    "-p",
+    "dispatcharr-input-store",
+    "--locked",
+    "--offline",
+    "--test",
+    "redis",
+    "--",
+    "--ignored",
+    "--test-threads=1"
+  ],
+  "exit_code": 0,
+  "evidence_path": "artifacts/rust/m2-input-store-abandoned-1/evidence.json",
+  "real_redis_tests_passed": 6,
+  "actual_upstream_lua_age_vectors": 80
+}

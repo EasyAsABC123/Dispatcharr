@@ -1,0 +1,363 @@
+{
+  "format_version": 1,
+  "scope": "original native catch-up media/provider fallback and lifecycle characterization",
+  "capture_complete": true,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "events": [
+    {
+      "case": "all",
+      "status": 206,
+      "bytes": 1880000,
+      "sha256": "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0",
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-1879999/15001836",
+        "content-length": "1880000",
+        "x-content-type-options": "nosniff"
+      },
+      "elapsed_seconds": 3.683,
+      "media_file": "timeshift-all.ts",
+      "after_body": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 59,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1
+      },
+      "after_grace": {
+        "api_exists": false,
+        "api_ttl": -2,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "origin": {
+        "mode": "all",
+        "requests": [
+          {
+            "shape": "colon-dash",
+            "status": 206,
+            "range": "bytes=0-1879999"
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      },
+      "decoder": {
+        "frames": 74,
+        "audio_and_video_mapped": true,
+        "strict_decoder_passed": true
+      }
+    },
+    {
+      "case": "query-only",
+      "status": 206,
+      "bytes": 1880000,
+      "sha256": "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0",
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-1879999/15001836",
+        "content-length": "1880000",
+        "x-content-type-options": "nosniff"
+      },
+      "elapsed_seconds": 3.685,
+      "media_file": "timeshift-query-only.ts",
+      "after_body": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 59,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1
+      },
+      "after_grace": {
+        "api_exists": false,
+        "api_ttl": -2,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "origin": {
+        "mode": "query-only",
+        "requests": [
+          {
+            "shape": "colon-dash",
+            "status": 404
+          },
+          {
+            "shape": "underscore",
+            "status": 404
+          },
+          {
+            "shape": "colon-seconds",
+            "status": 404
+          },
+          {
+            "shape": "query",
+            "status": 206,
+            "range": "bytes=0-1879999"
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      },
+      "decoder": {
+        "frames": 74,
+        "audio_and_video_mapped": true,
+        "strict_decoder_passed": true
+      }
+    },
+    {
+      "case": "html-first",
+      "status": 206,
+      "bytes": 1880000,
+      "sha256": "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0",
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-1879999/15001836",
+        "content-length": "1880000",
+        "x-content-type-options": "nosniff"
+      },
+      "elapsed_seconds": 3.684,
+      "media_file": "timeshift-html-first.ts",
+      "after_body": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 59,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1
+      },
+      "after_grace": {
+        "api_exists": false,
+        "api_ttl": -2,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "origin": {
+        "mode": "html-first",
+        "requests": [
+          {
+            "shape": "query",
+            "status": 400
+          },
+          {
+            "shape": "colon-dash",
+            "status": 200,
+            "media": false
+          },
+          {
+            "shape": "underscore",
+            "status": 206,
+            "range": "bytes=0-1879999"
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      },
+      "decoder": {
+        "frames": 74,
+        "audio_and_video_mapped": true,
+        "strict_decoder_passed": true
+      }
+    },
+    {
+      "case": "forbidden",
+      "status": 403,
+      "bytes": 22,
+      "sha256": "00da1b7ba606b232b4df08246686a0e0a62fdfe8f1150472c709062edc3ed670",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "22",
+        "x-content-type-options": "nosniff"
+      },
+      "elapsed_seconds": 0.012,
+      "error_body": "Provider denied access",
+      "after_body": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "after_grace": {
+        "api_exists": true,
+        "api_ttl": 587,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "origin": {
+        "mode": "forbidden",
+        "requests": [
+          {
+            "shape": "underscore",
+            "status": 403
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      }
+    },
+    {
+      "case": "not-found",
+      "status": 404,
+      "bytes": 26,
+      "sha256": "d810f0a377e1ce03d5b4e5e9429383d0fee2d574304c902d479436a6955fac82",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "26",
+        "x-content-type-options": "nosniff"
+      },
+      "elapsed_seconds": 0.02,
+      "error_body": "Catch-up not available yet",
+      "after_body": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "after_grace": {
+        "api_exists": true,
+        "api_ttl": 587,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "origin": {
+        "mode": "not-found",
+        "requests": [
+          {
+            "shape": "underscore",
+            "status": 404
+          },
+          {
+            "shape": "colon-dash",
+            "status": 404
+          },
+          {
+            "shape": "colon-seconds",
+            "status": 404
+          },
+          {
+            "shape": "query",
+            "status": 404
+          },
+          {
+            "shape": "query",
+            "status": 404
+          },
+          {
+            "shape": "query",
+            "status": 404
+          },
+          {
+            "shape": "query",
+            "status": 404
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      }
+    },
+    {
+      "case": "server-error",
+      "status": 400,
+      "bytes": 14,
+      "sha256": "9ade31ecd1b5e04c2c506c807acebc8b6034d502c65167961b27137273950130",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "14",
+        "x-content-type-options": "nosniff"
+      },
+      "elapsed_seconds": 0.02,
+      "error_body": "Provider error",
+      "after_body": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "after_grace": {
+        "api_exists": true,
+        "api_ttl": 587,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "origin": {
+        "mode": "server-error",
+        "requests": [
+          {
+            "shape": "underscore",
+            "status": 500
+          },
+          {
+            "shape": "colon-dash",
+            "status": 500
+          },
+          {
+            "shape": "colon-seconds",
+            "status": 500
+          },
+          {
+            "shape": "query",
+            "status": 500
+          },
+          {
+            "shape": "query",
+            "status": 500
+          },
+          {
+            "shape": "query",
+            "status": 500
+          },
+          {
+            "shape": "query",
+            "status": 500
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      }
+    }
+  ],
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m4-timeshift-media-source-1/vod-contracts.json"
+}

@@ -74,6 +74,27 @@ The current bounded in-process throttle preserves the nominal 3/min login and
 10/min failed API-key budgets but does not yet share budgets across workers or
 Python. This crate is not a completed M5 account migration.
 
+Core settings, user agents, stream profiles and output profiles now expose
+existing-schema list/detail reads with standard-user and UI-network permission
+checks. The 190-check immutable Compose run recorded in
+[verified-integration-m5-core-profiles-2.json](../../../scripts/rust-integration/verified-integration-m5-core-profiles-2.json)
+verified these reads plus channel-profile create/update/delete/duplicate,
+default/empty memberships, user visibility and relation cleanup. The subsequent
+[274-check run](../../../scripts/rust-integration/verified-integration-m5-memberships-channel-reads-1.json)
+also verified single/bulk membership mutations and channel read serialization,
+filters, pagination and visibility. Core mutation side effects and pending gates are
+tracked in [CORE-CONTRACTS.md](../../../scripts/rust-account-contracts/CORE-CONTRACTS.md).
+The later [356-check run](../../../scripts/rust-integration/verified-integration-m5-channel-crud-2.json)
+verified supported channel writes, stream ordering/catchup, raw/effective
+overrides, group ownership and profile-selection creation side effects. Remaining
+EPG/DVR/compact-numbering/stop-control gates are recorded
+in [CHANNEL-CONTRACTS.md](../../../scripts/rust-account-contracts/CHANNEL-CONTRACTS.md).
+The [405-check group/stop run](../../../scripts/rust-integration/verified-integration-m5-channel-groups-1.json)
+then verified group CRUD, provider rename/demotion and actual active/inactive TS
+stop/delete behavior, including a repeat against the replica image. Its focused
+cleanup extension verifies unrelated-group protection and FK SET_NULL effects;
+only the source's experimentally unordered deleted-name list is normalized.
+
 An additional real-schema test is deliberately ignored by ordinary unit runs.
 It is not counted as a passing check until explicitly run. Against a disposable
 Django-migrated fixture database only, set `DISPATCHARR_STORE_TEST_FIXTURE=isolated`,

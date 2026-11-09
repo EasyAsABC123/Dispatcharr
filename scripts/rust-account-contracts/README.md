@@ -78,3 +78,18 @@ Only the disposable viewer's app-data rows are cleared by that suite. Existing
 non-fixture users are never targeted. Missing services and cleanup failures are
 recorded as failed checks rather than skipped. These golden checks remain
 functional evidence; they do not establish account/API performance acceptance.
+
+`run_core` compares core management reads across all fixture roles and missing
+or malformed IDs. `run_profiles` covers channel-profile CRUD, duplication,
+start-empty/default membership, ownership visibility and cascading relation
+cleanup. `run_memberships` checks single/bulk ownership differences, the disabled
+row created before a rejected update, nested validation and transactional writes.
+`run_channel_reads` verifies raw/effective serializers, provider URL redaction,
+filters, ordering, pagination and level/adult/profile visibility.
+
+`run_channel_crud` adds channel scalar, stream-order, catchup rollup, override,
+profile-selection and deletion lifecycles. Generated root channel IDs/UUIDs are
+normalized; read-only identity preservation is checked first. Relation IDs and
+shared fixture timestamps remain strict. Invalid profile selection is checked
+for the original 400-with-created-channel side effect. Unsupported EPG/DVR/engine
+side effects remain explicit gates documented in [CHANNEL-CONTRACTS.md](CHANNEL-CONTRACTS.md).

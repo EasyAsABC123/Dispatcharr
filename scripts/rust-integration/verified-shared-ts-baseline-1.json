@@ -1,0 +1,133 @@
+{
+  "scope": "actual upstream two-worker native TS contracts and owner-crash resource defect",
+  "evidence_path": "artifacts/rust/m2-shared-ts-baseline-1/shared-ts.json",
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "healthy_shared_playback_and_global_stop_passed": true,
+  "owner_crash_recovery_gate_passed": false,
+  "owner_crash_deadline_seconds": 90,
+  "measured_after_crash": {
+    "owner": null,
+    "provider_slots": 1,
+    "clients": 0,
+    "metadata_fields": 0,
+    "input_index": 4,
+    "timestamps": 0,
+    "state": null
+  },
+  "checks": [
+    {
+      "name": "baseline:shared-demand:one-origin-and-provider",
+      "passed": true,
+      "details": {
+        "owner": "9e53a5a4ea56:264",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 16,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "active"
+      }
+    },
+    {
+      "name": "baseline:follower-keeps-owner",
+      "passed": true,
+      "details": {
+        "owner": "9e53a5a4ea56:264",
+        "provider_slots": 1,
+        "clients": 1,
+        "metadata_fields": 17,
+        "input_index": 6,
+        "timestamps": 6,
+        "state": "active"
+      }
+    },
+    {
+      "name": "baseline:shared-demand:packet-sync",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "baseline:shared-demand:actual-decoder",
+      "passed": true,
+      "details": [
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        },
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "f6a0fc10562723e423c274ba477ef4a25caa87fa6862f89cd5906c9f0668da93"
+        }
+      ]
+    },
+    {
+      "name": "baseline:stop:one-origin-and-provider",
+      "passed": true,
+      "details": {
+        "owner": "9e53a5a4ea56:264",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 16,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "active"
+      }
+    },
+    {
+      "name": "baseline:follower-global-stop-response",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "body": {
+          "message": "Channel stop request sent",
+          "channel_id": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "previous_state": {
+            "state": "active"
+          }
+        }
+      }
+    },
+    {
+      "name": "baseline:stop:packet-sync",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "baseline:stop:actual-decoder",
+      "passed": true,
+      "details": [
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        },
+        {
+          "frames": 74,
+          "video_and_audio": true,
+          "sha256": "67a009e665d8481c622f0d53fac05139702f07d99d1f51785a8e7f2c4f2463e1"
+        }
+      ]
+    },
+    {
+      "name": "baseline:owner-crash:one-origin-and-provider",
+      "passed": true,
+      "details": {
+        "owner": "9e53a5a4ea56:264",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 16,
+        "input_index": 4,
+        "timestamps": 4,
+        "state": "active"
+      }
+    }
+  ],
+  "cleanup": "isolated Compose project removed",
+  "resource_improvement_policy": "Rust must recover fenced provider slots and input metadata within its numeric gate; preserve original author credit and document this as cleanup improvement, not identical crash leaks."
+}

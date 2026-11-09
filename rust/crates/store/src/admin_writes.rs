@@ -18,13 +18,12 @@ use std::net::SocketAddr;
 
 type Body = Result<Json<Value>, JsonRejection>;
 const USERNAME_MESSAGE:&str="Username may only contain letters, numbers, periods (.), underscores (_), at signs (@), and hyphens (-)";
-const INTEGER_MESSAGE: &str = "A valid integer is required.";
 const DATETIME_MESSAGE:&str="Datetime has wrong format. Use one of these formats instead: YYYY-MM-DDThh:mm[:ss[.uuuuuu]][+HH:MM|-HH:MM|Z].";
 
 fn field_error(field: &str, message: &str) -> StoreError {
     StoreError::InvalidInput(json!({field:[message]}))
 }
-fn body_object(body: Body) -> Result<Map<String, Value>, StoreError> {
+pub(crate) fn body_object(body: Body) -> Result<Map<String, Value>, StoreError> {
     let Json(value) =
         body.map_err(|_| StoreError::InvalidInput(json!({"detail":"JSON parse error"})))?;
     value.as_object().cloned().ok_or_else(||StoreError::InvalidInput(json!({"non_field_errors":[format!("Invalid data. Expected a dictionary, but got {}.",datatype(&value))]})))
@@ -45,7 +44,7 @@ fn datatype(value: &Value) -> &'static str {
         }
     }
 }
-fn character(
+pub(crate) fn character(
     field: &str,
     value: &Value,
     max: Option<usize>,
@@ -56,7 +55,17 @@ fn character(
     }
     let value = match value {
         Value::String(value) => value.trim().to_owned(),
-        Value::Number(value) => value.to_string(),
+        Value::Number(value) => {
+            if value.is_f64() {
+                crate::json_compat::float_string(
+                    value
+                        .as_f64()
+                        .ok_or_else(|| field_error(field, "Not a valid string."))?,
+                )
+            } else {
+                value.to_string()
+            }
+        }
         _ => return Err(field_error(field, "Not a valid string.")),
     };
     if value.is_empty() && !blank {
@@ -75,36 +84,26 @@ fn character(
     }
     Ok(value)
 }
-fn integer(field: &str, value: &Value) -> Result<i64, StoreError> {
-    if value.is_null() {
-        return Err(field_error(field, "This field may not be null."));
-    }
-    let number = match value {
-        Value::Bool(value) => Some(i64::from(*value)),
-        Value::Number(value) => value.as_i64().or_else(|| {
-            value
-                .as_f64()
-                .filter(|value| {
-                    value.is_finite()
-                        && value.fract() == 0.0
-                        && *value >= i64::MIN as f64
-                        && *value <= i64::MAX as f64
-                })
-                .map(|value| value as i64)
-        }),
-        Value::String(value) => {
-            let raw = value.trim();
-            let raw = raw
-                .split_once('.')
-                .filter(|(_, fraction)| {
-                    !fraction.is_empty() && fraction.bytes().all(|byte| byte == b'0')
-                })
-                .map_or(raw, |(whole, _)| whole);
-            raw.parse().ok()
+pub(crate) fn integer(field: &str, value: &Value) -> Result<i64, StoreError> {
+    let value = crate::channel_memberships::integer(value).map_err(|error| match error {
+        StoreError::InvalidInput(Value::Object(mut fields)) => {
+            if let Some(message) = fields.remove("channel_id") {
+                fields.insert(field.into(), message);
+            }
+            StoreError::InvalidInput(Value::Object(fields))
         }
-        _ => None,
-    }
-    .ok_or_else(|| field_error(field, INTEGER_MESSAGE))?;
+        other => other,
+    })?;
+    let number = value.as_i64().ok_or_else(|| {
+        field_error(
+            field,
+            if value.to_string().starts_with('-') {
+                "Ensure this value is greater than or equal to -2147483648."
+            } else {
+                "Ensure this value is less than or equal to 2147483647."
+            },
+        )
+    })?;
     if number > i32::MAX as i64 {
         return Err(field_error(
             field,
@@ -119,14 +118,14 @@ fn integer(field: &str, value: &Value) -> Result<i64, StoreError> {
     }
     Ok(number)
 }
-fn boolean(field: &str, value: &Value) -> Result<bool, StoreError> {
+pub(crate) fn boolean(field: &str, value: &Value) -> Result<bool, StoreError> {
     if let Some(value) = value.as_bool() {
         return Ok(value);
     }
-    if value == &json!(1) {
+    if crate::json_compat::python_equal(value, &json!(1)) {
         return Ok(true);
     }
-    if value == &json!(0) {
+    if crate::json_compat::python_equal(value, &json!(0)) {
         return Ok(false);
     }
     if let Some(value) = value.as_str() {
@@ -141,7 +140,7 @@ fn boolean(field: &str, value: &Value) -> Result<bool, StoreError> {
     }
     Err(field_error(field, "Must be a valid boolean."))
 }
-fn parse_datetime(
+pub(crate) fn parse_datetime(
     field: &str,
     value: &Value,
     nullable: bool,

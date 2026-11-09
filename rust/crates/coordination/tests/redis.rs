@@ -63,15 +63,60 @@ async fn vod_owner_is_scoped_but_provider_capacity_is_shared_with_live() {
     live.channel_id = uuid::Uuid::new_v4().to_string();
     let vod_owner = format!("{namespace}:vod:session:{}:owner", vod.channel_id);
     let lease = coordinator.acquire_vod(vod.clone()).await.unwrap();
-    assert_eq!(redis.get::<_, String>(&vod_owner).await.unwrap(), lease.token());
+    assert_eq!(
+        redis.get::<_, String>(&vod_owner).await.unwrap(),
+        lease.token()
+    );
     assert!(!redis.exists::<_, bool>(owner(&vod)).await.unwrap());
     assert_eq!(redis.get::<_, i64>(profile(&vod)).await.unwrap(), 1);
-    assert!(matches!(coordinator.acquire(live.clone()).await, Err(Error::ProfileFull)));
+    assert!(matches!(
+        coordinator.acquire(live.clone()).await,
+        Err(Error::ProfileFull)
+    ));
     assert!(!redis.exists::<_, bool>(owner(&live)).await.unwrap());
     assert!(lease.release().await.unwrap());
     assert!(!redis.exists::<_, bool>(&vod_owner).await.unwrap());
     let live_lease = coordinator.acquire(live.clone()).await.unwrap();
-    assert!(matches!(coordinator.acquire_vod(vod.clone()).await, Err(Error::ProfileFull)));
+    assert!(matches!(
+        coordinator.acquire_vod(vod.clone()).await,
+        Err(Error::ProfileFull)
+    ));
+    assert!(!redis.exists::<_, bool>(&vod_owner).await.unwrap());
+    assert_eq!(redis.get::<_, i64>(profile(&vod)).await.unwrap(), 1);
+    live_lease.release().await.unwrap();
+    let _: () = redis.del(profile(&vod)).await.unwrap();
+}
+
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn timeshift_owner_is_scoped_but_provider_capacity_is_shared_with_live() {
+    let mut configuration = config();
+    configuration.ttl = Duration::from_secs(10);
+    let namespace = configuration.namespace.clone();
+    let (coordinator, mut redis) = setup(configuration).await;
+    let vod = request();
+    let mut live = vod.clone();
+    live.channel_id = uuid::Uuid::new_v4().to_string();
+    let vod_owner = format!("{namespace}:timeshift:session:{}:owner", vod.channel_id);
+    let lease = coordinator.acquire_timeshift(vod.clone()).await.unwrap();
+    assert_eq!(
+        redis.get::<_, String>(&vod_owner).await.unwrap(),
+        lease.token()
+    );
+    assert!(!redis.exists::<_, bool>(owner(&vod)).await.unwrap());
+    assert_eq!(redis.get::<_, i64>(profile(&vod)).await.unwrap(), 1);
+    assert!(matches!(
+        coordinator.acquire(live.clone()).await,
+        Err(Error::ProfileFull)
+    ));
+    assert!(!redis.exists::<_, bool>(owner(&live)).await.unwrap());
+    assert!(lease.release().await.unwrap());
+    assert!(!redis.exists::<_, bool>(&vod_owner).await.unwrap());
+    let live_lease = coordinator.acquire(live.clone()).await.unwrap();
+    assert!(matches!(
+        coordinator.acquire_timeshift(vod.clone()).await,
+        Err(Error::ProfileFull)
+    ));
     assert!(!redis.exists::<_, bool>(&vod_owner).await.unwrap());
     assert_eq!(redis.get::<_, i64>(profile(&vod)).await.unwrap(), 1);
     live_lease.release().await.unwrap();

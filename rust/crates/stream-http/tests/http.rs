@@ -84,6 +84,130 @@ fn config() -> EngineConfig {
     }
 }
 
+#[tokio::test]
+async fn full_chunk_startup_waits_for_four_chunks_then_positions_at_live_head() {
+    let (sender, receiver) = tokio::sync::mpsc::channel::<Bytes>(8);
+    let receiver = Arc::new(std::sync::Mutex::new(Some(receiver)));
+    let app = Router::new().route(
+        "/live",
+        get(move || {
+            let mut receiver = receiver.lock().unwrap().take().unwrap();
+            async move {
+                Body::from_stream(async_stream::stream! {
+                    while let Some(bytes) = receiver.recv().await {
+                        yield Ok::<_, Infallible>(bytes);
+                    }
+                })
+            }
+        }),
+    );
+    let (base, origin) = serve(app).await;
+    let mut limits = config();
+    limits.initial_buffer_chunks = 4;
+    limits.source_initialization = true;
+    limits.flush_partial_chunks = false;
+    limits.read_timeout = Duration::from_secs(1);
+    let engine = StreamEngine::new(limits).unwrap();
+    let running = engine.clone();
+    let request = tokio::spawn(async move {
+        running
+            .play(source(format!("{base}/live"), "initial-buffer"))
+            .await
+    });
+    let packet = |value: u8| {
+        let mut bytes = vec![value; 188];
+        bytes[0] = 0x47;
+        bytes
+    };
+    for _ in 0..3 {
+        sender
+            .send(Bytes::from([packet(1), packet(1)].concat()))
+            .await
+            .unwrap();
+    }
+    sender.send(Bytes::from(packet(2))).await.unwrap();
+    time::sleep(Duration::from_millis(30)).await;
+    assert!(
+        !request.is_finished(),
+        "three complete chunks plus a partial chunk must stay initializing"
+    );
+    sender.send(Bytes::from(packet(2))).await.unwrap();
+    let mut body = time::timeout(Duration::from_secs(1), request)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap()
+        .into_body();
+    assert!(
+        time::timeout(Duration::from_millis(20), body.frame())
+            .await
+            .is_err(),
+        "live-head positioning must skip the four initialization chunks"
+    );
+    sender
+        .send(Bytes::from([packet(9), packet(9)].concat()))
+        .await
+        .unwrap();
+    let bytes = time::timeout(Duration::from_secs(1), body.frame())
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap();
+    assert_eq!(bytes.len(), 376);
+    assert_eq!(bytes[4], 9);
+    drop(bytes);
+    drop(body);
+    drop(sender);
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
+    origin.abort();
+}
+
+#[tokio::test]
+async fn source_mode_retains_partial_packets_and_full_chunk_accumulation_across_same_url_retry() {
+    let requests = Arc::new(AtomicUsize::new(0));
+    let counted = requests.clone();
+    let mut old = vec![1u8; 188];
+    old[0] = 0x47;
+    let mut new = vec![2u8; 188];
+    new[0] = 0x47;
+    let expected = [old.clone(), new.clone()].concat();
+    let app = Router::new().route(
+        "/live",
+        get(move || {
+            let attempt = counted.fetch_add(1, Ordering::SeqCst);
+            let bytes = if attempt == 0 {
+                old[..94].to_vec()
+            } else {
+                [old[94..].to_vec(), new.clone()].concat()
+            };
+            async move {
+                Body::from_stream(async_stream::stream! {
+                    yield Ok::<_,Infallible>(Bytes::from(bytes));
+                    if attempt>0 {std::future::pending::<()>().await;}
+                })
+            }
+        }),
+    );
+    let (base, origin) = serve(app).await;
+    let mut limits = config();
+    limits.source_initialization = true;
+    limits.flush_partial_chunks = false;
+    limits.max_retries = 1;
+    let engine = StreamEngine::new(limits).unwrap();
+    let mut playback = source(format!("{base}/live"), "retry-accumulator");
+    playback.startup_behind = Duration::from_secs(10);
+    let mut body = engine.play(playback).await.unwrap().into_body();
+    let data = body.frame().await.unwrap().unwrap().into_data().unwrap();
+    assert_eq!(data.as_ref(), expected);
+    assert_eq!(requests.load(Ordering::SeqCst), 2);
+    drop(data);
+    drop(body);
+    assert!(engine.shutdown_wait(Duration::from_secs(1)).await);
+    origin.abort();
+}
+
 fn source(url: String, channel: &str) -> PlaybackSource {
     PlaybackSource {
         channel_id: channel.into(),
@@ -543,6 +667,126 @@ async fn wait_profile_zero(redis: &mut redis::aio::MultiplexedConnection, key: &
     })
     .await
     .expect("profile reservation not released");
+}
+
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn shutdown_drains_upstream_and_provider_even_while_http_frame_is_held() {
+    let (coordinator, mut redis) = redis_coordinator().await;
+    let (url, counts, origin) = start_origin().await;
+    let source = limited_source(url);
+    let profile_key = format!(
+        "profile_connections:{}",
+        source.provider_profile_id.unwrap()
+    );
+    let engine = StreamEngine::new_with_coordinator(config(), Some(coordinator)).unwrap();
+    let mut body = engine.play(source.clone()).await.unwrap().into_body();
+    let frame = body.frame().await.unwrap().unwrap().into_data().unwrap();
+    let held = frame.clone();
+    assert!(!held.is_empty());
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
+    wait_profile_zero(&mut redis, &profile_key).await;
+    wait_for(|| counts.active.load(Ordering::SeqCst) == 0).await;
+    assert!(engine.status().is_empty());
+    assert_eq!(engine.play(source).await.unwrap_err().status, 503);
+    // The downstream frame remains valid after the upstream and provider slot
+    // have drained; dropping it must not be required to finish process cleanup.
+    assert_eq!(held[0], 0x47);
+    drop(frame);
+    drop(held);
+    drop(body);
+    assert!(engine.shutdown_wait(Duration::from_millis(100)).await);
+    origin.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn native_cold_failure_waits_for_ghost_and_returns_exact_error_packet_but_capacity_stays_json(
+) {
+    use dispatcharr_clients::{ClientConfig, ClientStore};
+    use dispatcharr_coordination::{Coordinator, LeaseConfig};
+    use redis::AsyncCommands;
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let coordinator = Coordinator::connect(&redis_url, LeaseConfig::default())
+        .await
+        .unwrap();
+    let clients = ClientStore::connect(
+        &redis_url,
+        ClientConfig {
+            ghost_timeout: Duration::from_millis(250),
+            flush_interval: Duration::from_millis(20),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let requests = Arc::new(AtomicUsize::new(0));
+    let counted = requests.clone();
+    let (base, origin) = serve(Router::new().route(
+        "/fail",
+        get(move || {
+            counted.fetch_add(1, Ordering::SeqCst);
+            async { StatusCode::SERVICE_UNAVAILABLE }
+        }),
+    ))
+    .await;
+    let mut limits = config();
+    limits.source_initialization = true;
+    limits.initial_buffer_chunks = 4;
+    limits.flush_partial_chunks = false;
+    let engine =
+        StreamEngine::new_with_services(limits, Some(coordinator), Some(clients.clone())).unwrap();
+    let mut source = limited_source(format!("{base}/fail"));
+    source.shutdown_delay = Duration::from_millis(50);
+    let profile_key = format!(
+        "profile_connections:{}",
+        source.provider_profile_id.unwrap()
+    );
+    let mut redis = redis::Client::open(redis_url)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let running = engine.clone();
+    let playback = source.clone();
+    let started = time::Instant::now();
+    let request = tokio::spawn(async move { running.play(playback).await });
+    wait_for(|| requests.load(Ordering::SeqCst) > 0).await;
+    time::sleep(Duration::from_millis(30)).await;
+    assert!(
+        !request.is_finished(),
+        "an upstream503 is not a pre-stream JSON503"
+    );
+    assert_eq!(redis.get::<_, i64>(&profile_key).await.unwrap(), 1);
+    let response = time::timeout(Duration::from_secs(2), request)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap();
+    assert!(started.elapsed() >= Duration::from_millis(200));
+    assert_eq!(response.status(), StatusCode::OK);
+    assert_eq!(response.headers()["content-type"], "video/mp2t");
+    assert_eq!(redis.get::<_, i64>(&profile_key).await.unwrap(), 1);
+    let bytes = response.into_body().collect().await.unwrap().to_bytes();
+    let mut expected = [0u8; 188];
+    expected[..4].copy_from_slice(&[0x47, 0x1f, 0xff, 0]);
+    let message = b"Error: Client disconnected";
+    expected[4..4 + message.len()].copy_from_slice(message);
+    assert_eq!(bytes.as_ref(), expected);
+    drop(bytes);
+    wait_profile_zero(&mut redis, &profile_key).await;
+    let mut full = limited_source(format!("{base}/fail"));
+    full.provider_profile_id = source.provider_profile_id;
+    redis.set::<_, _, ()>(&profile_key, 1).await.unwrap();
+    let count = requests.load(Ordering::SeqCst);
+    let failure = engine.play(full).await.unwrap_err();
+    assert_eq!(failure.status, 503);
+    assert_eq!(requests.load(Ordering::SeqCst), count);
+    assert_eq!(redis.get::<_, i64>(&profile_key).await.unwrap(), 1);
+    redis.del::<_, ()>(&profile_key).await.unwrap();
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
+    clients.shutdown().await;
+    origin.abort();
 }
 
 #[tokio::test]
@@ -1094,4 +1338,194 @@ async fn viewer_limit_metadata_stop_and_frame_lifetime_are_enforced_over_http() 
     engine.shutdown();
     clients.shutdown().await;
     origin.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires disposable Redis; execute run-redis.py --http"]
+async fn separate_workers_follow_shared_input_without_extra_upstream_or_provider_slot() {
+    shared_workers(false).await;
+}
+
+#[tokio::test]
+#[ignore = "requires disposable Redis; execute run-redis.py --http"]
+async fn stop_through_follower_cancels_owner_and_all_accounting_with_held_body_frame() {
+    shared_workers(true).await;
+}
+
+async fn shared_workers(remote_stop: bool) {
+    use dispatcharr_clients::{ClientConfig, ClientStore};
+    use dispatcharr_coordination::{Coordinator, LeaseConfig};
+    use dispatcharr_input_store::{InputConfig, InputStore};
+    use redis::AsyncCommands;
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let coordinator = Coordinator::connect(&redis_url, LeaseConfig::default())
+        .await
+        .unwrap();
+    let first_clients = ClientStore::connect(&redis_url, ClientConfig::default())
+        .await
+        .unwrap();
+    let second_clients = ClientStore::connect(&redis_url, ClientConfig::default())
+        .await
+        .unwrap();
+    let inputs = InputStore::connect(&redis_url, InputConfig::default())
+        .await
+        .unwrap();
+    let first = StreamEngine::new_with_shared_inputs(
+        config(),
+        Some(coordinator.clone()),
+        Some(first_clients.clone()),
+        Some(inputs.clone()),
+    )
+    .unwrap();
+    let second = StreamEngine::new_with_shared_inputs(
+        config(),
+        Some(coordinator),
+        Some(second_clients.clone()),
+        Some(inputs.clone()),
+    )
+    .unwrap();
+    let (url, counts, origin) = start_origin().await;
+    let channel = uuid::Uuid::new_v4().to_string();
+    let profile = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000) as i64 + 100;
+    let mut source = source(url, &channel);
+    source.provider_profile_id = Some(profile);
+    source.provider_max_streams = 1;
+    source.startup_behind = Duration::from_millis(25);
+    let mut owner = first.play(source.clone()).await.unwrap().into_body();
+    let bytes = owner.frame().await.unwrap().unwrap().into_data().unwrap();
+    assert!(!bytes.is_empty());
+    drop(bytes);
+    let mut follower = second.play(source).await.unwrap().into_body();
+    let bytes = follower
+        .frame()
+        .await
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap();
+    assert_eq!(bytes.len() % 188, 0);
+    assert_eq!(bytes[0], 0x47);
+    drop(bytes);
+    assert_eq!(counts.connections.load(Ordering::SeqCst), 1);
+    let mut redis = redis::Client::open(redis_url)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let key = format!("profile_connections:{profile}");
+    assert_eq!(redis.get::<_, u64>(&key).await.unwrap(), 1);
+    let metadata = second
+        .legacy_status(&channel, false)
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(metadata["client_count"], 2);
+    drop(owner);
+    // The owner must keep ingesting for viewers on another worker, even after
+    // its final local HTTP reader disappears.
+    time::sleep(Duration::from_millis(1100)).await;
+    assert_eq!(counts.active.load(Ordering::SeqCst), 1);
+    for _ in 0..4 {
+        let bytes = follower
+            .frame()
+            .await
+            .unwrap()
+            .unwrap()
+            .into_data()
+            .unwrap();
+        assert_eq!(bytes[0], 0x47);
+    }
+    assert_eq!(counts.connections.load(Ordering::SeqCst), 1);
+    let held = if remote_stop {
+        let held = follower
+            .frame()
+            .await
+            .unwrap()
+            .unwrap()
+            .into_data()
+            .unwrap();
+        assert!(second.stop_global(&channel).await.unwrap());
+        assert_eq!(
+            redis
+                .scard::<_, usize>(format!("live:channel:{channel}:clients"))
+                .await
+                .unwrap(),
+            0
+        );
+        Some(held)
+    } else {
+        None
+    };
+    if !remote_stop {
+        drop(follower);
+    } else {
+        assert!(!held.as_ref().unwrap().is_empty());
+        drop(follower);
+    }
+    time::timeout(Duration::from_secs(4), async {
+        loop {
+            if counts.active.load(Ordering::SeqCst) == 0
+                && redis
+                    .get::<_, Option<u64>>(&key)
+                    .await
+                    .unwrap()
+                    .unwrap_or(0)
+                    == 0
+            {
+                break;
+            }
+            time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert!(inputs.snapshot(&channel).await.unwrap().owner.is_none());
+    if remote_stop {
+        assert!(!redis
+            .exists::<_, bool>(format!("live:channel:{channel}:stopping"))
+            .await
+            .unwrap());
+    }
+    drop(held);
+    assert!(!redis
+        .exists::<_, bool>(format!("live:channel:{channel}:input:buffer:index"))
+        .await
+        .unwrap());
+    first.shutdown();
+    second.shutdown();
+    first_clients.shutdown().await;
+    second_clients.shutdown().await;
+    origin.abort();
+}
+
+#[tokio::test]
+async fn head_authenticates_without_resolving_or_starting_an_origin() {
+    let engine = StreamEngine::new(config()).unwrap();
+    let resolver = Arc::new(Resolver {
+        source: source("http://127.0.0.1:9/live".into(), "head"),
+        resolutions: AtomicUsize::new(0),
+    });
+    for (path, auth, expected) in [
+        ("/proxy/ts/stream/head", None, 405),
+        ("/proxy/ts/stream/head", Some("Bearer supplied"), 501),
+        ("/proxy/ts/status", None, 403),
+        ("/proxy/ts/status/head", Some("Bearer admin"), 405),
+    ] {
+        let mut request = axum::http::Request::builder().method("HEAD").uri(path);
+        if let Some(auth) = auth {
+            request = request.header("authorization", auth);
+        }
+        assert_eq!(
+            engine
+                .router(resolver.clone())
+                .oneshot(request.body(Body::empty()).unwrap())
+                .await
+                .unwrap()
+                .status()
+                .as_u16(),
+            expected
+        );
+    }
+    assert_eq!(resolver.resolutions.load(Ordering::SeqCst), 0);
+    assert!(engine.status().is_empty());
 }

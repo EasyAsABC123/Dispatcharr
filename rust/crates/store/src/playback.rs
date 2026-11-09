@@ -156,6 +156,18 @@ impl Store {
 }
 
 impl PlaybackResolver for AuthService {
+    fn authenticate_optional(
+        &self,
+        request: PlaybackRequest,
+    ) -> BoxFuture<'_, Result<(), PlaybackError>> {
+        Box::pin(async move {
+            self.authenticate(&request)
+                .await
+                .map(|_| ())
+                .map_err(playback_error)
+        })
+    }
+
     fn resolve(
         &self,
         request: PlaybackRequest,
@@ -194,12 +206,6 @@ impl PlaybackResolver for AuthService {
                 .await
                 .map_err(playback_error)?;
             let output = resolve_output_format(&request, user.as_ref(), &stream_settings);
-            if output == "fmp4" {
-                return Err(PlaybackError::new(
-                    501,
-                    "Requested output format is not implemented",
-                ));
-            }
             if let Some(profile) = resolve_output_profile_id(&request, user.as_ref()) {
                 let active: bool = sqlx::query_scalar(
                     "SELECT EXISTS(SELECT 1 FROM core_outputprofile WHERE id=$1 AND is_active)",

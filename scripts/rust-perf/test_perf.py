@@ -62,6 +62,18 @@ class PerformanceTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 perf.resources(['a', 'b'])
 
+    def test_process_rss_is_diagnostic_and_bounded(self):
+        raw = '    PID COMMAND RSS\n12 redis-server 1024\n13 postgres 2048\n'
+        parsed = perf.parse_process_rss(raw)
+        self.assertEqual(parsed[0], {'pid':12,'name':'redis-server','rss_bytes':1024*1024})
+        with patch.object(perf.subprocess, 'check_output', return_value=raw) as call:
+            result=perf.process_resources(['container'])
+            self.assertEqual(result['containers'][0]['process_rss_bytes_sum_diagnostic'],3*1024*1024)
+            self.assertEqual(call.call_args.kwargs['timeout'],3)
+        for invalid in ['PID COMMAND RSS\n1 redis-server -1', 'PID ARGS RSS\n1 hidden 2', 'PID COMMAND RSS\n'+('1 p 1\n'*4097)]:
+            with self.assertRaises(ValueError): perf.parse_process_rss(invalid)
+        with self.assertRaises(ValueError): perf.process_resources(['container']*17)
+
     def candidate(self):
         result = report()
         result['measurement']['summary'].update(cpu_percent_mean=30, memory_bytes_peak=700)

@@ -238,3 +238,97 @@ def run_app_data(http, baseline, candidate, accounts, record):
     module=importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.run(http,baseline,candidate,accounts,record)
+
+
+def run_core(http, baseline, candidate, accounts, record):
+    """Load source-vs-candidate core settings/profile read contracts."""
+    spec=importlib.util.spec_from_file_location('dispatcharr_core_read_probes',
+                                               Path(__file__).with_name('core_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_profiles(http, baseline, candidate, accounts, record):
+    """Load transactional channel-profile CRUD and duplicate oracles."""
+    validate_fixture(baseline,candidate,accounts)
+    validate_fixture(baseline,candidate,dict(accounts,viewer=accounts['standard']))
+    spec=importlib.util.spec_from_file_location('dispatcharr_profile_probes',
+                                               Path(__file__).with_name('profile_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_memberships(http, baseline, candidate, accounts, record):
+    """Load owner single/admin bulk profile-membership mutation contracts."""
+    validate_fixture(baseline,candidate,accounts)
+    validate_fixture(baseline,candidate,dict(accounts,viewer=accounts['standard']))
+    spec=importlib.util.spec_from_file_location('dispatcharr_membership_probes',
+                                               Path(__file__).with_name('membership_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_channel_reads(http, baseline, candidate, accounts, record):
+    """Load real channel serialization/filter/access/page contracts."""
+    validate_fixture(baseline,candidate,accounts)
+    validate_fixture(baseline,candidate,dict(accounts,viewer=accounts['standard']))
+    spec=importlib.util.spec_from_file_location('dispatcharr_channel_read_probes',
+                                               Path(__file__).with_name('channel_read_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_channel_crud(http, baseline, candidate, accounts, record):
+    """Load transactional channel scalar/override/stream/profile CRUD oracles."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_channel_crud_probes',
+                                               Path(__file__).with_name('channel_crud_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_groups(http, baseline, candidate, accounts, record):
+    """Load manual/provider channel-group CRUD and ownership contracts."""
+    validate_fixture(baseline,candidate,accounts)
+    validate_fixture(baseline,candidate,dict(accounts,viewer=accounts['standard']))
+    spec=importlib.util.spec_from_file_location('dispatcharr_group_probes',
+                                               Path(__file__).with_name('group_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_channel_stops(http, baseline, candidate, accounts, record, seed):
+    """Load real native media active/inactive stop-before-delete contracts."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_channel_stop_probes',
+                                               Path(__file__).with_name('channel_stop_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record,seed)
+
+
+def run_group_cleanup(http, baseline, candidate, accounts, record):
+    """Load isolated global-cleanup/FK effects with unrelated rows protected."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_group_cleanup_probes',
+                                               Path(__file__).with_name('group_cleanup_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_streams(http, baseline, candidate, accounts, record):
+    """Load source stream read/pagination/provider-lock/CRUD/rollup contracts."""
+    validate_fixture(baseline,candidate,accounts)
+    validate_fixture(baseline,candidate,dict(accounts,viewer=accounts['standard']))
+    spec=importlib.util.spec_from_file_location('dispatcharr_stream_probes',
+                                               Path(__file__).with_name('stream_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)

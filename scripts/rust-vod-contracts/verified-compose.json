@@ -1,0 +1,45 @@
+{
+  "format_version": 1,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "candidate_provenance": {
+    "image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+    "source_tree_sha256": "9610d95e612c3736113eadb97bb7322b6d0a91d7064d13133334b57f21344dcc",
+    "build_manifest_sha256": "8d55601effde90d581822d4ad00a25240c4930b60871fce2e2bd8e59cea03665"
+  },
+  "wire_comparison": {
+    "format_version": 1,
+    "scope": "captured native XC VOD seven-case wire comparison only",
+    "captured_wire_matches": true,
+    "differences": [],
+    "application_parity_verified": false,
+    "performance_verified": false,
+    "remaining_gates": [
+      "authenticated handoff and user/network controls",
+      "provider/cross-worker session lifecycle",
+      "full metadata/WebSocket side effects",
+      "decoded browser execution",
+      "resource/performance matrix"
+    ]
+  },
+  "decoders": [
+    {
+      "backend": "baseline",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    },
+    {
+      "backend": "candidate",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    }
+  ],
+  "scope": "Frozen source-bound Docker native XC VOD seven-case byte/header comparison and actual A/V decode",
+  "performance_verified": false,
+  "application_parity_verified": false,
+  "evidence": "artifacts/rust/m4-vod-candidate-wire-2/vod-contracts.json"
+}

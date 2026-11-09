@@ -1,0 +1,1606 @@
+{
+  "format_version": 1,
+  "scope": "original Python pure Timeshift helper characterization",
+  "capture_complete": true,
+  "rust_parity_verified": false,
+  "performance_verified": false,
+  "source_sha256": {
+    "apps/timeshift/helpers.py": "788fe9c2e25de27dec735c93b928ac6eac7298729a50109e82f6addbfd0abe77",
+    "apps/timeshift/redis_keys.py": "98796b576702aa50301be8a527ce86b1a8ec5419d80cf99670ad3cfc10441fa6"
+  },
+  "vector_count": 207,
+  "cases": [
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": null,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": null,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": null,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": null,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": null,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": null,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "",
+      "output": {
+        "value": ""
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "",
+      "output": {
+        "value": ""
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "",
+      "output": {
+        "value": ""
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "",
+      "output": {
+        "value": ""
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "   ",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "   ",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "   ",
+      "output": {
+        "value": "   "
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "   ",
+      "output": {
+        "value": "   "
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "   ",
+      "output": {
+        "value": "   "
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "   ",
+      "output": {
+        "value": "   "
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "bad",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "bad",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "bad",
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "bad",
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "bad",
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "bad",
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-99-99:99-99",
+      "output": {
+        "value": "2026-99-99T99:99:00"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-99-99:99-99",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-99-99:99-99",
+      "output": {
+        "value": "2026-99-99:99-99"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-99-99:99-99",
+      "output": {
+        "value": "2026-99-99:99-99"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-99-99:99-99",
+      "output": {
+        "value": "2026-99-99:99-99"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-99-99:99-99",
+      "output": {
+        "value": "2026-99-99:99-99"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09:14-30",
+      "output": {
+        "value": "2026-07-09T14:30:00"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09:14-30",
+      "output": {
+        "value": "2026-07-09T14:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09:14-30",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09:14-30",
+      "output": {
+        "value": "2026-07-09:14:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09:14-30",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09:14-30",
+      "output": {
+        "value": "2026-07-09 14:30:00"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09:14-30-45",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09:14-30-45",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09:14-30-45",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09:14-30-45",
+      "output": {
+        "value": "2026-07-09:14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09:14-30-45",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09:14-30-45",
+      "output": {
+        "value": "2026-07-09 14:30:45"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09_14-30",
+      "output": {
+        "value": "2026-07-09T14:30:00"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09_14-30",
+      "output": {
+        "value": "2026-07-09T14:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09_14-30",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09_14-30",
+      "output": {
+        "value": "2026-07-09:14:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09_14-30",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09_14-30",
+      "output": {
+        "value": "2026-07-09 14:30:00"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09:14:30",
+      "output": {
+        "value": "2026-07-09T14:30:00"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09:14:30",
+      "output": {
+        "value": "2026-07-09T14:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09:14:30",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09:14:30",
+      "output": {
+        "value": "2026-07-09:14:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09:14:30",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09:14:30",
+      "output": {
+        "value": "2026-07-09 14:30:00"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09:14:30:45",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09:14:30:45",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09:14:30:45",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09:14:30:45",
+      "output": {
+        "value": "2026-07-09:14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09:14:30:45",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09:14:30:45",
+      "output": {
+        "value": "2026-07-09 14:30:45"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09 14:30:45",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09 14:30:45",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09 14:30:45",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09 14:30:45",
+      "output": {
+        "value": "2026-07-09:14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09 14:30:45",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09 14:30:45",
+      "output": {
+        "value": "2026-07-09 14:30:45"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09:14-30:45",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09:14-30:45",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09:14-30:45",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09:14-30:45",
+      "output": {
+        "value": "2026-07-09:14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09:14-30:45",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09:14-30:45",
+      "output": {
+        "value": "2026-07-09 14:30:45"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09T14:30:45Z",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09T14:30:45Z",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09T14:30:45Z",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09T14:30:45Z",
+      "output": {
+        "value": "2026-07-09:14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09T14:30:45Z",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09T14:30:45Z",
+      "output": {
+        "value": "2026-07-09 14:30:45"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09T16:30:45+02:00",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09T16:30:45+02:00",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09T16:30:45+02:00",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09T16:30:45+02:00",
+      "output": {
+        "value": "2026-07-09:14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09T16:30:45+02:00",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09T16:30:45+02:00",
+      "output": {
+        "value": "2026-07-09 14:30:45"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09T12:30:45-02:00",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09T12:30:45-02:00",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09T12:30:45-02:00",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09T12:30:45-02:00",
+      "output": {
+        "value": "2026-07-09:14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09T12:30:45-02:00",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09T12:30:45-02:00",
+      "output": {
+        "value": "2026-07-09 14:30:45"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09T14:30:45.987654Z",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09T14:30:45.987654Z",
+      "output": {
+        "value": "2026-07-09T14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09T14:30:45.987654Z",
+      "output": {
+        "value": "2026-07-09:14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09T14:30:45.987654Z",
+      "output": {
+        "value": "2026-07-09:14:30:45"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09T14:30:45.987654Z",
+      "output": {
+        "value": "2026-07-09_14-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09T14:30:45.987654Z",
+      "output": {
+        "value": "2026-07-09 14:30:45"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "2026-07-09",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "2026-07-09",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "2026-07-09",
+      "output": {
+        "value": "2026-07-09"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "2026-07-09",
+      "output": {
+        "value": "2026-07-09"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "2026-07-09",
+      "output": {
+        "value": "2026-07-09"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "2026-07-09",
+      "output": {
+        "value": "2026-07-09"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "1720521000",
+      "output": {
+        "value": "2024-07-09T10:30:00"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "1720521000",
+      "output": {
+        "value": "2024-07-09T10:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "1720521000",
+      "output": {
+        "value": "2024-07-09:10-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "1720521000",
+      "output": {
+        "value": "2024-07-09:10:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "1720521000",
+      "output": {
+        "value": "2024-07-09_10-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "1720521000",
+      "output": {
+        "value": "2024-07-09 10:30:00"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "1720521000123",
+      "output": {
+        "value": "2024-07-09T10:30:00"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "1720521000123",
+      "output": {
+        "value": "2024-07-09T10:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "1720521000123",
+      "output": {
+        "value": "2024-07-09:10-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "1720521000123",
+      "output": {
+        "value": "2024-07-09:10:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "1720521000123",
+      "output": {
+        "value": "2024-07-09_10-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "1720521000123",
+      "output": {
+        "value": "2024-07-09 10:30:00"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "123456789",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "123456789",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "123456789",
+      "output": {
+        "value": "123456789"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "123456789",
+      "output": {
+        "value": "123456789"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "123456789",
+      "output": {
+        "value": "123456789"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "123456789",
+      "output": {
+        "value": "123456789"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "123456789012",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "123456789012",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "123456789012",
+      "output": {
+        "value": "123456789012"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "123456789012",
+      "output": {
+        "value": "123456789012"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "123456789012",
+      "output": {
+        "value": "123456789012"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "123456789012",
+      "output": {
+        "value": "123456789012"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": "9999999999999",
+      "output": {
+        "value": "2286-11-20T17:46:39"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": "9999999999999",
+      "output": {
+        "value": "2286-11-20T17:46:39"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": "9999999999999",
+      "output": {
+        "value": "2286-11-20:17-46"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": "9999999999999",
+      "output": {
+        "value": "2286-11-20:17:46:39"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": "9999999999999",
+      "output": {
+        "value": "2286-11-20_17-46"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": "9999999999999",
+      "output": {
+        "value": "2286-11-20 17:46:39"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": 1720521000,
+      "output": {
+        "value": "2024-07-09T10:30:00"
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": 1720521000,
+      "output": {
+        "value": "2024-07-09T10:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": 1720521000,
+      "output": {
+        "value": "2024-07-09:10-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": 1720521000,
+      "output": {
+        "value": "2024-07-09:10:30:00"
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": 1720521000,
+      "output": {
+        "value": "2024-07-09_10-30"
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": 1720521000,
+      "output": {
+        "value": "2024-07-09 10:30:00"
+      }
+    },
+    {
+      "function": "normalize_catchup_timestamp_input",
+      "input": false,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "parse_catchup_timestamp",
+      "input": false,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_dash",
+      "input": false,
+      "output": {
+        "value": false
+      }
+    },
+    {
+      "function": "format_timestamp_as_colon_seconds",
+      "input": false,
+      "output": {
+        "value": false
+      }
+    },
+    {
+      "function": "format_timestamp_as_underscore",
+      "input": false,
+      "output": {
+        "value": false
+      }
+    },
+    {
+      "function": "format_timestamp_as_sql_datetime",
+      "input": false,
+      "output": {
+        "value": false
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": null,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": "",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": "  ",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": 0,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": -1,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": 1,
+      "output": {
+        "value": 6
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": 30,
+      "output": {
+        "value": 35
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": 475,
+      "output": {
+        "value": 480
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": 479,
+      "output": {
+        "value": 480
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": 480,
+      "output": {
+        "value": 480
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": 481,
+      "output": {
+        "value": 480
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": 999,
+      "output": {
+        "value": 480
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": "2.5",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": "abc",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": " 42 ",
+      "output": {
+        "value": 47
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": true,
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": "1_0",
+      "output": {
+        "value": 15
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": "+2",
+      "output": {
+        "value": 7
+      }
+    },
+    {
+      "function": "client_duration_to_window",
+      "input": "-4",
+      "output": {
+        "value": null
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T00:30:00Z",
+        null
+      ],
+      "output": {
+        "value": "2026-03-29T00:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T01:30:00Z",
+        null
+      ],
+      "output": {
+        "value": "2026-03-29T01:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T05:30:00Z",
+        null
+      ],
+      "output": {
+        "value": "2026-11-01T05:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T06:30:00Z",
+        null
+      ],
+      "output": {
+        "value": "2026-11-01T06:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "bad",
+        null
+      ],
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T00:30:00Z",
+        ""
+      ],
+      "output": {
+        "value": "2026-03-29T00:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T01:30:00Z",
+        ""
+      ],
+      "output": {
+        "value": "2026-03-29T01:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T05:30:00Z",
+        ""
+      ],
+      "output": {
+        "value": "2026-11-01T05:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T06:30:00Z",
+        ""
+      ],
+      "output": {
+        "value": "2026-11-01T06:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "bad",
+        ""
+      ],
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T00:30:00Z",
+        "UTC"
+      ],
+      "output": {
+        "value": "2026-03-29T00:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T01:30:00Z",
+        "UTC"
+      ],
+      "output": {
+        "value": "2026-03-29T01:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T05:30:00Z",
+        "UTC"
+      ],
+      "output": {
+        "value": "2026-11-01T05:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T06:30:00Z",
+        "UTC"
+      ],
+      "output": {
+        "value": "2026-11-01T06:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "bad",
+        "UTC"
+      ],
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T00:30:00Z",
+        "Europe/Brussels"
+      ],
+      "output": {
+        "value": "2026-03-29:01-30"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T01:30:00Z",
+        "Europe/Brussels"
+      ],
+      "output": {
+        "value": "2026-03-29:03-30"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T05:30:00Z",
+        "Europe/Brussels"
+      ],
+      "output": {
+        "value": "2026-11-01:06-30"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T06:30:00Z",
+        "Europe/Brussels"
+      ],
+      "output": {
+        "value": "2026-11-01:07-30"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "bad",
+        "Europe/Brussels"
+      ],
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T00:30:00Z",
+        "America/New_York"
+      ],
+      "output": {
+        "value": "2026-03-28:20-30"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T01:30:00Z",
+        "America/New_York"
+      ],
+      "output": {
+        "value": "2026-03-28:21-30"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T05:30:00Z",
+        "America/New_York"
+      ],
+      "output": {
+        "value": "2026-11-01:01-30"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T06:30:00Z",
+        "America/New_York"
+      ],
+      "output": {
+        "value": "2026-11-01:01-30"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "bad",
+        "America/New_York"
+      ],
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T00:30:00Z",
+        "Asia/Kathmandu"
+      ],
+      "output": {
+        "value": "2026-03-29:06-15"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T01:30:00Z",
+        "Asia/Kathmandu"
+      ],
+      "output": {
+        "value": "2026-03-29:07-15"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T05:30:00Z",
+        "Asia/Kathmandu"
+      ],
+      "output": {
+        "value": "2026-11-01:11-15"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T06:30:00Z",
+        "Asia/Kathmandu"
+      ],
+      "output": {
+        "value": "2026-11-01:12-15"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "bad",
+        "Asia/Kathmandu"
+      ],
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T00:30:00Z",
+        "not-a-zone"
+      ],
+      "output": {
+        "value": "2026-03-29T00:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-03-29T01:30:00Z",
+        "not-a-zone"
+      ],
+      "output": {
+        "value": "2026-03-29T01:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T05:30:00Z",
+        "not-a-zone"
+      ],
+      "output": {
+        "value": "2026-11-01T05:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "2026-11-01T06:30:00Z",
+        "not-a-zone"
+      ],
+      "output": {
+        "value": "2026-11-01T06:30:00Z"
+      }
+    },
+    {
+      "function": "convert_timestamp_to_provider_tz",
+      "input": [
+        "bad",
+        "not-a-zone"
+      ],
+      "output": {
+        "value": "bad"
+      }
+    },
+    {
+      "function": "build_timeshift_candidate_urls",
+      "input": [
+        "2026-07-09T14:30:45Z",
+        65
+      ],
+      "output": {
+        "value": [
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/2026-07-09:14-30/123.ts",
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/2026-07-09_14-30/123.ts",
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/2026-07-09:14:30:45/123.ts",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=2026-07-09_14-30&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=2026-07-09 14:30:45&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=2026-07-09:14-30&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=2026-07-09:14:30:45&duration=65"
+        ]
+      }
+    },
+    {
+      "function": "build_timeshift_candidate_urls",
+      "input": [
+        "2026-07-09_14-30",
+        65
+      ],
+      "output": {
+        "value": [
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/2026-07-09:14-30/123.ts",
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/2026-07-09_14-30/123.ts",
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/2026-07-09:14:30:00/123.ts",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=2026-07-09_14-30&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=2026-07-09 14:30:00&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=2026-07-09:14-30&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=2026-07-09:14:30:00&duration=65"
+        ]
+      }
+    },
+    {
+      "function": "build_timeshift_candidate_urls",
+      "input": [
+        "bad",
+        65
+      ],
+      "output": {
+        "value": [
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/bad/123.ts",
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/bad/123.ts",
+          "http://provider.invalid/base/timeshift/%3Cfixture-user%3E/%3Cfixture-password%3E/65/bad/123.ts",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=bad&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=bad&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=bad&duration=65",
+          "http://provider.invalid/base/streaming/timeshift.php?username=%3Cfixture-user%3E&password=%3Cfixture-password%3E&stream=123&start=bad&duration=65"
+        ]
+      }
+    },
+    {
+      "function": "programme_age_days",
+      "input": "2026-11-09T12:00:00Z",
+      "output": {
+        "value": 0
+      }
+    },
+    {
+      "function": "programme_age_days",
+      "input": "2026-11-09T11:59:59Z",
+      "output": {
+        "value": 1
+      }
+    },
+    {
+      "function": "programme_age_days",
+      "input": "2026-11-08T12:00:00Z",
+      "output": {
+        "value": 1
+      }
+    },
+    {
+      "function": "programme_age_days",
+      "input": "2026-11-08T11:59:59Z",
+      "output": {
+        "value": 2
+      }
+    },
+    {
+      "function": "programme_age_days",
+      "input": "2026-11-10T12:00:00Z",
+      "output": {
+        "value": 0
+      }
+    },
+    {
+      "function": "programme_age_days",
+      "input": "bad",
+      "output": {
+        "value": null
+      }
+    }
+  ],
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "network_disabled": true,
+  "source_read_only": true
+}

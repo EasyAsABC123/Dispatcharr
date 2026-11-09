@@ -21,6 +21,17 @@ use tokio::{net::TcpListener, time};
 use tower::ServiceExt;
 struct Resolver;
 impl PlaybackResolver for Resolver {
+    fn authenticate_optional(
+        &self,
+        request: PlaybackRequest,
+    ) -> BoxFuture<'_, Result<(), PlaybackError>> {
+        Box::pin(async move {
+            match request.header("authorization") {
+                None | Some("Bearer valid") => Ok(()),
+                _ => Err(PlaybackError::new(401, "Invalid token")),
+            }
+        })
+    }
     fn resolve(&self, _: PlaybackRequest) -> BoxFuture<'_, Result<PlaybackSource, PlaybackError>> {
         Box::pin(async { Err(PlaybackError::new(404, "Not found")) })
     }
@@ -522,6 +533,372 @@ async fn idle_sessions_and_shutdown_remove_shared_descriptor_without_reviving_to
         503
     );
     engine.shutdown();
+    clients.shutdown().await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis"]
+async fn shared_redis_capabilities_and_followers_work_across_two_gateways() {
+    let (gateway_one, engine_one, clients_one, url, counts, server) =
+        setup(GatewayConfig::default(), true).await;
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let output_one = dispatcharr_output_store::OutputStore::connect(&redis_url, Default::default())
+        .await
+        .unwrap();
+    let gateway_one = gateway_one.with_output_store(output_one).unwrap();
+    let clients_two = ClientStore::connect(&redis_url, ClientConfig::default())
+        .await
+        .unwrap();
+    let engine_two = StreamEngine::new(EngineConfig::default()).unwrap();
+    let output_two = dispatcharr_output_store::OutputStore::connect(&redis_url, Default::default())
+        .await
+        .unwrap();
+    let gateway_two = HlsGateway::new(
+        engine_two.clone(),
+        clients_two.clone(),
+        Arc::new(Resolver),
+        Default::default(),
+    )
+    .unwrap()
+    .with_output_store(output_two)
+    .unwrap();
+    let channel = channel();
+    let one = mint(&gateway_one, &channel, &url).await;
+    let response = get(&gateway_two, format!("/proxy/hls/{one}/index.m3u8")).await;
+    assert_eq!(response.status(), 200);
+    let bytes = time::timeout(Duration::from_secs(3), async {
+        let mut body = response.into_body();
+        let mut bytes = Vec::new();
+        while let Some(frame) = body.frame().await {
+            let frame = frame.unwrap();
+            if let Ok(data) = frame.into_data() {
+                bytes.extend_from_slice(&data);
+                assert!(bytes.len() < 128 * 1024);
+            }
+        }
+        bytes
+    })
+    .await
+    .unwrap();
+    let text = std::str::from_utf8(&bytes).unwrap();
+    assert!(text.contains("#EXTINF:"));
+    let uri = text.lines().find(|line| line.ends_with(".ts")).unwrap();
+    assert_eq!(
+        get(&gateway_two, format!("/proxy/hls/{one}/{uri}"))
+            .await
+            .status(),
+        200
+    );
+    assert_eq!(
+        clients_one.channel_clients(&channel).await.unwrap().len(),
+        1,
+        "cross-worker GET must not register another client"
+    );
+    let two = mint(&gateway_two, &channel, &url).await;
+    let response = get(&gateway_one, format!("/proxy/hls/{two}/index.m3u8")).await;
+    assert_eq!(response.status(), 200);
+    response.into_body().collect().await.unwrap();
+    time::sleep(Duration::from_millis(300)).await;
+    assert_eq!(
+        counts.load(Ordering::SeqCst),
+        1,
+        "follower gateway must not open another origin"
+    );
+    let request = Request::builder()
+        .method("DELETE")
+        .uri(format!("/api/proxy/hls/sessions/{one}/"))
+        .header("x-owner", "7")
+        .body(Body::empty())
+        .unwrap();
+    assert_eq!(
+        gateway_two
+            .router()
+            .oneshot(request)
+            .await
+            .unwrap()
+            .status(),
+        204
+    );
+    time::sleep(Duration::from_millis(1100)).await;
+    assert_eq!(
+        get(&gateway_one, format!("/proxy/hls/{two}/index.m3u8"))
+            .await
+            .status(),
+        200,
+        "remote minted demand keeps original output owner alive"
+    );
+    assert_eq!(counts.load(Ordering::SeqCst), 1);
+    assert_eq!(
+        get(&gateway_two, format!("/proxy/hls/{one}/index.m3u8"))
+            .await
+            .status(),
+        410
+    );
+    gateway_two.shutdown().await;
+    gateway_one.shutdown().await;
+    engine_one.shutdown();
+    engine_two.shutdown();
+    clients_one.shutdown().await;
+    clients_two.shutdown().await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis"]
+async fn shared_owner_restart_rehydrates_index_window_and_marks_new_media_discontinuous() {
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let old_store = dispatcharr_output_store::OutputStore::connect(
+        &redis_url,
+        dispatcharr_output_store::OutputConfig {
+            owner_ttl: Duration::from_millis(60),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let channel = channel();
+    let old = old_store
+        .claim(&channel, "hls", "crashed-owner")
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        old.put(
+            &clip(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_secs_f64()
+        )
+        .await
+        .unwrap(),
+        1
+    );
+    old.publish(&serde_json::json!({"window":[{"seq":1,"dur":4.0,"disc":false}],"target":4.0,"adv_target":6,"disc_seq":0,"start_behind":2.0,"ts":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()})).await.unwrap();
+    time::sleep(Duration::from_millis(90)).await;
+    let (gateway, engine, clients, url, _, server) = setup(GatewayConfig::default(), true).await;
+    let store = dispatcharr_output_store::OutputStore::connect(&redis_url, Default::default())
+        .await
+        .unwrap();
+    let gateway = gateway.with_output_store(store.clone()).unwrap();
+    let token = mint(&gateway, &channel, &url).await;
+    until(|| async {
+        store
+            .snapshot(&channel, "hls")
+            .await
+            .unwrap()
+            .descriptor
+            .is_some_and(|value| {
+                value["window"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .any(|entry| entry["seq"].as_u64().unwrap() > 1 && entry["disc"] == true)
+            })
+    })
+    .await;
+    let snapshot = store.snapshot(&channel, "hls").await.unwrap();
+    assert!(snapshot.index > 1);
+    assert!(snapshot.descriptor.unwrap()["window"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|entry| entry["seq"] == 1));
+    assert!(
+        !old.release().await.unwrap(),
+        "crashed owner cannot remove successor output"
+    );
+    assert_eq!(
+        get(&gateway, format!("/proxy/hls/{token}/1.ts"))
+            .await
+            .status(),
+        200,
+        "unexpired pre-restart segment remains addressable"
+    );
+    gateway.shutdown().await;
+    engine.shutdown();
+    clients.shutdown().await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis"]
+async fn shared_hls_hundred_viewers_backpressure_without_capacity_errors_or_extra_origin() {
+    let (gateway, engine, clients, url, counts, server) = setup(Default::default(), true).await;
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let store = dispatcharr_output_store::OutputStore::connect(&redis_url, Default::default())
+        .await
+        .unwrap();
+    let gateway = gateway.with_output_store(store.clone()).unwrap();
+    let channel = channel();
+    let mut tokens = Vec::new();
+    for _ in 0..100 {
+        tokens.push(mint(&gateway, &channel, &url).await);
+    }
+    until(|| async {
+        store
+            .snapshot(&channel, "hls")
+            .await
+            .unwrap()
+            .descriptor
+            .is_some()
+    })
+    .await;
+    let snapshot = store.snapshot(&channel, "hls").await.unwrap();
+    let seq = snapshot.descriptor.unwrap()["window"][0]["seq"]
+        .as_u64()
+        .unwrap();
+    let requests = tokens.iter().map(|token| {
+        let gateway = &gateway;
+        async move {
+            let playlist = get(gateway, format!("/proxy/hls/{token}/index.m3u8")).await;
+            assert_eq!(playlist.status(), 200);
+            playlist.into_body().collect().await.unwrap();
+            let response = get(gateway, format!("/proxy/hls/{token}/{seq}.ts")).await;
+            assert_eq!(
+                response.status(),
+                200,
+                "normal fanout must wait for bounded read admission"
+            );
+            response.into_body().collect().await.unwrap().to_bytes()
+        }
+    });
+    let frames = time::timeout(
+        Duration::from_secs(10),
+        futures_util::future::join_all(requests),
+    )
+    .await
+    .unwrap();
+    assert_eq!(frames.len(), 100);
+    assert!(frames.iter().all(|data| data == &frames[0]));
+    assert_eq!(counts.load(Ordering::SeqCst), 1);
+    if let Ok(directory) = std::env::var("HLS_TEST_CAPTURE") {
+        std::fs::write(
+            std::path::Path::new(&directory).join("fanout.ts"),
+            &frames[0],
+        )
+        .unwrap();
+    }
+    drop(frames);
+    gateway.shutdown().await;
+    engine.shutdown();
+    clients.shutdown().await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis"]
+async fn shared_slow_frame_clones_hold_read_budget_while_next_request_waits() {
+    let (gateway, engine, clients, url, _, server) = setup(Default::default(), true).await;
+    let size = clip().len();
+    let store = dispatcharr_output_store::OutputStore::connect(
+        &std::env::var("REDIS_TEST_URL").unwrap(),
+        dispatcharr_output_store::OutputConfig {
+            max_segment_bytes: size,
+            max_read_bytes: size,
+            max_channel_bytes: size * 4,
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let gateway = gateway.with_output_store(store.clone()).unwrap();
+    let channel = channel();
+    let one = mint(&gateway, &channel, &url).await;
+    let two = mint(&gateway, &channel, &url).await;
+    until(|| async {
+        store
+            .snapshot(&channel, "hls")
+            .await
+            .unwrap()
+            .descriptor
+            .is_some()
+    })
+    .await;
+    let seq = store
+        .snapshot(&channel, "hls")
+        .await
+        .unwrap()
+        .descriptor
+        .unwrap()["window"][0]["seq"]
+        .as_u64()
+        .unwrap();
+    let response = get(&gateway, format!("/proxy/hls/{one}/{seq}.ts")).await;
+    assert_eq!(response.status(), 200);
+    let mut body = response.into_body();
+    let held = body.frame().await.unwrap().unwrap().into_data().unwrap();
+    drop(body);
+    let next_gateway = gateway.clone();
+    let next =
+        tokio::spawn(async move { get(&next_gateway, format!("/proxy/hls/{two}/{seq}.ts")).await });
+    time::sleep(Duration::from_millis(40)).await;
+    assert!(
+        !next.is_finished(),
+        "read must wait while a slow response owns its byte budget"
+    );
+    let cloned = held.clone();
+    drop(held);
+    time::sleep(Duration::from_millis(30)).await;
+    assert!(!next.is_finished(), "final Bytes clone retains the budget");
+    drop(cloned);
+    let response = time::timeout(Duration::from_secs(1), next)
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(response.status(), 200);
+    drop(response);
+    gateway.shutdown().await;
+    engine.shutdown();
+    clients.shutdown().await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis: REDIS_TEST_URL"]
+async fn capability_auth_and_head_are_checked_before_token_or_origin_work() {
+    let (gateway, engine, clients, _, count, server) = setup(GatewayConfig::default(), true).await;
+    for path in ["/proxy/hls/missing/index.m3u8", "/proxy/hls/missing/1.ts"] {
+        for (method, token, expected) in [
+            ("GET", Some("Bearer invalid"), 401),
+            ("HEAD", Some("Bearer invalid"), 401),
+            ("HEAD", Some("Bearer valid"), 405),
+            ("HEAD", None, 405),
+            ("GET", None, 410),
+        ] {
+            let mut request = Request::builder().method(method).uri(path);
+            if let Some(token) = token {
+                request = request.header("authorization", token);
+            }
+            let response = gateway
+                .router()
+                .oneshot(request.body(Body::empty()).unwrap())
+                .await
+                .unwrap();
+            assert_eq!(response.status().as_u16(), expected, "{method} {path}");
+            if expected == 401 {
+                assert_eq!(
+                    response.headers()["www-authenticate"],
+                    "Bearer realm=\"api\""
+                );
+            }
+        }
+        let invalid = Request::builder()
+            .uri(path)
+            .header(
+                "authorization",
+                axum::http::HeaderValue::from_bytes(b"Bearer \xff").unwrap(),
+            )
+            .body(Body::empty())
+            .unwrap();
+        assert_eq!(
+            gateway.router().oneshot(invalid).await.unwrap().status(),
+            401
+        );
+    }
+    assert_eq!(count.load(Ordering::SeqCst), 0);
+    assert!(engine.status().is_empty());
+    gateway.shutdown().await;
     clients.shutdown().await;
     server.abort();
 }
