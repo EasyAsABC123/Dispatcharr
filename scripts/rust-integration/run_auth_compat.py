@@ -22,10 +22,10 @@ from tool_snapshot import snapshot_sources
 from run import BASELINE,fixture_source
 ROOT=Path(__file__).resolve().parents[2]
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args();output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--skip-hash',action='store_true',help='Run only shared authentication contracts; prior hash proof remains separately bound');args=parser.parse_args();output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
     if any(output.iterdir()):parser.error('Output must be empty')
     tools=output/'tool-source';tool_hashes=snapshot_sources(ROOT,tools);project='dispatcharr-auth-compat-'+uuid.uuid4().hex[:10]
-    report={'passed':False,'scope':'actual original password upgrades versus native login with real Django schema','project':project,'performance_verified':False,'application_image_verified':False,'tool_source_sha256':tool_hashes}
+    report={'passed':False,'scope':'actual original password upgrades versus native login with real Django schema','project':project,'performance_verified':False,'application_image_verified':False,'native_hash_test_requested':not args.skip_hash,'tool_source_sha256':tool_hashes}
     status=1
     with fixture_source(report,False,output) as directory:
         temporary=Path(directory);source=temporary/'source';source.mkdir();source.chmod(0o755)
@@ -59,8 +59,8 @@ def main():
             for relative,data in captured.items():target=frozen/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
             pg=command(compose+['port','baseline','5432']).strip();redis=command(compose+['port','baseline','6379']).strip()
             test_env=dict(env,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+pg+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis+'/0',AUTH_DISPOSABLE_FIXTURE='playback-fixture-only',AUTH_COMPAT_FIXTURE=str(fixture),CARGO_TARGET_DIR=str(ROOT/'rust/target'))
-            with (output/'rust-tests.log').open('w') as log:check=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-store','--test','auth_sql','--locked','--offline','--','--ignored','--nocapture'],env=test_env,stdout=log,stderr=subprocess.STDOUT,timeout=600)
-            report.update(passed=check.returncode==0,rust_exit_code=check.returncode,source_cases=len(golden['hash_cases']),fixture_sha256=hashlib.sha256(fixture.read_bytes()).hexdigest(),rust_snapshot_manifest_sha256=hashlib.sha256(json.dumps({name:hashlib.sha256(data).hexdigest() for name,data in captured.items()},sort_keys=True,separators=(',',':')).encode()).hexdigest(),no_external_provider_requests=True)
+            with (output/'rust-tests.log').open('w') as log:check=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-store','--test','auth_sql','--locked','--offline','--','--ignored','--nocapture']+(['--skip','original_pbkdf2_login_upgrade_before_active_check_and_no_wrong_password_write'] if args.skip_hash else []),env=test_env,stdout=log,stderr=subprocess.STDOUT,timeout=600)
+            report.update(passed=check.returncode==0,rust_exit_code=check.returncode,source_cases=len(golden['hash_cases']),source_throttle_scenarios=len(golden.get('throttle_scenarios',[])),source_throttle_requests=sum(len(case['steps']) for case in golden.get('throttle_scenarios',[])),source_proxy_scenarios=len(golden.get('proxy_scenarios',[])),source_proxy_requests=sum(len(case['steps']) for case in golden.get('proxy_scenarios',[])),fixture_sha256=hashlib.sha256(fixture.read_bytes()).hexdigest(),rust_snapshot_manifest_sha256=hashlib.sha256(json.dumps({name:hashlib.sha256(data).hexdigest() for name,data in captured.items()},sort_keys=True,separators=(',',':')).encode()).hexdigest(),no_external_provider_requests=True)
             status=check.returncode
         except (OSError,ValueError,RuntimeError,subprocess.SubprocessError) as error:report['error_type']=type(error).__name__;status=1
         finally:

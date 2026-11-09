@@ -5,6 +5,7 @@ import hmac
 import json
 import time
 import unittest
+from unittest.mock import patch
 import startup_probes
 
 
@@ -30,7 +31,8 @@ class StartupTests(unittest.TestCase):
                         {'access':pair['access']+'invalid','refresh':pair['refresh']}]:
             with self.assertRaises(ValueError):startup_probes.token_pair(invalid,7)
 
-    def test_probe_capture_does_not_emit_credentials_or_exception_messages(self):
+    @patch('startup_probes.time.sleep', return_value=None)
+    def test_probe_capture_does_not_emit_credentials_or_exception_messages(self, pause):
         secret='fixture-sensitive-message'
         def broken(*args,**kwargs):raise RuntimeError(secret)
         accounts={role:{'access':secret,'username':'rust-probe-'+role,'password':secret,'id':index+1}
@@ -42,8 +44,10 @@ class StartupTests(unittest.TestCase):
         self.assertTrue(all(not row[1] for row in rows))
         self.assertNotIn(secret,json.dumps(rows))
         self.assertTrue(all(row[2]=={'error_type':'RuntimeError'} for row in rows))
+        self.assertEqual([call.args for call in pause.call_args_list],[(31,),(31,)])
 
-    def test_bootstrap_posts_require_a_visible_existing_fixture_administrator(self):
+    @patch('startup_probes.time.sleep', return_value=None)
+    def test_bootstrap_posts_require_a_visible_existing_fixture_administrator(self, pause):
         calls=[];rows=[]
         def denied(url,**kwargs):
             calls.append((url,kwargs.get('method')))

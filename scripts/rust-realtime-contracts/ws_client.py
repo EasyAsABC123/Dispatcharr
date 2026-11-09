@@ -12,9 +12,11 @@ import struct
 
 
 class Client:
-    def __init__(self,host,port,path,origin='https://fixture.invalid',headers=None):
+    def __init__(self,host,port,path,origin='https://fixture.invalid',headers=None,max_message_bytes=2*1024*1024):
         self.socket=socket.create_connection((host,port),timeout=5)
         self.buffer=b'';self.status=None;self.headers={};self.closed=False
+        if not 1024<=max_message_bytes<=32*1024*1024:raise ValueError('fixture message bound invalid')
+        self.max_message_bytes=max_message_bytes
         self.fragments=bytearray();self.kind=None
         key=base64.b64encode(os.urandom(16)).decode()
         request=['GET '+path+' HTTP/1.1','Host: fixture.invalid','Upgrade: websocket','Connection: Upgrade',
@@ -34,12 +36,24 @@ class Client:
             expected=base64.b64encode(hashlib.sha1((key+'258EAFA5-E914-47DA-95CA-C5AB0DC85B11').encode()).digest()).decode()
             assert next(value for name,value in self.headers.items() if name.lower()=='sec-websocket-accept')==expected
 
-    def exact(self,size):
-        while len(self.buffer)<size:
-            data=self.socket.recv(min(65536,size-len(self.buffer)))
-            if not data:raise EOFError('websocket transport ended')
-            self.buffer+=data
-        result,self.buffer=self.buffer[:size],self.buffer[size:];return result
+    def frame(self):
+        # Commit only a complete frame. A short optional receive may time out
+        # midway through a payload; the next call must retain its header too.
+        def need(size):
+            while len(self.buffer)<size:
+                data=self.socket.recv(min(65536,size-len(self.buffer)))
+                if not data:raise EOFError('websocket transport ended')
+                self.buffer+=data
+        need(2);head=self.buffer[:2]
+        final=bool(head[0]&0x80);opcode=head[0]&15
+        if head[0]&0x70 or head[1]&0x80:raise ValueError('unexpected compressed/masked server frame')
+        length=head[1]&127;offset=2
+        if length==126:need(4);length=struct.unpack('!H',self.buffer[2:4])[0];offset=4
+        elif length==127:need(10);length=struct.unpack('!Q',self.buffer[2:10])[0];offset=10
+        if opcode<8 and length>self.max_message_bytes:raise ValueError('server frame exceeds fixture bound')
+        if opcode>=8 and (not final or length>125):raise ValueError('invalid control frame')
+        need(offset+length);data=self.buffer[offset:offset+length];self.buffer=self.buffer[offset+length:]
+        return final,opcode,data
 
     def send(self,opcode,data,final=True):
         if len(data)>2*1024*1024:raise ValueError('fixture frame exceeds2MiB')
@@ -54,15 +68,9 @@ class Client:
     def receive(self,timeout=3):
         self.socket.settimeout(timeout)
         while True:
-            try:head=self.exact(2)
+            try:final,opcode,data=self.frame()
             except EOFError:return {'closed':1006}
-            final=bool(head[0]&0x80);opcode=head[0]&15
-            if head[0]&0x70 or head[1]&0x80:raise ValueError('unexpected compressed/masked server frame')
-            length=head[1]&127
-            if length==126:length=struct.unpack('!H',self.exact(2))[0]
-            elif length==127:length=struct.unpack('!Q',self.exact(8))[0]
-            if length>2*1024*1024 or len(self.fragments)+length>2*1024*1024:raise ValueError('server message exceeds2MiB')
-            data=self.exact(length)
+            if opcode<8 and len(self.fragments)+len(data)>self.max_message_bytes:raise ValueError('server message exceeds fixture bound')
             if opcode==8:return {'closed':struct.unpack('!H',data[:2])[0] if len(data)>=2 else 1005}
             if opcode==9:self.send(10,data);continue
             if opcode==10:return {'pong':data.hex()}

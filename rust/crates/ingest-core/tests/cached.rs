@@ -30,6 +30,33 @@ impl Drop for Fixture {
 }
 const PLAYLIST:&[u8]=b"#EXTM3U\n#EXTINF:-1 group-title=\"B\",One\nhttp://fixture/one\n#EXTINF:-1 group-title=\"A\",Two\nhttp://fixture/two\n";
 #[test]
+fn cancelled_validation_stops_before_open_or_after_one_bounded_entry() {
+    let fixture = Fixture::new();
+    let path = fixture.path();
+    let before_open = ValidatedCache::open_while(&path, CacheReadLimits::default(), || false);
+    assert!(
+        matches!(before_open, Err(dispatcharr_ingest_core::CacheReadError::Io(e))
+        if e.kind()==std::io::ErrorKind::Interrupted)
+    );
+    prepare_playlist(Cursor::new(PLAYLIST), &path, PreparationLimits::default()).unwrap();
+    let mut checks = 0;
+    assert!(
+        ValidatedCache::open_while(&path, CacheReadLimits::default(), || {
+            checks += 1;
+            checks < 2
+        })
+        .is_err()
+    );
+    assert_eq!(checks, 2);
+    // Cancellation is read-only; a fresh caller still validates the full file.
+    assert_eq!(
+        ValidatedCache::open(&path, CacheReadLimits::default())
+            .unwrap()
+            .entries,
+        2
+    );
+}
+#[test]
 fn reads_prepared_cache_in_original_entry_and_first_seen_group_order() {
     let fixture = Fixture::new();
     let path = fixture.path();

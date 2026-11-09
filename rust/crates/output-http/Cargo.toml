@@ -1,0 +1,22 @@
+[package]
+name = "dispatcharr-output-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+axum = "0.8"
+bytes = "1"
+futures-util = "0.3"
+dispatcharr-contracts = { path = "../contracts" }
+dispatcharr-store = { path = "../store" }
+serde_json = "1"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres", "json", "uuid"] }
+tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
+url = "2"
+uuid = "1"
+
+[dev-dependencies]
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
+tokio = { version = "1", features = ["rt-multi-thread", "net"] }
+sha2 = "0.10"

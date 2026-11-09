@@ -87,8 +87,7 @@ impl AuthService {
             ))?;
         if (admin && user.user_level < 10)
             || !self
-                .store
-                .network_allowed(self.client_ip(request), "UI", Some(&user))
+                .source_network_allowed(self.client_ip(request), "UI", Some(&user))
                 .await?
         {
             return Err(StoreError::PermissionDenied);

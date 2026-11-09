@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
                  'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud','core_utilities','core_stream_crud','notifications')
-OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip')
+OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash')
 
 
 def contract_suites(value):
@@ -116,7 +116,7 @@ def main():
     parser.add_argument('--candidate-image',help='Unique prebuilt image tag; keeps earlier measured tags unchanged')
     parser.add_argument('--candidate-build-manifest',type=Path)
     parser.add_argument('--contract-suites',default='all',help='Comma-separated oracle suites or all (default); foundational auth/schema/media checks always run')
-    parser.add_argument('--trusted-proxy-fixture',action='store_true',help='Only for the isolated proxy_auth suite: trust peers explicitly on both disposable fixture services')
+    parser.add_argument('--trusted-proxy-fixture',action='store_true',help='Only for isolated proxy_auth/auth_hash suites: trust peers explicitly on both disposable fixture services')
     parser.add_argument('--api-resource-matrix',action='store_true',help='Compare read-only React API JSON/resource subset in independent paired trials')
     parser.add_argument('--api-repetitions',type=int,default=3)
     parser.add_argument('--api-warmup',type=float,default=15)
@@ -127,8 +127,8 @@ def main():
         parser.error('API resource trials require an immutable candidate build manifest')
     try:selected_suites=contract_suites(args.contract_suites)
     except ValueError as error:parser.error(str(error))
-    if ('proxy_auth' in selected_suites or args.trusted_proxy_fixture) and not (args.trusted_proxy_fixture and selected_suites==['proxy_auth']):
-        parser.error('proxy_auth requires --trusted-proxy-fixture and must run as the only selected suite')
+    if (set(selected_suites)&{'proxy_auth','auth_hash'} or args.trusted_proxy_fixture) and not (args.trusted_proxy_fixture and len(selected_suites)==1 and selected_suites[0] in {'proxy_auth','auth_hash'}):
+        parser.error('proxy_auth/auth_hash require --trusted-proxy-fixture and must run as the only selected suite')
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
@@ -276,7 +276,7 @@ def main():
                                  ('core_utilities','run_core_utilities'),
                                  ('core_stream_crud','run_core_stream_crud'),
                                  ('notifications','run_notifications'),
-                                 ('proxy_auth','run_proxy_auth'),('environment_ip','run_environment_ip')]:
+                                 ('proxy_auth','run_proxy_auth'),('environment_ip','run_environment_ip'),('auth_hash','run_auth_hash')]:
                 if suite in selected_suites:
                     if suite=='core' and 'account_crud' in selected_suites:
                         # Both independent suites deliberately test password
@@ -287,7 +287,7 @@ def main():
                         report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
                         for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
-                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip'):
+                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash'):
                         extra=(metadata_fixture,)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             if args.api_resource_matrix:

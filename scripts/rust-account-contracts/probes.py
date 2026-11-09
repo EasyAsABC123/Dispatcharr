@@ -411,3 +411,11 @@ def run_environment_ip(http,baseline,candidate,accounts,record,fixture):
     spec=importlib.util.spec_from_file_location('dispatcharr_environment_ip_probes',Path(__file__).with_name('environment_ip_probes.py'))
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
     module.run(http,baseline,candidate,accounts,record,fixture)
+
+
+def run_auth_hash(http,baseline,candidate,accounts,record,fixture):
+    """Optional packaged legacy hash upgrades with source database witnesses."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_auth_hash_probes',Path(__file__).with_name('auth_hash_probes.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record,fixture)

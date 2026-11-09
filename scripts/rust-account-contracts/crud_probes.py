@@ -8,6 +8,7 @@ import copy
 import hashlib
 import json
 import secrets
+import time
 from urllib.parse import urlsplit
 import uuid
 
@@ -167,13 +168,17 @@ def run(http, baseline, candidate, accounts, record):
             if label == 'rust':
                 # All field comparisons have completed before login mutates
                 # last_login. Tokens/passwords never leave the HTTP callback.
+                # Source and candidate now share the same real Redis login
+                # budget. Let foundation's attempt expire before these three
+                # independent credential checks; never reset/bypass auth state.
+                for _ in range(2):time.sleep(31)
                 for peer_label, peer_base in [('python', baseline), ('rust', candidate)]:
                     login = invoke(peer_base, '/api/accounts/token/',
                                    {'username': username + '-put', 'password': changed_password},
                                    token=None, method='POST')
                     record('accounts-crud:rust-password-accepted:' + peer_label,
                            login[0] == 200 and set(login[1]) == {'access', 'refresh'},
-                           {'status': login[0]})
+                           {'status': login[0], 'shared_budget_isolation_wait_seconds':62})
                 wrong = invoke(candidate, '/api/accounts/token/',
                                {'username': username + '-put', 'password': password}, token=None, method='POST')
                 record('accounts-crud:old-password-rejected', wrong[0] == 401, {'status': wrong[0]})

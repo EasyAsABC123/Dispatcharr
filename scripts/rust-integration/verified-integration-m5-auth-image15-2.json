@@ -1,0 +1,75 @@
+{
+  "scope": "Immutable image15 shared-authentication full HTTP1024, enabled-IP33 and hash-only30 source comparisons. M7/M4 packaged gates recorded separately.",
+  "passed": true,
+  "image_id": "sha256:d5929a085ea262bfe24d3fe7eaee49f6cb69b6183a40cc7cc99da9cf82c7ece6",
+  "source_tree_sha256": "0053aef6fe71043b6db52851cb0e2cf691788cf175fe10ae956b02b5934ffde7",
+  "source_archive_sha256": "6299f3865cc9e630e467ea563831447b70362dc9cfd5f3ea267d43e79955562b",
+  "build_manifest_sha256": "0f7e8348ebc0be6e4bcc054e47f7ca46f3a16eaea5bfcfbcd5ecdbd61d715654",
+  "runs": [
+    {
+      "report": "artifacts/rust/m5-auth-full-integration-image15-1/integration.json",
+      "sha256": "c2ced8e93d06e4414e5349ebb3423b8df8f54f4f68acc49ac7c5af6ad45123b1",
+      "passed": true,
+      "checks": 1024,
+      "contract_suites": [
+        "accounts",
+        "account_crud",
+        "app_data",
+        "core",
+        "profiles",
+        "memberships",
+        "channel_reads",
+        "channel_crud",
+        "groups",
+        "channel_stops",
+        "group_cleanup",
+        "streams",
+        "provider_reads",
+        "server_group_crud",
+        "filter_crud",
+        "core_utilities",
+        "core_stream_crud",
+        "notifications"
+      ],
+      "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-ip-image15-1/integration.json",
+      "sha256": "955d29313f4f468965856ef0e64e5164f10dec2bfed2a76fb470a674ed07e535",
+      "passed": true,
+      "checks": 33,
+      "contract_suites": [
+        "environment_ip"
+      ],
+      "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-auth-hash-image15-1/integration.json",
+      "sha256": "8f0d98e271dfdf5c8c21c543903b85cd023da5e687e512922746cbf9da969b4f",
+      "passed": true,
+      "checks": 30,
+      "contract_suites": [
+        "auth_hash"
+      ],
+      "cleanup": "project removed"
+    }
+  ],
+  "host_component_evidence": [
+    "verified-auth-cache-proxy-source-4.json",
+    "verified-auth-shared-source-2.json",
+    "verified-ip-default-map-overlay-3.json"
+  ],
+  "earlier_failure": {
+    "report": "artifacts/rust/candidate-build-m5-auth-m7-websocket-image15-1/build.json",
+    "sha256": "4881ad911974cda4e9c932bcf4eb039a655eebf74b9484b935979688bdf6b87a",
+    "reason": "output-http dev dependency entered first snapshot before corresponding lock metadata; locked build failed; offline appcheck refreshed lock before unique15-2 snapshot."
+  },
+  "performance_verified": false,
+  "remaining": [
+    "Complete first-admin/fresh-database bootstrap and supported Scrypt family are next-scope work outside this image.",
+    "Django session/admin-cookie behavior and malformed parser/header edge cases remain open.",
+    "M7 browser/producers and M4 frozen aliases retain their independent evidence scope.",
+    "OutputHTTP remains application-unwired/unaccepted.",
+    "Native refresh/EPG job loops and M8 integrations remain separate milestones."
+  ]
+}

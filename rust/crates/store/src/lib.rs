@@ -5,6 +5,10 @@ mod accounts;
 mod admin_writes;
 mod app_data;
 mod auth;
+mod auth_events;
+mod auth_network;
+mod auth_throttle;
+mod cache_codec;
 mod channel_groups;
 mod channel_memberships;
 mod channel_profiles;
@@ -46,6 +50,7 @@ mod stream_writes;
 mod streams;
 
 pub use auth::{AuthConfig, AuthService, Claims, TokenPair};
+pub use cache_codec::{decode_source_cache, encode_source_cache};
 pub use channels::ChannelIdentity;
 pub use passwords::verify_password;
 pub use playback::{ProviderStream, ResolvedChannel};
@@ -69,6 +74,11 @@ pub enum StoreError {
     NotFound,
     Unsupported(&'static str),
     RateLimited(u64),
+    Throttled {
+        body: Value,
+        retry_after: Option<u64>,
+        wait: Option<f64>,
+    },
     XcDenied {
         status: u16,
         retry_after: Option<u64>,
@@ -98,6 +108,7 @@ impl std::fmt::Display for StoreError {
                 write!(formatter, "XC request denied with status {status}")
             }
             Self::RateLimited(wait) => write!(formatter, "Rate limited for {wait} seconds"),
+            Self::Throttled { .. } => formatter.write_str("Authentication request throttled"),
             Self::InvalidInput(_) => formatter.write_str("Invalid input"),
             Self::StatusBody(status, _) => write!(formatter, "Request failed with status {status}"),
         }

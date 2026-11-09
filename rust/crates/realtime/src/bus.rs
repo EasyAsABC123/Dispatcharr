@@ -152,6 +152,8 @@ impl RealtimeBus {
     pub fn available_read_bytes(&self) -> usize {
         self.inner.read_bytes.available_permits()
     }
+    pub fn available_publish_bytes(&self)->usize {self.inner.publish_bytes.available_permits()}
+    pub fn stop_accepting(&self) {self.inner.connections.close();}
     pub fn reserve_member(&self) -> Result<Membership> {
         let slot = self
             .inner

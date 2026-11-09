@@ -1,0 +1,51 @@
+{
+  "scope": "Actual pinned original Django and native host cache/proxy authentication; real SQL, Redis and loopback native HTTP. No frozen image, browser or performance claim.",
+  "passed": true,
+  "source_throttle_scenarios": 11,
+  "source_throttle_requests": 40,
+  "source_proxy_scenarios": 4,
+  "source_proxy_requests": 17,
+  "native_hash_test_requested": false,
+  "raw_report_sha256": "b610cf4f88e7fd6cd46408795c230592e8037f00901bdd7f177d5f0cd9e1a49b",
+  "rust_source_archive_sha256": "5352f4bfb5d926af3c6f9d22a9b02b07cbb98aaa0df30e0029db99f37c5c6d3d",
+  "source_files": {
+    "rust/crates/store/src/auth.rs": "8c531de2a76a36495b6466a0c4cc209423b7860c048e067a09e0ccb027caca0f",
+    "rust/crates/store/src/auth_events.rs": "95812f2092ba5eb51b0c7f0ccc75cd7b678011014721809566351ae2b5484139",
+    "rust/crates/store/src/auth_network.rs": "6a1a1b2de1227fd477e4dfec2b3396538e16a7aa2a3fa77c93cbc3f6c075b8a8",
+    "rust/crates/store/src/auth_throttle.rs": "2271d71ae0ca7f8ed38df12241164ee7dff0bddd0bd3d4abe73a41b8897f094d",
+    "rust/crates/store/src/startup.rs": "fee553defcf7953565063f2b568879f35b9e46754b3ea2cf151d6cf59a7f6202",
+    "rust/crates/store/src/settings_groups.rs": "8435fcd0069c46432ffe7a2410c8a903830a645a535daa3d1de3edec5a71a1ed",
+    "rust/crates/store/src/accounts.rs": "4f07941cf41c95cc78f6113e4e67209a4d0d3c363f0f033c77360930abf2c891",
+    "rust/crates/store/src/playback.rs": "6380e648476547b5892dc15ed49df56aea75187815699139e9f61b1b32eb1cad",
+    "rust/crates/store/src/xc_auth.rs": "888039150e096f1f8d9320a70e6927bd5ee3560aeac6fff7eb08b0c9952d4c39",
+    "rust/crates/store/src/lib.rs": "bad6fb42251e661dbedf90a109bbf05f7e08a30292d716edcfb0b0ef4d05e24c"
+  },
+  "cleanup": "project removed",
+  "verified": [
+    "Original serialized login and API-key histories restored with explicitly rebased relative timestamps share remaining budget across independent native services.",
+    "Overfull source login history omits Retry-After exactly.",
+    "Source login field errors and truncated audit text match for required, null, blank, nonstring and NUL values.",
+    "Cached network policy takes precedence over differing SQL for login, proxy, refresh and authenticated logout.",
+    "Cached enabled proxy config takes precedence over disabled SQL.",
+    "Availability probes consume no budget or audit; unknown/inactive identity audits and shared proxy lockout match.",
+    "Authenticated proxy requests bypass anonymous throttle; JWT remains valid after logout.",
+    "Manual proxy401 omits challenge while invalidJWT401 retains original Bearer challenge.",
+    "Exact status, JSON, headers, sequential audit/inbox rows, history counts and suppression/cooldown presence match."
+  ],
+  "evidence_history": [
+    {
+      "report": "artifacts/rust/m5-auth-cache-proxy-source-3/integration.json",
+      "outcome": "40 shared requests passed; first proxy request caught extra Bearer challenge. Preserved failure and successful cleanup."
+    }
+  ],
+  "remaining": [
+    "Frozen IMAGE15 and full packaged HTTP/browser workflow gates.",
+    "Native hash test explicitly skipped here; six cases accepted separately in Source1 and Source2.",
+    "Session-cookie deletion and Django admin/session endpoints remain unported.",
+    "Malformed JSON ordering/parser messages and non-UTF-8 API-key transport remain edge gaps.",
+    "Argon2, bcrypt_sha256 and scrypt remain fail closed.",
+    "M7 transport delivery and M8 integration/plugin audit hooks remain separate milestones.",
+    "No shared cache configured retains legacy bounded local fallback; deployed app configures Redis.",
+    "Media PlaybackError lacks Retry-After transport metadata; REST responses retain headers."
+  ]
+}

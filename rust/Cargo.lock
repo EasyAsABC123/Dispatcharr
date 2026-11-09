@@ -587,6 +587,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "dispatcharr-output-http"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "bytes",
+ "dispatcharr-contracts",
+ "dispatcharr-store",
+ "futures-util",
+ "reqwest",
+ "serde_json",
+ "sha2 0.10.9",
+ "sqlx",
+ "tokio",
+ "url",
+ "uuid",
+]
+
+[[package]]
 name = "dispatcharr-output-store"
 version = "0.1.0"
 dependencies = [
@@ -629,6 +647,7 @@ dependencies = [
  "dispatcharr-hls-http",
  "dispatcharr-input-store",
  "dispatcharr-output-store",
+ "dispatcharr-realtime",
  "dispatcharr-store",
  "dispatcharr-stream-http",
  "dispatcharr-timeshift-http",

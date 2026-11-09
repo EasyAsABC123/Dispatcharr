@@ -1,0 +1,39 @@
+{
+  "scope": "Actual pinned original Django vs native host auth on disposable PostgreSQL/Redis; no frozen application-image or performance claim.",
+  "passed": true,
+  "source_hash_cases": 6,
+  "source_throttle_scenarios": 3,
+  "source_throttle_requests": 31,
+  "raw_report_sha256": "516d4b4de4e8be55dd84f986eecb298d159bdfac03fb26a4d231eb701808c546",
+  "rust_source_archive_sha256": "89d67d230140dffb5d65029c0e32b7a666794a0b8db9a722de35b08740e15359",
+  "source_files": {
+    "rust/crates/store/src/auth.rs": "fd42f7ecce6afc75b2cf7016ba178f53215a30d0f4a691cabd797a8ad9398ccb",
+    "rust/crates/store/src/auth_events.rs": "3992385e8ab649002750b4527af861a2847bfd09e4ce6d23266aed78c703dbd6",
+    "rust/crates/store/src/auth_throttle.rs": "a7911018e3aed35231e196f44b03567625ce5297c531d7a00afb9f9c3a3821c5",
+    "rust/crates/store/src/startup.rs": "2854c3a92fc3f9839166f50572654eee6abbf68cfd7b253076499c7ec409c272",
+    "rust/crates/store/src/lib.rs": "56945ff7c79ffecdcde09423e6c56002fbbe59ac9a5ae6a7d3a3b6443bde1f22",
+    "rust/crates/store/src/playback.rs": "d78b14837dcc2ff4829c1a85d1a5b17bc61b09f53cfa306b1b801226edf053ab",
+    "rust/crates/store/src/passwords.rs": "aaaa1d3a377d35cbf2177d82e81943d97e3524d5823a50057ed97dca5f2e57d5",
+    "rust/crates/store/tests/auth_sql.rs": "4fecd2db53feb2884780a8075b2336c5b52d30b6529394d9188b6eb651f6cf4e"
+  },
+  "cleanup": "project removed",
+  "verified": [
+    "Three allowed login attempts include serializer failures; fourth returns original DRF429 and Retry-After.",
+    "Repeated denial emits one login audit event per lockout window and cooldown-gated exact admin inbox notice.",
+    "Active API-key success does not consume failure budget.",
+    "Invalid or inactive API key consumes shared10/minute budget; tenth401 triggers exact audit/inbox; eleventh valid key is429.",
+    "Missing API-key authentication remains uncharged even after another credential is blocked.",
+    "Two independent native service instances share real original-format Redis histories.",
+    "Source validation audit exception text, full sequential database audit/inbox records and history cardinalities compare exactly.",
+    "Six legacy/current/inactive/wrong-password hash cases still pass after audit integration."
+  ],
+  "limits": [
+    "Post-IMAGE14 implementation: needs next immutable packaged-image/full-browser gate.",
+    "Original Redis history interoperation uses shared restricted pickle codec; concurrent legacy Django writers remain non-atomic. Native CAS is stricter under concurrency.",
+    "Native services constructed without shared cache retain bounded process-local fallback; deployed main configures shared Redis.",
+    "Proxy-authenticated AnonRateThrottle bypass and proxy audit paths implemented but await focused original-source denial/role probes.",
+    "Non-UTF-8 API-key transport rejection/order and duplicate legacy API-key rows remain unported edge cases.",
+    "Other installed password hashers, complete Django session auth and M8 integration/plugin side effects remain open.",
+    "Native PlaybackError does not currently carry Retry-After headers; REST endpoints preserve them."
+  ]
+}

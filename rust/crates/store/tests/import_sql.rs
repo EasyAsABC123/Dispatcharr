@@ -358,6 +358,28 @@ async fn original_batch_create_touch_change_dedup_and_transaction_rollback() {
             if let Some(expected) = step["expected_batches"].as_u64() {
                 assert_eq!(result.as_ref().unwrap().batches, expected as usize);
             }
+            if let Some(expected) = step["expected_input_batches"].as_u64() {
+                assert_eq!(result.as_ref().unwrap().input_batches, expected as usize);
+                assert_eq!(
+                    result.as_ref().unwrap().failed_batches,
+                    step["expected_failed_batches"].as_u64().unwrap() as usize
+                );
+            }
+            if let Some(expected) = step["retry_audit"].as_array() {
+                let table = fixture["retry_trigger"]["audit"].as_str().unwrap();
+                assert!(
+                    table.starts_with("rust_retry_audit_")
+                        && table
+                            .bytes()
+                            .all(|b| b.is_ascii_alphanumeric() || b == b'_')
+                );
+                let audit: Vec<String> =
+                    sqlx::query_scalar(&format!("SELECT tvg_id FROM {table} ORDER BY id"))
+                        .fetch_all(store.pool())
+                        .await
+                        .unwrap();
+                assert_eq!(json!(audit), json!(expected));
+            }
             std::fs::remove_file(path).unwrap();
             result.map(|counts| counts.streams)
         } else {

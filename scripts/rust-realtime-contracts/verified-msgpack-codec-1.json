@@ -1,0 +1,30 @@
+{
+  "scope": "actual pinned Python msgpack to Rust byte-exact JSON codec vectors",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_runtime": {
+    "python": "3.13.18",
+    "msgpack": "1.2.4",
+    "codec_sha256": "62866d9383d087ec55350417916bd716755e0aa0816a26c706eecdf66126d204"
+  },
+  "vector_count": 307,
+  "vector_sha256": "5d63c7dd307ed60061c6743a63247e5e9f31538d04d298544c385d86f2e75e96",
+  "result": {
+    "vectors": 307,
+    "failed_indices": [],
+    "passed": true
+  },
+  "tool_sha256": {
+    "scripts/rust-realtime-contracts/codec.py": "93494fc134721b6ca4484690d5a1cc8a88d99a0e53afe71cf4f2fa9c0d2b656c",
+    "rust/crates/realtime/src/codec.rs": "1283972bba61a146be194e62d8976bc1fc37aa2b27d3a7703a1138cb2545a9fc",
+    "rust/crates/realtime/examples/codec_vectors.rs": "49c7087791b1f26b38f873136a3c14774b6bcfcea0cf3b6f192fe9c735e79721"
+  },
+  "limitations": [
+    "JSON-compatible MessagePack values only; binary/extensions/nonfinite floats are deliberately refused",
+    "Not a handshake, transport, cached-IP or frontend proof"
+  ],
+  "artifact": "artifacts/rust/m7-msgpack-codec-2/evidence.json",
+  "artifact_sha256": "1f3fef39df6297f5da69bed913d3aa2b673ce970dc53cb8fee65d60e3015d249"
+}

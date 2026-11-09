@@ -62,25 +62,16 @@ mod tests {
     use serde_json::json;
     #[test]
     fn event_filter_matches_actual_pinned_daphne_wire_cases() {
-        let source: Value = serde_json::from_str(include_str!(
-            "../../../../scripts/rust-realtime-contracts/verified-source-wire-1.json"
-        ))
-        .unwrap();
+        let source: Value =
+            serde_json::from_str(include_str!("../datasets/source-policy-wire.json")).unwrap();
         let mut compared = 0;
-        for row in source["cases"].as_array().unwrap() {
-            let data = match row["case"].as_str().unwrap() {
-                "event-filter" | "falsy-update" => row["data"].clone(),
-                "notification-filter" => {
-                    json!({"type":"system_notification","notification":{"admin_only":row["flag"]}})
-                }
-                _ => continue,
-            };
-            let expected = if row["received"][1].is_null() {
+        for row in source["rows"].as_array().unwrap() {
+            let expected = if row["administrative"] == true {
                 Visibility::Administrative
             } else {
                 Visibility::Public
             };
-            assert_eq!(visibility(&json!({"type":"update","data":data})), expected);
+            assert_eq!(visibility(&row["event"]), expected);
             compared += 1;
         }
         assert_eq!(compared, 22);

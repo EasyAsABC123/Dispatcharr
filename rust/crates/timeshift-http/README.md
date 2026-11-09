@@ -63,7 +63,7 @@ Completed verification:
 - Compile and strict Clippy for all targets pass. Evidence is in
   `scripts/rust-timeshift-contracts/verified-{contracts,admission,native-media,compose}.json`.
 
-Remaining gates: additional direct-auth/fingerprint/control corners and frozen XC playback proof; cross-worker/programme/profile
+Remaining gates: additional direct-auth/fingerprint/control corners; cross-worker/programme/profile
 pool adoption and broader generation/stop faults; broader
 positive-cap/preemption/stop reasons; complete range position, stream statistics,
 pubsub/WebSocket effects; transforms/server groups and failure recovery;
@@ -119,6 +119,9 @@ finalization briefly re-creates a grace-only client hash; both implementations
 remove it after grace and retain the idle fingerprint. Eleven real Redis pool
 regressions cover cancellation/reopen fences and that compatibility branch.
 A deliberately failing test event sink verifies three full stats-envelope
-attempts without changing stop success. Application router/shutdown wiring compiles with strict Clippy; frozen Compose
-management proof and actual shared event transport remain pending. See
+attempts without changing stop success. Immutable image14 now passes the full31 management cases plus real active/idle
+control comparison, all23 XC and15 direct cases, and all prior M4 subset
+comparisons/strict decoders, with cleanup. Its249 fixture/probe files were
+copied before setup and executed from that captured tree. Actual shared event
+transport and the broader remaining contracts remain open. See
 MANAGEMENT-CONTRACTS.md and verified-management.json.

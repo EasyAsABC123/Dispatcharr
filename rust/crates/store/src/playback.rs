@@ -177,8 +177,7 @@ impl PlaybackResolver for AuthService {
             // presented credentials are still validated before any channel reuse.
             let user = self.authenticate(&request).await.map_err(playback_error)?;
             if !self
-                .store
-                .network_allowed(self.client_ip(&request), "STREAMS", None)
+                .source_network_allowed(self.client_ip(&request), "STREAMS", None)
                 .await
                 .map_err(playback_error)?
             {
@@ -302,8 +301,7 @@ impl PlaybackResolver for AuthService {
                 .ok_or_else(|| PlaybackError { status: 401, body: serde_json::json!({"detail":"Authentication credentials were not provided."}) })?;
             if user.user_level < 10
                 || !self
-                    .store
-                    .network_allowed(self.client_ip(&request), "UI", Some(&user))
+                    .source_network_allowed(self.client_ip(&request), "UI", Some(&user))
                     .await
                     .map_err(playback_error)?
             {
@@ -323,8 +321,7 @@ impl PlaybackResolver for AuthService {
                 .ok_or_else(||PlaybackError{status:401,body:serde_json::json!({"detail":"Authentication credentials were not provided."})})?;
             if user.user_level < 1
                 || !self
-                    .store
-                    .network_allowed(self.client_ip(&request), "UI", Some(&user))
+                    .source_network_allowed(self.client_ip(&request), "UI", Some(&user))
                     .await
                     .map_err(playback_error)?
             {
@@ -332,8 +329,7 @@ impl PlaybackResolver for AuthService {
             }
             if check_stream_acl
                 && !self
-                    .store
-                    .network_allowed(self.client_ip(&request), "STREAMS", Some(&user))
+                    .source_network_allowed(self.client_ip(&request), "STREAMS", Some(&user))
                     .await
                     .map_err(playback_error)?
             {
@@ -352,16 +348,14 @@ impl PlaybackResolver for AuthService {
             let user=self.authenticate(&request).await.map_err(playback_error)?.ok_or_else(||PlaybackError{status:401,body:serde_json::json!({"detail":"Authentication credentials were not provided."})})?;
             if user.user_level < 1
                 || !self
-                    .store
-                    .network_allowed(self.client_ip(&request), "UI", Some(&user))
+                    .source_network_allowed(self.client_ip(&request), "UI", Some(&user))
                     .await
                     .map_err(playback_error)?
             {
                 return Err(playback_error(StoreError::PermissionDenied));
             }
             if !self
-                .store
-                .network_allowed(self.client_ip(&request), "STREAMS", Some(&user))
+                .source_network_allowed(self.client_ip(&request), "STREAMS", Some(&user))
                 .await
                 .map_err(playback_error)?
             {
@@ -394,6 +388,7 @@ fn playback_error(error: StoreError) -> PlaybackError {
         },
         StoreError::Unsupported(detail) => PlaybackError::new(501, detail),
         StoreError::RateLimited(_) => PlaybackError::new(429, "Too many attempts"),
+        StoreError::Throttled { body, .. } => PlaybackError { status: 429, body },
         StoreError::XcDenied { status, .. } => PlaybackError {
             status,
             body: crate::xc_auth::failure_body(status),

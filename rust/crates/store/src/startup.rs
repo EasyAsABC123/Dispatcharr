@@ -4,6 +4,7 @@ use crate::{auth::request, cidrs_allow, AuthService, StoreError, TokenPair, User
 use axum::{
     extract::{ConnectInfo, State},
     http::{HeaderMap, Method},
+    response::{IntoResponse, Response},
     routing::{any, get, post},
     Json, Router,
 };
@@ -128,17 +129,49 @@ impl AuthService {
     }
 }
 async fn proxy_login(
+    state: State<AuthService>,
+    peer: ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Response {
+    match proxy_login_inner(state, peer, headers).await {
+        Ok(pair) => pair.into_response(),
+        Err(error) => {
+            // These are manual Response(401) returns in the original view,
+            // not DRF authentication exceptions with a Bearer challenge.
+            let manual = matches!(
+                &error,
+                StoreError::Unauthorized(
+                    "Reverse proxy authentication unavailable."
+                        | "No account matches the authenticated identity."
+                )
+            );
+            let mut response = error.into_response();
+            if manual {
+                response.headers_mut().remove("www-authenticate");
+            }
+            response
+        }
+    }
+}
+async fn proxy_login_inner(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
 ) -> Result<Json<TokenPair>, StoreError> {
     let request = request(peer, headers);
-    auth.authenticate(&request).await?;
+    let already_authenticated = auth.authenticate(&request).await?.is_some();
     let ip = auth.client_ip(&request);
-    if !auth.store.network_allowed(ip, "UI", None).await? {
+    if !auth.source_network_allowed(ip, "UI", None).await? {
+        auth.auth_event(
+            &request,
+            "login_failed",
+            json!("proxy_auth"),
+            Some("Network access denied"),
+        )
+        .await;
         return Err(StoreError::Forbidden);
     }
-    let settings = auth.store.setting("reverse_proxy_auth").await?;
+    let settings = auth.cached_setting_group("reverse_proxy_auth").await?;
     let header = settings
         .get("header")
         .and_then(Value::as_str)
@@ -157,18 +190,39 @@ async fn proxy_login(
         .map(str::trim)
         .filter(|value| !value.is_empty())
         .ok_or_else(unavailable)?;
-    auth.throttle(ip, "login", true)?;
-    let user = auth
-        .proxy_user(identity)
-        .await?
-        .filter(|user| user.is_active)
-        .ok_or(StoreError::Unauthorized(
+    // The source proxy view retains DRF's AnonRateThrottle behavior: an
+    // already-authenticated JWT/API-key user does not consume a login slot.
+    if !already_authenticated {
+        if let Err(error) = auth
+            .shared_auth_budget(ip, crate::auth_throttle::Scope::Login, true, true)
+            .await
+        {
+            if let StoreError::Throttled { wait, .. } = &error {
+                auth.login_lockout(&request, json!(identity), *wait).await;
+            }
+            return Err(error);
+        }
+    }
+    let user = auth.proxy_user(identity).await?;
+    let reason = match user.as_ref() {
+        None => Some("Reverse proxy auth: no matching account"),
+        Some(user) if !user.is_active => Some("Reverse proxy auth: account inactive"),
+        _ => None,
+    };
+    if let Some(reason) = reason {
+        auth.auth_event(&request, "login_failed", json!(identity), Some(reason))
+            .await;
+        return Err(StoreError::Unauthorized(
             "No account matches the authenticated identity.",
-        ))?;
+        ));
+    }
+    let user = user.unwrap();
     sqlx::query("UPDATE accounts_user SET last_login=NOW() WHERE id=$1")
         .bind(user.id)
         .execute(auth.store.pool())
         .await?;
+    auth.auth_event(&request, "login_success", json!(user.username), None)
+        .await;
     Ok(Json(TokenPair {
         access: auth.mint(json!(user.id.to_string()), "access")?,
         refresh: auth.mint(json!(user.id.to_string()), "refresh")?,

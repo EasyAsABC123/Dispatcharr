@@ -1,0 +1,852 @@
+{
+  "scope": "packaged two-replica native app WebSocket routes and original event interoperability",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "candidate_image": "dispatcharr-rust-candidate:m5-auth-m7-websocket-image15-2",
+  "candidate_image_id": "sha256:d5929a085ea262bfe24d3fe7eaee49f6cb69b6183a40cc7cc99da9cf82c7ece6",
+  "candidate_source_tree_sha256": "0053aef6fe71043b6db52851cb0e2cf691788cf175fe10ae956b02b5934ffde7",
+  "candidate_build_manifest_sha256": "0f7e8348ebc0be6e4bcc054e47f7ca46f3a16eaea5bfcfbcd5ecdbd61d715654",
+  "separate_component_source_match": {
+    "rust/crates/realtime/Cargo.toml": true,
+    "rust/crates/realtime/README.md": false,
+    "rust/crates/realtime/datasets/source-policy-wire.json": true,
+    "rust/crates/realtime/examples/bus_peer.rs": true,
+    "rust/crates/realtime/examples/codec_vectors.rs": true,
+    "rust/crates/realtime/examples/gateway_peer.rs": true,
+    "rust/crates/realtime/src/bus.rs": true,
+    "rust/crates/realtime/src/codec.rs": true,
+    "rust/crates/realtime/src/gateway.rs": true,
+    "rust/crates/realtime/src/hub.rs": true,
+    "rust/crates/realtime/src/lib.rs": true,
+    "rust/crates/realtime/src/policy.rs": true,
+    "rust/crates/realtime/tests/redis.rs": true
+  },
+  "wire": {
+    "passed": true,
+    "cases": [
+      {
+        "case": "auth-absent",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-invalid",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-refresh",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-inactive",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-missing-user",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-apikey-query",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-header-only",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-wrong-case",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-invalid-first",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-blank-first",
+        "status": 101,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "auth-valid-first",
+        "status": 101,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "auth-query-with-invalid-header",
+        "status": 101,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "role-admin",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "role-standard",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "role-viewer",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "origin",
+        "origin": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "origin",
+        "origin": "null",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "origin",
+        "origin": "https://cross-origin.invalid",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": null,
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": {},
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": false,
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": 0,
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": "",
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": [
+          "invalid"
+        ],
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": {
+          "public_ip": "192.0.2.10",
+          "country_code": "ZZ",
+          "verified_at": 1234.5
+        },
+        "extra": {
+          "message": {
+            "data": {
+              "type": "ip_lookup_complete",
+              "country_code": "ZZ",
+              "public_ip": "192.0.2.10"
+            }
+          }
+        },
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": {
+          "type": "fixture_type_override",
+          "verified_at": 12
+        },
+        "extra": {
+          "message": {
+            "data": {
+              "type": "fixture_type_override"
+            }
+          }
+        },
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "event-filter",
+        "kind": "channel_stats",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "channel_stats",
+                "fixture_probe": 0
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "vod_stats",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "vod_stats",
+                "fixture_probe": 1
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "timeshift_stats",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "timeshift_stats",
+                "fixture_probe": 2
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "vod_started",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "vod_started",
+                "fixture_probe": 3
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "vod_stopped",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "vod_stopped",
+                "fixture_probe": 4
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "future_event",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "future_event",
+                "fixture_probe": 5
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "future_event",
+                "fixture_probe": 5
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "future_event",
+                "fixture_probe": 5
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": null,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": null,
+                "fixture_probe": 6
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": null,
+                "fixture_probe": 6
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": null,
+                "fixture_probe": 6
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": true,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": true
+                }
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": 1,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": 1
+                }
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": "false",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": "false"
+                }
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": [
+          false
+        ],
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": [
+                    false
+                  ]
+                }
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": false,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": false
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": false
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": 0,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": 0
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": 0
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": "",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": ""
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": ""
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": ""
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": [],
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": []
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": []
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": []
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": {},
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": {}
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": {}
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "falsy-update",
+        "data": null,
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": false,
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": 0,
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": "",
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": [],
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": {},
+        "passed": true
+      },
+      {
+        "case": "captured-role-and-active",
+        "passed": true
+      },
+      {
+        "case": "token-expiry-after-handshake",
+        "old-stays-connected": true,
+        "new-status": 403
+      },
+      {
+        "case": "inbound-invalid-json",
+        "closed": 1011
+      },
+      {
+        "case": "inbound-missing-type",
+        "closed": 1011
+      },
+      {
+        "case": "inbound-array",
+        "closed": 1011
+      },
+      {
+        "case": "inbound-binary",
+        "closed": 1011
+      },
+      {
+        "case": "standard-preview-ignored",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "ping-pong",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "large-fragmented-json-with-ping",
+        "json_bytes": 6291516,
+        "value_sha256": "ee78cd29d3a534713b36e6ff6fa3668c8a8f851a542d5eb2401c25ca4e057d02",
+        "one_message": true,
+        "pong_received": true
+      },
+      {
+        "case": "actual-Chromium-single-onmessage-for-6MiB-fragmented-JSON",
+        "large": {
+          "messages": 1,
+          "wireCharacters": 6291516,
+          "valueCharacters": 1048576,
+          "firstCode": 1,
+          "lastCode": 1
+        },
+        "closed": {
+          "code": 1000,
+          "clean": true
+        }
+      },
+      {
+        "case": "100-sockets-two-native-gateways-Source-broadcast",
+        "messages": 100,
+        "diagnostics": null
+      },
+      {
+        "case": "closing-half-preserves-other50",
+        "passed": true
+      },
+      {
+        "case": "held-slow-reader-fast-reader-isolated",
+        "fast_delivery_seconds": 0.16413038500468247,
+        "slow_member_removed_seconds": 2.397946505006985,
+        "remaining_members": 1,
+        "event_value_bytes": 3145728,
+        "json_bytes": 18874428,
+        "internal_byte_metrics": "unexposed in app; identical gateway component budgets verified separately"
+      }
+    ],
+    "case_count": 61,
+    "group_members_after_close": 0,
+    "scope": "native wire assertions using actual original Django auth/cache/events; no admin regex preview or browser proof"
+  },
+  "browser_runtime": {
+    "ready": true,
+    "browser": "Chrome/156.0.8078.79",
+    "protocol": "1.3"
+  },
+  "original": {
+    "daphne_defaults": {
+      "endpoints": null,
+      "signal_handlers": true,
+      "action_logger": null,
+      "http_timeout": null,
+      "request_buffer_size": 8192,
+      "websocket_timeout": 86400,
+      "websocket_connect_timeout": 20,
+      "ping_interval": 20,
+      "ping_timeout": 30,
+      "root_path": "",
+      "proxy_forwarded_address_header": null,
+      "proxy_forwarded_port_header": null,
+      "proxy_forwarded_proto_header": null,
+      "verbosity": 1,
+      "websocket_handshake_timeout": 5,
+      "websocket_max_message_size": 1048576,
+      "websocket_max_frame_size": 1048576,
+      "application_close_timeout": 10,
+      "ready_callable": null,
+      "server_name": "daphne"
+    },
+    "daphne_timeout_source": "    def check_timeouts(self):\n        \"\"\"\n        Called periodically to see if we should timeout something\n        \"\"\"\n        # Web timeout checking\n        if (\n            self.duration() > self.server.websocket_timeout\n            and self.server.websocket_timeout >= 0\n        ):\n            self.serverClose()\n        # Ping check\n        # If we're still connecting, deny the connection\n        if self.state == self.STATE_CONNECTING:\n            if self.duration() > self.server.websocket_connect_timeout:\n                self.serverReject()\n        elif self.state == self.STATE_OPEN:\n            if (time.time() - self.last_ping) > self.server.ping_interval:\n                self._sendAutoPing()\n                self.last_ping = time.time()\n",
+    "daphne_close_source": "    def serverClose(self, code=None):\n        \"\"\"\n        Server-side channel message to close the socket\n        \"\"\"\n        code = 1000 if code is None else code\n        self.sendClose(code=code)\n",
+    "source_sha256": {
+      "dispatcharr/consumers.py": "429bb971a13b853c4b87f63d0f350c68f94d5e3bff79455945e1cbb8a1fb1775",
+      "dispatcharr/jwt_ws_auth.py": "91d1770ec7724ac0fe865526d7af7c716b2e5f6cc3eee1729e59abbbf5c759f4",
+      "dispatcharr/asgi.py": "b0c67894be11f8797e123c974d653c146a5f9d5f2aba862521f68f00a356b1ca",
+      "dispatcharr/routing.py": "567b99437a8292e60913193d47bdf7d4855b40f07f02425eb16611f4097c8b15",
+      "core/utils.py": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7"
+    }
+  },
+  "shutdown_seconds": 0.3019320180028444,
+  "held_socket_shutdown": [
+    {
+      "closed": 1001
+    },
+    {
+      "closed": 1001
+    }
+  ],
+  "group_after_shutdown": {
+    "members": 0,
+    "ttl": -2
+  },
+  "exit_states": [
+    {
+      "service": "candidate",
+      "exit_code": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "candidate-replica",
+      "exit_code": 0,
+      "oom_killed": false
+    }
+  ],
+  "cleanup": "isolated Compose project removed",
+  "tool_sha256": {
+    "scripts/rust-realtime-contracts/gateway_image.py": "0ee14a69eb832570f9a74e3a119bcd242161f9a40961624379839d144ab4c2a1",
+    "scripts/rust-realtime-contracts/gateway_cases.py": "b2203306d97a2944e9ff6db3700ae8acaf3a95169720964a9b2980084aacd5e4",
+    "scripts/rust-realtime-contracts/gateway_control.py": "135099ec310b843cf9a13a82d2c6a3cbbf37c6372be5b010d1fe4c6ed11dcd72",
+    "scripts/rust-realtime-contracts/ws_client.py": "36d691aca21ef25db70a9dd6c6526b3e6fd06fded5fd5e39a36a18a3180b1a4b",
+    "scripts/rust-realtime-contracts/interop.py": "3be7185f1ea974fbee17bedff53ae9b3ab4f7567fd9939052ab89291fdf62b1f",
+    "scripts/rust-realtime-contracts/browser_peer.js": "fd55243d0884e2db6a864f573fb7c00bd22bf04435513263e9b31493429347c3",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "80ce607d050f72b8aea8399a3a769d8cd067e59beb16ee09349a5e356b11fddd",
+    "docker/compose.rust-replicas.yml": "b28f56bcd33a6192d175eeaff8da3348c89fac22149d4e4a95a5688da5581ea4",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1"
+  },
+  "artifact": "artifacts/rust/m7-packaged-gateway-image15-2/gateway-image.json",
+  "artifact_sha256": "d08d31f36c234209007b400479452f34e9eef25ca51d1c277c32c2144284b749",
+  "internal_budget_scope": "Identical realtime code source matched to separately measured component budget proof; app exposes no invented byte diagnostics endpoint.",
+  "limitations": [
+    "Main app WebSocket route and original producer interoperability verified; native live/media producer implementation remains open",
+    "Preserved complete React workflow, admin regex preview, handshake edge variants and full M7 remain gates",
+    "No WebSocket or full application resource-performance acceptance",
+    "First packaged pressure probe preserved60 successful wire assertions but6MiB did not induce cleanup by4s through forwarding;18MiB within unchanged caps established bounded backpressure. Proxy buffering is a hypothesis, not a proved application defect or exact transport buffer bound."
+  ]
+}

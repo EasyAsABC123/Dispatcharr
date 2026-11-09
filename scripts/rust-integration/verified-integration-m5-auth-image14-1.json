@@ -1,5 +1,5 @@
 {
-  "scope": "Immutable image14 default HTTP1024 and enabled-IP33 source comparisons. Native six-case legacy hash upgrade accepted separately as host SQL component, not an additional packaged hash-case claim.",
+  "scope": "Immutable image14 default HTTP1024, enabled-IP33 and packaged password-hash30 source comparisons.",
   "passed": true,
   "image_id": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
   "source_tree_sha256": "3dee6610ccae2626a800e46dc8797170f25e919dde5cef07f4c501d1cbf833aa",
@@ -41,6 +41,17 @@
         "environment_ip"
       ],
       "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-auth-hash-image14-1/integration.json",
+      "sha256": "42eba0cbe8b3d5bb31b1989794c76f6fa07a5eca4bb3c744ce2f8dd76d00f34b",
+      "passed": true,
+      "checks": 30,
+      "contract_suites": [
+        "auth_hash"
+      ],
+      "cleanup": "project removed",
+      "scope": "18foundation +6HTTP hash witnesses +6owned cleanup. Token signatures/claims normalized and verified. Audits intentionally outside this hash-only witness."
     }
   ],
   "component_evidence": [

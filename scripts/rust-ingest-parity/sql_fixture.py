@@ -234,6 +234,53 @@ def main():
                   'playlist':playlist,'projection_context':{'account_type':account.account_type,'groups':groups,'hash_keys':keys,'max_name_characters':512},
                   'rows':projected(batch),'counts':counts,'error':False,'expected_batches':2,
                   'expected':normalized(database_rows(),before)})
+    # Real database failures: other batches finish before one sequential retry.
+    # A nontransactional sequence makes the transient trigger fail exactly once;
+    # committed audit order distinguishes retry-after-all from inline retry.
+    from django.db import connection
+    suffix=uuid.uuid4().hex[:12]
+    retry_trigger={key:'rust_retry_'+key+'_'+suffix for key in ['sequence','audit','function','trigger']}
+    retry_trigger.update(transient_id=prefix+' retry-transient',valid_id=prefix+' retry-transient-valid')
+    q=connection.ops.quote_name
+    with connection.cursor() as cursor:
+        cursor.execute('CREATE SEQUENCE '+q(retry_trigger['sequence'])+' START 1')
+        cursor.execute('CREATE TABLE '+q(retry_trigger['audit'])+' (id bigint DEFAULT nextval(\''+retry_trigger['sequence']+'\'),tvg_id text NOT NULL)')
+        cursor.execute(f"""CREATE FUNCTION {q(retry_trigger['function'])}() RETURNS trigger AS $$ BEGIN
+            IF NEW.tvg_id IN ('{retry_trigger['transient_id']}','{retry_trigger['valid_id']}') THEN
+                IF NEW.tvg_id='{retry_trigger['transient_id']}' AND nextval('{retry_trigger['sequence']}')=1 THEN
+                    RAISE EXCEPTION 'disposable transient import fault';
+                END IF;
+                INSERT INTO {q(retry_trigger['audit'])}(tvg_id) VALUES (NEW.tvg_id);
+            END IF; RETURN NEW; END; $$ LANGUAGE plpgsql""")
+        cursor.execute('CREATE TRIGGER '+q(retry_trigger['trigger'])+' BEFORE INSERT ON dispatcharr_channels_stream FOR EACH ROW EXECUTE FUNCTION '+q(retry_trigger['function'])+'()')
+    for mode in ['permanent','transient']:
+        selected_groups={**groups,'bad':-1}
+        title='bad' if mode=='permanent' else 'Default Group'
+        playlist=f'#EXTM3U\n#EXTINF:-1 tvg-id="{prefix} retry-{mode}" group-title="{title}",Retry {mode}\nhttp://origin:8080/live/0.ts\n'
+        playlist+=''.join(f'#EXTINF:-1 tvg-id="{prefix} retry-{mode}-skip-{i}" group-title="excluded",Skip\nhttp://origin:8080/live/0.ts\n' for i in range(1499))
+        playlist+=f'#EXTINF:-1 tvg-id="{prefix} retry-{mode}-valid",Later batch\nhttp://origin:8080/live/0.ts\n'
+        batch=list(tasks.iter_m3u_entries(playlist.splitlines()))
+        before=database_rows();counts=[0,0,0];failed=[]
+        for index,offset in enumerate(range(0,len(batch),1500)):
+            part=batch[offset:offset+1500]
+            try:
+                result=tasks._parse_batch_stream_counts(tasks.process_m3u_batch_direct(account.id,part,selected_groups,keys,[]))
+                counts=[a+b for a,b in zip(counts,result)]
+            except Exception:failed.append((index,part))
+        assert len(failed)==1
+        created,updated,unchanged,still_failed=tasks._retry_failed_batches(account.id,failed,selected_groups,keys,[])
+        counts=[a+b for a,b in zip(counts,[created,updated,unchanged])]
+        step={'name':'parsed-cache-retry-after-all-'+mode,'account_id':account.id,'playlist':playlist,
+              'projection_context':{'account_type':account.account_type,'groups':selected_groups,'hash_keys':keys,'max_name_characters':512},
+              'rows':projected(batch,selected_groups),'counts':counts,'error':False,'expected_input_batches':2,
+              'expected_batches':2-still_failed,'expected_failed_batches':still_failed,
+              'expected':normalized(database_rows(),before)}
+        if mode=='transient':
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT tvg_id FROM '+q(retry_trigger['audit'])+' ORDER BY id')
+                step['retry_audit']=[row[0] for row in cursor.fetchall()]
+            assert step['retry_audit']==[retry_trigger['valid_id'],retry_trigger['transient_id']]
+        steps.append(step)
     # Restore the same initial logical dataset for the independent Rust writer.
     Stream.objects.filter(tvg_id__startswith=prefix).delete()
     restored=[]
@@ -290,7 +337,10 @@ def main():
     ChannelGroupM3UAccount.objects.bulk_create([ChannelGroupM3UAccount(**initial_relation_data)])
     cleanup=cleanup_oracle(account,other)
     group_cleanup=group_cleanup_oracle(account,other)
-    print(json.dumps({'account_id':account.id,'prefix':prefix,'initial':initial,'steps':steps,'group_steps':group_steps,'cleanup':cleanup,'group_cleanup':group_cleanup,
+    with connection.cursor() as cursor:
+        cursor.execute('TRUNCATE TABLE '+q(retry_trigger['audit']))
+        cursor.execute('ALTER SEQUENCE '+q(retry_trigger['sequence'])+' RESTART WITH 1')
+    print(json.dumps({'retry_trigger':retry_trigger,'account_id':account.id,'prefix':prefix,'initial':initial,'steps':steps,'group_steps':group_steps,'cleanup':cleanup,'group_cleanup':group_cleanup,
                       'group_id':group.id,'restored_ids':restored},default=serialize))
 
 

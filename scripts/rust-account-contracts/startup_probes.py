@@ -81,8 +81,8 @@ def run(http,baseline,candidate,accounts,record):
                 token=accounts[role]['access'] if role else None)
     compare('proxy-invalid-token',root+'auth/proxy-login/',401,method='POST',headers={'Authorization':'Bearer invalid'})
     compare('login-alias-authenticates-first',root+'auth/login/',401,method='POST',body={},headers={'Authorization':'Bearer invalid'})
-    # Source and Rust each spend only two additional login attempts. Root has
-    # already spent one on Rust; do not exceed the source's 3/minute budget.
+    # Source and Rust use one shared 3/minute login bucket. Alias and validation
+    # pairs are independent contracts and therefore receive separate windows.
     try:
         before_login=http(baseline+root+'users/me/',token=viewer['access'])
         compare('login-alias-token-pair',root+'auth/login/',200,method='POST',
@@ -93,6 +93,7 @@ def run(http,baseline,candidate,accounts,record):
                and digest(before_login[1].get('last_login'))==digest(after_login[1].get('last_login')),
                {'before_sha256':digest(before_login[1].get('last_login')),'after_sha256':digest(after_login[1].get('last_login'))})
     except Exception as error:record('startup:login-alias-lifecycle',False,{'error_type':type(error).__name__})
+    for _ in range(2):time.sleep(31)
     compare('direct-token-ignores-bearer-before-field-validation',root+'token/',400,method='POST',
             body={'username':None,'password':True},headers={'Authorization':'Bearer invalid'})
     for suffix,body in [('missing',{}),('null',{'refresh':None}),('blank',{'refresh':' '}),

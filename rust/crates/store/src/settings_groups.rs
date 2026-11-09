@@ -13,6 +13,8 @@ impl Store {
                 value
             } else if key == "system_settings" {
                 default_system()
+            } else if key == "reverse_proxy_auth" {
+                json!({"enabled":false,"header":""})
             } else {
                 json!({})
             },
@@ -23,14 +25,15 @@ impl AuthService {
     /// Source CoreSettings.get_system_settings(): cached maps are returned as
     /// stored; an empty/nonobject/missing DB value uses the complete defaults.
     pub async fn system_settings(&self) -> Result<Value, StoreError> {
+        self.cached_setting_group("system_settings").await
+    }
+    pub(crate) async fn cached_setting_group(&self, key: &str) -> Result<Value, StoreError> {
         if let Some(cache) = self.notification_cache.as_ref() {
             cache
-                .settings_group("system_settings", || {
-                    self.store.source_group_value("system_settings")
-                })
+                .settings_group(key, || self.store.source_group_value(key))
                 .await
         } else {
-            self.store.source_group_value("system_settings").await
+            self.store.source_group_value(key).await
         }
     }
 }

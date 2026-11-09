@@ -81,7 +81,7 @@ fn network(raw: &str, strict: bool) -> Result<IpNet, StoreError> {
     }
     Ok(network)
 }
-fn system_allowed(policy: &Value, key: &str, ip: IpAddr) -> Result<bool, StoreError> {
+pub(crate) fn system_allowed(policy: &Value, key: &str, ip: IpAddr) -> Result<bool, StoreError> {
     const LOCAL: &str =
         "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10";
     let raw = match policy.get(key) {
@@ -97,7 +97,7 @@ fn system_allowed(policy: &Value, key: &str, ip: IpAddr) -> Result<bool, StoreEr
     }
     Ok(false)
 }
-fn user_allowed(user: &User, key: &str, ip: IpAddr) -> Result<bool, StoreError> {
+pub(crate) fn user_allowed(user: &User, key: &str, ip: IpAddr) -> Result<bool, StoreError> {
     let props = mapping(&user.custom_properties)?;
     let allowed = props.and_then(|props| props.get("allowed_networks"));
     let Some(allowed) = allowed else {

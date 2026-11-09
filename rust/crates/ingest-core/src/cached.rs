@@ -271,6 +271,21 @@ pub struct ValidatedCache {
 }
 impl ValidatedCache {
     pub fn open(path: &Path, limits: CacheReadLimits) -> Result<Self, CacheReadError> {
+        Self::open_while(path, limits, || true)
+    }
+    /// Validate without exposing rows; cancellation is checked before opening
+    /// and after each bounded entry, including during the initial EOF pass.
+    pub fn open_while(
+        path: &Path,
+        limits: CacheReadLimits,
+        mut proceed: impl FnMut() -> bool,
+    ) -> Result<Self, CacheReadError> {
+        if !proceed() {
+            return Err(CacheReadError::Io(io::Error::new(
+                io::ErrorKind::Interrupted,
+                "Parsed M3U cache validation cancelled",
+            )));
+        }
         if limits.bytes == 0
             || limits.entry_bytes == 0
             || limits.groups == 0
@@ -282,7 +297,19 @@ impl ValidatedCache {
         if file.metadata()?.len() > limits.bytes {
             return Err(CacheReadError::Capacity);
         }
-        let (entries, groups) = parse(&mut file, &limits, &mut |_| Ok(()))?;
+        let (entries, groups) = parse(&mut file, &limits, &mut |_| {
+            if proceed() {
+                Ok(())
+            } else {
+                Err("Parsed M3U cache validation cancelled".into())
+            }
+        })?;
+        if !proceed() {
+            return Err(CacheReadError::Io(io::Error::new(
+                io::ErrorKind::Interrupted,
+                "Parsed M3U cache validation cancelled",
+            )));
+        }
         file.rewind()?;
         Ok(Self {
             file,

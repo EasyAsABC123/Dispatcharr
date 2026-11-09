@@ -142,16 +142,23 @@ impl AuthService {
             .merge(providers)
     }
 
+    /// Same peer trust used by forwarded client-IP resolution. Export origin
+    /// builders must check this socket peer before using forwarded headers.
+    pub fn is_trusted_proxy(&self, peer: IpAddr) -> bool {
+        cidrs_allow(
+            self.config.trusted_proxies.as_deref().unwrap_or(
+                "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10",
+            ),
+            peer,
+        )
+    }
     pub fn client_ip(&self, request: &PlaybackRequest) -> IpAddr {
         let normalize = |ip: IpAddr| match ip {
             IpAddr::V6(ip) => ip.to_ipv4_mapped().map_or(IpAddr::V6(ip), IpAddr::V4),
             ip => ip,
         };
         let peer = normalize(request.peer_ip);
-        let trusted = self.config.trusted_proxies.as_deref().unwrap_or(
-            "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10",
-        );
-        if !cidrs_allow(trusted, peer) {
+        if !self.is_trusted_proxy(peer) {
             return peer;
         }
         if let Some(ip) = request
@@ -164,7 +171,7 @@ impl AuthService {
             for value in forwarded.split(',').rev() {
                 if let Ok(ip) = value.trim().parse() {
                     let ip = normalize(ip);
-                    if !cidrs_allow(trusted, ip) {
+                    if !self.is_trusted_proxy(ip) {
                         return ip;
                     }
                 }
@@ -334,11 +341,27 @@ impl AuthService {
                 }
             });
         if let Some(key) = key {
-            self.throttle(ip, "api-key", false)?;
+            self.shared_auth_budget(ip, crate::auth_throttle::Scope::ApiKey, false, false)
+                .await?;
             match self.store.user_by_api_key(key).await? {
                 Some(user) if user.is_active => return Ok(Some(user)),
                 user => {
-                    self.throttle(ip, "api-key", true)?;
+                    if self
+                        .shared_auth_budget(ip, crate::auth_throttle::Scope::ApiKey, true, false)
+                        .await?
+                    {
+                        self.auth_event(
+                            request,
+                            "login_failed",
+                            json!(user
+                                .as_ref()
+                                .map_or("api_key", |user| user.username.as_str())),
+                            Some("API key rate limited"),
+                        )
+                        .await;
+                        self.auth_lockout_notice(&crate::auth_events::API_NOTICE)
+                            .await;
+                    }
                     return Err(StoreError::Unauthorized(if user.is_some() {
                         "User inactive"
                     } else {
@@ -356,8 +379,28 @@ impl AuthService {
         body: Value,
     ) -> Result<TokenPair, StoreError> {
         let ip = self.client_ip(request);
-        self.throttle(ip, "login", true)?;
-        if !self.store.network_allowed(ip, "UI", None).await? {
+        if let Err(error) = self
+            .shared_auth_budget(ip, crate::auth_throttle::Scope::Login, true, false)
+            .await
+        {
+            if let StoreError::Throttled { wait, .. } = &error {
+                self.login_lockout(
+                    request,
+                    body.get("username").cloned().unwrap_or(Value::Null),
+                    *wait,
+                )
+                .await;
+            }
+            return Err(error);
+        }
+        if !self.source_network_allowed(ip, "UI", None).await? {
+            self.auth_event(
+                request,
+                "login_failed",
+                body.get("username").cloned().unwrap_or(json!("unknown")),
+                Some("Network access denied"),
+            )
+            .await;
             return Err(StoreError::Forbidden);
         }
         if !body.is_object() {
@@ -389,7 +432,22 @@ impl AuthService {
             }
         }
         if !errors.is_empty() {
-            return Err(StoreError::InvalidInput(Value::Object(errors)));
+            let body_error = Value::Object(errors);
+            let reason = format!(
+                "Authentication error: {}",
+                crate::auth_events::validation_exception(&body_error)
+                    .chars()
+                    .take(100)
+                    .collect::<String>()
+            );
+            self.auth_event(
+                request,
+                "login_failed",
+                crate::auth_events::audit_username(&body),
+                Some(&reason),
+            )
+            .await;
+            return Err(StoreError::InvalidInput(body_error));
         }
         let username = values["username"].as_str().unwrap();
         let password = values["password"].as_str().unwrap().to_owned();
@@ -423,11 +481,18 @@ impl AuthService {
                 .execute(self.store.pool())
                 .await?;
         }
-        let user =
-            user.filter(|user| user.is_active && matched)
-                .ok_or(StoreError::Unauthorized(
-                    "No active account found with the given credentials",
-                ))?;
+        let Some(user) = user.filter(|user| user.is_active && matched) else {
+            self.auth_event(
+                request,
+                "login_failed",
+                crate::auth_events::audit_username(&body),
+                Some("Authentication error: No active account found with the given credentials"),
+            )
+            .await;
+            return Err(StoreError::Unauthorized(
+                "No active account found with the given credentials",
+            ));
+        };
         // The original custom view looks up the untrimmed request username
         // after authentication. Padded names may authenticate successfully
         // without updating last_login; do not silently change that behavior.
@@ -438,10 +503,14 @@ impl AuthService {
             } else {
                 crate::admin_writes::character("username", raw, None, false)?
             };
-            sqlx::query("UPDATE accounts_user SET last_login=NOW() WHERE username=$1")
+            let saved = sqlx::query("UPDATE accounts_user SET last_login=NOW() WHERE username=$1")
                 .bind(logged_username)
                 .execute(self.store.pool())
                 .await?;
+            if saved.rows_affected() > 0 {
+                self.auth_event(request, "login_success", body["username"].clone(), None)
+                    .await;
+            }
         }
         Ok(TokenPair {
             access: self.mint(json!(user.id.to_string()), "access")?,
@@ -479,10 +548,16 @@ impl AuthService {
 
     async fn refresh_network(&self, request: &PlaybackRequest) -> Result<(), StoreError> {
         if !self
-            .store
-            .network_allowed(self.client_ip(request), "UI", None)
+            .source_network_allowed(self.client_ip(request), "UI", None)
             .await?
         {
+            self.auth_event(
+                request,
+                "login_failed",
+                json!("token_refresh"),
+                Some("Network access denied (token refresh)"),
+            )
+            .await;
             return Err(StoreError::StatusBody(403, json!({"error":"Unauthorized"})));
         }
         Ok(())
@@ -596,8 +671,14 @@ async fn logout(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
 ) -> Response {
+    let playback_request = request(peer, headers.clone());
     match service.account_user(peer, headers, false).await {
-        Ok(_) => Json(json!({"message":"Logout successful"})).into_response(),
+        Ok(user) => {
+            service
+                .auth_event(&playback_request, "logout", json!(user.username), None)
+                .await;
+            Json(json!({"message":"Logout successful"})).into_response()
+        }
         Err(error) => error.into_response(),
     }
 }
@@ -641,6 +722,17 @@ impl IntoResponse for StoreError {
                     Json(json!({"detail":"Too many login attempts. Try again later."})),
                 )
                     .into_response()
+            }
+            Self::Throttled {
+                body, retry_after, ..
+            } => {
+                let mut response = (StatusCode::TOO_MANY_REQUESTS, Json(body)).into_response();
+                if let Some(wait) = retry_after {
+                    if let Ok(value) = wait.to_string().parse() {
+                        response.headers_mut().insert("retry-after", value);
+                    }
+                }
+                return response;
             }
             Self::InvalidInput(body) => (StatusCode::BAD_REQUEST, body),
             Self::StatusBody(status, body) => (

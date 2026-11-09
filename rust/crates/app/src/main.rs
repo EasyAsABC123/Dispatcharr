@@ -1,6 +1,7 @@
 //! Derivative Dispatcharr backend port. Original project credit: ATTRIBUTION.md.
 mod control;
 mod playback;
+mod realtime;
 mod response_headers;
 use axum::{
     extract::State,
@@ -132,6 +133,14 @@ async fn run() -> Result<(), String> {
     } else {
         auth
     };
+    let realtime_bus = realtime::bus().await?;
+    // Attach before every resolver/environment/XC clone so original producers
+    // publish through the same bounded process transport.
+    let auth = if let Some(bus) = &realtime_bus {
+        auth.with_event_sink(Arc::new(bus.clone()))
+    } else {
+        auth
+    };
     let mut config = EngineConfig::default();
     config.initial_buffer_chunks = 4;
     config.flush_partial_chunks = false;
@@ -234,6 +243,7 @@ async fn run() -> Result<(), String> {
         StreamEngine::new_with_shared_inputs(config, coordinator.clone(), clients.clone(), inputs)
             .map_err(|_| "Invalid streaming configuration")?;
     let auth = auth.with_channel_control(Arc::new(control::EngineControl(engine.clone())));
+    let realtime = realtime::gateway(auth.clone(), realtime_bus.clone())?;
     let resolver: Arc<dyn dispatcharr_contracts::PlaybackResolver> = Arc::new(auth.clone());
     let hls = clients
         .clone()
@@ -328,6 +338,11 @@ async fn run() -> Result<(), String> {
         )
         .await
         .map_err(|_| "Catch-up management initialization failed (credentials omitted)")?;
+        let management = if let Some(bus) = &realtime_bus {
+            management.with_events(Arc::new(bus.clone()))
+        } else {
+            management
+        };
         (Some(sessions), Some(media), Some(management))
     } else {
         (None, None, None)
@@ -343,6 +358,9 @@ async fn run() -> Result<(), String> {
             hls.clone(),
             fmp4.clone(),
         ));
+    if let Some(gateway) = &realtime {
+        app = app.merge(gateway.router());
+    }
     if let Some(gateway) = &hls {
         app = app.merge(gateway.router());
     }
@@ -392,29 +410,25 @@ async fn run() -> Result<(), String> {
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
-    let signal_engine = engine.clone();
-    let signal_clients = clients.clone();
-    let signal_hls = hls.clone();
-    let signal_fmp4 = fmp4.clone();
-    let signal_vod = vod.clone();
-    let signal_catchup = catchup.clone();
-    let signal_catchup_management = catchup_management.clone();
+    let services = ShutdownServices {
+        engine,
+        clients,
+        hls,
+        fmp4,
+        vod,
+        catchup,
+        catchup_management,
+        realtime,
+    };
+    let signal_services = services.clone();
     let server = axum::serve(
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
     )
     .with_graceful_shutdown(async move {
         shutdown_signal().await;
-        signal_engine.shutdown();
-        let cleanup = tokio::spawn(shutdown_components(
-            signal_engine,
-            signal_clients,
-            signal_hls,
-            signal_fmp4,
-            signal_vod,
-            signal_catchup,
-            signal_catchup_management,
-        ));
+        signal_services.engine.shutdown();
+        let cleanup = tokio::spawn(shutdown_components(signal_services));
         let _ = shutdown_started.send(cleanup);
         // Return immediately: Axum stops accepting while cleanup runs.
     })
@@ -422,7 +436,7 @@ async fn run() -> Result<(), String> {
     tokio::pin!(server);
     tokio::select! {
         result=&mut server=>{
-            let _=tokio::time::timeout(shutdown_timeout,shutdown_components(engine,clients,hls,fmp4,vod,catchup,catchup_management)).await;
+            let _=tokio::time::timeout(shutdown_timeout,shutdown_components(services)).await;
             result.map_err(|_|"HTTP server failed".to_string())
         },
         cleanup=&mut shutdown_notice=>{
@@ -457,7 +471,8 @@ async fn shutdown_signal() {
         let _ = tokio::signal::ctrl_c().await;
     }
 }
-async fn shutdown_components(
+#[derive(Clone)]
+struct ShutdownServices {
     engine: StreamEngine,
     clients: Option<ClientStore>,
     hls: Option<dispatcharr_hls_http::HlsGateway>,
@@ -465,9 +480,21 @@ async fn shutdown_components(
     vod: Option<dispatcharr_vod_http::VodEngine>,
     catchup: Option<dispatcharr_timeshift_http::CatchupMedia>,
     catchup_management: Option<dispatcharr_timeshift_http::CatchupManagement>,
-) {
+    realtime: Option<dispatcharr_realtime::RealtimeGateway>,
+}
+async fn shutdown_components(services: ShutdownServices) {
+    let ShutdownServices {
+        engine,
+        clients,
+        hls,
+        fmp4,
+        vod,
+        catchup,
+        catchup_management,
+        realtime,
+    } = services;
     engine.shutdown();
-    let (live, _, _, vod, catchup, management) = tokio::join!(
+    let (live, _, _, vod, catchup, management, realtime) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
             if let Some(hls) = hls {
@@ -500,8 +527,15 @@ async fn shutdown_components(
                 true
             }
         },
+        async {
+            if let Some(gateway) = realtime {
+                gateway.shutdown().await
+            } else {
+                true
+            }
+        },
     );
-    if !live || !vod || !catchup || !management {
+    if !live || !vod || !catchup || !management || !realtime {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }
     if let Some(clients) = clients {
