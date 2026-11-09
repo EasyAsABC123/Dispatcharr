@@ -1,0 +1,10 @@
+services:
+  fixture:
+    build:
+      context: .
+    ports:
+      - "127.0.0.1:${PERF_FIXTURE_PORT:-19292}:9292"
+    labels:
+      dispatcharr.test.role: benchmark-fixture
+    mem_limit: 128m
+    cpus: 1

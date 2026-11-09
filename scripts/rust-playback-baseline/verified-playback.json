@@ -1,0 +1,169 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "git_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "verified_at_utc": "2026-11-09T07:00:43.778109+00:00",
+  "exit_code": 0,
+  "cleanup": "isolated project removed",
+  "fixture": {
+    "active": 0,
+    "maximum_active": 0,
+    "connections": 0,
+    "bytes": 0,
+    "fixture_sha256": "2f25893317655b102f97d328580385a7b8c8813bf949caa85f5a430277d598b4",
+    "fixture_bytes": 44994792,
+    "bytes_per_second": 250000,
+    "duration_seconds": 180,
+    "video": "mpeg2video 320x180 25fps",
+    "audio": "mp2 48kHz"
+  },
+  "decoder": {
+    "video_frames": 75,
+    "output_time_us": 3000000,
+    "command_exit_code": 0
+  },
+  "measurements": [
+    {
+      "file": "viewers-1-trial-1.json",
+      "workload": {
+        "scenario": "same-channel",
+        "viewers": 1,
+        "warmup": 2.0,
+        "duration": 10.0,
+        "slow_delay": 0,
+        "timeout": 10.0,
+        "fixture_id": "2f25893317655b102f97d328580385a7b8c8813bf949caa85f5a430277d598b4:proxy-ts-2mbps-one-worker",
+        "sample_interval": 1.0,
+        "url_count": 1
+      },
+      "summary": {
+        "bytes": 3838020,
+        "requests": 1,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.552387051997357,
+        "bytes_per_second": 383802.0,
+        "first_byte_ms_median": 11.666391001199372,
+        "first_byte_ms_p95": 11.666391001199372,
+        "first_byte_samples": 1,
+        "viewers_without_data": 0,
+        "cpu_percent_mean": 3.236666666666667,
+        "memory_bytes_peak": 328487403.52000004
+      },
+      "resource_sample_count": 3,
+      "sample_errors": [],
+      "origin_before": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 1543668,
+        "fixture_sha256": "2f25893317655b102f97d328580385a7b8c8813bf949caa85f5a430277d598b4",
+        "fixture_bytes": 44994792,
+        "bytes_per_second": 250000,
+        "duration_seconds": 180,
+        "video": "mpeg2video 320x180 25fps",
+        "audio": "mp2 48kHz"
+      },
+      "origin_after": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 4862620,
+        "fixture_sha256": "2f25893317655b102f97d328580385a7b8c8813bf949caa85f5a430277d598b4",
+        "fixture_bytes": 44994792,
+        "bytes_per_second": 250000,
+        "duration_seconds": 180,
+        "video": "mpeg2video 320x180 25fps",
+        "audio": "mp2 48kHz"
+      }
+    },
+    {
+      "file": "viewers-10-trial-1.json",
+      "workload": {
+        "scenario": "same-channel",
+        "viewers": 10,
+        "warmup": 2.0,
+        "duration": 10.0,
+        "slow_delay": 0,
+        "timeout": 10.0,
+        "fixture_id": "2f25893317655b102f97d328580385a7b8c8813bf949caa85f5a430277d598b4:proxy-ts-2mbps-one-worker",
+        "sample_interval": 1.0,
+        "url_count": 1
+      },
+      "summary": {
+        "bytes": 28145480,
+        "requests": 10,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.387622033995285,
+        "bytes_per_second": 2814548.0,
+        "first_byte_ms_median": 2616.285590996995,
+        "first_byte_ms_p95": 2645.8227799957967,
+        "first_byte_samples": 10,
+        "viewers_without_data": 0,
+        "cpu_percent_mean": 6.443333333333333,
+        "memory_bytes_peak": 334820802.56
+      },
+      "resource_sample_count": 3,
+      "sample_errors": [],
+      "origin_before": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 1,
+        "bytes": 4862620,
+        "fixture_sha256": "2f25893317655b102f97d328580385a7b8c8813bf949caa85f5a430277d598b4",
+        "fixture_bytes": 44994792,
+        "bytes_per_second": 250000,
+        "duration_seconds": 180,
+        "video": "mpeg2video 320x180 25fps",
+        "audio": "mp2 48kHz"
+      },
+      "origin_after": {
+        "active": 1,
+        "maximum_active": 1,
+        "connections": 2,
+        "bytes": 8149988,
+        "fixture_sha256": "2f25893317655b102f97d328580385a7b8c8813bf949caa85f5a430277d598b4",
+        "fixture_bytes": 44994792,
+        "bytes_per_second": 250000,
+        "duration_seconds": 180,
+        "video": "mpeg2video 320x180 25fps",
+        "audio": "mp2 48kHz"
+      }
+    }
+  ],
+  "milestone_completed": false,
+  "performance_gain_verified": false,
+  "scope": "Initial one-trial 1/10-viewer Python native TS characterization only; no Rust playback candidate exists",
+  "limitations": [
+    "10-second measurement and2-second warmup; insufficient steady-state baseline",
+    "One trial per scenario; no100-viewer scenario yet",
+    "One gevent uWSGI worker, no Celery/Daphne/nginx; not entire production deployment",
+    "Startup retained-buffer catchup can exceed source rate; no steady-state throughput inference",
+    "Origin repeats180-second clip; longer runs need continuous mux or longer timestamp-stable media",
+    "Docker stats reports container-adjusted memory rather than process PSS; includes internal PostgreSQL andRedis plus origin container"
+  ],
+  "artifact_sha256": {
+    "run.json": "113b90b9a194a9c97bcddbcf73e0dd6ab3c7fbd580ba48d3cbb40eb760085a2e",
+    "compose.log": "a007b48e60d344b1e663d7a23714ee90a94e8c6454943a7a0030e8374ab7d621",
+    "viewers-10-trial-1.json.log": "d0d27f578aae2676b61a692fc7f06a9114f7c0a4994c6b30d51154ab1e212162",
+    "viewers-10-trial-1.json": "b9db71fc5a7e9d3b866e60bbda5da75b002d4d761da14815c52d13491863f911",
+    "viewers-1-trial-1.json.log": "96684128211990cd659d7181f16f66a7eff7447377a3b60a1cf1e96660cc8b74",
+    "viewers-1-trial-1.json": "be0a722c7ef7b4cc60ee73ab83e8ddcaa371e00e599667d85ea0144077a0c915",
+    "urls.txt": "d737757823c8fb04dd67a4f4029401332cc760652f4a59462f0b9dac54088db1",
+    "decode.log": "49fbb74063cf2b4b1b7aae0fdb8e2cb9070e21dbbacc536dae6582802dc220c9",
+    "fixture.json": "d4f4eb1a87ca6ead321a4c1a0d301a9b20d8a1184feb756538ef1722ce34d3f3",
+    "seed.json": "aa7cda23965dcee59695710418e4372f5c168e3da035a24e333ba00387ce52b9",
+    "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d"
+  },
+  "tools_sha256": {
+    "docker/compose.rust-playback.yml": "23d6f17bb7c8b8a42708a0ecb212d14895d484784f0faabddc775325d3220e83",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+    "scripts/rust-perf/perf.py": "f92ebf2604d8aaafa1381381fdd9d092a3db47c546d6a249cee9c6f96b0bc9a4",
+    "scripts/rust-playback-baseline/origin.py": "5adf67025cb8a338c3edbff9b095e8b7824b0b8eca5d0c6760ca55c015101a3e",
+    "scripts/rust-playback-baseline/run.py": "4c3900d7d0dd5f607ced36ee0e94281cd54bc1d770afdb2f56f7f49437c5eb49",
+    "scripts/rust-playback-baseline/seed.py": "e2bf1e88f121d94ed434ca2a4f2f9980e99bddc18f92b8dadd0c02d591828953",
+    "scripts/rust-playback-baseline/start.sh": "974ff8418143ac62853bdd06f6dcd7e2f7c21ec9596feed89458edcd5c0f2180",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+  }
+}

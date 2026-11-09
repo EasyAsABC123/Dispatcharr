@@ -1,0 +1,43 @@
+# Actual Python TS playback characterization; isolated benchmark infrastructure.
+services:
+  baseline:
+    image: ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f
+    platform: linux/amd64
+    working_dir: /app
+    entrypoint: [bash, /verification/start.sh]
+    environment:
+      DISPATCHARR_ENV: aio
+      DJANGO_SECRET_KEY: playback-fixture-only
+      POSTGRES_DB: dispatcharr
+      POSTGRES_USER: dispatch
+      POSTGRES_PASSWORD: playback-fixture-only
+      POSTGRES_HOST: /var/run/postgresql
+      POSTGRES_PORT: "5432"
+      POSTGRES_DIR: /data/db
+      REDIS_HOST: localhost
+      REDIS_PORT: "6379"
+      DISPATCHARR_LOG_LEVEL: WARNING
+      PYTHONDONTWRITEBYTECODE: "1"
+      PUID: "1000"
+      PGID: "1000"
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+    volumes:
+      - ${BASELINE_SOURCE_DIR:?Run scripts/rust-playback-baseline/run.py}:/app:ro
+      - ../scripts/rust-playback-baseline:/verification:ro
+      - ../scripts/rust-baseline:/baseline-tools:ro
+      - ${BASELINE_EVIDENCE_DIR:?Run scripts/rust-playback-baseline/run.py}:/evidence
+    ports: ["127.0.0.1::5656"]
+    tmpfs:
+      - /data:mode=1777,size=2147483648
+      - /app/media:mode=1777,size=67108864
+      - /tmp:mode=1777,size=2147483648
+    depends_on: [origin]
+  origin:
+    image: ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f
+    platform: linux/amd64
+    entrypoint: [/dispatcharrpy/bin/python, /verification/origin.py]
+    volumes:
+      - ../scripts/rust-playback-baseline:/verification:ro
+    ports: ["127.0.0.1::8080"]
+    tmpfs: ["/tmp:mode=1777,size=268435456"]

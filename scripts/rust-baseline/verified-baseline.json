@@ -1,0 +1,51 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "platform": "linux/amd64",
+  "verified_at_utc": "2026-11-09T06:49:35.923470+00:00",
+  "evidence_directory": "/tmp/dispatcharr-baseline-evidence-5",
+  "exit_code": 0,
+  "direct_dependencies_compatible": true,
+  "focused_tests_passed": 48,
+  "resolved_django_patterns": 592,
+  "openapi_paths": 246,
+  "openapi_operations": 362,
+  "schema_warnings": 58,
+  "milestone_completed": false,
+  "performance_gain_verified": false,
+  "artifact_sha256": {
+    "run.json": "f6b996f95dd2352fc7ad6e6d31276d659d47027989507a204be44ecd91cf816f",
+    "runtime-contracts.json": "ea9582c481d4953ab45401fe2f8553a53d3ab4cfde51d267d606bd0c4b3657bc",
+    "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+    "tests.log": "492a4b626c163048c73716dafc9e284c40f36ca22c3d0cefd88442877290bee1"
+  },
+  "schema_graceful_fallback_errors": 66,
+  "git_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "broader_run": {
+    "evidence_directory": "/tmp/dispatcharr-baseline-broad-2",
+    "tests_passed": 526,
+    "tests_seconds": 4.612,
+    "exit_code": 0,
+    "labels": [
+      "apps.proxy.live_proxy.tests",
+      "apps.proxy.tests",
+      "apps.proxy.vod_proxy.tests"
+    ],
+    "timeout_seconds": 1800,
+    "cleanup_exit_code": 0,
+    "tools_sha256": {
+      "scripts/rust-baseline/container.sh": "bf1cdab77c7d8e1826daa5c8ee88781bc46f0bddc563561d078704cb264bd38c",
+      "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+      "scripts/rust-baseline/run.py": "c722cfbb079361e7b3afc153c1a060b46c263035872fc6b4e4e0ba704cfe4206",
+      "scripts/rust-baseline/runtime_inventory.py": "5544e7982f07af3bc71b3d8bebe6b4853ac4578bc54af242e8f6747f0ee18163",
+      "docker/compose.rust-baseline.yml": "04e7be55d67514ec5ff4b223743ca7f6998ebd447c588058bfa3c96fda259a88"
+    },
+    "artifact_sha256": {
+      "run.json": "ed17588b6ebabb795a16a82440968ca8f9720f2374ff4dc17f8520fd11bfea91",
+      "runtime-contracts.json": "ea9582c481d4953ab45401fe2f8553a53d3ab4cfde51d267d606bd0c4b3657bc",
+      "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+      "tests.log": "e1121d5bff6335dfab2d54f64352c7076e676b4bbb8b10ebe014b9477283ebfd"
+    }
+  },
+  "runner_failure_tests_passed": 3
+}

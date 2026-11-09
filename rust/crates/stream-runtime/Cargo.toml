@@ -1,0 +1,12 @@
+[package]
+name = "dispatcharr-stream-runtime"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+dispatcharr-stream-core = { path = "../stream-core" }
+tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["test-util", "rt-multi-thread"] }

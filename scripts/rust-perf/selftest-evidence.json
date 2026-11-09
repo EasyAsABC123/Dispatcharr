@@ -1,0 +1,71 @@
+{
+  "kind": "benchmark-harness-selftest-only",
+  "application_performance_verified": false,
+  "selftest_passed": true,
+  "fixture_image": "sha256:3334ad7abd3b18c03c62b520c8dc133b69a1080e97d044f63a227bd66775d78a",
+  "fixture_counters": {
+    "requests": 8,
+    "active": 0,
+    "bytes": 36151296,
+    "disconnects": 8
+  },
+  "identity_comparison_passed": true,
+  "injected_error_rejected": true,
+  "compose_teardown_completed": true,
+  "runs": [
+    {
+      "timestamp_utc": "2026-11-09T06:45:24.376696+00:00",
+      "workload": {
+        "scenario": "same-channel",
+        "viewers": 2,
+        "warmup": 1.0,
+        "duration": 10.0,
+        "slow_delay": 0,
+        "timeout": 3,
+        "fixture_id": "synthetic-bytes-v1-8192-per-10ms",
+        "sample_interval": 1,
+        "url_count": 1
+      },
+      "summary": {
+        "bytes": 16252928,
+        "requests": 2,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.001030224004353,
+        "bytes_per_second": 1625292.8,
+        "first_byte_ms_median": 1.6201004982576706,
+        "viewers_without_data": 0,
+        "cpu_percent_mean": 10.302,
+        "memory_bytes_peak": 28594667.52
+      },
+      "resource_sample_count": 5
+    },
+    {
+      "timestamp_utc": "2026-11-09T06:45:35.520360+00:00",
+      "workload": {
+        "scenario": "same-channel",
+        "viewers": 2,
+        "warmup": 1.0,
+        "duration": 10.0,
+        "slow_delay": 0,
+        "timeout": 3,
+        "fixture_id": "synthetic-bytes-v1-8192-per-10ms",
+        "sample_interval": 1,
+        "url_count": 1
+      },
+      "summary": {
+        "bytes": 16261120,
+        "requests": 2,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.008802506999928,
+        "bytes_per_second": 1626112.0,
+        "first_byte_ms_median": 1.39829500039923,
+        "viewers_without_data": 0,
+        "cpu_percent_mean": 13.862,
+        "memory_bytes_peak": 30503075.84
+      },
+      "resource_sample_count": 5
+    }
+  ]
+}

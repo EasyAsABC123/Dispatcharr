@@ -1,5 +1,21 @@
 # 🎬 Dispatcharr — Your Ultimate IPTV & Stream Management Companion
 
+> **Original project credit:** Dispatcharr was created by
+> [OkinawaBoss](https://github.com/OkinawaBoss), with
+> [dekzter](https://github.com/dekzter),
+> [SergeantPanda](https://github.com/SergeantPanda),
+> [Seth](https://github.com/sethwv), and the entire
+> [Dispatcharr contributor community](https://github.com/Dispatcharr/Dispatcharr/graphs/contributors).
+> Full credit for the original application belongs to its authors and contributors.
+> This fork is a derivative Rust backend port and makes no claim to creating Dispatcharr.
+> See [attribution](ATTRIBUTION.md).
+
+The Rust backend migration is in progress; the existing React UI stays.
+See the [milestones](docs/rust-milestones.md),
+[local Compose verification guide](docs/rust-local-verification.md), and
+[measured performance evidence](docs/rust-verification-evidence.json).
+Current component results do not establish whole-application CPU or memory savings.
+
 <p align="center">
   <img src="https://github.com/Dispatcharr/Dispatcharr/blob/main/frontend/src/images/logo.png?raw=true" height="200" alt="Dispatcharr Logo" />
 </p>

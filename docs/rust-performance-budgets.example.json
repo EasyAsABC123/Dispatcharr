@@ -1,0 +1,31 @@
+{
+  "format_version": 1,
+  "scope": "full-service-playback",
+  "frozen": false,
+  "baseline_source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image_digest": null,
+  "fixture_sha256": null,
+  "hardware_id": null,
+  "docker_version": null,
+  "minimum_repetitions": 3,
+  "scenarios": [
+    {
+      "id": "same-channel-10-viewers-ts-copy",
+      "viewers": 10,
+      "distinct_channels": 1,
+      "format": "ts",
+      "profile": "copy",
+      "warmup_seconds": 15,
+      "measurement_seconds": 60,
+      "minimum_valid_media_bytes_per_second": null,
+      "maximum_errors": 0,
+      "maximum_startup_p95_ms": null,
+      "maximum_candidate_to_baseline_cpu_ratio": null,
+      "maximum_candidate_to_baseline_memory_ratio": null,
+      "minimum_candidate_to_baseline_throughput_ratio": 0.95,
+      "cleanup_deadline_seconds": null,
+      "maximum_post_cleanup_memory_growth_bytes": null
+    }
+  ],
+  "acceptance_rule": "This is an unfrozen example, never a passing budget. Full-milestone acceptance must fail while frozen is false, any required budget or provenance field is null, repetitions are insufficient, media validation fails, or the required scenario matrix is incomplete. The current perf.py CLI accepts explicit ratios, not this manifest; a future milestone gate must validate this schema before consuming it."
+}
