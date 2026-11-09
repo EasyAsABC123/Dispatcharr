@@ -31,8 +31,12 @@ def main():
     # environment files and build/dependency artifacts from the image.
     tracked_frontend = subprocess.check_output(['git','ls-files','-z','--','frontend'],cwd=ROOT).split(b'\0')
     paths.extend(ROOT / os.fsdecode(path) for path in tracked_frontend if path)
-    paths.extend(path for path in (ROOT / 'rust').rglob('*') if path.is_file()
-                 and not set(path.relative_to(ROOT / 'rust').parts) & {'target', '.git', '__pycache__'})
+    excluded = {'target', '.git', '__pycache__'}
+    for directory, subdirectories, filenames in os.walk(ROOT / 'rust'):
+        # Prune build trees before traversing them; their contents are never
+        # source inputs and can dwarf the repository during parallel checks.
+        subdirectories[:] = [name for name in subdirectories if name not in excluded]
+        paths.extend(Path(directory) / name for name in filenames if name not in excluded)
     # Hash the same in-memory bytes that enter the tar; later source edits cannot
     # change the snapshot compiled by Docker.
     inputs = {str(path.relative_to(ROOT)): path.read_bytes() for path in sorted(paths)}

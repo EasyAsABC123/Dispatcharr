@@ -81,7 +81,7 @@ fn numeric_ascii(value: &str) -> Option<String> {
     }
     Some(mapped.replace('_', ""))
 }
-fn integer_literal(value: &str) -> Option<String> {
+pub(crate) fn integer_literal(value: &str) -> Option<String> {
     let value = numeric_ascii(value)?;
     let digits = value.strip_prefix(['+', '-']).unwrap_or(&value);
     if digits.is_empty() || !digits.bytes().all(|byte| byte.is_ascii_digit()) || digits.len() > 4300

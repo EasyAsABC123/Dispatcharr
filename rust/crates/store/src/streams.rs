@@ -314,6 +314,54 @@ async fn retrieve(
     )
     .await
 }
+// Original action deliberately omits DRF SearchFilter and removes group
+// filters for both option lists, then account IDs only for account choices.
+async fn filter_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    Query(mut params): Query<HashMap<String, String>>,
+) -> Result<Json<Value>, StoreError> {
+    let user = auth.account_user(peer, headers, false).await?;
+    if user.user_level < 1 {
+        return Err(StoreError::PermissionDenied);
+    }
+    let slow = [
+        "name",
+        "m3u_account",
+        "m3u_account_name",
+        "m3u_account_is_active",
+        "tvg_id",
+    ]
+    .iter()
+    .any(|key| params.get(*key).is_some_and(|value| !value.is_empty()));
+    params.remove("channel_group");
+    params.remove("channel_group_name");
+    params.remove("search");
+    let mut groups = QueryBuilder::new(format!("SELECT DISTINCT g.name{FROM}"));
+    if slow {
+        filters(&mut groups, &params)?;
+    }
+    groups.push(" AND g.id IS NOT NULL ORDER BY g.name");
+    let groups = groups
+        .build_query_scalar::<String>()
+        .fetch_all(auth.store.pool())
+        .await?;
+    params.remove("m3u_account");
+    let mut accounts = QueryBuilder::new(format!("SELECT DISTINCT a.id::bigint,a.name{FROM}"));
+    if slow {
+        filters(&mut accounts, &params)?;
+    }
+    accounts.push(" AND a.id IS NOT NULL ORDER BY a.name");
+    let accounts = accounts
+        .build_query_as::<(i64, String)>()
+        .fetch_all(auth.store.pool())
+        .await?
+        .into_iter()
+        .map(|(id, name)| json!({"id":id,"name":name}))
+        .collect::<Vec<_>>();
+    Ok(Json(json!({"groups":groups,"m3u_accounts":accounts})))
+}
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route(
@@ -321,6 +369,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(list).post(crate::stream_writes::create),
         )
         .route("/api/channels/streams/ids/", get(ids))
+        .route("/api/channels/streams/filter-options/", get(filter_options))
         .route(
             "/api/channels/streams/bulk-delete/",
             delete(crate::stream_writes::bulk_delete),

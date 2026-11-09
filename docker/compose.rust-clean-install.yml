@@ -1,0 +1,47 @@
+# Disposable native-only first-install verification. Original authors retain credit.
+# No original/Django service or source database mounts are present.
+services:
+  database:
+    image: postgres@sha256:665dc7b37ac52a17e298511414c21d23ffa4e6a6ef6225b3e5d59c7afb35e994
+    platform: linux/amd64
+    environment:
+      POSTGRES_DB: dispatcharr
+      POSTGRES_USER: dispatch
+      POSTGRES_PASSWORD: playback-fixture-only
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C.UTF-8
+    tmpfs: ["/var/lib/postgresql/data:mode=1777,size=1073741824"]
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U dispatch -d dispatcharr]
+      interval: 1s
+      timeout: 3s
+      retries: 60
+  cache:
+    image: redis@sha256:c5d34a98396a4775e223c74e929162c35c5a2182901ba26b50ade939941ce14b
+    platform: linux/amd64
+    command: [redis-server, --save, "", --appendonly, "no", --requirepass, playback-fixture-only]
+    tmpfs: ["/data:mode=1777,size=134217728"]
+    healthcheck:
+      test: [CMD, redis-cli, -a, playback-fixture-only, ping]
+      interval: 1s
+      timeout: 3s
+      retries: 60
+  candidate:
+    image: ${RUST_CANDIDATE_IMAGE:?Supply an immutable candidate image and build manifest}
+    platform: linux/amd64
+    environment:
+      DATABASE_URL: postgresql://dispatch:playback-fixture-only@database:5432/dispatcharr
+      DJANGO_SECRET_KEY: playback-fixture-only
+      REDIS_URL: redis://:playback-fixture-only@cache:6379/0
+      DISPATCHARR_TRUSTED_PROXIES: none
+      RUST_INITIALIZE_EMPTY_DATABASE: "1"
+      RUST_BIND: 0.0.0.0:9192
+      RUST_DATABASE_POOL_SIZE: "4"
+      RUST_LOG: info
+    depends_on:
+      database: {condition: service_healthy}
+      cache: {condition: service_healthy}
+    ports: ["127.0.0.1::9192"]
+    read_only: true
+    tmpfs: ["/tmp:mode=1777,size=134217728"]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]

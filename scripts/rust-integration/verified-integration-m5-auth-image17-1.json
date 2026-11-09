@@ -1,0 +1,65 @@
+{
+  "scope": "Immutable canonical17 full HTTP1024, enabled-IP33, password34 including Scrypt, and pure-native Chromium fresh-install/restart11checks with16requiredAPIresponses.",
+  "passed": true,
+  "image_id": "sha256:5277575cb8f99ccab2bdb76bd4502287f0834a71d3db383eda0f9887108bcc0c",
+  "source_tree_sha256": "acd37ee8a918a3fc6fd311af8eefe617f05bc4b3bb584d17eceb83b9bf7255d0",
+  "source_archive_sha256": "600caadd70655c037d7a46eab60dc21791ee2399744fe8375fd9e5fcf9847523",
+  "build_manifest_sha256": "4df6073b8957b06cf366c1588c4736144a159adb8e4d287d57aae6cc8af11cb0",
+  "runs": [
+    {
+      "report": "artifacts/rust/m5-auth-full-integration-image17-1/integration.json",
+      "sha256": "f1e20f57e7aabaae6bc16f4c6349c0c7034baa9a304f6c8946956df4f2e23933",
+      "passed": true,
+      "checks": 1024,
+      "contract_suites": [
+        "accounts",
+        "account_crud",
+        "app_data",
+        "core",
+        "profiles",
+        "memberships",
+        "channel_reads",
+        "channel_crud",
+        "groups",
+        "channel_stops",
+        "group_cleanup",
+        "streams",
+        "provider_reads",
+        "server_group_crud",
+        "filter_crud",
+        "core_utilities",
+        "core_stream_crud",
+        "notifications"
+      ],
+      "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-ip-image17-1/integration.json",
+      "sha256": "96e62ee01aeac3222c642abf4d4c3bf1a69f060e7ba8b163e3b3808d2ee1075a",
+      "passed": true,
+      "checks": 33,
+      "contract_suites": [
+        "environment_ip"
+      ],
+      "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-auth-hash-image17-1/integration.json",
+      "sha256": "d57e99a801bb509f1068ca3df3be41c710cb3c6228605244697abdb8dc035a34",
+      "passed": true,
+      "checks": 34,
+      "contract_suites": [
+        "auth_hash"
+      ],
+      "cleanup": "project removed"
+    }
+  ],
+  "performance_verified": false,
+  "browser_evidence": "verified-native-clean-install-image17-2.json",
+  "component_reads_evidence": "verified-browser-deferred-reads-source-3.json",
+  "remaining": [
+    "Populated browser workflows and logo image/cache/upload/mutation routes remain separate gates.",
+    "Native provider-refresh/EPG job bridge and M8 integrations remain separate milestones.",
+    "Existing database upgrades and PostgreSQL versions beyond pinned17 are unclaimed."
+  ]
+}

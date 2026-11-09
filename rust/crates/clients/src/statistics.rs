@@ -233,6 +233,24 @@ mod tests {
         let _:usize=redis::cmd("DEL").arg(format!("live:channel:{channel}:stopping")).query_async(&mut connection).await.unwrap();
         store.shutdown().await;
     }
+    #[tokio::test(flavor="multi_thread",worker_threads=2)]
+    #[ignore="requires owned disposable Redis"]
+    async fn abandoned_era_notifies_only_removed_clients_and_preserves_preowner_registration() {
+        let (store,count)=fixture().await;let channel=uuid::Uuid::new_v4().to_string();
+        let mut connection=store.inner.connection.clone();let owner=format!("live:channel:{channel}:owner");
+        let _:String=redis::cmd("SET").arg(&owner).arg("old-owner").query_async(&mut connection).await.unwrap();
+        store.publish_channel(&channel,"old-owner","old-owner",&BTreeMap::from([("state".into(),"connecting".into())]),0).await.unwrap();
+        let old=store.register(&channel,&viewer(),"ts").await.unwrap();
+        let _:usize=redis::cmd("DEL").arg(&owner).query_async(&mut connection).await.unwrap();
+        let new=store.register(&channel,&viewer(),"ts").await.unwrap();assert_eq!(count.0.load(Ordering::SeqCst),2);
+        assert_eq!(store.stop_abandoned_channel(&channel,"old-owner").await.unwrap(),1);
+        assert_eq!(count.0.load(Ordering::SeqCst),3);
+        assert!(*old.stopped().borrow());assert!(!*new.stopped().borrow());
+        assert_eq!(store.channel_clients(&channel).await.unwrap().len(),1);
+        assert_eq!(store.stop_abandoned_channel(&channel,"old-owner").await.unwrap(),0);assert_eq!(count.0.load(Ordering::SeqCst),3);
+        old.release().await.unwrap();new.release().await.unwrap();drop((old,new));
+        assert_eq!(count.0.load(Ordering::SeqCst),4);store.shutdown().await;
+    }
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
     #[ignore = "requires owned disposable Redis; pauses all commands250ms"]
     async fn cancelled_registration_notifies_only_after_actual_redis_replies() {

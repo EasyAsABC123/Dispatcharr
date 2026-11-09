@@ -5,7 +5,7 @@ const {spawn}=require('node:child_process');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),readline=require('node:readline');
 const directory=fs.mkdtempSync(path.join(os.tmpdir(),'dispatcharr-clean-browser-'));
 let child,cdp,next=1,stage='startup';const pending=new Map(),responses=[],socketTypes=new Set();let exceptions=0;
-const required=['/api/accounts/users/me/','/api/core/settings/','/api/core/settings/env/','/api/channels/groups/','/api/channels/profiles/','/api/m3u/accounts/','/api/epg/sources/','/api/epg/epgdata/','/api/core/streamprofiles/','/api/core/outputprofiles/','/api/core/useragents/','/api/m3u/server-groups/','/api/channels/channels/ids/','/api/accounts/users/'];
+const required=['/api/accounts/users/me/','/api/core/settings/','/api/core/settings/env/','/api/channels/groups/','/api/channels/profiles/','/api/m3u/accounts/','/api/epg/sources/','/api/epg/epgdata/','/api/core/streamprofiles/','/api/core/outputprofiles/','/api/core/useragents/','/api/m3u/server-groups/','/api/channels/channels/ids/','/api/accounts/users/','/api/channels/logos/','/api/channels/streams/filter-options/'];
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function call(method,params={}){const id=next++;return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{pending.delete(id);reject(new Error('CDP deadline'))},10000);pending.set(id,{resolve:value=>{clearTimeout(timer);resolve(value)},reject});cdp.send(JSON.stringify({id,method,params}));});}
 async function evaluate(expression){const result=await call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(result.exceptionDetails)throw new Error('Browser expression failed');return result.result.value;}
@@ -28,7 +28,7 @@ async function authenticated(config){
  if(!required.every(path=>responses.some(r=>r.path===path&&r.status===200)))throw new Error('Missing initialization response');
  await delay(500);
  const token=await evaluate(`(async()=>{const parse=value=>JSON.parse(atob(value.replaceAll('-','+').replaceAll('_','/')));const decode=value=>Uint8Array.from(atob(value.replaceAll('-','+').replaceAll('_','/')),v=>v.charCodeAt(0));const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(${JSON.stringify(config.secret)}),{name:'HMAC',hash:'SHA-256'},false,['verify']);const out={};for(const [name,life]of [['access',1800],['refresh',86400]]){const raw=localStorage.getItem(name+'Token');if(!raw)throw Error('Missing stored token');const parts=raw.split('.'),header=parse(parts[0]),claims=parse(parts[1]);if(header.alg!=='HS256'||claims.token_type!==name||claims.user_id!=='1'||claims.exp-claims.iat!==life||claims.exp<=Date.now()/1000||!await crypto.subtle.verify('HMAC',key,decode(parts[2]),new TextEncoder().encode(parts[0]+'.'+parts[1])))throw Error('Invalid stored token');out[name]=true}return out})()`);
- const failures=responses.filter(r=>r.status>=400&&!(r.path==='/api/accounts/auth/proxy-login/'&&r.status===401));
+ const failures=responses.filter(r=>r.status>=400&&!(r.status===401&&(r.path==='/api/accounts/auth/proxy-login/'||(r.path==='/api/accounts/auth/logout/'&&r.stage==='first-admin-form'))));
  return {authenticated:true,required_api_paths:required.length,required_api_paths_passed:required.filter(path=>responses.some(r=>r.path===path&&r.status===200)).length,api_responses:responses.length,failed_api_responses:failures,exceptions,stored_tokens_verified:token,socket_types:[...socketTypes].sort()};
 }
 async function command(config){

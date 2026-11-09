@@ -122,6 +122,8 @@ impl ClientStore {
                         client.released.store(true, Ordering::Release);
                         client.cleanup_done.send_replace(true);
                     }
+                    let announced=client.stats_announced.swap(false,Ordering::AcqRel);
+                    statistics::released(&snapshot_store,&channel,&client.id,announced);
                 }
             }
             Ok(rows.len())

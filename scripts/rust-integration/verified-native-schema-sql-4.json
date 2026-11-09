@@ -1,0 +1,41 @@
+{
+  "scope": "Native Rust initialization of separate empty PostgreSQL17 databases versus original migration/default reference. Not app/browser/standalone acceptance.",
+  "passed": true,
+  "raw_report_sha256": "bcd61bb8b9f07ecc27818edd965437c0bfd86f31c2b06fab33eca0f5419a7090",
+  "rust_source_archive_sha256": "c91c0fff8531d12114ca1a4ec98a1b0470e2ca3a970b6cca0c9c1060b47ca6be",
+  "cleanup": "project removed",
+  "source_cases": 62,
+  "performance_verified": false,
+  "tables": 62,
+  "default_rows": 498,
+  "migrations": 184,
+  "schema_ddl_equal": true,
+  "source_schema_ddl_sha256": "e2fe636535f1ba2e7d8f38239fb80f380c3d23cecf1cbecd3a2c4045b76ade7d",
+  "native_schema_ddl_sha256": "e2fe636535f1ba2e7d8f38239fb80f380c3d23cecf1cbecd3a2c4045b76ade7d",
+  "source_files": {
+    "rust/crates/store/src/schema.rs": "cdce7f7b81d41fa6b3ee29c63d7e172d0f30c018818ce0eda070755998ad5dbe",
+    "rust/crates/store/tests/schema_sql.rs": "b74b5667213d85c9ef61369baf29d23eb82d628dfc56acacd4df579c172bfad2",
+    "rust/crates/store/schema/original-1241b3-schema.sql": "35d78338081e2d6fe3149c58d9a041e8d8570a410fa7f49aad36e4b9f858e9a9",
+    "rust/crates/store/schema/original-1241b3-defaults.sql": "80840dd0cb88d692153a8f7fe9b9dc465c57785b7d5883f091a181988bc0526b",
+    "rust/crates/store/schema/original-1241b3-fresh-timestamps.sql": "a7567d504c0b60a73bb0e952f8ba2159721298bd1091f645aec817d9f0b33592",
+    "rust/crates/store/schema/original-1241b3-manifest.json": "3b9ba205ec5b6df613c2a0737324f1271948a30dc8216050671a7ea305bce210",
+    "rust/crates/store/schema/README.md": "7f3c48befcf3e8ad04a8c7c7a8fd6ed62e7c9c32351d909972ef26a09e5d57b2"
+  },
+  "verified": [
+    "Exact normalized pg_dump DDL equality including empty-table columns, indexes and constraints.",
+    "All498builtin/default rows across62tables compare; only fresh creation bookkeeping timestamps excluded.",
+    "Only Rust writes native/sentinel/race databases; Django reference writes a different database.",
+    "Repeated initialization and existing original database remain unchanged.",
+    "Nonpublic sentinel preserved and public schema remains absent.",
+    "Concurrent initializers fence to one creation; other skips.",
+    "Fault injection after every DDL statement but before defaults rolls all DDL and extension creation back; retry creates successfully."
+  ],
+  "remaining": [
+    "Application init/firstadmin/login/native restart are verified separately; unchanged React clean-install acceptance remains blocked by two missing deferred read endpoints in image16.",
+    "PostgreSQL versions beyond original17 and legacy upgrades are unclaimed."
+  ],
+  "earlier_setup_failure": {
+    "report": "artifacts/rust/m5-native-schema-sql-1/integration.json",
+    "reason": "DockerexecdidnotinheritPG_BINDIR; fixed pinnedPG17createdb path; no native test ran; cleanup passed."
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "scope": "frozen-original-XMLTV-element-metadata-projection",
+  "passed": true,
+  "cases": 1208,
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence_directory": "artifacts/rust/m6-metadata-frozen-30",
+  "original_capture_directory": "artifacts/rust/m6-epg-metadata-source-29",
+  "source_archive_sha256": "0140197061a2b5722c2d9e45161324469dd1bd93ea73041c9aeab5a9abb0f962",
+  "strict_all_target_clippy": true,
+  "report": {
+    "scope": "original-XMLTV-element-metadata-projection",
+    "passed": true,
+    "cases": 1208,
+    "failures": [],
+    "source_sha256": {
+      "apps/epg/tasks.py": "deb4792a39ed93c57da435ecc2a4fcdf5b4dad8f4e087d3afdb5d4f2b7932ff9",
+      "apps/epg/utils.py": "ff321c707872a6b856e00fbc6f956d9602acb665ee8332f695996cc1f24429e3"
+    },
+    "original_python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "original_lxml": [
+      6,
+      1,
+      3,
+      0
+    ],
+    "original_libxml": [
+      2,
+      14,
+      6
+    ],
+    "goldens_sha256": "e0a93b7f0c8dbc9d41ebe1d0b89bfb2d08bcc6b053d0ece9aaefb3f7131f7998",
+    "binary_sha256": "2e404e21d16906525b5e96956c29e25c1c813c4d015e611b141cd214ba88f76a",
+    "rust_source_sha256": {
+      "rust/crates/ingest-core/Cargo.toml": "aae8a8442a5a22329751246cb996d536d3b376cc9126cfdd1559a21184ac25dd",
+      "rust/Cargo.lock": "f7d2431ed19f928a7a1c312e32ebe1318e953a1a4b5b8215edc38c69f2808788",
+      "rust/crates/ingest-core/src/cache.rs": "b3ce35bef58ffb391a9e2114187de7c6c5104aa4578c58cb0a3ca71e6721daed",
+      "rust/crates/ingest-core/src/cached.rs": "6302c83c6c4f4b3c12a89964d97f57e698c0cc8b8948a93e4ed3cd72e490bba6",
+      "rust/crates/ingest-core/src/identity.rs": "a26a428d346c2fcce8e1fdafcd6baf7ca8beafc5bbf7d84b55c70206a4159776",
+      "rust/crates/ingest-core/src/lib.rs": "b63add1276cb2cdb305961ac932a4376a303c38d1102e10e441cbc1ace047cd2",
+      "rust/crates/ingest-core/src/prepared.rs": "502070f5f5b16a3ec851ca88d9334a7e9f9779dfbfd769b2fae15a6855590c12",
+      "rust/crates/ingest-core/src/projection.rs": "c9adb5e5c73d76536c663c457262a0c593fd8f1198b16f5d893b9f147f0ee4ba",
+      "rust/crates/ingest-core/src/reader.rs": "90ebdde2c67f0fdc307a353f9d3c12245b77782f6fb4bc614627cf49eed480b4",
+      "rust/crates/ingest-core/src/uploads.rs": "d4b2a7ac8534aefc6ab4efe0943c7adc343ee37635c76c4ea35d870bdbf11f18",
+      "rust/crates/ingest-core/src/validation.rs": "4ed0b686973afec42ac63053c5d8bbf51f7357324fd4e094b770c9f000d1adf4",
+      "rust/crates/ingest-core/src/xmltv.rs": "eabff9a603cab189d317385b830dd5d562835c7cef2999d4f57a168b74bcf418",
+      "rust/crates/ingest-core/src/xmltv_metadata.rs": "9317769e6549109045672b7a8bd588f6c59cd8175d8a3d8b30daf0dad5b10b75",
+      "rust/crates/ingest-core/examples/xmltv_metadata_parity.rs": "2cc3c7958ce0fb5cce485af1478e1238dfac9196c912f9f7462ebfde923fc389",
+      "scripts/rust-epg-parity/metadata.py": "e1f2a8d7d7b72894546186b2d27fa386e848d642305d053bffc2d193463bd8d3"
+    },
+    "full_xml_parser_verified": false,
+    "application_performance_verified": false
+  },
+  "notes": [
+    "Single programme tree projection only: categories, episodes/large integers, ratings, credits, flags, media and original-air-date precedence.",
+    "Projection accepts bounded trees:4096nodes,depth32,total4MiB; tree decoding must enforce admission before allocation.",
+    "Initial structured-input oracle used XML-illegal control characters; lxml rejected construction before projection. Invalid oracle evidence retained, corrected XML-valid inputs replayed against unchanged function.",
+    "No full XML parser/recovery, guide refresh or database job acceptance.",
+    "Final proof uses a fresh dedicated target directory; provisional shared-target logs are retained but excluded from acceptance to prevent zero-mtime archive cache reuse."
+  ],
+  "application_performance_verified": false,
+  "core_tests_passed": 27,
+  "logs_sha256": {
+    "fresh-build.log": "a6774f9303c2cd9b10a83154e9f2434fb3a7aa1712e33f2a23ece590b8951513",
+    "fresh-tests.log": "5af226388c826d6f674e8c469bc6d8962dc8fed4aeed7e2eb2249642119da9e5",
+    "fresh-clippy.log": "79913f702609dc932d7d5bf004b9929042385f0086701bf5e79533019be2e8d9"
+  }
+}

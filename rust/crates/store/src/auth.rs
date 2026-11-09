@@ -123,7 +123,8 @@ impl AuthService {
         let channel_profiles = crate::channel_profiles::router(self.clone());
         let channels = crate::channels::router(self.clone());
         let channel_groups = crate::channel_groups::router(self.clone());
-        let streams = crate::streams::router(self.clone());
+        let streams =
+            crate::streams::router(self.clone()).merge(crate::logos::router(self.clone()));
         let startup = crate::startup::router(self.clone());
         let providers = crate::provider_reads::router(self.clone());
         Router::new()

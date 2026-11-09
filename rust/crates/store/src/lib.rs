@@ -44,6 +44,7 @@ mod startup_bootstrap;
 pub use import_batches::{
     ImportCounts, ImportedStream, MAX_IMPORT_BATCH_BYTES, MAX_IMPORT_BATCH_ROWS,
 };
+mod logos;
 mod password_scrypt;
 mod passwords;
 mod playback;

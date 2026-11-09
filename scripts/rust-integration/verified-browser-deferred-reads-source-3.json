@@ -1,0 +1,38 @@
+{
+  "scope": "Original deferred React logo/filter-option read contracts; no packaged browser acceptance or performance claim.",
+  "passed": true,
+  "report": "artifacts/rust/m5-browser-deferred-reads-source-3/integration.json",
+  "report_sha256": "ab26eb13d96c890d28ec8edc1a802b1d93a69be3443abe3970019e18d41e7b42",
+  "rust_source_archive_sha256": "dbc5e1afbc0d50293186b8199197ae26e56b63b6bcf16e194eeb9fcf083fe9b4",
+  "source_cases": 44,
+  "cleanup": "project removed",
+  "source_files": {
+    "rust/crates/store/src/streams.rs": "01c1051b8bb2d4031defd88d4b1ab5eeed3ce451b530f40eeb36d4a660812ec3",
+    "rust/crates/store/src/logos.rs": "f508ce3d45347e2bda2c2cd953ce3f04ccdbbfefc9a5ebb2b4ef25b4cf7a81f9",
+    "rust/crates/store/tests/browser_reads_sql.rs": "ce1064cf73b2d5a6a48eb15f71da28e1222c08c0644679a6b1eda58ce41167ba",
+    "rust/crates/store/datasets/python-digits-15-1.json": "9ae45aad84e42ae399c71937cd0b345db52b58df8692888e62d10f4ff0dd23d9"
+  },
+  "verified": [
+    "Nonempty logo serialization, counts/first5names/truncation, MD5 cache-busting URL, missing local logo path.",
+    "Default and disabled pagination; used/name/repeated-ID filters, original invalid-ID ignore versus Unicode digit conversion failure.",
+    "Original detail unknown/filtered versus malformed-ID404 bodies, Standard/basic/inactive/anonymous permissions.",
+    "Trusted forwarded origin fields in serializer and pagination.",
+    "Stream hierarchical group/provider options, inactive provider exclusion, fast-path ignored custom/search/group filters, slow-path group/account filter removal."
+  ],
+  "earlier_failures": [
+    {
+      "report": "artifacts/rust/m5-browser-deferred-reads-source-1/integration.json",
+      "reason": "Fixture setup incorrectly assumed empty playback catalog; no native test ran; cleaned."
+    },
+    {
+      "report": "artifacts/rust/m5-browser-deferred-reads-source-2/integration.json",
+      "reason": "Actual original numeric missing-logo404 detail was No Logo matches the given query; corrected native response before source3; cleaned."
+    }
+  ],
+  "performance_verified": false,
+  "remaining": [
+    "Immutable packaged image and actual fresh-install React rerun.",
+    "Logo mutations, image cache/content delivery and local existing-file mtime variations remain separate scope.",
+    "Full init/browser workflows on populated migrated catalogs remain separate coverage."
+  ]
+}
