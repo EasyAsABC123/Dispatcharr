@@ -1,0 +1,26 @@
+[package]
+name = "dispatcharr-stream-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+dispatcharr-stream-core = { path = "../stream-core" }
+dispatcharr-stream-runtime = { path = "../stream-runtime" }
+dispatcharr-contracts = { path = "../contracts" }
+dispatcharr-coordination = { path = "../coordination" }
+dispatcharr-clients = { path = "../clients" }
+axum = "0.8"
+bytes = "1"
+futures-util = "0.3"
+async-stream = "0.3"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4"] }
+tokio = { version = "1", features = ["rt-multi-thread", "net", "time", "sync", "macros"] }
+
+[dev-dependencies]
+http-body-util = "0.1"
+tower = { version = "0.5", features = ["util"] }
+redis = { version = "0.32", features = ["tokio-comp"] }

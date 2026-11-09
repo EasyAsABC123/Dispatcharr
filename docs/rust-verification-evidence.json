@@ -1,5 +1,5 @@
 {
-  "scope": "migration-foundation-verification",
+  "scope": "incremental-backend-migration-verification",
   "application_performance_verified": false,
   "completed_milestones": [],
   "baseline_source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
@@ -95,5 +95,11 @@
     "Authenticated Rust playback vertical slice and full-service comparison",
     "Remaining M2-M9 compatibility and operational acceptance"
   ],
-  "python_playback_baseline_evidence": "../scripts/rust-playback-baseline/verified-playback.json"
+  "python_playback_baseline_evidence": "../scripts/rust-playback-baseline/verified-playback.json",
+  "full_python_baseline_evidence": "../scripts/rust-baseline/verified-full-baseline.json",
+  "native_live_client_evidence": "../rust/crates/clients/verified-redis.json",
+  "hls_component_evidence": "../scripts/rust-hls-parity/verified-component.json",
+  "baseline_fault_evidence": "../scripts/rust-playback-baseline/verified-functional.json",
+  "baseline_browser_protocol_evidence": "../scripts/rust-playback-baseline/verified-protocols.json",
+  "prototype_matrix_disposition": "../scripts/rust-playback-baseline/prototype-matrix-halt.json"
 }

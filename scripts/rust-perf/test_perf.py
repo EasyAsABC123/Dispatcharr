@@ -21,6 +21,29 @@ def report():
 class PerformanceTests(unittest.TestCase):
     gates = {'cpu_percent_mean': .8, 'memory_bytes_peak': .8, 'first_byte_ms_median': 1.1}
 
+    def test_warmup_ramp_keeps_first_viewer_and_one_shared_deadline(self):
+        began = time.monotonic()
+        calls = []
+
+        def viewer(url, deadline, *_):
+            calls.append((url, time.monotonic() - began, deadline))
+            time.sleep(max(0, deadline - time.monotonic()))
+            return dict(bytes=1, requests=1, errors=0, empty_responses=0, first_byte_ms=[1])
+
+        with patch.object(perf, 'viewer', side_effect=viewer):
+            result = perf.phase(['first', 'second', 'third'], 3, .15, .1, 0, warmup_ramp=.05)
+        by_url = {row[0]: row for row in calls}
+        self.assertGreaterEqual(by_url['second'][1] - by_url['first'][1], .04)
+        self.assertGreaterEqual(by_url['third'][1] - by_url['first'][1], .04)
+        self.assertEqual(len({row[2] for row in calls}), 1)
+        self.assertEqual(result['summary']['viewers_without_data'], 0)
+
+    def test_different_warmup_ramp_is_not_equivalent_work(self):
+        baseline, candidate = report(), report()
+        candidate['workload']['warmup_ramp'] = 4
+        comparison = perf.compare(baseline, candidate, self.gates)
+        self.assertIn('Workload mismatch: warmup_ramp', comparison['failures'])
+
     def test_binary_and_decimal_memory_units(self):
         self.assertEqual(perf.memory_bytes('1.5MiB / 4GiB'), 1.5 * 1024**2)
         self.assertEqual(perf.memory_bytes('1.5MB / 4GB'), 1500000)

@@ -73,7 +73,7 @@ def viewer(url, deadline, timeout, slow_delay):
     return result
 
 
-def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1):
+def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1, warmup_ramp=0):
     deadline = time.monotonic() + duration
     samples = []
     sample_errors = []
@@ -94,9 +94,15 @@ def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1):
     if sampler:
         sampler.start()
     began = time.monotonic()
+    def start_viewer(index):
+        if index and warmup_ramp:
+            # Keep the first warmup viewer connected while the channel initializes.
+            # All warmup viewers share the same deadline; measurement has no ramp.
+            time.sleep(min(warmup_ramp, max(0, deadline - time.monotonic())))
+        return viewer(urls[index % len(urls)], deadline, timeout, slow_delay)
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=viewers) as pool:
-        futures = [pool.submit(viewer, urls[i % len(urls)], deadline, timeout, slow_delay)
-                   for i in range(viewers)]
+        futures = [pool.submit(start_viewer, i) for i in range(viewers)]
         outcomes = [future.result() for future in futures]
     elapsed = time.monotonic() - began
     stop.set()
@@ -127,6 +133,8 @@ def compare(baseline, candidate, gates):
                 'fixture_id', 'sample_interval'):
         if baseline['workload'][key] != candidate['workload'][key]:
             failures.append('Workload mismatch: ' + key)
+    if baseline['workload'].get('warmup_ramp', 0) != candidate['workload'].get('warmup_ramp', 0):
+        failures.append('Workload mismatch: warmup_ramp')
     if baseline['environment'] != candidate['environment']:
         failures.append('Host environment mismatch')
     ratios = {}
@@ -164,6 +172,8 @@ def main():
     run.add_argument('--scenario', choices=['same-channel', 'many-channel'], required=True)
     run.add_argument('--viewers', type=int, default=10)
     run.add_argument('--warmup', type=float, default=15)
+    run.add_argument('--warmup-ramp', type=float, default=0,
+                     help='Warmup-only delay before viewers2..N, keeping viewer1 connected first')
     run.add_argument('--duration', type=float, default=60)
     run.add_argument('--timeout', type=float, default=3)
     run.add_argument('--slow-delay', type=float, default=0)
@@ -186,8 +196,9 @@ def main():
         print(json.dumps(result, indent=2))
         return 0 if result['passed'] else 1
     if (not all(math.isfinite(value) for value in
-                (args.warmup, args.duration, args.timeout, args.slow_delay, args.sample_interval))
-            or args.viewers < 1 or args.warmup < 0 or args.duration < 10 or args.timeout <= 0
+                (args.warmup, args.warmup_ramp, args.duration, args.timeout, args.slow_delay, args.sample_interval))
+            or args.viewers < 1 or args.warmup < 0 or args.warmup_ramp < 0
+            or (args.warmup_ramp and args.warmup_ramp >= args.warmup) or args.duration < 10 or args.timeout <= 0
             or args.timeout > args.duration or args.slow_delay < 0 or args.sample_interval <= 0):
         parser.error('Invalid workload limits (duration must be >=10s, timeout <= duration)')
     urls = [line.strip() for line in args.urls_file.read_text().splitlines()
@@ -209,7 +220,8 @@ def main():
         ids.extend(running)
     ids = list(dict.fromkeys(ids))
     if args.warmup:
-        phase(urls, args.viewers, args.warmup, args.timeout, args.slow_delay)
+        phase(urls, args.viewers, args.warmup, args.timeout, args.slow_delay,
+              warmup_ramp=args.warmup_ramp)
     measured = phase(urls, args.viewers, args.duration, args.timeout, args.slow_delay,
                      ids, args.sample_interval)
     output = {'format_version': 1, 'revision': args.revision,
@@ -217,7 +229,7 @@ def main():
               'environment': {'host': platform.node(), 'system': platform.platform(),
                               'logical_cpus': os.cpu_count(), 'docker': command(['docker', 'version', '--format', '{{.Server.Version}}'])},
               'workload': {key: getattr(args, key) for key in
-                           ('scenario', 'viewers', 'warmup', 'duration', 'slow_delay', 'timeout',
+                           ('scenario', 'viewers', 'warmup', 'warmup_ramp', 'duration', 'slow_delay', 'timeout',
                             'fixture_id', 'sample_interval')},
               'services': args.services, 'measurement': measured}
     output['workload']['url_count'] = len(urls)

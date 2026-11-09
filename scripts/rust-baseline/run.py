@@ -53,12 +53,15 @@ def main():
                     timeout=30).splitlines()
                 source = Path(temporary) / 'source'
                 source.mkdir()
+                # Upstream tests intentionally drop privileges to nobody. The
+                # bind-mounted archive root must be traversable by that child.
+                source.chmod(0o755)
                 archive = Path(temporary) / 'source.tar'
                 with archive.open('wb') as stream:
                     subprocess.run(['git', 'archive', BASELINE], cwd=ROOT, stdout=stream,
                                    check=True, timeout=30)
                 evidence['git_archive_sha256'] = hashlib.sha256(archive.read_bytes()).hexdigest()
-                subprocess.run(['tar', '-xf', str(archive), '-C', str(source), '--no-same-owner'],
+                subprocess.run(['tar', '-xf', str(archive), '-C', str(source), '--no-same-owner', '--same-permissions'],
                                check=True, timeout=30)
                 (source / 'media').mkdir(exist_ok=True)
                 environment = dict(os.environ, BASELINE_SOURCE_DIR=str(source),

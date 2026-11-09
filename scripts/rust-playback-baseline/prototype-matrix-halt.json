@@ -1,0 +1,21 @@
+{
+  "status": "halted-incomplete",
+  "timestamp_utc": "2026-11-09T07:49:59.906837+00:00",
+  "application_performance_verified": false,
+  "reason": "Candidate immutable build lacks equivalent legacy per-viewer telemetry and client metadata side effects. Experiment stopped before completing the matrix rather than report incomplete-work savings.",
+  "completed_pairs": 2,
+  "completed_viewers": [
+    1
+  ],
+  "incomplete_phase": "candidate same-channel1viewertrial3 was interrupted before a report was finalized",
+  "raw_runner_exit_code": 130,
+  "cleanup": "isolated project removed",
+  "next_steps": [
+    "Implement and verify client metadata, per-second byte/rate/activity statistics and user stop/accounting contracts",
+    "Build a new immutable source-bound candidate image",
+    "Repeat the frozen1/10/100viewer matrix with equivalent side effects and no concurrent heavy work",
+    "Retain cold-burst and default-zero-shutdown lifecycle gates separately"
+  ],
+  "raw_run_sha256": "7b5f819d8018d785bb77d4c7247ae59d37fa823ef98aacf42cf6548dd7814159",
+  "artifact_directory": "artifacts/rust/m2-native-ts-matrix"
+}

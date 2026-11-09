@@ -1,0 +1,15 @@
+[package]
+name = "dispatcharr-clients"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+dispatcharr-contracts = { path = "../contracts" }
+redis = { version = "0.32", features = ["tokio-comp"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt-multi-thread"] }

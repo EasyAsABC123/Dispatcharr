@@ -1,0 +1,23 @@
+[package]
+name = "dispatcharr-fmp4-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+dispatcharr-contracts = {path="../contracts"}
+dispatcharr-clients = {path="../clients"}
+dispatcharr-stream-http = {path="../stream-http"}
+dispatcharr-stream-runtime = {path="../stream-runtime"}
+dispatcharr-fmp4-core = {path="../fmp4-core"}
+dispatcharr-output-store = {path="../output-store"}
+axum = "0.8"
+bytes = "1"
+futures-util = "0.3"
+async-stream = "0.3"
+tokio = {version="1",features=["process","io-util","sync","time","rt-multi-thread","macros"]}
+uuid = {version="1",features=["v4"]}
+
+[dev-dependencies]
+http-body-util = "0.1"
+redis = {version="0.32",features=["tokio-comp"]}

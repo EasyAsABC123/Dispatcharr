@@ -1,0 +1,209 @@
+//! Existing Dispatcharr PostgreSQL/authentication compatibility.
+//! Original application credit: Dispatcharr authors and contributors; see ATTRIBUTION.md.
+mod account_writes;
+mod accounts;
+mod admin_writes;
+mod app_data;
+mod auth;
+mod json_compat;
+mod passwords;
+mod playback;
+
+pub use auth::{AuthConfig, AuthService, Claims, TokenPair};
+pub use passwords::verify_password;
+pub use playback::{ProviderStream, ResolvedChannel};
+
+use serde_json::Value;
+use sqlx::{postgres::PgPoolOptions, PgPool, Row};
+use std::{net::IpAddr, time::Duration};
+
+#[derive(Clone)]
+pub struct Store {
+    pool: PgPool,
+}
+
+#[derive(Debug)]
+pub enum StoreError {
+    Database(sqlx::Error),
+    Unauthorized(&'static str),
+    AuthenticationBody(Value),
+    Forbidden,
+    PermissionDenied,
+    NotFound,
+    Unsupported(&'static str),
+    RateLimited(u64),
+    InvalidInput(Value),
+    StatusBody(u16, Value),
+}
+
+impl From<sqlx::Error> for StoreError {
+    fn from(value: sqlx::Error) -> Self {
+        Self::Database(value)
+    }
+}
+
+impl std::fmt::Display for StoreError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Database(_) => formatter.write_str("Database unavailable"),
+            Self::AuthenticationBody(_) => formatter.write_str("Authentication failed"),
+            Self::Unauthorized(message) | Self::Unsupported(message) => {
+                formatter.write_str(message)
+            }
+            Self::Forbidden => formatter.write_str("Forbidden"),
+            Self::PermissionDenied => formatter.write_str("Permission denied"),
+            Self::NotFound => formatter.write_str("Not found"),
+            Self::RateLimited(wait) => write!(formatter, "Rate limited for {wait} seconds"),
+            Self::InvalidInput(_) => formatter.write_str("Invalid input"),
+            Self::StatusBody(status, _) => write!(formatter, "Request failed with status {status}"),
+        }
+    }
+}
+
+impl std::error::Error for StoreError {}
+
+#[derive(Clone)]
+pub struct User {
+    pub id: i64,
+    pub username: String,
+    pub password: String,
+    pub is_active: bool,
+    pub user_level: i32,
+    pub stream_limit: i32,
+    pub custom_properties: Value,
+}
+
+const USER_COLUMNS: &str = "id::bigint AS id, username, password, is_active, user_level, stream_limit, COALESCE(custom_properties, '{}'::jsonb) AS custom_properties";
+
+fn user_from_row(row: sqlx::postgres::PgRow) -> Result<User, sqlx::Error> {
+    Ok(User {
+        id: row.try_get("id")?,
+        username: row.try_get("username")?,
+        password: row.try_get("password")?,
+        is_active: row.try_get("is_active")?,
+        user_level: row.try_get("user_level")?,
+        stream_limit: row.try_get("stream_limit")?,
+        custom_properties: row.try_get("custom_properties")?,
+    })
+}
+
+impl Store {
+    pub async fn connect(url: &str, max_connections: u32) -> Result<Self, StoreError> {
+        if max_connections == 0 || max_connections > 64 {
+            return Err(StoreError::Unsupported(
+                "database pool must be 1..64 connections",
+            ));
+        }
+        let pool = PgPoolOptions::new()
+            .max_connections(max_connections)
+            .acquire_timeout(Duration::from_secs(5))
+            .idle_timeout(Duration::from_secs(60))
+            .connect(url)
+            .await?;
+        Ok(Self { pool })
+    }
+
+    pub fn from_pool(pool: PgPool) -> Self {
+        Self { pool }
+    }
+    pub fn pool(&self) -> &PgPool {
+        &self.pool
+    }
+
+    pub async fn user_by_username(&self, username: &str) -> Result<Option<User>, StoreError> {
+        let query = format!("SELECT {USER_COLUMNS} FROM accounts_user WHERE username=$1");
+        sqlx::query(&query)
+            .bind(username)
+            .fetch_optional(&self.pool)
+            .await?
+            .map(user_from_row)
+            .transpose()
+            .map_err(Into::into)
+    }
+
+    pub async fn user_by_id(&self, id: i64) -> Result<Option<User>, StoreError> {
+        let query = format!("SELECT {USER_COLUMNS} FROM accounts_user WHERE id=$1");
+        sqlx::query(&query)
+            .bind(id)
+            .fetch_optional(&self.pool)
+            .await?
+            .map(user_from_row)
+            .transpose()
+            .map_err(Into::into)
+    }
+
+    pub async fn user_by_api_key(&self, key: &str) -> Result<Option<User>, StoreError> {
+        // Django get() rejects ambiguous duplicate API keys. Do not choose one.
+        let query = format!("SELECT {USER_COLUMNS} FROM accounts_user WHERE api_key=$1 LIMIT 2");
+        let mut rows = sqlx::query(&query).bind(key).fetch_all(&self.pool).await?;
+        if rows.len() != 1 {
+            return Ok(None);
+        }
+        Ok(Some(user_from_row(rows.remove(0))?))
+    }
+
+    pub async fn setting(&self, key: &str) -> Result<Value, StoreError> {
+        let value: Option<Value> =
+            sqlx::query_scalar("SELECT value FROM core_coresettings WHERE key=$1")
+                .bind(key)
+                .fetch_optional(&self.pool)
+                .await?;
+        Ok(value.unwrap_or(Value::Null))
+    }
+
+    pub async fn network_allowed(
+        &self,
+        peer: IpAddr,
+        group: &str,
+        user: Option<&User>,
+    ) -> Result<bool, StoreError> {
+        let policy = self.setting("network_access").await?;
+        let default = if group == "M3U_EPG" {
+            "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10"
+        } else {
+            "0.0.0.0/0,::/0"
+        };
+        if !cidrs_allow(
+            policy.get(group).and_then(Value::as_str).unwrap_or(default),
+            peer,
+        ) {
+            return Ok(false);
+        }
+        if let Some(raw) = user
+            .and_then(|user| user.custom_properties.get("allowed_networks"))
+            .and_then(|policies| policies.get(group))
+            .and_then(Value::as_str)
+            .filter(|raw| !raw.is_empty())
+        {
+            return Ok(cidrs_allow(raw, peer));
+        }
+        Ok(true)
+    }
+}
+
+pub fn cidrs_allow(raw: &str, peer: IpAddr) -> bool {
+    let peer = match peer {
+        IpAddr::V6(value) => value.to_ipv4_mapped().map_or(peer, IpAddr::V4),
+        _ => peer,
+    };
+    raw.split(',')
+        .filter_map(|value| value.trim().parse::<ipnet::IpNet>().ok())
+        .any(|network| network.contains(&peer))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn networks_fail_closed_and_normalize_mapped_v4() {
+        assert!(cidrs_allow(
+            "192.168.0.0/16",
+            "::ffff:192.168.2.3".parse().unwrap()
+        ));
+        assert!(!cidrs_allow(
+            "invalid,10.0.0.0/8",
+            "192.168.2.3".parse().unwrap()
+        ));
+        assert!(!cidrs_allow("", "127.0.0.1".parse().unwrap()));
+    }
+}

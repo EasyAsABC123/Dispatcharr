@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+"""Build from an immutable source tar and bind its exact content to an image ID."""
+import argparse
+import hashlib
+import io
+import json
+import os
+from pathlib import Path
+import subprocess
+import tarfile
+import tempfile
+import time
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--tag', default='dispatcharr-rust-candidate:milestone2')
+    parser.add_argument('--timeout', type=int, default=600)
+    args = parser.parse_args()
+    destination = args.output.resolve()
+    destination.mkdir(parents=True, exist_ok=True)
+    if any(destination.iterdir()):
+        parser.error('output must be empty')
+    paths = [ROOT / 'LICENSE', ROOT / 'ATTRIBUTION.md']
+    paths.extend(path for path in (ROOT / 'rust').rglob('*') if path.is_file()
+                 and not set(path.relative_to(ROOT / 'rust').parts) & {'target', '.git', '__pycache__'})
+    # Hash the same in-memory bytes that enter the tar; later source edits cannot
+    # change the snapshot compiled by Docker.
+    inputs = {str(path.relative_to(ROOT)): path.read_bytes() for path in sorted(paths)}
+    hashes = {name: hashlib.sha256(content).hexdigest() for name, content in inputs.items()}
+    source_sha = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    report = {'format_version': 1, 'passed': False, 'tag': args.tag,
+              'source_tree_sha256': source_sha, 'source_sha256': hashes,
+              'git_revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+              'worktree_status': subprocess.check_output(['git', 'status', '--short'], cwd=ROOT, text=True),
+              'source_scope': 'immutable rust tree plus LICENSE and ATTRIBUTION.md; excludes build artifacts'}
+    status = 1
+    with tempfile.TemporaryFile() as archive:
+        with tarfile.open(fileobj=archive, mode='w') as tar:
+            for name, content in inputs.items():
+                info = tarfile.TarInfo(name)
+                info.size, info.mode, info.mtime = len(content), 0o644, 0
+                tar.addfile(info, io.BytesIO(content))
+        archive.seek(0)
+        command = ['docker', 'build', '-f', 'rust/Dockerfile.app', '-t', args.tag,
+                   '--label', 'org.opencontainers.image.source-tree-sha256=' + source_sha, '-']
+        report['command'] = command
+        began = time.monotonic()
+        try:
+            with (destination / 'build.log').open('w') as log:
+                result = subprocess.run(command, cwd=ROOT, stdin=archive, stdout=log,
+                                        stderr=subprocess.STDOUT, timeout=args.timeout)
+            report['exit_code'] = result.returncode
+            if result.returncode:
+                raise RuntimeError('Docker build failed; inspect build.log')
+            inspected = json.loads(subprocess.check_output(['docker', 'image', 'inspect', args.tag], text=True, timeout=30))[0]
+            if inspected['Config']['Labels'].get('org.opencontainers.image.source-tree-sha256') != source_sha:
+                raise RuntimeError('Image source label mismatch')
+            report.update(passed=True, image_id=inspected['Id'], platform=inspected['Os'] + '/' + inspected['Architecture'])
+            status = 0
+        except (OSError, ValueError, subprocess.SubprocessError, RuntimeError) as error:
+            report['failure'] = str(error)
+        except KeyboardInterrupt:
+            report['failure'], status = 'interrupted', 130
+        report['elapsed_seconds'] = time.monotonic() - began
+        (destination / 'build.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps({'passed': report['passed'], 'source_tree_sha256': source_sha, 'evidence': str(destination)}))
+    return status
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

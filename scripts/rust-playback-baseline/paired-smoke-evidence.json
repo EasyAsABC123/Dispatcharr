@@ -1,0 +1,117 @@
+{
+  "scope": "historical-native-TS-paired-load-smoke",
+  "measurement_quality": "concurrent-development-load-smoke",
+  "application_performance_verified": false,
+  "performance_gains_claimed": false,
+  "matrix_exit_code": 0,
+  "cleanup": "isolated project removed",
+  "artifact_directory": "artifacts/rust/baseline-paired-smoke",
+  "pairs": [
+    {
+      "viewers": 1,
+      "baseline_summary": {
+        "bytes": 3838020,
+        "requests": 1,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.249308484999347,
+        "bytes_per_second": 383802.0,
+        "first_byte_ms_median": 11.7466770025203,
+        "first_byte_ms_p95": 11.7466770025203,
+        "first_byte_samples": 1,
+        "viewers_without_data": 0,
+        "cpu_percent_mean": 2.69,
+        "memory_bytes_peak": 741448089.6
+      },
+      "candidate_summary": {
+        "bytes": 2488556,
+        "requests": 1,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.004384697000205,
+        "bytes_per_second": 248855.6,
+        "first_byte_ms_median": 54.277142000501044,
+        "first_byte_ms_p95": 54.277142000501044,
+        "first_byte_samples": 1,
+        "viewers_without_data": 0,
+        "cpu_percent_mean": 0.6866666666666666,
+        "memory_bytes_peak": 588327682.048
+      },
+      "comparison": {
+        "passed": false,
+        "failures": [
+          "first_byte_ms_p95 ratio 4.6206 exceeds 1.1000",
+          "Candidate throughput is below 95% of baseline"
+        ],
+        "candidate_over_baseline": {
+          "cpu_percent_mean": 0.2552664188351921,
+          "memory_bytes_peak": 0.793484655635695,
+          "first_byte_ms_p95": 4.620637988841921
+        }
+      }
+    },
+    {
+      "viewers": 100,
+      "baseline_summary": {
+        "bytes": 393013248,
+        "requests": 100,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 11.270983395996154,
+        "bytes_per_second": 39301324.8,
+        "first_byte_ms_median": 1342.92264350006,
+        "first_byte_ms_p95": 1756.2262540013762,
+        "first_byte_samples": 100,
+        "viewers_without_data": 0,
+        "cpu_percent_mean": 45.635,
+        "memory_bytes_peak": 814114406.4000001
+      },
+      "candidate_summary": {
+        "bytes": 248855600,
+        "requests": 100,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.011089460997027,
+        "bytes_per_second": 24885560.0,
+        "first_byte_ms_median": 47.30573000051663,
+        "first_byte_ms_p95": 57.90531600359827,
+        "first_byte_samples": 100,
+        "viewers_without_data": 0,
+        "cpu_percent_mean": 2.7266666666666666,
+        "memory_bytes_peak": 617040838.656
+      },
+      "comparison": {
+        "passed": false,
+        "failures": [
+          "Candidate throughput is below 95% of baseline"
+        ],
+        "candidate_over_baseline": {
+          "cpu_percent_mean": 0.05974946130528469,
+          "memory_bytes_peak": 0.7579289026275116,
+          "first_byte_ms_p95": 0.032971444238273466
+        }
+      }
+    }
+  ],
+  "interpretation": "Both backends served valid decoded TS and1/100viewers withoutloaderrors, but the95percent-throughput-equivalence gate failed. Do not report CPU/RAMratios as gains. Default zero shutdown delay destroyed Rustwarmupretention while Pythoncleanupheldchannelbriefly; rootcausehypothesis motivated explicit identical5secondshutdownconfigfornewtests. Source/runtimebehavior remains covered by separate lifecycle gates.",
+  "artifacts_sha256": {
+    "baseline-same-channel-viewers-1-trial-1.json": "39ca161a37dfd02a63cf89f4f452975e26b9b2650f9e18cf4140cc4e935e3922",
+    "baseline-same-channel-viewers-1-trial-1.json.log": "5b2852593c86fc8cdcba274a1af5d3d498b74c89feb6258c408646692731440e",
+    "baseline-same-channel-viewers-100-trial-1.json": "b54db7c3d9556bff1a70fb0bbbf2384978bdad6489e5d373ee8f3a7c1b26668e",
+    "baseline-same-channel-viewers-100-trial-1.json.log": "78cb326cc09084a432a9b8aa06b5f8b954f81f55445f07f39cc1c1afcca89b73",
+    "candidate-same-channel-viewers-1-trial-1.json": "7f170610cc56c51410d99a79cb43f0655a573b18a11840360e619ba2c7a83b31",
+    "candidate-same-channel-viewers-1-trial-1.json.decode.log": "5c293e1aa05ffbe427d921fed7ec270582603b6bdcc0fef9f059703591984e35",
+    "candidate-same-channel-viewers-1-trial-1.json.log": "d4cf19de61cbba67b24674df5d36c0f1e2700da8394a60c1feae77608694fd4c",
+    "candidate-same-channel-viewers-100-trial-1.json": "70d39c62dc5e09cb6ca87e1d432f04e41a84e4c882b912c4a6ba3487e249d708",
+    "candidate-same-channel-viewers-100-trial-1.json.decode.log": "97935154d369e5474b8880eeab295bb6ffa4602bebd1776b88ec877775a81a9f",
+    "candidate-same-channel-viewers-100-trial-1.json.log": "0094920b9f8cf3064970a109755454478dbca05eaafc6f4bf2db99575b1e75b1",
+    "compose.log": "7adc83f3c54aa2031e7b0c0e07007e999d264807aa38f5cb1279b45557367593",
+    "decode.log": "e7c4d00caa3e1cdfaf49dc54b30f91603beb22fdc6f0d5d36ce1f13207136afd",
+    "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+    "fixture.json": "6542f6e2d62639e6b34e150f8664c74f0f25a03334cd19d23cf18b8f0c40c6b0",
+    "ready.json": "6dc2f628a13d2ce47f123ed3d5ec795449ff70ee2e73dcd2881a3bc78735baaf",
+    "run.json": "49d6c26c4ef92cf21ee1c10414c9d57fb6371b75ce95a872a54f1f214f048692",
+    "same-channel-urls.txt": "d8b7abcf22dae875336702bee96be906089599112ebfd6ce7428ed6a016c9155",
+    "seed.json": "4a6e35732e22396605d7c0ae94244f840fe738ea11b5e738f9027b72bdbb6dfe"
+  }
+}

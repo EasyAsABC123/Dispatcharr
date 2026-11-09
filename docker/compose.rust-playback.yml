@@ -16,6 +16,11 @@ services:
       POSTGRES_DIR: /data/db
       REDIS_HOST: localhost
       REDIS_PORT: "6379"
+      REDIS_PASSWORD: playback-fixture-only
+      REDISCLI_AUTH: playback-fixture-only
+      BENCHMARK_SHUTDOWN_DELAY: ${BENCHMARK_SHUTDOWN_DELAY:-5}
+      BENCHMARK_RETENTION_SECONDS: ${BENCHMARK_RETENTION_SECONDS:-60}
+      BENCHMARK_STARTUP_BEHIND: ${BENCHMARK_STARTUP_BEHIND:-5}
       DISPATCHARR_LOG_LEVEL: WARNING
       PYTHONDONTWRITEBYTECODE: "1"
       PUID: "1000"
@@ -39,5 +44,9 @@ services:
     entrypoint: [/dispatcharrpy/bin/python, /verification/origin.py]
     volumes:
       - ../scripts/rust-playback-baseline:/verification:ro
+    environment:
+      FIXTURE_SECONDS: ${FIXTURE_SECONDS:-1800}
+      FIXTURE_CODEC: ${FIXTURE_CODEC:-mpeg2}
+      ENABLE_VOD_FIXTURE: ${ENABLE_VOD_FIXTURE:-0}
     ports: ["127.0.0.1::8080"]
-    tmpfs: ["/tmp:mode=1777,size=268435456"]
+    tmpfs: ["/tmp:mode=1777,size=1073741824"]

@@ -17,10 +17,10 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | --- | --- | --- | --- | --- |
 | M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
-| M2 | Authenticated live TS vertical slice | M1 | Planned | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
-| M3 | Complete live playback formats and profiles | M2 | Planned | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
-| M4 | VOD and timeshift parity | M2 | Planned | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
-| M5 | Accounts, settings, and channel control APIs | M2 | Planned | API/permission/database/React workflow parity and API benchmarks |
+| M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
+| M3 | Complete live playback formats and profiles | M2 | In progress (HLS component and gateway) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
+| M4 | VOD and timeshift parity | M2 | In progress (native VOD slice) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
+| M5 | Accounts, settings, and channel control APIs | M2 | In progress (independent account contracts) | API/permission/database/React workflow parity and API benchmarks |
 | M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | Planned | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | Planned | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | Planned | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
@@ -29,13 +29,40 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 Current evidence is described in the [local verification guide](rust-local-verification.md).
 The core Compose run has passed, the load-harness Compose selftest has passed,
 and Python baseline runs have passed (48 focused tests and a separate broader
-526-test proxy suite). Static source discovery and
+526-test proxy suite, followed by all 3,362 tests of the unchanged upstream suite; see
+[full baseline evidence](../scripts/rust-baseline/verified-full-baseline.json)). Static source discovery and
 runtime discovery are available; the runtime resolves 592 Django routes and 246
 OpenAPI paths/362 operations, with 58 schema warnings and 66 graceful-fallback
 error diagnostics that omit views with uninferred serializers. None of those discoveries is complete executable
 contract coverage. A measured TS helper comparison is component-only. Full-stack
 playback baselines, frozen scenario budgets, decoder checks, complete M1 gates,
 and the required application integration remain outstanding.
+
+Further implementation evidence (acceptance remains open): the Rust HTTP candidate
+has decoded 75 frames of actual proxied MPEG-TS through the migrated PostgreSQL
+fixture, authenticated Django PBKDF2 passwords, accepted Django access/refresh
+tokens, and issued JWTs accepted by Python SimpleJWT. The asynchronous runtime now
+leases owned HTTP frames so payloads remain accounted until their final owner
+drops. Redis lease tests exercise atomic provider limits and fenced ownership;
+HTTP integration of those leases has passed targeted tests. Further real-Redis tests
+passed for viewer admission, byte-owner lifetimes, immediate client stop, HLS token
+remint/touch/release, cold reconnect, and stale output/channel fencing. These are
+component and vertical-slice checks, not completed milestone acceptance.
+
+The HLS segmenter passes 40 unchanged upstream tests through an RPC adapter and
+2,145 exact operation comparisons. Generated segments passed FFmpeg decoding.
+The gateway and native VOD implementation are still under integration. The first
+full resource matrix was stopped because its frozen candidate lacked legacy
+per-viewer telemetry; its partial results establish no accepted performance gain.
+See [matrix disposition](../scripts/rust-playback-baseline/prototype-matrix-halt.json).
+
+Baseline load findings must remain separate: a 100-viewer cold burst failed twice,
+including with fresh web workers and isolated Redis reset. A warmed 100-viewer
+fanout passed with a recorded four-second warmup ramp. The database-pool deadlock
+explanation is a hypothesis, not an established cause. See the preserved
+[failure evidence](../scripts/rust-playback-baseline/cold-reopen-evidence.json).
+Warmed fanout does not close the cold-start acceptance gate. Short load-smoke
+measurements include startup catchup and are not accepted performance savings.
 
 M3/M4/M5 can proceed concurrently after M2, using separate owned modules and
 contract fixtures. M6 can proceed once its M5 models and API contracts stabilize.

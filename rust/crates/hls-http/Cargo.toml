@@ -1,0 +1,26 @@
+[package]
+name = "dispatcharr-hls-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+dispatcharr-contracts = { path = "../contracts" }
+dispatcharr-clients = { path = "../clients" }
+dispatcharr-stream-http = { path = "../stream-http" }
+dispatcharr-hls-core = { path = "../hls-core" }
+axum = "0.8"
+bytes = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "sync", "time", "macros"] }
+futures-util = "0.3"
+async-stream = "0.3"
+serde_json = "1"
+getrandom = "0.2"
+base64 = "0.22"
+
+[dev-dependencies]
+dispatcharr-coordination = { path = "../coordination" }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream"] }
+http-body-util = "0.1"
+redis = { version = "0.32", features = ["tokio-comp"] }
+tower = { version = "0.5", features = ["util"] }

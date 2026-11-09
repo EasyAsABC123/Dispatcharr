@@ -15,7 +15,7 @@ prepare_pg_socket_dir
 su - "$POSTGRES_USER" -c "$PG_BINDIR/pg_ctl -D '$POSTGRES_DIR' start -w -t 120"
 promote_app_role
 ensure_app_database
-redis-server --daemonize yes --protected-mode yes --bind 127.0.0.1 --port 6379
+redis-server --daemonize yes --protected-mode yes --bind 0.0.0.0 --port 6379 --requirepass "$REDIS_PASSWORD"
 python manage.py migrate --noinput
 python /verification/seed.py
-exec uwsgi --ini /verification/uwsgi.ini
+exec python /verification/supervisor.py serve

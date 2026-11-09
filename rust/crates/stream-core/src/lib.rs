@@ -3,6 +3,7 @@ use std::collections::VecDeque;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
+pub mod sync;
 pub mod ts;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -19,6 +20,7 @@ pub struct Chunk {
     pub sequence: u64,
     pub received_at: Instant,
     pub data: Arc<[u8]>,
+    pub discontinuity: bool,
 }
 
 #[derive(Debug)]
@@ -58,6 +60,15 @@ impl MediaBuffer {
     }
 
     pub fn push(&mut self, data: Arc<[u8]>, now: Instant) -> Result<u64, BufferError> {
+        self.push_marked(data, now, false)
+    }
+
+    pub fn push_marked(
+        &mut self,
+        data: Arc<[u8]>,
+        now: Instant,
+        discontinuity: bool,
+    ) -> Result<u64, BufferError> {
         if data.is_empty() {
             return Err(BufferError::EmptyChunk);
         }
@@ -81,6 +92,7 @@ impl MediaBuffer {
             sequence,
             received_at: now,
             data,
+            discontinuity,
         });
         self.next_sequence = next;
         self.last_write = Some(now);

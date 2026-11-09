@@ -1,0 +1,137 @@
+{
+  "scope": "immutable-python-baseline-native-ts-functional-probes",
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "exit_code": 0,
+  "cleanup": "isolated project removed",
+  "application_performance_verified": false,
+  "performance_gains_claimed": false,
+  "tool_tests_passed": 14,
+  "mixed": {
+    "passed": true,
+    "fast_viewers": 9,
+    "slow_viewers": 1,
+    "minimum_fast_bytes_per_second": 247339.06666666668,
+    "maximum_slow_bytes_per_second": 2184.5333333333333,
+    "slow_receive_buffer_bytes": 4096,
+    "sampled_memory_is_not_a_bound_proof": true
+  },
+  "probes": [
+    {
+      "backend": "baseline",
+      "probe": "mixed",
+      "exit_code": 0,
+      "directory": "baseline-mixed",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 314,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 5,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 374,
+          "exit_code": null,
+          "ok": true
+        }
+      }
+    },
+    {
+      "backend": "baseline",
+      "probe": "stall",
+      "exit_code": 0,
+      "directory": "baseline-stall",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 374,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 8,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 448,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "decoder_interior_seconds": 10.297456,
+      "decoder_exit_code": 0,
+      "decoder_frames": 258,
+      "decoder_verified": true,
+      "post_recovery_decoder_exit_code": 0,
+      "post_recovery_decoder_frames": 71,
+      "post_recovery_video_and_audio_verified": true
+    },
+    {
+      "backend": "baseline",
+      "probe": "failover",
+      "exit_code": 0,
+      "directory": "baseline-failover",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 448,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 8,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 623,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "decoder_interior_seconds": 8.767888,
+      "decoder_exit_code": 183,
+      "decoder_frames": 115,
+      "decoder_verified": false,
+      "post_recovery_decoder_exit_code": 0,
+      "post_recovery_decoder_frames": 60,
+      "post_recovery_video_and_audio_verified": true,
+      "transient_boundary_warning": true
+    }
+  ],
+  "artifact_directory": "artifacts/rust/baseline-functional-isolated",
+  "artifact_sha256": {
+    "baseline-failover/capture.ts": "a8a60230aee568216d8dfe094ee1ba6c4aa3eb072dbdf45977716cfb0249f939",
+    "baseline-failover/command.log": "7e0af02ff5cbbcacc5b0381dcf70db7b39764c59e4bfb83cbd4b0d18334c4b2d",
+    "baseline-failover/decode.log": "249601e25693667f1213a7067bab7b2c92c52632013711beff387db370490422",
+    "baseline-failover/fault.json": "1929d03f5962d99fe9c8dc277b7be2bc2f63db088c1b77855001ffe8b8bd5146",
+    "baseline-failover/post-recovery-decode.log": "6fa50ae50f6dc287f6e49bca4e675801e24af43507a2a83e1c1e5a26deec5267",
+    "baseline-mixed/command.log": "1ef673f93e5c71a3df84f573fdbe772a4607c4df45ab30c8a403d3fb3d619d33",
+    "baseline-mixed/mixed.json": "fb73e8cec36521f36835248afcf96c7d773d66bdc795f9aa7149e6e12e685cd7",
+    "baseline-stall/capture.ts": "491738eff546fbed33673972802ee69a33ea14644be7b2d91d8a90808d7c4d1f",
+    "baseline-stall/command.log": "7e0af02ff5cbbcacc5b0381dcf70db7b39764c59e4bfb83cbd4b0d18334c4b2d",
+    "baseline-stall/decode.log": "2a36cbdde3f2097e733db898733d21912bb21b057069686e5ec53bb3dc999d3d",
+    "baseline-stall/fault.json": "3ec8dd82e12420b757194d5244ea3da1dcc1ff58e809eaccd6ea344c4d175edc",
+    "baseline-stall/post-recovery-decode.log": "ad83473f8e539efef50c28aff5d0bcdf15e5fd31ff63f2a1cfa870247ab1d06b",
+    "compose.log": "d38b3515ca249fef1e6a9425c2dff9b8ec54f83c151e99be1983181bc29e1930",
+    "decode.log": "b76a265fd798f100c9810889b95a19276b473b1ba93dc56e30f6ccd19e1f6078",
+    "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+    "fixture.json": "6542f6e2d62639e6b34e150f8664c74f0f25a03334cd19d23cf18b8f0c40c6b0",
+    "functional-urls.txt": "1692767ce241366b6904841098f705ac55c9c0b9cbc671af6dab2d20abbec71c",
+    "ready.json": "6dc2f628a13d2ce47f123ed3d5ec795449ff70ee2e73dcd2881a3bc78735baaf",
+    "run.json": "dea1c7c7613972852d8e0facd73d765832d8c6d2b91dc98d3bf1b4eb37e49303",
+    "seed.json": "b81216b966bdfa0be270b6aba85a731082cbe4cb807a6afbcbdab113a4afff54"
+  },
+  "limitations": [
+    "Explicit fresh web and isolated Redis between cases; not a cold-reopen or burst test",
+    "Transient strict decode warning at abrupt failover boundary retained; healthy post-recovery video/audio decode required",
+    "No Rust candidate or performance comparison in this suite",
+    "Cold100burst and all full-app milestone gates remain separate"
+  ]
+}

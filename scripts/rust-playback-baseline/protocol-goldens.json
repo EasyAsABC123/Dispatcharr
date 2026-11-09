@@ -1,0 +1,402 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "codec_fixture_sha256": "fe0ba32eb0a98a65d765b67916d7c0f199c6519447756cc98105518787aed226",
+  "normalizations": [
+    "Opaque HLS capability token replaced by placeholder in headers/playlists",
+    "Volatile Date header omitted; media sequence values retained as observed"
+  ],
+  "protocols": {
+    "hls": {
+      "events": [
+        {
+          "kind": "mint",
+          "status": 302,
+          "headers": {
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": "0",
+            "Location": "/proxy/hls/<session-token>/index.m3u8",
+            "X-Dispatcharr-Session-Token": "<session-token>",
+            "Access-Control-Expose-Headers": "X-Dispatcharr-Session-Token"
+          }
+        },
+        {
+          "kind": "initial_playlist",
+          "status": 200,
+          "headers": {
+            "Content-Type": "application/vnd.apple.mpegurl",
+            "Cache-Control": "no-cache"
+          },
+          "first_bytes": "#EXTM3U\n",
+          "first_byte_seconds": 0.041551857997546904
+        },
+        {
+          "kind": "segment",
+          "uri": "1.ts",
+          "status": 200,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Content-Length": "492748",
+            "Cache-Control": "no-cache"
+          },
+          "bytes": 492748,
+          "sha256": "9b20d0a7239fb9a19fba66dd68a6ba6f78f72552750c2a8051f6291f936573e5"
+        },
+        {
+          "kind": "segment",
+          "uri": "2.ts",
+          "status": 200,
+          "headers": {
+            "Content-Type": "video/mp2t",
+            "Content-Length": "492936",
+            "Cache-Control": "no-cache"
+          },
+          "bytes": 492936,
+          "sha256": "56b65fcb99b96fd7f480b1b1db1a111351346728a77b91106192d1662696af24"
+        },
+        {
+          "kind": "missing_segment",
+          "status": 404,
+          "body": {
+            "error": "Segment expired"
+          }
+        },
+        {
+          "kind": "invalid_capability",
+          "status": 410,
+          "body": {
+            "error": "Session expired"
+          }
+        },
+        {
+          "kind": "expired_capability",
+          "status": 410,
+          "body": {
+            "error": "Session expired"
+          }
+        }
+      ],
+      "cleanup": {
+        "observed": true,
+        "elapsed_seconds": 18.19868296400091,
+        "origin_after": {
+          "active": 0,
+          "maximum_active": 1,
+          "connections": 2,
+          "bytes": 7827568,
+          "disconnections": 2,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "fe0ba32eb0a98a65d765b67916d7c0f199c6519447756cc98105518787aed226",
+          "fixture_bytes": 450002064,
+          "bytes_per_second": 250000,
+          "duration_seconds": 1800,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {
+            "/live/0.ts": {
+              "active": 0,
+              "connections": 2,
+              "bytes": 7827568
+            }
+          },
+          "vod": {
+            "fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+            "fixture_bytes": 4299455,
+            "duration_seconds": 30,
+            "video": "h264",
+            "audio": "aac",
+            "etag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\"",
+            "requests": 0,
+            "head_requests": 0,
+            "bytes": 0
+          }
+        }
+      },
+      "token_sha256": "4bdb7c691286726a3e8cccf250da3ffa70af7fdda956ecd8babeb583efca471d",
+      "segments_captured": 2
+    },
+    "fmp4": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "video/mp4",
+        "Cache-Control": "no-cache"
+      },
+      "boxes": [
+        {
+          "type": "ftyp",
+          "size": 28,
+          "offset": 0
+        },
+        {
+          "type": "moov",
+          "size": 1218,
+          "offset": 28
+        },
+        {
+          "type": "moof",
+          "size": 960,
+          "offset": 1246
+        },
+        {
+          "type": "mdat",
+          "size": 284723,
+          "offset": 2206
+        },
+        {
+          "type": "moof",
+          "size": 756,
+          "offset": 286929
+        },
+        {
+          "type": "mdat",
+          "size": 303576,
+          "offset": 287685
+        },
+        {
+          "type": "moof",
+          "size": 756,
+          "offset": 591261
+        },
+        {
+          "type": "mdat",
+          "size": 285615,
+          "offset": 592017
+        },
+        {
+          "type": "moof",
+          "size": 752,
+          "offset": 877632
+        },
+        {
+          "type": "mdat",
+          "size": 302268,
+          "offset": 878384
+        },
+        {
+          "type": "moof",
+          "size": 756,
+          "offset": 1180652
+        },
+        {
+          "type": "mdat",
+          "size": 268339,
+          "offset": 1181408
+        },
+        {
+          "type": "moof",
+          "size": 756,
+          "offset": 1449747
+        },
+        {
+          "type": "mdat",
+          "size": 283037,
+          "offset": 1450503
+        },
+        {
+          "type": "moof",
+          "size": 756,
+          "offset": 1733540
+        }
+      ],
+      "captured_bytes": 1734296,
+      "discarded_incomplete_tail_bytes": 11532,
+      "cleanup": {
+        "observed": true,
+        "elapsed_seconds": 7.582680332001473,
+        "origin_after": {
+          "active": 0,
+          "maximum_active": 1,
+          "connections": 3,
+          "bytes": 13717984,
+          "disconnections": 3,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "fe0ba32eb0a98a65d765b67916d7c0f199c6519447756cc98105518787aed226",
+          "fixture_bytes": 450002064,
+          "bytes_per_second": 250000,
+          "duration_seconds": 1800,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {
+            "/live/0.ts": {
+              "active": 0,
+              "connections": 3,
+              "bytes": 13717984
+            }
+          },
+          "vod": {
+            "fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+            "fixture_bytes": 4299455,
+            "duration_seconds": 30,
+            "video": "h264",
+            "audio": "aac",
+            "etag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\"",
+            "requests": 0,
+            "head_requests": 0,
+            "bytes": 0
+          }
+        }
+      }
+    },
+    "vod-origin": {
+      "events": [
+        {
+          "kind": "head",
+          "status": 200,
+          "headers": {
+            "Content-Type": "video/mp4",
+            "Content-Length": "4299455",
+            "Accept-Ranges": "bytes",
+            "ETag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\""
+          }
+        },
+        {
+          "kind": "range",
+          "request_range": "bytes=7-1023",
+          "status": 206,
+          "headers": {
+            "Content-Type": "video/mp4",
+            "Content-Length": "1017",
+            "Content-Range": "bytes 7-1023/4299455",
+            "Accept-Ranges": "bytes",
+            "ETag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\""
+          },
+          "bytes": 1017
+        },
+        {
+          "kind": "range",
+          "request_range": "bytes=-300",
+          "status": 206,
+          "headers": {
+            "Content-Type": "video/mp4",
+            "Content-Length": "300",
+            "Content-Range": "bytes 4299155-4299454/4299455",
+            "Accept-Ranges": "bytes",
+            "ETag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\""
+          },
+          "bytes": 300
+        },
+        {
+          "kind": "range",
+          "request_range": "bytes=4299455-",
+          "status": 416,
+          "headers": {
+            "Content-Type": "video/mp4",
+            "Content-Length": "0",
+            "Content-Range": "bytes */4299455",
+            "Accept-Ranges": "bytes",
+            "ETag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\""
+          },
+          "bytes": 0
+        },
+        {
+          "kind": "range",
+          "request_range": "bytes=malformed",
+          "status": 200,
+          "headers": {
+            "Content-Type": "video/mp4",
+            "Content-Length": "4299455",
+            "Accept-Ranges": "bytes",
+            "ETag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\""
+          },
+          "bytes": 4299455
+        }
+      ],
+      "bytes": 4299455,
+      "sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c"
+    }
+  },
+  "hls_playlists": {
+    "playlist-initial.m3u8": "#EXTM3U\n# dispatcharr: waiting 1\n# dispatcharr: waiting 2\n# dispatcharr: waiting 3\n# dispatcharr: waiting 4\n# dispatcharr: waiting 5\n# dispatcharr: waiting 6\n# dispatcharr: waiting 7\n# dispatcharr: waiting 8\n# dispatcharr: waiting 9\n# dispatcharr: waiting 10\n# dispatcharr: waiting 11\n# dispatcharr: waiting 12\n# dispatcharr: waiting 13\n# dispatcharr: waiting 14\n# dispatcharr: waiting 15\n# dispatcharr: waiting 16\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:6\n#EXT-X-MEDIA-SEQUENCE:1\n#EXTINF:2.000,\n1.ts\n#EXTINF:2.000,\n2.ts\n",
+    "playlist-advanced.m3u8": "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:6\n#EXT-X-MEDIA-SEQUENCE:1\n#EXT-X-START:TIME-OFFSET=-5.000,PRECISE=YES\n#EXTINF:2.000,\n1.ts\n#EXTINF:2.000,\n2.ts\n#EXTINF:2.000,\n3.ts\n"
+  },
+  "decoder_assertions": [
+    {
+      "backend": "baseline",
+      "probe": "hls",
+      "exit_code": 0,
+      "directory": "baseline-hls",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 317,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 5,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 377,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "protocol_scope": "backend live hls",
+      "decoder_exit_code": 0,
+      "decoder_frames": 74,
+      "video_and_audio_verified": true
+    },
+    {
+      "backend": "baseline",
+      "probe": "fmp4",
+      "exit_code": 0,
+      "directory": "baseline-fmp4",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 377,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 8,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 499,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "protocol_scope": "backend live fmp4",
+      "decoder_exit_code": 0,
+      "decoder_frames": 74,
+      "video_and_audio_verified": true
+    },
+    {
+      "backend": "baseline",
+      "probe": "vod-origin",
+      "exit_code": 0,
+      "directory": "baseline-vod-origin",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 499,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 8,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 624,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "protocol_scope": "origin fixture only; no VOD backend route exercised",
+      "decoder_exit_code": 0,
+      "decoder_frames": 75,
+      "video_and_audio_verified": true
+    }
+  ]
+}

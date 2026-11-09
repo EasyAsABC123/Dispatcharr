@@ -1,0 +1,301 @@
+{
+  "scope": "HLS-component-verification",
+  "application_performance_verified": false,
+  "milestone_completed": false,
+  "rust_tests_passed": 13,
+  "unchanged_upstream_tests_passed": 40,
+  "parity": {
+    "scope": "HLS-segmenter-component-parity",
+    "passed": true,
+    "application_performance_verified": false,
+    "reference_sha256": "593a6faadbfbb1c638a5338c8bdf640478cceb8657e081940af2cc6d9a89a19c",
+    "unchanged_tests_sha256": "bc511ce6085d9ddf0851e89486547ef9b30388f91a34a767778a28119d7260f6",
+    "seed": 20261109,
+    "unchanged_upstream_tests": 40,
+    "generated_sequences": 12,
+    "generated_parser_packets": 1000,
+    "real_fixtures": [
+      {
+        "name": "input.ts",
+        "sha256": "2f38ba7dd6f51c9030fd336e9262e13e4c08742bf4fdaa2335e3dfb4bf734826",
+        "segments": 6
+      },
+      {
+        "name": "input.ts",
+        "sha256": "212da74095653d39d016b191b6ce7cbd9ed38fae568a26438e5303d6bf650914",
+        "segments": 6
+      },
+      {
+        "name": "input.ts",
+        "sha256": "92c2204b582ff2baaf74f9b3584aef182d2f19c956abd42c8930b19d8490db8e",
+        "segments": 6
+      },
+      {
+        "name": "input.ts",
+        "sha256": "c0ba5b3a87f723e07b78fb3f8207d733482f3bc94478dbd7a7169cfb02129ee3",
+        "segments": 4
+      }
+    ],
+    "rpc_comparisons": 2145
+  },
+  "decoder": {
+    "scope": "TS-HLS-segmenter-decoder-component",
+    "passed": true,
+    "application_performance_verified": false,
+    "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "codecs": [
+      {
+        "codec": "mpeg2",
+        "fixture_sha256": "2f38ba7dd6f51c9030fd336e9262e13e4c08742bf4fdaa2335e3dfb4bf734826",
+        "segments": [
+          {
+            "bytes": 492560,
+            "discontinuity": false,
+            "duration": 2.0,
+            "filename": "1.ts",
+            "seq": 1,
+            "sha256": "f5cf227eafa12ab9183f875ceb034d754f65306fe2fb9f402eb9c0285e2d2bfd",
+            "decoded_frames": "50",
+            "out_time_us": 2000000
+          },
+          {
+            "bytes": 492936,
+            "discontinuity": false,
+            "duration": 2.0000000000000004,
+            "filename": "2.ts",
+            "seq": 2,
+            "sha256": "fefb6bddac7e138cd41de7c8d8cf34cd453ae3b40525b123be3247b498ad9d5a",
+            "decoded_frames": "50",
+            "out_time_us": 2160000
+          },
+          {
+            "bytes": 492184,
+            "discontinuity": false,
+            "duration": 2.0,
+            "filename": "3.ts",
+            "seq": 3,
+            "sha256": "2b9f12da1ad783eefa19da76504b514026612c1b84656f3dfba061a4dcb2448c",
+            "decoded_frames": "50",
+            "out_time_us": 2160000
+          },
+          {
+            "bytes": 492936,
+            "discontinuity": false,
+            "duration": 1.9999999999999991,
+            "filename": "4.ts",
+            "seq": 4,
+            "sha256": "4c104ed1d1479786f433cd85c7431d5597997091c6ac6ad4dd62e60a587004fd",
+            "decoded_frames": "50",
+            "out_time_us": 2120000
+          },
+          {
+            "bytes": 984932,
+            "discontinuity": false,
+            "duration": 4.0,
+            "filename": "5.ts",
+            "seq": 5,
+            "sha256": "89f0e02620214880100ab14fa95381c0e7e68a34e626e71bc3cb2caaac46532b",
+            "decoded_frames": "100",
+            "out_time_us": 4120000
+          },
+          {
+            "bytes": 983804,
+            "discontinuity": false,
+            "duration": 3.959999999999999,
+            "filename": "6.ts",
+            "seq": 6,
+            "sha256": "5dd68f6998b3116bdbf0d36267d8793fc6a7b9e3905da76304b33d5e8888d4f6",
+            "decoded_frames": "100",
+            "out_time_us": 4080000
+          }
+        ],
+        "independently_decoded_segments": 6
+      },
+      {
+        "codec": "h264",
+        "fixture_sha256": "212da74095653d39d016b191b6ce7cbd9ed38fae568a26438e5303d6bf650914",
+        "segments": [
+          {
+            "bytes": 492748,
+            "discontinuity": false,
+            "duration": 1.9999999999999998,
+            "filename": "1.ts",
+            "seq": 1,
+            "sha256": "9e1cfd8e118deaa1ff78cd44b7053f5fa8132bf1d6e1ee8db02746ec57b4fc81",
+            "decoded_frames": "50",
+            "out_time_us": 2040000
+          },
+          {
+            "bytes": 492560,
+            "discontinuity": false,
+            "duration": 2.0,
+            "filename": "2.ts",
+            "seq": 2,
+            "sha256": "9fe0245b063df4317cf2fdba2895af2e0f7716f2cfc3deafb6b9a84d555e744b",
+            "decoded_frames": "50",
+            "out_time_us": 2200000
+          },
+          {
+            "bytes": 492936,
+            "discontinuity": false,
+            "duration": 2.0,
+            "filename": "3.ts",
+            "seq": 3,
+            "sha256": "563ebef0ab122ed83d27f06dea5223e4baa39fb47f1aff9965d3362f9c620978",
+            "decoded_frames": "50",
+            "out_time_us": 2080000
+          },
+          {
+            "bytes": 492372,
+            "discontinuity": false,
+            "duration": 2.0,
+            "filename": "4.ts",
+            "seq": 4,
+            "sha256": "61dde17d32553db6bec1be83b6300b57167c3fba73ee6c47e3d00d7b51be7d94",
+            "decoded_frames": "50",
+            "out_time_us": 2200000
+          },
+          {
+            "bytes": 985308,
+            "discontinuity": false,
+            "duration": 4.0,
+            "filename": "5.ts",
+            "seq": 5,
+            "sha256": "1c2bc1e47d46c55411e121485966ef4533d23e2f3dd25b85511c59f5f99062fa",
+            "decoded_frames": "100",
+            "out_time_us": 4120000
+          },
+          {
+            "bytes": 978164,
+            "discontinuity": false,
+            "duration": 3.960000000000001,
+            "filename": "6.ts",
+            "seq": 6,
+            "sha256": "829a18cd24fb76e56eec93ba1e2117c10fec9078c5bc8f3bae88bbd5e36f36a9",
+            "decoded_frames": "100",
+            "out_time_us": 4120000
+          }
+        ],
+        "independently_decoded_segments": 6
+      },
+      {
+        "codec": "hevc",
+        "fixture_sha256": "92c2204b582ff2baaf74f9b3584aef182d2f19c956abd42c8930b19d8490db8e",
+        "segments": [
+          {
+            "bytes": 492748,
+            "discontinuity": false,
+            "duration": 1.9999999999999998,
+            "filename": "1.ts",
+            "seq": 1,
+            "sha256": "664ab26eb8b9fe346dd4fcec9ecd9e36801f44f1088e93ffb53df8b3b034df40",
+            "decoded_frames": "50",
+            "out_time_us": 2040000
+          },
+          {
+            "bytes": 492560,
+            "discontinuity": false,
+            "duration": 2.0,
+            "filename": "2.ts",
+            "seq": 2,
+            "sha256": "d063dc7d49399733f1030a6f2d7520a7552005f48f6688ae0777a2bb4909d788",
+            "decoded_frames": "50",
+            "out_time_us": 2200000
+          },
+          {
+            "bytes": 492936,
+            "discontinuity": false,
+            "duration": 2.0,
+            "filename": "3.ts",
+            "seq": 3,
+            "sha256": "316814ce737aa6c622d2473a2e09f9baf94db5633d002d48f000db9ac8b11af8",
+            "decoded_frames": "50",
+            "out_time_us": 2080000
+          },
+          {
+            "bytes": 492372,
+            "discontinuity": false,
+            "duration": 2.0,
+            "filename": "4.ts",
+            "seq": 4,
+            "sha256": "0658d5c16f451e19c8fada810451fff5f5db5726daa7f2502034c72e66d934fe",
+            "decoded_frames": "50",
+            "out_time_us": 2200000
+          },
+          {
+            "bytes": 984932,
+            "discontinuity": false,
+            "duration": 4.0,
+            "filename": "5.ts",
+            "seq": 5,
+            "sha256": "15f1b9461310986d181243826f3d847f045b0b3f292e6893da4d9c5caa77d7df",
+            "decoded_frames": "100",
+            "out_time_us": 4120000
+          },
+          {
+            "bytes": 978164,
+            "discontinuity": false,
+            "duration": 3.960000000000001,
+            "filename": "6.ts",
+            "seq": 6,
+            "sha256": "f3ea00c976778b8bd983c5e6a966f743f96ced431a8f9a086f9c5535c3d9bf35",
+            "decoded_frames": "100",
+            "out_time_us": 4120000
+          }
+        ],
+        "independently_decoded_segments": 6
+      },
+      {
+        "codec": "aac",
+        "fixture_sha256": "c0ba5b3a87f723e07b78fb3f8207d733482f3bc94478dbd7a7169cfb02129ee3",
+        "segments": [
+          {
+            "bytes": 55272,
+            "discontinuity": false,
+            "duration": 4.16,
+            "filename": "1.ts",
+            "seq": 1,
+            "sha256": "1a866557edb1dae52fa79fbd3905b0f9bde7fdf8afc7d086c1bdc4d6025822ef",
+            "decoded_frames": null,
+            "out_time_us": 4160000
+          },
+          {
+            "bytes": 55648,
+            "discontinuity": false,
+            "duration": 4.224000000000001,
+            "filename": "2.ts",
+            "seq": 2,
+            "sha256": "c702fd46691ec900c3a944d2329637229ea8dff071267f0f1516411321c2b90b",
+            "decoded_frames": null,
+            "out_time_us": 4224000
+          },
+          {
+            "bytes": 55648,
+            "discontinuity": false,
+            "duration": 4.223999999999998,
+            "filename": "3.ts",
+            "seq": 3,
+            "sha256": "ff2e56b39fcf7df63c9e00e983177397845af06dc89deb5a226206150b02522e",
+            "decoded_frames": null,
+            "out_time_us": 4224000
+          },
+          {
+            "bytes": 44932,
+            "discontinuity": false,
+            "duration": 3.285333333333334,
+            "filename": "4.ts",
+            "seq": 4,
+            "sha256": "cf9a3b6200424bb9b211e4d995ae82652838e323fdd03ed4f1ad15a93b60690d",
+            "decoded_frames": null,
+            "out_time_us": 3413333
+          }
+        ],
+        "independently_decoded_segments": 4
+      }
+    ]
+  },
+  "raw_artifacts": {
+    "artifacts/rust/m3-hls-real-parity.json": "f57e77152593cdda68dbd1263728a6451735c92d75412f696342f564c5ce6221",
+    "artifacts/rust/m3-hls-decode-1/evidence.json": "92de6e2a59e7f1a8e421e069218156d7967160532cb3cdb810f6eaa25ce7e48c"
+  }
+}

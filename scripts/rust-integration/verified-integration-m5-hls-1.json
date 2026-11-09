@@ -1,0 +1,570 @@
+{
+  "attribution": "Dispatcharr original authors and contributors retain full credit. See ../../ATTRIBUTION.md.",
+  "scope": "real-database-accounts-native-ts-probe",
+  "passed": true,
+  "checks_passed": 135,
+  "checks_total": 135,
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "candidate_image": "dispatcharr-rust-candidate:m5-hls-1",
+  "candidate_image_binding": {
+    "image_id": "sha256:3bf5ef5ec80c2ef093b5e2f01d73273815ce0e81ec98eac51e87218d5f8f6c27",
+    "source_tree_sha256": "b323d541a3060a2775766b59b4cab2b2af23157d6a206f347384e60564f0a505",
+    "manifest_verified": true
+  },
+  "raw_report_sha256": "6c7521215ccbbb54a440d573e455ac8b3bf62865d35efc8f83cd12b86c712c41",
+  "build_manifest_sha256": "c19393172290fc4083b2daaa780ea8f481a8d6d4e0099db92868babf7dea0773",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "candidate_overlay_sha256": "2bb0698b152ca15bd1c06cda12e7ce982feca1601afb8fdf5709455f3f0347c4",
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "application_performance_verified": false,
+  "check_results": [
+    {
+      "name": "status-parity:/proxy/ts/status",
+      "passed": true
+    },
+    {
+      "name": "status-parity:/proxy/ts/stream/not-a-channel",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/users/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/users/me/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/groups/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/permissions/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:admin:/api/accounts/api-keys/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/users/me/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/api-keys/",
+      "passed": true
+    },
+    {
+      "name": "account-body-parity:viewer:/api/accounts/users/",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:admin",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:viewer",
+      "passed": true
+    },
+    {
+      "name": "django-token-role:inactive",
+      "passed": true
+    },
+    {
+      "name": "django-password-auth",
+      "passed": true
+    },
+    {
+      "name": "rust-tokens-accepted-by-django",
+      "passed": true
+    },
+    {
+      "name": "django-refresh-accepted-by-rust",
+      "passed": true
+    },
+    {
+      "name": "rust-real-media-decoder",
+      "passed": true
+    },
+    {
+      "name": "invalid-presented-token-rejected",
+      "passed": true
+    },
+    {
+      "name": "accounts:firstname-only-preserves-null",
+      "passed": true
+    },
+    {
+      "name": "accounts:omitted-custom-properties-preserved",
+      "passed": true
+    },
+    {
+      "name": "accounts:owner-patch-body",
+      "passed": true
+    },
+    {
+      "name": "accounts:owner-privilege-protection-and-null-delete",
+      "passed": true
+    },
+    {
+      "name": "accounts:null-properties-merge",
+      "passed": true
+    },
+    {
+      "name": "accounts:invalid-nav",
+      "passed": true
+    },
+    {
+      "name": "accounts:invalid-properties-type",
+      "passed": true
+    },
+    {
+      "name": "accounts:invalid-email",
+      "passed": true
+    },
+    {
+      "name": "accounts:oversized-name",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generation-shape:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-cross-auth:python:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-cross-auth:python:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:revoked-key-rejected:python:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:revoked-key-rejected:python:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generation-shape:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-cross-auth:rust:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-cross-auth:rust:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:revoked-key-rejected:rust:python",
+      "passed": true
+    },
+    {
+      "name": "accounts:revoked-key-rejected:rust:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generation-response-parity",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generate-other-user",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generate-explicit-self",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generate-malformed-user-id",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-generate-anonymous",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke-other-user",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke-explicit-self",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke-malformed-user-id",
+      "passed": true
+    },
+    {
+      "name": "accounts:key-revoke-anonymous",
+      "passed": true
+    },
+    {
+      "name": "accounts:denied-key-actions-preserve-other-user",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-shape:python",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-dependent-fixture:python",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-shape:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-dependent-fixture:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:rust-password-accepted:python",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:rust-password-accepted:rust",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:old-password-rejected",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:bad-credentials-property",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:bad-profile-allowlist",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:bad-profile-type",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:create",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:delete-missing",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:duplicate-username",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:missing-profile",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:missing-put-username",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:patch",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:put",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:read",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:read-deleted",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:relink-before-delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:viewer-denied-delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user:viewer-denied-update",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:bad-permission-type",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:create",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:delete-missing",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:duplicate-name",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:missing-permission",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:missing-put-permissions",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:patch",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:put",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:read",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:read-deleted",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:viewer-denied-delete",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group:viewer-denied-update",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-create-denied:viewer",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:user-create-denied:anonymous",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group-create-denied:viewer",
+      "passed": true
+    },
+    {
+      "name": "accounts-crud:group-create-denied:anonymous",
+      "passed": true
+    },
+    {
+      "name": "app-data:fill-total-quota:python",
+      "passed": true
+    },
+    {
+      "name": "app-data:fill-app-count:python",
+      "passed": true
+    },
+    {
+      "name": "app-data:concurrent-quota:python",
+      "passed": true
+    },
+    {
+      "name": "app-data:fill-total-quota:rust",
+      "passed": true
+    },
+    {
+      "name": "app-data:fill-app-count:rust",
+      "passed": true
+    },
+    {
+      "name": "app-data:concurrent-quota:rust",
+      "passed": true
+    },
+    {
+      "name": "app-data:admin-other-owner-read",
+      "passed": true
+    },
+    {
+      "name": "app-data:after-delete-missing",
+      "passed": true
+    },
+    {
+      "name": "app-data:anonymous-denied",
+      "passed": true
+    },
+    {
+      "name": "app-data:app-count-summary",
+      "passed": true
+    },
+    {
+      "name": "app-data:clear-before-app-count",
+      "passed": true
+    },
+    {
+      "name": "app-data:clear-before-total-quota",
+      "passed": true
+    },
+    {
+      "name": "app-data:compact-byte-summary",
+      "passed": true
+    },
+    {
+      "name": "app-data:delete-before-app-insert",
+      "passed": true
+    },
+    {
+      "name": "app-data:delete-key",
+      "passed": true
+    },
+    {
+      "name": "app-data:delete-key-idempotent",
+      "passed": true
+    },
+    {
+      "name": "app-data:final-clear",
+      "passed": true
+    },
+    {
+      "name": "app-data:final-empty-list",
+      "passed": true
+    },
+    {
+      "name": "app-data:get-valid-json",
+      "passed": true
+    },
+    {
+      "name": "app-data:initial-empty-list",
+      "passed": true
+    },
+    {
+      "name": "app-data:insert-after-app-delete",
+      "passed": true
+    },
+    {
+      "name": "app-data:insert-after-reducing-total",
+      "passed": true
+    },
+    {
+      "name": "app-data:invalid-key",
+      "passed": true
+    },
+    {
+      "name": "app-data:missing-key",
+      "passed": true
+    },
+    {
+      "name": "app-data:numeric-idempotent-get",
+      "passed": true
+    },
+    {
+      "name": "app-data:numeric-idempotent-size",
+      "passed": true
+    },
+    {
+      "name": "app-data:other-owner-denied",
+      "passed": true
+    },
+    {
+      "name": "app-data:owner-numeric-alias",
+      "passed": true
+    },
+    {
+      "name": "app-data:post-contention-clear",
+      "passed": true
+    },
+    {
+      "name": "app-data:post-contention-empty",
+      "passed": true
+    },
+    {
+      "name": "app-data:put-bool",
+      "passed": true
+    },
+    {
+      "name": "app-data:put-equal-number",
+      "passed": true
+    },
+    {
+      "name": "app-data:put-valid-json",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-app-count",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-array",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-body-size",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-depth",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-nul-key",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-nul-value",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-total-quota",
+      "passed": true
+    },
+    {
+      "name": "app-data:reject-value-size",
+      "passed": true
+    },
+    {
+      "name": "app-data:replace-at-app-count",
+      "passed": true
+    },
+    {
+      "name": "app-data:replace-at-total-quota",
+      "passed": true
+    },
+    {
+      "name": "app-data:total-quota-summary",
+      "passed": true
+    },
+    {
+      "name": "app-data:unknown-target-admin",
+      "passed": true
+    },
+    {
+      "name": "app-data:unknown-target-nonadmin",
+      "passed": true
+    }
+  ],
+  "remaining_gates": [
+    "Full backend parity remains incomplete: settings/channel/provider management, background jobs, recording/EPG, environment/setup and external integrations.",
+    "Account edge cases remain: password hash upgrades/other algorithms, proxy sign-in/setup, uncommon Django parsers/validators, global Redis auth throttles and audit/inbox side effects.",
+    "Native HLS protocol probe is separate evidence; this report establishes native MPEG-TS decode and account contracts.",
+    "Distributed media/fMP4/output-profile transformations require separately bound image verification.",
+    "Performance gains require new repeated equivalent-work Docker Compose trials; no CPU or memory savings are established by this functional report."
+  ]
+}

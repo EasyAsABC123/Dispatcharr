@@ -1,0 +1,156 @@
+{
+  "scope": "immutable-python-browser-live-protocols-and-vod-origin-fixture",
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "exit_code": 0,
+  "cleanup": "isolated project removed",
+  "application_performance_verified": false,
+  "milestones_completed": [],
+  "fixture": {
+    "active": 0,
+    "maximum_active": 0,
+    "connections": 0,
+    "bytes": 0,
+    "disconnections": 0,
+    "eof_connections": 0,
+    "fault_requests": 0,
+    "fixture_sha256": "fe0ba32eb0a98a65d765b67916d7c0f199c6519447756cc98105518787aed226",
+    "fixture_bytes": 450002064,
+    "bytes_per_second": 250000,
+    "duration_seconds": 1800,
+    "codec": "h264",
+    "video": "h264 320x180 25fps",
+    "audio": "aac 48kHz",
+    "paths": {},
+    "vod": {
+      "fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+      "fixture_bytes": 4299455,
+      "duration_seconds": 30,
+      "video": "h264",
+      "audio": "aac",
+      "etag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\"",
+      "requests": 0,
+      "head_requests": 0,
+      "bytes": 0
+    }
+  },
+  "probes": [
+    {
+      "backend": "baseline",
+      "probe": "hls",
+      "exit_code": 0,
+      "directory": "baseline-hls",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 317,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 5,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 377,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "protocol_scope": "backend live hls",
+      "decoder_exit_code": 0,
+      "decoder_frames": 74,
+      "video_and_audio_verified": true
+    },
+    {
+      "backend": "baseline",
+      "probe": "fmp4",
+      "exit_code": 0,
+      "directory": "baseline-fmp4",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 377,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 8,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 499,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "protocol_scope": "backend live fmp4",
+      "decoder_exit_code": 0,
+      "decoder_frames": 74,
+      "video_and_audio_verified": true
+    },
+    {
+      "backend": "baseline",
+      "probe": "vod-origin",
+      "exit_code": 0,
+      "directory": "baseline-vod-origin",
+      "passed": true,
+      "reset": {
+        "mode": "isolated-web-and-redis-between-functional-cases",
+        "web_stop": {
+          "running": false,
+          "pid": 499,
+          "exit_code": 0,
+          "ok": true
+        },
+        "redis_keys_before": 8,
+        "redis_clear_result": "OK",
+        "web_start": {
+          "running": true,
+          "pid": 624,
+          "exit_code": null,
+          "ok": true
+        }
+      },
+      "protocol_scope": "origin fixture only; no VOD backend route exercised",
+      "decoder_exit_code": 0,
+      "decoder_frames": 75,
+      "video_and_audio_verified": true
+    }
+  ],
+  "tool_tests_passed_current": 19,
+  "artifact_directory": "artifacts/rust/baseline-browser-protocols",
+  "artifact_sha256": {
+    "baseline-fmp4/capture.mp4": "7e60fab57b2227e31b36dc4e1f11cfe17c1ce68be678721af9841ca89387e10e",
+    "baseline-fmp4/command.log": "d3bac5dc4747bec012b398e4763c90c9e9bc5ff819e3cc1733acffcacdac4ddd",
+    "baseline-fmp4/decode.log": "5ac54fd19e9af757672d43e41da68def1d9dc15978a17f9b693d4ceb07124dc6",
+    "baseline-fmp4/protocol.json": "0e4708f19f637123b6b210d48d1a719b74215a608da1ccacd486f0484da9d202",
+    "baseline-hls/capture.ts": "6bb7df94dea53294a65b67e113f121cc17ecc1e609a9d4bb87ec2a08106048ae",
+    "baseline-hls/command.log": "d3bac5dc4747bec012b398e4763c90c9e9bc5ff819e3cc1733acffcacdac4ddd",
+    "baseline-hls/decode.log": "680b72d78e7a5b41178ea849984026edbbedaba2512e2f2fb306f28ae7ce73da",
+    "baseline-hls/playlist-advanced.m3u8": "c4abf345d35a1e946f220985e10d1120dc93f9a20addc752df5d589b9cdffd4c",
+    "baseline-hls/playlist-initial.m3u8": "62efcd2ba467a21314e23af1de5b812f13b208f7cd1682df03a84d99ae4bb2aa",
+    "baseline-hls/protocol.json": "5103e53d14f0ef82239ed6c9d0f09d1b125491d9cdaa1f38d2ecdaeef867cb4f",
+    "baseline-vod-origin/capture.mp4": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "baseline-vod-origin/command.log": "d3bac5dc4747bec012b398e4763c90c9e9bc5ff819e3cc1733acffcacdac4ddd",
+    "baseline-vod-origin/decode.log": "bad92e24b9ea0f515b13f2598ad5f7fb67d220c1d893f03ddb3e2343092a7180",
+    "baseline-vod-origin/protocol.json": "a326bf44e39e50e90e8905bc862b2af8b46ab6e84b25ba849a1978be47cb4e4a",
+    "compose.log": "7b621457983c41eac87d73eebc9d49f11f0905ae1e65270c290ba8573488e6bc",
+    "decode.log": "b8549c32bab31690940645f7e6abb96ca631a4e138fe2a07b8bf7e1925c1d792",
+    "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+    "fixture.json": "64621483f3ac74ad8fca84c8b3e36b26e3efcf1e5c29def7cd266fc422d23728",
+    "functional-urls.txt": "2dac53b5f56339dd8b6462a99f0c219c9bb9a613cad2d3fe57d1ece556d211c3",
+    "ready.json": "6dc2f628a13d2ce47f123ed3d5ec795449ff70ee2e73dcd2881a3bc78735baaf",
+    "run.json": "f12b3109d28f52750a39dbfeae42d73e579b5ef4dcfa14f99a3fe4b4e7238437",
+    "seed.json": "b81216b966bdfa0be270b6aba85a731082cbe4cb807a6afbcbdab113a4afff54"
+  },
+  "limitations": [
+    "Only Python backend live HLS/fMP4; no Rust candidate tested in this run",
+    "VOD test exercises seekable fixture origin, not the application VOD route",
+    "Explicit fresh web and isolated Redis reset between cases",
+    "Protocol helper HTTP/box checks and enclosing runner pinned FFmpeg video/audio checks are distinct evidence",
+    "Capability token is normalized/hashed; Date header omitted; observed sequence numbers retained"
+  ]
+}

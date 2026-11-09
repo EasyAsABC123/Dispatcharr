@@ -11,14 +11,14 @@ import perf
 TOP = {'format_version', 'scope', 'frozen', 'aggregation', 'baseline_revision',
        'candidate_revision', 'hardware_id', 'docker_version', 'minimum_repetitions',
        'baseline_services', 'candidate_services', 'scenarios'}
-FIELDS = {'id', 'scenario', 'viewers', 'distinct_channels', 'fixture_id', 'warmup_seconds',
+FIELDS = {'id', 'scenario', 'viewers', 'distinct_channels', 'fixture_id', 'warmup_seconds', 'warmup_ramp_seconds',
           'measurement_seconds', 'timeout_seconds', 'slow_delay_seconds', 'sample_interval_seconds',
           'maximum_errors', 'minimum_bytes_per_second', 'maximum_first_byte_p95_ms',
           'minimum_first_byte_samples', 'maximum_candidate_to_baseline_cpu_ratio',
           'maximum_candidate_to_baseline_memory_ratio',
           'minimum_candidate_to_baseline_throughput_ratio'}
 WORKLOAD = {'scenario': 'scenario', 'viewers': 'viewers', 'distinct_channels': 'url_count',
-            'fixture_id': 'fixture_id', 'warmup_seconds': 'warmup',
+            'fixture_id': 'fixture_id', 'warmup_seconds': 'warmup', 'warmup_ramp_seconds': 'warmup_ramp',
             'measurement_seconds': 'duration', 'timeout_seconds': 'timeout',
             'slow_delay_seconds': 'slow_delay', 'sample_interval_seconds': 'sample_interval'}
 
@@ -67,8 +67,9 @@ def validate(budget):
             number(scenario[field], 1, field, integer=True)
         require(scenario['distinct_channels'] == (1 if scenario['scenario'] == 'same-channel'
                                                  else scenario['viewers']), 'Invalid channel count')
-        for field in ('warmup_seconds', 'slow_delay_seconds'):
+        for field in ('warmup_seconds', 'warmup_ramp_seconds', 'slow_delay_seconds'):
             number(scenario[field], 0, field)
+        require(scenario['warmup_ramp_seconds'] == 0 or scenario['warmup_ramp_seconds'] < scenario['warmup_seconds'], 'Warmup ramp must be shorter than warmup')
         number(scenario['measurement_seconds'], 10, 'measurement_seconds')
         for field in ('timeout_seconds', 'sample_interval_seconds', 'minimum_bytes_per_second',
                       'maximum_first_byte_p95_ms', 'maximum_candidate_to_baseline_cpu_ratio',

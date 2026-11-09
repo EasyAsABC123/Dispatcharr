@@ -1,0 +1,97 @@
+{
+  "scope": "immutable-python-baseline-burst-load-and-reopen-failures",
+  "performance_gain_verified": false,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "measurement_quality": "load-smoke-concurrent-development-not-performance-acceptance",
+  "failure": "After successful single-viewer playback and observed upstream cleanup,100newviewers received no response/data before the10second measured deadline; no new upstream connection opened.",
+  "baseline_modified": false,
+  "recovery_reset_is_not_a_fix": true,
+  "summary": {
+    "bytes": 0,
+    "requests": 0,
+    "errors": 0,
+    "empty_responses": 0,
+    "elapsed_seconds": 10.015595537995978,
+    "bytes_per_second": 0.0,
+    "first_byte_ms_median": null,
+    "first_byte_ms_p95": null,
+    "first_byte_samples": 0,
+    "viewers_without_data": 100,
+    "cpu_percent_mean": 0.6433333333333333,
+    "memory_bytes_peak": 763468185.6
+  },
+  "cleanup": "isolated project removed",
+  "log_observation": "Stream thread did not terminate within2seconds after last-client disconnect; exact root cause is not established.",
+  "artifact_directory": "artifacts/rust/baseline-matrix-smoke",
+  "artifacts_sha256": {
+    "compose.log": "938d5f775ed1bc4ea607879592d73ab7352888b7a27140ee6e66b6b147a92f1b",
+    "decode.log": "50b48acd41b61f1d83f083e18dbe3592e181db7fe27273d29083d1a7ab462d91",
+    "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+    "fixture.json": "6542f6e2d62639e6b34e150f8664c74f0f25a03334cd19d23cf18b8f0c40c6b0",
+    "ready.json": "6dc2f628a13d2ce47f123ed3d5ec795449ff70ee2e73dcd2881a3bc78735baaf",
+    "run.json": "13bd535fa8e68ce342ddb6c7c09534dfd8b88f71324d0e81a37004448fb02f5e",
+    "same-channel-urls.txt": "13e1c8a8c0412b1c9cbfb8cbf5d7a0c1082821a0ce562ea583b399ee8a419146",
+    "same-channel-viewers-1-trial-1.json": "051168b6e036752c7430bacd02e60769d1243e5831b4661960592c0d36e39653",
+    "same-channel-viewers-1-trial-1.json.log": "d9e668c2bd5d17832ca19b9f8b88cde2d32f13a0bd7877ac18316ff2e9f15742",
+    "same-channel-viewers-100-trial-1.json": "72af3cdd04924a3d24f247e5a8e11d6776d5f1ec068fbd73c9557432297d5dd1",
+    "same-channel-viewers-100-trial-1.json.log": "0bcca9c3836f4953bea55618a72dc0541966582656e22e27082b6ca64f034c16",
+    "seed.json": "f55f5add8132671562a7a656a65c4c304171976a6ee349728e592a84288f35a6"
+  },
+  "next_steps": [
+    "Reproduce cold reopen with one client and no concurrent host load",
+    "Inspect last-client stop lifecycle and Redis ownership state",
+    "Require Rust candidate cold-reopen and cleanup contracts to pass",
+    "Only compare successful equal-work independent trials; never treat zero-byte baseline as a performance gain"
+  ],
+  "fresh_web_repeat": {
+    "description": "Same100viewerzero-datafailure after explicit controlledwebrestart and isolatedRedisflush; therefore rootcauseisnotestablished asreopenonly.",
+    "summary": {
+      "bytes": 0,
+      "requests": 0,
+      "errors": 0,
+      "empty_responses": 0,
+      "elapsed_seconds": 10.01697912200325,
+      "bytes_per_second": 0.0,
+      "first_byte_ms_median": null,
+      "first_byte_ms_p95": null,
+      "first_byte_samples": 0,
+      "viewers_without_data": 100,
+      "cpu_percent_mean": 0.38666666666666666,
+      "memory_bytes_peak": 774373376.0
+    },
+    "reset": {
+      "mode": "fresh-web-and-isolated-redis-per-trial",
+      "reason": "Independent trial characterization; cold-reopen failure tracked separately",
+      "web_stop": {
+        "running": false,
+        "pid": 189,
+        "exit_code": 0,
+        "ok": true
+      },
+      "redis_keys_before": 27,
+      "redis_clear_result": "OK",
+      "redis_keys_after": 0,
+      "web_start": {
+        "running": true,
+        "pid": 312,
+        "exit_code": null,
+        "ok": true
+      }
+    },
+    "artifact_directory": "artifacts/rust/baseline-matrix-fresh-smoke",
+    "artifacts_sha256": {
+      "compose.log": "fbe691216ec776265eb494f072c80b0484bb17634f5413cd6d53554a381c64ef",
+      "decode.log": "25b581e2a8ff28eabd4095de45b5d1c9a751bdfd3b259e5ac6438da902175193",
+      "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+      "fixture.json": "6542f6e2d62639e6b34e150f8664c74f0f25a03334cd19d23cf18b8f0c40c6b0",
+      "ready.json": "6dc2f628a13d2ce47f123ed3d5ec795449ff70ee2e73dcd2881a3bc78735baaf",
+      "run.json": "93bcdf67f311dc54a8dcee4be13263825ef981e530627a6720df2c8074d71c65",
+      "same-channel-urls.txt": "4aa7d82d0a662f00e8fdb2cc16f1311383757fb69d824bdd0304bdac8e2335d5",
+      "same-channel-viewers-100-trial-1.json": "67acb87d9c16280b7f77716de80d893d995bda555c30d9dfb84f9745f3bd63f8",
+      "same-channel-viewers-100-trial-1.json.log": "b477ecfa050ee564f9d3ad6a381575accbb2408a8452cc4910b2e88afb9d4673",
+      "seed.json": "f55f5add8132671562a7a656a65c4c304171976a6ee349728e592a84288f35a6"
+    },
+    "cleanup": "isolated project removed"
+  }
+}
