@@ -1,0 +1,46 @@
+{
+  "format_version": 1,
+  "scope": "Frozen IMAGE18 actual originalDaphne/nativegatewayWebSocket VOD playback transition/fullstats delivery",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m7-vod-playback-ws-image18-2/vod-contracts.json",
+  "evidence_sha256": "6ac2f9ec7b0a7341d97a56ee8c78426687b62e8de763f7145dd131f92f87496c",
+  "candidate_provenance": {
+    "image_id": "sha256:af8352ff444b847d6edaed51c340578c0650f02f9b4881ff611b7fba4af9c44b",
+    "source_tree_sha256": "0598101581932ac6a95c8a7f33e4ef2dc7ea804197f1dfc5942a45045166d502",
+    "build_manifest_sha256": "f97a6d34ac31edda03aa91773d151a7a398b95f770665ccc20b280551a46e5c3"
+  },
+  "comparison": {
+    "captured_packaged_vod_events_match": true,
+    "differences": [],
+    "normalizations": [
+      "Own timestamps/elapsed/consumed progress validated; stable complete DTOs compared",
+      "Original stopping snapshot races metadata removal; empty/nonempty final snapshots permitted"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "http_cases_each": 3,
+  "actual_ws_messages_each": 8,
+  "fixture_bytes_per_second": 262144,
+  "reconnect_active_hold_seconds": 1.2,
+  "source_bound_candidate_image": true,
+  "actual_native_websocket_transport_verified": true,
+  "source_derived_host_body_and_snapshot_gates": "scripts/rust-output-contracts/verified-vod-producer-host.json",
+  "full_M4_regression": "scripts/rust-timeshift-contracts/verified-image18-regression.json",
+  "preserved_setup_and_scope_failures": [
+    "artifacts/rust/m7-vod-playback-ws-source-1: DockerTCPforwardaccepted beforeSourceDaphneready; changedtoapplicationHTTPreadiness",
+    "artifacts/rust/m7-vod-playback-ws-source-2: Source rapid-reclose duplicate old/new cleanup publications; accepted scenario keepsreplacementactivebeyondoldgrace",
+    "artifacts/rust/m7-vod-playback-ws-image18-1: candidate genericVODprimingprecededWScapture unlikeSource; Source-literalidlereusesuppressednewstart; equalorderingfixed"
+  ],
+  "secrets_not_persisted": true,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Rapid-closed-reconnect legacyduplicate-stopvariant",
+    "Broader ranges/metadata/concurrency/crossworker/profileadoption andallM4surfaces",
+    "Eventqueuesaturation/fault/resource/performanceacceptance",
+    "Connect/plugin audit dispatch"
+  ],
+  "original_application_credit": "Original Dispatcharr authors/contributors"
+}

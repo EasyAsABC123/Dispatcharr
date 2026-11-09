@@ -1,0 +1,380 @@
+{
+  "format_version": 1,
+  "scope": "ImmutableIMAGE20isolatedM4equal-cgroupstrictdecode+8sustainedfunctionalSource/nativecases",
+  "passed": true,
+  "cleanup_passed": true,
+  "measurements_started": false,
+  "plan_sha256": "cebad4c1409679e7f5efc6b1544c9fb40fc1b9981789554c490c26d1acfc4f42",
+  "evidence": "artifacts/rust/m4-resource-load-smoke-image20-1/result.json",
+  "evidence_sha256": "3dc6700ba9844f7a14c5082b1eb617d7ebbe4a8a3d2a56844970912bd57ab154",
+  "candidate_provenance": {
+    "image_id": "sha256:fd449c861ba84d44229004c961c92b263ac06c7fe21e6dc194b59a3a70cb4dac",
+    "source_tree_sha256": "db7ee628fe24da0589ad19134d8886a15ed59dcb50b85d6e0c59b22ee2a1117f",
+    "manifest_verified": true
+  },
+  "tool_manifest_sha256": "662d163bf7657cc5fca7cfa2ef5c9f2038d59abec594c963ace9bc6565258311",
+  "cgroups": {
+    "infrastructure": {
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "limits": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 1000000000
+      }
+    },
+    "origin": {
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "limits": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 2000000000
+      }
+    },
+    "source": {
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "limits": {
+        "memory_bytes": 536870912,
+        "nano_cpus": 2000000000
+      }
+    },
+    "candidate": {
+      "image_id": "sha256:fd449c861ba84d44229004c961c92b263ac06c7fe21e6dc194b59a3a70cb4dac",
+      "limits": {
+        "memory_bytes": 536870912,
+        "nano_cpus": 2000000000
+      }
+    }
+  },
+  "strict_decoders": [
+    {
+      "protocol": "vod",
+      "backend": "source",
+      "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+      "prefix_bytes": 1048576,
+      "decoded_frames": 200,
+      "audio_and_video_mapped": true,
+      "decoder": {
+        "frames": 200,
+        "audio_and_video_mapped": true,
+        "return_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict_decoder_passed": true
+      },
+      "websocket": {
+        "messages": 8,
+        "bytes": 5408,
+        "kinds": {
+          "vod_started": 2,
+          "vod_stats": 4,
+          "vod_stopped": 2
+        },
+        "errors": [],
+        "stats_snapshots": 4,
+        "last_connection_counts": {
+          "vod_stats": 0
+        },
+        "empty_snapshots": {
+          "vod_stats": 1
+        }
+      },
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "vod",
+      "backend": "candidate",
+      "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+      "prefix_bytes": 1048576,
+      "decoded_frames": 200,
+      "audio_and_video_mapped": true,
+      "decoder": {
+        "frames": 200,
+        "audio_and_video_mapped": true,
+        "return_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict_decoder_passed": true
+      },
+      "websocket": {
+        "messages": 8,
+        "bytes": 3855,
+        "kinds": {
+          "vod_started": 2,
+          "vod_stats": 4,
+          "vod_stopped": 2
+        },
+        "errors": [],
+        "stats_snapshots": 4,
+        "last_connection_counts": {
+          "vod_stats": 0
+        },
+        "empty_snapshots": {
+          "vod_stats": 2
+        }
+      },
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "source",
+      "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+      "prefix_bytes": 1048576,
+      "decoded_frames": 199,
+      "audio_and_video_mapped": true,
+      "decoder": {
+        "frames": 199,
+        "audio_and_video_mapped": true,
+        "return_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict_decoder_passed": true
+      },
+      "websocket": {
+        "messages": 4,
+        "bytes": 2832,
+        "kinds": {
+          "timeshift_stats": 4
+        },
+        "errors": [],
+        "stats_snapshots": 4,
+        "last_connection_counts": {
+          "timeshift_stats": 0
+        },
+        "empty_snapshots": {
+          "timeshift_stats": 2
+        }
+      },
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "candidate",
+      "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+      "prefix_bytes": 1048576,
+      "decoded_frames": 199,
+      "audio_and_video_mapped": true,
+      "decoder": {
+        "frames": 199,
+        "audio_and_video_mapped": true,
+        "return_code": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict_decoder_passed": true
+      },
+      "websocket": {
+        "messages": 4,
+        "bytes": 2682,
+        "kinds": {
+          "timeshift_stats": 4
+        },
+        "errors": [],
+        "stats_snapshots": 4,
+        "last_connection_counts": {
+          "timeshift_stats": 0
+        },
+        "empty_snapshots": {
+          "timeshift_stats": 2
+        }
+      },
+      "provider_counter_released": true
+    }
+  ],
+  "cases": [
+    {
+      "protocol": "vod",
+      "backend": "source",
+      "viewers": 1,
+      "requests": 1,
+      "correctness_failures": [],
+      "prefixes_match": true,
+      "unexpected_eof": false,
+      "websocket": {
+        "messages": 4,
+        "bytes": 3390,
+        "kinds": {
+          "vod_started": 1,
+          "vod_stats": 2,
+          "vod_stopped": 1
+        },
+        "errors": [],
+        "stats_snapshots": 2,
+        "last_connection_counts": {
+          "vod_stats": 1
+        },
+        "empty_snapshots": {}
+      }
+    },
+    {
+      "protocol": "vod",
+      "backend": "candidate",
+      "viewers": 1,
+      "requests": 1,
+      "correctness_failures": [],
+      "prefixes_match": true,
+      "unexpected_eof": false,
+      "websocket": {
+        "messages": 4,
+        "bytes": 1935,
+        "kinds": {
+          "vod_started": 1,
+          "vod_stats": 2,
+          "vod_stopped": 1
+        },
+        "errors": [],
+        "stats_snapshots": 2,
+        "last_connection_counts": {
+          "vod_stats": 0
+        },
+        "empty_snapshots": {
+          "vod_stats": 1
+        }
+      }
+    },
+    {
+      "protocol": "vod",
+      "backend": "source",
+      "viewers": 10,
+      "requests": 10,
+      "correctness_failures": [],
+      "prefixes_match": true,
+      "unexpected_eof": false,
+      "websocket": {
+        "messages": 40,
+        "bytes": 142244,
+        "kinds": {
+          "vod_started": 10,
+          "vod_stats": 20,
+          "vod_stopped": 10
+        },
+        "errors": [],
+        "stats_snapshots": 20,
+        "last_connection_counts": {
+          "vod_stats": 1
+        },
+        "empty_snapshots": {}
+      }
+    },
+    {
+      "protocol": "vod",
+      "backend": "candidate",
+      "viewers": 10,
+      "requests": 10,
+      "correctness_failures": [],
+      "prefixes_match": true,
+      "unexpected_eof": false,
+      "websocket": {
+        "messages": 40,
+        "bytes": 111855,
+        "kinds": {
+          "vod_started": 10,
+          "vod_stats": 20,
+          "vod_stopped": 10
+        },
+        "errors": [],
+        "stats_snapshots": 20,
+        "last_connection_counts": {
+          "vod_stats": 0
+        },
+        "empty_snapshots": {
+          "vod_stats": 8
+        }
+      }
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "source",
+      "viewers": 1,
+      "requests": 1,
+      "correctness_failures": [],
+      "prefixes_match": true,
+      "unexpected_eof": false,
+      "websocket": {
+        "messages": 2,
+        "bytes": 1419,
+        "kinds": {
+          "timeshift_stats": 2
+        },
+        "errors": [],
+        "stats_snapshots": 2,
+        "last_connection_counts": {
+          "timeshift_stats": 0
+        },
+        "empty_snapshots": {
+          "timeshift_stats": 1
+        }
+      }
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "candidate",
+      "viewers": 1,
+      "requests": 1,
+      "correctness_failures": [],
+      "prefixes_match": true,
+      "unexpected_eof": false,
+      "websocket": {
+        "messages": 2,
+        "bytes": 1348,
+        "kinds": {
+          "timeshift_stats": 2
+        },
+        "errors": [],
+        "stats_snapshots": 2,
+        "last_connection_counts": {
+          "timeshift_stats": 0
+        },
+        "empty_snapshots": {
+          "timeshift_stats": 1
+        }
+      }
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "source",
+      "viewers": 10,
+      "requests": 10,
+      "correctness_failures": [],
+      "prefixes_match": true,
+      "unexpected_eof": false,
+      "websocket": {
+        "messages": 20,
+        "bytes": 86333,
+        "kinds": {
+          "timeshift_stats": 20
+        },
+        "errors": [],
+        "stats_snapshots": 20,
+        "last_connection_counts": {
+          "timeshift_stats": 0
+        },
+        "empty_snapshots": {
+          "timeshift_stats": 10
+        }
+      }
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "candidate",
+      "viewers": 10,
+      "requests": 10,
+      "correctness_failures": [],
+      "prefixes_match": true,
+      "unexpected_eof": false,
+      "websocket": {
+        "messages": 20,
+        "bytes": 103658,
+        "kinds": {
+          "timeshift_stats": 20
+        },
+        "errors": [],
+        "stats_snapshots": 20,
+        "last_connection_counts": {
+          "timeshift_stats": 0
+        },
+        "empty_snapshots": {
+          "timeshift_stats": 9
+        }
+      }
+    }
+  ],
+  "performance_verified": false,
+  "full_m4_parity_verified": false,
+  "necessary_next_steps": [
+    "Rootcoordinatesquietwindowandrunsthealreadyfrozen24phase3-pairresourceplan.",
+    "OriginalrapidrecloseeventraceandinterruptedprogressremainseparateSourceparitygates."
+  ]
+}

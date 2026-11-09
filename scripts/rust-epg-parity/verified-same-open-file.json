@@ -1,0 +1,34 @@
+{
+  "format_version": 1,
+  "scope": "Source-compatible XMLTV same-open-file completeness and prefix preparation helper only",
+  "passed": true,
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": {
+    "preparation": "artifacts/rust/m6-xmltv-same-open-file-1/preparation.json",
+    "parser": "artifacts/rust/m6-xmltv-same-open-file-1/parser.json"
+  },
+  "checks": {
+    "same_descriptor_units": 3,
+    "original_preparation_vectors": 1594,
+    "original_parser_vectors": 1144,
+    "parser_resource_and_cancellation_units": 9,
+    "strict_ingest_core_all_target_clippy": true
+  },
+  "source_sha256": {
+    "rust/crates/ingest-core/src/xmltv.rs": "56705fff5c7abdc8ce1e24f687aa06153a34dee1e2c5959b9e35b1283b6bbf9e",
+    "rust/crates/ingest-core/src/lib.rs": "9ddfcdc93add3238f2200f8b899471b235656f7e32c986fb13a056a4aeda0d4a",
+    "rust/crates/ingest-core/tests/xmltv_file.rs": "37b8cf48b6bdaedfa0c8b2342913abb874e0163dafdc370fd7d5df8e88818ec2"
+  },
+  "behavior": "XmltvReader::open delegates to from_file; from_file starts at byte0. The same descriptor footer helper preserves cursor and Source false-on-I/O/literal8192-tail semantics. Atomic pathname replacement cannot substitute an unvalidated file.",
+  "remaining_gates": [
+    "Bounded import service staging queue and parser/SQL physical cancellation.",
+    "Actual original parse_programs_for_source end-to-end row/skip/error/retention comparisons.",
+    "Application ingestion scheduler/status/cache/event integration."
+  ],
+  "full_guide_jobs_verified": false,
+  "application_performance_verified": false,
+  "evidence_sha256": {
+    "artifacts/rust/m6-xmltv-same-open-file-1/preparation.json": "4490b479b1946ea25e1fcfb114811112fe501217e16247616c73db4c70fb17c3",
+    "artifacts/rust/m6-xmltv-same-open-file-1/parser.json": "42f8ef8a3c62c8c4130f2ce3c6e935e285e9579d284939e777fd501987baa6c3"
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "scope": "Unchanged React on fresh native-only PostgreSQL/Redis: first-admin/login/init,logo upload/edit/image,restart persistence,delete-file.",
+  "passed": true,
+  "report": "artifacts/rust/m5-native-react-logo-image20-1/integration.json",
+  "report_sha256": "fe00968d7ec028deeedd0483751ccd178ecc501f6e05d83aa14b5a0af1521390",
+  "candidate_image_binding": {
+    "image_id": "sha256:fd449c861ba84d44229004c961c92b263ac06c7fe21e6dc194b59a3a70cb4dac",
+    "source_tree_sha256": "db7ee628fe24da0589ad19134d8886a15ed59dcb50b85d6e0c59b22ee2a1117f",
+    "manifest_verified": true
+  },
+  "build_manifest_sha256": "d49453e794e12bbcb6778dd14d5303a13fe9ce8c61eb7767858686b0f62b47f6",
+  "tool_source": "artifacts/rust/m5-native-react-logo-image20-1/tool-source",
+  "clean_install_compose": "artifacts/rust/m5-native-react-logo-image20-1/tool-source/docker/compose.rust-clean-install.yml",
+  "checks": [
+    {
+      "name": "fresh-empty-database",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "initialization-default-off-no-ddl",
+      "passed": true,
+      "details": {
+        "exit_code": 1
+      }
+    },
+    {
+      "name": "native-only-service-set",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "rust-initialized-original-schema",
+      "passed": true,
+      "details": {
+        "tables": 62,
+        "migration_records": 184,
+        "users_before_browser": 0
+      }
+    },
+    {
+      "name": "candidate-has-no-python-runtime",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "first-admin-form-status",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "actual-react-first-admin-login-init",
+      "passed": true,
+      "details": {
+        "authenticated": true,
+        "required_api_paths": 16,
+        "required_api_paths_passed": 16,
+        "api_responses": 29,
+        "failed_api_responses": [],
+        "exceptions": 0,
+        "stored_tokens_verified": {
+          "access": true,
+          "refresh": true
+        },
+        "socket_types": [
+          "connection_established"
+        ]
+      }
+    },
+    {
+      "name": "browser-created-real-admin-row",
+      "passed": true,
+      "details": {
+        "row_sha256": "67fc6af5ebefa7d89b43df9b5934ec7ea2afd8b8d0d0f3955a5f92ccbf770511"
+      }
+    },
+    {
+      "name": "actual-react-logo-upload-edit-image",
+      "passed": true,
+      "details": {
+        "uploaded": true,
+        "edited": true,
+        "uploaded_image": {
+          "path": "/api/channels/logos/1/cache/",
+          "width": 2,
+          "height": 3
+        },
+        "edited_image": {
+          "path": "/api/channels/logos/1/cache/",
+          "width": 2,
+          "height": 3
+        },
+        "upload201": true,
+        "exceptions": 0,
+        "failed_api_responses": []
+      }
+    },
+    {
+      "name": "browser-uploaded-file-real-native-volume",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "restart-react-token-persistence-init",
+      "passed": true,
+      "details": {
+        "persisted": true,
+        "image": {
+          "path": "/api/channels/logos/1/cache/",
+          "width": 2,
+          "height": 3
+        },
+        "stored_access_present": true,
+        "exceptions": 0,
+        "failed_api_responses": []
+      }
+    },
+    {
+      "name": "restart-preserves-logo-file-and-row",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "actual-react-logo-delete-file",
+      "passed": true,
+      "details": {
+        "deleted": true,
+        "delete204": true,
+        "exceptions": 0,
+        "failed_api_responses": []
+      }
+    },
+    {
+      "name": "browser-delete-removes-file-and-db-row",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "restart-preserves-existing-schema-and-admin",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "setup-closed-after-browser-create",
+      "passed": true,
+      "details": null
+    }
+  ],
+  "services": [
+    "cache",
+    "candidate",
+    "data-init",
+    "database"
+  ],
+  "cleanup": "project removed",
+  "performance_verified": false
+}

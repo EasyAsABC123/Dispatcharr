@@ -1,0 +1,70 @@
+{
+  "scope": "native-streaming-XMLTV-library-host-component",
+  "passed": true,
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "cases": 1144,
+  "native_tests_passed": 9,
+  "strict_all_target_clippy": true,
+  "sanitizer_cases": 1144,
+  "resource_checks": [
+    {
+      "records": 50000,
+      "input_bytes": 53800009,
+      "passed": true,
+      "capacity": false,
+      "events": 50000,
+      "peak_rss_kib": 3908
+    },
+    {
+      "records": 100000,
+      "input_bytes": 107600009,
+      "passed": true,
+      "capacity": false,
+      "events": 100000,
+      "peak_rss_kib": 3940
+    },
+    {
+      "case": "oversized-record",
+      "passed": true,
+      "capacity": true,
+      "events": 0,
+      "peak_rss_kib": 11248
+    },
+    {
+      "case": "comment-node-budget",
+      "passed": true,
+      "capacity": true,
+      "events": 0,
+      "peak_rss_kib": 4364
+    },
+    {
+      "case": "oversized-prologue",
+      "passed": true,
+      "capacity": true,
+      "events": 0,
+      "peak_rss_kib": 3952
+    }
+  ],
+  "evidence_directory": "artifacts/rust/m6-native-xmltv-library-33",
+  "original_libxml": [
+    2,
+    14,
+    6
+  ],
+  "upstream_archive_sha256": "7ce458a0affeb83f0b55f1f4f9e0e55735dbfc1a9de124ee86fb4a66b597203a",
+  "logs_sha256": {
+    "parity.json": "1db004f20646c8ca82bd97c7d7a42aa6602b79b5629df941a5a5e54f2e0fa541",
+    "final-tests.log": "52b1dea8e3783414c7e6e6375bfecb04af88598035d3af6602edfd5929710348",
+    "final-clippy.log": "8913f6db76c8b8bf2041eca7f357f0aa918993b0427c1eb234921959e8642602",
+    "final-resources.json": "90e02cfb7ffdff928e856dbe637753d1e927e07be518904985c7c080b644547e"
+  },
+  "notes": [
+    "Promoted Rust callback API with original recover/entity/NOBLANKS semantics and native physical-allocation budget. All original application credit remains with Dispatcharr authors; libxml2 copyrights/licenses retained.",
+    "Actual bridge ASAN/LeakSanitizer tested; static libxml2 library itself not sanitizer-instrumented. No sanitizer failure is counted as a pass.",
+    "Early sandbox LeakSanitizer failure (ptrace restriction) and4real entity-bookkeeping leaks are retained in prototype artifacts; replaced per-node bookkeeping and reran outside sandbox.",
+    "VmHWM is sampled from the standalone Rust scanner after exec; inherited getrusage parent high-water values are excluded. No Source/Rust application resource gain inferred.",
+    "Host component only; immutable Compose parser target and full guide/SQL refresh jobs remain separate gates."
+  ],
+  "full_refresh_job_verified": false,
+  "application_performance_verified": false
+}

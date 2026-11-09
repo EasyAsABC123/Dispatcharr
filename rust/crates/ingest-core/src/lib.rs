@@ -11,6 +11,11 @@ use std::{collections::BTreeMap, sync::OnceLock};
 pub use validation::{validate_playlist_head, HeadValidation, VALIDATION_READ_BYTES};
 mod projection;
 pub use projection::{project_entry, ProjectedStream, ProjectionContext, ProjectionError};
+/// Python int(string) decimal spelling, pinned to source Unicode15.1 and its
+/// 4300-digit limit. None means the source raises ValueError.
+pub fn source_integer_literal(value: &str) -> Option<String> {
+    projection::integer_literal(value)
+}
 mod cache;
 pub use cache::{CacheDownload, CacheError, DownloadStats};
 mod uploads;
@@ -21,10 +26,13 @@ mod cached;
 pub use cached::{CacheReadError, CacheReadLimits, ValidatedCache};
 mod xmltv;
 pub use xmltv::{
-    parse_xmltv_time, xmltv_file_is_complete, XmltvReader, XmltvTimeError, HTML_ENTITY_DOCTYPE,
+    parse_xmltv_time, xmltv_file_handle_is_complete, xmltv_file_is_complete, XmltvReader,
+    XmltvTimeError, HTML_ENTITY_DOCTYPE,
 };
 mod xmltv_metadata;
 pub use xmltv_metadata::{extract_xmltv_properties, XmltvElement, XmltvMetadataError};
+mod xmltv_programme;
+pub use xmltv_programme::{project_xmltv_programme, XmltvProgramme, XmltvProgrammeError};
 #[derive(Clone, Debug, PartialEq)]
 pub struct ImportedCacheGroup {
     pub name: String,

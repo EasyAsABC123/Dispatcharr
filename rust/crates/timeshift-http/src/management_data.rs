@@ -58,13 +58,28 @@ return cjson.encode(out)
 "#;
 
 pub(crate) async fn stats(store: &Store, transport: &RedisTransport, now: f64) -> Value {
-    project(store, transport, now)
+    project(store, transport, now, ())
         .await
         .unwrap_or_else(|_| empty(now))
 }
-async fn project(store: &Store, transport: &RedisTransport, now: f64) -> Result<Value, ()> {
-    let (raw, _): (String, ()) = transport
-        .command(SNAPSHOT, &[], &[], ())
+pub(crate) async fn stats_guarded<G: Send + 'static>(
+    store: &Store,
+    transport: &RedisTransport,
+    now: f64,
+    guard: G,
+) -> Value {
+    project(store, transport, now, guard)
+        .await
+        .unwrap_or_else(|_| empty(now))
+}
+async fn project<G: Send + 'static>(
+    store: &Store,
+    transport: &RedisTransport,
+    now: f64,
+    guard: G,
+) -> Result<Value, ()> {
+    let (raw, _guard): (String, G) = transport
+        .command(SNAPSHOT, &[], &[], guard)
         .await
         .map_err(|_| ())?;
     let raw: Value = serde_json::from_str(&raw).map_err(|_| ())?;

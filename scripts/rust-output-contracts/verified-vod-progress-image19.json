@@ -1,0 +1,79 @@
+{
+  "format_version": 1,
+  "scope": "ImmutableIMAGE19 actualHTTP VOD100thpartial/full/followingchunk progress regression",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m4-vod-progress-image19-1/vod-contracts.json",
+  "evidence_sha256": "614c3a132aa53027b7b16eec85c1e03fabe63fdad37b499377e34bebbe379b15",
+  "provenance": {
+    "image_id": "sha256:88d884d9f708ef20420debb776439048e8040528624356ca87658634c4101a50",
+    "source_tree_sha256": "d1d2c1832fb900d6d1072e0988ce2aea317539a9f16d21d8526a600e1095323a",
+    "build_manifest_sha256": "04f43ae504984e0ab28342b15a8fbe06eaa7759e313d5c453115aa9da9074b28"
+  },
+  "tool_manifest_sha256": "219563dce761c0963c7a0ed4893249846a07f05a11387e051ef3a0e583b092bc",
+  "cases": [
+    {
+      "case": "range-819199",
+      "status": 206,
+      "bytes": 819199,
+      "sha256": "4982d0533dd35d95195596183e1d6e05a0587848564594cf10f8d763b445e0bb",
+      "bytes_sent": 819199,
+      "metadata_present_at_eof": true
+    },
+    {
+      "case": "range-819200",
+      "status": 206,
+      "bytes": 819200,
+      "sha256": "83ed2f3e9d49a217ee4ace25599d588c5a5d0c96374d9e1fe4ace4e17bc9c86c",
+      "bytes_sent": 819200,
+      "metadata_present_at_eof": true
+    },
+    {
+      "case": "range-819201",
+      "status": 206,
+      "bytes": 819201,
+      "sha256": "d2fd5781d8f9d8dc23f0ca86caeea5665ed1ed5800b875602b2a80757ee289b7",
+      "bytes_sent": 819200,
+      "metadata_present_at_eof": true
+    }
+  ],
+  "source_progress_matches": true,
+  "wire_comparison": {
+    "format_version": 1,
+    "scope": "captured native XC VOD seven-case wire comparison only",
+    "captured_wire_matches": true,
+    "differences": [],
+    "application_parity_verified": false,
+    "performance_verified": false,
+    "remaining_gates": [
+      "bound candidate build/source provenance",
+      "authenticated handoff and user/network controls",
+      "provider/cross-worker session lifecycle",
+      "full metadata/WebSocket side effects",
+      "decoded browser execution",
+      "resource/performance matrix"
+    ]
+  },
+  "decoders": [
+    {
+      "backend": "baseline",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    },
+    {
+      "backend": "candidate",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    }
+  ],
+  "preserved_initial_failure": "scripts/rust-output-contracts/verified-vod-progress-host.json",
+  "necessary_next_steps": [
+    "Partial interrupted-block progress and rapid-reclose legacy duplicate-stop parity remain separate gates.",
+    "Run fixed M4 resource workloads in a coordinated quiet window."
+  ],
+  "application_parity_verified": false,
+  "full_m4_parity_verified": false,
+  "performance_verified": false
+}

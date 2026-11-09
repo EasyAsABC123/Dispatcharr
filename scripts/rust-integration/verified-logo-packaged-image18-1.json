@@ -1,0 +1,40 @@
+{
+  "scope": "Immutable18 original/candidate logo delivery,URLCRUD,uploads101cases/104HTTPresponses plus22focused upload marker cases.",
+  "passed": true,
+  "image_id": "sha256:af8352ff444b847d6edaed51c340578c0650f02f9b4881ff611b7fba4af9c44b",
+  "source_tree_sha256": "0598101581932ac6a95c8a7f33e4ef2dc7ea804197f1dfc5942a45045166d502",
+  "source_archive_sha256": "7543ae92773e3bd874f95ab86f5117d6e17a02222b93723e7d8bdb0123dd9a42",
+  "build_manifest_sha256": "f97a6d34ac31edda03aa91773d151a7a398b95f770665ccc20b280551a46e5c3",
+  "runs": [
+    {
+      "report": "artifacts/rust/m5-logo-packaged-image18-1/integration.json",
+      "sha256": "bb528cfc3e9a48717e3259d2d2c271831211d7631a5971d907489e307f4981ee",
+      "source_cases": 101,
+      "source_http_responses": 104,
+      "packaged_checks_sha256": "0633ad7ab9085c3da41cb71e71969d3372e26b97d77cfefaf6dadbc06f74d1a2",
+      "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-logo-packaged-markers-image18-1/integration.json",
+      "sha256": "192f094ca08ae1ff65ebd4c2cb1e18ea3d8656538d6521914e4e9426557c9c01",
+      "source_cases": 22,
+      "source_http_responses": 22,
+      "packaged_checks_sha256": "84ccc3b56d6aedbec0a5f9a799269187d1529718c5a3aefcbf57c75ae0e33918",
+      "cleanup": "project removed"
+    }
+  ],
+  "performance_verified": false,
+  "native_component_evidence": "verified-logo-source-native-9.json",
+  "verified": [
+    "Original actual uWSGIHTTP versus immutable candidate HTTP, identical request SHA, selected response headers/JSON/binary hashes, database/channel references, owned file hashes and upstream attempt counts.",
+    "Shared owned logo/outside-target mounts provide actual existing-file/symlink boundary comparison across separate original/candidate runtime containers.",
+    "Original Python reads candidate-written processed_file Redis flags: exact presence,three-dayTTL and raw mtime string match after uploads, overwrite and rejected mutations.",
+    "No Python executable or original code is added to the candidate; fixtures/witness run in the separate original container."
+  ],
+  "remaining": [
+    "Escaped legacy delete_file paths remain501; no unrestricted legacy filesystem deletion.",
+    "Exotic malformed multipart/header/parser-limit families and additional MIME extensions remain separate coverage.",
+    "Populated actual React logo editing workflow is an additional browser gate beyond HTTP APIs."
+  ],
+  "earlier_evidence_failures_preserved": "verified-logo-source-native-9.json"
+}

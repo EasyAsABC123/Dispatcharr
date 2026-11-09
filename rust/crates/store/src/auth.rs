@@ -73,9 +73,11 @@ pub struct AuthService {
     config: AuthConfig,
     attempts: Arc<Mutex<AttemptHistory>>,
     password_workers: Arc<tokio::sync::Semaphore>,
+    pub(crate) user_agent_workers: Arc<tokio::sync::Semaphore>,
     pub(crate) channel_control: Option<Arc<dyn ChannelControl>>,
     pub(crate) notification_cache: Option<crate::NotificationCache>,
     pub(crate) event_sink: Option<Arc<dyn dispatcharr_contracts::UpdateEventSink>>,
+    pub(crate) images: crate::image_proxy::ImageRuntime,
     pub(crate) ip_lookup: crate::ip_lookup::IpLookup,
 }
 
@@ -88,9 +90,11 @@ impl AuthService {
             config,
             attempts: Arc::new(Mutex::new(HashMap::new())),
             password_workers: Arc::new(tokio::sync::Semaphore::new(4)),
+            user_agent_workers: Arc::new(tokio::sync::Semaphore::new(4)),
             channel_control: None,
             notification_cache: None,
             event_sink: None,
+            images: crate::image_proxy::ImageRuntime::new(),
             ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),
         }
     }
@@ -150,35 +154,39 @@ impl AuthService {
             self.config.trusted_proxies.as_deref().unwrap_or(
                 "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10",
             ),
-            peer,
+            dispatcharr_contracts::SourceIpAddr::from(peer).address(),
         )
     }
-    pub fn client_ip(&self, request: &PlaybackRequest) -> IpAddr {
-        let normalize = |ip: IpAddr| match ip {
-            IpAddr::V6(ip) => ip.to_ipv4_mapped().map_or(IpAddr::V6(ip), IpAddr::V4),
-            ip => ip,
-        };
-        let peer = normalize(request.peer_ip);
-        if !self.is_trusted_proxy(peer) {
+    pub fn source_client_ip(
+        &self,
+        request: &PlaybackRequest,
+    ) -> dispatcharr_contracts::SourceIpAddr {
+        let peer = dispatcharr_contracts::SourceIpAddr::from(request.peer_ip);
+        if !self.is_trusted_proxy(peer.address()) {
             return peer;
         }
         if let Some(ip) = request
             .header("x-real-ip")
-            .and_then(|value| value.trim().parse().ok())
+            .and_then(|value| value.parse::<dispatcharr_contracts::SourceIpAddr>().ok())
         {
-            return normalize(ip);
+            return ip;
         }
         if let Some(forwarded) = request.header("x-forwarded-for") {
             for value in forwarded.split(',').rev() {
-                if let Ok(ip) = value.trim().parse() {
-                    let ip = normalize(ip);
-                    if !self.is_trusted_proxy(ip) {
+                if let Ok(ip) = value.parse::<dispatcharr_contracts::SourceIpAddr>() {
+                    if !self.is_trusted_proxy(ip.address()) {
                         return ip;
                     }
                 }
             }
         }
         peer
+    }
+    pub fn client_ip(&self, request: &PlaybackRequest) -> IpAddr {
+        self.source_client_ip(request).address()
+    }
+    pub fn client_ip_text(&self, request: &PlaybackRequest) -> String {
+        self.source_client_ip(request).to_string()
     }
 
     pub(crate) fn explicit_trusted_proxies(&self) -> Option<&str> {
@@ -308,7 +316,6 @@ impl AuthService {
         &self,
         request: &PlaybackRequest,
     ) -> Result<Option<User>, StoreError> {
-        let ip = self.client_ip(request);
         let auth: Vec<_> = request
             .header("authorization")
             .unwrap_or("")
@@ -342,13 +349,23 @@ impl AuthService {
                 }
             });
         if let Some(key) = key {
-            self.shared_auth_budget(ip, crate::auth_throttle::Scope::ApiKey, false, false)
-                .await?;
+            self.shared_auth_budget(
+                self.source_client_ip(request),
+                crate::auth_throttle::Scope::ApiKey,
+                false,
+                false,
+            )
+            .await?;
             match self.store.user_by_api_key(key).await? {
                 Some(user) if user.is_active => return Ok(Some(user)),
                 user => {
                     if self
-                        .shared_auth_budget(ip, crate::auth_throttle::Scope::ApiKey, true, false)
+                        .shared_auth_budget(
+                            self.source_client_ip(request),
+                            crate::auth_throttle::Scope::ApiKey,
+                            true,
+                            false,
+                        )
                         .await?
                     {
                         self.auth_event(
@@ -381,7 +398,12 @@ impl AuthService {
     ) -> Result<TokenPair, StoreError> {
         let ip = self.client_ip(request);
         if let Err(error) = self
-            .shared_auth_budget(ip, crate::auth_throttle::Scope::Login, true, false)
+            .shared_auth_budget(
+                self.source_client_ip(request),
+                crate::auth_throttle::Scope::Login,
+                true,
+                false,
+            )
             .await
         {
             if let StoreError::Throttled { wait, .. } = &error {
@@ -581,12 +603,11 @@ pub(crate) fn request(peer: SocketAddr, headers: HeaderMap) -> PlaybackRequest {
         channel_id: String::new(),
         query: Vec::new(),
         peer_ip: peer.ip(),
-        headers: headers
-            .iter()
-            .filter_map(|(key, value)| {
-                Some((key.as_str().to_string(), value.to_str().ok()?.to_string()))
-            })
-            .collect(),
+        headers: dispatcharr_contracts::source_headers(
+            headers
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_bytes())),
+        ),
     }
 }
 

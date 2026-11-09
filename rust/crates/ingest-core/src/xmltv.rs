@@ -99,22 +99,34 @@ pub fn parse_xmltv_time(value: &str) -> Result<DateTime<Utc>, XmltvTimeError> {
     Ok(utc)
 }
 /// Original only inspects the last8192 bytes. This is not XML well-formedness.
+/// I/O errors preserve the original false result.
 pub fn xmltv_file_is_complete(path: &Path) -> bool {
-    let check = || -> io::Result<bool> {
-        let size = std::fs::metadata(path)?.len();
-        if size == 0 {
-            return Ok(false);
-        }
-        let mut file = File::open(path)?;
-        file.seek(SeekFrom::Start(size.saturating_sub(8192)))?;
-        let mut tail = Vec::with_capacity(8192);
-        file.take(8192).read_to_end(&mut tail)?;
-        while tail.last().is_some_and(|b| matches!(b, 9..=13 | 32)) {
-            tail.pop();
-        }
-        Ok(tail.ends_with(b"</tv>"))
+    File::open(path).is_ok_and(|mut file| xmltv_file_handle_is_complete(&mut file))
+}
+
+/// Apply the original suffix heuristic to the same open descriptor that will
+/// be parsed. Restore its previous cursor; replacing the pathname cannot
+/// change which file is validated. I/O failures return false as in Source.
+pub fn xmltv_file_handle_is_complete(file: &mut File) -> bool {
+    let check = |file: &mut File| -> io::Result<bool> {
+        let original = file.stream_position()?;
+        let result = (|| -> io::Result<bool> {
+            let size = file.metadata()?.len();
+            if size == 0 {
+                return Ok(false);
+            }
+            file.seek(SeekFrom::Start(size.saturating_sub(8192)))?;
+            let mut tail = Vec::with_capacity(8192);
+            (&mut *file).take(8192).read_to_end(&mut tail)?;
+            while tail.last().is_some_and(|b| matches!(b, 9..=13 | 32)) {
+                tail.pop();
+            }
+            Ok(tail.ends_with(b"</tv>"))
+        })();
+        file.seek(SeekFrom::Start(original))?;
+        result
     };
-    check().unwrap_or(false)
+    check(file).unwrap_or(false)
 }
 
 pub struct XmltvReader {
@@ -126,7 +138,13 @@ impl XmltvReader {
     /// Existing declarations are passed through unchanged, including recovery
     /// cases which a subsequent parser may reject.
     pub fn open(path: &Path) -> io::Result<Self> {
-        let mut file = File::open(path)?;
+        Self::from_file(File::open(path)?)
+    }
+
+    /// Prepare the original entity prefix using an already validated file.
+    /// Always start from byte0, regardless of the caller's previous reads.
+    pub fn from_file(mut file: File) -> io::Result<Self> {
+        file.seek(SeekFrom::Start(0))?;
         let mut head = Vec::with_capacity(512);
         (&mut file).take(512).read_to_end(&mut head)?;
         let lower: Vec<u8> = head.iter().map(u8::to_ascii_lowercase).collect();

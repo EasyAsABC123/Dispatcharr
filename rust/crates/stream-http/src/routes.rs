@@ -68,12 +68,11 @@ fn request(
     Ok(PlaybackRequest {
         channel_id,
         query,
-        headers: headers
-            .into_iter()
-            .filter_map(|(name, value)| {
-                Some((name?.as_str().to_owned(), value.to_str().ok()?.to_owned()))
-            })
-            .collect(),
+        headers: dispatcharr_contracts::source_headers(
+            headers
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_bytes())),
+        ),
         peer_ip: peer.map_or(
             IpAddr::V4(Ipv4Addr::UNSPECIFIED),
             |Extension(ConnectInfo(address))| address.ip(),

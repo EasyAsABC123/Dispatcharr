@@ -16,6 +16,14 @@ ENV CARGO_TARGET_DIR=/tmp/dispatcharr-target
 COPY rust/ ./rust/
 RUN mkdir -p "$CARGO_TARGET_DIR" && cargo build --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-rs
 
+FROM build AS xmltv-parser-tests
+RUN cargo test --manifest-path rust/Cargo.toml --locked -p dispatcharr-xmltv-parser --all-targets && cargo build --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-xmltv-parser --examples && cp /tmp/dispatcharr-target/release/examples/xmltv_stream_parity /usr/local/bin/dispatcharr-xmltv-parity
+COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
+COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
+COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
+USER 65532:65532
+ENTRYPOINT ["/usr/local/bin/dispatcharr-xmltv-parity"]
+
 FROM ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f AS media
 COPY rust/runtime/collect_media.py /tmp/collect_media.py
 RUN /dispatcharrpy/bin/python /tmp/collect_media.py
@@ -29,6 +37,9 @@ COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-rs /usr/local/bin/
 COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
 COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
 COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE
+COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
+COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
+RUN mkdir -p /data/logos && chown 65532:65532 /data /data/logos
 USER 65532:65532
 ENV RUST_BIND=0.0.0.0:9192 RUST_FRONTEND_DIR=/opt/dispatcharr-frontend
 EXPOSE 9192

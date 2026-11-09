@@ -1,0 +1,22 @@
+{
+  "scope": "original-EPG-history-policy",
+  "passed": true,
+  "cases": 1125,
+  "responses": 1125,
+  "failures": [],
+  "goldens_sha256": "7b97c4a883a06bcd19cef707fe075ef139256c8bd79ba713031c8b712f18668d",
+  "binary_sha256": "b164c129425bf3f67cb35eb55e72d07305a8d64f12e053f1871174558779fffa",
+  "source_sha256": {
+    "core/models.py": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+    "core/utils.py": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7"
+  },
+  "full_refresh_job_verified": false,
+  "application_performance_verified": false,
+  "evidence_directory": "artifacts/rust/m6-epg-policy-source-36",
+  "strict_all_target_clippy": true,
+  "notes": [
+    "Actual unchanged CoreSettings classmethod/clamp_int oracle;1,125 finite JSON policy cases.",
+    "Shared source_epg_settings uses the existing version-fenced Django group cache and original complete defaults only for empty/missing groups.",
+    "Included in image19 immutable archive; staged guide replacement remains a separate component."
+  ]
+}

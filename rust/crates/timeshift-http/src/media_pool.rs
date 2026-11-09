@@ -1,5 +1,6 @@
 //! Bounded archive reservation/lifecycle prototype ported from Timeshift views.
 //! Original application credit belongs entirely to upstream Dispatcharr authors.
+use crate::events::Producer;
 use dispatcharr_clients::timeshift::{self, Admission};
 use dispatcharr_contracts::UserLimitPolicy;
 use dispatcharr_coordination::{AcquireRequest, Coordinator, Lease, ProviderReservation};
@@ -88,6 +89,7 @@ struct Inner {
     config: ArchivePoolConfig,
     stopped: watch::Sender<bool>,
     cleanup_failed: AtomicBool,
+    events: Mutex<Option<Producer>>,
 }
 #[derive(Clone)]
 pub struct ArchivePool {
@@ -449,6 +451,7 @@ impl ArchivePool {
                 config,
                 stopped,
                 cleanup_failed: AtomicBool::new(false),
+                events: Mutex::new(None),
             }),
         })
     }
@@ -571,6 +574,7 @@ impl ArchivePool {
             )
             .await
             .map_err(|_| unavailable())?;
+        publish_displaced(&self.inner, &result);
         let admission_error = match timeshift::decode(result) {
             Ok(true) => None,
             Ok(false) => Some(StoreError::Unsupported(
@@ -738,6 +742,25 @@ impl ArchivePool {
             rollback: Some(rollback),
         })
     }
+    pub(crate) fn install_events(&self, events: Producer) -> Result<(), StoreError> {
+        let entries = self.inner.entries.lock().unwrap();
+        let mut configured = self.inner.events.lock().unwrap();
+        if !entries.is_empty() || configured.is_some() {
+            return Err(StoreError::Unsupported(
+                "Catch-up events must be configured before playback",
+            ));
+        }
+        *configured = Some(events);
+        Ok(())
+    }
+    pub fn event_diagnostics(&self) -> serde_json::Value {
+        self.inner
+            .events
+            .lock()
+            .unwrap()
+            .as_ref()
+            .map_or(json!({"pending":0,"failed":0}), Producer::diagnostics)
+    }
     pub async fn format_index(&self, account: i64) -> Option<usize> {
         let (value, _) = self
             .inner
@@ -778,6 +801,7 @@ impl ArchivePool {
         self.inner.entries.lock().unwrap().is_empty()
     }
     pub async fn shutdown(&self) -> bool {
+        let deadline = tokio::time::Instant::now() + self.inner.config.shutdown_timeout;
         self.inner.stopped.send_replace(true);
         self.inner.slots.close();
         self.inner.probe_slots.close();
@@ -796,7 +820,20 @@ impl ArchivePool {
             }
         })
         .await;
-        result.is_ok() && !self.inner.cleanup_failed.load(Ordering::SeqCst)
+        let events = self.inner.events.lock().unwrap().clone();
+        let published = if let Some(events) = events {
+            if result.is_err() {
+                events.cancel();
+                false
+            } else {
+                events
+                    .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+                    .await
+            }
+        } else {
+            true
+        };
+        result.is_ok() && published && !self.inner.cleanup_failed.load(Ordering::SeqCst)
     }
 }
 impl ArchiveTicket {
@@ -883,7 +920,7 @@ impl ArchiveTicket {
         let length = content_length
             .map(|value| value.to_string())
             .unwrap_or_default();
-        let (result, _): (i64, Operation) = owned
+        let (result, _): (Vec<i64>, Operation) = owned
             .inner
             .transport
             .command(
@@ -900,15 +937,25 @@ impl ArchiveTicket {
                     serving_range.as_bytes(),
                     base.as_bytes(),
                     if near_eof { b"1" } else { b"0" },
+                    if entry.generation.load(Ordering::SeqCst) == 0 {
+                        b"1"
+                    } else {
+                        b"0"
+                    },
                 ],
                 Operation::new(entry),
             )
             .await
             .map_err(|_| unavailable())?;
-        if result < 1 {
+        if result.first().copied().unwrap_or(0) < 1 {
             return Err(unavailable());
         }
-        entry.generation.store(result as u64, Ordering::SeqCst);
+        entry.generation.store(result[0] as u64, Ordering::SeqCst);
+        if result.get(1) == Some(&1) {
+            if let Some(events) = owned.inner.events.lock().unwrap().as_ref() {
+                events.trigger();
+            }
+        }
         *entry.started.lock().unwrap() = Instant::now();
         entry.streaming.store(true, Ordering::SeqCst);
         Ok(())
@@ -993,12 +1040,25 @@ async fn check_existing<G: Send + 'static>(
         )
         .await
         .map_err(|_| unavailable())?;
+    publish_displaced(inner, &result);
     match timeshift::decode(result) {
         Ok(true) => Ok(guard),
         Err(dispatcharr_clients::Error::UserLimit) => {
             Err(StoreError::StatusBody(403, json!("Stream limit exceeded")))
         }
         _ => Err(unavailable()),
+    }
+}
+fn publish_displaced(inner: &Inner, result: &[String]) {
+    if matches!(result.first().map(String::as_str), Some("OK" | "LIMIT"))
+        && result
+            .get(1)
+            .and_then(|value| value.parse::<usize>().ok())
+            .is_some_and(|count| count > 0)
+    {
+        if let Some(events) = inner.events.lock().unwrap().as_ref() {
+            events.trigger();
+        }
     }
 }
 async fn wait_removed(inner: &Arc<Inner>, entry: &Arc<Entry>) -> Result<(), StoreError> {
@@ -1157,6 +1217,11 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
             inner.cleanup_failed.store(true, Ordering::SeqCst);
         }
     }
+    if streaming && result == 1 {
+        if let Some(events) = inner.events.lock().unwrap().as_ref() {
+            events.trigger();
+        }
+    }
     let mut entries = inner.entries.lock().unwrap();
     if entries
         .get(&entry.request.session_id)
@@ -1176,9 +1241,11 @@ return 1
 const START: &str = r#"
 local function kind(key) local value=redis.call('TYPE',key);if type(value)=='table' then return value.ok end return value end
 for i,expected in ipairs({'hash','hash','set','hash','hash','string','string'}) do local actual=kind(KEYS[i]);if actual~='none' and actual~=expected then return redis.error_reply('CORRUPT archive metadata') end end
-if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_preempted')=='1' then return 0 end
+if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_preempted')=='1' then return {0,0} end
 redis.call('DEL',KEYS[8]);redis.call('HDEL',KEYS[2],'stats_grace_deadline','stats_grace_disconnected_at')
 local clients=cjson.decode(ARGV[2]);local metadata=cjson.decode(ARGV[3])
+local old_vid=redis.call('HGET',KEYS[2],'programme_vid')
+local notify=ARGV[11]=='1' or not redis.call('HGET',KEYS[2],'connected_at') or (clients.programme_vid and old_vid and old_vid~='' and clients.programme_vid~=old_vid)
 local old_programme=redis.call('HGET',KEYS[2],'programme_start')
 local keep_anchor=ARGV[10]=='1' and (not old_programme or old_programme==clients['programme_start'])
 local old_anchor=redis.call('HGET',KEYS[2],'position_anchor_at')
@@ -1197,7 +1264,7 @@ redis.call('HSET',KEYS[1],'final_url',ARGV[6],'serving_range',ARGV[8])
 if ARGV[7]~='' then redis.call('HSET',KEYS[1],'content_length',ARGV[7]) end
 for i=2,4 do redis.call('EXPIRE',KEYS[i],60) end
 local generation=redis.call('INCR',KEYS[6]);redis.call('EXPIRE',KEYS[6],600);redis.call('DEL',KEYS[7])
-return generation
+return {generation,notify and 1 or 0}
 "#;
 const HEARTBEAT: &str = r#"
 local function kind(key) local value=redis.call('TYPE',key);if type(value)=='table' then return value.ok end return value end

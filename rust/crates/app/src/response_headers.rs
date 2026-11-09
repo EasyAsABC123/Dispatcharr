@@ -9,10 +9,15 @@ use axum::{
 
 pub async fn apply(request: Request, next: Next) -> Response {
     let mut response = next.run(request).await;
+    let raw_image = response
+        .extensions()
+        .get::<dispatcharr_store::SourceImageResponse>()
+        .is_some();
     let headers = response.headers_mut();
-    if headers
-        .get(header::CONTENT_TYPE)
-        .is_some_and(|value| value == "text/html")
+    if !raw_image
+        && headers
+            .get(header::CONTENT_TYPE)
+            .is_some_and(|value| value == "text/html")
     {
         headers.insert(
             header::CONTENT_TYPE,

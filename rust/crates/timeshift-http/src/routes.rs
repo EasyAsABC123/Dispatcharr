@@ -34,16 +34,12 @@ fn identity(request: &Request<Body>) -> Result<PlaybackRequest, dispatcharr_stor
         query: url::form_urlencoded::parse(request.uri().query().unwrap_or("").as_bytes())
             .into_owned()
             .collect(),
-        headers: request
-            .headers()
-            .iter()
-            .filter_map(|(key, value)| {
-                value
-                    .to_str()
-                    .ok()
-                    .map(|value| (key.as_str().into(), value.into()))
-            })
-            .collect(),
+        headers: dispatcharr_contracts::source_headers(
+            request
+                .headers()
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_bytes())),
+        ),
         peer_ip: peer,
     })
 }

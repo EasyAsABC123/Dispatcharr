@@ -184,3 +184,15 @@ explicit503 rather than a truncated playlist. Larger valid original exports
 outside configured/hard bounds remain unsupported; they do not establish full
 M7 parity. Nonempty provider-transform allowlists, XMLTV/Xtream/HDHomeRun,
 integration hooks and frozen-app/resource acceptance remain separate gates.
+
+## Frozen application follow-up
+
+`verified-m3u-image16.json` binds the packaged50-case and6,000-channel gates to
+immutable IMAGE16, its source tar/build manifest and copied tool manifests.
+Both pass with no response differences and clean Compose teardown. The first
+packaged50-case run preserved one fixture failure: generic playback candidate
+configuration disabled proxy trust while Source used its local-network default.
+The output-specific candidate policy now explicitly matches the Source fixture
+CIDRs on both services; the same immutable application image passes the retry.
+The earlier artifact remains. This accepts the captured M3U slice, not full M7,
+all possible catalog sizes, output resource gains or the remaining protocols.

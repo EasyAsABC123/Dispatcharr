@@ -318,22 +318,35 @@ async fn run() -> Result<(), String> {
         })
         .transpose()?;
     let vod = if let Some(coordinator) = coordinator.clone() {
-        Some(
-            dispatcharr_vod_http::VodEngine::new(
-                store.clone(),
-                auth.clone(),
-                coordinator,
-                &env::var("REDIS_URL").map_err(|_| "Redis VOD configuration missing")?,
-                dispatcharr_vod_http::VodConfig {
-                    max_sessions: positive("RUST_MAX_VOD_SESSIONS", 1024)?,
-                    max_requests: positive("RUST_MAX_VOD_REQUESTS", 2048)?,
-                    frame_bytes: positive("RUST_VOD_FRAME_BYTES", 64 * 1024)?,
-                    ..Default::default()
-                },
-            )
-            .await
-            .map_err(|_| "VOD initialization failed (credentials omitted)")?,
+        let redis_url = env::var("REDIS_URL").map_err(|_| "Redis VOD configuration missing")?;
+        let engine = dispatcharr_vod_http::VodEngine::new(
+            store.clone(),
+            auth.clone(),
+            coordinator,
+            &redis_url,
+            dispatcharr_vod_http::VodConfig {
+                max_sessions: positive("RUST_MAX_VOD_SESSIONS", 1024)?,
+                max_requests: positive("RUST_MAX_VOD_REQUESTS", 2048)?,
+                frame_bytes: positive("RUST_VOD_FRAME_BYTES", 64 * 1024)?,
+                ..Default::default()
+            },
         )
+        .await
+        .map_err(|_| "VOD initialization failed (credentials omitted)")?;
+        let engine = if let Some(bus) = &realtime_bus {
+            engine
+                .with_events(
+                    store.clone(),
+                    auth.clone(),
+                    &redis_url,
+                    Arc::new(bus.clone()),
+                )
+                .await
+                .map_err(|_| "VOD event initialization failed (credentials omitted)")?
+        } else {
+            engine
+        };
+        Some(engine)
     } else {
         None
     };
@@ -366,6 +379,14 @@ async fn run() -> Result<(), String> {
         )
         .await
         .map_err(|_| "Catch-up media initialization failed (credentials omitted)")?;
+        let media = if let Some(bus) = &realtime_bus {
+            media
+                .with_events(store.clone(), &redis_url, Arc::new(bus.clone()))
+                .await
+                .map_err(|_| "Catch-up event initialization failed (credentials omitted)")?
+        } else {
+            media
+        };
         let management = dispatcharr_timeshift_http::CatchupManagement::new(
             store.clone(),
             auth.clone(),
@@ -404,10 +425,28 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
+    let hdhr = dispatcharr_hdhr_http::HdhrGateway::new(
+        store.clone(),
+        auth.clone(),
+        dispatcharr_hdhr_http::HdhrConfig {
+            max_requests: positive("RUST_MAX_HDHR_REQUESTS", 32)?,
+            max_channels: positive("RUST_MAX_HDHR_CHANNELS", 50000)?,
+            max_devices: positive("RUST_MAX_HDHR_DEVICES", 4096)?,
+            max_body_bytes: positive("RUST_HDHR_BODY_BYTES", 64 * 1024)?,
+            max_metadata_bytes: positive("RUST_HDHR_METADATA_BYTES", 8 * 1024 * 1024)?,
+            max_response_bytes: positive("RUST_HDHR_RESPONSE_BYTES", 16 * 1024 * 1024)?,
+            max_memory_bytes: positive("RUST_HDHR_MEMORY_BYTES", 128 * 1024 * 1024)?,
+            request_deadline: Duration::from_secs(
+                positive("RUST_HDHR_REQUEST_TIMEOUT_SECONDS", 15)? as u64,
+            ),
+        },
+    )
+    .map_err(|_| "HDHR initialization failed (credentials omitted)")?;
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(store)
         .merge(auth.clone().router())
+        .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))
         .merge(playback::router(
             engine.clone(),
@@ -480,6 +519,7 @@ async fn run() -> Result<(), String> {
         catchup_management,
         realtime,
         output,
+        hdhr,
         live_statistics,
     };
     let signal_services = services.clone();
@@ -544,6 +584,7 @@ struct ShutdownServices {
     catchup_management: Option<dispatcharr_timeshift_http::CatchupManagement>,
     realtime: Option<dispatcharr_realtime::RealtimeGateway>,
     output: Option<dispatcharr_output_http::OutputGateway>,
+    hdhr: dispatcharr_hdhr_http::HdhrGateway,
     live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
 }
 async fn shutdown_components(services: ShutdownServices) {
@@ -557,10 +598,11 @@ async fn shutdown_components(services: ShutdownServices) {
         catchup_management,
         realtime,
         output,
+        hdhr,
         live_statistics,
     } = services;
     engine.shutdown();
-    let (live, _, _, vod, catchup, management, realtime, output) = tokio::join!(
+    let (live, _, _, vod, catchup, management, realtime, output, hdhr) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
             if let Some(hls) = hls {
@@ -607,8 +649,9 @@ async fn shutdown_components(services: ShutdownServices) {
                 true
             }
         },
+        hdhr.shutdown(),
     );
-    if !live || !vod || !catchup || !management || !realtime || !output {
+    if !live || !vod || !catchup || !management || !realtime || !output || !hdhr {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }
     if let Some(clients) = clients {

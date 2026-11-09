@@ -252,7 +252,7 @@ impl OutputGateway {
             .strip_prefix("/output/m3u/")
             .map(|value| percent_path(value.trim_end_matches('/')))
             .filter(|value| !value.is_empty());
-        let ip = self.inner.auth.client_ip(&identity).to_string();
+        let ip = self.inner.auth.client_ip_text(&identity);
         let agent = identity.header("user-agent").unwrap_or("unknown");
         let user = if xc {
             match self
@@ -532,8 +532,8 @@ fn percent_path(value: &str) -> String {
     String::from_utf8_lossy(&output).into_owned()
 }
 
-fn origin(auth: &AuthService, identity: &PlaybackRequest, headers: &HeaderMap) -> String {
-    let header = |key| headers.get(key).and_then(|value| value.to_str().ok());
+fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) -> String {
+    let header = |key| identity.header(key);
     let trusted = auth.is_trusted_proxy(identity.peer_ip);
     let scheme = if trusted {
         header("x-forwarded-proto")
@@ -641,16 +641,12 @@ async fn dispatch(
             query: url::form_urlencoded::parse(uri.query().unwrap_or("").as_bytes())
                 .into_owned()
                 .collect(),
-            headers: request
-                .headers()
-                .iter()
-                .filter_map(|(key, value)| {
-                    value
-                        .to_str()
-                        .ok()
-                        .map(|value| (key.as_str().into(), value.into()))
-                })
-                .collect(),
+            headers: dispatcharr_contracts::source_headers(
+                request
+                    .headers()
+                    .iter()
+                    .map(|(name, value)| (name.as_str(), value.as_bytes())),
+            ),
         };
         let headers = request.headers().clone();
         let method = request.method().clone();
@@ -776,6 +772,65 @@ mod tests {
     async fn call(gateway: OutputGateway, request: Request<Body>) -> Response {
         let uri = request.uri().clone();
         dispatch(State(gateway), OriginalUri(uri), request).await
+    }
+    #[tokio::test]
+    #[ignore = "requires disposable actual Django SQL/Redis export fixture"]
+    async fn retained_string_capacity_and_last_emitted_frame_keep_actual_memory_charge() {
+        use futures_util::StreamExt;
+        let gateway = fixture().await;
+        let mut text = String::with_capacity(4096);
+        text.push_str("ok");
+        let body = text.into_bytes();
+        let allocation = body.capacity();
+        assert_eq!(body.len(), 2);
+        assert!(allocation >= 4096);
+        let total = gateway.inner.config.max_memory_bytes;
+        let reservation = Reservation {
+            request: gateway.inner.requests.clone().try_acquire_owned().unwrap(),
+            memory: Arc::new(MemoryReservation {
+                permit:
+                    gateway
+                        .inner
+                        .bytes
+                        .clone()
+                        .try_acquire_many_owned(
+                            build_reservation(&gateway.inner.config).unwrap() as u32
+                        )
+                        .unwrap(),
+            }),
+        };
+        let held = gateway.attachment(body, reservation);
+        let charged = allocation + 2 + 64 * 1024;
+        assert_eq!(
+            gateway.inner.bytes.available_permits(),
+            total - charged,
+            "retained Vec capacity, not2-byte payload, must be charged"
+        );
+        let mut stream = held.into_body().into_data_stream();
+        let frame = stream.next().await.unwrap().unwrap();
+        assert_eq!(&frame[..], b"ok");
+        drop(stream);
+        tokio::time::timeout(Duration::from_secs(2), async {
+            while gateway.inner.requests.available_permits() != 1 {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        assert_eq!(
+            gateway.inner.bytes.available_permits(),
+            total - charged,
+            "detached final Bytes owner must keep the shared memory guard"
+        );
+        drop(frame);
+        tokio::time::timeout(Duration::from_secs(2), async {
+            while gateway.inner.bytes.available_permits() != total {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        assert!(gateway.shutdown().await);
     }
     #[tokio::test]
     #[ignore = "requires disposable actual Django SQL/Redis export fixture"]

@@ -1,0 +1,21 @@
+{
+  "format_version": 1,
+  "scope": "Test-only native VOD SQL stats projection versus19 actual original Redis/ORM golden rows with nonempty metadata",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m7-vod-producer-native-projection-1/vod-contracts.json",
+  "evidence_sha256": "31121cd6bb17b8201c0a7f61df9d264d26793808fead3588b446ae535a1ec0c9",
+  "stats_cases": 19,
+  "native_runtime_enabled": false,
+  "native_lifecycle_publication_verified": false,
+  "source_bound_candidate_image": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Global bounded realRedis snapshot and lifecycle publication actor",
+    "Actual first-body-poll versus unpolled/reuse/reconnect/stop transition timing",
+    "Broad numeric/malformed/large metadata conversions",
+    "Frozen app pluspreviousM4regression"
+  ],
+  "original_application_credit": "Original Dispatcharr authors/contributors"
+}

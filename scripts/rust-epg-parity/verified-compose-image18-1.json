@@ -1,0 +1,36 @@
+{
+  "scope": "immutable-native-XML-parser-Compose-component",
+  "passed": true,
+  "source_tree_sha256": "0598101581932ac6a95c8a7f33e4ef2dc7ea804197f1dfc5942a45045166d502",
+  "source_archive_sha256": "7543ae92773e3bd874f95ab86f5117d6e17a02222b93723e7d8bdb0123dd9a42",
+  "app_manifest_sha256": "f97a6d34ac31edda03aa91773d151a7a398b95f770665ccc20b280551a46e5c3",
+  "goldens_sha256": "d16119cfaf554e2040911bcd47856fc83d0ec98cd2e6df9e5f5d69570df46f86",
+  "cases": 1144,
+  "tool_sha256": "fe85b88f9f7510554048e0c57bb18677385534ad09c2d6399df2662b4c3a32c1",
+  "application_performance_verified": false,
+  "full_refresh_job_verified": false,
+  "build_seconds": 54.34013546499773,
+  "image_id": "sha256:5fe6213421f91b1d77a6f876de0e7bd4ce6471fcb6e0a61d00ede93cf96a8d45",
+  "exit_code": 0,
+  "responses": 1144,
+  "limits": [
+    "Immutable Rust/cc library test target; no Python backend or mounted application source.",
+    "Container has no network and runs read-only/nonroot with256MiB and2CPU limits.",
+    "Full ingestion scheduling, SQL guide swap and job/playback resource acceptance remain open."
+  ],
+  "cleanup_passed": true,
+  "logs_sha256": {
+    "build.log": "124ee8edf0452381a3d0f19f72fdceb0819410c10a45f59e7ec2e5009678b75f",
+    "compose.json": "21531d7083ce3d17dd983d71ef00cceabdb1b388850190df6f6cdaaee7baca8d",
+    "stdout.jsonl": "b6eecbdbb4ab7270992fbb1eea284c3d0491da14df08354f8b3579d909335bd0",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "report": "artifacts/rust/m6-native-xmltv-compose-image18-1/verification.json",
+  "report_sha256": "bdcedc077c3d7e565aa97662c9495b6e8ea5f5cce137ebc1a8fe3b00c2a0ea24",
+  "notes": [
+    "Built from the exact retained immutable application image18 tar; no working-tree code enters the helper target.",
+    "The Docker build runs9 native parser tests before building the release comparison driver.",
+    "1144 actual original lxml cases match through a read-only, nonroot, network-isolated Compose service; cleanup confirmed.",
+    "Application contains no wired EPG refresh job yet. Full guide database lifecycle and resource comparison remain open."
+  ]
+}

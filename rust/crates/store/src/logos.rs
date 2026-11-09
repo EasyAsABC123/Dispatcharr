@@ -21,10 +21,10 @@ use std::{
 };
 use url::Url;
 const FROM: &str = " FROM dispatcharr_channels_logo l WHERE true";
-fn missing() -> StoreError {
+pub(crate) fn missing() -> StoreError {
     StoreError::StatusBody(404, json!({"detail":"Not found."}))
 }
-fn params(uri: &Uri) -> Vec<(String, String)> {
+pub(crate) fn params(uri: &Uri) -> Vec<(String, String)> {
     url::form_urlencoded::parse(uri.query().unwrap_or("").as_bytes())
         .into_owned()
         .collect()
@@ -62,7 +62,7 @@ fn ids(values: impl Iterator<Item = String>) -> Option<Vec<String>> {
     }
     Some(out)
 }
-fn filters(q: &mut QueryBuilder<'_, Postgres>, pairs: &[(String, String)]) {
+pub(crate) fn filters(q: &mut QueryBuilder<'_, Postgres>, pairs: &[(String, String)]) {
     match ids(pairs
         .iter()
         .filter(|(key, _)| key == "ids")
@@ -98,13 +98,9 @@ fn filters(q: &mut QueryBuilder<'_, Postgres>, pairs: &[(String, String)]) {
     }
 }
 // Same trusted-socket forwarding rules as core.utils.build_absolute_uri_with_port.
-fn origin(auth: &AuthService, peer: IpAddr, headers: &HeaderMap) -> String {
-    let header = |key| {
-        headers
-            .get(key)
-            .and_then(|v| v.to_str().ok())
-            .filter(|v| !v.is_empty())
-    };
+pub(crate) fn origin(auth: &AuthService, peer: IpAddr, headers: &HeaderMap) -> String {
+    let identity = crate::auth::request(SocketAddr::new(peer, 0), headers.clone());
+    let header = |key| identity.header(key).filter(|value| !value.is_empty());
     let trusted = auth.is_trusted_proxy(peer);
     let scheme = if trusted {
         header("x-forwarded-proto")
@@ -147,7 +143,7 @@ fn origin(auth: &AuthService, peer: IpAddr, headers: &HeaderMap) -> String {
     }
     format!("{scheme}://{host}")
 }
-fn serialize(mut row: Value, origin: &str) -> Value {
+pub(crate) fn serialize(mut row: Value, origin: &str) -> Value {
     let url = row["url"].as_str().unwrap_or("");
     let mut cache_key = url.to_owned();
     if url.starts_with("/data/logos") {
@@ -175,6 +171,36 @@ fn serialize(mut row: Value, origin: &str) -> Value {
             .push(json!(format!("...and {} more", count - 5)));
     }
     row
+}
+pub(crate) async fn lookup(auth: &AuthService, raw: &str, uri: &Uri) -> Result<Value, StoreError> {
+    let id = raw.parse::<i64>().map_err(|_| missing())?;
+    let mut query=QueryBuilder::new(format!("SELECT json_build_object('id',l.id,'name',l.name,'url',l.url,'channel_count',(SELECT count(*) FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id),'channel_names',COALESCE((SELECT json_agg('Channel: '||n.name) FROM (SELECT c.name FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id LIMIT 5)n),'[]'::json)){FROM}"));
+    filters(&mut query, &params(uri));
+    query.push(" AND l.id=").push_bind(id);
+    query
+        .build_query_scalar::<Value>()
+        .fetch_optional(auth.store.pool())
+        .await?
+        .ok_or_else(|| {
+            StoreError::StatusBody(404, json!({"detail":"No Logo matches the given query."}))
+        })
+}
+pub(crate) async fn serialized(
+    auth: &AuthService,
+    id: i64,
+    peer: IpAddr,
+    headers: &HeaderMap,
+) -> Result<Value, StoreError> {
+    let row = lookup(
+        auth,
+        &id.to_string(),
+        &Uri::from_static("/api/channels/logos/"),
+    )
+    .await?;
+    let origin = origin(auth, peer, headers);
+    tokio::task::spawn_blocking(move || serialize(row, &origin))
+        .await
+        .map_err(|_| StoreError::StatusBody(503, json!({"detail":"Logo metadata unavailable."})))
 }
 async fn read(
     auth: AuthService,
@@ -314,8 +340,30 @@ async fn retrieve(
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
-        .route("/api/channels/logos/", get(list))
-        .route("/api/channels/logos/{id}/", get(retrieve))
+        .route(
+            "/api/channels/logos/",
+            get(list).post(crate::logo_writes::create),
+        )
+        .route(
+            "/api/channels/logos/{id}/",
+            get(retrieve)
+                .patch(crate::logo_writes::patch)
+                .put(crate::logo_writes::put)
+                .delete(crate::logo_writes::delete),
+        )
+        .route(
+            "/api/channels/logos/{id}/cache/",
+            get(crate::image_proxy::cache),
+        )
+        .route(
+            "/api/channels/logos/{id}/cache",
+            get(crate::image_proxy::cache),
+        )
+        .route(
+            "/api/channels/logos/upload/",
+            axum::routing::post(crate::logo_writes::upload)
+                .layer(axum::extract::DefaultBodyLimit::max(8 * 1024 * 1024)),
+        )
         .with_state(auth)
 }
 #[cfg(test)]

@@ -1,3 +1,4 @@
+use crate::events::{Producer, Transition};
 use crate::resolver::{VodCandidate, VodRequest, VodSource};
 use dispatcharr_coordination::{AcquireRequest, Coordinator, Lease, ProviderReservation};
 use redis::{aio::MultiplexedConnection, AsyncCommands, Script};
@@ -91,15 +92,59 @@ struct Inner {
     max_requests: usize,
     pending_cleanups: AtomicUsize,
     cleanup_failed: AtomicBool,
+    events: std::sync::Mutex<Option<Producer>>,
 }
 #[derive(Clone)]
 pub(crate) struct SessionPool {
     inner: Arc<Inner>,
 }
+pub(crate) struct Progress {
+    session: Weak<Session>,
+    pool: Weak<Inner>,
+    acknowledged: u64,
+    reported: u64,
+}
+impl Progress {
+    pub async fn acknowledge(&mut self, bytes: usize) {
+        self.acknowledged = self.acknowledged.saturating_add(bytes as u64);
+        // Source writes after100 completed8192-byte generator yields. Count
+        // consumed bytes, independently of network/TLS/frame fragmentation.
+        let milestone = (self.acknowledged / 819200) * 819200;
+        self.record(milestone).await;
+    }
+    pub async fn finish(&mut self) {
+        // Requests yields a final short8192-byte block too. If that is block
+        //100/200/etc, Source stores its actual byte count rather than rounding.
+        if self.acknowledged > 0 && self.acknowledged.div_ceil(8192).is_multiple_of(100) {
+            self.record(self.acknowledged).await;
+        }
+    }
+    async fn record(&mut self, milestone: u64) {
+        if milestone <= self.reported {
+            return;
+        }
+        self.reported = milestone;
+        let (Some(session), Some(pool)) = (self.session.upgrade(), self.pool.upgrade()) else {
+            return;
+        };
+        session.bytes.store(milestone, Ordering::Relaxed);
+        let _ = update(
+            &pool,
+            &session,
+            &[
+                ("bytes_sent", milestone.to_string()),
+                ("last_activity", now()),
+            ],
+        )
+        .await;
+    }
+}
 pub(crate) struct Ticket {
     pub session: Arc<Session>,
     pool: Weak<Inner>,
     _request: OwnedSemaphorePermit,
+    is_new: bool,
+    body_started: AtomicBool,
 }
 
 impl SessionPool {
@@ -135,10 +180,43 @@ impl SessionPool {
                 max_requests,
                 pending_cleanups: AtomicUsize::new(0),
                 cleanup_failed: AtomicBool::new(false),
+                events: std::sync::Mutex::new(None),
             }),
         })
     }
 
+    pub fn install_events(&self, producer: Producer) -> Result<(), dispatcharr_store::StoreError> {
+        let sessions = self.inner.sessions.try_lock().map_err(|_| unavailable())?;
+        let mut events = self.inner.events.lock().unwrap();
+        if !sessions.is_empty() || events.is_some() {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "VOD events must be configured before playback",
+            ));
+        }
+        *events = Some(producer);
+        Ok(())
+    }
+    pub fn event_diagnostics(&self) -> serde_json::Value {
+        self.inner
+            .events
+            .lock()
+            .unwrap()
+            .as_ref()
+            .map_or(json!({"pending":0,"failed":0}), Producer::diagnostics)
+    }
+    pub async fn finish_events(&self, timeout: Duration) -> bool {
+        let events = self.inner.events.lock().unwrap().clone();
+        if let Some(events) = events {
+            events.shutdown(timeout).await
+        } else {
+            true
+        }
+    }
+    pub fn cancel_events(&self) {
+        if let Some(events) = self.inner.events.lock().unwrap().as_ref() {
+            events.cancel();
+        }
+    }
     pub fn stopped(&self) -> bool {
         *self.inner.stopped.borrow()
     }
@@ -313,6 +391,8 @@ impl SessionPool {
                 session,
                 pool: Arc::downgrade(&self.inner),
                 _request: request_permit,
+                is_new: false,
+                body_started: AtomicBool::new(false),
             };
             let mut connection = self.inner.connection.clone();
             let count: i64 = Script::new(ENTER)
@@ -366,7 +446,7 @@ impl SessionPool {
             ("content_obj_type", source.kind.storage_name().into()),
             ("content_uuid", source.content_uuid.clone()),
             ("content_name", source.name.clone()),
-            ("client_ip", request.playback.peer_ip.to_string()),
+            ("client_ip", request.client_ip_text()),
             (
                 "client_user_agent",
                 request.playback.header("user-agent").unwrap_or("").into(),
@@ -472,7 +552,7 @@ impl SessionPool {
             bytes: AtomicU64::new(0),
             content_length: AtomicU64::new(0),
             last_request: AtomicU64::new(millis()),
-            client_ip: request.playback.peer_ip.to_string(),
+            client_ip: request.client_ip_text(),
             user_agent: request.playback.header("user-agent").unwrap_or("").into(),
             lease,
             metadata_token,
@@ -492,6 +572,8 @@ impl SessionPool {
             session,
             pool: Arc::downgrade(&self.inner),
             _request: request_permit,
+            is_new: true,
+            body_started: AtomicBool::new(false),
         })
     }
 
@@ -564,36 +646,14 @@ fn monitor(session: Weak<Session>, pool: Weak<Inner>) {
             if session.state.lock().await.closed {
                 return;
             }
-            let stop: bool = match pool
-                .connection
-                .clone()
-                .exists(format!("vod_proxy:client:{}:stop", session.id))
-                .await
-            {
-                Ok(value) => value,
-                Err(_) => {
-                    session.stop.send_replace(true);
-                    return;
-                }
-            };
+            // Private liveness/stop checks must not invent Source activity or
+            // publish prefetched bytes. Only acknowledged body milestones do so.
+            let mut connection = pool.connection.clone();
+            let stop:bool=match Script::new("if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return 1 end return redis.call('EXISTS',KEYS[2])")
+                .key(key(&session.id)).key(format!("vod_proxy:client:{}:stop",session.id)).arg(&session.metadata_token).invoke_async(&mut connection).await {
+                    Ok(value)=>value,Err(_)=>{session.stop.send_replace(true);return;}
+                };
             if stop {
-                session.stop.send_replace(true);
-                return;
-            }
-            if update(
-                &pool,
-                &session,
-                &[
-                    (
-                        "bytes_sent",
-                        session.bytes.load(Ordering::Relaxed).to_string(),
-                    ),
-                    ("last_activity", now()),
-                ],
-            )
-            .await
-            .is_err()
-            {
                 session.stop.send_replace(true);
                 return;
             }
@@ -601,14 +661,62 @@ fn monitor(session: Weak<Session>, pool: Weak<Inner>) {
     });
 }
 
+impl Ticket {
+    pub fn progress(&self) -> Progress {
+        Progress {
+            session: Arc::downgrade(&self.session),
+            pool: self.pool.clone(),
+            acknowledged: 0,
+            reported: 0,
+        }
+    }
+    pub async fn begin_body(&self) {
+        if self.body_started.swap(true, Ordering::AcqRel) || !self.is_new {
+            return;
+        }
+        if let Some(pool) = self.pool.upgrade() {
+            let events = pool.events.lock().unwrap().clone();
+            if let Some(events) = events {
+                let _ = events.emit(transition(&self.session, true)).await;
+            }
+        }
+    }
+}
+fn transition(session: &Session, started: bool) -> Transition {
+    Transition {
+        started,
+        content_name: session.source.name.clone(),
+        content_uuid: session.source.content_uuid.clone(),
+        client_ip: session.client_ip.clone(),
+        user_id: session
+            .source
+            .user
+            .as_ref()
+            .map_or_else(|| "0".into(), |user| user.id.to_string()),
+        username: session
+            .source
+            .user
+            .as_ref()
+            .map(|user| user.username.clone()),
+    }
+}
+struct CleanupFinished(Arc<Inner>);
+impl Drop for CleanupFinished {
+    fn drop(&mut self) {
+        self.0.pending_cleanups.fetch_sub(1, Ordering::AcqRel);
+    }
+}
 impl Drop for Ticket {
     fn drop(&mut self) {
         let session = self.session.clone();
+        let emit_stop = !self.is_new || self.body_started.load(Ordering::Acquire);
         let Some(pool) = self.pool.upgrade() else {
             return;
         };
         if let Ok(runtime) = tokio::runtime::Handle::try_current() {
+            pool.pending_cleanups.fetch_add(1, Ordering::AcqRel);
             runtime.spawn(async move {
+                let _finished=CleanupFinished(pool.clone());
                 let mut state = session.state.lock().await;
                 if state.active == 0 {
                     return;
@@ -655,6 +763,11 @@ impl Drop for Ticket {
                     .is_some_and(|value| Arc::ptr_eq(value, &session))
                 {
                     sessions.remove(&session.id);
+                }
+                drop(sessions);drop(state);
+                if deleted==1 && emit_stop {
+                    let events=pool.events.lock().unwrap().clone();
+                    if let Some(events)=events{let _=events.emit(transition(&session,false)).await;}
                 }
             });
         }
@@ -722,7 +835,7 @@ fn idle_match(
                     .is_ok_and(|state| state.active == 0 && !state.closed)
         })
         .max_by_key(|session| {
-            let ip = if session.client_ip == request.playback.peer_ip.to_string() {
+            let ip = if session.client_ip == request.client_ip_text() {
                 5
             } else {
                 0

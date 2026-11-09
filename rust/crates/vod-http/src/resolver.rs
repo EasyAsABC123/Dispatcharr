@@ -38,11 +38,21 @@ impl ContentKind {
 
 #[derive(Clone)]
 pub struct VodRequest {
+    /// Engine-derived Source IP text, retained before the typed peer is normalized.
+    pub resolved_client_ip: Option<String>,
     pub playback: PlaybackRequest,
     pub kind: String,
     pub content_id: String,
     pub session_id: Option<String>,
     pub profile_id: Option<i64>,
+}
+
+impl VodRequest {
+    pub fn client_ip_text(&self) -> String {
+        self.resolved_client_ip
+            .clone()
+            .unwrap_or_else(|| self.playback.peer_ip.to_string())
+    }
 }
 
 // No Debug derives: provider URLs can contain private credentials.
@@ -78,6 +88,9 @@ pub trait VodResolver: Send + Sync {
     ) -> BoxFuture<'a, Result<VodSource, StoreError>>;
     fn client_ip(&self, request: &PlaybackRequest) -> std::net::IpAddr {
         request.peer_ip
+    }
+    fn client_ip_text(&self, request: &PlaybackRequest) -> String {
+        self.client_ip(request).to_string()
     }
     fn restore_user(&self, _id: i64) -> BoxFuture<'_, Result<Option<User>, StoreError>> {
         Box::pin(async { Ok(None) })
@@ -127,6 +140,9 @@ impl SqlVodResolver {
 impl VodResolver for SqlVodResolver {
     fn client_ip(&self, request: &PlaybackRequest) -> std::net::IpAddr {
         self.auth.client_ip(request)
+    }
+    fn client_ip_text(&self, request: &PlaybackRequest) -> String {
+        self.auth.client_ip_text(request)
     }
     fn restore_user(&self, id: i64) -> BoxFuture<'_, Result<Option<User>, StoreError>> {
         Box::pin(async move { Ok(self.store.user_by_id(id).await?.filter(|u| u.is_active)) })

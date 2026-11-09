@@ -105,3 +105,79 @@ would incorrectly suppress a new-viewer update. Preserve the pre-admission
 registration decision separately; use the original existing-connected-at and
 existing-programme rules, including the legacy case where connected-at exists
 but programme_vid is missing. Reopens/probes must preserve that prior decision.
+
+## Native host milestones
+
+`verified-vod-producer-host.json` records the actual six Source/native response
+body cases, eight equal audit rows, nineteen SQL/global-Redis statistics
+projections and fifteen pre-existing HTTP/Redis regressions. A stalled sink
+cannot produce a false drained shutdown; provider/session/actor work cleans up.
+The first run exposed an actual native telemetry mismatch: the old timer wrote
+prefetched bytes. Native now records acknowledged per-request data at the
+Source100×8192-byte milestones, including the captured4,096,000-byte full-file
+sample. The normal-completion fixture pauses both implementations after their
+first chunk until the start snapshot arrives, preventing unlike observation
+points from being confused with telemetry differences. Earlier failures remain.
+
+`verified-timeshift-producer-host.json` adds original conditional publication
+and immediate old-position displacement evidence, native full-snapshot actor
+registration/grace/hop cases, stalled publication cleanup, eleven archive-pool
+regressions and the original-derived shared admission suite. The first owned
+registration is distinguished from its private pending admission; repeats and
+legacy connected-at-without-programme suppress notification. Previous-position
+removal publishes before replacement provider selection, including a later
+limit refusal. Only the private admission result gained a hop count on LIMIT;
+existing policy/counter semantics retain their Source tests.
+
+Both actors hold Store/Redis/sink context rather than an owning playback-engine
+reference. Their bounded queues, single snapshot workers and supervised transport
+guards have no per-viewer publication polling. Explicit VOD transitions stay in
+order and are not merged. VOD omits success; catch-up snapshots retain success.
+The app attaches both publishers before playback. IMAGE18 packaged transport
+and complete earlier M4 contract replay are the next separate acceptance gates.
+
+The actual HTTP/WebSocket Source probe also captured a remaining legacy race:
+a reconnect that closes again before the first one-second cleanup expires can
+produce duplicate vod_stopped/statistics pairs, because both original daemon
+threads see idle state. Native epoch-fenced cleanup currently emits once.
+This rapid-close variant remains an explicit parity gap; the accepted
+reconnect scenario keeps the replacement active beyond the old grace window.
+The packaged comparison uses an optional262144-byte/s identical MP4 origin
+and1.2-second active hold so that scenario is reproducible through HTTP socket
+buffers. Default VOD fixtures remain unpaced and all file/header bytes stay
+unchanged. No performance gain follows from these functional probes.
+
+## Post-IMAGE18 known-length progress correction
+
+`verified-vod-progress-host.json` preserves an actual immutable18 HTTP witness:
+819199/819200/819201-byte206 range payloads match Source hashes exactly, while
+published Redis byte progress remains0 instead of819199/819200/819200. A direct
+body collector had hidden part of this behavior: Hyper can finish a declared
+Content-Length without polling the body again for EOF. The correction tracks
+the provider response length and acknowledges its final emitted frame, while
+retaining EOF handling for unknown-length bodies. It also preserves Source's
+actual byte count when its100th8192-byte generator block is a short final block.
+
+The working correction passes all three cases through an actual Axum/Hyper
+HTTP socket, plus the fifteen HTTP/Redis, six lifecycle, nineteen full-statistics
+and stalled-publication regressions. This is post18 host evidence; repeat the
+same witness on immutable19 before accepting its packaged behavior. Interrupted
+partial-block variants, the rapid-reclose legacy race and the broader remaining
+M4/resource gates remain explicit.
+
+## Immutable IMAGE19 packaged regression and rapid reclose witness
+
+`verified-vod-progress-image19.json` now repeats the failing IMAGE18 witness on
+immutable19 through actual HTTP: all three206 payload hashes, EOF metadata and
+819199/819200/819200 Source progress values match. The original IMAGE18 failure
+remains preserved. `verified-vod-producer-image19.json` and
+`verified-timeshift-producer-image19.json` repeat real Source Daphne/native
+WebSocket transport, stable full statistics DTOs and audio/video decode gates.
+These are functional results, not resource measurements or full M4 acceptance.
+
+`verified-vod-rapid-reclose-source.json` makes the remaining race reproducible:
+reconnect and reclose within4.75ms produce one start, two stop events and
+start/stop/stop DB audits in the original backend. Its snapshots race from one
+connection to zero, then metadata and provider counters clean up. Native fenced
+cleanup currently emits one stop. Porting the observed event/audit multiplicity
+without letting stale cleanup remove active ownership remains a separate gate.

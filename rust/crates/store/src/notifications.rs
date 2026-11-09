@@ -60,6 +60,40 @@ impl NotificationCache {
         cmd.arg("if redis.call('STRLEN',KEYS[1])>1048576 then return redis.error_reply('cache value exceeds limit') end return redis.call('GET',KEYS[1])").arg(1).arg(key);
         self.command(cmd).await
     }
+    pub(crate) async fn invalidate_user_agent(&self, version: &str) -> Result<(), StoreError> {
+        // CoreSettings signals ignore connectivity/timeout errors, but do not
+        // swallow authentication, permission or server command failures.
+        let Ok(Ok(_permit)) = timeout(Duration::from_secs(2), self.permits.acquire()).await else {
+            return Ok(());
+        };
+        let mut connection = self.connection.clone();
+        let mut delete = redis::cmd("DEL");
+        delete.arg(":1:coresettings:default_user_agent");
+        let mut bump = redis::cmd("SET");
+        bump.arg(":1:coresettings:default_user_agent:ver")
+            .arg(version);
+        for command in [delete, bump] {
+            match timeout(
+                Duration::from_secs(2),
+                command.query_async::<redis::Value>(&mut connection),
+            )
+            .await
+            {
+                Ok(Ok(_)) => {}
+                Err(_) => tracing::warn!("Default User-Agent cache invalidation timed out"),
+                Ok(Err(error)) if error.is_io_error() || error.is_timeout() => {
+                    tracing::warn!("Default User-Agent cache invalidation backend unavailable")
+                }
+                Ok(Err(_)) => {
+                    return Err(StoreError::StatusBody(
+                        500,
+                        json!({"detail":"Default User-Agent cache invalidation failed."}),
+                    ))
+                }
+            }
+        }
+        Ok(())
+    }
     async fn set(&self, key: &str, value: &Value) -> Result<(), StoreError> {
         self.set_for(key, value, 300).await
     }

@@ -1,0 +1,90 @@
+{
+  "scope": "packaged HDHR original/native HTTP and generated native TS URL decoder proof",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "candidate_image": "dispatcharr-rust-candidate:m5-logo-m7-hdhr-events-image18-1",
+  "candidate_image_id": "sha256:af8352ff444b847d6edaed51c340578c0650f02f9b4881ff611b7fba4af9c44b",
+  "candidate_source_tree_sha256": "0598101581932ac6a95c8a7f33e4ef2dc7ea804197f1dfc5942a45045166d502",
+  "candidate_build_manifest_sha256": "f97a6d34ac31edda03aa91773d151a7a398b95f770665ccc20b280551a46e5c3",
+  "decode": {
+    "frames": 74,
+    "video_and_audio": true,
+    "stderr_bytes": 0,
+    "sample_sha256": "b3aed96f66233d6ff3f105f1bf542f286160a8acb15cf15c1d9c7bfdf4a4c03e"
+  },
+  "media_reader": {
+    "bytes": 1792204,
+    "media_bytes": 1165788,
+    "packets": 9533,
+    "sync_errors": 0,
+    "partial_bytes": 0,
+    "ended": true,
+    "errors": [],
+    "http_status": 200,
+    "content_type": "video/mp2t"
+  },
+  "media_streams": {
+    "programs": [
+      {
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ]
+      }
+    ],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio"
+      }
+    ]
+  },
+  "ffprobe_tail_stderr_bytes": 0,
+  "candidate_shutdown": {
+    "ExitCode": 0,
+    "OOMKilled": false
+  },
+  "shutdown_seconds": 0.22008600100525655,
+  "cleanup": "isolated Compose project removed",
+  "tool_sha256": {
+    "scripts/rust-hdhr-contracts/image.py": "9626e83b4cb0a20e68e2064e3cd6bf3518446f70a927c587cb8b39b4fc526655",
+    "scripts/rust-hdhr-contracts/probe.py": "71ba4c940d9ef4c2aa7ce0c2885416e3e3e57467cef9e460b2f3022e76dd26eb",
+    "scripts/rust-hdhr-contracts/control.py": "d1ea849d0a7193e8a266d1ece9be74ac1bcc72b5da38651c21f29e9ce2adb56e",
+    "scripts/rust-realtime-contracts/interop.py": "3be7185f1ea974fbee17bedff53ae9b3ab4f7567fd9939052ab89291fdf62b1f",
+    "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "80ce607d050f72b8aea8399a3a769d8cd067e59beb16ee09349a5e356b11fddd",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1"
+  },
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "artifact": "artifacts/rust/m7-hdhr-image18-1/hdhr-image.json",
+  "artifact_sha256": "1c928f4a4d4ebbc7b0c7cbe9c5dec8aabb6cf2f257d69867d30be1e57584c3b3",
+  "compared_http_cases": 127,
+  "excluded": [
+    "HTML template rendering",
+    "multipart input",
+    "suffix/query-format precedence",
+    "full Xtream/XMLTV APIs",
+    "full M7/full-app/performance acceptance"
+  ]
+}

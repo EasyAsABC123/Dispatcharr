@@ -77,13 +77,24 @@ pub(super) fn released(store: &Inner, channel: &str, id: &str, announced: bool) 
         }
     }
 }
-pub(super) fn stopped_channel(store:&Inner,channel:&str,clients:&[Arc<ClientInner>]) {
-    let callback={
-        let mut state=store.live_stats.lock().unwrap();
-        state.ready.remove(channel);state.pending.remove(channel);trigger(&state)
+pub(super) fn stopped_channel(store: &Inner, channel: &str, clients: &[Arc<ClientInner>]) {
+    let callback = {
+        let mut state = store.live_stats.lock().unwrap();
+        state.ready.remove(channel);
+        state.pending.remove(channel);
+        trigger(&state)
     };
-    let count=clients.iter().filter(|client|client.channel==channel&&client.stats_announced.swap(false,Ordering::AcqRel)).count();
-    if let Some(callback)=callback {for _ in 0..count {callback.changed();}}
+    let count = clients
+        .iter()
+        .filter(|client| {
+            client.channel == channel && client.stats_announced.swap(false, Ordering::AcqRel)
+        })
+        .count();
+    if let Some(callback) = callback {
+        for _ in 0..count {
+            callback.changed();
+        }
+    }
 }
 impl ClientStore {
     /// Existing store/lease clones share the callback. The application retains
@@ -214,42 +225,92 @@ mod tests {
         );
         store.shutdown().await;
     }
-    #[tokio::test(flavor="multi_thread",worker_threads=2)]
-    #[ignore="requires owned disposable Redis"]
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    #[ignore = "requires owned disposable Redis"]
     async fn channel_stop_notifies_after_atomic_cleanup_without_waiting_for_held_leases() {
-        let (store,count)=fixture().await;let channel=uuid::Uuid::new_v4().to_string();metadata(&store,&channel).await;
-        let first=store.register(&channel,&viewer(),"ts").await.unwrap();
-        let second=store.register(&channel,&viewer(),"ts").await.unwrap();
-        assert_eq!(count.0.load(Ordering::SeqCst),2);
+        let (store, count) = fixture().await;
+        let channel = uuid::Uuid::new_v4().to_string();
+        metadata(&store, &channel).await;
+        let first = store.register(&channel, &viewer(), "ts").await.unwrap();
+        let second = store.register(&channel, &viewer(), "ts").await.unwrap();
+        assert_eq!(count.0.load(Ordering::SeqCst), 2);
         assert!(store.request_channel_stop(&channel).await.unwrap());
-        assert_eq!(count.0.load(Ordering::SeqCst),4);
+        assert_eq!(count.0.load(Ordering::SeqCst), 4);
         assert!(store.channel_clients(&channel).await.unwrap().is_empty());
-        assert_eq!(store.inner.slots.available_permits(),0,"media/frame leases still retain physical admission");
-        assert!(store.request_channel_stop(&channel).await.unwrap());assert_eq!(count.0.load(Ordering::SeqCst),4);
-        drop((first,second));wait(||store.inner.slots.available_permits()==2).await;
-        assert_eq!(count.0.load(Ordering::SeqCst),4);
-        store.remove_channel(&channel,"stats-fence").await.unwrap();
-        let mut connection=store.inner.connection.clone();
-        let _:usize=redis::cmd("DEL").arg(format!("live:channel:{channel}:stopping")).query_async(&mut connection).await.unwrap();
+        assert_eq!(
+            store.inner.slots.available_permits(),
+            0,
+            "media/frame leases still retain physical admission"
+        );
+        assert!(store.request_channel_stop(&channel).await.unwrap());
+        assert_eq!(count.0.load(Ordering::SeqCst), 4);
+        drop((first, second));
+        wait(|| store.inner.slots.available_permits() == 2).await;
+        assert_eq!(count.0.load(Ordering::SeqCst), 4);
+        store.remove_channel(&channel, "stats-fence").await.unwrap();
+        let mut connection = store.inner.connection.clone();
+        let _: usize = redis::cmd("DEL")
+            .arg(format!("live:channel:{channel}:stopping"))
+            .query_async(&mut connection)
+            .await
+            .unwrap();
         store.shutdown().await;
     }
-    #[tokio::test(flavor="multi_thread",worker_threads=2)]
-    #[ignore="requires owned disposable Redis"]
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    #[ignore = "requires owned disposable Redis"]
     async fn abandoned_era_notifies_only_removed_clients_and_preserves_preowner_registration() {
-        let (store,count)=fixture().await;let channel=uuid::Uuid::new_v4().to_string();
-        let mut connection=store.inner.connection.clone();let owner=format!("live:channel:{channel}:owner");
-        let _:String=redis::cmd("SET").arg(&owner).arg("old-owner").query_async(&mut connection).await.unwrap();
-        store.publish_channel(&channel,"old-owner","old-owner",&BTreeMap::from([("state".into(),"connecting".into())]),0).await.unwrap();
-        let old=store.register(&channel,&viewer(),"ts").await.unwrap();
-        let _:usize=redis::cmd("DEL").arg(&owner).query_async(&mut connection).await.unwrap();
-        let new=store.register(&channel,&viewer(),"ts").await.unwrap();assert_eq!(count.0.load(Ordering::SeqCst),2);
-        assert_eq!(store.stop_abandoned_channel(&channel,"old-owner").await.unwrap(),1);
-        assert_eq!(count.0.load(Ordering::SeqCst),3);
-        assert!(*old.stopped().borrow());assert!(!*new.stopped().borrow());
-        assert_eq!(store.channel_clients(&channel).await.unwrap().len(),1);
-        assert_eq!(store.stop_abandoned_channel(&channel,"old-owner").await.unwrap(),0);assert_eq!(count.0.load(Ordering::SeqCst),3);
-        old.release().await.unwrap();new.release().await.unwrap();drop((old,new));
-        assert_eq!(count.0.load(Ordering::SeqCst),4);store.shutdown().await;
+        let (store, count) = fixture().await;
+        let channel = uuid::Uuid::new_v4().to_string();
+        let mut connection = store.inner.connection.clone();
+        let owner = format!("live:channel:{channel}:owner");
+        let _: String = redis::cmd("SET")
+            .arg(&owner)
+            .arg("old-owner")
+            .query_async(&mut connection)
+            .await
+            .unwrap();
+        store
+            .publish_channel(
+                &channel,
+                "old-owner",
+                "old-owner",
+                &BTreeMap::from([("state".into(), "connecting".into())]),
+                0,
+            )
+            .await
+            .unwrap();
+        let old = store.register(&channel, &viewer(), "ts").await.unwrap();
+        let _: usize = redis::cmd("DEL")
+            .arg(&owner)
+            .query_async(&mut connection)
+            .await
+            .unwrap();
+        let new = store.register(&channel, &viewer(), "ts").await.unwrap();
+        assert_eq!(count.0.load(Ordering::SeqCst), 2);
+        assert_eq!(
+            store
+                .stop_abandoned_channel(&channel, "old-owner")
+                .await
+                .unwrap(),
+            1
+        );
+        assert_eq!(count.0.load(Ordering::SeqCst), 3);
+        assert!(*old.stopped().borrow());
+        assert!(!*new.stopped().borrow());
+        assert_eq!(store.channel_clients(&channel).await.unwrap().len(), 1);
+        assert_eq!(
+            store
+                .stop_abandoned_channel(&channel, "old-owner")
+                .await
+                .unwrap(),
+            0
+        );
+        assert_eq!(count.0.load(Ordering::SeqCst), 3);
+        old.release().await.unwrap();
+        new.release().await.unwrap();
+        drop((old, new));
+        assert_eq!(count.0.load(Ordering::SeqCst), 4);
+        store.shutdown().await;
     }
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
     #[ignore = "requires owned disposable Redis; pauses all commands250ms"]

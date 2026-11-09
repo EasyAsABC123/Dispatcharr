@@ -168,7 +168,12 @@ async fn proxy_login_inner(
     // already-authenticated JWT/API-key user does not consume a login slot.
     if !already_authenticated {
         if let Err(error) = auth
-            .shared_auth_budget(ip, crate::auth_throttle::Scope::Login, true, true)
+            .shared_auth_budget(
+                auth.source_client_ip(&request),
+                crate::auth_throttle::Scope::Login,
+                true,
+                true,
+            )
             .await
         {
             if let StoreError::Throttled { wait, .. } = &error {

@@ -116,17 +116,39 @@ impl VodEngine {
             }),
         })
     }
+    /// Attach the bounded original lifecycle publisher before any playback.
+    pub async fn with_events(
+        self,
+        store: Store,
+        auth: AuthService,
+        redis_url: &str,
+        sink: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
+    ) -> Result<Self, StoreError> {
+        let producer = crate::events::Producer::connect(store, auth, redis_url, sink, 2048).await?;
+        self.inner.sessions.install_events(producer)?;
+        Ok(self)
+    }
+    pub fn event_diagnostics(&self) -> serde_json::Value {
+        self.inner.sessions.event_diagnostics()
+    }
     /// Stop admission and every supervised provider body under one global
     /// deadline. False leaves ledger/reaper recovery necessary after an outage.
     pub async fn shutdown(&self) -> bool {
+        let deadline = tokio::time::Instant::now() + self.inner.config.shutdown_timeout;
         self.inner.sessions.stop_admission();
-        tokio::time::timeout(
-            self.inner.config.shutdown_timeout,
-            self.inner.sessions.drain(),
-        )
-        .await
-        .is_ok()
-            && self.inner.sessions.cleanup_succeeded()
+        let drained = tokio::time::timeout_at(deadline, self.inner.sessions.drain())
+            .await
+            .is_ok();
+        if !drained {
+            self.inner.sessions.cancel_events();
+            return false;
+        }
+        let events = self
+            .inner
+            .sessions
+            .finish_events(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await;
+        events && self.inner.sessions.cleanup_succeeded()
     }
     pub fn router(self) -> Router {
         Router::new()
@@ -163,6 +185,7 @@ impl VodEngine {
             ));
         }
         let mut user = self.inner.resolver.authorize(request).await?;
+        request.resolved_client_ip = Some(self.inner.resolver.client_ip_text(&request.playback));
         request.playback.peer_ip = self.inner.resolver.client_ip(&request.playback);
         if let Some(id) = &request.session_id {
             if !valid_session(id) {
@@ -312,19 +335,32 @@ impl VodEngine {
                 })
                 .collect(),
         };
+        let provider_body_length = upstream.content_length();
+        let progress = ticket.progress();
+        let (start_body, body_started) = tokio::sync::oneshot::channel();
         let task = tokio::spawn(pump(
             upstream,
             ticket,
             sender,
             self.inner.config.frame_bytes,
             retry,
+            body_started,
         ));
         let state = BodyState {
             receiver,
             stop,
             _cancel: CancelTask(task),
+            start_body: Some(start_body),
+            progress,
+            pending_bytes: 0,
+            remaining: provider_body_length,
         };
         let body = stream::try_unfold(state, |mut state| async move {
+            state.progress.acknowledge(state.pending_bytes).await;
+            state.pending_bytes = 0;
+            if let Some(start) = state.start_body.take() {
+                let _ = start.send(());
+            }
             if *state.stop.borrow() {
                 return Err(io::Error::new(
                     io::ErrorKind::Interrupted,
@@ -339,9 +375,26 @@ impl VodEngine {
                 ));
             }
             match next {
-                Some(Ok(chunk)) => Ok(Some((chunk, state))),
+                Some(Ok(chunk)) => {
+                    state.remaining = state
+                        .remaining
+                        .and_then(|left| left.checked_sub(chunk.len() as u64));
+                    if state.remaining == Some(0) {
+                        // Hyper can retire a known-length body after this frame
+                        // without another EOF poll. Commit its final Source
+                        // generator yield here so that progress is not lost.
+                        state.progress.acknowledge(chunk.len()).await;
+                        state.progress.finish().await;
+                    } else {
+                        state.pending_bytes = chunk.len();
+                    }
+                    Ok(Some((chunk, state)))
+                }
                 Some(Err(error)) => Err(error),
-                None => Ok(None),
+                None => {
+                    state.progress.finish().await;
+                    Ok(None)
+                }
             }
         });
         let mut response = Response::new(Body::from_stream(body));
@@ -360,6 +413,10 @@ struct BodyState {
     receiver: tokio::sync::mpsc::Receiver<Result<Bytes, io::Error>>,
     stop: tokio::sync::watch::Receiver<bool>,
     _cancel: CancelTask,
+    start_body: Option<tokio::sync::oneshot::Sender<()>>,
+    progress: crate::sessions::Progress,
+    pending_bytes: usize,
+    remaining: Option<u64>,
 }
 struct RetryRequest {
     client: reqwest::Client,
@@ -416,9 +473,18 @@ async fn pump(
     sender: tokio::sync::mpsc::Sender<Result<Bytes, io::Error>>,
     frame_bytes: usize,
     retry: RetryRequest,
+    body_started: tokio::sync::oneshot::Receiver<()>,
 ) {
     let mut upstream: ProviderStream = Box::pin(upstream.bytes_stream());
     let mut stop = ticket.session.stop.subscribe();
+    if *stop.borrow() {
+        return;
+    }
+    let started = tokio::select! {result=body_started=>result.is_ok(),_=stop.changed()=>false};
+    if !started || *stop.borrow() {
+        return;
+    }
+    ticket.begin_body().await;
     let mut failures = 0;
     let mut sent_bytes = 0u64;
     let range_start = retry
@@ -475,7 +541,6 @@ async fn pump(
             }
             sent_bytes = sent_bytes.saturating_add(count);
             failures = 0;
-            ticket.session.bytes.fetch_add(count, Ordering::Relaxed);
         }
     }
 }
@@ -685,16 +750,12 @@ fn playback(request: &Request<Body>, content: String) -> Result<PlaybackRequest,
         query: url::form_urlencoded::parse(request.uri().query().unwrap_or("").as_bytes())
             .into_owned()
             .collect(),
-        headers: request
-            .headers()
-            .iter()
-            .filter_map(|(key, value)| {
-                value
-                    .to_str()
-                    .ok()
-                    .map(|value| (key.as_str().to_owned(), value.to_owned()))
-            })
-            .collect(),
+        headers: dispatcharr_contracts::source_headers(
+            request
+                .headers()
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_bytes())),
+        ),
         peer_ip: peer,
     })
 }
@@ -717,6 +778,7 @@ async fn play(
     };
     engine
         .respond(VodRequest {
+            resolved_client_ip: None,
             playback,
             kind: path.get("kind").cloned().unwrap_or_default(),
             content_id,
@@ -800,6 +862,7 @@ mod header_tests {
             (Some(0), "/proxy/vod/movie/fixture/0/session"),
         ] {
             let request = VodRequest {
+                resolved_client_ip: None,
                 playback: PlaybackRequest {
                     channel_id: String::new(),
                     query: vec![],

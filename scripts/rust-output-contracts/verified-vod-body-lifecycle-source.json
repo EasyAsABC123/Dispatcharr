@@ -1,0 +1,35 @@
+{
+  "format_version": 1,
+  "scope": "Original actual VOD manager response-body iterator timing with real HTTP origin/Redis/Channels/DB audit; frontend routing/auth not covered",
+  "passed": true,
+  "cleanup_passed": true,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": "artifacts/rust/m7-vod-body-lifecycle-source-2/vod-contracts.json",
+  "evidence_sha256": "743575d3e00d8486ba1c34a865b32d49d8609a83a40d19bebf280e8ecdfb7d78",
+  "oracle": "artifacts/rust/m7-vod-body-lifecycle-source-2/vod-lifecycle-source.json",
+  "oracle_sha256": "d1a6573ff4de97ff5cafbf0f6e273abf75310cd4dd737a371cdcc8b1e3abfb9b",
+  "cases": [
+    "new-unpolled-duplicate-close",
+    "new-started-disconnect",
+    "reused-unpolled-last-close",
+    "reconnect-suppresses-grace-stop",
+    "normal-completion",
+    "provider-failure-before-body"
+  ],
+  "audit_rows": 8,
+  "provider_and_metadata_cleanup_verified": true,
+  "metadata_anonymous_user_id": "unknown",
+  "event_anonymous_user_id": "0",
+  "initial_observer_timeout_preserved": "artifacts/rust/m7-vod-body-lifecycle-source-1",
+  "native_implementation_verified": false,
+  "source_bound_candidate_image": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Native bounded lifecycle producers and exact fullstats projection integration",
+    "Native component/body transition comparison including firstpoll/unpolled/reconnect",
+    "Real native transport/DB audit retention and shutdown",
+    "Frozen application replay and previousM4gates"
+  ],
+  "original_application_credit": "Original Dispatcharr authors/contributors"
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "original-real-PostgreSQL-EPG-staging-swap-component",
+  "passed": true,
+  "source_cases": 14,
+  "evidence_directory": "artifacts/rust/m6-guide-swap-source-native-38",
+  "raw_report_sha256": "829b82bec2d330130216cd663803b068c4c636cc9f00e0c9763db4ddece24bd4",
+  "fixture_sha256": "b29f5ba561678cf8673ec66502c6d47a5697f218235e3ee90be8498804a358c3",
+  "source_archive_sha256": "3a8c9f89ea35cd21fc908d295d0f4b00470045261a6fb2316be7cabc73ee00fb",
+  "native_sql_log_sha256": "5f5ed649a478d5abab9b60b1b5d922b3ca534c1effcf8564b72003de2aa3f5d9",
+  "physical_guard_cancellation_test": true,
+  "cleanup": "project removed",
+  "notes": [
+    "14 actual original PostgreSQL staging/swap cases cover retention/catchup overrides, empty staged channels, first-start boundaries, orphan/live mapping rules, literal unmapped staged insertion, bounded move batches and transaction rollback.",
+    "Private session holds4-worker admission and caller-provided job guard. Each SQL operation owns its connection and guard until actual reply; aborting a table-locked waiter retains guard until query/commit completion.",
+    "Existing guide payloads remain in SQL; range processing uses1000IDs, insert move batches<=5000, stage batches<=2500rows/8MiB. Explicit total/mapped-ID caps remain resource guards.",
+    "Initial runner import and assumed-table-name fixture errors are retained; original schema names were verified before successful native comparison.",
+    "No HTTP refresh dispatch, complete ingestion job, lock-loss/cancel policy, SQL-failure retry orchestration or full job resource acceptance yet."
+  ],
+  "full_refresh_job_verified": false,
+  "application_performance_verified": false
+}

@@ -1,0 +1,54 @@
+{
+  "format_version": 1,
+  "scope": "ImmutableIMAGE19 actual pinned Source/native timeshift HTTP playback+WebSocket fullstats publication subset",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m7-timeshift-playback-ws-image19-1/vod-contracts.json",
+  "evidence_sha256": "5ad7ff058eaddc1b7df9681dbe09368d241933adebd2820b5d02ccfeb9990d8b",
+  "provenance": {
+    "image_id": "sha256:88d884d9f708ef20420debb776439048e8040528624356ca87658634c4101a50",
+    "source_tree_sha256": "d1d2c1832fb900d6d1072e0988ce2aea317539a9f16d21d8526a600e1095323a",
+    "build_manifest_sha256": "04f43ae504984e0ab28342b15a8fbe06eaa7759e313d5c453115aa9da9074b28"
+  },
+  "tool_manifest_sha256": "219563dce761c0963c7a0ed4893249846a07f05a11387e051ef3a0e583b092bc",
+  "source_event_count": 6,
+  "candidate_event_count": 6,
+  "comparison": {
+    "captured_packaged_timeshift_events_match": true,
+    "differences": [],
+    "normalizations": [
+      "Actual capability IDs replaced by first-seen session ordinals",
+      "Own timestamps/elapsed/byte-rate progress validated; stable full DTOs and snapshot counts compared"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "decoders": [
+    {
+      "backend": "baseline",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    },
+    {
+      "backend": "candidate",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    }
+  ],
+  "full_application_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Legacy rapid reconnect/reclose duplicate-stop behavior remains separately characterized and unimplemented.",
+    "Partial interrupted-block progress and isolated three-pair M4 resource comparison."
+  ],
+  "connection_counts": [
+    1,
+    0,
+    1,
+    0,
+    1,
+    0
+  ]
+}

@@ -31,6 +31,10 @@ async function authenticated(config){
  const failures=responses.filter(r=>r.status>=400&&!(r.status===401&&(r.path==='/api/accounts/auth/proxy-login/'||(r.path==='/api/accounts/auth/logout/'&&r.stage==='first-admin-form'))));
  return {authenticated:true,required_api_paths:required.length,required_api_paths_passed:required.filter(path=>responses.some(r=>r.path===path&&r.status===200)).length,api_responses:responses.length,failed_api_responses:failures,exceptions,stored_tokens_verified:token,socket_types:[...socketTypes].sort()};
 }
+async function replaceInput(name,value){await evaluate(`document.querySelector('input[name="${name}"]').focus();true`);await call('Input.dispatchKeyEvent',{type:'keyDown',key:'a',code:'KeyA',windowsVirtualKeyCode:65,nativeVirtualKeyCode:65,modifiers:2});await call('Input.dispatchKeyEvent',{type:'keyUp',key:'a',code:'KeyA',windowsVirtualKeyCode:65,nativeVirtualKeyCode:65,modifiers:2});await call('Input.insertText',{text:value});}
+function logoRowExpression(name){return `Array.from(document.querySelectorAll('.tr')).find(row=>row.querySelector('[data-column-id="name"]')?.textContent===${JSON.stringify(name)})`;}
+async function logoImage(name){await until(`(()=>{const row=${logoRowExpression(name)};const image=row?.querySelector('img');return !!image&&image.complete&&image.naturalWidth===2&&image.naturalHeight===3&&new URL(image.src).pathname.startsWith('/api/channels/logos/')})()`);return await evaluate(`(()=>{const image=(${logoRowExpression(name)}).querySelector('img');return {path:new URL(image.src).pathname,width:image.naturalWidth,height:image.naturalHeight}})()`);}
+async function logoChecks(extra={}){await delay(200);return {...extra,exceptions,failed_api_responses:responses.filter(r=>r.status>=400&&!(r.path==='/api/accounts/auth/proxy-login/'&&r.status===401))};}
 async function command(config){
  if(config.op==='setup'){
   stage='first-admin-form';await call('Page.navigate',{url:config.url});await until(`document.body.innerText.includes('Create your Super User Account')&&!!document.querySelector('input[name="username"]')`);
@@ -40,10 +44,28 @@ async function command(config){
   stage='initialization';return await authenticated(config);
  }
  if(config.op==='reload') {stage='restart-reload';responses.length=0;await call('Page.reload',{ignoreCache:true});return await authenticated(config);}
+ if(config.op==='logo_create'){
+  stage='logo-upload-edit';responses.length=0;await call('Page.navigate',{url:config.url+'/logos'});await until(`Array.from(document.querySelectorAll('button')).some(button=>button.innerText==='Add Logo')`);
+  await evaluate(`Array.from(document.querySelectorAll('button')).find(button=>button.innerText==='Add Logo').click();true`);await until(`!!document.querySelector('input[type="file"]')&&!!document.querySelector('input[name="name"]')`);
+  const document=await call('DOM.getDocument');const input=await call('DOM.querySelector',{nodeId:document.root.nodeId,selector:'input[type="file"]'});await call('DOM.setFileInputFiles',{nodeId:input.nodeId,files:[config.file]});
+  await until(`document.body.innerText.includes('Selected file:')`);await replaceInput('name',config.logo_name);await evaluate(`document.querySelector('input[name="name"]').form.requestSubmit();true`);
+  stage='logo-upload-row';await until(`!document.querySelector('input[name="name"]')&&!!(${logoRowExpression(config.logo_name)})`);stage='logo-upload-image';const uploaded=await logoImage(config.logo_name);
+  stage='logo-open-editor';await evaluate(`(${logoRowExpression(config.logo_name)}).querySelector('svg.lucide-square-pen').closest('button').click();true`);await until(`!!document.querySelector('input[name="name"]')`);stage='logo-submit-edit';await replaceInput('name',config.renamed_logo);await evaluate(`document.querySelector('input[name="name"]').form.requestSubmit();true`);
+  stage='logo-edited-row';await until(`!document.querySelector('input[name="name"]')&&!!(${logoRowExpression(config.renamed_logo)})`);stage='logo-edited-image';const edited=await logoImage(config.renamed_logo);
+  return await logoChecks({uploaded:true,edited:true,uploaded_image:uploaded,edited_image:edited,upload201:responses.some(r=>r.path==='/api/channels/logos/upload/'&&r.status===201)});
+ }
+ if(config.op==='logo_reload'){
+  stage='logo-restart-persistence';responses.length=0;await call('Page.reload',{ignoreCache:true});const image=await logoImage(config.renamed_logo);return await logoChecks({persisted:true,image,stored_access_present:await evaluate(`!!localStorage.getItem('accessToken')`)});
+ }
+ if(config.op==='logo_delete'){
+  stage='logo-delete-file';responses.length=0;await evaluate(`(${logoRowExpression(config.renamed_logo)}).querySelector('svg.lucide-square-minus').closest('button').click();true`);
+  await until(`Array.from(document.querySelectorAll('[role="dialog"]')).some(dialog=>dialog.innerText.includes('Delete Logo'))`);await evaluate(`(()=>{const dialog=Array.from(document.querySelectorAll('[role="dialog"]')).find(dialog=>dialog.innerText.includes('Delete Logo'));dialog.querySelector('input[type="checkbox"]').click();Array.from(dialog.querySelectorAll('button')).find(button=>button.innerText==='Delete').click();return true})()`);
+  await until(`!(${logoRowExpression(config.renamed_logo)})&&!document.querySelector('[role="dialog"]')`);return await logoChecks({deleted:true,delete204:responses.some(r=>r.path.startsWith('/api/channels/logos/')&&r.status===204)});
+ }
  if(config.op==='screenshot'){const value=await call('Page.captureScreenshot',{format:'png'});fs.writeFileSync(config.path,Buffer.from(value.data,'base64'));return {saved:true};}
  if(config.op==='close')return {closed:true};throw new Error('Unknown browser command');
 }
-(async()=>{try{process.stdout.write(JSON.stringify(await start())+'\n');for await(const line of readline.createInterface({input:process.stdin})){const config=JSON.parse(line);let response;try{response=await command(config)}catch(error){response={failed:true,stage,error_type:error.name,observed_api_paths:responses,missing_required_api_paths:required.filter(path=>!responses.some(r=>r.path===path&&r.status===200)),exceptions};process.exitCode=1}process.stdout.write(JSON.stringify(response)+'\n');if(config.op==='close'||response.failed)break}}
+(async()=>{try{process.stdout.write(JSON.stringify(await start())+'\n');for await(const line of readline.createInterface({input:process.stdin})){const config=JSON.parse(line);let response;try{response=await command(config)}catch(error){let diagnostics=null;if(config.op.startsWith('logo')){try{diagnostics=await evaluate(`({rows:Array.from(document.querySelectorAll('.tr')).map(row=>({text:row.innerText.slice(0,120),images:Array.from(row.querySelectorAll('img')).map(image=>({path:(()=>{try{return new URL(image.src).pathname}catch{return null}})(),complete:image.complete,width:image.naturalWidth,height:image.naturalHeight}))})),inputs:Array.from(document.querySelectorAll('input')).map(input=>({name:input.name,type:input.type})),dialogs:document.querySelectorAll('[role=dialog]').length})`)}catch{}}response={failed:true,stage,error_type:error.name,failure_message:error.message,observed_api_paths:responses,diagnostics,missing_required_api_paths:required.filter(path=>!responses.some(r=>r.path===path&&r.status===200)),exceptions};process.exitCode=1}process.stdout.write(JSON.stringify(response)+'\n');if(config.op==='close'||response.failed)break}}
  catch(error){process.stdout.write(JSON.stringify({failed:true,stage,error_type:error.name})+'\n');process.exitCode=1}
  finally{if(cdp)cdp.close();if(child){try{process.kill(-child.pid,'SIGTERM')}catch{}await delay(200);try{process.kill(-child.pid,'SIGKILL')}catch{}}fs.rmSync(directory,{recursive:true,force:true})}
 })();

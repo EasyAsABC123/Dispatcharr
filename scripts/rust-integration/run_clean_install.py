@@ -39,7 +39,7 @@ class Browser:
 def http(url):
     with urllib.request.urlopen(url,timeout=3)as response:return response.status,json.load(response)
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',required=True,type=Path);parser.add_argument('--candidate-build-manifest',required=True,type=Path);args=parser.parse_args();output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',required=True,type=Path);parser.add_argument('--candidate-build-manifest',required=True,type=Path);parser.add_argument('--logo-workflow',action='store_true');args=parser.parse_args();output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
     if any(output.iterdir()):parser.error('Output must be empty')
     raw=args.candidate_build_manifest.read_bytes();manifest=json.loads(raw)
     if manifest.get('passed')is not True:parser.error('Successful immutable build required')
@@ -68,7 +68,7 @@ def main():
         state=json.loads(command(['docker','inspect',container]))[0]['State'];record('initialization-default-off-no-ddl',state['ExitCode']!=0 and sql("SELECT count(*) FROM pg_tables WHERE schemaname='public'")=='0',{'exit_code':state['ExitCode']})
         stage='explicit-initialize';command(base+['up','-d','--no-build','--force-recreate','candidate']);url='http://'+command(base+['port','candidate','9192']).strip();wait(lambda:http(url+'/health/ready')[0]==200)
         container=command(base+['ps','-q','candidate']).strip();inspection=json.loads(command(['docker','inspect',container]))[0];report['candidate_image_binding']=validate_candidate_image(manifest,inspection)
-        report['services']=sorted(command(base+['config','--services']).splitlines());record('native-only-service-set',report['services']==['cache','candidate','database'])
+        report['services']=sorted(command(base+['config','--services']).splitlines());record('native-only-service-set',report['services']==['cache','candidate','data-init','database'])
         record('rust-initialized-original-schema',sql("SELECT count(*) FROM pg_tables WHERE schemaname='public'")=='62' and sql('SELECT count(*) FROM django_migrations')=='184' and sql('SELECT count(*) FROM accounts_user')=='0',{'tables':62,'migration_records':184,'users_before_browser':0})
         no_python=command(base+['exec','-T','candidate','sh','-c','if command -v python >/dev/null 2>&1 || command -v python3 >/dev/null 2>&1; then echo present; else echo absent; fi'],timeout=10).strip()=='absent'
         record('candidate-has-no-python-runtime',no_python)
@@ -84,8 +84,22 @@ def main():
         picture=output/'first-admin-channels.png';saved=browser.send({'op':'screenshot','path':str(picture)});report['screenshot_sha256']=hashlib.sha256(picture.read_bytes()).hexdigest()if saved.get('saved')else None
         query="SELECT json_build_object('id',id,'username',username,'email',email,'level',user_level,'staff',is_staff,'superuser',is_superuser,'active',is_active,'algorithm',split_part(password,'$',1),'iterations',split_part(password,'$',2),'joined_set',date_joined IS NOT NULL,'login_set',last_login IS NOT NULL) FROM accounts_user"
         row=json.loads(sql(query));record('browser-created-real-admin-row',row['id']==1 and row['username']==credentials['username']and row['email']=='Native@example.invalid'and row['level']==10 and row['staff']and row['superuser']and row['active']and row['algorithm']=='pbkdf2_sha256'and row['iterations']=='1200000'and row['joined_set']and row['login_set'],{'row_sha256':hashlib.sha256(json.dumps(row,sort_keys=True).encode()).hexdigest()})
+        logo_config=None;logo_fingerprint=None
+        if args.logo_workflow:
+            stage='browser-logo-upload-edit';file=output/'rust-probe-browser-logo.svg';file.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="2" height="3"><rect width="2" height="3" fill="green"/></svg>')
+            logo_config={'url':url,'file':str(file),'logo_name':'rust-probe-browser-logo','renamed_logo':'rust-probe-browser-logo-edited'}
+            result=browser.send({'op':'logo_create',**logo_config});record('actual-react-logo-upload-edit-image',result.get('uploaded')and result.get('edited')and result.get('upload201')and not result.get('failed_api_responses')and result.get('exceptions')==0,result)
+            if result.get('failed'):raise RuntimeError('Browser logo creation failed')
+            logo_fingerprint=sql("SELECT md5(string_agg(id::text||':'||name||':'||url,','ORDER BY id))FROM dispatcharr_channels_logo")
+            witness=command(base+['exec','-T','candidate','sha256sum','/data/logos/rust-probe-browser-logo.svg']).split()[0];record('browser-uploaded-file-real-native-volume',witness==hashlib.sha256(file.read_bytes()).hexdigest()and sql("SELECT count(*)FROM dispatcharr_channels_logo WHERE name='rust-probe-browser-logo-edited'")=='1')
         fingerprint_query="SELECT md5(string_agg(app||':'||name||':'||applied::text,',' ORDER BY id)) FROM django_migrations";before=sql(fingerprint_query)
-        stage='restart';command(base+['restart','candidate']);wait(lambda:http(url+'/health/ready')[0]==200);result=browser.send({'op':'reload',**credentials});record('restart-react-token-persistence-init',result.get('authenticated')is True and not result.get('failed_api_responses')and result.get('exceptions')==0,result)
+        stage='restart';command(base+['restart','candidate']);wait(lambda:http(url+'/health/ready')[0]==200)
+        result=browser.send({'op':'logo_reload',**logo_config}if logo_config else{'op':'reload',**credentials})
+        record('restart-react-token-persistence-init',result.get('persisted')is True and result.get('stored_access_present')is True and not result.get('failed_api_responses')and result.get('exceptions')==0 if logo_config else result.get('authenticated')is True and not result.get('failed_api_responses')and result.get('exceptions')==0,result)
+        if logo_config:
+            record('restart-preserves-logo-file-and-row',logo_fingerprint==sql("SELECT md5(string_agg(id::text||':'||name||':'||url,','ORDER BY id))FROM dispatcharr_channels_logo")and command(base+['exec','-T','candidate','sha256sum','/data/logos/rust-probe-browser-logo.svg']).split()[0]==hashlib.sha256(file.read_bytes()).hexdigest())
+            result=browser.send({'op':'logo_delete',**logo_config});record('actual-react-logo-delete-file',result.get('deleted')and result.get('delete204')and not result.get('failed_api_responses')and result.get('exceptions')==0,result)
+            removed=command(base+['exec','-T','candidate','sh','-c','if test -e /data/logos/rust-probe-browser-logo.svg; then echo present; else echo absent; fi']).strip()=='absent';record('browser-delete-removes-file-and-db-row',removed and sql('SELECT count(*)FROM dispatcharr_channels_logo')=='0')
         record('restart-preserves-existing-schema-and-admin',before==sql(fingerprint_query)and sql('SELECT count(*) FROM accounts_user')=='1'and json.loads(sql(query))==row)
         record('setup-closed-after-browser-create',http(url+'/api/accounts/initialize-superuser/')[1]=={'superuser_exists':True})
         status=0 if all(check['passed']for check in report['checks'])else 1;report['passed']=status==0

@@ -1,0 +1,12 @@
+[package]
+name = "dispatcharr-ingest-epg"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+[dependencies]
+dispatcharr-ingest-core = { path = "../ingest-core" }
+dispatcharr-xmltv-parser = { path = "../xmltv-parser" }
+dispatcharr-store = { path = "../store" }
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+serde_json = { version = "1", features = ["arbitrary_precision"] }
+tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }

@@ -1,0 +1,57 @@
+{
+  "scope": "actual original regex preview source-only behavior",
+  "passed": true,
+  "native_preview_implemented": false,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "exit_code": 0,
+  "command": [
+    "/tmp/dispatcharr-docker/docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--read-only",
+    "--cap-drop",
+    "ALL",
+    "--security-opt",
+    "no-new-privileges",
+    "-i",
+    "-v",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m7-preview-source-1:/source:ro",
+    "--entrypoint",
+    "/dispatcharrpy/bin/python",
+    "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "/source/preview_oracle.py"
+  ],
+  "case_count": 267,
+  "python": "3.13.18",
+  "regex_version": "2026.9.29",
+  "regex_default_version": "regex.V0",
+  "regex_native_sha256": "b9289d43031fd883e8f81c97e802ffb7d82d719f99d86efec09288a81eaa1ce5",
+  "source_sha256": {
+    "dispatcharr/consumers.py": "429bb971a13b853c4b87f63d0f350c68f94d5e3bff79455945e1cbb8a1fb1775",
+    "apps/proxy/live_proxy/url_utils.py": "3209fbde7199732601f3213687285e700e4e8fb4c8f36a4e5edb128e283875d3"
+  },
+  "method_sha256": {
+    "receive": "0a8a7cd427a3c5e776c596e78690c933baba2757741fa157e15bf61081ca2d95",
+    "user_is_admin": "11366a437853ec066c1a541eef4366288e7af81eaacfba044e83d742494daee9",
+    "transform_url": "e3921af06c8786676ef83663eb7f5756ca359a81af768d880e19bcf531273e33"
+  },
+  "tool_sha256": {
+    "scripts/rust-realtime-contracts/preview_source.py": "5d3f323d66f09fa173c96818375e7a4f0bb6c310a22636ac79c5c1259f010c77",
+    "scripts/rust-realtime-contracts/preview_oracle.py": "347c811fa80516278135ea67af817af62f91f14e447b46de8240dbaaf48661ec"
+  },
+  "artifact": "artifacts/rust/m7-preview-source-1/source-preview.json",
+  "artifact_sha256": "4302bbbcf134f858e7edc756593471c905c43432d688f7e91f9a59d9bcee4ccb",
+  "corpus": "scripts/rust-realtime-contracts/datasets/source-preview.json",
+  "corpus_sha256": "4f67bf54a57d2a988c7112b8bc036160a0e77d10d0cebc32c746581903212ad3",
+  "limitations": [
+    "Source-only unchanged method bodies; no native regex backend selected or preview implementation proved",
+    "Authentication/ORM dependency shims supply captured admin-level constant; handshake/role authorization has separate real wire proof",
+    "Elapsed timeout observations are not deterministic performance goldens",
+    "Builtin Python re ingestion behavior is a separate engine contract"
+  ]
+}

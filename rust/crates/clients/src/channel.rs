@@ -50,17 +50,14 @@ impl ClientStore {
                 .values()
                 .filter_map(Weak::upgrade)
                 .collect::<Vec<_>>();
-            for client in clients
-                .iter()
-                .filter(|client| client.channel == channel)
-            {
+            for client in clients.iter().filter(|client| client.channel == channel) {
                 client.stop.send_replace(true);
                 if client.registered.load(Ordering::Acquire) {
                     client.released.store(true, Ordering::Release);
                     client.cleanup_done.send_replace(true);
                 }
             }
-            statistics::stopped_channel(&self.inner,channel,&clients);
+            statistics::stopped_channel(&self.inner, channel, &clients);
         }
         Ok(result == 1)
     }

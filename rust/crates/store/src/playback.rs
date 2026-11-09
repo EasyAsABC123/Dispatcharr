@@ -230,7 +230,7 @@ impl PlaybackResolver for AuthService {
             let viewer = PlaybackViewer {
                 user_id: user.as_ref().map(|user| user.id),
                 username: user.as_ref().map(|user| user.username.clone()),
-                ip_address: self.client_ip(&request),
+                ip_address: self.source_client_ip(&request),
                 user_agent: request.header("user-agent").unwrap_or("").to_string(),
                 stream_limit: user
                     .as_ref()

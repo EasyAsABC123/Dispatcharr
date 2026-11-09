@@ -47,7 +47,18 @@ try:
         if message:
             if message['type']!='update' or message['data'].get('success') is not True or message['data'].get('type')!='timeshift_stats' or not isinstance(message['data'].get('stats'),str):raise RuntimeError('Unexpected original Timeshift envelope')
             json.loads(message['data']['stats'])
-    print(json.dumps({'format_version':1,'scope':'Original actual Redis/Channels Timeshift stats registration component; no HTTP lifecycle timing acceptance','cases':cases,'application_parity_verified':False,'performance_verified':False}))
+    # Original displaces other owned positions before selecting/opening the new
+    # upstream, so the old-viewer removal must publish even if later setup fails.
+    for stats,sid in owned:views._unregister_stats_client(redis,stats,sid)
+    owned.clear()
+    from apps.accounts.models import User
+    user=User.objects.get(username='rust-vod-fixture-capped')
+    sid='fixture-ts-displaced';stats=f"{seed['channel_pk']}_{sid}";owned.append((stats,sid))
+    views._register_stats_client(redis,stats,sid,'192.0.2.22','fixture-ts-producer',user,channel_display_name='Producer fixture',timestamp_utc='2024-01-01 00:00:00',primary_url='http://origin:8080/fixture.ts',programme_vid=f"{seed['channel_pk']}_1704067200",channel_id=seed['channel_pk'],channel_uuid=seed['channel_uuid'],emit_stats_update=False)
+    views._terminate_previous_timeshift_sessions(redis,user,seed['channel_pk'],f"{seed['channel_pk']}_1704070800",'fixture-ts-new-position')
+    displacement=runner.run(receive(3))
+    if not displacement or displacement.get('data',{}).get('type')!='timeshift_stats' or json.loads(displacement['data']['stats'])['total_connections']!=0:raise RuntimeError('Missing original immediate displacement snapshot')
+    print(json.dumps({'format_version':1,'scope':'Original actual Redis/Channels Timeshift stats registration component; no HTTP lifecycle timing acceptance','cases':cases,'immediate_displacement':{'published':displacement,'before_new_upstream':True},'application_parity_verified':False,'performance_verified':False}))
 finally:
     for stats,sid in owned:views._unregister_stats_client(redis,stats,sid)
     runner.run(layer.group_discard('updates',observer))

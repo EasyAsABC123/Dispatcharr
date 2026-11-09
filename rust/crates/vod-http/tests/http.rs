@@ -274,6 +274,7 @@ async fn fixture_with_user(
 }
 fn request(session: &str, range: Option<&str>) -> VodRequest {
     VodRequest {
+        resolved_client_ip: None,
         playback: PlaybackRequest {
             channel_id: "fixture".into(),
             query: vec![],

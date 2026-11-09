@@ -21,7 +21,7 @@ impl AuthService {
         user: Value,
         reason: Option<&str>,
     ) {
-        let mut details = json!({"user":user,"client_ip":self.client_ip(request).to_string(),"user_agent":request.header("user-agent").unwrap_or("unknown")});
+        let mut details = json!({"user":user,"client_ip":self.client_ip_text(request),"user_agent":request.header("user-agent").unwrap_or("unknown")});
         if let Some(reason) = reason {
             details["reason"] = json!(reason)
         }
@@ -120,7 +120,7 @@ impl AuthService {
         let mut cmd = redis::cmd("SET");
         cmd.arg(format!(
             ":1:login_rate_limit_lockout_emitted:{}",
-            self.client_ip(request)
+            self.client_ip_text(request)
         ))
         .arg([0x80u8, 4, 0x88, b'.'].as_slice())
         .arg("NX")

@@ -6,7 +6,7 @@ import stat
 DIRECTORIES=('scripts/rust-output-contracts','scripts/rust-vod-contracts','scripts/rust-timeshift-contracts',
              'scripts/rust-integration','scripts/rust-account-contracts',
              'scripts/rust-playback-baseline','scripts/rust-baseline',
-             'scripts/rust-ingest-parity')
+             'scripts/rust-ingest-parity','scripts/rust-realtime-contracts')
 COMPOSE=('docker/compose.rust-playback.yml','docker/compose.rust-candidate.yml')
 
 

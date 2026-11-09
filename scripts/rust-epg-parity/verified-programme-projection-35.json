@@ -1,0 +1,27 @@
+{
+  "scope": "frozen-native-XMLTV-programme-row-projection",
+  "passed": true,
+  "cases": 2432,
+  "core_tests_passed": 30,
+  "strict_all_target_clippy": true,
+  "source_archive_sha256": "1c5f2b59b9c5198f7afcf25c4d9949f677971f0b42536fbda56b8da54f6d8d9a",
+  "evidence_directory": "artifacts/rust/m6-programme-frozen-35",
+  "goldens_directory": "artifacts/rust/m6-programme-projection-source-34",
+  "logs_sha256": {
+    "build.log": "48a563ea8396df68623e0ba0d4b81883f26bd02929dc9ac81ca3179a2a4d54a5",
+    "tests.log": "d326f3220391e4dd58213c74df6a63404d70c866019d804a610bd164f2e9409f",
+    "clippy.log": "67dcbb0f761b30c08ff2265a800efbdc592b788fe193dd18938e4a84cdd9d04c",
+    "parity.json": "30aa79baccbe3443657a3c9fd0907c4c1a6cd6b6cc01bf5469a8a70009f97cc2"
+  },
+  "original_source_sha256": {
+    "apps/epg/tasks.py": "deb4792a39ed93c57da435ecc2a4fcdf5b4dad8f4e087d3afdb5d4f2b7932ff9",
+    "apps/epg/utils.py": "ff321c707872a6b856e00fbc6f956d9602acb665ee8332f695996cc1f24429e3"
+  },
+  "notes": [
+    "Actual unchanged Source streaming-loop AST produces comparison rows; no SQL or refresh completion claim.",
+    "Preserves last title/desc/subtitle, missing versus empty text, title character limit, exact channel mapping, timestamps, description-derived season/episode precedence and original negative intervals.",
+    "Built from a frozen image18 workspace with only the current ingest-core overlay; fresh dedicated target."
+  ],
+  "full_refresh_job_verified": false,
+  "application_performance_verified": false
+}

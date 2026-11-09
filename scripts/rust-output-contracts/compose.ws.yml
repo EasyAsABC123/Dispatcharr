@@ -1,0 +1,5 @@
+# Deterministic active-reconnect observation; default VOD fixtures stay unpaced.
+services:
+  origin:
+    environment:
+      VOD_FIXTURE_BYTES_PER_SECOND: "262144"

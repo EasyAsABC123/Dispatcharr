@@ -1,0 +1,56 @@
+{
+  "format_version": 1,
+  "scope": "Host native VOD producer actor and actual Source manager-body lifecycle using real HTTP upstream/Redis/SQL; native transport/app frozen gate pending",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m7-vod-body-lifecycle-native-4/vod-contracts.json",
+  "evidence_sha256": "a45daec63a3538f7c305af87266007d46f0e8a201338bec0784d1e576260bdbb",
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "body_lifecycle_cases": 6,
+  "equal_audit_rows": 8,
+  "source_stats_sql_and_real_redis_cases": 19,
+  "existing_http_real_redis_regressions": 15,
+  "stalled_sink_shutdown_resource_test": true,
+  "source_eof_bytes_sent": 4096000,
+  "native_telemetry_matches_source_consumed_byte_milestones": true,
+  "source_body_sample_barrier": "Both pause afterfirstchunk untilstartstats beforecontinuing normalcompletion",
+  "normalizations": [
+    "JSON-string stats parsed semantically; metadata key ordering notsignificant",
+    "Own timestamp strings/elapsed duration parsed and structurally checked, notcompared acrossseparate wallclockruns",
+    "Stop stats racesidlemetadata removal inoriginal: finalnativeempty snapshot allowed; bothoriginalempty/nonempty stopvariants captured"
+  ],
+  "preserved_failures": [
+    {
+      "path": "artifacts/rust/m7-vod-body-lifecycle-native-1",
+      "reason": "Realprefetched-byte telemetry mismatch; fixedacknowledged Source819200byte milestones"
+    },
+    {
+      "path": "artifacts/rust/m7-vod-body-lifecycle-native-2",
+      "reason": "Asymmetric Source wholefile versusnativefirstchunk start-snapshot observation timing; identicalbarrier applied"
+    },
+    {
+      "path": "artifacts/rust/m7-vod-body-lifecycle-native-3",
+      "reason": "Alllifecycle/resource tests passed; statsrecompile hitconcurrentStoremid-edit moduledefinition race"
+    }
+  ],
+  "native_transport_verified": false,
+  "source_bound_candidate_image": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "runtime_files_sha256": {
+    "rust/crates/vod-http/src/lib.rs": "aa1613796c9bece94b162892937cece7466029d02ba49c59d7cdd1d1fcba7c3a",
+    "rust/crates/vod-http/src/resolver.rs": "b6e2b6d072dd458e0c3a1391cb07c3743bcfeac6d7effd081d98c247d9ce7d7f",
+    "rust/crates/vod-http/src/sessions.rs": "433f1e01e49cf2c8693b88e658272984b76959024e73f6686ac0ee1abd81f15b",
+    "rust/crates/vod-http/src/engine.rs": "32ce1cd1d2cf171ef84ac3229ab14adab271349730f435a2ba3d46903e34f1f3",
+    "rust/crates/vod-http/src/statistics.rs": "896fb7caecc871fe02442c76320e0851d40870bc7b1e33667697665dbd0839b6",
+    "rust/crates/vod-http/src/events.rs": "2b9cb8afba1f90c68100cbe9730423b4d94a21e241786cdaaccbf2c3526c2186"
+  },
+  "remaining_gates": [
+    "Attachactualrealtimebus beforeimmutableappimage capture",
+    "Packaged actualSource/native transport and fullM4 replay",
+    "Broad numeric/Unicode/large stats and cancellation/queue saturation variants",
+    "Connect/plugin audit hooks, crossworkerVODadoption and fullM4/output resourceacceptance"
+  ],
+  "original_application_credit": "Original Dispatcharr authors/contributors",
+  "frozen_actual_transport_followup": "scripts/rust-output-contracts/verified-vod-producer-image18.json"
+}

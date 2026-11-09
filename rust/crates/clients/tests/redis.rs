@@ -8,7 +8,7 @@ fn user() -> PlaybackViewer {
     PlaybackViewer {
         user_id: Some((uuid::Uuid::new_v4().as_u128() % 1_000_000_000) as i64 + 1000),
         username: Some("fixture".into()),
-        ip_address: "127.0.0.1".parse::<IpAddr>().unwrap(),
+        ip_address: "127.0.0.1".parse::<IpAddr>().unwrap().into(),
         user_agent: "fixture-client".into(),
         stream_limit: 1,
         limit_policy: UserLimitPolicy::default(),

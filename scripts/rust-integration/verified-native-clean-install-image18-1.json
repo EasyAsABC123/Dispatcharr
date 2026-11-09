@@ -1,0 +1,93 @@
+{
+  "scope": "pure-native fresh empty officialPG17/Redis Compose; actual unchanged React first-admin/login/init/restart",
+  "passed": true,
+  "report": "artifacts/rust/m5-native-clean-install-image18-1/integration.json",
+  "report_sha256": "99c514b185a9a28f1d5e9c052a8f0aa612ae1f528b87c6c28b2100b99a724abb",
+  "candidate_image_binding": {
+    "image_id": "sha256:af8352ff444b847d6edaed51c340578c0650f02f9b4881ff611b7fba4af9c44b",
+    "source_tree_sha256": "0598101581932ac6a95c8a7f33e4ef2dc7ea804197f1dfc5942a45045166d502",
+    "manifest_verified": true
+  },
+  "build_manifest_sha256": "f97a6d34ac31edda03aa91773d151a7a398b95f770665ccc20b280551a46e5c3",
+  "services": [
+    "cache",
+    "candidate",
+    "database"
+  ],
+  "checks": [
+    {
+      "name": "fresh-empty-database",
+      "passed": true
+    },
+    {
+      "name": "initialization-default-off-no-ddl",
+      "passed": true
+    },
+    {
+      "name": "native-only-service-set",
+      "passed": true
+    },
+    {
+      "name": "rust-initialized-original-schema",
+      "passed": true
+    },
+    {
+      "name": "candidate-has-no-python-runtime",
+      "passed": true
+    },
+    {
+      "name": "first-admin-form-status",
+      "passed": true
+    },
+    {
+      "name": "actual-react-first-admin-login-init",
+      "passed": true
+    },
+    {
+      "name": "browser-created-real-admin-row",
+      "passed": true
+    },
+    {
+      "name": "restart-react-token-persistence-init",
+      "passed": true
+    },
+    {
+      "name": "restart-preserves-existing-schema-and-admin",
+      "passed": true
+    },
+    {
+      "name": "setup-closed-after-browser-create",
+      "passed": true
+    }
+  ],
+  "browser": {
+    "ready": true,
+    "browser": "Chrome/156.0.8078.79",
+    "protocol": "1.3"
+  },
+  "browser_executable_sha256": "df68ac926f09a1b892b68cd718aea4698a7a4963c172ede0b851e47f1da9871e",
+  "screenshot_sha256": "6a6a58a149362e618a361e15f8d6f156ec1097f6c41992ccc8979a5262bec343",
+  "cleanup": "project removed",
+  "verified": [
+    "Only official PostgreSQL17/Redis7.4 and immutable Rust candidate; no Django service, no candidate Python runtime.",
+    "Initializer disabled fails without creating public tables. Explicit initialization creates62tables/184original migration records and zero users.",
+    "Actual unchanged React form creates real admin; login verifies access/refresh HS256 signatures/claims without capturing tokens.",
+    "All16required React API responses, including deferred logos and stream filter-options, complete successfully before startup/restart acceptance; zero API errors and browser exceptions.",
+    "Actual candidate restart preserves original migration records/admin row and stored JWT browser authentication; React reload succeeds without errors.",
+    "SQL is queried read-only by fixture; native application alone creates schema/default/admin data."
+  ],
+  "limits": [
+    "Fresh native path on pinned PostgreSQL17 only; legacy upgrades and other PostgreSQL versions are unclaimed.",
+    "Empty catalog first-install/restart; populated browser workflows, logo image delivery/uploads/mutations and provider refresh/EPG jobs remain separate gates.",
+    "External IP provider calls avoided by fixture-owned Redis lock; IP worker behavior has independent source and packaged regression evidence.",
+    "No application performance gain inferred from this functional test."
+  ],
+  "earlier_failure": "verified-native-clean-install-image16-2.json",
+  "source_component_evidence": [
+    "verified-first-admin-source-2.json",
+    "verified-native-schema-sql-4.json",
+    "verified-browser-deferred-reads-source-3.json"
+  ],
+  "performance_verified": false,
+  "prior_weaker_probe": "verified-native-clean-install-image17-2.json"
+}

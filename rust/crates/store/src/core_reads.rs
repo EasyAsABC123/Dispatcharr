@@ -83,6 +83,15 @@ impl Resource {
     }
 }
 
+pub(crate) async fn user_agent_value(auth: &AuthService, id: i64) -> Result<Value, StoreError> {
+    let resource = Resource::UserAgents;
+    let row = sqlx::query(resource.query())
+        .bind(Some(id))
+        .fetch_optional(auth.store.pool())
+        .await?
+        .ok_or_else(|| resource.missing())?;
+    Ok(resource.serialize(row)?)
+}
 async fn read(
     auth: AuthService,
     peer: SocketAddr,
@@ -144,8 +153,17 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/core/settings/", get(settings))
         .route("/api/core/settings/{id}/", get(setting))
-        .route("/api/core/useragents/", get(useragents))
-        .route("/api/core/useragents/{id}/", get(useragent))
+        .route(
+            "/api/core/useragents/",
+            get(useragents).post(crate::user_agent_writes::create),
+        )
+        .route(
+            "/api/core/useragents/{id}/",
+            get(useragent)
+                .patch(crate::user_agent_writes::patch)
+                .put(crate::user_agent_writes::put)
+                .delete(crate::user_agent_writes::delete),
+        )
         .route(
             "/api/core/streamprofiles/",
             get(streamprofiles).post(crate::core_stream_writes::create),

@@ -83,6 +83,9 @@ pub trait ArchiveResolver: Send + Sync {
     fn client_ip(&self, request: &PlaybackRequest) -> IpAddr {
         request.peer_ip
     }
+    fn client_ip_text(&self, request: &PlaybackRequest) -> String {
+        self.client_ip(request).to_string()
+    }
 }
 pub struct SqlArchiveResolver {
     store: Store,
@@ -224,6 +227,9 @@ impl ArchiveResolver for SqlArchiveResolver {
     fn client_ip(&self, request: &PlaybackRequest) -> IpAddr {
         self.auth.client_ip(request)
     }
+    fn client_ip_text(&self, request: &PlaybackRequest) -> String {
+        self.auth.client_ip_text(request)
+    }
 }
 #[derive(Clone)]
 pub struct CatchupMediaConfig {
@@ -299,6 +305,19 @@ impl CatchupMedia {
                 config,
             }),
         })
+    }
+    pub async fn with_events(
+        self,
+        store: Store,
+        redis_url: &str,
+        sink: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
+    ) -> Result<Self, StoreError> {
+        let events = crate::events::Producer::connect(store, redis_url, sink).await?;
+        self.inner.pool.install_events(events)?;
+        Ok(self)
+    }
+    pub fn event_diagnostics(&self) -> serde_json::Value {
+        self.inner.pool.event_diagnostics()
     }
     pub fn router(self) -> Router {
         Router::new()
@@ -417,7 +436,7 @@ impl CatchupMedia {
             binding.channel.id,
             binding.start.replace([':', '/'], "-")
         );
-        let ip = self.inner.resolver.client_ip(request).to_string();
+        let ip = self.inner.resolver.client_ip_text(request);
         let agent = request.header("user-agent").unwrap_or("");
         let mut effective = provided.map(str::to_owned);
         let mut find = provided.is_none();
@@ -491,7 +510,7 @@ impl CatchupMedia {
                 &source,
                 candidate,
                 request,
-                self.inner.resolver.client_ip(request),
+                &self.inner.resolver.client_ip_text(request),
             );
             if let Some(probe) = self.inner.pool.busy_probe(&pool_request, range).await? {
                 return self
@@ -711,7 +730,7 @@ fn descriptor(
     source: &CatchupSource,
     candidate: &crate::CatchupCandidate,
     request: &PlaybackRequest,
-    ip: IpAddr,
+    ip: &str,
 ) -> ArchivePoolRequest {
     let safe = source.timestamp.replace([':', '/'], "-");
     let media_id = format!("{}_{}", source.channel.id, safe);
@@ -943,16 +962,12 @@ async fn play(
         query: url::form_urlencoded::parse(request.uri().query().unwrap_or("").as_bytes())
             .into_owned()
             .collect(),
-        headers: request
-            .headers()
-            .iter()
-            .filter_map(|(key, value)| {
-                value
-                    .to_str()
-                    .ok()
-                    .map(|value| (key.as_str().into(), value.into()))
-            })
-            .collect(),
+        headers: dispatcharr_contracts::source_headers(
+            request
+                .headers()
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_bytes())),
+        ),
         peer_ip: peer,
     };
     engine.respond(channel, identity).await

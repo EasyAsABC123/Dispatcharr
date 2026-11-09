@@ -11,7 +11,7 @@ pub(crate) enum Scope {
     ApiKey,
 }
 impl Scope {
-    fn key(self, ip: std::net::IpAddr) -> String {
+    fn key(self, ip: &str) -> String {
         format!(
             ":1:throttle_{}_{ip}",
             match self {
@@ -72,7 +72,7 @@ fn wait(history: &[f64], at: f64, limit: usize) -> Option<f64> {
 /// allowed attempts; rejected attempts do not extend the original TTL.
 pub(crate) async fn check(
     cache: &NotificationCache,
-    ip: std::net::IpAddr,
+    ip: &str,
     scope: Scope,
     record: bool,
 ) -> Result<Decision, StoreError> {
@@ -113,14 +113,14 @@ impl crate::AuthService {
     /// the constructor retain the existing bounded local budget.
     pub(crate) async fn shared_auth_budget(
         &self,
-        ip: std::net::IpAddr,
+        ip: dispatcharr_contracts::SourceIpAddr,
         scope: Scope,
         record: bool,
         proxy: bool,
     ) -> Result<bool, StoreError> {
         let Some(cache) = self.notification_cache.as_ref() else {
             self.throttle(
-                ip,
+                ip.address(),
                 match scope {
                     Scope::Login => "login",
                     Scope::ApiKey => "api-key",
@@ -129,7 +129,7 @@ impl crate::AuthService {
             )?;
             return Ok(false);
         };
-        match check(cache, ip, scope, record).await? {
+        match check(cache, &ip.to_string(), scope, record).await? {
             Decision::Allowed { crossed } => Ok(crossed),
             Decision::Limited { wait } => {
                 let retry_after = wait.map(|wait| {

@@ -1,0 +1,74 @@
+{
+  "format_version": 1,
+  "scope": "PostIMAGE18 VOD finalpartial100thchunk and known-length Hyper final-frame progress correction",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m4-vod-progress-native-http-1/vod-contracts.json",
+  "evidence_sha256": "388fec9e5aaa75877cf44acab65e4094e079b3b99a3813ea16f34be053676ef6",
+  "actual_native_http_socket_verified": true,
+  "source_cases": [
+    {
+      "range_bytes": 819199,
+      "source_bytes_sent": 819199
+    },
+    {
+      "range_bytes": 819200,
+      "source_bytes_sent": 819200
+    },
+    {
+      "range_bytes": 819201,
+      "source_bytes_sent": 819200
+    }
+  ],
+  "payload_matches_origin": true,
+  "regressions": {
+    "existing_http_redis": 15,
+    "body_lifecycle": 6,
+    "audit_rows": 8,
+    "stats_sql_and_global_redis": 19,
+    "stalled_publication_shutdown": true
+  },
+  "preserved_immutable18_failure": {
+    "evidence": "artifacts/rust/m4-vod-progress-image18-witness-1/vod-contracts.json",
+    "evidence_sha256": "0979b3e9bf55c7ce00c642c46afe805a26f0103d0a6953c4fb7e302dc6e1f982",
+    "provenance": {
+      "image_id": "sha256:af8352ff444b847d6edaed51c340578c0650f02f9b4881ff611b7fba4af9c44b",
+      "source_tree_sha256": "0598101581932ac6a95c8a7f33e4ef2dc7ea804197f1dfc5942a45045166d502",
+      "build_manifest_sha256": "f97a6d34ac31edda03aa91773d151a7a398b95f770665ccc20b280551a46e5c3"
+    },
+    "differences": [
+      {
+        "case": "range-819199",
+        "field": "bytes_sent",
+        "source": 819199,
+        "candidate": 0
+      },
+      {
+        "case": "range-819200",
+        "field": "bytes_sent",
+        "source": 819200,
+        "candidate": 0
+      },
+      {
+        "case": "range-819201",
+        "field": "bytes_sent",
+        "source": 819200,
+        "candidate": 0
+      }
+    ]
+  },
+  "root_cause": "Acknowledging only on next body poll misses final known-ContentLength frame; Hyper can finish without another EOF poll. Source also counts its100th short8192-byte yield atactual819199bytes.",
+  "fix": "Trackproviderbodylength and acknowledge itslastemittedframe; preserveEOFhandling forunknownlength andrecordactualfinalpartial100thchunk.",
+  "runtime_files_sha256": {
+    "rust/crates/vod-http/src/engine.rs": "dfe4cf20b50c139bbe566a9154be1c56db813ab68f624eaa6db6edbac92348a7",
+    "rust/crates/vod-http/src/sessions.rs": "235575e586d854ab70ba7f74c5569ceb6f2375ebddc5cfa6041cb9dbafabe531"
+  },
+  "source_bound_candidate_image": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "IMAGE19 exactsame3rangeprogress/socketwitness pluspreviouspackagedVOD/TSWS/fullM4replay",
+    "Broader interrupted/fault partialchunk telemetry andrapid-recloselegacyrace"
+  ],
+  "original_application_credit": "Original Dispatcharr authors/contributors"
+}

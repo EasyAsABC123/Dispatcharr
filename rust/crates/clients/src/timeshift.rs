@@ -208,7 +208,7 @@ for _,client in ipairs(hops) do
 end
 for key,stop in pairs(stops) do redis.call('SET',key,stop.value,'PX',stop.ttl) end
 for _,client in ipairs(victims) do redis.call('HSET',client.key,'rust_preempted','1') end
-if not allowed then return {'LIMIT'} end
+if not allowed then return {'LIMIT',tostring(#hops)} end
 if ARGV[9]=='create' then
  for key,value in pairs(data) do redis.call('HSET',KEYS[1],key,tostring(value)) end
  redis.call('PEXPIRE',KEYS[1],ARGV[4])

@@ -5,6 +5,7 @@ use dispatcharr_vod_http::{ContentKind, SqlVodResolver, VodRequest, VodResolver}
 use std::net::{IpAddr, Ipv4Addr};
 fn request(kind: &str, id: &str) -> VodRequest {
     VodRequest {
+        resolved_client_ip: None,
         kind: kind.into(),
         content_id: id.into(),
         session_id: Some("sql-fixture-session".into()),

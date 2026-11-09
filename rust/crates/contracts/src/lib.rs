@@ -1,5 +1,7 @@
 //! Backend boundaries for the derivative Dispatcharr port. Original authorship
 //! belongs to the upstream Dispatcharr authors; see ../../../ATTRIBUTION.md.
+mod source_ip;
+pub use source_ip::SourceIpAddr;
 use std::{future::Future, net::IpAddr, pin::Pin, time::Duration};
 
 pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
@@ -38,11 +40,41 @@ pub trait LiveStatsSnapshotReader: Send + Sync {
     fn snapshot(&self) -> BoxFuture<'_, Result<bytes::Bytes, PlaybackError>>;
 }
 
+/// Decode incoming WSGI/ASGI header bytes as the original Django request does.
+/// Invalid UTF-8 is not a reason to discard an entire forwarded-IP chain.
+/// Authentication adapters retain their independent fail-closed byte guards.
+pub fn source_header_value(raw: &[u8]) -> String {
+    raw.iter().map(|byte| char::from(*byte)).collect()
+}
+
+/// Canonicalize production Django/WSGI request fields. Hyphens and underscores
+/// share a CGI META name; repeated fields preserve order and join with ", ".
+/// Callers validate ambiguous/raw authentication fields before this conversion.
+pub fn source_headers<'a>(
+    values: impl IntoIterator<Item = (&'a str, &'a [u8])>,
+) -> Vec<(String, String)> {
+    let mut result: Vec<(String, String)> = Vec::new();
+    let mut positions = std::collections::HashMap::new();
+    for (name, raw) in values {
+        let name = name.replace('_', "-").to_ascii_lowercase();
+        let value = source_header_value(raw);
+        if let Some(index) = positions.get(&name).copied() {
+            let (_, previous): &mut (String, String) = &mut result[index];
+            previous.push_str(", ");
+            previous.push_str(&value);
+        } else {
+            positions.insert(name.clone(), result.len());
+            result.push((name, value));
+        }
+    }
+    result
+}
+
 #[derive(Clone, Debug)]
 pub struct PlaybackRequest {
     pub channel_id: String,
     pub query: Vec<(String, String)>,
-    /// Raw HTTP header names and values. Adapters lowercase header names.
+    /// Canonical incoming names and Source Latin-1-decoded, folded values.
     pub headers: Vec<(String, String)>,
     /// Socket peer, before trusted-proxy resolution by the authorization layer.
     pub peer_ip: IpAddr,
@@ -106,7 +138,7 @@ impl Default for UserLimitPolicy {
 pub struct PlaybackViewer {
     pub user_id: Option<i64>,
     pub username: Option<String>,
-    pub ip_address: IpAddr,
+    pub ip_address: SourceIpAddr,
     pub user_agent: String,
     pub stream_limit: u32,
     pub limit_policy: UserLimitPolicy,
@@ -223,5 +255,26 @@ pub trait PlaybackResolver: Send + Sync + 'static {
         _owner_user_id: Option<i64>,
     ) -> BoxFuture<'_, Result<(), PlaybackError>> {
         Box::pin(async { Err(PlaybackError::new(404, "Session not found")) })
+    }
+}
+
+#[cfg(test)]
+mod source_header_tests {
+    use super::source_header_value;
+    #[test]
+    fn source_latin1_preserves_mixed_forwarding_and_utf8_bytes() {
+        assert_eq!(
+            source_header_value(b"203.0.113.42, \xff"),
+            "203.0.113.42, ÿ"
+        );
+        assert_eq!(source_header_value(b"header-caf\xe9"), "header-café");
+        assert_eq!(source_header_value(b"caf\xc3\xa9"), "cafÃ©");
+        assert_eq!(
+            super::source_headers([
+                ("X-Forwarded-For", &b"10.0.0.1"[..]),
+                ("X_Forwarded_For", &b"203.0.113.42, \xff"[..])
+            ]),
+            vec![("x-forwarded-for".into(), "10.0.0.1, 203.0.113.42, ÿ".into())]
+        );
     }
 }

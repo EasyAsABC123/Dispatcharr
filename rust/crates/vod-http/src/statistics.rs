@@ -194,17 +194,19 @@ repeat
   end
  end
 until cursor=='0'
+if #rows==0 then return '[]' end
 local encoded=cjson.encode(rows)
 if #encoded>16777216 then return redis.error_reply('VOD stats encoded limit') end
 return encoded
 "#;
-pub(crate) async fn snapshot(
+pub(crate) async fn snapshot<G: Send + 'static>(
     store: &Store,
     transport: &RedisTransport,
     now: f64,
+    guard: G,
 ) -> Result<Value, Error> {
-    let (raw, _): (String, ()) = transport
-        .command(SNAPSHOT, &[], &[], ())
+    let (raw, _guard): (String, G) = transport
+        .command(SNAPSHOT, &[], &[], guard)
         .await
         .map_err(|_| Error::Capacity)?;
     let rows: Vec<Value> = serde_json::from_str(&raw).map_err(|_| Error::Invalid)?;
@@ -263,6 +265,7 @@ pub(crate) async fn project(store: &Store, rows: &[Value], now: f64) -> Result<V
     Ok(value)
 }
 
+#[cfg(test)]
 #[tokio::test]
 #[ignore = "requires disposable original VOD producer ORM fixture"]
 async fn original_vod_statistics_match_real_orm_source() {
@@ -338,7 +341,7 @@ async fn original_vod_statistics_match_real_orm_source() {
         redis::AsyncCommands::hset_multiple::<_, _, _, ()>(&mut redis, &key, &fields)
             .await
             .unwrap();
-        let actual = snapshot(&store, &transport, now).await.unwrap();
+        let actual = snapshot(&store, &transport, now, ()).await.unwrap();
         redis::AsyncCommands::del::<_, usize>(&mut redis, &key)
             .await
             .unwrap();
@@ -362,6 +365,10 @@ async fn original_vod_statistics_match_real_orm_source() {
         .execute(store.pool())
         .await
         .unwrap();
+    assert_eq!(
+        snapshot(&store, &transport, now, ()).await.unwrap(),
+        json!({"vod_connections":[],"total_connections":0,"timestamp":now})
+    );
     assert_eq!(count, 19);
     println!(
         "{}",

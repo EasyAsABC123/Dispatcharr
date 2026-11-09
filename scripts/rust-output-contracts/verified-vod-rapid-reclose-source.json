@@ -1,0 +1,36 @@
+{
+  "format_version": 1,
+  "scope": "Original Dispatcharr rapid reconnect/reclose timer race; Source characterization only",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "evidence": "artifacts/rust/m4-vod-rapid-reclose-source-1/vod-contracts.json",
+  "evidence_sha256": "fc32bfbe6c3fae322a7a3326fb7bde22ae51f22a614c5644ad87daaac64a7af8",
+  "tool_manifest_sha256": "20cd827a4186d9ad5604623cf01824ba33ce21072c31f39761bfb0716bed883e",
+  "within_original_grace": true,
+  "reclose_elapsed_seconds": 0.004743295008665882,
+  "event_types": [
+    "vod_started",
+    "vod_stats",
+    "vod_stopped",
+    "vod_stopped",
+    "vod_stats",
+    "vod_stats"
+  ],
+  "audit_event_types": [
+    "vod_start",
+    "vod_stop",
+    "vod_stop"
+  ],
+  "remaining_metadata": false,
+  "provider_connections": 0,
+  "cleanup_passed": true,
+  "finding": "Two independently scheduled Source grace timers both observe the reclosed shared session and emit stop; one start creates two stop events/audits. Native epoch-fenced cleanup currently emits one stop. This race remains an explicit compatibility gap.",
+  "necessary_next_steps": [
+    "Add deterministic timer ordering and paired native rapid-reclose proof.",
+    "Preserve legacy observable event/audit multiplicity without allowing stale cleanup to delete active ownership or resurrect metadata.",
+    "Recheck provider counters and bounded shutdown under repeated reconnect/reclose."
+  ],
+  "native_implementation_verified": false,
+  "full_m4_parity_verified": false,
+  "performance_verified": false
+}

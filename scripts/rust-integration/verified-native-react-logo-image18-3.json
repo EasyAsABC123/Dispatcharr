@@ -1,0 +1,115 @@
+{
+  "scope": "Actual unchanged React first-admin/login/init,logo upload/edit/cache render,restart persistence and delete-file on fresh officialPG/Redis with immutable18.",
+  "passed": true,
+  "report": "artifacts/rust/m5-native-react-logo-image18-3/integration.json",
+  "report_sha256": "ae68f071cbf994122998ee057147b9aadf55a154593111a15ed7fc1e9e65fbd0",
+  "candidate_image_binding": {
+    "image_id": "sha256:af8352ff444b847d6edaed51c340578c0650f02f9b4881ff611b7fba4af9c44b",
+    "source_tree_sha256": "0598101581932ac6a95c8a7f33e4ef2dc7ea804197f1dfc5942a45045166d502",
+    "manifest_verified": true
+  },
+  "build_manifest_sha256": "f97a6d34ac31edda03aa91773d151a7a398b95f770665ccc20b280551a46e5c3",
+  "services": [
+    "cache",
+    "candidate",
+    "data-init",
+    "database"
+  ],
+  "checks": [
+    {
+      "name": "fresh-empty-database",
+      "passed": true
+    },
+    {
+      "name": "initialization-default-off-no-ddl",
+      "passed": true
+    },
+    {
+      "name": "native-only-service-set",
+      "passed": true
+    },
+    {
+      "name": "rust-initialized-original-schema",
+      "passed": true
+    },
+    {
+      "name": "candidate-has-no-python-runtime",
+      "passed": true
+    },
+    {
+      "name": "first-admin-form-status",
+      "passed": true
+    },
+    {
+      "name": "actual-react-first-admin-login-init",
+      "passed": true
+    },
+    {
+      "name": "browser-created-real-admin-row",
+      "passed": true
+    },
+    {
+      "name": "actual-react-logo-upload-edit-image",
+      "passed": true
+    },
+    {
+      "name": "browser-uploaded-file-real-native-volume",
+      "passed": true
+    },
+    {
+      "name": "restart-react-token-persistence-init",
+      "passed": true
+    },
+    {
+      "name": "restart-preserves-logo-file-and-row",
+      "passed": true
+    },
+    {
+      "name": "actual-react-logo-delete-file",
+      "passed": true
+    },
+    {
+      "name": "browser-delete-removes-file-and-db-row",
+      "passed": true
+    },
+    {
+      "name": "restart-preserves-existing-schema-and-admin",
+      "passed": true
+    },
+    {
+      "name": "setup-closed-after-browser-create",
+      "passed": true
+    }
+  ],
+  "browser": {
+    "ready": true,
+    "browser": "Chrome/156.0.8078.79",
+    "protocol": "1.3"
+  },
+  "browser_executable_sha256": "df68ac926f09a1b892b68cd718aea4698a7a4963c172ede0b851e47f1da9871e",
+  "screenshot_sha256": "652cb3d2cef1c03aed7e05ffafaf0f7d3f488c89bb55b6e3e24649b3096d2055",
+  "cleanup": "project removed",
+  "performance_verified": false,
+  "verified": [
+    "Actual Chromium uses unchanged React forms and file input: uploads a valid SVG, renders exact2x3image from native cache URL, edits name, confirms file deletion.",
+    "NativeSQLrow and candidate-written fileSHA witnesses; restart preserves both and authenticated UI rerenders the same exact image.",
+    "Delete removes both DBrow and actual file; no APIerrors or browserexceptions.",
+    "Project-owned named/data volume persists across candidate restart; a pinned Debian ownership-init container grants UID65532 writable data without changing operator data.",
+    "OriginalDjango never populates this database; native schema/first-admin path remains under test."
+  ],
+  "limits": [
+    "Four services include a one-shot ownership initializer; it performs no application or database logic.",
+    "Fresh project volume only; existing operator data owners/mount migrations are unclaimed.",
+    "Scalar APIexactness and original-body/file comparisons are recorded separately in verified-logo-packaged-image18-1.json."
+  ],
+  "earlier_probe_failures": [
+    {
+      "report": "artifacts/rust/m5-native-react-logo-image18-1/integration.json",
+      "reason": "HTML tr selector did not match unchanged UIdivrows;upload201/cache200 succeeded;cleaned."
+    },
+    {
+      "report": "artifacts/rust/m5-native-react-logo-image18-2/integration.json",
+      "reason": "Granular diagnostics confirmed same selector mismatch;source-inspected div.tr/data-column-id fixed;cleaned."
+    }
+  ]
+}

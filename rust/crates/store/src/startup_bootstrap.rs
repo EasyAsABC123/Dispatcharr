@@ -41,7 +41,7 @@ fn email(value: Option<&Value>) -> Result<String, String> {
         },
     )
 }
-fn json_error(raw: &[u8], e: serde_json::Error) -> String {
+pub(crate) fn json_error(raw: &[u8], e: serde_json::Error) -> String {
     let message = e.to_string();
     let (label, line, column) = if raw.iter().all(u8::is_ascii_whitespace) {
         ("Expecting value", 1, 1)

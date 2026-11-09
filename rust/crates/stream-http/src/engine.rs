@@ -1019,8 +1019,17 @@ async fn run_follower(
                     }
                     if owner.is_none() {
                         if let Some(clients) = &inner.clients {
-                            if clients.channel_snapshot(&session.source.channel_id).await.ok().flatten()
-                                .is_some_and(|(fields,_)|fields.get("state").is_some_and(|state|!matches!(state.as_str(),"initializing"|"error"))) {
+                            if clients
+                                .channel_snapshot(&session.source.channel_id)
+                                .await
+                                .ok()
+                                .flatten()
+                                .is_some_and(|(fields, _)| {
+                                    fields.get("state").is_some_and(|state| {
+                                        !matches!(state.as_str(), "initializing" | "error")
+                                    })
+                                })
+                            {
                                 clients.announce_channel_statistics(&session.source.channel_id);
                             }
                         }

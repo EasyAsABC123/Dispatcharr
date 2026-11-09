@@ -2,7 +2,7 @@
 //! Application credit remains with original Dispatcharr authors/contributors.
 use serde_json::Value;
 use std::sync::OnceLock;
-fn printable(c: char) -> bool {
+pub(crate) fn printable(c: char) -> bool {
     static RANGES: OnceLock<Vec<(u32, u32)>> = OnceLock::new();
     let ranges = RANGES.get_or_init(|| {
         let data: Value =

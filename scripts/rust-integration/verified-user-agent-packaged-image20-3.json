@@ -1,0 +1,41 @@
+{
+  "scope": "Actual original UserAgent serializer/HTTP/cache/FK contracts replayed against immutable image20; original Dispatcharr authors retain full application credit.",
+  "passed": true,
+  "report": "artifacts/rust/m5-user-agent-packaged-image20-3/integration.json",
+  "report_sha256": "9bb01cbf42612006dabe9defca430e68889b3ec785e5234c14f0b78c7b0219de",
+  "candidate_image_binding": {
+    "image_id": "sha256:fd449c861ba84d44229004c961c92b263ac06c7fe21e6dc194b59a3a70cb4dac",
+    "source_tree_sha256": "db7ee628fe24da0589ad19134d8886a15ed59dcb50b85d6e0c59b22ee2a1117f",
+    "manifest_verified": true
+  },
+  "build_manifest_sha256": "d49453e794e12bbcb6778dd14d5303a13fe9ce8c61eb7767858686b0f62b47f6",
+  "tool_source": "artifacts/rust/m5-user-agent-packaged-image20-3/tool-source",
+  "packaged_checks_sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542",
+  "source_cases": 79,
+  "default_id_cases": 13,
+  "packaged_resource_checks": 3,
+  "total_checks": 95,
+  "cleanup": "project removed",
+  "performance_verified": false,
+  "verified": [
+    "Exact request-body SHA256, status, selected headers, normalized clock-only JSON, DB timestamps/FKs, persistent version key and cached string state.",
+    "Original Python HTTP and CoreSettings consumers read native-written cache strings; native image reader resolves configured default.",
+    "Blocked original old-value reader versus native HTTP writer skips stale cache fill.",
+    "Actual PostgreSQL lock holds four native owned mutations after HTTP clients time out; fifth request rejects503, all four finish after unlock, service recovers."
+  ],
+  "failed_attempts": [
+    {
+      "report": "artifacts/rust/m5-user-agent-packaged-image20-1/integration.json",
+      "reason": "Probe missing base64 import; corrected tool only; owned project removed."
+    },
+    {
+      "report": "artifacts/rust/m5-user-agent-packaged-image20-2/integration.json",
+      "reason": "Fixture polled pg_stat_activity within one transaction without refreshing the PostgreSQL statistics snapshot; corrected pg_stat_clear_snapshot observer only; owned project removed."
+    }
+  ],
+  "remaining": [
+    "Concurrent UserAgent unique/delete-update races, Redis ACL/fatal-error response shapes, skip-cache environment read behavior, malformed NUL/surrogate/file-valued input families retain separate coverage.",
+    "Unsafe legacy logo file deletion and exotic parser/header/limit families remain explicit gaps.",
+    "Other output/M4/header scopes and performance measurements retain their own proof; native M6 jobs and remaining integrations are incomplete."
+  ]
+}

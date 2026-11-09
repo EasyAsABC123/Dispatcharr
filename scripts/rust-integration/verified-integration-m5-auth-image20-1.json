@@ -1,0 +1,100 @@
+{
+  "scope": "Canonical immutable20 API1024,IP33,password34,persistent unchanged React logo16 checks,logo101 cases/104 responses including processed_file markers,and UserAgent79 contracts+13 default-ID vectors+3 packaged resource gates.",
+  "passed": true,
+  "candidate_image_binding": {
+    "image_id": "sha256:fd449c861ba84d44229004c961c92b263ac06c7fe21e6dc194b59a3a70cb4dac",
+    "source_tree_sha256": "db7ee628fe24da0589ad19134d8886a15ed59dcb50b85d6e0c59b22ee2a1117f",
+    "manifest_verified": true
+  },
+  "build_manifest": "artifacts/rust/candidate-build-m5-useragent-m7-scoped-ip-image20-1/build.json",
+  "build_manifest_sha256": "d49453e794e12bbcb6778dd14d5303a13fe9ce8c61eb7767858686b0f62b47f6",
+  "runs": [
+    {
+      "report": "artifacts/rust/m5-auth-full-integration-image20-1/integration.json",
+      "sha256": "d372b741fa35f47ec0045e78ac11f21e88fdfa093a09b3d2f5a52d0817e6fe69",
+      "tool_source": "artifacts/rust/m5-auth-full-integration-image20-1/tool-source",
+      "cleanup": "project removed",
+      "checks": 1024,
+      "contract_suites": [
+        "accounts",
+        "account_crud",
+        "app_data",
+        "core",
+        "profiles",
+        "memberships",
+        "channel_reads",
+        "channel_crud",
+        "groups",
+        "channel_stops",
+        "group_cleanup",
+        "streams",
+        "provider_reads",
+        "server_group_crud",
+        "filter_crud",
+        "core_utilities",
+        "core_stream_crud",
+        "notifications"
+      ]
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-ip-image20-1/integration.json",
+      "sha256": "a46dc8e2b15f3405434b5e3142bc2f4e63d932ed5910f454a0874a803cb14ab6",
+      "tool_source": "artifacts/rust/m5-packaged-ip-image20-1/tool-source",
+      "cleanup": "project removed",
+      "checks": 33,
+      "contract_suites": [
+        "environment_ip"
+      ]
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-auth-hash-image20-1/integration.json",
+      "sha256": "139f2c6c1094083735a2b327fce021d0e21f8f1f9a423f601a0f7fab1a283a56",
+      "tool_source": "artifacts/rust/m5-packaged-auth-hash-image20-1/tool-source",
+      "cleanup": "project removed",
+      "checks": 34,
+      "contract_suites": [
+        "auth_hash"
+      ]
+    },
+    {
+      "report": "artifacts/rust/m5-native-react-logo-image20-1/integration.json",
+      "sha256": "fe00968d7ec028deeedd0483751ccd178ecc501f6e05d83aa14b5a0af1521390",
+      "tool_source": "artifacts/rust/m5-native-react-logo-image20-1/tool-source",
+      "cleanup": "project removed",
+      "checks": 16
+    },
+    {
+      "report": "artifacts/rust/m5-logo-packaged-image20-1/integration.json",
+      "sha256": "5eed0b4bafb0a568f672f5f6cecdb6ffd56ca087db3e9ad8712ed6ae717eca96",
+      "tool_source": "artifacts/rust/m5-logo-packaged-image20-1/tool-source",
+      "cleanup": "project removed",
+      "source_cases": 101,
+      "source_http_responses": 104
+    },
+    {
+      "report": "artifacts/rust/m5-user-agent-packaged-image20-3/integration.json",
+      "sha256": "9bb01cbf42612006dabe9defca430e68889b3ec785e5234c14f0b78c7b0219de",
+      "tool_source": "artifacts/rust/m5-user-agent-packaged-image20-3/tool-source",
+      "cleanup": "project removed",
+      "source_cases": 79,
+      "default_id_cases": 13,
+      "resource_checks": 3
+    }
+  ],
+  "performance_verified": false,
+  "failed_attempts": [
+    {
+      "report": "artifacts/rust/m5-user-agent-packaged-image20-1/integration.json",
+      "reason": "Probe missing base64 import; corrected tool only; owned project removed."
+    },
+    {
+      "report": "artifacts/rust/m5-user-agent-packaged-image20-2/integration.json",
+      "reason": "Fixture polled pg_stat_activity within one transaction without refreshing the PostgreSQL statistics snapshot; corrected pg_stat_clear_snapshot observer only; owned project removed."
+    }
+  ],
+  "remaining": [
+    "Concurrent UserAgent unique/delete-update races, Redis ACL/fatal-error response shapes, skip-cache environment read behavior, malformed NUL/surrogate/file-valued input families retain separate coverage.",
+    "Unsafe legacy logo file deletion and exotic parser/header/limit families remain explicit gaps.",
+    "Other output/M4/header scopes and performance measurements retain their own proof; native M6 jobs and remaining integrations are incomplete."
+  ]
+}

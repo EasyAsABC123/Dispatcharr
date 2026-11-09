@@ -25,6 +25,16 @@ services:
       interval: 1s
       timeout: 3s
       retries: 60
+  data-init:
+    image: debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+    platform: linux/amd64
+    user: "0:0"
+    entrypoint: [sh, -c, "mkdir -p /data/logos && chown 65532:65532 /data /data/logos"]
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN]
+    security_opt: [no-new-privileges:true]
+    volumes: [candidate-data:/data]
   candidate:
     image: ${RUST_CANDIDATE_IMAGE:?Supply an immutable candidate image and build manifest}
     platform: linux/amd64
@@ -40,8 +50,13 @@ services:
     depends_on:
       database: {condition: service_healthy}
       cache: {condition: service_healthy}
+      data-init: {condition: service_completed_successfully}
     ports: ["127.0.0.1::9192"]
     read_only: true
+    volumes: [candidate-data:/data]
     tmpfs: ["/tmp:mode=1777,size=134217728"]
     security_opt: [no-new-privileges:true]
     cap_drop: [ALL]
+
+volumes:
+  candidate-data:

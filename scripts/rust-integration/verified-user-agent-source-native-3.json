@@ -1,0 +1,48 @@
+{
+  "scope": "Actual original UserAgent HTTP/serializer/FK/cache contracts versus frozen native service in disposable PostgreSQL/Redis/container network.",
+  "passed": true,
+  "report": "artifacts/rust/m5-user-agent-source-native-3/integration.json",
+  "report_sha256": "5c00999e3efb6349ab2d04a697fe979dd24d0e9da9444c5309eb607cbf7b2d0f",
+  "rust_source_archive_sha256": "9144c679c5294bb084eaaa0a8f349d8cc7515c51a59fc5ce5cfde75b8a58196a",
+  "native_test_executable_sha256": "0ae9eb023c3ad2818dba82f8195627b9f8939c6edb53a5d02a56f4c7b07d1c2e",
+  "native_test_log_sha256": "8d9550d9553ad10a119b2372aaf42df2995eca5056b048c2c7ca79666b8688a6",
+  "source_cases": 79,
+  "default_id_cases": 13,
+  "source_files": {
+    "rust/crates/store/src/core_reads.rs": "f780994250768ccc3a4874ef3836bb76d1e45aae18ec982439f240dc43706282",
+    "rust/crates/store/src/notifications.rs": "4631571b79996eb5c5b0703fdfe7815469f8698213308c8f84c05e3b9298b1d5",
+    "rust/crates/store/src/image_proxy.rs": "3b41d1aa3f01f063dfbe243b53f167d7b63f3268e4992582085ce26c4326022f",
+    "rust/crates/store/src/user_agent_writes.rs": "f63666da6412305cd490191f15b3e8fabe32fa0b9e7c33fa344ead6e3d94dc72",
+    "rust/crates/store/tests/user_agent_sql.rs": "a4490d77403adbd191cbf451a78b12f3a638d740fb3b9613d26d25bb55b47fba"
+  },
+  "critical_image20_source_match": {
+    "rust/crates/store/src/core_reads.rs": true,
+    "rust/crates/store/src/notifications.rs": true,
+    "rust/crates/store/src/image_proxy.rs": true,
+    "rust/crates/store/src/user_agent_writes.rs": true
+  },
+  "cleanup": "project removed",
+  "performance_verified": false,
+  "verified": [
+    "JSON/form/multipart required/blank/null/numeric/bool/max512/max255/unique/read-only/partial/full-update behavior. HTML missing/blank boolean semantics retain original distinctions.",
+    "Admin>=10writes and Standard>=1reads, inactive/basic/anonymous denial, malformed versus numeric unknown lookup errors including Unicode/underscore/huge integers.",
+    "Default version key changes persistently and resolved string invalidates on any successful create/save/delete, including empty PATCH and unrelated-row changes. Rejected operations retain cache state.",
+    "StreamProfile and M3UAccount foreign keys clear on deletion; default-ID JSON remains unchanged and default getter falls back exactly.",
+    "Other native reader plus actual original Python HTTP image consumer reads native-written cache strings.",
+    "13original default-ID vectors include finite float truncation, Unicode/underscore integers, bool/null/invalid/huge values and inactive configured agents."
+  ],
+  "native_resource_checks": [
+    "Actual old-value reader blocked through bounded RESPproxy observes new write version and skips stale cache fill.",
+    "Four owned mutation actors block at actual PostgreSQL insert; extra request rejects503 before SQL.",
+    "Abandoned HTTP callers do not cancel the owned DB/cache mutation work; all four complete and service recovers."
+  ],
+  "normalization": [
+    "Only current-clock created_at/updated_at values are normalized; fixed original dates and DB invariants remain exact. Content-Length may be ignored only for JSON responses with those clock-dependent values.",
+    "JSON field order canonicalized; request body bytes compared by SHA256."
+  ],
+  "remaining": [
+    "Packaged image20 replay passed separately; see verified-user-agent-packaged-image20-3.json.",
+    "Concurrent unique/delete-update races, Redis authentication/ACL/fatal-error response shapes, skip-cache environment read behavior, and malformed NUL/surrogate/file-valued field families remain separate coverage.",
+    "No native refresh/EPG jobs or application performance gain is claimed."
+  ]
+}

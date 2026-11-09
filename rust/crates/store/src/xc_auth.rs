@@ -235,7 +235,7 @@ impl AuthService {
         if !system_allowed(&policy, network_key, ip)? {
             return Err(denied(403, None));
         }
-        let key = format!(":1:throttle_xc_auth_{ip}");
+        let key = format!(":1:throttle_xc_auth_{}", self.client_ip_text(request));
         if let Some(wait) = limited(cache, &key).await? {
             return Err(denied(429, wait));
         }
@@ -267,7 +267,7 @@ impl AuthService {
         username: &str,
         cache: &NotificationCache,
     ) {
-        let details = json!({"user":if username.is_empty(){"unknown"}else{username},"client_ip":self.client_ip(request).to_string(),"user_agent":request.header("user-agent").unwrap_or("unknown"),"reason":"XC auth rate limited"});
+        let details = json!({"user":if username.is_empty(){"unknown"}else{username},"client_ip":self.client_ip_text(request),"user_agent":request.header("user-agent").unwrap_or("unknown"),"reason":"XC auth rate limited"});
         if sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) VALUES('login_failed',now(),NULL,NULL,$1)").bind(details).execute(self.store.pool()).await.is_err(){tracing::warn!("XC lockout event storage failed");return}
         // Connect/plugin dispatch is an independently tracked M8 bridge.
         let setting = settings(self, cache, "system_settings")

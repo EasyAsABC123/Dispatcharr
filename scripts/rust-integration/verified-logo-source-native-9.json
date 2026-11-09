@@ -1,0 +1,79 @@
+{
+  "scope": "Original actual uWSGI HTTP logo delivery/URLCRUD/uploads versus frozen native test service in disposable original container DNS/filesystem/PostgreSQL; not packaged Rust application acceptance.",
+  "passed": true,
+  "report": "artifacts/rust/m5-logo-source-native-9/integration.json",
+  "report_sha256": "0f2fc35ffee0eb40eccc04e23a0e05fa554b48ccc91c7972b3a231a93e1e60a5",
+  "rust_source_archive_sha256": "b04e5ef52c567830434a897f427827e046ad9c3cf0f08f1d7e8a6ece61c3ab97",
+  "native_test_executable_sha256": "46cb81da0c3c51a72039c7c41120697d3396f52bb091eaa2cb79ecc267ff7fdf",
+  "native_test_log_sha256": "e5187db2ce23c3eebf301aa209bc6258e4f59a76d6a72e8d37740bcb52c4f34d",
+  "source_cases": 101,
+  "source_http_responses": 104,
+  "cleanup": "project removed",
+  "source_files": {
+    "rust/crates/app/src/response_headers.rs": "f2ba6c94d967a7a7884698085c96d1c3578ca03d1632ae94757767af29f1491b",
+    "rust/crates/store/src/logos.rs": "d5902bac5ffac695ff0505a43baac73842cf2310ef22fbf2782ef25cadf9b734",
+    "rust/crates/store/src/image_proxy.rs": "1b0307544b35b2b1370e5067c5068dfd7596c105e801aa22d1ccfa238f2a29c4",
+    "rust/crates/store/src/logo_writes.rs": "80a295c2f9efb6cdd366e23ba23ebaa3f9f9a02c14a3e818d91c53b70a0e8fcf",
+    "rust/crates/store/src/html_filename.rs": "d34c151e82967c80753dc5e5daff47f4d33ec0981100d8bd03e9c175274b6a66",
+    "rust/crates/store/tests/logo_sql.rs": "83890e04ffd5a4ba190c5d12306d94e7e3b25b84a59fd5af8e4115fe762c938f",
+    "rust/crates/store/datasets/source-image-ip-policy.json": "409456bfe038055b7fa104b35c7169a88e38d9248eb70c13d70bc0e12a3fd3f7",
+    "rust/crates/store/datasets/source-html-charrefs.json": "01fd0d7c32b1abc1c58cb0afc5ceb19b92987cd9264ccfd585756bafbae05669"
+  },
+  "verified": [
+    "Identical source/native JSON/multipart request body digests; exact status/selected headers and binary SHA256/length, canonical JSON without hiding numeric types.",
+    "PNG/JPEG/GIF/WebP/ICO/BMP/SVG sniffing, misleading MIME/HTML rejection, gzip/bad-gzip/truncation,5redirect successes/6redirect failure, loopback/link-local/DNS denial versus real private origin DNS.",
+    "Exact5MiB remote/upload boundaries, read/total deadlines, negative-cache repeat request counts and oversized image retry semantics.",
+    "Local safe paths/missing files/escaping symlink/traversal/directory error; original explicit HTML/text MIME, Latin1 and RFC2047 Unicode filename headers, fixed-mtime Last-Modified/cache keys.",
+    "Anonymous media and optional credential validation, inactive/bad token errors, Standard/basic/admin write permissions.",
+    "URLCRUD validation/truncation/duplicate errors, forms/multipart, read-only stripping, relation clearing and original204framing.",
+    "Upload MIME-before-size validation, exact5MiB accepted, overwrite/conflict, original basename/entity/printability sanitization and symlink escape rejection; exact file bytes and DB witnesses."
+  ],
+  "native_resource_checks": [
+    "Actual5MiB fetched response frame and its clones retain byte/admission ownership until final drop.",
+    "4admitted and64waiting HTTP requests; further request rejected503 without extra upstream request.",
+    "Canceled in-flight and queued HTTP work drains and service recovers.",
+    "5MiB vector capacity ceiling and primitive waiter cancellation/permit release are separately unit tested."
+  ],
+  "normalization": [
+    "Only successful upload response local cache version hash is normalized: its mtime is independently clock-dependent on each write. File bytes/DB/other headers remain exact. Fixed existing-file mtime hashes are compared exactly.",
+    "JSON field order is canonicalized; binary image responses compare actual bytes by SHA256/length."
+  ],
+  "remaining": [
+    "Immutable packaged candidate gate pending.",
+    "Escaped legacy delete_file paths fail501 before DB deletion; unrestricted legacy filesystem removal is intentionally not implemented.",
+    "Malformed multipart/control/header edge families and whole-request/field-count limits outside captured cases remain separate coverage.",
+    "processed_file shared Redis TTL/mtime interoperability needs a dedicated oracle.",
+    "No resource/performance gain inferred from functional checks."
+  ],
+  "performance_verified": false,
+  "earlier_failures": [
+    {
+      "run": "m5-logo-source-native-1",
+      "reason": "Fixture Django request completion closed connection inside outer atomic; no native verification; cleaned."
+    },
+    {
+      "run": "m5-logo-source-native-2",
+      "reason": "Frozen workspace captured during coordinated lock promotion; native build refused locked metadata; cleaned."
+    },
+    {
+      "run": "m5-logo-source-native-3",
+      "reason": "Harness omitted existing app nosniff middleware; switched to exact shared app module; cleaned."
+    },
+    {
+      "run": "m5-logo-source-native-4",
+      "reason": "Local text MIME charset differed; corrected native header; cleaned."
+    },
+    {
+      "run": "m5-logo-source-native-5",
+      "reason": "Three204Content-Length0 differences; all remaining contracts passed; cleaned."
+    },
+    {
+      "run": "m5-logo-source-native-6",
+      "reason": "Confirmed204zero header over actual original HTTP; cleaned."
+    },
+    {
+      "run": "m5-logo-source-native-7",
+      "reason": "Hyper omitted zero header on ended body; explicit empty streaming body preserved original framing; cleaned."
+    }
+  ]
+}

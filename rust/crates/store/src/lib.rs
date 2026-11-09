@@ -19,13 +19,23 @@ mod core_reads;
 mod core_stream_writes;
 mod core_utilities;
 mod django_pickle;
+mod epg_policy;
 mod ip_lookup;
 mod notifications;
 mod python_action;
 mod schema;
 mod settings_groups;
+mod user_agent_writes;
+pub use epg_policy::{source_epg_history_policy, EpgHistoryPolicy, EpgPolicyError};
+mod epg_staging;
+pub use epg_staging::{GuideMapping, GuideStaging, GuideSwapCounts};
 pub use ip_lookup::IpLookupConfig;
 pub use schema::{initialize_empty_database, SchemaInitialization};
+/// Source-compatible JSON decoder error text for management adapters.
+pub fn source_json_error(raw: &[u8], error: serde_json::Error) -> String {
+    startup_bootstrap::json_error(raw, error)
+}
+
 mod xc_auth;
 pub use notifications::NotificationCache;
 mod import_batches;
@@ -44,6 +54,10 @@ mod startup_bootstrap;
 pub use import_batches::{
     ImportCounts, ImportedStream, MAX_IMPORT_BATCH_BYTES, MAX_IMPORT_BATCH_ROWS,
 };
+mod image_proxy;
+pub use image_proxy::SourceImageResponse;
+mod html_filename;
+mod logo_writes;
 mod logos;
 mod password_scrypt;
 mod passwords;

@@ -67,7 +67,7 @@ fn string(value: &str) -> Value {
 fn put(map: &mut Map<String, Value>, name: &str, value: &str) {
     map.insert(name.into(), string(value));
 }
-fn integer(value: &str, increment: bool) -> Option<Value> {
+pub(crate) fn integer(value: &str, increment: bool) -> Option<Value> {
     let mut text = integer_literal(value)?;
     if increment {
         let negative = text.starts_with('-');

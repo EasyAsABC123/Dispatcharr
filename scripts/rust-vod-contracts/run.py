@@ -12,6 +12,7 @@ import sys
 import tempfile
 import time
 import urllib.request
+import urllib.parse
 import uuid
 from vod_tool_snapshot import snapshot_sources
 
@@ -33,6 +34,15 @@ def main():
     parser.add_argument('--timeshift-redirect-session', action='store_true', help='Use Redirect channel with empty allowed profiles to verify established capability still proxies')
     parser.add_argument('--m3u-rust-http', action='store_true', help='Compare actual native M3U HTTP/auth/cache with original source')
     parser.add_argument('--m3u-rust-renderer', action='store_true', help='Compare native SQL/renderer positive export bytes with original source')
+    parser.add_argument('--vod-rapid-reclose-source', action='store_true', help='Characterize actual original rapid-reclose duplicate-stop timer race separately')
+    parser.add_argument('--vod-progress-source', action='store_true', help='Capture original finalpartial/full100thchunk consumed-byte telemetry boundaries')
+    parser.add_argument('--vod-progress-rust', action='store_true', help='Compare native finalpartial100thchunk telemetry with actual original provider/Redis')
+    parser.add_argument('--timeshift-playback-ws', action='store_true', help='Capture actual original/native WebSocket fullstats during six decoded archive media/lifecycle cases')
+    parser.add_argument('--vod-playback-ws', action='store_true', help='Compare actual original/native HTTP playback and packaged WebSocket lifecycle/fullstats delivery')
+    parser.add_argument('--vod-lifecycle-rust', action='store_true', help='Compare native VOD event/body timing and real Redis cleanup against original manager contracts')
+    parser.add_argument('--vod-lifecycle-source', action='store_true', help='Capture original actual VOD response-body lifecycle event timing against real upstream HTTP/Redis/Channels')
+    parser.add_argument('--vod-producer-rust', action='store_true', help='Compare native VOD statistics projection with actual original ORM/Redis golden rows')
+    parser.add_argument('--timeshift-producer-rust', action='store_true', help='Verify native bounded catch-up producer registration and grace cleanup on actual original schema/Redis')
     parser.add_argument('--timeshift-producer-source', action='store_true', help='Capture original actual Redis/Channels Timeshift stats registration publication rules')
     parser.add_argument('--vod-producer-source', action='store_true', help='Capture original real ORM/Redis VOD statistics and Channels producer component contracts')
     parser.add_argument('--m3u-large-output', action='store_true', help='Characterize a 6000-channel multi-megabyte M3U and its Django cache')
@@ -60,6 +70,18 @@ def main():
     parser.add_argument('--rust-resolver-test', action='store_true', help='Run the actual-schema Rust resolver test against this disposable database')
     parser.add_argument('--rust-ingest-test', action='store_true', help='Compare the native M3U batch sink to original Django writes in this disposable database')
     args = parser.parse_args()
+    if args.vod_progress_rust:
+        args.vod_progress_source = True
+    if args.timeshift_playback_ws:
+        args.timeshift_media = True
+        if args.candidate_overlay:
+            args.candidate_timeshift_media = True
+    if args.timeshift_producer_rust:
+        args.timeshift_producer_source = True
+    if args.vod_lifecycle_rust:
+        args.vod_lifecycle_source = True
+    if args.vod_producer_rust:
+        args.vod_producer_source = True
     if args.m3u_large_output:
         args.m3u_output = True
     if args.m3u_rust_http:
@@ -111,8 +133,10 @@ def main():
     environment = dict(os.environ, BASELINE_SOURCE_DIR=str(source), BASELINE_EVIDENCE_DIR=str(output))
     compose = [args.docker, 'compose', '-p', project, '-f', str(tool_root/'docker/compose.rust-playback.yml'),
                '-f', str(tool_root/'scripts/rust-vod-contracts/compose.yml')]
-    if args.m3u_output or args.vod_producer_source or args.timeshift_producer_source:
+    if args.m3u_output or args.vod_producer_source or args.timeshift_producer_source or args.vod_lifecycle_source or args.vod_playback_ws or args.timeshift_playback_ws or args.vod_progress_source or args.vod_rapid_reclose_source:
         compose += ['-f',str(tool_root/'scripts/rust-output-contracts/compose.yml')]
+    if args.vod_playback_ws:
+        compose += ['-f',str(tool_root/'scripts/rust-output-contracts/compose.ws.yml')]
     candidate_manifest = None
     candidate_manifest_bytes = None
     if args.candidate_overlay:
@@ -132,6 +156,8 @@ def main():
     port_namespace = {'__file__':str(tool_root/'scripts/rust-integration/fixture_ports.py')}
     exec(compile(port_source,port_namespace['__file__'],'exec'),port_namespace)
     service_ports = {'baseline':[5656,5432,6379],'origin':[8080]}
+    if args.vod_playback_ws or args.timeshift_playback_ws:
+        service_ports['baseline'].append(9191)
     if candidate_manifest:
         service_ports['candidate'] = [9192]
     port_overlay = output/'fixture-ports.yml'
@@ -190,18 +216,96 @@ def main():
                 time.sleep(1)
         command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/vod-verification/seed.py'])
         seed = json.loads((output/'vod-seed.json').read_text())
+        if args.vod_rapid_reclose_source:
+            rapid=json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_rapid_reclose_fixture.py'],timeout=60).splitlines()[-1])
+            (output/'vod-rapid-reclose-source.json').write_text(json.dumps(rapid,indent=2)+'\n')
+            report['vod_rapid_reclose_source']=rapid
+            if not rapid['within_original_grace'] or rapid['remaining_metadata'] or rapid['provider_connections']!=0:raise RuntimeError('Rapid source race capture incomplete')
+        if args.vod_progress_source:
+            progress=json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_progress_fixture.py'],timeout=60).splitlines()[-1])
+            (output/'vod-progress-source.json').write_text(json.dumps(progress,indent=2)+'\n')
+            report['vod_progress_source']=progress
+            if args.vod_progress_rust:
+                database_address=command(compose+['port','baseline','5432']).strip();redis_address=command(compose+['port','baseline','6379']).strip();origin_address=command(compose+['port','origin','8080']).strip()
+                test_environment=dict(environment,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+database_address+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis_address+'/0',VOD_ORIGIN_TEST_URL='http://'+origin_address,VOD_DISPOSABLE_FIXTURE='playback-fixture-only',VOD_PROGRESS_ORACLE=str(output/'vod-progress-source.json'))
+                result=subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-vod-http','--test','lifecycle_sql','--locked','--offline','final_partial_hundredth_source_chunk','--','--ignored','--nocapture'],env=test_environment,capture_output=True,text=True,timeout=180)
+                (output/'rust-vod-progress.log').write_text(result.stdout+result.stderr);report['vod_progress_rust']={'passed':result.returncode==0,'source_bound_candidate_image':False};result.check_returncode()
+        if args.vod_playback_ws or args.timeshift_playback_ws:
+            def ws_control(action,sid=None):
+                arguments=compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_ws_control.py',action]+([sid] if sid else [])
+                # Token output remains memory-only and never reaches command logs.
+                result=subprocess.run(arguments,env=environment,capture_output=True,text=True,timeout=30)
+                result.check_returncode();return json.loads(result.stdout.splitlines()[-1])
+            def source_ws():
+                access=ws_control('token')['access']
+                report.setdefault('source_daphne_starts',[]).append(ws_control('start-daphne'))
+                ws_base='http://'+command(compose+['port','baseline','9191']).strip()
+                deadline=time.monotonic()+30
+                while True:
+                    try:
+                        with urllib.request.urlopen(ws_base+'/api/core/version/',timeout=1) as ready:
+                            if ready.status==200:break
+                    except OSError:
+                        if time.monotonic()>deadline:raise TimeoutError('Owned source WebSocket server readiness timed out')
+                        time.sleep(.1)
+                return ws_base,access
+        if args.vod_playback_ws:
+            spec=importlib.util.spec_from_file_location('frozen_vod_ws_probe',tool_root/'scripts/rust-output-contracts/vod_ws_probe.py')
+            vod_ws=importlib.util.module_from_spec(spec);spec.loader.exec_module(vod_ws)
+            ws_base,access=source_ws()
+            try:report['vod_ws_source']=vod_ws.capture(base,ws_base,access,ws_control,error_path=output/'vod-ws-source-partial.json')
+            finally:ws_control('stop-daphne')
+            del access
+            (output/'vod-ws-source.json').write_text(json.dumps(report['vod_ws_source'],indent=2)+'\n')
+        if args.timeshift_playback_ws:
+            spec=importlib.util.spec_from_file_location('frozen_timeshift_ws_probe',tool_root/'scripts/rust-output-contracts/timeshift_ws_probe.py')
+            timeshift_ws=importlib.util.module_from_spec(spec);spec.loader.exec_module(timeshift_ws)
+        if args.vod_lifecycle_source:
+            lifecycle_result=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_lifecycle_fixture.py'],timeout=120)
+            lifecycle=json.loads(lifecycle_result.splitlines()[-1])
+            (output/'vod-lifecycle-source.json').write_text(json.dumps(lifecycle,indent=2)+'\n')
+            report['vod_lifecycle_source']={'cases':len(lifecycle['cases']),'passed':len(lifecycle['cases'])==6,'native_implementation_verified':False}
+            if not report['vod_lifecycle_source']['passed']:raise RuntimeError('Original VOD body lifecycle fixture incomplete')
+            if args.vod_lifecycle_rust:
+                database_address=command(compose+['port','baseline','5432']).strip()
+                redis_address=command(compose+['port','baseline','6379']).strip()
+                origin_address=command(compose+['port','origin','8080']).strip()
+                test_environment=dict(environment,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+database_address+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis_address+'/0',VOD_DISPOSABLE_FIXTURE='playback-fixture-only',VOD_LIFECYCLE_ORACLE=str(output/'vod-lifecycle-source.json'),VOD_ORIGIN_TEST_URL='http://'+origin_address)
+                result=subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-vod-http','--test','lifecycle_sql','--test','http','--locked','--offline','--','--ignored','--nocapture','--test-threads=1','--skip','final_partial_hundredth_source_chunk'],env=test_environment,capture_output=True,text=True,timeout=240)
+                (output/'rust-vod-lifecycle.log').write_text(result.stdout+result.stderr)
+                report['vod_lifecycle_rust']={'passed':result.returncode==0,'native_transport_verified':False,'source_bound_candidate_image':False}
+                result.check_returncode()
         if args.timeshift_producer_source:
             producer_result=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/timeshift_producer_fixture.py'],timeout=120)
             producer=json.loads(producer_result.splitlines()[-1])
             (output/'timeshift-producer-source.json').write_text(json.dumps(producer,indent=2)+'\n')
             report['timeshift_producer_source']={'registration_cases':len(producer['cases']),'passed':len(producer['cases'])==5,'application_parity_verified':False}
             if not report['timeshift_producer_source']['passed']:raise RuntimeError('Original Timeshift producer fixture incomplete')
+            if args.timeshift_producer_rust:
+                database_address=command(compose+['port','baseline','5432']).strip()
+                redis_address=command(compose+['port','baseline','6379']).strip()
+                test_environment=dict(environment,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+database_address+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis_address+'/0',TIMESHIFT_DISPOSABLE_FIXTURE='playback-fixture-only')
+                result=subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-timeshift-http','--lib','--locked','--offline','original_registration_notifications_and_grace_cleanup','--','--ignored','--nocapture','--test-threads=1'],env=test_environment,capture_output=True,text=True,timeout=180)
+                (output/'rust-timeshift-producer.log').write_text(result.stdout+result.stderr)
+                report['timeshift_producer_rust']={'passed':result.returncode==0,'native_transport_verified':False,'source_bound_candidate_image':False}
+                result.check_returncode()
+                result=subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-timeshift-http','--test','media_pool','--locked','--offline','--','--ignored','--nocapture'],env=test_environment,capture_output=True,text=True,timeout=180)
+                (output/'rust-timeshift-pool-regression.log').write_text(result.stdout+result.stderr)
+                report['timeshift_pool_regression']={'passed':result.returncode==0}
+                result.check_returncode()
         if args.vod_producer_source:
             producer_result=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_producer_fixture.py'],timeout=120)
             producer=json.loads(producer_result.splitlines()[-1])
             (output/'vod-producer-source.json').write_text(json.dumps(producer,indent=2)+'\n')
             report['vod_producer_source']={'stats_cases':len(producer['stats_cases']),'channel_messages':len(producer['published']),'audit_rows':len(producer['audit']),'passed':len(producer['stats_cases'])==19 and len(producer['published'])==4 and len(producer['audit'])==2,'application_parity_verified':False}
             if not report['vod_producer_source']['passed']:raise RuntimeError('Original VOD producer fixture incomplete')
+            if args.vod_producer_rust:
+                database_address=command(compose+['port','baseline','5432']).strip()
+                test_environment=dict(environment,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+database_address+'/dispatcharr',VOD_DISPOSABLE_FIXTURE='playback-fixture-only',VOD_PRODUCER_ORACLE=str(output/'vod-producer-source.json'),REDIS_TEST_URL='redis://:playback-fixture-only@'+command(compose+['port','baseline','6379']).strip()+'/0')
+                result=subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-vod-http','--lib','--locked','--offline','original_vod_statistics_match_real_orm_source','--','--ignored','--nocapture'],env=test_environment,capture_output=True,text=True,timeout=180)
+                (output/'rust-vod-producer-projection.log').write_text(result.stdout+result.stderr)
+                report['vod_producer_rust']={'passed':result.returncode==0,'native_lifecycle_publication_verified':False,'source_bound_candidate_image':False}
+                result.check_returncode()
         if args.m3u_output:
             spec=importlib.util.spec_from_file_location('frozen_m3u_probe',tool_root/'scripts/rust-output-contracts/m3u_probe.py')
             m3u=importlib.util.module_from_spec(spec)
@@ -315,7 +419,13 @@ def main():
             spec = importlib.util.spec_from_file_location('timeshift_media_probe',tool_root/'scripts/rust-timeshift-contracts/media_probe.py')
             media = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(media)
-            report['timeshift_media'] = media.capture(base,address('origin',8080),session_seed,output,observe)
+            if args.timeshift_playback_ws:
+                ws_base,access=source_ws()
+                try:report['timeshift_media'],report['timeshift_ws_source']=timeshift_ws.capture(ws_base,access,lambda:media.capture(base,address('origin',8080),session_seed,output,observe))
+                finally:ws_control('stop-daphne');del access
+                (output/'timeshift-ws-source.json').write_text(json.dumps(report['timeshift_ws_source'],indent=2)+'\n')
+            else:
+                report['timeshift_media'] = media.capture(base,address('origin',8080),session_seed,output,observe)
             (output/'timeshift-media.json').write_text(json.dumps(report['timeshift_media'],indent=2)+'\n')
             for event in report['timeshift_media']['events']:
                 if 'media_file' not in event:
@@ -489,6 +599,17 @@ def main():
             spec.loader.exec_module(playback_adapter)
             source_hash = playback_adapter.validate_build_manifest(candidate_manifest,inspected['Image'],(inspected['Config'].get('Labels') or {}).get('org.opencontainers.image.source-tree-sha256'))
             report['candidate_provenance'] = {'image_id':inspected['Image'],'source_tree_sha256':source_hash,'build_manifest_sha256':hashlib.sha256(candidate_manifest_bytes).hexdigest()}
+            if args.vod_progress_source:
+                spec=importlib.util.spec_from_file_location('frozen_vod_progress',tool_root/'scripts/rust-output-contracts/vod_progress_probe.py');progress_probe=importlib.util.module_from_spec(spec);spec.loader.exec_module(progress_probe)
+                def progress_inspect(sid):return json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_progress_inspect.py',sid],timeout=10).splitlines()[-1])
+                report['vod_progress_candidate']=progress_probe.capture(candidate,report['vod_progress_source'],progress_inspect)
+                (output/'vod-progress-candidate.json').write_text(json.dumps(report['vod_progress_candidate'],indent=2)+'\n')
+            if args.vod_playback_ws:
+                access=ws_control('token')['access']
+                try:report['vod_ws_candidate']=vod_ws.capture(candidate,candidate,access,ws_control,error_path=output/'vod-ws-candidate-partial.json')
+                finally:del access
+                report['vod_ws_comparison']=vod_ws.compare(report['vod_ws_source'],report['vod_ws_candidate'])
+                (output/'vod-ws-candidate.json').write_text(json.dumps(report['vod_ws_candidate'],indent=2)+'\n')
             report['candidate_wire'] = probe(candidate,seed['native_path'],capture_fullfile=output/'candidate-full.mp4')
             (output/'candidate-wire.json').write_text(json.dumps(report['candidate_wire'],indent=2)+'\n')
             if args.profile_aliases:
@@ -548,7 +669,14 @@ def main():
                 spec.loader.exec_module(timeshift_compare)
                 report['candidate_timeshift_sessions'] = module.capture(candidate,session_seed)
                 report['timeshift_session_comparison'] = timeshift_compare.compare_sessions(report['timeshift_sessions'],report['candidate_timeshift_sessions'])
-                report['candidate_timeshift_media'] = media.capture(candidate,address('origin',8080),session_seed,output,observe,prefix='timeshift-candidate')
+                if args.timeshift_playback_ws:
+                    access=ws_control('token')['access']
+                    try:report['candidate_timeshift_media'],report['timeshift_ws_candidate']=timeshift_ws.capture(candidate,access,lambda:media.capture(candidate,address('origin',8080),session_seed,output,observe,prefix='timeshift-candidate'))
+                    finally:del access
+                    report['timeshift_ws_comparison']=timeshift_ws.compare(report['timeshift_ws_source'],report['timeshift_ws_candidate'])
+                    (output/'timeshift-ws-candidate.json').write_text(json.dumps(report['timeshift_ws_candidate'],indent=2)+'\n')
+                else:
+                    report['candidate_timeshift_media'] = media.capture(candidate,address('origin',8080),session_seed,output,observe,prefix='timeshift-candidate')
                 for event in report['candidate_timeshift_media']['events']:
                     if 'media_file' not in event:
                         continue
@@ -575,6 +703,12 @@ def main():
         # A characterization succeeds only when every request was recorded.
         # It does not claim that baseline defects satisfy RFC range behavior.
         report['passed'] = len(report['wire']['events']) == 7 and (not candidate_manifest or report['wire_comparison']['captured_wire_matches'])
+        if args.vod_progress_source:
+            report['passed']=report['passed'] and report['vod_progress_source']['capture_complete'] and (not candidate_manifest or report['vod_progress_candidate']['source_progress_matches'])
+        if args.timeshift_playback_ws:
+            report['passed']=report['passed'] and report['timeshift_ws_source']['capture_complete'] and (not candidate_manifest or report['timeshift_ws_comparison']['captured_packaged_timeshift_events_match'])
+        if args.vod_playback_ws:
+            report['passed']=report['passed'] and report['vod_ws_source']['capture_complete'] and (not candidate_manifest or report['vod_ws_comparison']['captured_packaged_vod_events_match'])
         if args.m3u_rust_http:
             report['passed'] = report['passed'] and report['m3u_rust_http']['passed']
         if args.m3u_rust_renderer:
