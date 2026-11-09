@@ -27,6 +27,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | Planned | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 
 Current evidence is described in the [local verification guide](rust-local-verification.md).
+The separate [image14 API characterization](../scripts/rust-integration/verified-api-resources-image14-1.json) passes three paired resource trials at identical40successfulrequests/second, with14,400 exact JSON responses and zero errors. Median paired CPU and sampled working-memory ratios are0.10483and0.62949. This read-only synthetic API subset does not close browser, authentication, realtime, background-job or full M5/application acceptance.
 The unchanged original React suite passed 6,567 tests in pinned Docker packaging,
 and the application image now bundles its production build. This does not close
 browser workflow parity. Real-schema management coverage reached 405 integrated

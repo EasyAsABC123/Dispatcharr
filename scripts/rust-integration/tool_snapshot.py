@@ -9,7 +9,7 @@ from pathlib import Path
 import stat
 
 DIRECTORIES=('scripts/rust-integration','scripts/rust-account-contracts',
-             'scripts/rust-playback-baseline','scripts/rust-baseline')
+             'scripts/rust-playback-baseline','scripts/rust-baseline','scripts/rust-perf')
 COMPOSE=('docker/compose.rust-playback.yml','docker/compose.rust-candidate.yml')
 
 

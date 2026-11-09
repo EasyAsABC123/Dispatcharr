@@ -117,7 +117,14 @@ def main():
     parser.add_argument('--candidate-build-manifest',type=Path)
     parser.add_argument('--contract-suites',default='all',help='Comma-separated oracle suites or all (default); foundational auth/schema/media checks always run')
     parser.add_argument('--trusted-proxy-fixture',action='store_true',help='Only for the isolated proxy_auth suite: trust peers explicitly on both disposable fixture services')
+    parser.add_argument('--api-resource-matrix',action='store_true',help='Compare read-only React API JSON/resource subset in independent paired trials')
+    parser.add_argument('--api-repetitions',type=int,default=3)
+    parser.add_argument('--api-warmup',type=float,default=15)
+    parser.add_argument('--api-duration',type=float,default=60)
+    parser.add_argument('--api-start-signal',type=Path,help='Wait for this new local file before API resource trials')
     args = parser.parse_args()
+    if args.api_resource_matrix and not args.candidate_build_manifest:
+        parser.error('API resource trials require an immutable candidate build manifest')
     try:selected_suites=contract_suites(args.contract_suites)
     except ValueError as error:parser.error(str(error))
     if ('proxy_auth' in selected_suites or args.trusted_proxy_fixture) and not (args.trusted_proxy_fixture and selected_suites==['proxy_auth']):
@@ -283,6 +290,22 @@ def main():
                     if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip'):
                         extra=(metadata_fixture,)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
+            if args.api_resource_matrix:
+                if args.api_start_signal:
+                    deadline=time.monotonic()+1800
+                    print('API fixture ready; waiting for measurement start signal',flush=True)
+                    while not args.api_start_signal.exists():
+                        if time.monotonic()>=deadline:raise TimeoutError('API measurement start signal absent')
+                        time.sleep(.5)
+                spec=importlib.util.spec_from_file_location('captured_api_matrix',tool_source/'scripts/rust-integration/api_matrix.py')
+                matrix=importlib.util.module_from_spec(spec);spec.loader.exec_module(matrix)
+                measured=matrix.run(compose=compose,command=command,endpoint=endpoint,
+                    token=admin['access'],output=output/'api-resources',tools=tool_source,manifest=manifest,
+                    repetitions=args.api_repetitions,warmup=args.api_warmup,duration=args.api_duration)
+                report['api_resource_matrix']={'report':'api-resources/matrix.json',
+                    'sha256':hashlib.sha256((output/'api-resources/matrix.json').read_bytes()).hexdigest(),
+                    'measurement_quality':measured['measurement_quality'],'scope':measured['scope']}
+                record('read-only-api-resource-matrix',measured['passed'],report['api_resource_matrix'])
             status = 0 if all(check['passed'] for check in report['checks']) else 1
             report['passed'] = status == 0
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:

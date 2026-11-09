@@ -1,9 +1,9 @@
 # Native TS characterization and rejected runs
 
 Full original Dispatcharr author/contributor credit remains with upstream.
-These studies compare the native TS backend subset. Frontend viewing,
-WebSocket statistics and equivalent event delivery are not exercised; no full
-application performance gain is accepted from this matrix.
+This ledger retains native TS studies and a separate read-only API study.
+Frontend viewing, WebSocket statistics and equivalent event delivery are not
+accepted by these partial workloads; no full application gain is claimed.
 
 The fixed workload uses the pinned original source/runtime, the same actual H264
 TS origin and FFmpeg decoder, one backend worker, retained input60seconds,
@@ -241,3 +241,44 @@ Rust source: `d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0`.
 Durable evidence, exact paired values and component/RSS diagnostics:
 `verified-hot-cache-many-channel-image11-1.json`. Raw artifacts and immutable
 measured tool copies: `artifacts/rust/m2-hot-cache-many-channel-matrix-1/`.
+
+## Image14 read-only API characterization
+
+The separate [API report](verified-api-resources-image14-1.json) passes all three
+independent pairs at ten synthetic users and40successfulrequests/second. Each
+phase has15seconds of equal warmup and60seconds of observation; backend order
+alternates. All14,400 measured responses match the original canonical JSON, with
+zero delivery or observer errors. These are repeated channel/settings/user-agent
+reads used by React initialization, rather than an actual browser session.
+
+| Metric | Median paired Rust/source ratio | Three-pair range |
+| --- | --- | --- |
+| Service-group CPU |0.10483|0.10329–0.10748|
+| Sampled Docker working-memory peak |0.62949|0.62839–0.63011|
+| First-byte p95 |0.06490|0.06301–0.06508|
+| Complete-response p95 |0.06605|0.06416–0.06609|
+| Successful requests/second |1.00000|1.00000–1.00000|
+
+This is about89.5%lessCPU and37.1%lesssampled working memory for this API subset.
+The absolute backend medians are30.372%CPU/source versus3.1825%/Rust and
+357.60MiB/source versus225.10MiB/Rust working memory. CPU100% means one logical
+core. Identical successful request rates also normalize the CPU comparison by
+completed requests. These medians and medians of paired ratios are distinct
+statistics.
+
+Each trial restarts the selected web service, stops the other implementation,
+and clears the fixture's isolated Redis. The same seeded PostgreSQL dataset and
+identical idle origin remain. Totals include backend, PostgreSQL, Redis and
+origin; `docker stats` working memory is a sampled peak, not an unsampled kernel
+peak or process RSS. All fixed CPU/memory/latency/throughput gates in the captured
+harness pass in every pair. The shorter smoke is retained separately and is not
+combined with this isolated matrix.
+
+The measured Rust image is
+`sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a`, with
+source tree`3dee6610ccae2626a800e46dc8797170f25e919dde5cef07f4c501d1cbf833aa`.
+Actual browser execution, authentication/mutation workloads, WebSocket events,
+background jobs, long-run growth and full M5/application acceptance remain open.
+Later shared-auth and gateway changes must receive their own package/resource
+gates. Exact tools, raw samples, isolation record and cleanup are retained in
+`artifacts/rust/m5-api-resource-matrix-1/`.

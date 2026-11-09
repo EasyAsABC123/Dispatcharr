@@ -1,0 +1,287 @@
+{
+  "scope": "selected-read-only-React-API-resource-characterization",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "candidate_image": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
+  "candidate_source_tree_sha256": "3dee6610ccae2626a800e46dc8797170f25e919dde5cef07f4c501d1cbf833aa",
+  "build_manifest": "artifacts/rust/candidate-build-m5-auth-management-image14-1/build.json",
+  "measurement_quality": "repeated-isolated-characterization",
+  "workload": {
+    "scope": "read-only-React-API-subset",
+    "paths": [
+      "/api/channels/channels/?page=1&page_size=200",
+      "/api/core/settings/",
+      "/api/core/useragents/"
+    ],
+    "users": 10,
+    "period": 0.25,
+    "warmup": 15,
+    "duration": 60,
+    "timeout": 3,
+    "sample_interval": 1
+  },
+  "pairs": 3,
+  "measurements": [
+    {
+      "backend": "original",
+      "trial": 1,
+      "file": "original-trial-1.json",
+      "sha256": "c08abccc3b90ef385f0fdd2b487c2b6f60678a670fec5516298a2fc068238e14",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "services": [
+        "baseline",
+        "origin"
+      ],
+      "summary": {
+        "completed": 2400,
+        "errors": 0,
+        "users_without_success": 0,
+        "requests_per_second": 40.0,
+        "ttfb_ms_p95": 44.088037000619806,
+        "roundtrip_ms_p95": 44.15357900143135,
+        "cpu_percent_mean": 30.798,
+        "memory_bytes_peak": 374970777.6,
+        "per_path": {
+          "/api/channels/channels/?page=1&page_size=200": 800,
+          "/api/core/settings/": 800,
+          "/api/core/useragents/": 800
+        }
+      },
+      "resource_samples": 20,
+      "observer_errors": 0
+    },
+    {
+      "backend": "native",
+      "trial": 1,
+      "file": "native-trial-1.json",
+      "sha256": "f5dff91a295af73b31dde88a72b725e81e5b280b02c8b275585eea0d1b7f57cc",
+      "revision": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
+      "services": [
+        "baseline",
+        "origin",
+        "candidate"
+      ],
+      "summary": {
+        "completed": 2400,
+        "errors": 0,
+        "users_without_success": 0,
+        "requests_per_second": 40.0,
+        "ttfb_ms_p95": 2.861150001990609,
+        "roundtrip_ms_p95": 2.916482000728138,
+        "cpu_percent_mean": 3.181,
+        "memory_bytes_peak": 236038651.904,
+        "per_path": {
+          "/api/channels/channels/?page=1&page_size=200": 800,
+          "/api/core/settings/": 800,
+          "/api/core/useragents/": 800
+        }
+      },
+      "resource_samples": 20,
+      "observer_errors": 0
+    },
+    {
+      "backend": "native",
+      "trial": 2,
+      "file": "native-trial-2.json",
+      "sha256": "64b7bde6da92f7994d920920e3d2a0efabd710db919ed71231a260ad3ccbd94b",
+      "revision": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
+      "services": [
+        "baseline",
+        "origin",
+        "candidate"
+      ],
+      "summary": {
+        "completed": 2400,
+        "errors": 0,
+        "users_without_success": 0,
+        "requests_per_second": 40.0,
+        "ttfb_ms_p95": 2.7926679904339835,
+        "roundtrip_ms_p95": 2.8469599928939715,
+        "cpu_percent_mean": 3.1825,
+        "memory_bytes_peak": 235497586.68800002,
+        "per_path": {
+          "/api/channels/channels/?page=1&page_size=200": 800,
+          "/api/core/settings/": 800,
+          "/api/core/useragents/": 800
+        }
+      },
+      "resource_samples": 20,
+      "observer_errors": 0
+    },
+    {
+      "backend": "original",
+      "trial": 2,
+      "file": "original-trial-2.json",
+      "sha256": "4c686d32e712138ef8566f1f5a4f0a1a425837b74fa08adfb619a04df4d86933",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "services": [
+        "baseline",
+        "origin"
+      ],
+      "summary": {
+        "completed": 2400,
+        "errors": 0,
+        "users_without_success": 0,
+        "requests_per_second": 40.0,
+        "ttfb_ms_p95": 44.32055099459831,
+        "roundtrip_ms_p95": 44.369872004608624,
+        "cpu_percent_mean": 29.609,
+        "memory_bytes_peak": 374761062.40000004,
+        "per_path": {
+          "/api/channels/channels/?page=1&page_size=200": 800,
+          "/api/core/settings/": 800,
+          "/api/core/useragents/": 800
+        }
+      },
+      "resource_samples": 20,
+      "observer_errors": 0
+    },
+    {
+      "backend": "original",
+      "trial": 3,
+      "file": "original-trial-3.json",
+      "sha256": "41ff32ff9899b9fc250a059bba3c7629a0990228a0065aab423b4ee19b5a3575",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "services": [
+        "baseline",
+        "origin"
+      ],
+      "summary": {
+        "completed": 2400,
+        "errors": 0,
+        "users_without_success": 0,
+        "requests_per_second": 40.0,
+        "ttfb_ms_p95": 44.72549300407991,
+        "roundtrip_ms_p95": 44.77611400943715,
+        "cpu_percent_mean": 30.372,
+        "memory_bytes_peak": 376229068.8,
+        "per_path": {
+          "/api/channels/channels/?page=1&page_size=200": 800,
+          "/api/core/settings/": 800,
+          "/api/core/useragents/": 800
+        }
+      },
+      "resource_samples": 20,
+      "observer_errors": 0
+    },
+    {
+      "backend": "native",
+      "trial": 3,
+      "file": "native-trial-3.json",
+      "sha256": "1ce0952c46866b272387a7da0a9d96a65290bca40a03ab117d7b812dd843f47f",
+      "revision": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
+      "services": [
+        "baseline",
+        "origin",
+        "candidate"
+      ],
+      "summary": {
+        "completed": 2400,
+        "errors": 0,
+        "users_without_success": 0,
+        "requests_per_second": 40.0,
+        "ttfb_ms_p95": 2.9109320021234453,
+        "roundtrip_ms_p95": 2.95926199760288,
+        "cpu_percent_mean": 3.184,
+        "memory_bytes_peak": 237064159.232,
+        "per_path": {
+          "/api/channels/channels/?page=1&page_size=200": 800,
+          "/api/core/settings/": 800,
+          "/api/core/useragents/": 800
+        }
+      },
+      "resource_samples": 20,
+      "observer_errors": 0
+    }
+  ],
+  "total_measured_responses": 14400,
+  "all_responses_match_original_canonical_json": true,
+  "all_delivery_and_observer_errors": 0,
+  "ratios_native_over_original": {
+    "cpu_percent_mean": {
+      "median": 0.10483339918345845,
+      "minimum": 0.10328592765764011,
+      "maximum": 0.10748421088182647
+    },
+    "memory_bytes_peak": {
+      "median": 0.6294854586129753,
+      "minimum": 0.628393956351427,
+      "maximum": 0.6301059085841694
+    },
+    "ttfb_ms_p95": {
+      "median": 0.06489628925756857,
+      "minimum": 0.06301067851738458,
+      "maximum": 0.0650844028003874
+    },
+    "roundtrip_ms_p95": {
+      "median": 0.06605312789329247,
+      "minimum": 0.06416425976162975,
+      "maximum": 0.06609019257408486
+    },
+    "requests_per_second": {
+      "median": 1.0,
+      "minimum": 1.0,
+      "maximum": 1.0
+    }
+  },
+  "absolute_backend_medians": {
+    "original": {
+      "cpu_percent_mean": 30.372,
+      "memory_bytes_peak": 374970777.6,
+      "ttfb_ms_p95": 44.32055099459831,
+      "roundtrip_ms_p95": 44.369872004608624,
+      "requests_per_second": 40.0
+    },
+    "native": {
+      "cpu_percent_mean": 3.1825,
+      "memory_bytes_peak": 236038651.904,
+      "ttfb_ms_p95": 2.861150001990609,
+      "roundtrip_ms_p95": 2.916482000728138,
+      "requests_per_second": 40.0
+    }
+  },
+  "every_pair_passed": true,
+  "budgets": {
+    "maximum_cpu_ratio": 1,
+    "maximum_memory_ratio": 1,
+    "maximum_ttfb_and_roundtrip_p95_ratio": 1.1,
+    "minimum_throughput_ratio": 0.95,
+    "minimum_fraction_of_target_request_pacing": 0.95,
+    "maximum_errors": 0,
+    "minimum_samples_per_measurement": 3
+  },
+  "environment": {
+    "host": "justindesktop",
+    "system": "Linux-7.3.1-1-cachyos-x86_64-with-glibc2.44",
+    "logical_cpus": 32,
+    "docker": "29.9.3"
+  },
+  "tool_sha256": {
+    "scripts/rust-integration/api_load.py": "e64cef99f7f3c28ea4567028b5eebf4729d04cee4d8b066985bf5dd37d28f8c9",
+    "scripts/rust-integration/api_matrix.py": "f8f3af0966a5b303c899876c5222fdbd56a60aa5c0783644f8333d0dd18cd9ca",
+    "scripts/rust-integration/run.py": "b3909744c34f020faccf01ed88737f7156fc5fb9234c6e672f4652a33ea2628e",
+    "scripts/rust-integration/tool_snapshot.py": "8ef73c640d60242844bb6a875a86b37526f679f39fe8eefa4787e67ae32ffe89",
+    "scripts/rust-perf/perf.py": "301b502d928540db7ee5e2177caa664121dd9250a341d764c9a203e25c786dc5"
+  },
+  "raw_evidence_directory": "artifacts/rust/m5-api-resource-matrix-1",
+  "raw_sha256": {
+    "integration.json": "9821752382fefe4843bdc25256ca34f5a2e5baafe3b617d4ba33d310ee0c85c0",
+    "api-resources/matrix.json": "ccb6f476f555cdcfa308e3a2df3fb4ba13a78509e05b47fc5290e69fa35a3bf1",
+    "isolation.json": "cac22eed2d59744678b0797748d1dd9eebf9b8e1465e25e4824550b08dd06ac6"
+  },
+  "cleanup": "unique Compose project removed; no resources retained",
+  "notes": [
+    "Three independent pairs alternate original/native order with equal15secondwarmup and60secondmeasurement, ten users at4requests/second each.",
+    "14,400 measured responses match canonical original JSON, including numeric/boolean distinctions; every endpoint is exercised in each phase.",
+    "All service-group CPU and simultaneous sampled Docker working-memory comparisons pass in every pair. Primary memory is sampled working memory, not kernel unsampled peak or summed process RSS.",
+    "Both backends share the same seeded data, owned PostgreSQL/Redis and identical idle origin; inactive web is stopped and owned Redis cleared before each independent trial.",
+    "At identical40successfulrequests/second, CPU ratio also normalizes by completed requests.",
+    "Read-only synthetic initialization API subset only: no actual browser, mutation/login/API-key workload, WebSocket delivery, background jobs, soak or full M5/application acceptance.",
+    "Native image14 retains older local auth throttle semantics; later shared-cache authentication and gateway changes need their own package/resource gates.",
+    "Short successful smoke is retained separately and not combined with this isolated characterization.",
+    "Original Dispatcharr authors and contributors retain full application credit."
+  ]
+}

@@ -24,7 +24,7 @@ class ToolSnapshotTests(unittest.TestCase):
             self.assertEqual((destination/relative).read_text(),'original fixture bytes')
             self.assertEqual(hashes[relative],hashlib.sha256((destination/relative).read_bytes()).hexdigest())
             self.assertFalse(any('__pycache__' in path for path in hashes))
-            self.assertEqual(len(hashes),6)
+            self.assertEqual(len(hashes),7)
 
     def test_symlink_sources_are_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
