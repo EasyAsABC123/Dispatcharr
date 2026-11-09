@@ -38,6 +38,15 @@ impl StreamEngine {
                 .unwrap_or_default()
                 .as_secs_f64(),
         );
+        self.apply_local_manager_status(
+            id,
+            detailed,
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap_or_default()
+                .as_secs_f64(),
+            &mut status,
+        );
         if detailed {
             if let Some(inputs) = &self.inner.inputs {
                 status["buffer_stats"] = inputs
@@ -47,6 +56,23 @@ impl StreamEngine {
             }
         }
         Ok(Some(status))
+    }
+    pub(crate) fn apply_local_manager_status(
+        &self,
+        id: &str,
+        detailed: bool,
+        now: f64,
+        status: &mut Value,
+    ) {
+        if let Some(manager) = self.local_manager_status(id) {
+            if detailed {
+                status["local_manager"] = json!({"healthy":manager.healthy,
+                    "connected":manager.connected,"last_data_time":manager.last_data_time,
+                    "last_data_age":now-manager.last_data_time});
+            } else {
+                status["healthy"] = json!(manager.healthy);
+            }
+        }
     }
 }
 pub fn project_status_at(

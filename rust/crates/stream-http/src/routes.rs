@@ -207,6 +207,12 @@ async fn status(
     if let Err(failure) = app.resolver.authorize_admin(request).await {
         return error(failure);
     }
+    if let Some(reader) = app.engine.live_statistics_reader() {
+        return match reader.snapshot().await {
+            Ok(bytes) => ([(header::CONTENT_TYPE, "application/json")], bytes).into_response(),
+            Err(reason) => error(reason),
+        };
+    }
     let mut channels = Vec::new();
     for local in app.engine.status() {
         match app.engine.legacy_status(&local.channel_id, false).await {

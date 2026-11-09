@@ -22,16 +22,16 @@ class AuthHashProbeTests(unittest.TestCase):
         return rows,removed
     def test_outcome_witness_type_difference_fails(self):
         rows,removed=self.execute(mismatch=True)
-        self.assertEqual(len(removed),6)
+        self.assertEqual(len(removed),8)
         self.assertTrue(all(not passed for name,passed,_ in rows if ':cleanup:' not in name))
     def test_valid_signature_normalization_and_cleanup(self):
         rows,removed=self.execute()
-        self.assertEqual(len(rows),12)
-        self.assertEqual(len(removed),6)
+        self.assertEqual(len(rows),16)
+        self.assertEqual(len(removed),8)
         self.assertTrue(all(row[1] for row in rows))
     def test_failure_never_captures_credentials_or_exception_message(self):
         rows,removed=self.execute(broken=True)
-        self.assertEqual(len(removed),6)
+        self.assertEqual(len(removed),8)
         rendered=json.dumps(rows)
         self.assertNotIn('must-not-emit',rendered)
         self.assertTrue(all(details=={'error_type':'RuntimeError'} for name,_,details in rows if ':cleanup:' not in name))

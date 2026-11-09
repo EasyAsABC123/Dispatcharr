@@ -72,7 +72,7 @@ async fn original_m3u_bytes_match_actual_sql_and_bounded_native_renderer() {
             direct,
             restricted_direct: channels.restricted_direct,
             catchup: fixture["catchup"].as_bool().unwrap(),
-            max_bytes: 1024 * 1024,
+            max_bytes: 8 * 1024 * 1024,
         };
         let body = render::render(&context, &channels.rows).unwrap();
         let digest = format!("{:x}", Sha256::digest(&body));
@@ -91,7 +91,12 @@ async fn original_m3u_bytes_match_actual_sql_and_bounded_native_renderer() {
         count += 1;
     }
     assert!(
-        count >= 25,
+        count
+            >= if oracle.get("large_catalog").is_some() {
+                3
+            } else {
+                25
+            },
         "all captured positive render cases must be compared"
     );
     for (max_channels, max_metadata_bytes) in [(1, 16 * 1024 * 1024), (50000, 1)] {

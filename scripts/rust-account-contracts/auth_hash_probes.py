@@ -14,7 +14,7 @@ _tokens=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(_tokens)
 def digest(value):return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
 def run(http,baseline,candidate,accounts,record,fixture):
     prefix='rust-probe-packaged-hash-'+uuid.uuid4().hex[:12]
-    for index,kind in enumerate(['rounds','sha1','salt','preferred','inactive','wrong']):
+    for index,kind in enumerate(['rounds','sha1','salt','preferred','inactive','wrong','scrypt','scrypt-wrong']):
         control={'kind':kind,'username':prefix+'-'+kind,'client_ip':'198.18.2.'+str(index+1)}
         owned=False
         try:
@@ -23,11 +23,11 @@ def run(http,baseline,candidate,accounts,record,fixture):
             for backend in [baseline,candidate]:
                 reset=fixture({'action':'auth_package_reset',**control})
                 if reset!={'reset':True}:raise RuntimeError('Credential fixture reset failed')
-                status,body=http(backend+'/api/accounts/token/',body={'username':control['username'],'password':'wrong-fixture-only' if kind=='wrong' else 'packaged-hash-fixture-only'},method='POST',headers={'X-Real-IP':control['client_ip'],'User-Agent':'rust-probe-packaged-auth-UA'})
+                status,body=http(backend+'/api/accounts/token/',body={'username':control['username'],'password':'wrong-fixture-only' if kind in ['wrong','scrypt-wrong'] else 'packaged-hash-fixture-only'},method='POST',headers={'X-Real-IP':control['client_ip'],'User-Agent':'rust-probe-packaged-auth-UA'})
                 if status==200:body=_tokens.token_pair(body,control['user_id'])
                 witness=fixture({'action':'auth_package_inspect',**control})
                 outcomes.append({'status':status,'body':body,'witness':witness})
-            expected=401 if kind in ['inactive','wrong'] else 200
+            expected=401 if kind in ['inactive','wrong','scrypt-wrong'] else 200
             record('packaged-auth-hash:'+kind,outcomes[0]['status']==outcomes[1]['status']==expected and digest(outcomes[0])==digest(outcomes[1]),{'python_status':outcomes[0]['status'],'rust_status':outcomes[1]['status'],'python_outcome_sha256':digest(outcomes[0]),'rust_outcome_sha256':digest(outcomes[1]),'login_attempts_per_fixture_ip':2})
         except Exception as error:record('packaged-auth-hash:'+kind,False,{'error_type':type(error).__name__})
         finally:

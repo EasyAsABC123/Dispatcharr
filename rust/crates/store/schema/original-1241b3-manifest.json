@@ -1,0 +1,862 @@
+{
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "channels": 0,
+  "epg_sources": 0,
+  "migrations": [
+    [
+      "accounts",
+      "0001_initial"
+    ],
+    [
+      "accounts",
+      "0002_remove_user_channel_groups_user_channel_profiles_and_more"
+    ],
+    [
+      "accounts",
+      "0003_alter_user_custom_properties"
+    ],
+    [
+      "accounts",
+      "0004_user_api_key"
+    ],
+    [
+      "accounts",
+      "0005_alter_user_managers"
+    ],
+    [
+      "accounts",
+      "0006_user_stream_limit"
+    ],
+    [
+      "accounts",
+      "0007_user_app_data"
+    ],
+    [
+      "accounts",
+      "0008_userappdata_and_remove_user_app_data"
+    ],
+    [
+      "admin",
+      "0001_initial"
+    ],
+    [
+      "admin",
+      "0002_logentry_remove_auto_add"
+    ],
+    [
+      "admin",
+      "0003_logentry_add_action_flag_choices"
+    ],
+    [
+      "auth",
+      "0001_initial"
+    ],
+    [
+      "auth",
+      "0002_alter_permission_name_max_length"
+    ],
+    [
+      "auth",
+      "0003_alter_user_email_max_length"
+    ],
+    [
+      "auth",
+      "0004_alter_user_username_opts"
+    ],
+    [
+      "auth",
+      "0005_alter_user_last_login_null"
+    ],
+    [
+      "auth",
+      "0006_require_contenttypes_0002"
+    ],
+    [
+      "auth",
+      "0007_alter_validators_add_error_messages"
+    ],
+    [
+      "auth",
+      "0008_alter_user_username_max_length"
+    ],
+    [
+      "auth",
+      "0009_alter_user_last_name_max_length"
+    ],
+    [
+      "auth",
+      "0010_alter_group_name_max_length"
+    ],
+    [
+      "auth",
+      "0011_update_proxy_permissions"
+    ],
+    [
+      "auth",
+      "0012_alter_user_first_name_max_length"
+    ],
+    [
+      "contenttypes",
+      "0001_initial"
+    ],
+    [
+      "contenttypes",
+      "0002_remove_content_type_name"
+    ],
+    [
+      "core",
+      "0001_initial"
+    ],
+    [
+      "core",
+      "0002_preload_user_agents"
+    ],
+    [
+      "core",
+      "0003_preload_stream_profiles"
+    ],
+    [
+      "core",
+      "0004_preload_core_settings"
+    ],
+    [
+      "core",
+      "0005_streamprofile_locked_alter_streamprofile_command_and_more"
+    ],
+    [
+      "core",
+      "0006_set_locked_stream_profiles"
+    ],
+    [
+      "core",
+      "0007_create_proxy_and_redirect_stream_profiles"
+    ],
+    [
+      "core",
+      "0008_rename_profile_name_streamprofile_name_and_more"
+    ],
+    [
+      "core",
+      "0009_m3u_hash_settings"
+    ],
+    [
+      "core",
+      "0010_reload_additional_settings"
+    ],
+    [
+      "core",
+      "0011_fix_stream_profiles_and_user_agents"
+    ],
+    [
+      "core",
+      "0012_default_active_m3u_accounts"
+    ],
+    [
+      "core",
+      "0013_default_network_access_settings"
+    ],
+    [
+      "core",
+      "0014_default_proxy_settings"
+    ],
+    [
+      "core",
+      "0015_dvr_templates"
+    ],
+    [
+      "core",
+      "0016_update_dvr_template_paths"
+    ],
+    [
+      "core",
+      "0017_systemevent"
+    ],
+    [
+      "core",
+      "0018_alter_systemevent_event_type"
+    ],
+    [
+      "core",
+      "0019_add_vlc_stream_profile"
+    ],
+    [
+      "core",
+      "0020_change_coresettings_value_to_jsonfield"
+    ],
+    [
+      "core",
+      "0021_systemnotification_notificationdismissal"
+    ],
+    [
+      "core",
+      "0023_alter_systemevent_event_type"
+    ],
+    [
+      "core",
+      "0024_outputprofile"
+    ],
+    [
+      "core",
+      "0025_move_preferred_region_and_auto_import_to_system_settings"
+    ],
+    [
+      "core",
+      "0026_add_channel_client_wait_period"
+    ],
+    [
+      "core",
+      "0027_vlc_play_and_exit"
+    ],
+    [
+      "core",
+      "0028_alter_systemevent_event_type"
+    ],
+    [
+      "core",
+      "0029_update_default_stream_and_output_profiles"
+    ],
+    [
+      "core",
+      "0030_rename_default_stream_profile_names"
+    ],
+    [
+      "core",
+      "0031_default_reverse_proxy_auth_settings"
+    ],
+    [
+      "core",
+      "0032_limit_default_interleave_delta"
+    ],
+    [
+      "core",
+      "022_default_user_limit_settings"
+    ],
+    [
+      "dashboard",
+      "0001_initial"
+    ],
+    [
+      "dispatcharr_channels",
+      "0001_initial"
+    ],
+    [
+      "dispatcharr_channels",
+      "0002_rename_channel_name_channel_name_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0003_channel_uuid"
+    ],
+    [
+      "dispatcharr_channels",
+      "0004_stream_is_custom"
+    ],
+    [
+      "dispatcharr_channels",
+      "0005_stream_channel_group_stream_last_seen_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0006_migrate_stream_groups"
+    ],
+    [
+      "dispatcharr_channels",
+      "0007_remove_stream_group_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0008_stream_stream_hash"
+    ],
+    [
+      "dispatcharr_channels",
+      "0009_remove_channel_tvg_name_channel_epg_data"
+    ],
+    [
+      "dispatcharr_channels",
+      "0010_stream_custom_properties"
+    ],
+    [
+      "dispatcharr_channels",
+      "0011_logo_remove_channel_logo_file_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0012_channelprofile_channelprofilemembership"
+    ],
+    [
+      "dispatcharr_channels",
+      "0013_alter_logo_url"
+    ],
+    [
+      "dispatcharr_channels",
+      "0014_recording"
+    ],
+    [
+      "dispatcharr_channels",
+      "0015_recording_custom_properties"
+    ],
+    [
+      "dispatcharr_channels",
+      "0016_channelstream_unique_channel_stream"
+    ],
+    [
+      "dispatcharr_channels",
+      "0017_alter_channelgroup_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0018_channelgroupm3uaccount_custom_properties_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0019_channel_tvc_guide_stationid"
+    ],
+    [
+      "dispatcharr_channels",
+      "0020_alter_channel_channel_number"
+    ],
+    [
+      "dispatcharr_channels",
+      "0021_channel_user_level"
+    ],
+    [
+      "dispatcharr_channels",
+      "0022_channel_auto_created_channel_auto_created_by_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0023_stream_stream_stats_stream_stream_stats_updated_at"
+    ],
+    [
+      "dispatcharr_channels",
+      "0024_alter_channelgroupm3uaccount_channel_group"
+    ],
+    [
+      "dispatcharr_channels",
+      "0025_alter_channelgroupm3uaccount_custom_properties_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0026_recurringrecordingrule"
+    ],
+    [
+      "dispatcharr_channels",
+      "0027_recurringrecordingrule_end_date_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0028_channel_created_at_channel_updated_at"
+    ],
+    [
+      "dispatcharr_channels",
+      "0029_backfill_custom_stream_hashes"
+    ],
+    [
+      "dispatcharr_channels",
+      "0030_alter_stream_url"
+    ],
+    [
+      "dispatcharr_channels",
+      "0031_channelgroupm3uaccount_is_stale_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0032_channel_is_adult_stream_is_adult"
+    ],
+    [
+      "dispatcharr_channels",
+      "0033_stream_id_stream_chno"
+    ],
+    [
+      "dispatcharr_channels",
+      "0034_remove_stream_dispatcharr_stream_id_idx_and_more"
+    ],
+    [
+      "dispatcharr_channels",
+      "0035_alter_channel_name_alter_stream_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0036_alter_stream_name"
+    ],
+    [
+      "dispatcharr_channels",
+      "0037_auto_sync_overhaul"
+    ],
+    [
+      "dispatcharr_channels",
+      "0038_add_catchup_fields"
+    ],
+    [
+      "dispatcharr_channels",
+      "0039_add_radio_fields"
+    ],
+    [
+      "dispatcharr_channels",
+      "0040_channelgroup_custom_relation"
+    ],
+    [
+      "dispatcharr_connect",
+      "0001_initial"
+    ],
+    [
+      "dispatcharr_connect",
+      "0002_alter_eventsubscription_event"
+    ],
+    [
+      "dispatcharr_connect",
+      "0003_alter_eventsubscription_event"
+    ],
+    [
+      "dispatcharr_connect",
+      "0004_alter_eventsubscription_event"
+    ],
+    [
+      "dispatcharr_connect",
+      "0005_alter_eventsubscription_event"
+    ],
+    [
+      "django_celery_beat",
+      "0001_initial"
+    ],
+    [
+      "django_celery_beat",
+      "0002_auto_20161118_0346"
+    ],
+    [
+      "django_celery_beat",
+      "0003_auto_20161209_0049"
+    ],
+    [
+      "django_celery_beat",
+      "0004_auto_20170221_0000"
+    ],
+    [
+      "django_celery_beat",
+      "0005_add_solarschedule_events_choices"
+    ],
+    [
+      "django_celery_beat",
+      "0006_auto_20180210_1226"
+    ],
+    [
+      "django_celery_beat",
+      "0006_auto_20180322_0932"
+    ],
+    [
+      "django_celery_beat",
+      "0006_periodictask_priority"
+    ],
+    [
+      "django_celery_beat",
+      "0007_auto_20180521_0826"
+    ],
+    [
+      "django_celery_beat",
+      "0008_auto_20180914_1922"
+    ],
+    [
+      "django_celery_beat",
+      "0009_periodictask_headers"
+    ],
+    [
+      "django_celery_beat",
+      "0010_auto_20190429_0326"
+    ],
+    [
+      "django_celery_beat",
+      "0011_auto_20190508_0153"
+    ],
+    [
+      "django_celery_beat",
+      "0012_periodictask_expire_seconds"
+    ],
+    [
+      "django_celery_beat",
+      "0013_auto_20200609_0727"
+    ],
+    [
+      "django_celery_beat",
+      "0014_remove_clockedschedule_enabled"
+    ],
+    [
+      "django_celery_beat",
+      "0015_edit_solarschedule_events_choices"
+    ],
+    [
+      "django_celery_beat",
+      "0016_alter_crontabschedule_timezone"
+    ],
+    [
+      "django_celery_beat",
+      "0017_alter_crontabschedule_month_of_year"
+    ],
+    [
+      "django_celery_beat",
+      "0018_improve_crontab_helptext"
+    ],
+    [
+      "django_celery_beat",
+      "0019_alter_periodictasks_options"
+    ],
+    [
+      "epg",
+      "0001_initial"
+    ],
+    [
+      "epg",
+      "0002_epgsource_file_path"
+    ],
+    [
+      "epg",
+      "0003_alter_epgdata_tvg_id"
+    ],
+    [
+      "epg",
+      "0004_epgdata_epg_source_alter_epgdata_tvg_id"
+    ],
+    [
+      "epg",
+      "0005_programdata_custom_properties_and_more"
+    ],
+    [
+      "epg",
+      "0006_epgsource_refresh_interval_epgsource_refresh_task"
+    ],
+    [
+      "epg",
+      "0007_epgsource_status_epgsource_last_error"
+    ],
+    [
+      "epg",
+      "0007_populate_periodic_tasks"
+    ],
+    [
+      "epg",
+      "0008_epgsource_created_at_epgsource_updated_at"
+    ],
+    [
+      "epg",
+      "0009_alter_epgsource_created_at_and_more"
+    ],
+    [
+      "epg",
+      "0010_merge_20250503_2147"
+    ],
+    [
+      "epg",
+      "0011_update_epgsource_fields"
+    ],
+    [
+      "epg",
+      "0012_alter_epgsource_status"
+    ],
+    [
+      "epg",
+      "0013_alter_epgsource_refresh_interval"
+    ],
+    [
+      "epg",
+      "0014_epgsource_extracted_file_path"
+    ],
+    [
+      "epg",
+      "0015_alter_programdata_custom_properties"
+    ],
+    [
+      "epg",
+      "0016_epgdata_icon_url"
+    ],
+    [
+      "epg",
+      "0017_alter_epgsource_url"
+    ],
+    [
+      "epg",
+      "0018_epgsource_custom_properties_and_more"
+    ],
+    [
+      "epg",
+      "0019_alter_programdata_sub_title"
+    ],
+    [
+      "epg",
+      "0020_migrate_time_to_starttime_placeholders"
+    ],
+    [
+      "epg",
+      "0021_epgsource_priority"
+    ],
+    [
+      "epg",
+      "0022_alter_epgdata_name"
+    ],
+    [
+      "epg",
+      "0023_epgsource_programme_index"
+    ],
+    [
+      "epg",
+      "0024_remove_epgsource_api_key_epgsource_password_and_more"
+    ],
+    [
+      "epg",
+      "0025_programdata_epg_id_index"
+    ],
+    [
+      "epg",
+      "0026_epgsourceindex"
+    ],
+    [
+      "epg",
+      "0027_programdata_epg_start_end_index"
+    ],
+    [
+      "epg",
+      "0028_programdata_epg_end_index"
+    ],
+    [
+      "hdhr",
+      "0001_initial"
+    ],
+    [
+      "m3u",
+      "0001_initial"
+    ],
+    [
+      "m3u",
+      "0002_m3uaccount_locked"
+    ],
+    [
+      "m3u",
+      "0003_create_custom_account"
+    ],
+    [
+      "m3u",
+      "0004_m3uaccount_stream_profile"
+    ],
+    [
+      "m3u",
+      "0005_m3uaccount_custom_properties_and_more"
+    ],
+    [
+      "m3u",
+      "0006_populate_periodic_tasks"
+    ],
+    [
+      "m3u",
+      "0007_remove_m3uaccount_uploaded_file_m3uaccount_file_path"
+    ],
+    [
+      "m3u",
+      "0008_m3uaccount_stale_stream_days"
+    ],
+    [
+      "m3u",
+      "0009_m3uaccount_account_type_m3uaccount_password_and_more"
+    ],
+    [
+      "m3u",
+      "0010_add_status_fields_and_remove_auto_now"
+    ],
+    [
+      "m3u",
+      "0011_alter_m3uaccount_status"
+    ],
+    [
+      "m3u",
+      "0012_alter_m3uaccount_refresh_interval"
+    ],
+    [
+      "m3u",
+      "0013_alter_m3ufilter_filter_type"
+    ],
+    [
+      "m3u",
+      "0014_alter_m3ufilter_options_m3ufilter_order"
+    ],
+    [
+      "m3u",
+      "0015_alter_m3ufilter_options_m3ufilter_custom_properties"
+    ],
+    [
+      "m3u",
+      "0016_m3uaccount_priority"
+    ],
+    [
+      "m3u",
+      "0017_alter_m3uaccount_custom_properties_and_more"
+    ],
+    [
+      "m3u",
+      "0018_add_profile_custom_properties"
+    ],
+    [
+      "m3u",
+      "0019_m3uaccountprofile_exp_date"
+    ],
+    [
+      "plugins",
+      "0001_initial"
+    ],
+    [
+      "plugins",
+      "0002_pluginrepo"
+    ],
+    [
+      "plugins",
+      "0003_update_official_repo_url"
+    ],
+    [
+      "plugins",
+      "0004_plugin_schedule_ownership"
+    ],
+    [
+      "sessions",
+      "0001_initial"
+    ],
+    [
+      "vod",
+      "0001_initial"
+    ],
+    [
+      "vod",
+      "0002_add_last_seen_with_default"
+    ],
+    [
+      "vod",
+      "0003_vodlogo_alter_movie_logo_alter_series_logo"
+    ],
+    [
+      "vod",
+      "0004_m3uepisoderelation_series_relation"
+    ],
+    [
+      "vod",
+      "0005_movie_is_adult"
+    ],
+    [
+      "vod",
+      "0006_movie_series_language"
+    ]
+  ],
+  "refresh_creation_timestamps": [
+    {
+      "column": "created_at",
+      "table": "core_systemnotification"
+    },
+    {
+      "column": "updated_at",
+      "table": "core_systemnotification"
+    },
+    {
+      "column": "created_at",
+      "table": "core_useragent"
+    },
+    {
+      "column": "updated_at",
+      "table": "core_useragent"
+    },
+    {
+      "column": "date_changed",
+      "table": "django_celery_beat_periodictask"
+    },
+    {
+      "column": "last_update",
+      "table": "django_celery_beat_periodictasks"
+    },
+    {
+      "column": "applied",
+      "table": "django_migrations"
+    },
+    {
+      "column": "created_at",
+      "table": "m3u_m3uaccount"
+    },
+    {
+      "column": "updated_at",
+      "table": "m3u_m3uaccount"
+    },
+    {
+      "column": "created_at",
+      "table": "plugins_pluginrepo"
+    },
+    {
+      "column": "updated_at",
+      "table": "plugins_pluginrepo"
+    }
+  ],
+  "scope": "Fresh original migrations and normal app/URL initialization, no benchmark or user seed",
+  "streams": 0,
+  "tables": {
+    "accounts_user": 0,
+    "accounts_user_channel_profiles": 0,
+    "accounts_user_groups": 0,
+    "accounts_user_user_permissions": 0,
+    "accounts_userappdata": 0,
+    "auth_group": 0,
+    "auth_group_permissions": 0,
+    "auth_permission": 228,
+    "core_coresettings": 8,
+    "core_notificationdismissal": 0,
+    "core_outputprofile": 2,
+    "core_streamprofile": 5,
+    "core_systemevent": 0,
+    "core_systemnotification": 1,
+    "core_useragent": 3,
+    "dashboard_settings": 0,
+    "dispatcharr_channels_channel": 0,
+    "dispatcharr_channels_channelgroup": 0,
+    "dispatcharr_channels_channelgroupm3uaccount": 0,
+    "dispatcharr_channels_channeloverride": 0,
+    "dispatcharr_channels_channelprofile": 0,
+    "dispatcharr_channels_channelprofilemembership": 0,
+    "dispatcharr_channels_channelstream": 0,
+    "dispatcharr_channels_logo": 0,
+    "dispatcharr_channels_recording": 0,
+    "dispatcharr_channels_recurringrecordingrule": 0,
+    "dispatcharr_channels_stream": 0,
+    "dispatcharr_connect_deliverylog": 0,
+    "dispatcharr_connect_eventsubscription": 0,
+    "dispatcharr_connect_integration": 0,
+    "django_admin_log": 0,
+    "django_celery_beat_clockedschedule": 0,
+    "django_celery_beat_crontabschedule": 1,
+    "django_celery_beat_intervalschedule": 2,
+    "django_celery_beat_periodictask": 3,
+    "django_celery_beat_periodictasks": 1,
+    "django_celery_beat_solarschedule": 0,
+    "django_content_type": 57,
+    "django_migrations": 184,
+    "django_session": 0,
+    "epg_epgdata": 0,
+    "epg_epgsource": 0,
+    "epg_epgsourceindex": 0,
+    "epg_programdata": 0,
+    "epg_sdprogrammd5": 0,
+    "epg_sdschedulemd5": 0,
+    "hdhr_hdhrdevice": 0,
+    "m3u_m3uaccount": 1,
+    "m3u_m3uaccountprofile": 1,
+    "m3u_m3ufilter": 0,
+    "m3u_servergroup": 0,
+    "plugins_pluginconfig": 0,
+    "plugins_pluginrepo": 1,
+    "vod_episode": 0,
+    "vod_m3uepisoderelation": 0,
+    "vod_m3umovierelation": 0,
+    "vod_m3useriesrelation": 0,
+    "vod_m3uvodcategoryrelation": 0,
+    "vod_movie": 0,
+    "vod_series": 0,
+    "vod_vodcategory": 0,
+    "vod_vodlogo": 0
+  },
+  "users": 0,
+  "sql_sha256": {
+    "original-1241b3-schema.sql": "35d78338081e2d6fe3149c58d9a041e8d8570a410fa7f49aad36e4b9f858e9a9",
+    "original-1241b3-defaults.sql": "80840dd0cb88d692153a8f7fe9b9dc465c57785b7d5883f091a181988bc0526b",
+    "original-1241b3-fresh-timestamps.sql": "a7567d504c0b60a73bb0e952f8ba2159721298bd1091f645aec817d9f0b33592"
+  }
+}

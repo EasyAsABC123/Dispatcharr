@@ -4,6 +4,7 @@ version.workspace=true
 edition.workspace=true
 license.workspace=true
 [dependencies]
+chrono={version="0.4",default-features=false,features=["std"]}
 regex="1"
 serde={version="1",features=["derive"]}
 sha2="0.10"
@@ -12,4 +13,5 @@ flate2={version="1.1.11",default-features=false,features=["zlib-rs"]}
 xz2={version="=0.1.7",features=["static"]}
 zip={version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs","bzip2","lzma"]}
 [dev-dependencies]
+base64="0.22"
 fancy-regex={version="=0.20.0",default-features=false,features=["std","unicode","perf"]}

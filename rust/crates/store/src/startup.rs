@@ -3,7 +3,7 @@
 use crate::{auth::request, cidrs_allow, AuthService, StoreError, TokenPair, User};
 use axum::{
     extract::{ConnectInfo, State},
-    http::{HeaderMap, Method},
+    http::HeaderMap,
     response::{IntoResponse, Response},
     routing::{any, get, post},
     Json, Router,
@@ -13,7 +13,6 @@ use std::net::{IpAddr, SocketAddr};
 
 const LOCAL: &str =
     "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10";
-const SETUP_ENV: &str = "DISPATCHARR_SETUP_ALLOWED_IP";
 fn env(name: &str, default: &str) -> String {
     std::env::var(name).unwrap_or_else(|_| default.into())
 }
@@ -26,7 +25,7 @@ fn normalized(ip: IpAddr) -> IpAddr {
         ip => ip,
     }
 }
-fn setup_allowed(ip: IpAddr, override_ip: &str) -> bool {
+pub(crate) fn setup_allowed(ip: IpAddr, override_ip: &str) -> bool {
     if override_ip.trim().is_empty() {
         return cidrs_allow(LOCAL, ip);
     }
@@ -38,34 +37,9 @@ fn setup_allowed(ip: IpAddr, override_ip: &str) -> bool {
 async fn setup(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    headers: HeaderMap,
-    method: Method,
-) -> Result<Json<Value>, StoreError> {
-    // This is a plain Django view, not DRF. It ignores presented credentials,
-    // body and method once any admin-level account exists (even inactive).
-    let exists: bool =
-        sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM accounts_user WHERE user_level>=10)")
-            .fetch_one(auth.store.pool())
-            .await?;
-    if exists {
-        return Ok(Json(json!({"superuser_exists":true})));
-    }
-    let ip = auth.client_ip(&request(peer, headers));
-    let allowed = setup_allowed(ip, &env(SETUP_ENV, ""));
-    if method == Method::POST {
-        if !allowed {
-            return Err(StoreError::StatusBody(
-                403,
-                json!({"error":format!("Web setup is limited to local networks by default. Set {SETUP_ENV} to your IP to allow setup from this network, or create the account with: python manage.py createsuperuser"),"client_ip":ip.to_string(),"setup_allowed":false}),
-            ));
-        }
-        return Err(StoreError::Unsupported(
-            "First-install bootstrap requires the original migrations and has not been ported.",
-        ));
-    }
-    Ok(Json(
-        json!({"superuser_exists":false,"client_ip":ip.to_string(),"setup_allowed":allowed}),
-    ))
+    request: axum::extract::Request,
+) -> Response {
+    crate::startup_bootstrap::response(auth, peer, request).await
 }
 
 async fn version(

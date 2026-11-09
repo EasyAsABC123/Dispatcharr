@@ -3,7 +3,7 @@ import hashlib
 from pathlib import Path
 import stat
 
-DIRECTORIES=('scripts/rust-vod-contracts','scripts/rust-timeshift-contracts',
+DIRECTORIES=('scripts/rust-output-contracts','scripts/rust-vod-contracts','scripts/rust-timeshift-contracts',
              'scripts/rust-integration','scripts/rust-account-contracts',
              'scripts/rust-playback-baseline','scripts/rust-baseline',
              'scripts/rust-ingest-parity')

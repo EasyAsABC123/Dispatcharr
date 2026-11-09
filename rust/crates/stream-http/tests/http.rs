@@ -1447,7 +1447,26 @@ async fn viewer_limit_metadata_stop_and_frame_lifetime_are_enforced_over_http() 
     assert_eq!(projected["client_count"], 1);
     assert_eq!(projected["clients"][0]["output_format"], "mpegts");
     assert!(projected["buffer_index"].as_u64().unwrap() > 0);
-    assert!(projected["total_bytes"].as_u64().unwrap() > 0);
+    assert!(
+        projected.get("total_bytes").is_none(),
+        "original raw-input metadata omits total_bytes before its first five-second data update"
+    );
+    time::timeout(Duration::from_secs(6), async {
+        loop {
+            let current = engine
+                .legacy_status(&channel, false)
+                .await
+                .unwrap()
+                .unwrap();
+            if current["total_bytes"].as_u64().unwrap_or(0) > 0 {
+                assert_eq!(current["stream_profile"], "1");
+                break;
+            }
+            time::sleep(Duration::from_millis(25)).await;
+        }
+    })
+    .await
+    .unwrap();
     assert!(projected.get("viewer_count").is_none());
     let detailed = engine.legacy_status(&channel, true).await.unwrap().unwrap();
     assert_eq!(detailed["clients"][0]["user_agent"], "bounded-http-fixture");

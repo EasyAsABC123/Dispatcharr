@@ -1,0 +1,48 @@
+{
+  "scope": "original-XMLTV-time-completeness-and-prefix-components",
+  "passed": true,
+  "cases": 1594,
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+  "original_unicode": "15.1.0",
+  "original_lxml": [
+    6,
+    1,
+    3,
+    0
+  ],
+  "original_libxml": [
+    2,
+    14,
+    6
+  ],
+  "original_epg_source_sha256": "deb4792a39ed93c57da435ecc2a4fcdf5b4dad8f4e087d3afdb5d4f2b7932ff9",
+  "original_capture_tool_sha256": "a22c221539063a7cc3e41d7e977d283745634b72542708b5f0191e248915ab82",
+  "goldens_sha256": "f289e0b751420062d17d79219ccc6fe0433d214d7d15d7e8e0f38248d768021c",
+  "binary_sha256": "05d5c1ef3e4f04a1b248b12d32f5ceba44cb5e3b69491997325c0d982c4ed2a7",
+  "source_sha256": {
+    "rust/crates/ingest-core/Cargo.toml": "8db8d52fe232159819e91bff96a6f8c18c309823ef76778512941974299f0911",
+    "rust/Cargo.lock": "f7d2431ed19f928a7a1c312e32ebe1318e953a1a4b5b8215edc38c69f2808788",
+    "rust/crates/ingest-core/src/cache.rs": "b3ce35bef58ffb391a9e2114187de7c6c5104aa4578c58cb0a3ca71e6721daed",
+    "rust/crates/ingest-core/src/cached.rs": "6302c83c6c4f4b3c12a89964d97f57e698c0cc8b8948a93e4ed3cd72e490bba6",
+    "rust/crates/ingest-core/src/identity.rs": "a26a428d346c2fcce8e1fdafcd6baf7ca8beafc5bbf7d84b55c70206a4159776",
+    "rust/crates/ingest-core/src/lib.rs": "38a267bb4f8382103698671d1860cabf477e0d4a27a799693b9e376ab77203b1",
+    "rust/crates/ingest-core/src/prepared.rs": "502070f5f5b16a3ec851ca88d9334a7e9f9779dfbfd769b2fae15a6855590c12",
+    "rust/crates/ingest-core/src/projection.rs": "f8d5588482b8f5a59bbf403e162a6139a3dfd821ef405e7b70d23cf954d63359",
+    "rust/crates/ingest-core/src/reader.rs": "90ebdde2c67f0fdc307a353f9d3c12245b77782f6fb4bc614627cf49eed480b4",
+    "rust/crates/ingest-core/src/uploads.rs": "d4b2a7ac8534aefc6ab4efe0943c7adc343ee37635c76c4ea35d870bdbf11f18",
+    "rust/crates/ingest-core/src/validation.rs": "4ed0b686973afec42ac63053c5d8bbf51f7357324fd4e094b770c9f000d1adf4",
+    "rust/crates/ingest-core/src/xmltv.rs": "eabff9a603cab189d317385b830dd5d562835c7cef2999d4f57a168b74bcf418",
+    "rust/crates/ingest-core/examples/xmltv_parity.rs": "505aa00a47d1c07a3471a9592426053f52314a3ad42b0c9e3a35f6c2505cc785",
+    "rust/crates/ingest-core/datasets/html4-doctype.xml": "f1eaf76fc838188e93a1465946c6dccc867af6c6cef7c00d07ab78517813962b",
+    "scripts/rust-epg-parity/run.py": "a0764a9c07644204cda9e8009f0a4541cba0dcc27f1a942fc0f49447fe236dbc"
+  },
+  "evidence_directory": "artifacts/rust/m6-epg-source-26",
+  "full_guide_jobs_migrated": false,
+  "application_performance_verified": false,
+  "notes": [
+    "Original XMLTV timestamp character slicing/short-field/offset behavior, bounded8KiB completeness tail and512byte HTML4 doctype injection match1594cases.",
+    "Completeness is only the Source suffix heuristic, not XML well-formedness. Prefix pass-through preserves existing declarations and recovery cases.",
+    "No XML channel/programme parser, database guide swap, index, refresh jobs or job performance is accepted by this component."
+  ]
+}

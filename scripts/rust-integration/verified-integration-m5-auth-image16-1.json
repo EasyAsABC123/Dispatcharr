@@ -1,0 +1,63 @@
+{
+  "scope": "Immutable image16 full HTTP1024, enabled-IP33 and password34 including Scrypt source comparisons. Fresh-install browser acceptance explicitly remains open.",
+  "passed": true,
+  "image_id": "sha256:6529a212c510219dc2dafbec99104472903edb958a57a89a948f18789b432b02",
+  "source_tree_sha256": "22d128a8f8fcedd84d9ab4a1032d1cd29db4f5c1bcf81c6bfeeca465e37aa7e1",
+  "source_archive_sha256": "753748b8a878509bbe3a77319706b30d3482bec4dc4a754ec6695993f89d9a6b",
+  "build_manifest_sha256": "29fd29fbe4284fa8e8e182729f5e31f930dc759aef50a8aa2c69ab382203728f",
+  "runs": [
+    {
+      "report": "artifacts/rust/m5-auth-full-integration-image16-1/integration.json",
+      "sha256": "f3cceda198e5713c90b7aa76799f5ab1a5298a1979f25b083d628df4d2e64976",
+      "passed": true,
+      "checks": 1024,
+      "contract_suites": [
+        "accounts",
+        "account_crud",
+        "app_data",
+        "core",
+        "profiles",
+        "memberships",
+        "channel_reads",
+        "channel_crud",
+        "groups",
+        "channel_stops",
+        "group_cleanup",
+        "streams",
+        "provider_reads",
+        "server_group_crud",
+        "filter_crud",
+        "core_utilities",
+        "core_stream_crud",
+        "notifications"
+      ],
+      "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-ip-image16-1/integration.json",
+      "sha256": "2884944f0b11f5438821d59ac39e72491651ed9d4f617c4b5f8fed2c57e4e584",
+      "passed": true,
+      "checks": 33,
+      "contract_suites": [
+        "environment_ip"
+      ],
+      "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-auth-hash-image16-1/integration.json",
+      "sha256": "4617efb47b32edcc5fc49e67ecc708117527a5a07090eca5db7767cb6241a3fd",
+      "passed": true,
+      "checks": 34,
+      "contract_suites": [
+        "auth_hash"
+      ],
+      "cleanup": "project removed"
+    }
+  ],
+  "performance_verified": false,
+  "remaining": [
+    "Fresh native PostgreSQL initialization, first-admin creation, authentication and restart checks passed in separate run, but browser workflow failed on missing logos and stream filter-options read endpoints. No full first-install acceptance.",
+    "M7/M4/output packaged gates recorded separately.",
+    "Native M6 jobs and remaining EPG/output/integrations retain separate milestone gates."
+  ]
+}

@@ -1,0 +1,11 @@
+# Original PostgreSQL bootstrap snapshot
+
+All original application credit remains with Dispatcharr authors and contributors. SQL derives from their migrations and normal application initialization at baseline `1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430`, using the pinned original image recorded in the manifest. It contains no user, channel, stream, EPG or external-provider data. The one locked custom account and builtin profiles/settings/permissions are original defaults.
+
+`original-1241b3-schema.sql` holds qualified PostgreSQL DDL. `original-1241b3-defaults.sql` holds builtin rows and original sequence positions using INSERT statements, with no COPY/psql protocol. Creation bookkeeping timestamps are refreshed by the separate timestamp file; explicit expiry/scheduling values remain unchanged. `original-1241b3-manifest.json` records the original184migrations,62tables,498default rows and SQL digests.
+
+The public `initialize_empty_database(url)` uses a private connection and one transaction with a database-scoped advisory lock. It refuses to initialize if any non-system relation, function, enum or domain already exists. `SkippedExisting` does not claim compatibility or validate an arbitrary legacy schema. No legacy tables or rows are altered, and no automatic upgrade is provided. Cancellation/error rolls back the new schema. Successful creation verifies the fixed table/migration inventory before commit.
+
+`run_schema_capture.py` captures fresh original DDL/defaults in a network-disabled disposable container without the benchmark/user seed. `run_schema_sql.py` uses a separate original reference DB and three newly created native/sentinel/race databases. Only Rust writes the native databases. The ignored `schema_sql` test explicitly requires disposable fixture environment variables; absence is never a successful skip.
+
+Actual SQL2 verified all default rows (only creation timestamps excluded), existing/reference preservation, a nonpublic sentinel, repeated initialization and concurrent creators. A final structural pg_dump comparison is a separate gate. Application init command/environment wiring, standalone candidate image, first-admin/login/React initialization and restart are still required before clean-install acceptance. PostgreSQL17 is the verified original target; other PostgreSQL versions and legacy upgrades remain unclaimed.

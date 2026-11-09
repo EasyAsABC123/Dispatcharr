@@ -62,5 +62,20 @@
     "source_bound_candidate_image": false
   },
   "tool_manifest_sha256": "ffa1615b9f13e2cf4b0eed1786012b773bde4ff13886168eb4d36169b95ffb54",
-  "captured_tool_files": 249
+  "captured_tool_files": 249,
+  "image15_regression": {
+    "evidence": "artifacts/rust/m4-timeshift-management-image15-regression-1/vod-contracts.json",
+    "evidence_sha256": "d8d47746ef6e2568c85ea009b76ccb0aa320513b0b6bc4cfb5e5724882ddc05a",
+    "passed": true,
+    "cleanup_passed": true,
+    "candidate_provenance": {
+      "image_id": "sha256:d5929a085ea262bfe24d3fe7eaee49f6cb69b6183a40cc7cc99da9cf82c7ece6",
+      "source_tree_sha256": "0053aef6fe71043b6db52851cb0e2cf691788cf175fe10ae956b02b5934ffde7",
+      "build_manifest_sha256": "0f7e8348ebc0be6e4bcc054e47f7ca46f3a16eaea5bfcfbcd5ecdbd61d715654"
+    },
+    "comparison_groups": 10,
+    "all_differences": 0,
+    "purpose": "Regression after shared UI/STREAMS cache policy and app management event-sink wiring; no new full-M4/event-transport/performance claim",
+    "tool_manifest_sha256": "058a8a6cc3fc566b5fed48d1f42229d0e5c6d9f6224e236afc76f06b9b4ca531"
+  }
 }

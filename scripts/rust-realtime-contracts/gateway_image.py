@@ -29,7 +29,7 @@ from ws_client import Client
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--docker',default='docker');parser.add_argument('--output',type=Path,required=True)
-    parser.add_argument('--candidate-image',required=True);parser.add_argument('--candidate-build-manifest',type=Path,required=True)
+    parser.add_argument('--live-stats',action='store_true');parser.add_argument('--candidate-image',required=True);parser.add_argument('--candidate-build-manifest',type=Path,required=True)
     args=parser.parse_args();docker=shutil.which(args.docker)
     if not docker:parser.error('Docker not found')
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._:/@-]{0,255}',args.candidate_image):parser.error('invalid image reference')
@@ -80,7 +80,7 @@ def main():
             control=Peer(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/realtime/gateway_control.py'],environment,out/'control.log');peers.append(control)
             browser=Peer(['/home/justin/.local/share/paseo-runtime/node-v22.23.2-linux-x64/bin/node',str(copies/'scripts/rust-realtime-contracts/browser_peer.js')],environment,out/'browser.log');peers.append(browser)
             report['browser_runtime']=browser.ready;report['original']=control.call({'op':'source_info'})
-            report['wire']=exercise(*targets[0],control.call,browser=browser,second_port=targets[1][1],slow_value_bytes=3*1024*1024)
+            report['wire']=exercise(*targets[0],control.call,browser=browser,second_port=targets[1][1],slow_value_bytes=3*1024*1024,source_live_stats=args.live_stats,live_stats_target='http://candidate:9192' if args.live_stats else None,live_stats_peer='http://candidate-replica:9192' if args.live_stats else None)
             browser.close()
             token=control.call({'op':'token','role':'admin'})['access']
             for host,port in targets:

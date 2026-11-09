@@ -1,5 +1,5 @@
 //! M3U row projection from original process_m3u_batch_direct; no job/SQL side effects.
-use crate::{stream_hash, trim, Entry, StreamIdentity};
+use crate::{stream_hash, Entry, StreamIdentity};
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 use std::collections::BTreeMap;
@@ -35,15 +35,23 @@ pub enum ProjectionError {
 
 // Decimal-zero ranges captured from pinned Python3.13.18 / Unicode15.1.0.
 // Python int/float accept Unicode decimal digits, not all is_numeric characters.
-const DECIMAL_ZEROS: &[u32] = &[
+pub(crate) const DECIMAL_ZEROS: &[u32] = &[
     48, 1632, 1776, 1984, 2406, 2534, 2662, 2790, 2918, 3046, 3174, 3302, 3430, 3558, 3664, 3792,
     3872, 4160, 4240, 6112, 6160, 6470, 6608, 6784, 6800, 6992, 7088, 7232, 7248, 42528, 43216,
     43264, 43472, 43504, 43600, 44016, 65296, 66720, 68912, 69734, 69872, 69942, 70096, 70384,
     70736, 70864, 71248, 71360, 71472, 71904, 72016, 72784, 73040, 73120, 73552, 92768, 92864,
     93008, 120782, 120792, 120802, 120812, 120822, 123200, 123632, 124144, 125264, 130032,
 ];
+// Python int/float reject ASCII information separators accepted by str.strip.
+// Non-ASCII whitespace is transformed by Python's Unicode numeric decoder.
+pub(crate) fn numeric_whitespace(c: char) -> bool {
+    matches!(c, '\t'..='\r' | ' ' | '\u{85}' | '\u{a0}' | '\u{1680}'
+        | '\u{2000}'..='\u{200a}' | '\u{2028}' | '\u{2029}' | '\u{202f}'
+        | '\u{205f}' | '\u{3000}')
+}
 fn numeric_ascii(value: &str) -> Option<String> {
-    let mapped = trim(value)
+    let mapped = value
+        .trim_matches(numeric_whitespace)
         .chars()
         .map(|character| {
             if character.is_ascii() {
@@ -88,7 +96,7 @@ fn integer_literal(value: &str) -> Option<String> {
         Some(format!("{}{digits}", if negative { "-" } else { "" }))
     }
 }
-fn integer(value: &str) -> Result<Option<i64>, ProjectionError> {
+pub(crate) fn integer(value: &str) -> Result<Option<i64>, ProjectionError> {
     integer_literal(value)
         .map(|value| value.parse().map_err(|_| ProjectionError::IntegerRange))
         .transpose()

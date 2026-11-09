@@ -8,3 +8,6 @@ mod hub;
 mod gateway;
 pub use gateway::{GatewayConfig, PreviewHandler, RealtimeGateway};
 pub mod policy;
+
+mod statistics;
+pub use statistics::{LiveStatistics,StatisticsConfig};

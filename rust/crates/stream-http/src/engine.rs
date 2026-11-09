@@ -8,6 +8,8 @@ use dispatcharr_coordination::{AcquireRequest, Coordinator, ProviderReservation}
 use dispatcharr_input_store::InputStore;
 use dispatcharr_stream_core::ts::{DiscontinuityMarker, PacketAssembler, PACKET_SIZE};
 use dispatcharr_stream_runtime::{Channel, Viewer};
+#[path = "health.rs"]
+mod health;
 #[path = "history.rs"]
 mod history;
 use futures_util::StreamExt;
@@ -41,6 +43,11 @@ pub struct EngineConfig {
     pub connect_timeout: Duration,
     pub read_timeout: Duration,
     pub startup_timeout: Duration,
+    /// Original manager's health clocks, distinct from HTTP/readiness timeouts.
+    pub health_startup_timeout: Duration,
+    pub health_connection_timeout: Duration,
+    pub health_initialization_grace: Duration,
+    pub health_check_interval: Duration,
     /// Number of canonical input chunks required before startup is ready.
     pub initial_buffer_chunks: u64,
     /// Low-latency component mode. The application disables periodic and EOF
@@ -74,6 +81,10 @@ impl Default for EngineConfig {
             connect_timeout: Duration::from_secs(10),
             read_timeout: Duration::from_secs(10),
             startup_timeout: Duration::from_secs(30),
+            health_startup_timeout: Duration::from_secs(8),
+            health_connection_timeout: Duration::from_secs(10),
+            health_initialization_grace: Duration::from_secs(60),
+            health_check_interval: Duration::from_secs(5),
             initial_buffer_chunks: 1,
             flush_partial_chunks: true,
             source_initialization: false,
@@ -93,6 +104,14 @@ impl Default for EngineConfig {
 }
 
 impl EngineConfig {
+    fn health_timing(&self) -> health::Timing {
+        health::Timing {
+            startup: self.health_startup_timeout,
+            connection: self.health_connection_timeout,
+            initialization: self.health_initialization_grace,
+            interval: self.health_check_interval,
+        }
+    }
     fn local_cache_bytes(&self, shared: bool) -> usize {
         if shared {
             self.retained_bytes_per_channel
@@ -124,6 +143,8 @@ pub(crate) struct Inner {
     pub(crate) inputs: Option<InputStore>,
     workers: AtomicUsize,
     workers_done: Notify,
+    pub(crate) statistics_reader:
+        Mutex<Option<Weak<dyn dispatcharr_contracts::LiveStatsSnapshotReader>>>,
 }
 
 #[derive(Clone, Debug)]
@@ -139,6 +160,8 @@ struct Session {
     stop: watch::Sender<bool>,
     startup: watch::Sender<Startup>,
     received_bytes: AtomicU64,
+    reported_bytes: AtomicU64,
+    last_bytes_report_bits: AtomicU64,
     reconnects: AtomicU64,
     buffer_index: AtomicU64,
     last_data_ms: AtomicU64,
@@ -146,6 +169,8 @@ struct Session {
     current: Mutex<PlaybackCandidate>,
     connecting: AtomicBool,
     following: AtomicBool,
+    manager_visible: AtomicBool,
+    health: Mutex<health::Health>,
     idle_watching: AtomicBool,
     native_initializing: AtomicBool,
     upstream_admitted: AtomicBool,
@@ -169,8 +194,27 @@ pub struct StreamStatus {
     pub received_bytes: u64,
     pub reconnects: u64,
 }
+pub(crate) struct LocalManagerStatus {
+    pub healthy: bool,
+    pub connected: bool,
+    pub last_data_time: f64,
+}
 
 impl StreamEngine {
+    pub(crate) fn local_manager_status(&self, id: &str) -> Option<LocalManagerStatus> {
+        let session = self.inner.sessions.lock().unwrap().get(id)?.clone();
+        if !session.manager_visible.load(Ordering::Acquire)
+            || session.following.load(Ordering::Acquire)
+        {
+            return None;
+        }
+        let health = session.health.lock().unwrap();
+        Some(LocalManagerStatus {
+            healthy: health.healthy,
+            connected: health.connected,
+            last_data_time: health.last_data_time,
+        })
+    }
     pub fn new(config: EngineConfig) -> Result<Self, PlaybackError> {
         Self::new_with_coordinator(config, None)
     }
@@ -215,6 +259,7 @@ impl StreamEngine {
             || config.connect_timeout.is_zero()
             || config.read_timeout.is_zero()
             || config.startup_timeout.is_zero()
+            || config.health_check_interval.is_zero()
             || config.initial_buffer_chunks == 0
             || config.retry_window.is_zero()
             || config.stable_connection_threshold.is_zero()
@@ -240,6 +285,7 @@ impl StreamEngine {
                 inputs,
                 workers: AtomicUsize::new(0),
                 workers_done: Notify::new(),
+                statistics_reader: Mutex::new(None),
             }),
         })
     }
@@ -368,6 +414,8 @@ impl StreamEngine {
                     stop,
                     startup,
                     received_bytes: AtomicU64::new(0),
+                    reported_bytes: AtomicU64::new(0),
+                    last_bytes_report_bits: AtomicU64::new(epoch_seconds().to_bits()),
                     reconnects: AtomicU64::new(0),
                     buffer_index: AtomicU64::new(0),
                     last_data_ms: AtomicU64::new(0),
@@ -375,6 +423,8 @@ impl StreamEngine {
                     current,
                     connecting: AtomicBool::new(true),
                     following: AtomicBool::new(false),
+                    manager_visible: AtomicBool::new(false),
+                    health: Mutex::new(health::Health::new(epoch_seconds())),
                     idle_watching: AtomicBool::new(false),
                     native_initializing: AtomicBool::new(
                         register_client && self.inner.config.source_initialization,
@@ -903,6 +953,7 @@ async fn run_follower(
                             state == "active" || state == "waiting_for_clients"
                         }) =>
                     {
+                        clients.announce_channel_statistics(&session.source.channel_id);
                         session.startup.send_replace(Startup::Ready);
                     }
                     Ok(_) => {}
@@ -965,6 +1016,14 @@ async fn run_follower(
                     }
                     if snapshot.index < cursor.unwrap() {
                         return PlaybackError::new(503, "Channel input restarted");
+                    }
+                    if owner.is_none() {
+                        if let Some(clients) = &inner.clients {
+                            if clients.channel_snapshot(&session.source.channel_id).await.ok().flatten()
+                                .is_some_and(|(fields,_)|fields.get("state").is_some_and(|state|!matches!(state.as_str(),"initializing"|"error"))) {
+                                clients.announce_channel_statistics(&session.source.channel_id);
+                            }
+                        }
                     }
                     owner = Some(current.clone());
                     *session.input_owner.lock().unwrap() = Some(current.clone());
@@ -1066,6 +1125,8 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
     } else {
         None
     };
+    // A pending or foreign-owner subscription is not a local StreamManager.
+    session.manager_visible.store(true, Ordering::Release);
     if let (Some(clients), Some(lease)) = (&inner.clients, &lease) {
         if clients.bind_local_owner(&key, lease.token()).await.is_err() {
             session.stop.send_replace(true);
@@ -1082,7 +1143,10 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
             .as_ref()
             .map_or(String::new(), |lease| lease.token().to_owned());
         let shared = inner.inputs.is_some();
-        tokio::spawn(async move { channel_metadata_worker(clients, session, owner, shared).await })
+        let health_timing = inner.config.health_timing();
+        tokio::spawn(async move {
+            channel_metadata_worker(clients, session, owner, shared, health_timing).await
+        })
     });
     let (_unleased_guard, unleased_watch) = watch::channel(false);
     let mut lost = lease.as_ref().map_or(unleased_watch, |lease| lease.lost());
@@ -1151,6 +1215,7 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
             Err(error) => last_error = error,
             Ok(()) => {
                 session.upstream_admitted.store(true, Ordering::Release);
+                session.metadata_wake.notify_one();
                 *session.current.lock().unwrap() = candidate.clone();
                 loop {
                     if *stop.borrow() || *lost.borrow() {
@@ -1293,6 +1358,20 @@ fn epoch_seconds() -> f64 {
 }
 
 impl Session {
+    fn record_received_bytes(&self, length: usize, now: f64) {
+        let total = self
+            .received_bytes
+            .fetch_add(length as u64, Ordering::Relaxed)
+            .saturating_add(length as u64);
+        if crate::byte_reporting::report(
+            total,
+            now,
+            &self.last_bytes_report_bits,
+            &self.reported_bytes,
+        ) {
+            self.metadata_wake.notify_one();
+        }
+    }
     fn request_ready(&self, inner: &Inner) {
         if !matches!(*self.startup.borrow(), Startup::Pending)
             || self.ready_requested.swap(true, Ordering::AcqRel)
@@ -1357,6 +1436,7 @@ async fn channel_metadata_worker(
     session: Arc<Session>,
     owner: String,
     shared: bool,
+    health_timing: health::Timing,
 ) {
     let fence = if owner.is_empty() {
         uuid_fence()
@@ -1372,7 +1452,26 @@ async fn channel_metadata_worker(
         if *stop.borrow() {
             break;
         }
-        tokio::select! {_=stop.changed()=>break,_=timer.tick()=>{},_=session.metadata_wake.notified()=>{}}
+        let health_delay = {
+            let next = session.health.lock().unwrap().next_check;
+            Duration::from_secs_f64(
+                (next - epoch_seconds()).clamp(0.0, health_timing.interval.as_secs_f64()),
+            )
+        };
+        tokio::select! {
+            _=stop.changed()=>break,
+            _=timer.tick()=>{},
+            _=session.metadata_wake.notified()=>{},
+            _=time::sleep(health_delay)=>{
+                session.health.lock().unwrap().tick_if_due(epoch_seconds(),session.buffer_index.load(Ordering::Relaxed),health_timing);
+                continue;
+            },
+        }
+        session.health.lock().unwrap().tick_if_due(
+            epoch_seconds(),
+            session.buffer_index.load(Ordering::Relaxed),
+            health_timing,
+        );
         if clients
             .channel_is_stopping(&session.source.channel_id)
             .await
@@ -1440,13 +1539,9 @@ async fn channel_metadata_worker(
             ("state", state.to_string()),
             ("state_changed_at", state_changed.to_string()),
             ("owner", owner.clone()),
-            ("stream_profile", "Proxy".to_string()),
+            ("stream_profile", session.source.profile_id.to_string()),
             ("channel_name", session.source.channel_name.clone()),
             ("init_time", session.started_at.to_string()),
-            (
-                "total_bytes",
-                session.received_bytes.load(Ordering::Relaxed).to_string(),
-            ),
             (
                 "last_data",
                 (session.last_data_ms.load(Ordering::Relaxed) as f64 / 1000.0).to_string(),
@@ -1454,6 +1549,10 @@ async fn channel_metadata_worker(
             ("worker_id", clients.worker_id().to_owned()),
         ] {
             fields.insert(name.into(), value);
+        }
+        let reported = session.reported_bytes.load(Ordering::Acquire);
+        if reported > 0 {
+            fields.insert("total_bytes".into(), reported.to_string());
         }
         let published = if shared {
             clients
@@ -1499,6 +1598,12 @@ struct InputAccumulator {
     marker: DiscontinuityMarker,
     chunk: Vec<u8>,
     mark_chunk: bool,
+}
+struct ConnectionClock<'a>(&'a Session);
+impl Drop for ConnectionClock<'_> {
+    fn drop(&mut self) {
+        self.0.health.lock().unwrap().connected = false;
+    }
 }
 impl InputAccumulator {
     fn new(bytes: usize) -> Self {
@@ -1552,6 +1657,12 @@ async fn drive_candidate(
     else {
         return;
     };
+    {
+        let mut health = session.health.lock().unwrap();
+        health.arm(epoch_seconds());
+        health.connected = true;
+    }
+    let _connection_clock = ConnectionClock(session);
     let response = tokio::select! {
         _ = stop.changed() => return, _ = lost.changed() => return,
         response = request.send() => response,
@@ -1584,8 +1695,11 @@ async fn drive_candidate(
             _ = lost.changed() => break,
             frame = bytes.next() => {
                 let Some(Ok(frame)) = frame else { break };
-                session.received_bytes.fetch_add(frame.len() as u64, Ordering::Relaxed);
-                session.last_data_ms.store((epoch_seconds()*1000.0) as u64,Ordering::Relaxed);
+                if frame.is_empty(){continue;}
+                let now=epoch_seconds();
+                session.record_received_bytes(frame.len(),now);
+                session.last_data_ms.store((now*1000.0) as u64,Ordering::Relaxed);
+                session.health.lock().unwrap().data(now);
                 let mut failed = false;
                 // One packet-aligned input window can finish at most one
                 // publish chunk. Await Redis before processing the next window;

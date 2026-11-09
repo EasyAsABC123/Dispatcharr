@@ -1,0 +1,24 @@
+{
+  "scope": "actual original Python raw-input byte-reporting counter/time vectors",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_sha256": "4f86253c4e3a30e62a49a335f1b494b9d0d4308eced0c79f11c98fa3128cb9a8",
+  "python": "3.13.18",
+  "method_sha256": "4d9d2ab2d98357fa20e72b0143f49d8742cce1cad2ffea2f155d00f9298f42ea",
+  "sequence_count": 103,
+  "read_count": 3215,
+  "dataset_sha256": "e4fe5b0cd1e236cf121b81e29fd1a985648d9624cd7196ce959a3b397cc67e92",
+  "tool_sha256": {
+    "scripts/rust-realtime-contracts/byte_reporting.py": "60f3a0853730041bb5df73ac4edfeb7fdc97a69d9f0fb2cacf307f826e7fff10",
+    "rust/crates/stream-http/src/byte_reporting.rs": "79ba9f934cb57e13b1679bc163a7d18f5b03ef7d2f81476ac3c7ebb57d24c966"
+  },
+  "artifact": "artifacts/rust/m7-source-byte-reporting-2/evidence.json",
+  "artifact_sha256": "0b80585efb6008d7f6e84954f2ec15eaa35459115cc8278167f0cc9868749a3c",
+  "limitations": [
+    "Successful Redis increments and finite bounded counter/clock sequences; Redis error/retry behavior not proved by this method oracle",
+    "No native app performance or full upstream fault-timeline claim"
+  ]
+}

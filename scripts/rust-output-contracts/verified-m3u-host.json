@@ -1,0 +1,73 @@
+{
+  "format_version": 1,
+  "scope": "Host native M3U50 HTTP cases including profile path decoding, actual SQL/Redis lifecycle/cache gates; frozen application proof pending",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m7-m3u-profile-path-native-sql-1/vod-contracts.json",
+  "evidence_sha256": "14bbd72670e1b89b70ec555261ceb45d38e21743906171b74dd6abf536067878",
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "comparison": {
+    "captured_m3u_http_matches": true,
+    "differences": [],
+    "normalizations": [
+      "JSON error objects compared semantically; their own Content-Length remains validated"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "source_bound_candidate_image": false,
+  "http_cases": 50,
+  "download_events_each": 33,
+  "blocked_events_each": 4,
+  "native_cache_readable_by_original_django": true,
+  "tool_manifest_sha256": "c73075af820b6a26c944b72b62ba18f92163903ad47dd98a2e52874f2df0647e",
+  "tested_working_bytes_sha256": {
+    "rust/crates/output-http/src/lib.rs": "02b9122b1cbe1a826b4ddaaa495cf0acba9a2277164c66151d5d11d6159d3439",
+    "rust/crates/output-http/src/render.rs": "ad828066ab2b54f9b26d4487c1f7440a8b9d7ffb69570bdf0aced76a68622507",
+    "rust/crates/output-http/src/reader.rs": "684b6e41db821afd59294b543ea5aa9a4d847af5ae0de7130c1af87d10d44d13",
+    "rust/crates/output-http/src/csrf.rs": "3426c1c8b9e31478cb53bd52e3ceed30f09c226bb30cc7eada52b70f7a4dff18",
+    "rust/crates/output-http/src/gateway.rs": "f258462c0abe12656674dd636b82869c0b09ead3da292f3dcbc42518fc8c2ccd",
+    "rust/crates/output-http/tests/http_sql.rs": "46a73394a3dee67e1bce404a7e14f0d04b54433d39b8783e9383803c6897ca70"
+  },
+  "renderer_actual_sql_proof": {
+    "evidence": "artifacts/rust/m7-m3u-profile-path-native-sql-1/vod-contracts.json",
+    "positive_exact_byte_cases": 30,
+    "capacity_refusals": 2,
+    "passed": true
+  },
+  "strict_all_target_clippy_passed": true,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "original_application_credit": "Original Dispatcharr authors/contributors; Django CSRF fixtures/code retain their BSD license and original Django authorship in data/Django-LICENSE",
+  "remaining_gates": [
+    "Application router/shutdown wiring and immutable Compose50-case proof",
+    "Nonempty provider allowlist credential transforms, server groups; exports beyond configured/hard bounds",
+    "Broader CSRF/origin/referer/form/path/Unicode/malformed cache/large dataset corners",
+    "Connect/plugin event hook bridge and full M7 XMLTV/Xtream/HDHR surfaces",
+    "Resource/performance acceptance"
+  ],
+  "initial43_case_evidence": {
+    "evidence": "artifacts/rust/m7-m3u-native-http-sql-1/vod-contracts.json",
+    "sha256": "f2d8ab106eb904ee3397d86824f778351a0e4ede6f50416f3c3359767fde1221"
+  },
+  "two_second_cache": {
+    "warm_probe_inside_two_seconds": true,
+    "cached_body_unchanged": true,
+    "expired_body_changed": true
+  },
+  "real_resource_tests": 2,
+  "body_chunk_bytes": 65536,
+  "shutdown_releases_unpolled_body_without_client_poll": true,
+  "disconnect_releases_admission_and_memory": true,
+  "incoming_body_stop_race_tests": 2,
+  "application_wiring_strict_clippy_passed": true,
+  "third_party_notice_packaged_by_runtime_dockerfile": true,
+  "comparator_fault_tests": 4,
+  "prior46_case_evidence": {
+    "evidence": "artifacts/rust/m7-m3u-native-http-lifecycle-sql-3/vod-contracts.json",
+    "sha256": "62bd14d90674561a7c68cb25ab1463fa5837109f4dd3d058f247a0fcb5b2312a"
+  },
+  "path_decode_regression_tests": 1,
+  "large_export_followup": "scripts/rust-output-contracts/verified-m3u-large-host.json"
+}

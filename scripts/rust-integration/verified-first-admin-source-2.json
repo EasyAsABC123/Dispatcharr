@@ -1,0 +1,27 @@
+{
+  "scope": "Original/native first-admin API on existing migrated schema, including plain JSON errors, manager flags and Source15.1 normalization.",
+  "passed": true,
+  "raw_report_sha256": "3d8e769dc401ca906d4633c1a249a5f608210cc29c325556a4fa46af41e328b7",
+  "rust_source_archive_sha256": "35c6c540d8515dc038730bb2851e210d9dc727838995c36a23f75aaa2d3ba707",
+  "cleanup": "project removed",
+  "source_cases": 25,
+  "performance_verified": false,
+  "source_files": {
+    "rust/crates/store/src/passwords.rs": "98a8d325b5bda80c13103ec1a647c91ed7e7e924368598dd25a5a7fdecd665b4",
+    "rust/crates/store/src/startup.rs": "69bdf22183d1bfb73e2eeb653464cb3f376642f14d0902ef1da7cf7f6e041a03",
+    "rust/crates/store/src/username.rs": "4cbce007899b2ac3a3975b4e8d568a6471d6e20d5b582698b015d764ad645910",
+    "rust/crates/store/src/startup_bootstrap.rs": "20584fc3b8883e3bfa5f52290cfe3ad2cbaab7b89f614d7ebbdf27a677342f65"
+  },
+  "verified": [
+    "25actual original/native rawHTTP cases; native peer tuples explicitly injected to match original RequestFactory.",
+    "Original setup IP/header/override rules, existing inactive-level10 closure before malformed body.",
+    "No DRF username/password strength validators; short and whitespace password hashes verified against actual submitted string.",
+    "Numeric username, username NFKC, full original flags/defaults, duplicate nonadmin error and email quirks.",
+    "Unicode15.1 email lowercase preserves newer Source-unassigned chars.",
+    "No unowned users permitted; each operation starts in an empty user table."
+  ],
+  "remaining": [
+    "Native fresh schema and app/browser initialization acceptance separate.",
+    "Exotic parser encodings/surrogates, concurrent creators and bounded input/worker differences remain explicit."
+  ]
+}

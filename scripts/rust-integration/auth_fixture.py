@@ -14,7 +14,7 @@ sys.argv.append('shell')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dispatcharr.settings')
 import django
 django.setup()
-from django.contrib.auth.hashers import PBKDF2PasswordHasher, PBKDF2SHA1PasswordHasher, check_password
+from django.contrib.auth.hashers import PBKDF2PasswordHasher, PBKDF2SHA1PasswordHasher, ScryptPasswordHasher, check_password
 from django.core.cache import cache
 from rest_framework.test import APIRequestFactory
 from apps.accounts.models import User
@@ -29,9 +29,11 @@ for index, (name, algorithm, iterations, salt, active, correct) in enumerate([
     ('preferred', 'sha256', 1200000, 'abcdefghijklmnopqrstuv', True, True),
     ('inactive-upgrades-before-rejection', 'sha256', 10, 'abcdefghijklmnopqrstuv', False, True),
     ('wrong-password-preserves-hash', 'sha256', 10, 'abcdefghijklmnopqrstuv', True, False),
+    ('supported-default-scrypt-upgrades', 'scrypt', 16384, 'abcdefghijklmnopqrstuv', True, True),
+    ('wrong-scrypt-preserves-hash', 'scrypt', 16384, 'abcdefghijklmnopqrstuv', True, False),
 ]):
-    hasher = PBKDF2SHA1PasswordHasher() if algorithm == 'sha1' else PBKDF2PasswordHasher()
-    original_hash = hasher.encode(PASSWORD, salt, iterations)
+    hasher = ScryptPasswordHasher() if algorithm == 'scrypt' else PBKDF2SHA1PasswordHasher() if algorithm == 'sha1' else PBKDF2PasswordHasher()
+    original_hash = hasher.encode(PASSWORD, salt) if algorithm == 'scrypt' else hasher.encode(PASSWORD, salt, iterations)
     username = 'rust-probe-auth-hash-' + str(index)
     user, _ = User.objects.get_or_create(username=username)
     User.objects.filter(pk=user.pk).update(password=original_hash, is_active=active, user_level=1, custom_properties={})

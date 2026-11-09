@@ -58,3 +58,13 @@ partial-media bytes. `verified-xc-routes.json` records this host-service proof.
 Use `--timeshift-xc --candidate-overlay <overlay> --candidate-build-manifest
 <build.json>` for the separate frozen-image comparison; a host pass does not
 complete that gate. Neither result establishes whole M4 or performance parity.
+
+Immutable image14 has now passed the native management31 cases and actual
+active/idle admin-stop lifecycle, alongside XC23, direct15 and all prior
+API/media/busy/idle/limit/VOD/alias slices. All10 comparison groups have zero
+differences, strict audio/video decoders pass and Compose cleanup succeeds.
+The run copies and hashes249 tool files before setup, then imports and mounts
+that captured copy. See verified-management.json and verified-compose.json.
+These accepted slices retain their limited scope: all-event transport, unusual
+input/serializer corners, cross-worker/programme/profile adoption, provider
+transforms and resource acceptance remain open.

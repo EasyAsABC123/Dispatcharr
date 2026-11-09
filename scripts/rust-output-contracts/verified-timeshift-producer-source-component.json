@@ -1,0 +1,22 @@
+{
+  "format_version": 1,
+  "scope": "Original actual Redis/Channels Timeshift registration conditional publication component ONLY",
+  "passed": true,
+  "cleanup_passed": true,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": "artifacts/rust/m7-timeshift-producer-source-component-2/vod-contracts.json",
+  "evidence_sha256": "ba556a7bf13acc814f96d07a8017410c1bdda2fccee4db6cadd4afda3840d134",
+  "oracle": "artifacts/rust/m7-timeshift-producer-source-component-2/timeshift-producer-source.json",
+  "oracle_sha256": "2bacd358141d9ec7fbd1be37a689278f371904ab7b156d7884c6d2d4e3267697",
+  "registration_cases": 5,
+  "repeated_viewer_suppressed": true,
+  "new_and_hop_publish_only": true,
+  "source_connected_at_without_programme_suppresses_publication": true,
+  "native_implementation_verified": false,
+  "http_body_lifecycle_timing_verified": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "initial_harness_failure_preserved": "artifacts/rust/m7-timeshift-producer-source-component-1",
+  "initial_failure_reason": "Observer reused Channels receive queue across separate async_to_sync event loops; fixed using persistent asyncio.Runner",
+  "original_application_credit": "Original Dispatcharr authors/contributors"
+}

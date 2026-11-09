@@ -22,6 +22,22 @@ pub trait UpdateEventSink: Send + Sync {
     ) -> BoxFuture<'a, Result<(), UpdateEventError>>;
 }
 
+/// Nonblocking notification that acknowledged live-client metadata changed.
+/// Implementations schedule bounded background snapshots; no polling per viewer.
+pub trait LiveStatsTrigger: Send + Sync {
+    fn changed(&self);
+}
+
+/// Build a global live snapshot from acknowledged metadata, without publication.
+pub trait LiveStatsSnapshotSource: Send + Sync {
+    fn build(&self) -> BoxFuture<'_, Result<serde_json::Value, PlaybackError>>;
+}
+/// Return the shared owned JSON body and schedule its exact stats event.
+/// The byte owner retains global snapshot admission through the final HTTP frame.
+pub trait LiveStatsSnapshotReader: Send + Sync {
+    fn snapshot(&self) -> BoxFuture<'_, Result<bytes::Bytes, PlaybackError>>;
+}
+
 #[derive(Clone, Debug)]
 pub struct PlaybackRequest {
     pub channel_id: String,

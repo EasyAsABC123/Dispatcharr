@@ -3,6 +3,7 @@ mod control;
 mod playback;
 mod realtime;
 mod response_headers;
+mod statistics;
 use axum::{
     extract::State,
     http::{header, StatusCode},
@@ -115,8 +116,18 @@ async fn run() -> Result<(), String> {
     let mut auth_config =
         AuthConfig::new(secret).map_err(|_| "Invalid authentication configuration")?;
     auth_config.trusted_proxies = env::var("DISPATCHARR_TRUSTED_PROXIES").ok();
+    let database_url = database_url()?;
+    match env::var("RUST_INITIALIZE_EMPTY_DATABASE").as_deref() {
+        Ok("1")=>match dispatcharr_store::initialize_empty_database(&database_url).await
+            .map_err(|_|"Empty database initialization failed (credentials omitted)")? {
+            dispatcharr_store::SchemaInitialization::Created{tables,migrations}=>eprintln!("Created original Dispatcharr schema: {tables} tables, {migrations} migration records"),
+            dispatcharr_store::SchemaInitialization::SkippedExisting{objects}=>eprintln!("Skipped initialization: {objects} existing database objects; schema compatibility was not checked"),
+        },
+        Ok("0")|Err(_)=>{},
+        Ok(_)=>return Err("RUST_INITIALIZE_EMPTY_DATABASE must be 0 or 1".into()),
+    }
     let store = Store::connect(
-        &database_url()?,
+        &database_url,
         positive("RUST_DATABASE_POOL_SIZE", 8)?
             .try_into()
             .map_err(|_| "Database pool size overflow")?,
@@ -162,6 +173,30 @@ async fn run() -> Result<(), String> {
         .setting("proxy_settings")
         .await
         .map_err(|_| "Proxy settings unavailable")?;
+    for (name, default, target) in [
+        (
+            "stream_startup_timeout",
+            8.0,
+            &mut config.health_startup_timeout,
+        ),
+        (
+            "connection_timeout",
+            10.0,
+            &mut config.health_connection_timeout,
+        ),
+        (
+            "channel_init_grace_period",
+            60.0,
+            &mut config.health_initialization_grace,
+        ),
+    ] {
+        let seconds = proxy_settings
+            .get(name)
+            .and_then(serde_json::Value::as_f64)
+            .unwrap_or(default);
+        *target = Duration::try_from_secs_f64(seconds)
+            .map_err(|_| format!("Invalid {name} health timeout"))?;
+    }
     let configured_retention = proxy_settings
         .get("redis_chunk_ttl")
         .and_then(serde_json::Value::as_u64)
@@ -242,6 +277,7 @@ async fn run() -> Result<(), String> {
     let engine =
         StreamEngine::new_with_shared_inputs(config, coordinator.clone(), clients.clone(), inputs)
             .map_err(|_| "Invalid streaming configuration")?;
+    let live_statistics = statistics::start(&engine, clients.as_ref(), realtime_bus.as_ref())?;
     let auth = auth.with_channel_control(Arc::new(control::EngineControl(engine.clone())));
     let realtime = realtime::gateway(auth.clone(), realtime_bus.clone())?;
     let resolver: Arc<dyn dispatcharr_contracts::PlaybackResolver> = Arc::new(auth.clone());
@@ -347,6 +383,27 @@ async fn run() -> Result<(), String> {
     } else {
         (None, None, None)
     };
+    let output = if let Ok(redis_url) = env::var("REDIS_URL") {
+        Some(
+            dispatcharr_output_http::OutputGateway::new(
+                store.clone(),
+                auth.clone(),
+                &redis_url,
+                dispatcharr_output_http::OutputConfig {
+                    max_requests: positive("RUST_MAX_OUTPUT_REQUESTS", 4)?,
+                    max_channels: positive("RUST_MAX_OUTPUT_CHANNELS", 50000)?,
+                    max_metadata_bytes: positive("RUST_OUTPUT_METADATA_BYTES", 8 * 1024 * 1024)?,
+                    max_export_bytes: positive("RUST_OUTPUT_EXPORT_BYTES", 8 * 1024 * 1024)?,
+                    max_memory_bytes: positive("RUST_OUTPUT_MEMORY_BYTES", 192 * 1024 * 1024)?,
+                    ..Default::default()
+                },
+            )
+            .await
+            .map_err(|_| "Output initialization failed (credentials omitted)")?,
+        )
+    } else {
+        None
+    };
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(store)
@@ -375,6 +432,9 @@ async fn run() -> Result<(), String> {
     }
     if let Some(management) = &catchup_management {
         app = app.merge(management.clone().router());
+    }
+    if let Some(output) = &output {
+        app = app.merge(output.clone().router());
     }
     // Source bare-profile redirects duplicate the profile and render React.
     app = app
@@ -419,6 +479,8 @@ async fn run() -> Result<(), String> {
         catchup,
         catchup_management,
         realtime,
+        output,
+        live_statistics,
     };
     let signal_services = services.clone();
     let server = axum::serve(
@@ -481,6 +543,8 @@ struct ShutdownServices {
     catchup: Option<dispatcharr_timeshift_http::CatchupMedia>,
     catchup_management: Option<dispatcharr_timeshift_http::CatchupManagement>,
     realtime: Option<dispatcharr_realtime::RealtimeGateway>,
+    output: Option<dispatcharr_output_http::OutputGateway>,
+    live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
 }
 async fn shutdown_components(services: ShutdownServices) {
     let ShutdownServices {
@@ -492,9 +556,11 @@ async fn shutdown_components(services: ShutdownServices) {
         catchup,
         catchup_management,
         realtime,
+        output,
+        live_statistics,
     } = services;
     engine.shutdown();
-    let (live, _, _, vod, catchup, management, realtime) = tokio::join!(
+    let (live, _, _, vod, catchup, management, realtime, output) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
             if let Some(hls) = hls {
@@ -534,12 +600,24 @@ async fn shutdown_components(services: ShutdownServices) {
                 true
             }
         },
+        async {
+            if let Some(output) = output {
+                output.shutdown().await
+            } else {
+                true
+            }
+        },
     );
-    if !live || !vod || !catchup || !management || !realtime {
+    if !live || !vod || !catchup || !management || !realtime || !output {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }
     if let Some(clients) = clients {
         clients.shutdown().await;
+    }
+    if let Some(statistics) = live_statistics {
+        if !statistics.shutdown(Duration::from_millis(500)).await {
+            eprintln!("Statistics drain deadline reached; pending callbacks require recovery");
+        }
     }
 }
 

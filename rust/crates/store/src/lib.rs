@@ -22,8 +22,10 @@ mod django_pickle;
 mod ip_lookup;
 mod notifications;
 mod python_action;
+mod schema;
 mod settings_groups;
 pub use ip_lookup::IpLookupConfig;
+pub use schema::{initialize_empty_database, SchemaInitialization};
 mod xc_auth;
 pub use notifications::NotificationCache;
 mod import_batches;
@@ -38,9 +40,11 @@ pub use import_pipeline::{CacheBatchCounts, CacheBatchRequest};
 mod json_compat;
 pub mod realtime;
 mod startup;
+mod startup_bootstrap;
 pub use import_batches::{
     ImportCounts, ImportedStream, MAX_IMPORT_BATCH_BYTES, MAX_IMPORT_BATCH_ROWS,
 };
+mod password_scrypt;
 mod passwords;
 mod playback;
 mod provider_mutations;
@@ -48,6 +52,7 @@ mod provider_reads;
 mod stream_validation;
 mod stream_writes;
 mod streams;
+mod username;
 
 pub use auth::{AuthConfig, AuthService, Claims, TokenPair};
 pub use cache_codec::{decode_source_cache, encode_source_cache};

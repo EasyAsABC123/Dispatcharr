@@ -26,6 +26,12 @@ import zipfile
 ROOT=Path(__file__).resolve().parents[2]
 
 
+def decode_json_lines(value):
+    # NDJSON framing is LF only. NEL/U+2028 are legal characters inside a JSON
+    # string and must not be treated as separators by Python splitlines().
+    return [json.loads(line) for line in value.split('\n') if line]
+
+
 def original():
     scope={'re':re,'logger':logging.getLogger('original-m3u')}
     scope['logger'].disabled=True
@@ -196,6 +202,16 @@ def main():
         context={'account_id':12,'account_type':rng.choice(['STD','XC','xc']),'groups':{'Default Group':7,'Group':8,'':9},
                  'hash_keys':rng.choice([['name','url','tvg_id','m3u_id','group'],['url'],['tvg_id'],[]]),'max_name_characters':rng.choice([0,3,512])}
         cases.append(({'kind':'projection','entry':entry,'context':context},oracle['project'](entry,context)))
+    # Numeric constructors use a narrower ASCII whitespace set than str.strip.
+    for cp in [9, 0x1c, 0x1d, 0x1e, 0x1f, 0x85, 0xa0, 0x200b, 0xfeff]:
+        for value in [chr(cp)+'1','1'+chr(cp)]:
+            for account_type in ['STD','XC']:
+                attrs={'tvg-id':'numeric-whitespace','stream_id':value,'tv_archive_duration':value,
+                       'tvg-chno':value,'num':value}
+                entry={'name':'Numeric whitespace','display_name':'Fixture','url':'http://fixture/live','attributes':attrs}
+                context={'account_id':12,'account_type':account_type,'groups':{'Default Group':7},
+                         'hash_keys':['url'],'max_name_characters':512}
+                cases.append(({'kind':'projection','entry':entry,'context':context},oracle['project'](entry,context)))
     cache_samples=[b'',b'#EXTM3U',b'#EXTM3U\nhttp://fixture\n',b'#EXTM3U\rhttp://fixture\r',
                    b'#EXTM3U\r\nhttp://fixture\r\n',b'<html>error',b'error: unauthorized',b'   ',
                    b'\xff#EXTM3U\n',b'\xff\xfe',b' '*32768+b'#EXTM3U',b'#EXTM3U'+b'x'*65536,
@@ -251,7 +267,7 @@ def main():
         args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(json.dumps(captured)+'\n')
         print(json.dumps({'captured':len(cases),'oracle_runtime':oracle_runtime}));return 0
     result=subprocess.run([str(args.binary)],input=''.join(json.dumps(case)+'\n' for case,_ in cases),text=True,capture_output=True,check=True)
-    responses=[json.loads(line) for line in result.stdout.splitlines()]
+    responses=decode_json_lines(result.stdout)
     if len(responses)!=len(cases):raise RuntimeError('Incomplete Rust oracle responses')
     failures=[{'case':i,'request':case,'expected':expected,'actual':actual} for i,((case,expected),actual) in enumerate(zip(cases,responses)) if expected!=actual]
     paths=[ROOT/'apps/m3u/tasks.py',ROOT/'apps/m3u/utils.py',ROOT/'apps/channels/models.py',ROOT/'core/utils.py',Path(__file__).resolve(),ROOT/'rust/Cargo.lock',ROOT/'rust/rust-toolchain.toml',ROOT/'rust/crates/ingest-core/Cargo.toml',*sorted((ROOT/'rust/crates/ingest-core').rglob('*.rs'))]

@@ -120,7 +120,11 @@ for key,value in pairs(data) do redis.call('HSET',KEYS[1],key,tostring(value)) e
 redis.call('PEXPIRE',KEYS[1],ttl)
 redis.call('SADD',KEYS[2],ARGV[6])
 redis.call('PEXPIRE',KEYS[2],ttl)
-return {'OK',tostring(#stop_targets)}
+local metadata_key='live:channel:'..tostring(data.channel_id)..':metadata'
+local state=false
+if kind(metadata_key)=='hash' then state=redis.call('HGET',metadata_key,'state') end
+local announced=state and state~='initializing' and state~='error'
+return {'OK',tostring(#stop_targets),announced and '1' or '0'}
 "#;
 
 pub const HEARTBEAT: &str = r#"

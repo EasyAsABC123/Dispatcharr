@@ -43,7 +43,9 @@ pub(crate) fn verify_and_upgrade(password: &str, encoded: &str) -> (bool, Option
                 );
             }
         }
-    } else if encoded.starts_with('!') || !["pbkdf2_sha256", "pbkdf2_sha1"].contains(&fields[0]) {
+    } else if encoded.starts_with('!')
+        || !["pbkdf2_sha256", "pbkdf2_sha1", "scrypt"].contains(&fields[0])
+    {
         // Django spends a default hash for unusable/unknown hashes. Unsupported
         // installed algorithms still fail closed until their native port exists.
         let _ = encode_password(password);
@@ -79,8 +81,11 @@ pub fn verify_password(password: &str, encoded: &str) -> bool {
     if password.len() > 4096 || encoded.len() > 4096 {
         return false;
     }
+    if encoded.starts_with("scrypt$") {
+        return crate::password_scrypt::verify(password, encoded);
+    }
     let fields: Vec<_> = encoded.split('$').collect();
-    if fields.len() != 4 || fields[2].len() > 1024 {
+    if fields.len() != 4 || fields[2].is_empty() || fields[2].len() > 1024 {
         return false;
     }
     let Ok(iterations) = fields[1].parse::<u32>() else {
@@ -115,12 +120,34 @@ pub fn verify_password(password: &str, encoded: &str) -> bool {
         }
         _ => return false,
     };
+    // Django compares the complete regenerated encoding, not just digest bytes.
+    let canonical = format!(
+        "{}${iterations}${}${}",
+        fields[0],
+        fields[2],
+        STANDARD.encode(&actual)
+    );
     bool::from(actual.ct_eq(&expected))
+        && bool::from(canonical.as_bytes().ct_eq(encoded.as_bytes()))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn original_full_encoding_comparison_rejects_noncanonical_parameter_spellings() {
+        let cases: serde_json::Value =
+            serde_json::from_str(include_str!("../datasets/django-hash-canonical.json")).unwrap();
+        for case in cases.as_array().unwrap() {
+            assert_eq!(
+                verify_password(
+                    case["password"].as_str().unwrap(),
+                    case["encoded"].as_str().unwrap()
+                ),
+                case["expected"].as_bool().unwrap()
+            );
+        }
+    }
     #[test]
     fn pinned_original_upgrade_policy_counts_unicode_salt_characters() {
         let source: serde_json::Value =

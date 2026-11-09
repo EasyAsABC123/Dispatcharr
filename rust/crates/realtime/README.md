@@ -64,8 +64,16 @@ timeouts, 5-second upgrade waits and 24-hour connection lifetime. See
 `../../../scripts/rust-realtime-contracts/verified-native-gateway-fanout-1.json`.
 
 Main-app wiring now attaches the event sink before authentication service
-clones and drains the gateway in parallel with media. Its Docker-image and
-preserved React workflow proofs remain open. Admin regex preview is deliberately
+clones and drains the gateway in parallel with media. The frozen IMAGE15-2 Docker app now passes the same 61 wire/Chromium/fanout
+assertions. Both replicas close held sockets with code 1001 and exit without
+OOM or drain warnings; shared membership returns to zero. All component code
+hashes match the separate internal byte-budget proof (README changes only).
+An 18MiB JSON event establishes backpressure through container forwarding and
+removes an unread socket within 2.398 seconds while a fast reader completes in
+0.164 seconds. The earlier 6MiB pressure probe did not establish that deadline
+and remains preserved; no runtime timeout was relaxed. See
+`../../../scripts/rust-realtime-contracts/verified-packaged-gateway-image15-1.json`.
+The complete preserved React workflow remains open. Admin regex preview is deliberately
 unimplemented pending its separate third-party Python `regex` compatibility
 proof. Live/media lifecycle producers, all event families, ingress boundary
 faults and native handshake edge cases remain separate gates. No live-event

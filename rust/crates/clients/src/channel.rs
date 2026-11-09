@@ -51,7 +51,7 @@ impl ClientStore {
                 .filter_map(Weak::upgrade)
                 .collect::<Vec<_>>();
             for client in clients
-                .into_iter()
+                .iter()
                 .filter(|client| client.channel == channel)
             {
                 client.stop.send_replace(true);
@@ -60,6 +60,7 @@ impl ClientStore {
                     client.cleanup_done.send_replace(true);
                 }
             }
+            statistics::stopped_channel(&self.inner,channel,&clients);
         }
         Ok(result == 1)
     }

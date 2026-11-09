@@ -3,7 +3,7 @@
 Original application credit remains with Dispatcharr contributors. No plaintext
 password, encoded credential or token is returned by this control helper.
 """
-from django.contrib.auth.hashers import PBKDF2PasswordHasher, PBKDF2SHA1PasswordHasher, check_password
+from django.contrib.auth.hashers import PBKDF2PasswordHasher, PBKDF2SHA1PasswordHasher, ScryptPasswordHasher, check_password
 from apps.accounts.models import User
 from core.models import SystemEvent
 CASES={
@@ -13,12 +13,14 @@ CASES={
     'preferred':('sha256',1200000,'abcdefghijklmnopqrstuv',True),
     'inactive':('sha256',10,'abcdefghijklmnopqrstuv',False),
     'wrong':('sha256',10,'abcdefghijklmnopqrstuv',True),
+    'scrypt':('scrypt',16384,'abcdefghijklmnopqrstuv',True),
+    'scrypt-wrong':('scrypt',16384,'abcdefghijklmnopqrstuv',True),
 }
 PASSWORD='packaged-hash-fixture-only'
 def original_hash(kind):
     algorithm,iterations,salt,_=CASES[kind]
-    hasher=PBKDF2SHA1PasswordHasher() if algorithm=='sha1' else PBKDF2PasswordHasher()
-    return hasher.encode(PASSWORD,salt,iterations)
+    hasher=ScryptPasswordHasher() if algorithm=='scrypt' else PBKDF2SHA1PasswordHasher() if algorithm=='sha1' else PBKDF2PasswordHasher()
+    return hasher.encode(PASSWORD,salt) if algorithm=='scrypt' else hasher.encode(PASSWORD,salt,iterations)
 def dispatch(data):
     kind=data.get('kind');name=data.get('username','');action=data['action']
     if kind not in CASES or not name.startswith('rust-probe-packaged-hash-') or len(name)>100:

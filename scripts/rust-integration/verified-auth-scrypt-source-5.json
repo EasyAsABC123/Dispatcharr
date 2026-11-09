@@ -1,0 +1,31 @@
+{
+  "scope": "Actual supported Django password families versus native SQL/login on original migrated schema; shared/proxy contracts rerun. Not packaged-image or performance acceptance.",
+  "passed": true,
+  "source_hash_cases": 8,
+  "shared_requests": 40,
+  "proxy_requests": 17,
+  "raw_report_sha256": "f667b300870036f8694e4a356177a199be007ea0d556d280101557e3665cf55a",
+  "rust_source_archive_sha256": "e8440a9f53923628f4c4220cfd884aff225bdc51ac132675cd5dbd542e0038a1",
+  "cleanup": "project removed",
+  "source_files": {
+    "rust/crates/store/src/passwords.rs": "aef4583935a7fa3f36e78ed10896440f3457cfc282e50db1bf4535577a3142e6",
+    "rust/crates/store/src/auth.rs": "8c531de2a76a36495b6466a0c4cc209423b7860c048e067a09e0ccb027caca0f",
+    "rust/crates/store/src/password_scrypt.rs": "a46c5f8508901aec19150be691b027449528457356c82a6fb8d9f65d8b592279"
+  },
+  "verified": [
+    "Default OpenSSL/Django ScryptN16384,r8,p5 verifies and upgrades to preferred PBKDF2SHA256.",
+    "Wrong Scrypt credential returns401 without changing stored Scrypt hash.",
+    "Prior6PBKDF2/inactive/wrong cases still pass.",
+    "All40shared-cache/audit and17proxy/refresh/logout cases still pass."
+  ],
+  "bounds": [
+    "Existing password worker semaphore4, password/hash4096bytes and salt1024bytes.",
+    "Scrypt parameter arithmetic checked before allocation; memory formula capped32MiB and N*r*p capped8388608.",
+    "Supported original default is within bounds. Larger custom-cost encodings fail closed; no broad custom-configuration compatibility claim."
+  ],
+  "remaining": [
+    "Packaged Scrypt gate and first-admin/schema/bootstrap scopes separate.",
+    "Canonical complete-encoding comparison was added after this source snapshot and has6 original low-cost spelling vectors; no unchanged binary claim.",
+    "Argon2/bcrypt libraries absent from pinned source; no successful native auth introduced."
+  ]
+}

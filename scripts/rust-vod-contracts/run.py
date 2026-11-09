@@ -31,6 +31,12 @@ def main():
     parser.add_argument('--source-frontend-from-candidate', action='store_true', help='Mount unchanged built React from immutable candidate into source fixture; requires candidate manifest')
     parser.add_argument('--profile-aliases', action='store_true', help='Separately characterize bare-profile redirects and their follow status')
     parser.add_argument('--timeshift-redirect-session', action='store_true', help='Use Redirect channel with empty allowed profiles to verify established capability still proxies')
+    parser.add_argument('--m3u-rust-http', action='store_true', help='Compare actual native M3U HTTP/auth/cache with original source')
+    parser.add_argument('--m3u-rust-renderer', action='store_true', help='Compare native SQL/renderer positive export bytes with original source')
+    parser.add_argument('--timeshift-producer-source', action='store_true', help='Capture original actual Redis/Channels Timeshift stats registration publication rules')
+    parser.add_argument('--vod-producer-source', action='store_true', help='Capture original real ORM/Redis VOD statistics and Channels producer component contracts')
+    parser.add_argument('--m3u-large-output', action='store_true', help='Characterize a 6000-channel multi-megabyte M3U and its Django cache')
+    parser.add_argument('--m3u-output', action='store_true', help='Characterize original anonymous and XC M3U exports')
     parser.add_argument('--timeshift-management-active', action='store_true', help='Include actual active/idle media admin-stop controls')
     parser.add_argument('--timeshift-rust-management', action='store_true', help='Compare native Rust catchup management against original actual SQL/Redis wire contracts')
     parser.add_argument('--timeshift-management', action='store_true', help='Characterize original catchup stats/programmes/admin-stop contracts')
@@ -54,6 +60,12 @@ def main():
     parser.add_argument('--rust-resolver-test', action='store_true', help='Run the actual-schema Rust resolver test against this disposable database')
     parser.add_argument('--rust-ingest-test', action='store_true', help='Compare the native M3U batch sink to original Django writes in this disposable database')
     args = parser.parse_args()
+    if args.m3u_large_output:
+        args.m3u_output = True
+    if args.m3u_rust_http:
+        args.m3u_output = True
+    if args.m3u_rust_renderer:
+        args.m3u_output = True
     if args.timeshift_management_active:
         args.timeshift_management = True
     if args.timeshift_rust_management:
@@ -99,6 +111,8 @@ def main():
     environment = dict(os.environ, BASELINE_SOURCE_DIR=str(source), BASELINE_EVIDENCE_DIR=str(output))
     compose = [args.docker, 'compose', '-p', project, '-f', str(tool_root/'docker/compose.rust-playback.yml'),
                '-f', str(tool_root/'scripts/rust-vod-contracts/compose.yml')]
+    if args.m3u_output or args.vod_producer_source or args.timeshift_producer_source:
+        compose += ['-f',str(tool_root/'scripts/rust-output-contracts/compose.yml')]
     candidate_manifest = None
     candidate_manifest_bytes = None
     if args.candidate_overlay:
@@ -111,6 +125,8 @@ def main():
         spec.loader.exec_module(integration)
         overlay = integration.candidate_overlay(args.candidate_overlay.resolve(), output/'candidate-overlay.yml', candidate_manifest.get('tag') or candidate_manifest['image_id'])
         compose += ['-f',str(overlay)]
+        if args.m3u_output:
+            compose += ['-f',str(tool_root/'scripts/rust-output-contracts/candidate-policy.yml')]
     port_source = (tool_root/'scripts/rust-integration/fixture_ports.py').read_bytes()
     (output/'fixture-ports-tool.py').write_bytes(port_source)
     port_namespace = {'__file__':str(tool_root/'scripts/rust-integration/fixture_ports.py')}
@@ -174,6 +190,45 @@ def main():
                 time.sleep(1)
         command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/vod-verification/seed.py'])
         seed = json.loads((output/'vod-seed.json').read_text())
+        if args.timeshift_producer_source:
+            producer_result=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/timeshift_producer_fixture.py'],timeout=120)
+            producer=json.loads(producer_result.splitlines()[-1])
+            (output/'timeshift-producer-source.json').write_text(json.dumps(producer,indent=2)+'\n')
+            report['timeshift_producer_source']={'registration_cases':len(producer['cases']),'passed':len(producer['cases'])==5,'application_parity_verified':False}
+            if not report['timeshift_producer_source']['passed']:raise RuntimeError('Original Timeshift producer fixture incomplete')
+        if args.vod_producer_source:
+            producer_result=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_producer_fixture.py'],timeout=120)
+            producer=json.loads(producer_result.splitlines()[-1])
+            (output/'vod-producer-source.json').write_text(json.dumps(producer,indent=2)+'\n')
+            report['vod_producer_source']={'stats_cases':len(producer['stats_cases']),'channel_messages':len(producer['published']),'audit_rows':len(producer['audit']),'passed':len(producer['stats_cases'])==19 and len(producer['published'])==4 and len(producer['audit'])==2,'application_parity_verified':False}
+            if not report['vod_producer_source']['passed']:raise RuntimeError('Original VOD producer fixture incomplete')
+        if args.m3u_output:
+            spec=importlib.util.spec_from_file_location('frozen_m3u_probe',tool_root/'scripts/rust-output-contracts/m3u_probe.py')
+            m3u=importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(m3u)
+            def output_control(action,label):
+                result=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/control.py',action,label],timeout=30)
+                return json.loads(result.splitlines()[-1])
+            report['m3u_source']=(m3u.capture_large if args.m3u_large_output else m3u.capture)(base,output_control,'source',error_path=output/'source-csrf-failure.html')
+            (output/'m3u-source.json').write_text(json.dumps(report['m3u_source'],indent=2)+'\n')
+            report['m3u_third_party_license']=output_control('license','source')
+            (output/'django-source-license.json').write_text(json.dumps(report['m3u_third_party_license'],indent=2)+'\n')
+            if args.m3u_rust_http:
+                database_address=command(compose+['port','baseline','5432']).strip()
+                redis_address=command(compose+['port','baseline','6379']).strip()
+                test_environment=dict(environment,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+database_address+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis_address+'/0',M3U_DISPOSABLE_FIXTURE='playback-fixture-only',M3U_SOURCE_ORACLE=str(output/'m3u-source.json'),M3U_HTTP_COMPOSE=json.dumps(compose),M3U_HTTP_DRIVER=str(tool_root/'scripts/rust-output-contracts/native_driver.py'),M3U_HTTP_OUTPUT=str(output/'m3u-native-http.json'),M3U_LARGE_OUTPUT='1' if args.m3u_large_output else '0')
+                result=subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-output-http','--lib','--test','http_sql','--locked','--offline','--','--ignored','--nocapture'],env=test_environment,capture_output=True,text=True,timeout=240)
+                (output/'rust-m3u-http.log').write_text(result.stdout+result.stderr)
+                report['m3u_rust_http']={'passed':result.returncode==0,'source_bound_candidate_image':False,'application_parity_verified':False,'performance_verified':False}
+                result.check_returncode()
+                report['m3u_native_http']=json.loads((output/'m3u-native-http.json').read_text())
+            if args.m3u_rust_renderer:
+                database_address=command(compose+['port','baseline','5432']).strip()
+                test_environment=dict(environment,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+database_address+'/dispatcharr',M3U_DISPOSABLE_FIXTURE='playback-fixture-only',M3U_SOURCE_ORACLE=str(output/'m3u-source.json'))
+                result=subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-output-http','--test','sql','--locked','--offline','--','--ignored','--nocapture'],env=test_environment,capture_output=True,text=True,timeout=180)
+                (output/'rust-m3u-renderer.log').write_text(result.stdout+result.stderr)
+                report['m3u_rust_sql_renderer']={'passed':result.returncode==0,'source_bound_candidate_image':False,'http_auth_cache_and_route_parity_verified':False,'application_parity_verified':False,'performance_verified':False}
+                result.check_returncode()
         if args.timeshift_sessions:
             private = subprocess.run(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/timeshift-verification/seed.py'], env=environment, capture_output=True, text=True, timeout=60)
             private.check_returncode()
@@ -449,6 +504,10 @@ def main():
                         if comparison_adapter.semantic(source_alias.get(key)) != comparison_adapter.semantic(candidate_alias.get(key)):
                             alias_differences.append({'profile_id':source_alias['profile_id'],'field':key,'source':source_alias.get(key),'candidate':candidate_alias.get(key)})
                 report['profile_alias_comparison'] = {'captured_wire_matches':not alias_differences,'differences':alias_differences,'application_parity_verified':False,'performance_verified':False}
+            if args.m3u_output:
+                report['m3u_candidate']=(m3u.capture_large if args.m3u_large_output else m3u.capture)(candidate,output_control,'candidate')
+                report['m3u_comparison']=m3u.compare(report['m3u_source'],report['m3u_candidate'])
+                (output/'m3u-candidate.json').write_text(json.dumps(report['m3u_candidate'],indent=2)+'\n')
             if args.timeshift_management:
                 report['candidate_timeshift_management']=management.capture(candidate,session_seed,management_control,'candidate',active=args.timeshift_management_active)
                 report['timeshift_management_comparison']=management.compare(report['timeshift_management_source'],report['candidate_timeshift_management'])
@@ -516,6 +575,12 @@ def main():
         # A characterization succeeds only when every request was recorded.
         # It does not claim that baseline defects satisfy RFC range behavior.
         report['passed'] = len(report['wire']['events']) == 7 and (not candidate_manifest or report['wire_comparison']['captured_wire_matches'])
+        if args.m3u_rust_http:
+            report['passed'] = report['passed'] and report['m3u_rust_http']['passed']
+        if args.m3u_rust_renderer:
+            report['passed'] = report['passed'] and report['m3u_rust_sql_renderer']['passed']
+        if args.m3u_output:
+            report['passed'] = report['passed'] and report['m3u_source']['capture_complete'] and (not candidate_manifest or report['m3u_comparison']['captured_m3u_http_matches'])
         if args.timeshift_management:
             report['passed'] = report['passed'] and report['timeshift_management_source']['capture_complete'] and (not candidate_manifest or report['timeshift_management_comparison']['captured_management_matches'])
         if args.timeshift_xc:

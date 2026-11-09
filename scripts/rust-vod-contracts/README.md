@@ -65,3 +65,21 @@ original seven-case repeat differed only in nondeterministic `Allow` method
 ordering across Python processes. `compare.py` now compares this header as a
 set, with an executable regression that still rejects redirect/body changes;
 raw captures stay unchanged and the separate normalized comparison passes.
+
+The runner now copies the executable fixture/probe directories and Compose files
+into `<output>/tool-source` before starting the stack. Every later helper import,
+host driver and container script mount uses those captured bytes. The report
+includes each file SHA-256 plus the manifest hash; the candidate build manifest
+and applied overlay are copied separately. Python bytecode caches are excluded.
+This prevents parallel repository edits from changing a running contract trial.
+The isolated three-test snapshot suite checks frozen execution after a source
+edit, permission preservation, symlink rejection and refusal to overwrite a prior
+snapshot.
+
+To replay captured tooling while retaining an existing repository for immutable
+`git archive` access, set `DISPATCHARR_CONTRACT_REPO=/absolute/repository` and run
+`python <prior-output>/tool-source/scripts/rust-vod-contracts/run.py` with a new
+empty `--output` and the original flags/immutable build manifest. The new run
+copies its tools from that captured tree. Host Cargo test flags still use the
+selected repository's Rust tree; they remain explicitly separate from frozen
+application-image acceptance.

@@ -14,7 +14,7 @@ INITIAL={'type':'connection_established','data':{'success':True,'message':'WebSo
 ADMIN_TYPES=['channel_stats','vod_stats','timeshift_stats','vod_started','vod_stopped']
 
 
-def exercise(host,port,control,browser=None,second_port=None,diagnostics=None,source_live_stats=False,slow_value_bytes=1024*1024):
+def exercise(host,port,control,browser=None,second_port=None,diagnostics=None,source_live_stats=False,slow_value_bytes=1024*1024,live_stats_target=None,live_stats_peer=None):
     accounts=control({'op':'seed'})['accounts'];clients=[];cases=[]
     def connect(query,**kwargs):
         client=Client(host,port,'/ws/?'+urlencode(query),**kwargs);clients.append(client);return client
@@ -170,23 +170,33 @@ def exercise(host,port,control,browser=None,second_port=None,diagnostics=None,so
                     snapshot=json.loads(data['stats']);observed.append(snapshot)
                     if predicate(snapshot):return snapshot
                 raise AssertionError('Source live stats event deadline')
-            empty=control({'op':'status_get'});assert empty['status']==200
+            empty=control({'op':'status_get',**({'base_url':live_stats_target} if live_stats_target else {})});assert empty['status']==200
             stats_until(lambda value:value==empty['body'])
-            opened=control({'op':'play_start'})
+            opened=control({'op':'play_start',**({'base_url':live_stats_target} if live_stats_target else {})})
             channel=opened['channel_id']
             connected=stats_until(lambda value:any(row['channel_id']==channel and row['client_count']==1 for row in value['channels']))
+            initial_channel=next(row for row in connected['channels'] if row['channel_id']==channel)
+            assert initial_channel['state']=='connecting' and initial_channel['buffer_index']==0
+            assert initial_channel['stream_profile']==str(opened['profile_id']) and 'total_bytes' not in initial_channel
             deadline=time.monotonic()+15
             while control({'op':'play_state'}).get('bytes',0)<65536:
                 if time.monotonic()>deadline:raise AssertionError('Source media first bytes deadline')
                 time.sleep(.1)
-            active=control({'op':'status_get'});assert active['status']==200
+            active=control({'op':'status_get',**({'base_url':live_stats_target} if live_stats_target else {})});assert active['status']==200
             stats_until(lambda value:value==active['body'])
-            stopped=control({'op':'play_stop'});assert stopped['stopped'] and stopped['bytes']>=65536
+            peer_snapshot=None
+            if live_stats_peer:
+                peer_snapshot=control({'op':'status_get','base_url':live_stats_peer})
+                assert peer_snapshot['status']==200
+                remote=next(row for row in peer_snapshot['body']['channels'] if row['channel_id']==channel)
+                assert remote['client_count']==1 and 'healthy' not in remote
+                stats_until(lambda value:value==peer_snapshot['body'])
+            stopped=control({'op':'play_stop'});assert stopped['stopped'] and stopped['bytes']>=65536 and stopped['media']['decoder_exit']==0 and stopped['media']['video_frames']>=25 and stopped['media']['audio_frames']>0
             removed=stats_until(lambda value:all(row.get('client_count')==0 for row in value['channels']))
-            cases.append({'case':'actual-Source-live-client-add-remove-and-status-GET-producers',
-                          'source_backend_only':True,'native_gateway_delivery':True,'initial_get':empty['body'],
-                          'connected':connected,'active_get':active['body'],'removed':removed,
-                          'observed_snapshots':observed,'source_media_bytes':stopped['bytes']})
+            cases.append({'case':('native-live-client-add-remove-and-status-GET-producers' if live_stats_target else 'actual-Source-live-client-add-remove-and-status-GET-producers'),
+                          'source_backend_only':live_stats_target is None,'native_backend':live_stats_target is not None,'native_gateway_delivery':True,'initial_get':empty['body'],
+                          'connected':connected,'active_get':active['body'],'foreign_replica_get':peer_snapshot,'removed':removed,
+                          'observed_snapshots':observed,'media_bytes':stopped['bytes'],'media':stopped['media']})
             observer.close()
         deadline=time.monotonic()+3
         while True:

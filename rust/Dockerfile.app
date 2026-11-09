@@ -28,6 +28,7 @@ COPY --from=media /media-runtime/ /
 COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-rs /usr/local/bin/dispatcharr-rs
 COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
 COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
+COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE
 USER 65532:65532
 ENV RUST_BIND=0.0.0.0:9192 RUST_FRONTEND_DIR=/opt/dispatcharr-frontend
 EXPOSE 9192

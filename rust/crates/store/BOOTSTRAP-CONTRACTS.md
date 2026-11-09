@@ -1,0 +1,16 @@
+# Native first-admin and clean-install gates
+
+All original application credit remains with Dispatcharr authors and contributors. Source contracts are `apps/accounts/api_views.py:initialize_superuser`, `dispatcharr/utils.py:setup_ip_allowed`, Django's UserManager and the pinned original migrations.
+
+The existing configured-system status path is already source-verified. Any account at level10 or higher closes bootstrap, including an inactive account. Once closed, the original plain Django view ignores method, credentials and request body and returns `{"superuser_exists":true}`. No JWT or API-key preflight belongs on this route.
+
+On an existing migrated schema with no admin, GET and non-POST methods report the resolved client IP and setup permission. POST checks the setup network before reading JSON: default private/loopback networks, or the exact single IP in `DISPATCHARR_SETUP_ALLOWED_IP`. This gate is independent of the UI network policy and shared login budget.
+
+The original POST calls `json.loads(request.body)` and UserManager.create_superuser directly. It does not apply the DRF UserSerializer's safe-credential regex, password whitespace trimming, email validation or password-strength validators. Empty/falsy username or password gives400; malformed JSON and UserManager/database exceptions give500 with an error string. Username NFKC and email-domain normalization, default flags, short/whitespace passwords, inactive-existing-admin closure, duplicate nonadmin usernames and configured-body bypass need actual original/native cases before enabling the native path.
+
+First-admin API acceptance is not clean-install acceptance. The current app expects existing Django tables and default rows. A fresh PostgreSQL database cannot yet start the full service. Native clean install requires a source-pinned schema/default-data manifest, an explicit fresh-database guard, actual PostgreSQL application and verification without Django writing the native database, then first-admin/login/React initialization checks. Existing migrated databases must remain unchanged. Migration upgrade/rollback and default-data provenance are separate gates; no Python bootstrap sidecar should be silently called a Rust clean install.
+
+Password inventory from the pinned original runtime: PBKDF2 SHA256 and SHA1 work; hashlib Scrypt is available. Argon2PasswordHasher and BCryptSHA256PasswordHasher classes are listed by Django defaults but their Python packages are absent in the pinned image. Introducing successful authentication for those unavailable families would change source behavior. Native Scrypt must have measured resource bounds and real original hash/upgrade cases before acceptance.
+
+
+Current component evidence: `verified-first-admin-source-2.json` passed25actual original/native cases on the migrated schema, including short/whitespace passwords and Unicode email behavior. `verified-nfkc-dataset-2.json` records all-scalar Unicode15.1 normalization/lowercase comparisons. `verified-native-schema-sql-3.json` separately passed native62-table/498-default/184-migration creation, original pg_dump equality, existing preservation and concurrent fencing. App-init wiring and standalone first-admin/login/React/browser tests remain open; these component proofs do not close clean install.

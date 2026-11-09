@@ -1,0 +1,37 @@
+{
+  "scope": "First-admin API original/native component proof on existing original migrated schema and a fresh empty user table. Native raw HTTP uses explicitly injected same peer tuples as original RequestFactory. Not clean schema, packaged image or browser acceptance.",
+  "passed": true,
+  "source_cases": 22,
+  "raw_report_sha256": "6b3c41f25562ad92cbc85a7906153b5ade1e77e1d016a01cdadf9965c5df0735",
+  "rust_source_archive_sha256": "7a80039f0bd398dab3a27286c5ab74a14282167446845ee001fe22d2eaf82edd",
+  "source_files": {
+    "rust/crates/store/src/startup.rs": "01bbf25bac7500a1c67fb3c8ef03ada64f49bdc4819e0671e1c21cd7742af822",
+    "rust/crates/store/src/startup_bootstrap.rs": "9d83c6b03ad3a03a41443fa12bfee3efd591f6f633677c3beac33c8b8e4816d7",
+    "rust/crates/store/src/username.rs": "05d6b9197f28456aaff23cf9012664b7e7f9c5e66132dc8c0e9c69d208a4ae36",
+    "rust/crates/store/tests/startup_sql.rs": "290835643935f633a7d17af1fcff9e2fc8689388ba62054621d9e57e676fc94e",
+    "rust/crates/store/datasets/python-nfkc-15-1.json": "a2a953a0b700d17ec7e2f26214bfd5bb2ee27582b534cc578ee3ee94164f550e",
+    "rust/crates/store/datasets/python-assigned-ranges-15-1.json": "e1bad0d9af3c65b7d4ad2fb64b42f4fc6cfa9e21b4a7b2db138a7ae8a720f390"
+  },
+  "cleanup": "project removed",
+  "notes": [
+    "Raw runner scope/file names inherited prior auth wrapper; this report describes actual startup_sql test and bootstrap_cases fixture. Corrected runner names for next run.",
+    "Captured unused obsolete SETUP_ENV constant caused a warning only. Current tree removes it and passed strictClippy; behavior unchanged.",
+    "Source username/email manager behavior deliberately bypasses DRF safe-credential/password-strength validators.",
+    "No existing/unowned users allowed; each fixture starts from an empty user table.",
+    "All previous15 packaged proofs remain bound to immutable15 archive before these changes."
+  ],
+  "verified": [
+    "Private/public setup IP gates, trusted/untrusted client headers and explicit override.",
+    "Plain JSON500/missing400/type errors and original duplicate-nonadmin PostgreSQL error text.",
+    "Staff/superuser/active flags, level10, defaultJSON/limits/key and valid preferred credential.",
+    "Source NFKC including newer Source-unassigned compatibility glyph barrier.",
+    "Email domain lower/no-at whitespace and None behavior.",
+    "Setup remains independent of UI network policy.",
+    "Inactive level10 row closes setup before invalid body parsing."
+  ],
+  "remaining": [
+    "Native schema/default-data initialization and clean-install browser flow.",
+    "Expanded short/whitespace password and newer email-domain lowercase proof queued separately.",
+    "Source parser exotic encodings/surrogates, concurrent creator races, oversized input bounds remain explicit limits."
+  ]
+}

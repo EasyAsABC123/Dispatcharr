@@ -1,0 +1,10 @@
+# Actual original Django export fixture; isolated and disposable.
+# Identical explicit Source-default proxy trust on both backends. The generic
+# playback candidate overlay intentionally uses "none" and cannot characterize
+# this output fixture's positive trusted-forwarded-origin contract unchanged.
+services:
+  baseline:
+    environment:
+      DISPATCHARR_TRUSTED_PROXIES: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10"
+    volumes:
+      - ../scripts/rust-output-contracts:/output-verification:ro

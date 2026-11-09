@@ -69,6 +69,11 @@ async fn register_actual(
             false
         }
     };
+    statistics::registered(
+        &store,
+        &client,
+        result.get(2).is_some_and(|flag| flag == "1"),
+    );
     if stopped {
         let _ = release(&client).await;
         return Err(Error::Stopped);
@@ -84,6 +89,10 @@ fn release_job(client: &ClientInner) -> tokio::task::JoinHandle<Result<(), Error
     let done = client.cleanup_done.clone();
     let failed = client.cleanup_error.clone();
     let mut connection = client.connection.clone();
+    let stats_store = client.store.clone();
+    let stats_channel = client.channel.clone();
+    let stats_id = client.id.clone();
+    let stats_announced = client.stats_announced.swap(false, Ordering::AcqRel);
     client.runtime.spawn(async move {
         let _admission = admission;
         let result: Result<i64, redis::RedisError> = Script::new(scripts::RELEASE)
@@ -97,6 +106,9 @@ fn release_job(client: &ClientInner) -> tokio::task::JoinHandle<Result<(), Error
         failed.store(result.is_err(), Ordering::Release);
         done.send_replace(true);
         result.map_err(|_| Error::RedisUnavailable)?;
+        if let Some(store) = stats_store.upgrade() {
+            statistics::released(&store, &stats_channel, &stats_id, stats_announced);
+        }
         Ok(())
     })
 }
@@ -135,6 +147,7 @@ pub(super) async fn stop_local_channel(store: Arc<Inner>, channel: &str) -> Resu
     if channel.is_empty() || channel.len() > 256 || channel.contains(':') {
         return Err(Error::InvalidClient);
     }
+    statistics::channel_closed(&store, channel);
     // Upgrade under the mutex, but never filter/drop a possible final Arc
     // there: ClientInner::drop reacquires the same registry mutex.
     let all_clients = {

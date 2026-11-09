@@ -1,0 +1,1150 @@
+{
+  "scope": "packaged two-replica native app WebSocket routes and original event interoperability",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "candidate_image": "dispatcharr-rust-candidate:m6-bootstrap-m7-output-stats-image16-1",
+  "candidate_image_id": "sha256:6529a212c510219dc2dafbec99104472903edb958a57a89a948f18789b432b02",
+  "candidate_source_tree_sha256": "22d128a8f8fcedd84d9ab4a1032d1cd29db4f5c1bcf81c6bfeeca465e37aa7e1",
+  "candidate_build_manifest_sha256": "29fd29fbe4284fa8e8e182729f5e31f930dc759aef50a8aa2c69ab382203728f",
+  "wire": {
+    "passed": true,
+    "cases": [
+      {
+        "case": "auth-absent",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-invalid",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-refresh",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-inactive",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-missing-user",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-apikey-query",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-header-only",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-wrong-case",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-invalid-first",
+        "status": 403,
+        "close": null
+      },
+      {
+        "case": "auth-blank-first",
+        "status": 101,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "auth-valid-first",
+        "status": 101,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "auth-query-with-invalid-header",
+        "status": 101,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "role-admin",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "role-standard",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "role-viewer",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "origin",
+        "origin": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "origin",
+        "origin": "null",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "origin",
+        "origin": "https://cross-origin.invalid",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": null,
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": {},
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": false,
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": 0,
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": "",
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": [
+          "invalid"
+        ],
+        "extra": null,
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": {
+          "public_ip": "192.0.2.10",
+          "country_code": "ZZ",
+          "verified_at": 1234.5
+        },
+        "extra": {
+          "message": {
+            "data": {
+              "type": "ip_lookup_complete",
+              "country_code": "ZZ",
+              "public_ip": "192.0.2.10"
+            }
+          }
+        },
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "input": {
+          "type": "fixture_type_override",
+          "verified_at": 12
+        },
+        "extra": {
+          "message": {
+            "data": {
+              "type": "fixture_type_override"
+            }
+          }
+        },
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "event-filter",
+        "kind": "channel_stats",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "channel_stats",
+                "fixture_probe": 0
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "vod_stats",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "vod_stats",
+                "fixture_probe": 1
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "timeshift_stats",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "timeshift_stats",
+                "fixture_probe": 2
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "vod_started",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "vod_started",
+                "fixture_probe": 3
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "vod_stopped",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "vod_stopped",
+                "fixture_probe": 4
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": "future_event",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "future_event",
+                "fixture_probe": 5
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "future_event",
+                "fixture_probe": 5
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "future_event",
+                "fixture_probe": 5
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "event-filter",
+        "kind": null,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": null,
+                "fixture_probe": 6
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": null,
+                "fixture_probe": 6
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": null,
+                "fixture_probe": 6
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": true,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": true
+                }
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": 1,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": 1
+                }
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": "false",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": "false"
+                }
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": [
+          false
+        ],
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": [
+                    false
+                  ]
+                }
+              }
+            }
+          },
+          null,
+          null
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": false,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": false
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": false
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": false
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": 0,
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": 0
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": 0
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": "",
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": ""
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": ""
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": ""
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": [],
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": []
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": []
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": []
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "notification-filter",
+        "flag": {},
+        "received": [
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": {}
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": {}
+                }
+              }
+            }
+          },
+          {
+            "message": {
+              "type": "update",
+              "data": {
+                "type": "system_notification",
+                "notification": {
+                  "admin_only": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "case": "falsy-update",
+        "data": null,
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": false,
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": 0,
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": "",
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": [],
+        "passed": true
+      },
+      {
+        "case": "falsy-update",
+        "data": {},
+        "passed": true
+      },
+      {
+        "case": "captured-role-and-active",
+        "passed": true
+      },
+      {
+        "case": "token-expiry-after-handshake",
+        "old-stays-connected": true,
+        "new-status": 403
+      },
+      {
+        "case": "inbound-invalid-json",
+        "closed": 1011
+      },
+      {
+        "case": "inbound-missing-type",
+        "closed": 1011
+      },
+      {
+        "case": "inbound-array",
+        "closed": 1011
+      },
+      {
+        "case": "inbound-binary",
+        "closed": 1011
+      },
+      {
+        "case": "standard-preview-ignored",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "ping-pong",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "large-fragmented-json-with-ping",
+        "json_bytes": 6291516,
+        "value_sha256": "ee78cd29d3a534713b36e6ff6fa3668c8a8f851a542d5eb2401c25ca4e057d02",
+        "one_message": true,
+        "pong_received": true
+      },
+      {
+        "case": "actual-Chromium-single-onmessage-for-6MiB-fragmented-JSON",
+        "large": {
+          "messages": 1,
+          "wireCharacters": 6291516,
+          "valueCharacters": 1048576,
+          "firstCode": 1,
+          "lastCode": 1
+        },
+        "closed": {
+          "code": 1000,
+          "clean": true
+        }
+      },
+      {
+        "case": "100-sockets-two-native-gateways-Source-broadcast",
+        "messages": 100,
+        "diagnostics": null
+      },
+      {
+        "case": "closing-half-preserves-other50",
+        "passed": true
+      },
+      {
+        "case": "held-slow-reader-fast-reader-isolated",
+        "fast_delivery_seconds": 0.17438643400964793,
+        "slow_member_removed_seconds": 2.3844073270010995,
+        "remaining_members": 1,
+        "event_value_bytes": 3145728,
+        "json_bytes": 18874428,
+        "internal_byte_metrics": "unexposed in app; identical gateway component budgets verified separately"
+      },
+      {
+        "case": "native-live-client-add-remove-and-status-GET-producers",
+        "source_backend_only": false,
+        "native_backend": true,
+        "native_gateway_delivery": true,
+        "initial_get": {
+          "count": 0,
+          "channels": []
+        },
+        "connected": {
+          "count": 1,
+          "channels": [
+            {
+              "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+              "state": "connecting",
+              "url": "http://origin:8080/live/0.ts",
+              "stream_profile": "3",
+              "owner": "rust:4e18ba0b-fb6e-4729-b971-a0f377f7546f",
+              "buffer_index": 0,
+              "client_count": 1,
+              "uptime": 0.0011587142944335938,
+              "started_at": 1794253130.3691905,
+              "channel_name": "Offline benchmark channel 0",
+              "stream_name": "Offline benchmark stream 0",
+              "stream_id": 1,
+              "m3u_profile_id": 1,
+              "clients": [
+                {
+                  "client_id": "client_b3773f827de74042a87ecd36b2681bb5",
+                  "user_agent": "python-requests/2.34.2",
+                  "output_format": "mpegts",
+                  "output_profile_id": null,
+                  "ip_address": "172.18.0.3",
+                  "connected_at": 1794253130.3687198,
+                  "user_id": "0"
+                }
+              ],
+              "healthy": true
+            }
+          ]
+        },
+        "active_get": {
+          "count": 1,
+          "channels": [
+            {
+              "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+              "state": "active",
+              "url": "http://origin:8080/live/0.ts",
+              "stream_profile": "3",
+              "owner": "rust:4e18ba0b-fb6e-4729-b971-a0f377f7546f",
+              "buffer_index": 4,
+              "client_count": 1,
+              "uptime": 4.102449178695679,
+              "started_at": 1794253130.3691905,
+              "channel_name": "Offline benchmark channel 0",
+              "stream_name": "Offline benchmark stream 0",
+              "stream_id": 1,
+              "m3u_profile_id": 1,
+              "clients": [
+                {
+                  "client_id": "client_b3773f827de74042a87ecd36b2681bb5",
+                  "user_agent": "python-requests/2.34.2",
+                  "output_format": "mpegts",
+                  "output_profile_id": null,
+                  "ip_address": "172.18.0.3",
+                  "connected_at": 1794253130.3687198,
+                  "user_id": "0"
+                }
+              ],
+              "healthy": true
+            }
+          ]
+        },
+        "foreign_replica_get": {
+          "status": 200,
+          "body": {
+            "count": 1,
+            "channels": [
+              {
+                "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "state": "active",
+                "url": "http://origin:8080/live/0.ts",
+                "stream_profile": "3",
+                "owner": "rust:4e18ba0b-fb6e-4729-b971-a0f377f7546f",
+                "buffer_index": 4,
+                "client_count": 1,
+                "uptime": 4.143663167953491,
+                "started_at": 1794253130.3691905,
+                "channel_name": "Offline benchmark channel 0",
+                "stream_name": "Offline benchmark stream 0",
+                "stream_id": 1,
+                "m3u_profile_id": 1,
+                "clients": [
+                  {
+                    "client_id": "client_b3773f827de74042a87ecd36b2681bb5",
+                    "user_agent": "python-requests/2.34.2",
+                    "output_format": "mpegts",
+                    "output_profile_id": null,
+                    "ip_address": "172.18.0.3",
+                    "connected_at": 1794253130.3687198,
+                    "user_id": "0"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "removed": {
+          "count": 1,
+          "channels": [
+            {
+              "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+              "state": "active",
+              "url": "http://origin:8080/live/0.ts",
+              "stream_profile": "3",
+              "owner": "rust:4e18ba0b-fb6e-4729-b971-a0f377f7546f",
+              "buffer_index": 4,
+              "client_count": 0,
+              "uptime": 4.595512866973877,
+              "started_at": 1794253130.3691905,
+              "channel_name": "Offline benchmark channel 0",
+              "stream_name": "Offline benchmark stream 0",
+              "stream_id": 1,
+              "m3u_profile_id": 1,
+              "clients": [],
+              "healthy": true
+            }
+          ]
+        },
+        "observed_snapshots": [
+          {
+            "count": 0,
+            "channels": []
+          },
+          {
+            "count": 1,
+            "channels": [
+              {
+                "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "state": "connecting",
+                "url": "http://origin:8080/live/0.ts",
+                "stream_profile": "3",
+                "owner": "rust:4e18ba0b-fb6e-4729-b971-a0f377f7546f",
+                "buffer_index": 0,
+                "client_count": 1,
+                "uptime": 0.0011587142944335938,
+                "started_at": 1794253130.3691905,
+                "channel_name": "Offline benchmark channel 0",
+                "stream_name": "Offline benchmark stream 0",
+                "stream_id": 1,
+                "m3u_profile_id": 1,
+                "clients": [
+                  {
+                    "client_id": "client_b3773f827de74042a87ecd36b2681bb5",
+                    "user_agent": "python-requests/2.34.2",
+                    "output_format": "mpegts",
+                    "output_profile_id": null,
+                    "ip_address": "172.18.0.3",
+                    "connected_at": 1794253130.3687198,
+                    "user_id": "0"
+                  }
+                ],
+                "healthy": true
+              }
+            ]
+          },
+          {
+            "count": 1,
+            "channels": [
+              {
+                "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "state": "active",
+                "url": "http://origin:8080/live/0.ts",
+                "stream_profile": "3",
+                "owner": "rust:4e18ba0b-fb6e-4729-b971-a0f377f7546f",
+                "buffer_index": 4,
+                "client_count": 1,
+                "uptime": 4.102449178695679,
+                "started_at": 1794253130.3691905,
+                "channel_name": "Offline benchmark channel 0",
+                "stream_name": "Offline benchmark stream 0",
+                "stream_id": 1,
+                "m3u_profile_id": 1,
+                "clients": [
+                  {
+                    "client_id": "client_b3773f827de74042a87ecd36b2681bb5",
+                    "user_agent": "python-requests/2.34.2",
+                    "output_format": "mpegts",
+                    "output_profile_id": null,
+                    "ip_address": "172.18.0.3",
+                    "connected_at": 1794253130.3687198,
+                    "user_id": "0"
+                  }
+                ],
+                "healthy": true
+              }
+            ]
+          },
+          {
+            "count": 1,
+            "channels": [
+              {
+                "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "state": "active",
+                "url": "http://origin:8080/live/0.ts",
+                "stream_profile": "3",
+                "owner": "rust:4e18ba0b-fb6e-4729-b971-a0f377f7546f",
+                "buffer_index": 4,
+                "client_count": 1,
+                "uptime": 4.143663167953491,
+                "started_at": 1794253130.3691905,
+                "channel_name": "Offline benchmark channel 0",
+                "stream_name": "Offline benchmark stream 0",
+                "stream_id": 1,
+                "m3u_profile_id": 1,
+                "clients": [
+                  {
+                    "client_id": "client_b3773f827de74042a87ecd36b2681bb5",
+                    "user_agent": "python-requests/2.34.2",
+                    "output_format": "mpegts",
+                    "output_profile_id": null,
+                    "ip_address": "172.18.0.3",
+                    "connected_at": 1794253130.3687198,
+                    "user_id": "0"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "count": 1,
+            "channels": [
+              {
+                "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "state": "active",
+                "url": "http://origin:8080/live/0.ts",
+                "stream_profile": "3",
+                "owner": "rust:4e18ba0b-fb6e-4729-b971-a0f377f7546f",
+                "buffer_index": 4,
+                "client_count": 0,
+                "uptime": 4.595512866973877,
+                "started_at": 1794253130.3691905,
+                "channel_name": "Offline benchmark channel 0",
+                "stream_name": "Offline benchmark stream 0",
+                "stream_id": 1,
+                "m3u_profile_id": 1,
+                "clients": [],
+                "healthy": true
+              }
+            ]
+          }
+        ],
+        "media_bytes": 1023472,
+        "media": {
+          "sample_bytes": 1023472,
+          "sha256": "6e1b295fa4236ff5659cab040487685f9cad7d550633df8af81e892225317845",
+          "decoder_exit": 0,
+          "video_frames": 103,
+          "audio_frames": 168,
+          "decoder_stderr": "[mpeg2video @ 0x55dcf7af1000] ac-tex damaged at 14 7\n[mpeg2video @ 0x55dcf7af1000] Warning MVs not available\n"
+        }
+      }
+    ],
+    "case_count": 62,
+    "group_members_after_close": 0,
+    "scope": "native wire assertions using actual original Django auth/cache/events; no admin regex preview or browser proof"
+  },
+  "browser_runtime": {
+    "ready": true,
+    "browser": "Chrome/156.0.8078.79",
+    "protocol": "1.3"
+  },
+  "original": {
+    "daphne_defaults": {
+      "endpoints": null,
+      "signal_handlers": true,
+      "action_logger": null,
+      "http_timeout": null,
+      "request_buffer_size": 8192,
+      "websocket_timeout": 86400,
+      "websocket_connect_timeout": 20,
+      "ping_interval": 20,
+      "ping_timeout": 30,
+      "root_path": "",
+      "proxy_forwarded_address_header": null,
+      "proxy_forwarded_port_header": null,
+      "proxy_forwarded_proto_header": null,
+      "verbosity": 1,
+      "websocket_handshake_timeout": 5,
+      "websocket_max_message_size": 1048576,
+      "websocket_max_frame_size": 1048576,
+      "application_close_timeout": 10,
+      "ready_callable": null,
+      "server_name": "daphne"
+    },
+    "daphne_timeout_source": "    def check_timeouts(self):\n        \"\"\"\n        Called periodically to see if we should timeout something\n        \"\"\"\n        # Web timeout checking\n        if (\n            self.duration() > self.server.websocket_timeout\n            and self.server.websocket_timeout >= 0\n        ):\n            self.serverClose()\n        # Ping check\n        # If we're still connecting, deny the connection\n        if self.state == self.STATE_CONNECTING:\n            if self.duration() > self.server.websocket_connect_timeout:\n                self.serverReject()\n        elif self.state == self.STATE_OPEN:\n            if (time.time() - self.last_ping) > self.server.ping_interval:\n                self._sendAutoPing()\n                self.last_ping = time.time()\n",
+    "daphne_close_source": "    def serverClose(self, code=None):\n        \"\"\"\n        Server-side channel message to close the socket\n        \"\"\"\n        code = 1000 if code is None else code\n        self.sendClose(code=code)\n",
+    "source_sha256": {
+      "dispatcharr/consumers.py": "429bb971a13b853c4b87f63d0f350c68f94d5e3bff79455945e1cbb8a1fb1775",
+      "dispatcharr/jwt_ws_auth.py": "91d1770ec7724ac0fe865526d7af7c716b2e5f6cc3eee1729e59abbbf5c759f4",
+      "dispatcharr/asgi.py": "b0c67894be11f8797e123c974d653c146a5f9d5f2aba862521f68f00a356b1ca",
+      "dispatcharr/routing.py": "567b99437a8292e60913193d47bdf7d4855b40f07f02425eb16611f4097c8b15",
+      "core/utils.py": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+      "apps/proxy/live_proxy/channel_status.py": "d2b8f8aeac28ec10666dff723f4d2175a3eda4fb3acee903cfee1955fe34004c",
+      "apps/proxy/live_proxy/client_manager.py": "4d0c6c7a4a60fe7d7f97794b4c28b3b9d9703f2772964315a802a3fc4ac2cc9d",
+      "apps/proxy/live_proxy/input/manager.py": "4f86253c4e3a30e62a49a335f1b494b9d0d4308eced0c79f11c98fa3128cb9a8"
+    }
+  },
+  "shutdown_seconds": 0.2733583999943221,
+  "held_socket_shutdown": [
+    {
+      "closed": 1001
+    },
+    {
+      "closed": 1001
+    }
+  ],
+  "group_after_shutdown": {
+    "members": 0,
+    "ttl": -2
+  },
+  "exit_states": [
+    {
+      "service": "candidate",
+      "exit_code": 0,
+      "oom_killed": false
+    },
+    {
+      "service": "candidate-replica",
+      "exit_code": 0,
+      "oom_killed": false
+    }
+  ],
+  "cleanup": "isolated Compose project removed",
+  "tool_sha256": {
+    "scripts/rust-realtime-contracts/gateway_image.py": "a1da1bcafc8476d6476a204642b3525ef9e72fe9995e618473347ac05d4564c5",
+    "scripts/rust-realtime-contracts/gateway_cases.py": "d6fac46eb6e52460707e7c8a3db4b6e12072e5a63196339bc59f235a6d2eea04",
+    "scripts/rust-realtime-contracts/gateway_control.py": "a24ae2472e7c4ff91316e5fd1e604e671c1eac1a509b739c64705b88b2322ba0",
+    "scripts/rust-realtime-contracts/ws_client.py": "36d691aca21ef25db70a9dd6c6526b3e6fd06fded5fd5e39a36a18a3180b1a4b",
+    "scripts/rust-realtime-contracts/interop.py": "3be7185f1ea974fbee17bedff53ae9b3ab4f7567fd9939052ab89291fdf62b1f",
+    "scripts/rust-realtime-contracts/browser_peer.js": "fd55243d0884e2db6a864f573fb7c00bd22bf04435513263e9b31493429347c3",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "80ce607d050f72b8aea8399a3a769d8cd067e59beb16ee09349a5e356b11fddd",
+    "docker/compose.rust-replicas.yml": "b28f56bcd33a6192d175eeaff8da3348c89fac22149d4e4a95a5688da5581ea4",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1"
+  },
+  "artifact": "artifacts/rust/m7-live-statistics-decoder-image16-1/gateway-image.json",
+  "artifact_sha256": "9bb827f12820a616d25e7d4a463f7e86292c4fa643610b4deb5c0058b6587d39",
+  "complete_prefix_decoder": {
+    "scope": "complete initial3second audio/video prefix from actual frozen16 native live stream",
+    "passed": true,
+    "decoder_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "sample_sha256": "6e1b295fa4236ff5659cab040487685f9cad7d550633df8af81e892225317845",
+    "video_frames": 75,
+    "exit_code": 0,
+    "stderr": "",
+    "command": [
+      "/tmp/dispatcharr-docker/docker",
+      "run",
+      "--rm",
+      "--network",
+      "none",
+      "--read-only",
+      "--cap-drop",
+      "ALL",
+      "--security-opt",
+      "no-new-privileges",
+      "-v",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m7-live-statistics-decoder-image16-1/live-statistics-media.ts:/media/sample.ts:ro",
+      "--entrypoint",
+      "ffmpeg",
+      "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "-nostdin",
+      "-v",
+      "error",
+      "-i",
+      "/media/sample.ts",
+      "-map",
+      "0:v:0",
+      "-map",
+      "0:a:0",
+      "-t",
+      "3",
+      "-frames:v",
+      "75",
+      "-progress",
+      "pipe:1",
+      "-nostats",
+      "-f",
+      "null",
+      "-"
+    ],
+    "tail_scope": "live capture ends at aTS packet boundary, not necessarily an MPEG picture boundary; full-file ffprobe tail warnings retained separately"
+  },
+  "complete_prefix_decoder_artifact": "artifacts/rust/m7-live-statistics-decoder-image16-1/complete-prefix-decode.json",
+  "complete_prefix_decoder_artifact_sha256": "197b769b33a82ad8e646461e8a47f6c6e30cd833f1aa64b42bdaeab8ee9ab52b",
+  "limitations": [
+    "Frozen16 native live stats lifecycle and global status GET verified; VOD/Timeshift producers, admin regex preview and whole React workflows remain open",
+    "Source snapshots are asynchronous and not linearizable; generated IDs, peer addresses and wall times differ",
+    "Full-file ffprobe counts103video/168audio frames but reports truncated live tail warnings; complete75-frame audio/video prefix decodes without errors",
+    "No realtime or whole application resource-performance acceptance",
+    "Post16 abandoned-owner notification fix is not included in this image"
+  ]
+}

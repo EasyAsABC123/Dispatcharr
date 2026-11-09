@@ -19,6 +19,8 @@ mod prepared;
 pub use prepared::{prepare_playlist, PreparationError, PreparationLimits, PreparedPlaylist};
 mod cached;
 pub use cached::{CacheReadError, CacheReadLimits, ValidatedCache};
+mod xmltv;
+pub use xmltv::{parse_xmltv_time, xmltv_file_is_complete, XmltvReader, XmltvTimeError, HTML_ENTITY_DOCTYPE};
 #[derive(Clone, Debug, PartialEq)]
 pub struct ImportedCacheGroup {
     pub name: String,

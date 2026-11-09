@@ -1,0 +1,63 @@
+{
+  "format_version": 1,
+  "scope": "IMAGE16 packaged anonymous/XC50-case M3U slice plus6000-channel3.49MB export/cache; broader M7 open",
+  "passed": true,
+  "cleanup_passed": true,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_bound_candidate_image": true,
+  "proofs": [
+    {
+      "evidence": "artifacts/rust/m7-m3u-image16-frozen-50-2/vod-contracts.json",
+      "evidence_sha256": "240a7f546b63a7f794dc83e288d98c6b75839f867bf94a76a65ea53089baf212",
+      "http_cases": 50,
+      "comparison": {
+        "captured_m3u_http_matches": true,
+        "differences": [],
+        "normalizations": [
+          "JSON error objects compared semantically; their own Content-Length remains validated"
+        ],
+        "application_parity_verified": false,
+        "performance_verified": false
+      },
+      "provenance": {
+        "image_id": "sha256:6529a212c510219dc2dafbec99104472903edb958a57a89a948f18789b432b02",
+        "source_tree_sha256": "22d128a8f8fcedd84d9ab4a1032d1cd29db4f5c1bcf81c6bfeeca465e37aa7e1",
+        "build_manifest_sha256": "29fd29fbe4284fa8e8e182729f5e31f930dc759aef50a8aa2c69ab382203728f"
+      },
+      "tool_manifest_sha256": "8709c619294a5cc95cfe4b86b73ba33a687cb091059c4a0357464f2c0806c862"
+    },
+    {
+      "evidence": "artifacts/rust/m7-m3u-image16-frozen-large-2/vod-contracts.json",
+      "evidence_sha256": "c75e7a9d6c27b827d398206e3f9066f4fdb77068fa0723c7608b1134be03cf08",
+      "http_cases": 3,
+      "comparison": {
+        "captured_m3u_http_matches": true,
+        "differences": [],
+        "normalizations": [
+          "JSON error objects compared semantically; their own Content-Length remains validated"
+        ],
+        "application_parity_verified": false,
+        "performance_verified": false
+      },
+      "provenance": {
+        "image_id": "sha256:6529a212c510219dc2dafbec99104472903edb958a57a89a948f18789b432b02",
+        "source_tree_sha256": "22d128a8f8fcedd84d9ab4a1032d1cd29db4f5c1bcf81c6bfeeca465e37aa7e1",
+        "build_manifest_sha256": "29fd29fbe4284fa8e8e182729f5e31f930dc759aef50a8aa2c69ab382203728f"
+      },
+      "tool_manifest_sha256": "8709c619294a5cc95cfe4b86b73ba33a687cb091059c4a0357464f2c0806c862"
+    }
+  ],
+  "proxy_policy": "Identical explicit original Source-default local/private CIDRs on both fixture services; output-specific candidate-policy.yml overrides generic playback none",
+  "initial_fixture_mismatch_preserved": "artifacts/rust/m7-m3u-image16-frozen-50-1",
+  "initial_failure": "49cases match, forwarded-origin differed because generic candidateoverlay disabled trusted proxies while original used defaultlocalCIDRs; no runtime/image modification in retry",
+  "host_resource_evidence": "scripts/rust-output-contracts/verified-m3u-large-host.json",
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Exports beyond configured/hard limits; nonempty provider credential/profile transforms",
+    "Broader CSRF/path/malformed cache variants and Connect/plugin audit hooks",
+    "XMLTV/fullXtream/HDHomeRun",
+    "Packaged slow-client/concurrency/shutdown extension and output-specific performance/resource acceptance"
+  ],
+  "original_application_credit": "Original Dispatcharr authors/contributors; Django BSD license retained"
+}

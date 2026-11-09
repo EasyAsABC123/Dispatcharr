@@ -1,0 +1,67 @@
+{
+  "format_version": 1,
+  "scope": "Actual original/native6000-channel multi-megabyte M3U SQL/HTTP/cache and bounded cancellation;50-case regression",
+  "passed": true,
+  "cleanup_passed": true,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": [
+    {
+      "path": "artifacts/rust/m7-m3u-large-source-1/vod-contracts.json",
+      "sha256": "9f776947d586943da21c6a4bbce225f6fb603422d7544f0343def1a36a3087c3"
+    },
+    {
+      "path": "artifacts/rust/m7-m3u-large-native-http-sql-2/vod-contracts.json",
+      "sha256": "c03c7794652ec63155a7e15b75a5b8a4dc800a93403c8051bf2ba8e35da30cef"
+    },
+    {
+      "path": "artifacts/rust/m7-m3u-large-renderer-sql-1/vod-contracts.json",
+      "sha256": "72cff6eddc18325006b1a79eb5e33998dd46300aa373eff2bf3a6ede8c8074b6"
+    },
+    {
+      "path": "artifacts/rust/m7-m3u-large-limits-regression-50-1/vod-contracts.json",
+      "sha256": "04f52097984816f022fd36a87b69bdfe418ec7b38f654e41e45ecdf08679197f"
+    }
+  ],
+  "channels": 6000,
+  "export_bytes": 3492158,
+  "export_sha256": "a0de281d2fd3c3532fdc7f0551cd0714079c6b895493d325ea5ed45798591117",
+  "large_http_cases": 3,
+  "large_sql_exact_hash_cases": 3,
+  "small_regression_http_cases": 50,
+  "small_regression_sql_exact_hash_cases": 30,
+  "capacity_refusals_each_sql_gate": 2,
+  "original_download_events_each_large_backend": 2,
+  "original_blocked_events_each_large_backend": 0,
+  "native_cache_read_by_original_django": true,
+  "original_django_cache_written_back_then_read_by_native": true,
+  "real_resource_tests_large_gate": 4,
+  "pure_tests": 6,
+  "strict_all_target_clippy_passed": true,
+  "tested_output_crate_sha256": {
+    "rust/crates/output-http/Cargo.toml": "e97aac1b200e725c9f280746decdffa492e06036a79d981204f6f59ffffe571c",
+    "rust/crates/output-http/src/lib.rs": "19a1b7261c46f88a2a98b62df126b769b1e4ed8da6d05a9c4612e0c0f07a3eec",
+    "rust/crates/output-http/src/render.rs": "ad828066ab2b54f9b26d4487c1f7440a8b9d7ffb69570bdf0aced76a68622507",
+    "rust/crates/output-http/src/reader.rs": "684b6e41db821afd59294b543ea5aa9a4d847af5ae0de7130c1af87d10d44d13",
+    "rust/crates/output-http/src/csrf.rs": "3426c1c8b9e31478cb53bd52e3ceed30f09c226bb30cc7eada52b70f7a4dff18",
+    "rust/crates/output-http/src/gateway.rs": "3be4e3dcf53baa01b45b71891335d1ebe74a4f899d6573127bd43542cbe0f32e",
+    "rust/crates/output-http/src/string_cache.rs": "bdde5a92b02b5e47e45c32a75d2bff7d96f8e37eec12edde12f12e0e49e7465e",
+    "rust/crates/output-http/src/test_proxy.rs": "ad71996974dcec9c01f9e3276f9e933230f17447ac16d96933f13098b51a7e0b",
+    "rust/crates/output-http/tests/sql.rs": "0236a0e1d840bb9048979647e1eef324f52965bfd2cf5e5d5d527c5f3d58a625",
+    "rust/crates/output-http/tests/http_sql.rs": "46a73394a3dee67e1bce404a7e14f0d04b54433d39b8783e9383803c6897ca70"
+  },
+  "default_max_export_bytes": 8388608,
+  "hard_max_export_bytes": 67108864,
+  "default_shared_memory_bytes": 201326592,
+  "hard_shared_memory_bytes": 536870912,
+  "source_bound_candidate_image": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Frozen application Compose small+large M3U comparison",
+    "Exports beyond supported catalog/metadata/export bounds",
+    "Nonempty provider credential/profile transforms",
+    "Broad CSRF/path/cache/parser variants and Connect/plugin audit hooks",
+    "XMLTV/full Xtream/HDHomeRun output and resource/performance acceptance"
+  ],
+  "original_application_credit": "Original Dispatcharr authors/contributors; Django BSD code/license retained"
+}

@@ -68,7 +68,11 @@ check this branch and reopen cancellation; all11 pool tests pass. The full31
 case test also injects a failing event sink and checks three complete stats
 envelopes without changing successful stop responses. This establishes a
 component hook, not actual shared Redis/WebSocket delivery. App router and
-parallel shutdown wiring compile; frozen application comparison remains open.
+parallel shutdown wiring compile; immutable image14 now matches all31 HTTP and
+real active/idle controls in Compose, with final cleanup. The full run also
+replays the prior XC/direct/API/media/idle/busy/limit/VOD scopes and strict
+audio/video decoders. Its249 fixture/probe files are captured and hashed before
+setup and used by all later imports/container script mounts. See verified-compose.json.
 
 Run `scripts/rust-vod-contracts/run.py --output <empty-directory>
 --timeshift-management --timeshift-management-active --candidate-overlay
@@ -80,3 +84,30 @@ setup, an unclosed active body, provider leakage and API/stat cleanup failures.
 Top-level timestamps are normalized only after checking request time bounds.
 More malformed input, Unicode/numeric conversion, guide/cross-worker and
 all playback lifecycle event cases remain outside this accepted host slice.
+
+Next source-oracle matrix (audit targets, not accepted behavior):
+
+- Programme channel UUIDs: canonical, uppercase, unhyphenated, malformed and
+  non-string inputs. The original batch helper builds a dictionary keyed by
+  canonical `str(channel.uuid)` and looks it up with the presented string;
+  treating every parseable UUID as equivalent needs an actual compatibility
+  check before acceptance.
+- Playheads: null, booleans, numeric strings, negative values, nonfinite strings,
+  very large finite values and exact programme boundaries. The original helper
+  catches datetime overflow inside `get_programme_info` and keeps the initial
+  guide result when advancement returns no programme.
+- JSON parsing: incomplete objects/arrays/strings, misplaced delimiters,
+  multiline and non-ASCII input, top-level scalars and non-object session
+  elements. The current accepted malformed-body case is only the incomplete
+  object captured by the31-case slice; it does not prove all Python JSON error
+  messages or renderer/exception responses.
+- Redis projections: missing/empty init/byte fields, invalid numeric metadata,
+  missing DB channels/profiles, blank codec fields, multiple connections and
+  multiple sessions. Keep request-clock bounds and all stable display fields in
+  comparisons. Enrich unique channels/profiles with bounded batch SQL, matching
+  the original builder's batch lookup rather than introducing a query per row.
+- Stop races: repeated admin stop during the temporary grace-only hash, HTTP
+  cancellation around a delayed Redis reply, idle cache reopening after stop,
+  multiple workers and the actual shared stats-event transport. Verify raw
+  Redis state and visible statistics separately because the original temporary
+  hash has no programme fields or set membership and is omitted by the builder.

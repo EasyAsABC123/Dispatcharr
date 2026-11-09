@@ -1,0 +1,22 @@
+{
+  "scope": "original-manager-one-tick-health-state",
+  "passed": true,
+  "source_cases": 2560,
+  "source_sha256": "4f86253c4e3a30e62a49a335f1b494b9d0d4308eced0c79f11c98fa3128cb9a8",
+  "source_tool_sha256": "90ed1a6e718763fa483ed59eed4e32eb17b4af72bea510bc804a5bc87782814e",
+  "goldens_sha256": "5a6e7cc2ddd568037638a8d6565290ffa6497ee65b50c163b7039a72b750d881",
+  "native_health_source_sha256": "2bf1d4ee4d4eeca2473c78285efa6581f0ab466eb1fb7e20f4eb6f502055ca1d",
+  "library_test_log_sha256": "73d9fc698f4bdaf952a5780badb66b25991f76ec5127aa12163147a79fdf1e52",
+  "ordinary_http_tests_passed": 20,
+  "ordinary_http_log_sha256": "f8ba890565696214a8b1d8714911e9c5d7c42ae02c103340696c8ac5a901b56c",
+  "full_supervisor_timing_verified": false,
+  "full_milestone_complete": false,
+  "application_performance_verified": false,
+  "notes": [
+    "Original single health-monitor iteration matched healthy/recovery flags and next poll delay across2560states.",
+    "Initial healthy, connection/startup reset, inactivity, no-data exhaustion and resumed-data recovery are separate from metadata state. Ordinary failure/EOF does not itself make Source unhealthy.",
+    "Engine/status helpers expose basic healthy and detailed local_manager only for locally owned managers, not followers. Dedicated health sampling is process/channel work, not per-viewer polling.",
+    "This gate does not prove original versus native full upstream switch/retry timing; no playback supervisor behavior was changed by the health projection.",
+    "Later shared metadata counters/profile and global stats actor have independent Source/Redis/package gates."
+  ]
+}

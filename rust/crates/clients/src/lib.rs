@@ -5,6 +5,9 @@ mod channel;
 mod era;
 mod hls;
 mod scripts;
+mod statistics;
+mod statistics_catalog;
+pub use statistics_catalog::{ChannelStatisticsPage, ChannelStatisticsRecord};
 pub mod timeshift;
 pub mod vod;
 pub use hls::HlsSessionInfo;
@@ -71,6 +74,8 @@ struct Inner {
     connection: MultiplexedConnection,
     config: ClientConfig,
     clients: Mutex<HashMap<String, Weak<ClientInner>>>,
+    live_stats: Mutex<statistics::State>,
+    statistics_bytes: Arc<Semaphore>,
     slots: Arc<Semaphore>,
     stopped: AtomicBool,
     register: Script,
@@ -100,6 +105,7 @@ struct ClientInner {
     stop: watch::Sender<bool>,
     released: AtomicBool,
     registered: AtomicBool,
+    stats_announced: AtomicBool,
     cleanup_done: watch::Sender<bool>,
     cleanup_error: Arc<AtomicBool>,
     _permit: Arc<OwnedSemaphorePermit>,
@@ -202,6 +208,12 @@ return 1
         .map_err(|_| Error::RedisUnavailable)?
         .map_err(|_| Error::RedisUnavailable)?;
         if result == 1 {
+            if fields
+                .get("state")
+                .is_some_and(|state| !matches!(state.as_str(), "initializing" | "error"))
+            {
+                statistics::channel_ready(&self.inner, channel);
+            }
             Ok(())
         } else {
             Err(Error::Stopped)
@@ -222,7 +234,7 @@ return 1
     ) -> Result<(), Error> {
         let script=Script::new("if redis.call('HGET',KEYS[1],'rust_token')~=ARGV[1] then return 0 end if ARGV[2]=='1' then redis.call('DEL',KEYS[1],KEYS[2]) else redis.call('DEL',KEYS[1]) end return 1");
         let mut connection = self.inner.connection.clone();
-        let _: i64 = time::timeout(
+        let removed: i64 = time::timeout(
             self.inner.config.command_timeout,
             script
                 .key(format!("live:channel:{channel}:metadata"))
@@ -234,6 +246,9 @@ return 1
         .await
         .map_err(|_| Error::RedisUnavailable)?
         .map_err(|_| Error::RedisUnavailable)?;
+        if removed == 1 {
+            statistics::channel_closed(&self.inner, channel);
+        }
         Ok(())
     }
 
@@ -383,6 +398,8 @@ return 1
             slots: Arc::new(Semaphore::new(config.max_clients)),
             config,
             clients: Mutex::new(HashMap::new()),
+            live_stats: Mutex::new(statistics::State::default()),
+            statistics_bytes: Arc::new(Semaphore::new(16 * 1024 * 1024)),
             stopped: AtomicBool::new(false),
             register: Script::new(scripts::REGISTER),
             heartbeat_sha,
@@ -452,7 +469,7 @@ return 1
         let token = uuid::Uuid::new_v4().to_string();
         let (metadata, set, stop) = keys(channel, &id);
         let timestamp = now();
-        let mut data = json!({"channel_id":channel,"user_agent":viewer.user_agent,
+        let mut data = json!({"channel_id":channel,"user_agent":if viewer.user_agent.is_empty(){"unknown"}else{viewer.user_agent.as_str()},
             "ip_address":viewer.ip_address.to_string(),"connected_at":timestamp.to_string(),
             "last_active":timestamp.to_string(),"worker_id":self.inner.config.worker_id,
             "user_id":viewer.user_id.unwrap_or(0).to_string(),"username":viewer.username.as_deref().unwrap_or(""),
@@ -496,6 +513,7 @@ return 1
             stop: stop_watch,
             released: AtomicBool::new(false),
             registered: AtomicBool::new(false),
+            stats_announced: AtomicBool::new(false),
             cleanup_done,
             cleanup_error: Arc::new(AtomicBool::new(false)),
             _permit: Arc::new(permit),

@@ -24,7 +24,7 @@ fn local(store: &Inner, channel: &str) -> Vec<Arc<ClientInner>> {
         .filter(|client| client.channel == channel)
         .collect()
 }
-async fn supervised<T, F, Fut>(store: Arc<Inner>, operation: F) -> Result<T, Error>
+pub(super) async fn supervised<T, F, Fut>(store: Arc<Inner>, operation: F) -> Result<T, Error>
 where
     T: Send + 'static,
     F: FnOnce(MultiplexedConnection) -> Fut + Send + 'static,
