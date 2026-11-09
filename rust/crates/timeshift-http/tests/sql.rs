@@ -388,6 +388,116 @@ async fn actual_store_auth_channel_visibility_bound_playback_and_active_user_con
                 .unwrap(),
             0
         );
+        if std::env::var("TIMESHIFT_RUST_IDLE").as_deref() == Ok("1") {
+            let cap = client
+                .post(format!("http://{address}/api/catchup/sessions/"))
+                .bearer_auth(&token)
+                .json(&json!({"channel_uuid":channel,"start":"2026-11-09T11:00:00Z","duration":30}))
+                .send()
+                .await
+                .unwrap()
+                .json::<Value>()
+                .await
+                .unwrap();
+            let sid = cap["session_id"].as_str().unwrap();
+            let poolkey = format!("timeshift:pool:{sid}");
+            let clientkey = format!(
+                "timeshift:channel:{}_{sid}:clients:{sid}",
+                descriptor.channel.id
+            );
+            let metakey = format!("timeshift:channel:{}_{sid}:metadata", descriptor.channel.id);
+            let mut connected = String::new();
+            let mut initialized = String::new();
+            for (index, (range, length, digest)) in [
+                (
+                    "bytes=0-255",
+                    256,
+                    "222cc5871d7518afec470f6f067a46b5dd78b302f239ac7654f217b8876ecf38",
+                ),
+                (
+                    "bytes=0-1879999",
+                    1_880_000,
+                    "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0",
+                ),
+                (
+                    "bytes=1880000-1880255",
+                    256,
+                    "869eee20827b8ebaa0fe00cd53e1a1cf5b6802c884f3382f50ea9fe71647fde2",
+                ),
+            ]
+            .into_iter()
+            .enumerate()
+            {
+                let response = client
+                    .get(format!(
+                        "http://{media_address}{}",
+                        cap["playback_url"].as_str().unwrap()
+                    ))
+                    .header("Range", range)
+                    .header("User-Agent", "fixture-idle-same-capability")
+                    .send()
+                    .await
+                    .unwrap();
+                assert_eq!(response.status(), 206);
+                let payload = response.bytes().await.unwrap();
+                assert_eq!(payload.len(), length);
+                assert_eq!(format!("{:x}", Sha256::digest(&payload)), digest);
+                tokio::time::timeout(std::time::Duration::from_secs(3), async {
+                    while redis
+                        .hget::<_, _, String>(&poolkey, "busy")
+                        .await
+                        .unwrap_or_default()
+                        != "0"
+                    {
+                        tokio::time::sleep(std::time::Duration::from_millis(10)).await;
+                    }
+                })
+                .await
+                .unwrap();
+                let next_connected: String = redis.hget(&clientkey, "connected_at").await.unwrap();
+                let next_initialized: String = redis.hget(&metakey, "init_time").await.unwrap();
+                if index == 0 {
+                    connected = next_connected;
+                    initialized = next_initialized;
+                } else {
+                    assert_eq!(next_connected, connected);
+                    assert_eq!(next_initialized, initialized);
+                }
+                assert_eq!(
+                    redis
+                        .get::<_, i64>(format!(
+                            "profile_connections:{}",
+                            descriptor.candidates[0].profile_id
+                        ))
+                        .await
+                        .unwrap(),
+                    0
+                );
+            }
+            assert_eq!(
+                redis
+                    .hget::<_, _, u64>(&metakey, "total_bytes")
+                    .await
+                    .unwrap(),
+                1_880_512
+            );
+            assert!(
+                (redis
+                    .hget::<_, _, f64>(&clientkey, "playback_base_secs")
+                    .await
+                    .unwrap()
+                    - 263.16778826271667)
+                    .abs()
+                    < 1e-9
+            );
+            tokio::time::sleep(std::time::Duration::from_secs(9)).await;
+            assert!(redis.exists::<_, bool>(&poolkey).await.unwrap());
+            assert!(redis
+                .exists::<_, bool>(format!("timeshift:session:{sid}"))
+                .await
+                .unwrap());
+            assert!(service.delete(sid, owner.id).await);
+        }
         assert!(media.shutdown().await);
         media_server.abort();
         sqlx::query("UPDATE accounts_user SET stream_limit=$1 WHERE id=$2")

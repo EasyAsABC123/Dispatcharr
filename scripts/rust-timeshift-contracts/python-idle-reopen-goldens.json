@@ -1,0 +1,217 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "format_version": 1,
+  "scope": "original same-capability idle Range reconnect only",
+  "capture_complete": true,
+  "events": [
+    {
+      "case": "startup-probe",
+      "range": "bytes=0-255",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-255/15001836",
+        "content-length": "256"
+      },
+      "bytes": 256,
+      "sha256": "222cc5871d7518afec470f6f067a46b5dd78b302f239ac7654f217b8876ecf38",
+      "elapsed_seconds": 0.022,
+      "state": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 59,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "0",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "start",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794234211.4923792",
+            "position_anchor_at": "1794234211.4923792"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794234211.4923792",
+            "total_bytes": "256",
+            "state": "active"
+          }
+        ]
+      }
+    },
+    {
+      "case": "established-reopen",
+      "range": "bytes=0-1879999",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-1879999/15001836",
+        "content-length": "1880000"
+      },
+      "bytes": 1880000,
+      "sha256": "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0",
+      "elapsed_seconds": 3.688,
+      "state": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 59,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "0",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "start",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794234211.4923792",
+            "position_anchor_at": "1794234212.6297355"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794234211.4923792",
+            "total_bytes": "1880256",
+            "state": "active"
+          }
+        ]
+      },
+      "media_file": "timeshift-idle-established.ts",
+      "decoder": {
+        "frames": 74,
+        "strict_audio_video_decode_passed": true
+      }
+    },
+    {
+      "case": "seek-reopen",
+      "range": "bytes=1880000-1880255",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 1880000-1880255/15001836",
+        "content-length": "256"
+      },
+      "bytes": 256,
+      "sha256": "869eee20827b8ebaa0fe00cd53e1a1cf5b6802c884f3382f50ea9fe71647fde2",
+      "elapsed_seconds": 0.018,
+      "state": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 59,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "0",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "range",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794234211.4923792",
+            "playback_base_secs": "263.16778826271667",
+            "position_anchor_at": "1794234217.176106"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794234211.4923792",
+            "total_bytes": "1880512",
+            "state": "active"
+          }
+        ]
+      }
+    }
+  ],
+  "after_grace": {
+    "api_exists": true,
+    "api_ttl": 589,
+    "pool_exists": true,
+    "pool_ttl": 49,
+    "pool_busy": "0",
+    "profile_connections": 0,
+    "stats_client_count": 1,
+    "pool_fields": {
+      "busy": "0",
+      "profile_id": "2",
+      "content_length": "15001836",
+      "serving_range": "range",
+      "media_id": "11_2026-11-09T11-00-00Z",
+      "stream_id": "fixture",
+      "user_id": "3"
+    },
+    "cached_final_url_present": true,
+    "clients": [
+      {
+        "connected_at": "1794234211.4923792",
+        "playback_base_secs": "263.16778826271667",
+        "position_anchor_at": "1794234217.176106"
+      }
+    ],
+    "metadata": [
+      {
+        "init_time": "1794234211.4923792",
+        "total_bytes": "1880512",
+        "state": "active"
+      }
+    ]
+  },
+  "origin": {
+    "mode": "all",
+    "requests": [
+      {
+        "shape": "colon-dash",
+        "status": 206,
+        "range": "bytes=0-255"
+      },
+      {
+        "shape": "colon-dash",
+        "status": 206,
+        "range": "bytes=0-1879999"
+      },
+      {
+        "shape": "colon-dash",
+        "status": 206,
+        "range": "bytes=1880000-1880255"
+      }
+    ],
+    "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+    "fixture_bytes": 15001836,
+    "bytes_per_second": 500000
+  },
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "evidence": "artifacts/rust/m4-timeshift-idle-native-sql-1/vod-contracts.json",
+  "evidence_sha256": "88c0371e793e9d6f3fc58ea76ecdea9264229d740f136355285404a31c8bf3ad",
+  "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
+  "implementation_verified": false
+}

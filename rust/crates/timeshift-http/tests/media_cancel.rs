@@ -97,6 +97,93 @@ async fn wait(mut predicate: impl AsyncFnMut() -> bool) {
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "requires disposable REDIS_TEST_URL and loopback TCP"]
+async fn idle_reopen_cancelled_during_provider_reply_retains_cleanup_until_owned_reply() {
+    let target = std::env::var("REDIS_TEST_URL").unwrap();
+    let proxy = proxy().await;
+    let mut redis = redis::Client::open(target.as_str())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let coordinator = Coordinator::connect(
+        &proxy.url,
+        LeaseConfig {
+            namespace: format!("test:archive-reopen-cancel:{}", uuid::Uuid::new_v4()),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let pool = ArchivePool::connect(
+        &target,
+        coordinator,
+        ArchivePoolConfig {
+            max_sessions: 1,
+            startup_idle: Duration::from_secs(30),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let sid = uuid::Uuid::new_v4().to_string();
+    let profile = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000_000) as i64 + 1000;
+    let key = format!("timeshift:pool:{sid}");
+    let counter = format!("profile_connections:{profile}");
+    let ticket = pool.open(request(&sid, profile)).await.unwrap();
+    ticket
+        .start(
+            "http://fixture.invalid/archive.ts",
+            Some(15001836),
+            Some("bytes=0-255"),
+        )
+        .await
+        .unwrap();
+    ticket.forwarded(256);
+    drop(ticket);
+    wait(async || {
+        redis
+            .hget::<_, _, String>(&key, "busy")
+            .await
+            .ok()
+            .as_deref()
+            == Some("0")
+    })
+    .await;
+    // Warm RESERVE_PROVIDER before holding replies; otherwise a held NOSCRIPT
+    // response would prevent the actual remote reservation from executing.
+    let warm = pool.open(request(&sid, profile)).await.unwrap();
+    warm.start("http://fixture.invalid/archive.ts", None, None)
+        .await
+        .unwrap();
+    drop(warm);
+    wait(async || {
+        redis
+            .hget::<_, _, String>(&key, "busy")
+            .await
+            .ok()
+            .as_deref()
+            == Some("0")
+    })
+    .await;
+    proxy.hold.send_replace(true);
+    let cloned = pool.clone();
+    let req = request(&sid, profile);
+    let call = tokio::spawn(async move { cloned.open(req).await });
+    wait(async || redis.get::<_, i64>(&counter).await.unwrap_or(0) == 1).await;
+    call.abort();
+    let _ = call.await;
+    tokio::time::sleep(Duration::from_millis(50)).await;
+    assert!(redis.exists::<_, bool>(&key).await.unwrap());
+    assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+    proxy.hold.send_replace(false);
+    wait(async || pool.is_idle()).await;
+    assert!(!redis.exists::<_, bool>(&key).await.unwrap());
+    assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 0);
+    assert!(pool.shutdown().await);
+    let _: () = redis.del(counter).await.unwrap();
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback TCP"]
 async fn delayed_mutations_hold_reservation_and_heartbeat_cancellation_cannot_double_count_bytes() {
     let target = std::env::var("REDIS_TEST_URL").unwrap();
     let proxy = proxy().await;

@@ -2,7 +2,7 @@
 //! Original application credit belongs entirely to upstream Dispatcharr authors.
 use dispatcharr_clients::timeshift::{self, Admission};
 use dispatcharr_contracts::UserLimitPolicy;
-use dispatcharr_coordination::{AcquireRequest, Coordinator, Lease};
+use dispatcharr_coordination::{AcquireRequest, Coordinator, Lease, ProviderReservation};
 use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
 use dispatcharr_store::StoreError;
 use serde_json::json;
@@ -63,6 +63,8 @@ struct Entry {
     request: ArchivePoolRequest,
     token: String,
     lease: Mutex<Option<Arc<Lease>>>,
+    lifecycle: AtomicU64,
+    reopened: Notify,
     active: AtomicBool,
     streaming: AtomicBool,
     bytes: AtomicU64,
@@ -90,6 +92,7 @@ pub struct ArchivePool {
 /// Dropping a setup or body ticket releases the provider and schedules bounded
 /// cleanup. An unpolled body must retain this ticket in a supervised task.
 pub struct ArchiveTicket {
+    refreshed: Option<ArchivePoolRequest>,
     rollback: Option<Rollback>,
 }
 struct Rollback {
@@ -115,6 +118,13 @@ impl Drop for Operation {
 }
 impl Drop for Rollback {
     fn drop(&mut self) {
+        let state = self.entry.lifecycle.load(Ordering::SeqCst);
+        let _ = self.entry.lifecycle.compare_exchange(
+            state & !3,
+            (state & !3) | 1,
+            Ordering::SeqCst,
+            Ordering::SeqCst,
+        );
         let inner = self.inner.clone();
         let entry = self.entry.clone();
         let runtime = inner.runtime.clone();
@@ -242,6 +252,10 @@ impl ArchivePool {
         {
             return Err(StoreError::Unsupported("invalid archive descriptor"));
         }
+        let existing = self.inner.entries.lock().unwrap().get(sid).cloned();
+        if let Some(existing) = existing {
+            return self.reopen(existing, request).await;
+        }
         let permit = self
             .inner
             .slots
@@ -253,6 +267,8 @@ impl ArchivePool {
             request,
             token: uuid::Uuid::new_v4().to_string(),
             lease: Mutex::new(None),
+            lifecycle: AtomicU64::new(0),
+            reopened: Notify::new(),
             active: AtomicBool::new(true),
             streaming: AtomicBool::new(false),
             bytes: AtomicU64::new(0),
@@ -377,6 +393,130 @@ impl ArchivePool {
             return Err(unavailable());
         }
         Ok(ArchiveTicket {
+            refreshed: None,
+            rollback: Some(rollback),
+        })
+    }
+    async fn reopen(
+        &self,
+        entry: Arc<Entry>,
+        request: ArchivePoolRequest,
+    ) -> Result<ArchiveTicket, StoreError> {
+        if entry.request.provider_profile_id != request.provider_profile_id
+            || entry.request.virtual_channel_id != request.virtual_channel_id
+            || entry.request.pool_fields.get("user_id") != request.pool_fields.get("user_id")
+            || entry.request.pool_fields.get("media_id") != request.pool_fields.get("media_id")
+        {
+            return Err(StoreError::Unsupported(
+                "archive programme/profile adoption is not yet implemented",
+            ));
+        }
+        // A just-disconnected supervised body may still be flushing its final
+        // byte watermark and provider release. Never reopen before both finish.
+        let deadline = tokio::time::Instant::now() + self.inner.config.command_timeout;
+        let epoch = loop {
+            let state = entry.lifecycle.load(Ordering::SeqCst);
+            match state & 3 {
+                1 if tokio::time::Instant::now() < deadline => {
+                    tokio::time::sleep(Duration::from_millis(5)).await
+                }
+                2 => {
+                    if entry
+                        .lifecycle
+                        .compare_exchange(
+                            state,
+                            (state & !3) + 4,
+                            Ordering::SeqCst,
+                            Ordering::SeqCst,
+                        )
+                        .is_ok()
+                    {
+                        break (state & !3) + 4;
+                    }
+                }
+                _ => return Err(StoreError::StatusBody(503, json!("Stream slot busy"))),
+            }
+        };
+        entry.reopened.notify_waiters();
+        entry.active.store(true, Ordering::SeqCst);
+        entry.streaming.store(false, Ordering::SeqCst);
+        entry.bytes.store(0, Ordering::SeqCst);
+        debug_assert_eq!(entry.lifecycle.load(Ordering::SeqCst), epoch);
+        let rollback = Rollback {
+            inner: self.inner.clone(),
+            entry: entry.clone(),
+        };
+        let prepared = timeshift::prepare(Admission {
+            mode: timeshift::AdmissionMode::Check,
+            session_id: &request.session_id,
+            channel_id: request.channel_id,
+            programme_media_id: request
+                .pool_fields
+                .get("media_id")
+                .map(String::as_str)
+                .unwrap_or(""),
+            fields: &request.client_fields,
+            stream_limit: request.stream_limit,
+            policy: &request.limit_policy,
+            owner_token: &entry.token,
+            now: &timestamp(),
+            ttl: self.inner.config.pending_admission_ttl,
+            scan_limit: self.inner.config.admission_scan_limit,
+        })
+        .map_err(|_| unavailable())?;
+        let args: Vec<_> = prepared.args.iter().map(Vec::as_slice).collect();
+        let (result, _): (Vec<String>, Operation) = self
+            .inner
+            .transport
+            .command(
+                timeshift::SCRIPT,
+                &prepared.keys,
+                &args,
+                Operation::new(&entry),
+            )
+            .await
+            .map_err(|_| unavailable())?;
+        match timeshift::decode(result) {
+            Ok(true) => {}
+            Err(dispatcharr_clients::Error::UserLimit) => {
+                return Err(StoreError::StatusBody(403, json!("Stream limit exceeded")))
+            }
+            _ => return Err(unavailable()),
+        }
+        start_setup_refresh(&self.inner, &entry);
+        let lease = entry
+            .lease
+            .lock()
+            .unwrap()
+            .clone()
+            .ok_or_else(unavailable)?;
+        let provider = ProviderReservation {
+            profile_id: Some(request.provider_profile_id),
+            max_streams: request.provider_max_streams,
+            credential_pool: None,
+        };
+        // This owned task retains rollback through quota reservation even when
+        // the HTTP setup future is dropped before Redis returns.
+        let task = self.inner.runtime.spawn(async move {
+            let result = lease.reserve_provider(provider).await;
+            (result, rollback)
+        });
+        let (reserved, rollback) = task.await.map_err(|_| unavailable())?;
+        reserved.map_err(|error| match error {
+            dispatcharr_coordination::Error::ProfileFull => {
+                StoreError::StatusBody(503, json!("No available stream"))
+            }
+            _ => unavailable(),
+        })?;
+        let (result,rollback):(i64,Rollback)=self.inner.transport.command(
+            "if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[1],'busy')~='0' or redis.call('EXISTS',KEYS[2])~=0 then return 0 end redis.call('HSET',KEYS[1],'busy','1','last_activity',ARGV[2]);redis.call('EXPIRE',KEYS[1],600);return 1",
+            &[pool(&entry),keys(&entry)[6].clone()],&[entry.token.as_bytes(),timestamp().as_bytes()],rollback
+        ).await.map_err(|_|unavailable())?;
+        if result != 1 || *self.inner.stopped.borrow() || *entry.stop.borrow() {
+            return Err(unavailable());
+        }
+        Ok(ArchiveTicket {
+            refreshed: Some(request),
             rollback: Some(rollback),
         })
     }
@@ -457,6 +597,14 @@ impl ArchiveTicket {
             .expect("provider lease")
             .lost()
     }
+    pub async fn cached_final_url(&self) -> Result<Option<String>, StoreError> {
+        let owned = self.owned();
+        let (url,_):(Option<String>,Operation)=owned.inner.transport.command(
+            "if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return nil end return redis.call('HGET',KEYS[1],'final_url')",
+            &[pool(&owned.entry)],&[owned.entry.token.as_bytes()],Operation::new(&owned.entry)
+        ).await.map_err(|_|unavailable())?;
+        Ok(url)
+    }
     pub fn forwarded(&self, bytes: usize) {
         self.owned()
             .entry
@@ -474,10 +622,9 @@ impl ArchiveTicket {
     ) -> Result<(), StoreError> {
         let owned = self.owned();
         let entry = &owned.entry;
-        let clients =
-            serde_json::to_vec(&entry.request.client_fields).map_err(|_| unavailable())?;
-        let metadata =
-            serde_json::to_vec(&entry.request.channel_fields).map_err(|_| unavailable())?;
+        let request = self.refreshed.as_ref().unwrap_or(&entry.request);
+        let clients = serde_json::to_vec(&request.client_fields).map_err(|_| unavailable())?;
+        let metadata = serde_json::to_vec(&request.channel_fields).map_err(|_| unavailable())?;
         let serving_range = match range.filter(|value| !value.is_empty()) {
             None => "none",
             Some(value)
@@ -488,6 +635,25 @@ impl ArchiveTicket {
             }
             Some(_) => "range",
         };
+        let range_start =
+            dispatcharr_timeshift_core::parse_client_range(range).map(|(start, _)| start);
+        let duration = request
+            .pool_fields
+            .get("rust_duration_secs")
+            .and_then(|value| value.parse::<f64>().ok());
+        let base = range_start
+            .filter(|start| *start > 0)
+            .zip(content_length.filter(|total| *total > 0))
+            .zip(duration.filter(|duration| duration.is_finite() && *duration > 0.0))
+            .map(|((start, total), duration)| {
+                ((start as f64 / total as f64).clamp(0.0, 1.0) * duration).to_string()
+            })
+            .unwrap_or_default();
+        let near_eof = range_start
+            .zip(content_length)
+            .is_some_and(|(start, total)| {
+                total > 0 && start >= total.saturating_sub(1_880_000).max(0)
+            });
         let length = content_length
             .map(|value| value.to_string())
             .unwrap_or_default();
@@ -506,6 +672,8 @@ impl ArchiveTicket {
                     final_url.as_bytes(),
                     length.as_bytes(),
                     serving_range.as_bytes(),
+                    base.as_bytes(),
+                    if near_eof { b"1" } else { b"0" },
                 ],
                 Operation::new(entry),
             )
@@ -582,6 +750,8 @@ fn start_setup_refresh(inner: &Arc<Inner>, entry: &Arc<Entry>) {
     *entry.setup_refresh.lock().unwrap() = Some(task);
 }
 async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
+    let epoch = entry.lifecycle.load(Ordering::SeqCst) & !3;
+    entry.lifecycle.store(epoch | 1, Ordering::SeqCst);
     entry.active.store(false, Ordering::SeqCst);
     let refresh = entry.setup_refresh.lock().unwrap().take();
     if let Some(refresh) = refresh {
@@ -633,9 +803,20 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
         } else {
             inner.config.startup_idle
         };
+        let reopened = entry.reopened.notified();
+        tokio::pin!(reopened);
+        reopened.as_mut().enable();
+        entry.lifecycle.store(epoch | 2, Ordering::SeqCst);
         let mut stopped = inner.stopped.subscribe();
         if !*stopped.borrow() {
-            tokio::select! {_=tokio::time::sleep(delay)=>{},_=stopped.changed()=>{}}
+            tokio::select! {_=tokio::time::sleep(delay)=>{},_=stopped.changed()=>{},_=reopened=>{return;}}
+        }
+        if entry
+            .lifecycle
+            .compare_exchange(epoch | 2, epoch | 3, Ordering::SeqCst, Ordering::SeqCst)
+            .is_err()
+        {
+            return;
         }
     }
     if *inner.stopped.borrow() {
@@ -690,10 +871,19 @@ local function kind(key) local value=redis.call('TYPE',key);if type(value)=='tab
 for i,expected in ipairs({'hash','hash','set','hash','hash','string','string'}) do local actual=kind(KEYS[i]);if actual~='none' and actual~=expected then return redis.error_reply('CORRUPT archive metadata') end end
 if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_preempted')=='1' then return 0 end
 local clients=cjson.decode(ARGV[2]);local metadata=cjson.decode(ARGV[3])
+local old_programme=redis.call('HGET',KEYS[2],'programme_start')
+local keep_anchor=ARGV[10]=='1' and (not old_programme or old_programme==clients['programme_start'])
+local old_anchor=redis.call('HGET',KEYS[2],'position_anchor_at')
 for key,value in pairs(clients) do redis.call('HSET',KEYS[2],key,value) end
 for key,value in pairs(metadata) do redis.call('HSET',KEYS[4],key,value) end
-redis.call('HSET',KEYS[2],'rust_owner_token',ARGV[1],'connected_at',ARGV[5],'last_active',ARGV[5],'position_anchor_at',ARGV[5],'rust_total_bytes','0')
-redis.call('HSET',KEYS[4],'rust_owner_token',ARGV[1],'state','active','init_time',ARGV[5])
+redis.call('HSETNX',KEYS[2],'connected_at',ARGV[5])
+redis.call('HSET',KEYS[2],'rust_owner_token',ARGV[1],'last_active',ARGV[5],'rust_total_bytes','0')
+if not keep_anchor then
+ redis.call('HSET',KEYS[2],'position_anchor_at',ARGV[5]);redis.call('HDEL',KEYS[2],'paused')
+ if ARGV[9]~='' and (not old_programme or old_programme==clients['programme_start']) then redis.call('HSET',KEYS[2],'playback_base_secs',ARGV[9]) else redis.call('HDEL',KEYS[2],'playback_base_secs') end
+elseif not old_anchor then redis.call('HSET',KEYS[2],'position_anchor_at',ARGV[5]) end
+redis.call('HSETNX',KEYS[4],'init_time',ARGV[5])
+redis.call('HSET',KEYS[4],'rust_owner_token',ARGV[1],'state','active')
 redis.call('SADD',KEYS[3],ARGV[4])
 redis.call('HSET',KEYS[1],'final_url',ARGV[6],'serving_range',ARGV[8])
 if ARGV[7]~='' then redis.call('HSET',KEYS[1],'content_length',ARGV[7]) end

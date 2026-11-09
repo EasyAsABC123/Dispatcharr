@@ -34,7 +34,8 @@ checks, plus 11 unique checks from a focused cleanup suite, followed by
 [518 combined checks](../scripts/rust-integration/verified-integration-m5-full-518.json)
 after stream management was added, then
 [655 default checks plus 20 additional proxy contracts](../scripts/rust-integration/verified-integration-m5-startup-relations-1.json), then
-[751 default checks including provider read APIs](../scripts/rust-integration/verified-integration-m6-provider-reads-image6-1.json).
+[751 default checks including provider read APIs](../scripts/rust-integration/verified-integration-m6-provider-reads-image6-1.json), then
+[818 default checks including provider group/filter writes](../scripts/rust-integration/verified-integration-m6-provider-crud-image8-1.json).
 Two-replica TS probes
 passed shared demand, global stop and owner-crash cleanup with strict decoding.
 The earlier Rust image needed 87.1 seconds for owner-crash cleanup; the new image
@@ -63,14 +64,14 @@ with zero delivery/observer errors. Paired median Rust/source CPU ratios were
 0.296/0.186/0.0673 and container working-memory ratios 0.825/0.846/0.778.
 The totals include backend, PostgreSQL, Redis and origin. This is a warmed,
 partial-backend characterization: browser/realtime/event equivalence, many-channel
-and slow-reader resource gates remain open. It does not accept a complete
+and slow-reader resource gates remain open. A [single ten-channel diagnostic](../scripts/rust-integration/verified-many-retention-diagnostic-1.json) delivered valid media with lower CPU, but failed the memory budget (Rust/source 1.0095); it establishes no accepted many-channel gain. It does not accept a complete
 milestone or full-application performance gain.
 
 Frozen native timeshift/VOD comparison also
 [passed](../scripts/rust-timeshift-contracts/verified-compose.json): 24 API/error
 cases, six archive media/lifecycle scenarios, strict audio/video decoding and
 literal source profile aliases. Positive shared timeshift admission is a later
-frozen-image follow-up. M6 now has [2,133 parser/hash/validation/projection cases](../scripts/rust-ingest-parity/verified-components-5.json) and [six actual-source database scenarios](../scripts/rust-ingest-parity/verified-batch-pipeline-sql-5.json), including the parser-to-database pipeline; see [ingestion gates](rust-ingestion.md).
+frozen-image follow-up. M6 now has [2,283 component cases under the original runtime](../scripts/rust-ingest-parity/verified-preparation-original-runtime-14.json) and [six stream-batch plus eleven group-sync database scenarios](../scripts/rust-ingest-parity/verified-groups-batch-sql-13.json), including the parser-to-database pipeline; see [ingestion gates](rust-ingestion.md).
 
 The core Compose run has passed, the load-harness Compose selftest has passed,
 and Python baseline runs have passed (48 focused tests and a separate broader

@@ -52,6 +52,7 @@ fn request(sid: &str, profile: i64) -> ArchivePoolRequest {
             ("user_id".into(), fixture_user(sid).to_string()),
             ("profile_id".into(), profile.to_string()),
             ("media_id".into(), "123_2026-11-09T11-00-00Z".into()),
+            ("rust_duration_secs".into(), "2100".into()),
         ]),
         client_fields: BTreeMap::from([
             ("user_id".into(), fixture_user(sid).to_string()),
@@ -87,6 +88,175 @@ fn client_key(sid: &str) -> String {
 }
 fn metadata_key(sid: &str) -> String {
     format!("timeshift:channel:123_{sid}:metadata")
+}
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn idle_reopen_preserves_connection_times_cumulative_bytes_and_cancels_old_cleanup() {
+    let (pool, mut redis, profile) = setup().await;
+    let sid = uuid::Uuid::new_v4().to_string();
+    let first = pool.open(request(&sid, profile)).await.unwrap();
+    first
+        .start(
+            "http://fixture.invalid/cached.ts",
+            Some(15_001_836),
+            Some("bytes=0-255"),
+        )
+        .await
+        .unwrap();
+    let connected: String = redis.hget(client_key(&sid), "connected_at").await.unwrap();
+    let initialized: String = redis.hget(metadata_key(&sid), "init_time").await.unwrap();
+    first.forwarded(256);
+    drop(first);
+    let second = pool.open(request(&sid, profile)).await.unwrap();
+    assert_eq!(
+        second.cached_final_url().await.unwrap().as_deref(),
+        Some("http://fixture.invalid/cached.ts")
+    );
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 1);
+    second
+        .start(
+            "http://fixture.invalid/cached.ts",
+            Some(15_001_836),
+            Some("bytes=0-1879999"),
+        )
+        .await
+        .unwrap();
+    second.forwarded(1_880_000);
+    assert!(second.heartbeat().await.unwrap());
+    // Cross the previous startup-idle deadline while its successor is live.
+    tokio::time::sleep(Duration::from_millis(400)).await;
+    assert!(second.alive().await.unwrap());
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(client_key(&sid), "connected_at")
+            .await
+            .unwrap(),
+        connected
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(metadata_key(&sid), "init_time")
+            .await
+            .unwrap(),
+        initialized
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, u64>(metadata_key(&sid), "total_bytes")
+            .await
+            .unwrap(),
+        1_880_256
+    );
+    drop(second);
+    let third = pool.open(request(&sid, profile)).await.unwrap();
+    third
+        .start(
+            "http://fixture.invalid/cached.ts",
+            Some(15_001_836),
+            Some("bytes=1880000-1880255"),
+        )
+        .await
+        .unwrap();
+    assert!(
+        (redis
+            .hget::<_, _, f64>(client_key(&sid), "playback_base_secs")
+            .await
+            .unwrap()
+            - 263.16778826271667)
+            .abs()
+            < 1e-10
+    );
+    third.forwarded(256);
+    drop(third);
+    wait(async || {
+        redis
+            .hget::<_, _, u64>(metadata_key(&sid), "total_bytes")
+            .await
+            .unwrap_or(0)
+            == 1_880_512
+    })
+    .await;
+    let anchor: String = redis
+        .hget(client_key(&sid), "position_anchor_at")
+        .await
+        .unwrap();
+    let _: () = redis.hset(client_key(&sid), "paused", "1").await.unwrap();
+    let eof = pool.open(request(&sid, profile)).await.unwrap();
+    eof.start(
+        "http://fixture.invalid/cached.ts",
+        Some(15_001_836),
+        Some("bytes=14999900-15000155"),
+    )
+    .await
+    .unwrap();
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(client_key(&sid), "position_anchor_at")
+            .await
+            .unwrap(),
+        anchor
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(client_key(&sid), "paused")
+            .await
+            .unwrap(),
+        "1"
+    );
+    assert!(
+        (redis
+            .hget::<_, _, f64>(client_key(&sid), "playback_base_secs")
+            .await
+            .unwrap()
+            - 263.16778826271667)
+            .abs()
+            < 1e-9
+    );
+    drop(eof);
+    wait(async || !redis.exists::<_, bool>(pool_key(&sid)).await.unwrap()).await;
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 0);
+    assert!(pool.shutdown().await);
+    let _: () = redis.del(profile_key(profile)).await.unwrap();
+}
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn idle_reopen_preserves_source_same_session_exemption_under_new_positive_limit() {
+    let (pool, mut redis, profile) = setup().await;
+    let sid = uuid::Uuid::new_v4().to_string();
+    let first = pool.open(request(&sid, profile)).await.unwrap();
+    first
+        .start("http://fixture.invalid/archive.ts", None, None)
+        .await
+        .unwrap();
+    drop(first);
+    let live = format!(
+        "live:channel:{}:clients:{}",
+        uuid::Uuid::new_v4(),
+        uuid::Uuid::new_v4()
+    );
+    let _: () = redis
+        .hset_multiple(
+            &live,
+            &[
+                ("user_id", fixture_user(&sid).to_string()),
+                ("connected_at", "1".into()),
+            ],
+        )
+        .await
+        .unwrap();
+    let mut updated = request(&sid, profile);
+    updated.stream_limit = 1;
+    updated.limit_policy.terminate_on_limit_exceeded = false;
+    // Original check_user_stream_limit exempts this already registered SID,
+    // including when another protocol is now counted at the positive limit.
+    let reopened = pool.open(updated).await.unwrap();
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 1);
+    assert!(redis.exists::<_, bool>(&live).await.unwrap());
+    drop(reopened);
+    wait(async || pool.is_idle()).await;
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 0);
+    assert!(pool.shutdown().await);
+    let _: () = redis.del(&[live, profile_key(profile)]).await.unwrap();
 }
 #[tokio::test]
 #[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]

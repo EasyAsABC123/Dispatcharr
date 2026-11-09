@@ -17,9 +17,7 @@ use bytes::Bytes;
 use dispatcharr_contracts::{BoxFuture, PlaybackRequest};
 use dispatcharr_coordination::Coordinator;
 use dispatcharr_store::{AuthService, Store, StoreError, User};
-use dispatcharr_timeshift_core::{
-    downstream_length_headers, parse_client_range, representation_length, LengthRequest,
-};
+use dispatcharr_timeshift_core::{downstream_length_headers, representation_length, LengthRequest};
 use futures_util::stream;
 use serde_json::json;
 use std::{
@@ -258,10 +256,11 @@ impl CatchupMedia {
                 Err(error) => return Err(error),
             };
             let cached = self.inner.pool.format_index(candidate.account_id).await;
+            let final_url = ticket.cached_final_url().await?;
             let setup_stopped = ticket.stopped();
             let setup_lost = ticket.lease_lost();
             let opened = tokio::select! {
-                result=self.inner.client.open(ArchiveRequest {urls:&candidate.urls,cached_format:cached,final_url:None,user_agent:&candidate.user_agent,range})=>result,
+                result=self.inner.client.open(ArchiveRequest {urls:&candidate.urls,cached_format:cached,final_url:final_url.as_deref(),user_agent:&candidate.user_agent,range})=>result,
                 _=wait_stopped(setup_stopped)=>{ticket.abort().await?;return Err(StoreError::StatusBody(503,json!("Archive session stopped")));},
                 _=wait_stopped(setup_lost)=>{ticket.abort().await?;return Err(StoreError::StatusBody(503,json!("Archive provider lease lost")));},
             };
@@ -381,6 +380,10 @@ fn descriptor(
     let virtual_channel_id = format!("{}_{}", media_id, candidate.provider_stream_id);
     let pool_fields = BTreeMap::from([
         ("media_id".into(), media_id),
+        (
+            "rust_duration_secs".into(),
+            (u64::from(source.duration_window) * 60).to_string(),
+        ),
         ("user_id".into(), source.user.id.to_string()),
         ("client_ip".into(), ip.to_string()),
         (
@@ -403,7 +406,7 @@ fn descriptor(
             candidate.provider_timezone.clone().unwrap_or_default(),
         ),
     ]);
-    let mut client_fields = BTreeMap::from([
+    let client_fields = BTreeMap::from([
         (
             "user_agent".into(),
             request
@@ -418,11 +421,6 @@ fn descriptor(
         ("programme_start".into(), source.timestamp.clone()),
         ("programme_vid".into(), virtual_channel_id.clone()),
     ]);
-    if let Some((start, _)) = parse_client_range(request.header("range")) {
-        if start == 0 {
-            client_fields.insert("playback_base_secs".into(), "0.0".into());
-        }
-    }
     let channel_fields = BTreeMap::from([
         ("channel_id".into(), source.channel.id.to_string()),
         ("channel_uuid".into(), source.channel.uuid.to_string()),

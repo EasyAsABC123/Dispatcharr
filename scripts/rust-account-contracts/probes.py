@@ -357,3 +357,23 @@ def run_provider_reads(http,baseline,candidate,accounts,record):
     module=importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.run(http,baseline,candidate,accounts,record)
+
+
+def run_server_group_crud(http,baseline,candidate,accounts,record,fixture):
+    """No-job ServerGroup writes plus original collector SET_NULL semantics."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_server_group_probes',
+                                               Path(__file__).with_name('server_group_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record,fixture)
+
+
+def run_filter_crud(http,baseline,candidate,accounts,record):
+    """Scoped M3UFilter writes, preserving source serializer regex behavior."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_filter_crud_probes',
+                                               Path(__file__).with_name('filter_crud_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)

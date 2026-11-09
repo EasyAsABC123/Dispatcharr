@@ -110,3 +110,43 @@ local ring plus Redis input versus source Redis storage must be measured with a
 longer many-channel matrix before architectural changes. Its observed resource
 values cannot establish many-channel gains or rule out a full-retention regression.
 Durable evidence: `verified-many-channel-smoke-1.json`.
+
+## Failed full-retention ten-channel diagnostic
+
+A single isolated source/Rust pair at10channels/10viewers used15second warmup and
+60second measurement, with20successful parallel decoder primes and all owners
+active before load. Both phases delivered data to every viewer without errors,
+and cleanup removed the isolated project. This is n=1 diagnostic evidence.
+
+The declared memory gate **failed**: full-fixture Docker working-memory peak was
+517.68MiB/source versus522.58MiB/Rust, ratio1.009465 (+4.90MiB). CPU was23.7345%
+versus5.3055%; observed ten-channel throughput was2.763/2.776MB/s total
+(source/Rust), reflecting2Mbps per channel.
+First-byte p95 was116.84/8.06ms. No many-channel performance gain is accepted.
+
+Independent per-component peaks (do not sum these non-coincident maxima):
+
+| Container role | Source working-memory MiB | Rust phase working-memory MiB |
+| --- | --- | --- |
+| Baseline web/PostgreSQL/Redis; web stopped for Rust |431.40|277.70|
+| Shared origin fixture |86.59|87.01|
+| Rust native process |—|159.40|
+
+Process RSS is diagnostic and can double-count shared pages. Redis RSS peaked at
+165.18/162.39MiB; source uWSGI RSS sum235.37MiB, Rust process166.46MiB. PostgreSQL
+RSS sum was135.95/253.93MiB, with9/14postgres processes observed (including server
+and background workers). Actual pg_stat_activity states and private/PSS memory
+were not collected. The fixed Rust pool8 may contribute, alongside its local
+media ring plus Redis storage; neither explanation is established causally.
+
+Image1 did not export direct local retained-byte or full Redis-key memory
+telemetry. Its configured local ring is16MiB/channel (160MiB across ten), in
+addition to the Redis input copy. The next work is direct admin-only retained-byte
+telemetry and database connection/private/PSS diagnostics, followed by a bounded
+hot-cache/Redis-history design if warranted. Source60second/16MiB history,
+behind-zero live positioning, slow consumers and follower behavior must remain
+intact. No retention reduction or repeated heavy matrix substitutes for that
+functional proof.
+
+Raw evidence: `artifacts/rust/m2-many-channel-retention-diagnostic-1/run.json`;
+component breakdown: `verified-many-retention-diagnostic-1.json`.

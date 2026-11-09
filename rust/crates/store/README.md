@@ -108,6 +108,11 @@ recorded. See
 [PROVIDER-READ-CONTRACTS.md](../../../scripts/rust-account-contracts/PROVIDER-READ-CONTRACTS.md)
 for exact role/password/default/cron/expiration/count behavior and the queued
 golden gates. Job-triggering management writes remain explicitly unsupported.
+The subsequent no-job ServerGroup/M3UFilter CRUD slice passed
+[85 focused / 818 default checks](../../../scripts/rust-integration/verified-integration-m6-provider-crud-image8-1.json),
+including source regex acceptance, nested ownership, JSONB response types and
+collector SET_NULL without account-save effects. Other provider/source mutations
+remain gated pending their native job/cache/notification behavior.
 The later [356-check run](../../../scripts/rust-integration/verified-integration-m5-channel-crud-2.json)
 verified supported channel writes, stream ordering/catchup, raw/effective
 overrides, group ownership and profile-selection creation side effects. Remaining

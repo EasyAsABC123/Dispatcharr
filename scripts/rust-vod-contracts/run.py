@@ -30,6 +30,8 @@ def main():
     parser.add_argument('--source-frontend-from-candidate', action='store_true', help='Mount unchanged built React from immutable candidate into source fixture; requires candidate manifest')
     parser.add_argument('--profile-aliases', action='store_true', help='Separately characterize bare-profile redirects and their follow status')
     parser.add_argument('--timeshift-redirect-session', action='store_true', help='Use Redirect channel with empty allowed profiles to verify established capability still proxies')
+    parser.add_argument('--timeshift-busy-seek', action='store_true', help='Characterize original busy middle seek, full reconnect and near-EOF probe boundaries')
+    parser.add_argument('--timeshift-idle-reopen', action='store_true', help='Characterize original same-capability idle Range reopen and cached URL state')
     parser.add_argument('--timeshift-native-limit', action='store_true', help='Capture actual JWT native positive-limit refusal/retry on source and optional frozen candidate')
     parser.add_argument('--timeshift-admission-rust-test', action='store_true', help='Compare new Rust atomic admission effects against captured original source with real fixture Redis')
     parser.add_argument('--timeshift-admission-source', action='store_true', help='Capture original Timeshift shared-limit/hop policy using actual Redis fixture records')
@@ -54,7 +56,7 @@ def main():
     if args.timeshift_rust_media:
         args.timeshift_rust_test = True
         args.timeshift_media = True
-    if args.timeshift_rust_test or args.timeshift_media or args.timeshift_admission_source or args.timeshift_native_limit:
+    if args.timeshift_rust_test or args.timeshift_media or args.timeshift_admission_source or args.timeshift_native_limit or args.timeshift_idle_reopen or args.timeshift_busy_seek:
         args.timeshift_sessions = True
     if bool(args.candidate_overlay) != bool(args.candidate_build_manifest):
         parser.error('candidate overlay and immutable build manifest must be provided together')
@@ -166,11 +168,34 @@ def main():
                 (output/'rust-timeshift-admission.log').write_text(result.stdout+result.stderr)
                 report['rust_timeshift_admission_source_passed'] = result.returncode == 0
                 result.check_returncode()
-        if args.timeshift_media or args.timeshift_native_limit:
-            def observe(session_id):
-                result = subprocess.run(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/timeshift-verification/inspect_session.py'],env=environment,input=json.dumps({'session_id':session_id,'profile_id':seed['provider_profile_id']}),capture_output=True,text=True,timeout=15)
+        if args.timeshift_media or args.timeshift_native_limit or args.timeshift_idle_reopen or args.timeshift_busy_seek:
+            def observe(session_id,details=False):
+                result = subprocess.run(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/timeshift-verification/inspect_session.py'],env=environment,input=json.dumps({'session_id':session_id,'profile_id':seed['provider_profile_id'],'details':details}),capture_output=True,text=True,timeout=15)
                 result.check_returncode()
                 return json.loads(result.stdout.splitlines()[-1])
+        if args.timeshift_busy_seek:
+            sys.path.insert(0,str(ROOT/'scripts/rust-timeshift-contracts'))
+            spec=importlib.util.spec_from_file_location('timeshift_busy_probe',ROOT/'scripts/rust-timeshift-contracts/busy_probe.py')
+            busy=importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(busy)
+            report['timeshift_busy_seek_source']=busy.capture(base,address('origin',8080),session_seed,observe)
+            (output/'timeshift-busy-seek-source.json').write_text(json.dumps(report['timeshift_busy_seek_source'],indent=2)+'\n')
+        if args.timeshift_idle_reopen:
+            spec=importlib.util.spec_from_file_location('timeshift_idle_probe',ROOT/'scripts/rust-timeshift-contracts/idle_probe.py')
+            idle=importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(idle)
+            def decode_idle(capture):
+                event=capture['events'][1]
+                if 'media_file' not in event:
+                    return
+                decoded=command(compose+['exec','-T','baseline','ffmpeg','-hide_banner','-loglevel','error','-xerror','-progress','pipe:1','-nostats','-i','/evidence/'+event['media_file'],'-map','0:v:0','-map','0:a:0','-t','3','-f','null','-'],timeout=45)
+                (output/(event['media_file']+'.decode.log')).write_text(decoded)
+                frames=max((int(line.split('=')[1]) for line in decoded.splitlines() if line.startswith('frame=')),default=0)
+                event['decoder']={'frames':frames,'strict_audio_video_decode_passed':frames>=50}
+                if frames<50:raise RuntimeError('idle reopen strict decoder failed')
+            report['timeshift_idle_reopen']=idle.capture(base,address('origin',8080),session_seed,output,observe)
+            decode_idle(report['timeshift_idle_reopen'])
+            (output/'timeshift-idle-reopen-source.json').write_text(json.dumps(report['timeshift_idle_reopen'],indent=2)+'\n')
         if args.timeshift_media:
             spec = importlib.util.spec_from_file_location('timeshift_media_probe',ROOT/'scripts/rust-timeshift-contracts/media_probe.py')
             media = importlib.util.module_from_spec(spec)
@@ -218,6 +243,8 @@ def main():
                     if response.status != 200:
                         raise RuntimeError('native Rust archive fixture reset failed')
                 test_environment.update(TIMESHIFT_ARCHIVE_ORIGIN=origin,TIMESHIFT_RUST_MEDIA_FILE=str(output/'timeshift-rust.ts'))
+                if args.timeshift_idle_reopen:
+                    test_environment['TIMESHIFT_RUST_IDLE']='1'
             result = subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-timeshift-http','--test','sql','--offline','--','--ignored','--nocapture'],env=test_environment,capture_output=True,text=True,timeout=180)
             (output/'rust-timeshift-sql.log').write_text(result.stdout+result.stderr)
             report['rust_timeshift_sql_passed'] = result.returncode == 0
@@ -229,7 +256,7 @@ def main():
                 decoded = command(compose+['exec','-T','baseline','ffmpeg','-hide_banner','-loglevel','error','-xerror','-progress','pipe:1','-nostats','-i','/evidence/timeshift-rust.ts','-map','0:v:0','-map','0:a:0','-t','3','-f','null','-'],timeout=45)
                 (output/'timeshift-rust.ts.decode.log').write_text(decoded)
                 frames=max((int(line.split('=')[1]) for line in decoded.splitlines() if line.startswith('frame=')),default=0)
-                report['rust_timeshift_media']={'native_http_passed':True,'positive_limit_live_refusal_and_retry_verified':True,'store_auth':'real Django schema, AuthService and JWT handshake','bytes':captured.stat().st_size,'sha256':hashlib.sha256(captured.read_bytes()).hexdigest(),'strict_audio_and_video_decode_passed':frames>=50,'frames':frames,'source_bound_candidate_image':False}
+                report['rust_timeshift_media']={'native_http_passed':True,'positive_limit_live_refusal_and_retry_verified':True,'store_auth':'real Django schema, AuthService and JWT handshake','bytes':captured.stat().st_size,'sha256':hashlib.sha256(captured.read_bytes()).hexdigest(),'strict_audio_and_video_decode_passed':frames>=50,'frames':frames,'source_bound_candidate_image':False,'same_session_idle_reopen_actual_sql_passed':args.timeshift_idle_reopen}
                 if frames<50:
                     raise RuntimeError('native Rust archive decode insufficient frames')
         if args.rust_ingest_test:
@@ -251,7 +278,7 @@ def main():
             test_environment=dict(environment,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+database_address+'/dispatcharr',INGEST_DISPOSABLE_FIXTURE='playback-fixture-only',INGEST_BATCH_FIXTURE=str(fixture_path),CARGO_TARGET_DIR=str(ROOT/'rust/target/ingest-sql-verification'))
             result=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-store','--test','import_sql','--locked','--offline','--','--ignored','--nocapture'],env=test_environment,capture_output=True,text=True,timeout=600)
             (output/'rust-ingest-sql.log').write_text(result.stdout+result.stderr)
-            report['rust_ingest_sql']={'passed':result.returncode==0,'fixture_tool_sha256':hashlib.sha256(fixture_tool).hexdigest(),'fixture_sha256':hashlib.sha256(fixture_path.read_bytes()).hexdigest(),'rust_source_sha256':{relative:hashlib.sha256(content).hexdigest() for relative,content in captured.items()},'cases':[step['name'] for step in fixture['steps']],'application_performance_verified':False}
+            report['rust_ingest_sql']={'passed':result.returncode==0,'fixture_tool_sha256':hashlib.sha256(fixture_tool).hexdigest(),'fixture_sha256':hashlib.sha256(fixture_path.read_bytes()).hexdigest(),'rust_source_sha256':{relative:hashlib.sha256(content).hexdigest() for relative,content in captured.items()},'cases':[step['name'] for step in fixture['steps']],'group_cases':[step['name'] for step in fixture.get('group_steps',[])],'application_performance_verified':False}
             result.check_returncode()
         inspection = json.loads(command([args.docker,'inspect',container('baseline')]))[0]
         report['source_image_id'] = inspection['Image']
@@ -305,6 +332,11 @@ def main():
                         if comparison_adapter.semantic(source_alias.get(key)) != comparison_adapter.semantic(candidate_alias.get(key)):
                             alias_differences.append({'profile_id':source_alias['profile_id'],'field':key,'source':source_alias.get(key),'candidate':candidate_alias.get(key)})
                 report['profile_alias_comparison'] = {'captured_wire_matches':not alias_differences,'differences':alias_differences,'application_parity_verified':False,'performance_verified':False}
+            if args.timeshift_idle_reopen:
+                report['candidate_timeshift_idle_reopen']=idle.capture(candidate,address('origin',8080),session_seed,output,observe,prefix='timeshift-candidate-idle')
+                decode_idle(report['candidate_timeshift_idle_reopen'])
+                report['timeshift_idle_reopen_comparison']=idle.compare(report['timeshift_idle_reopen'],report['candidate_timeshift_idle_reopen'])
+                (output/'timeshift-idle-reopen-candidate.json').write_text(json.dumps(report['candidate_timeshift_idle_reopen'],indent=2)+'\n')
             if args.timeshift_native_limit:
                 report['candidate_timeshift_native_limit']=native_limit.capture(candidate,address('origin',8080),session_seed,output,observe,limit_control,'candidate')
                 decode_limit(report['candidate_timeshift_native_limit'])
@@ -351,6 +383,10 @@ def main():
         # A characterization succeeds only when every request was recorded.
         # It does not claim that baseline defects satisfy RFC range behavior.
         report['passed'] = len(report['wire']['events']) == 7 and (not candidate_manifest or report['wire_comparison']['captured_wire_matches'])
+        if args.timeshift_busy_seek:
+            report['passed'] = report['passed'] and report['timeshift_busy_seek_source']['capture_complete']
+        if args.timeshift_idle_reopen:
+            report['passed'] = report['passed'] and report['timeshift_idle_reopen']['capture_complete'] and (not candidate_manifest or report['timeshift_idle_reopen_comparison']['captured_idle_reopen_matches'])
         if args.candidate_timeshift_media:
             report['passed'] = report['passed'] and report['timeshift_session_comparison']['captured_wire_matches'] and report['timeshift_media_comparison']['captured_media_matches']
         if args.timeshift_native_limit:

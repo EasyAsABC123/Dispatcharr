@@ -100,7 +100,7 @@ fn profile(raw: &Value, account: &Value) -> Value {
     value["account"] = json!({"id":account["id"],"name":account["name"],"account_type":account["account_type"],"is_xtream_codes":account["account_type"]=="XC"});
     value
 }
-fn filter(raw: &Value) -> Value {
+pub(crate) fn filter(raw: &Value) -> Value {
     fields(
         raw,
         &[
@@ -435,22 +435,25 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/m3u/accounts/{parent}/filters/",
-            get(filters).post(mutation),
+            get(filters).post(crate::provider_mutations::create_filter),
         )
         .route(
             "/api/m3u/accounts/{parent}/filters/{id}/",
             get(filter_detail)
-                .patch(mutation)
-                .put(mutation)
-                .delete(mutation),
+                .patch(crate::provider_mutations::patch_filter)
+                .put(crate::provider_mutations::put_filter)
+                .delete(crate::provider_mutations::delete_filter),
         )
-        .route("/api/m3u/server-groups/", get(server_groups).post(mutation))
+        .route(
+            "/api/m3u/server-groups/",
+            get(server_groups).post(crate::provider_mutations::create_server_group),
+        )
         .route(
             "/api/m3u/server-groups/{id}/",
             get(server_group)
-                .patch(mutation)
-                .put(mutation)
-                .delete(mutation),
+                .patch(crate::provider_mutations::patch_server_group)
+                .put(crate::provider_mutations::put_server_group)
+                .delete(crate::provider_mutations::delete_server_group),
         )
         .route("/api/epg/sources/", get(epg_sources).post(mutation))
         .route(

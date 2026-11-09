@@ -47,26 +47,47 @@ Completed verification:
   actual Redis, including cross-protocol races, hop ordering, source stop keys,
   same-session exemption and corruption guards. These helper fixtures use owned
   synthetic existing connection records and explicit policy inputs.
-- Four native HTTP, five pool/order/shutdown and one delayed actual Redis test
+- Four native HTTP, seven pool/order/shutdown and two delayed actual Redis tests
   cover positive limits, provider-full ordering, fences, missing-hash cleanup,
   unread bodies and ADMIT/CREATE/START/HEARTBEAT cancellation.
 - Actual Django Store/Auth/JWT native HTTP passed positive-limit 403 refusal,
   retry of the same capability 206 with exact 1,880,000 source bytes, grace cleanup
   and strict A/V decoding 74 frames. Refusal uses an explicitly synthetic owned
   live accounting record, not a fake authorization/provider resolver.
-- Frozen image 5 matches all 24 API/error cases, six actual media/provider/lifecycle
-  scenarios and actual-JWT positive-limit refusal/retry. All four candidate
+- Frozen image 9 matches all 24 API/error cases, six actual media/provider/lifecycle
+  scenarios and actual-JWT positive-limit refusal/retry on an established Redirect
+  capability with an empty allowed-profile list. All four candidate
   catch-up captures strictly decode audio/video 74 frames. Image/source binding
   and Compose cleanup passed. Native VOD 7 cases and both profile/React aliases
   also match in that run.
 - Compile and strict Clippy for all targets pass. Evidence is in
   `scripts/rust-timeshift-contracts/verified-{contracts,admission,native-media,compose}.json`.
 
-Remaining gates: direct-auth mint/adoption and XC playback; idle/busy/cross-worker
-pool adoption, cached final URL reuse and seeks/generation handoff; broader
+Remaining gates: direct-auth mint/adoption and XC playback; fingerprint/busy/cross-worker
+pool adoption and seeks/generation handoff; broader
 positive-cap/preemption/stop reasons; complete range position, stream statistics,
 pubsub/WebSocket effects; transforms/server groups and failure recovery;
 serializer/OPTIONS/path and unusual timestamp/integer corners; full resource
-comparison. Existing media/admission reuse fails explicitly until its remaining
-contracts are ported. See the contract scripts' MILESTONES.md. No M4 completion,
+comparison. Unsupported programme/profile adoption and busy/cross-worker reuse fail explicitly
+until their remaining contracts are ported. See the contract scripts' MILESTONES.md. No M4 completion,
 application parity or performance gain is claimed.
+
+Current follow-up: local same-capability idle Range reopen retains its scoped
+owner, re-reserves provider capacity, checks fresh user limits, reuses the cached
+final URL and fences old cleanup with a request epoch. It preserves cumulative
+bytes and connection/channel start times. Source characterization, 21 targeted HTTP/Redis regressions, the delayed provider
+reply cancellation case, strict Clippy and actual Django Store/Auth/JWT native
+HTTP proof have passed. Three Range responses match source hashes, preserve
+1,880,512 cumulative bytes and start times, retain the source middle-seek base,
+and cancel prior grace through startup retention. See `verified-idle.json`. Frozen image 9 also matches the original three Range/status/header/hash
+responses, metadata relationships, cleanup cancellation and retention; its
+established reopen strictly decodes audio/video (74 frames). See immutable
+provenance in `verified-compose.json`. This establishes only this local idle
+slice, with busy/fingerprint/cross-worker behavior still open.
+
+Busy-control preparation is separate: 448 pure decision vectors captured from
+immutable original views match `timeshift-core`, including full restart versus
+bounded startup Range, near-EOF thresholds and capped open-ended tail ranges.
+Original busy middle-seek, plain-reconnect and tail-probe HTTP/Redis snapshots
+are recorded in `python-busy-seek-goldens.json`; these are source characterization,
+not Rust busy-playback implementation or continuous quota sampling.

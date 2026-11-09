@@ -22,7 +22,7 @@ from tool_snapshot import snapshot_sources
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
-                 'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads')
+                 'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud')
 OPTIONAL_CONTRACT_SUITES=('proxy_auth',)
 
 
@@ -249,6 +249,8 @@ def main():
                                  ('groups','run_groups'),('channel_stops','run_channel_stops'),
                                  ('group_cleanup','run_group_cleanup'),('streams','run_streams'),
                                  ('provider_reads','run_provider_reads'),
+                                 ('server_group_crud','run_server_group_crud'),
+                                 ('filter_crud','run_filter_crud'),
                                  ('proxy_auth','run_proxy_auth')]:
                 if suite in selected_suites:
                     if suite=='core' and 'account_crud' in selected_suites:
@@ -260,6 +262,8 @@ def main():
                         report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
                         for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
+                    if suite=='server_group_crud':
+                        extra=(lambda payload:json.loads(execute('baseline','/integration/metadata_fixture.py',json.dumps(payload))),)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             status = 0 if all(check['passed'] for check in report['checks']) else 1
             report['passed'] = status == 0

@@ -88,3 +88,40 @@ therefore need another channel/live/VOD; changing User-Agent alone only avoids
 fingerprint adoption. Source limit-stop values/TTLs are live `true`/30seconds,
 VOD `true`/60seconds, Timeshift `limit`/60seconds; hop is `hop`/60seconds.
 Complete pubsub/WebSocket and generation effects remain separate gates.
+
+The frozen image 9 comparison includes established capabilities on a
+Redirect-profile channel whose user's allowed M3U profiles are empty. The
+original still proxies that bound capability; the allowed-profile filter belongs
+to the bare redirect selection path. Both apps matched positive-cap refusal and
+same-capability retry, the 24 API cases, six provider cases, exact media bytes,
+strict A/V decoding and cleanup. See `verified-compose.json` for immutable image
+and source hashes. General direct-auth/XC and lifecycle parity remain open.
+
+`python-idle-reopen-goldens.json` captures the original same-capability sequence
+of a 256-byte startup Range, a paced 1,880,000-byte reopen and a 256-byte middle
+seek. All return 206 and release the provider after the body. The pool retains
+the cached final URL, connection/channel start times and cumulative 1,880,512
+bytes. The last seek anchors position to 263.16778826271667 seconds. Its short
+transfer cancels the prior established disconnect grace, so pool/API/stats remain
+nine seconds later under startup-idle retention. Reproduce with
+`run.py --timeshift-idle-reopen --output <new-directory>` in the VOD contract
+runner. Observation excludes capability identifiers, JWTs and provider URLs.
+Add a frozen candidate overlay/manifest to compare this slice; comparisons keep
+byte/status/header/order equality and timestamp preservation relationships.
+Rust local idle reuse has passed actual-schema/Auth/JWT HTTP, exact three-range
+hashes and seek/retention metadata checks, 21 targeted HTTP/Redis tests and strict
+Clippy. `verified-idle.json` records host and immutable image 9 proof. The frozen app
+comparison matches all three responses and metadata/lifecycle observations with
+strict A/V (74-frame) decoding; every previously captured image 7 control also
+passes in the same isolated run. Busy seek generation handoff and cross-worker adoption are separate
+unfinished contracts.
+
+Busy source characterization is now in `python-busy-seek-goldens.json`. A middle
+seek cuts off the prior response and serves the requested 256 bytes from the same
+pool. A plain reconnect returns a new full 200 response and later removes the
+session after disconnect grace. A near-EOF 256-byte probe leaves the original
+transfer busy, with the existing single provider counter unchanged in before/
+during snapshots; the source's dedicated cached-CDN path has no pool/stat/profile
+side effects. These snapshots do not prove absence of a transient quota gap.
+`capture.py --busy-controls` records 448 immutable pure control vectors matched
+by Rust; HTTP busy handoff, side effects and cross-worker behavior remain open.

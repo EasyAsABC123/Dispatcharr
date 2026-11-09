@@ -4,6 +4,90 @@ use dispatcharr_store::{ImportedStream, Store};
 use serde_json::{json, Value};
 use std::{collections::HashMap, path::Path};
 
+async fn group_snapshot(store: &Store, prefix: &str) -> Value {
+    let names: Vec<String> = sqlx::query_scalar(
+        "SELECT name FROM dispatcharr_channels_channelgroup WHERE name LIKE $1 ORDER BY name",
+    )
+    .bind(format!("{prefix}%"))
+    .fetch_all(store.pool())
+    .await
+    .unwrap();
+    let relations:Vec<Value>=sqlx::query_scalar("SELECT jsonb_build_object('channel_group__name',g.name,'m3u_account_id',r.m3u_account_id,'custom_properties',r.custom_properties,'enabled',r.enabled,'auto_channel_sync',r.auto_channel_sync,'auto_sync_channel_start',r.auto_sync_channel_start,'auto_sync_channel_end',r.auto_sync_channel_end,'last_seen',r.last_seen,'is_stale',r.is_stale) FROM dispatcharr_channels_channelgroupm3uaccount r JOIN dispatcharr_channels_channelgroup g ON g.id=r.channel_group_id WHERE g.name LIKE $1 ORDER BY g.name,r.m3u_account_id")
+        .bind(format!("{prefix}%")).fetch_all(store.pool()).await.unwrap();
+    json!({"groups":names,"relations":relations})
+}
+fn normalize_group_timestamps(mut value: Value) -> Value {
+    for relation in value["relations"].as_array_mut().unwrap() {
+        let parsed = DateTime::parse_from_rfc3339(relation["last_seen"].as_str().unwrap()).unwrap();
+        relation["last_seen"] = json!(parsed.to_rfc3339_opts(chrono::SecondsFormat::Micros, true));
+    }
+    value
+}
+
+#[tokio::test]
+#[ignore = "requires INGEST_DISPOSABLE_FIXTURE and original-group-golden disposable database"]
+async fn original_groups_preserve_settings_xc_identity_and_bulk_write_boundaries() {
+    use dispatcharr_store::ImportedGroup;
+    assert_eq!(
+        std::env::var("INGEST_DISPOSABLE_FIXTURE").as_deref(),
+        Ok("playback-fixture-only")
+    );
+    let fixture: Value = serde_json::from_slice(
+        &std::fs::read(std::env::var("INGEST_BATCH_FIXTURE").unwrap()).unwrap(),
+    )
+    .unwrap();
+    let prefix = fixture["prefix"].as_str().unwrap();
+    assert!(prefix.starts_with("rust-ingest-"));
+    let store = Store::connect(&std::env::var("DATABASE_TEST_URL").unwrap(), 2)
+        .await
+        .unwrap();
+    for step in fixture["group_steps"].as_array().unwrap() {
+        if let Some(mutation) = step["mutation"].as_object() {
+            sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount SET custom_properties=$1,is_stale=true WHERE channel_group_id=$2 AND m3u_account_id=$3")
+                .bind(&mutation["custom_properties"]).bind(mutation["group_id"].as_i64().unwrap()).bind(mutation["account_id"].as_i64().unwrap())
+                .execute(store.pool()).await.unwrap();
+        }
+        let groups: Vec<ImportedGroup> = serde_json::from_value(step["groups"].clone()).unwrap();
+        let result = store
+            .import_m3u_groups(
+                step["account_id"].as_i64().unwrap(),
+                &step["account_properties"],
+                groups,
+                DateTime::parse_from_rfc3339(step["scan_time"].as_str().unwrap())
+                    .unwrap()
+                    .to_utc(),
+            )
+            .await;
+        assert_eq!(
+            result.is_err(),
+            step["error"].as_bool().unwrap(),
+            "{}: {result:?}",
+            step["name"]
+        );
+        assert_eq!(
+            normalize_group_timestamps(group_snapshot(&store, prefix).await),
+            normalize_group_timestamps(step["expected"].clone()),
+            "{}",
+            step["name"]
+        );
+    }
+    let before = group_snapshot(&store, prefix).await;
+    let repeated = ImportedGroup {
+        name: format!("{prefix} bounded"),
+        custom_properties: Default::default(),
+    };
+    assert!(store
+        .import_m3u_groups(
+            fixture["account_id"].as_i64().unwrap(),
+            &json!({}),
+            vec![repeated; 32769],
+            chrono::Utc::now()
+        )
+        .await
+        .is_err());
+    assert_eq!(group_snapshot(&store, prefix).await, before);
+}
+
 async fn snapshot(store: &Store, prefix: &str) -> Vec<Value> {
     let rows:Vec<Value>=sqlx::query_scalar("SELECT to_jsonb(s)-'id' FROM dispatcharr_channels_stream s WHERE tvg_id LIKE $1 ORDER BY stream_hash")
         .bind(format!("{prefix}%")).fetch_all(store.pool()).await.unwrap();

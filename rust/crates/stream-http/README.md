@@ -87,3 +87,31 @@ slow/fast viewers, bounded retention, final-viewer shutdown, initialization
 timeouts, upstream HTTP errors, retries, and shutdown capacity closure. Fixture
 packets test transport/alignment only; actual decoder checks and paired Docker
 performance measurements belong to the application-level verification stack.
+
+## Upstream HTTP session and encoding compatibility
+
+Native inputs use a new HTTP/1 client and cookie jar per provider attempt, including
+same-URL retries. No shared/global jar or cross-attempt idle pool is retained.
+Default upstream headers match the pinned Requests reader; empty User-Agent falls
+back to `python-requests/2.34.2`, custom values use Latin-1 and invalid leading
+whitespace/CRLF/non-Latin-1 values fail before sending a request. Adapter retries
+are disabled; the existing source retry state machine owns retries. Only200 is
+accepted;30 redirects succeed and31 fail.
+
+Streaming gzip and ZLIB/raw-deflate fallback follow the original urllib3 decoder
+behavior, including concatenated gzip members, trailing junk after a valid member,
+and its five-link stacked coding limit. The port retains original Dispatcharr
+credit and recognizes Requests/urllib3 contributors for these transport semantics.
+Decoded frames are at most8192bytes; the deflate first-output fallback probe is
+capped at64KiB. Cumulative cookie headers are capped at64KiB/512headers per attempt;
+request/final response headers have a64KiB safety budget. These explicit resource
+caps do not claim unbounded legacy-input equivalence. More cookie-policy, TLS/CA
+and malformed-encoding partial-output edge cases remain separate verification.
+
+Source41 loopback cases, six codec tests, six native engine tests (one real-Redis
+provider cancellation/rollback gate), nineteen prior HTTP regressions and frozen
+image7 real H264 byte-prefix/decoder/quota cases pass. See
+`verified-upstream-http.json` and
+`../../../docs/rust-http-input-parity.md`. The prior source reopen failure is
+preserved; Rust stays running across all encoded modes to check cookie isolation.
+No application performance gain is inferred from these transport fixtures.

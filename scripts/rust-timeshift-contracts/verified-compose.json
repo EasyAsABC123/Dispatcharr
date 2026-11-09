@@ -5,9 +5,9 @@
   "passed": true,
   "cleanup_passed": true,
   "candidate_provenance": {
-    "image_id": "sha256:5f32be58351267d8196281bf3e7f2cf690f6995272b40c735b79935b60057b5e",
-    "source_tree_sha256": "3fbcd0564daa8c9be9be87481d6c7530de15d9fa1101aae9f7f7c1656b2185ec",
-    "build_manifest_sha256": "affa25f6e11648aec162722be70ac72556bb690268221a6cbe07b5539c677680"
+    "image_id": "sha256:5d30b71b43e4b30549eaa82b692c60069def5e36c35f25eb4441fefe6c5a5a78",
+    "source_tree_sha256": "1c92452bfb6ba16c2d0ed9453c380978c8e7becf48970fba492eab6f5461396a",
+    "build_manifest_sha256": "e0c2ab16586699df2ea23106a9992c4659432040dbf67290a0451544b154d992"
   },
   "fixture_ports": {
     "host_range": [
@@ -21,34 +21,34 @@
     "services": {
       "baseline": [
         {
-          "host": 63814,
+          "host": 63855,
           "container": 5656
         },
         {
-          "host": 63815,
+          "host": 63856,
           "container": 5432
         },
         {
-          "host": 63816,
+          "host": 63857,
           "container": 6379
         }
       ],
       "origin": [
         {
-          "host": 63817,
+          "host": 63858,
           "container": 8080
         }
       ],
       "candidate": [
         {
-          "host": 63818,
+          "host": 63859,
           "container": 9192
         }
       ]
     },
     "selection": "bind probes held together until overlay is written; released before Docker starts",
     "tool_sha256": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
-    "overlay_sha256": "40a714179df86bf460cefdc477ba556561b46e75cbecb1326ec94bc96cd6e6b9"
+    "overlay_sha256": "f20c60d744a725aae2e13fce56137248956897dac09d8c709f6b102f50e95e65"
   },
   "fixture_start_attempts": [
     {
@@ -64,6 +64,7 @@
     "application_parity_verified": false,
     "performance_verified": false,
     "remaining_gates": [
+      "bound candidate build/source provenance",
       "authenticated handoff and user/network controls",
       "provider/cross-worker session lifecycle",
       "full metadata/WebSocket side effects",
@@ -113,8 +114,8 @@
       "strict_decoder_passed": true
     }
   ],
-  "scope": "Frozen default-Proxy API-capability native catch-up/media/lifecycle and positive-cap refusal/retry plus native VOD/alias slice; not full M4 parity",
-  "evidence": "artifacts/rust/m4-timeshift-positive-frozen-compose-1/vod-contracts.json",
+  "scope": "Frozen API-capability native catch-up/media/lifecycle, same-session idle Range reopen and Redirect positive-cap refusal/retry, plus native VOD/alias slice; not full M4 parity",
+  "evidence": "artifacts/rust/m4-timeshift-idle-frozen-compose-1/vod-contracts.json",
   "application_parity_verified": false,
   "performance_verified": false,
   "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
@@ -123,7 +124,8 @@
     "catchup_media_provider_lifecycle": 6,
     "native_vod": 7,
     "literal_vod_profile_react_aliases": 2,
-    "positive_native_limit_refusal_and_same_capability_retry": 2
+    "positive_native_limit_refusal_and_same_capability_retry": 2,
+    "same_session_idle_range_reopens": 3
   },
   "catchup_decoders": [
     {
@@ -148,20 +150,36 @@
       "case": "positive-native-limit-retry",
       "frames": 74,
       "strict_audio_video_decode_passed": true
+    },
+    {
+      "case": "idle-established-reopen",
+      "frames": 74,
+      "strict_audio_video_decode_passed": true
     }
   ],
   "positive_native_limit_configuration": {
     "user_limit": 1,
     "terminate_on_limit_exceeded": false,
-    "existing_live_record": "synthetic owned source-accounting hash; no media body"
+    "existing_live_record": "synthetic owned source-accounting hash; no media body",
+    "stream_profile_context": "Redirect channel established capability; allowed profiles empty"
   },
   "remaining_gates": [
-    "Redirect-profile established-capability context fix is working-tree follow-up, not in this image",
     "native direct-auth/XC flows",
-    "idle/busy/cross-worker adoption and seeks/generation handoff",
+    "busy/cross-worker/fingerprint adoption and seeks/generation handoff",
     "broader positive user policy and stop/preemption matrix",
     "complete statistics/position/pubsub/WebSocket effects",
     "provider transforms/server groups and failure corners",
     "performance characterization"
-  ]
+  ],
+  "timeshift_idle_reopen_comparison": {
+    "captured_idle_reopen_matches": true,
+    "differences": [],
+    "normalizations": [
+      "wall-clock timestamps compared by preservation/reanchor relationships",
+      "numeric seek base tolerance 1e-9 seconds",
+      "bounded sliding TTLs account for observer boot"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  }
 }

@@ -20,6 +20,10 @@ diagnostics. Provider usage fixtures distinguish DB viewers1, Redis reservations
 and XC reported connections11 instead of allowing all-zero getters to mask gaps.
 See [provider read contracts](../rust-account-contracts/PROVIDER-READ-CONTRACTS.md)
 for field/permission semantics and unsupported writes/jobs.
+The subsequent [no-job provider CRUD run](verified-integration-m6-provider-crud-image8-1.json)
+passed85 focused and818 complete default checks on immutable image8. It covers
+ServerGroup and M3UFilter writes only; it does not validate intermediate native
+ingestion or Timeshift idle work present in that snapshot.
 
 Build a source-bound immutable candidate, then run the disposable Compose probe:
 

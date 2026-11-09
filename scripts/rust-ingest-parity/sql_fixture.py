@@ -5,6 +5,7 @@ database state for the independent Rust sink. No application credentials leave
 the process; all rows are local synthetic fixture data.
 """
 import ast
+import copy
 import datetime
 import json
 import os
@@ -18,7 +19,7 @@ sys.path.insert(0,'/app')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
 import django
 django.setup()
-from apps.channels.models import ChannelGroup,Stream
+from apps.channels.models import ChannelGroup,ChannelGroupM3UAccount,Stream
 from apps.m3u.models import M3UAccount
 from apps.m3u import tasks
 from core.models import StreamProfile
@@ -123,7 +124,53 @@ def main():
         stream=Stream(**data);Stream.objects.bulk_create([stream])
         Stream.objects.filter(pk=stream.pk).update(updated_at=row['updated_at'],last_seen=row['last_seen'])
         restored.append(stream.pk)
-    print(json.dumps({'account_id':account.id,'prefix':prefix,'initial':initial,'steps':steps,
+    # Separate group-sync oracle: preserve the task's actual bulk-write order,
+    # legacy JSON normalization and global-group/provider-link distinction.
+    initial_relation=ChannelGroupM3UAccount(channel_group=group,m3u_account=account,
+        custom_properties={'xc_id':True,'keep':'user-setting'},enabled=False,
+        auto_channel_sync=True,auto_sync_channel_start=1.5,auto_sync_channel_end=10.5,
+        last_seen=old_time,is_stale=True)
+    ChannelGroupM3UAccount.objects.bulk_create([initial_relation])
+    initial_relation_data=ChannelGroupM3UAccount.objects.filter(pk=initial_relation.pk).values().get()
+    def group_snapshot():
+        names=list(ChannelGroup.objects.filter(name__startswith=prefix).order_by('name').values_list('name',flat=True))
+        relations=list(ChannelGroupM3UAccount.objects.filter(channel_group__name__startswith=prefix)
+            .order_by('channel_group__name','m3u_account_id').values('channel_group__name','m3u_account_id','custom_properties',
+                'enabled','auto_channel_sync','auto_sync_channel_start','auto_sync_channel_end','last_seen','is_stale'))
+        return {'groups':names,'relations':relations}
+    group_steps=[]
+    missing=copy.copy(account);missing.pk=-1
+    for index,(name,selected_account,account_props,incoming,mutation) in enumerate([
+        ('create-disabled-preserve-bool-xc',account,{'auto_enable_new_groups_live':False},
+         {group.name:{'xc_id':1},prefix+' B':{'xc_id':11,'incoming':'new'},prefix+' A':{}},None),
+        ('change-xc-preserve-user-settings',account,{}, {group.name:{'xc_id':2}},None),
+        ('remove-xc-preserve-disabled',account,{}, {group.name:{},prefix+' B':{},prefix+' C':{}},None),
+        ('normalize-legacy-string',account,{}, {group.name:{'xc_id':4}},json.dumps({'xc_id':4,'keep':'legacy-user'})),
+        ('normalize-invalid-legacy-string',account,{}, {group.name:{}},'not-json'),
+        ('retain-unchanged-nonobject',account,{}, {group.name:{}},[1,2]),
+        ('retain-unchanged-null',account,{}, {group.name:{}},{'__fixture_sql_null__':True}),
+        ('other-provider-no-manual-link',other,{}, {prefix+' D':{'xc_id':17}},None),
+        ('group-create-survives-later-fk-error',missing,{}, {prefix+' E':{}},None),
+        ('legacy-account-auto-enable',account,json.dumps({'auto_enable_new_groups_live':False}), {prefix+' F':{}},None),
+        ('group-create-survives-invalid-auto-enable',account,{'auto_enable_new_groups_live':None}, {prefix+' G':{}},None),
+    ]):
+        if mutation=={'__fixture_sql_null__':True}:mutation=None;mutate_null=True
+        else:mutate_null=False
+        if mutation is not None or mutate_null:
+            ChannelGroupM3UAccount.objects.filter(pk=initial_relation.pk).update(custom_properties=mutation,is_stale=True)
+        selected_account.custom_properties=account_props
+        scan_time=timezone.now()+datetime.timedelta(seconds=index+1)
+        error=False
+        try:tasks.process_groups(selected_account,incoming,scan_time)
+        except Exception:error=True
+        group_steps.append({'name':name,'account_id':selected_account.pk,'account_properties':account_props,
+            'groups':[{'name':key,'custom_properties':value} for key,value in incoming.items()],
+            'scan_time':scan_time,'mutation':None if mutation is None and not mutate_null else {'group_id':group.pk,'account_id':account.pk,'custom_properties':mutation},
+            'error':error,'expected':group_snapshot()})
+    ChannelGroupM3UAccount.objects.filter(channel_group__name__startswith=prefix).delete()
+    ChannelGroup.objects.filter(name__startswith=prefix).exclude(pk=group.pk).delete()
+    ChannelGroupM3UAccount.objects.bulk_create([ChannelGroupM3UAccount(**initial_relation_data)])
+    print(json.dumps({'account_id':account.id,'prefix':prefix,'initial':initial,'steps':steps,'group_steps':group_steps,
                       'group_id':group.id,'restored_ids':restored},default=serialize))
 
 

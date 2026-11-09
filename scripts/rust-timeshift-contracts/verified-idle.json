@@ -1,0 +1,84 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "format_version": 1,
+  "scope": "Host actual-schema/Auth/JWT and immutable Docker native API-capability same-session idle Range reopen compared with original backend",
+  "evidence": "artifacts/rust/m4-timeshift-idle-native-sql-1/vod-contracts.json",
+  "evidence_sha256": "88c0371e793e9d6f3fc58ea76ecdea9264229d740f136355285404a31c8bf3ad",
+  "sql_test_log_sha256": "c6162f52c41fc5b27f892991407ead8e7df36ecb2324fe169799b08cb98e7742",
+  "reviewed_source_sha256": {
+    "rust/crates/timeshift-http/src/media_pool.rs": "958bf4a7097d5084a519473df616d17cf7449387d0967bc5a0fdf2f39e2e7ca0",
+    "rust/crates/timeshift-http/src/media.rs": "39cdb2755cc4718fdebf258a3635af59d4fe1c26794249136a5284301c28444d",
+    "rust/crates/timeshift-http/tests/sql.rs": "27a4e53a55876290e9b4ae591b53032b8a14917151a11eba911af8d9fb0f6452",
+    "rust/crates/timeshift-http/tests/media_pool.rs": "c677d5f3af6b75fa5b79ee6307b008ddf2a32223802f73b792568024469f1c53",
+    "rust/crates/timeshift-http/tests/media_cancel.rs": "fb905fc815d029b3688ca6e3e41fc593df7c0c4f79e85ac5590621af00dce0ad"
+  },
+  "source_bound_candidate_image": true,
+  "actual_sql_native_idle_reopen_passed": true,
+  "range_bytes": [
+    256,
+    1880000,
+    256
+  ],
+  "cumulative_bytes": 1880512,
+  "middle_seek_base_secs": 263.16778826271667,
+  "preserved_start_times": true,
+  "prior_grace_cancelled": true,
+  "startup_retention_observed_seconds": 9,
+  "provider_connections_after_bodies": 0,
+  "strict_audio_video_decoder": {
+    "native_http_passed": true,
+    "positive_limit_live_refusal_and_retry_verified": true,
+    "store_auth": "real Django schema, AuthService and JWT handshake",
+    "bytes": 1880000,
+    "sha256": "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0",
+    "strict_audio_and_video_decode_passed": true,
+    "frames": 74,
+    "source_bound_candidate_image": false
+  },
+  "targeted_tests": {
+    "native_http": 4,
+    "pool_quota_lifecycle": 7,
+    "actual_redis_delayed_reply": 2,
+    "native_sessions": 4,
+    "provider_transport": 4,
+    "actual_sql_http": 1,
+    "python_fixture_comparison": 5
+  },
+  "strict_clippy_all_targets_passed": true,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
+  "remaining_gates": [
+    "busy seeks/generation handoff",
+    "cross-worker/fingerprint adoption",
+    "direct-auth and XC playback",
+    "full metadata/position/pubsub/WebSocket side effects",
+    "provider/configuration/fault matrix",
+    "resource/performance acceptance"
+  ],
+  "candidate_provenance": {
+    "image_id": "sha256:5d30b71b43e4b30549eaa82b692c60069def5e36c35f25eb4441fefe6c5a5a78",
+    "source_tree_sha256": "1c92452bfb6ba16c2d0ed9453c380978c8e7becf48970fba492eab6f5461396a",
+    "build_manifest_sha256": "e0c2ab16586699df2ea23106a9992c4659432040dbf67290a0451544b154d992"
+  },
+  "frozen_compose_evidence": "artifacts/rust/m4-timeshift-idle-frozen-compose-1/vod-contracts.json",
+  "frozen_compose_evidence_sha256": "9db524ef56ddc88f315c77e33e2dc35304065f88e15537602fbb62d0c221feb5",
+  "frozen_compose_comparison": {
+    "captured_idle_reopen_matches": true,
+    "differences": [],
+    "normalizations": [
+      "wall-clock timestamps compared by preservation/reanchor relationships",
+      "numeric seek base tolerance 1e-9 seconds",
+      "bounded sliding TTLs account for observer boot"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "frozen_candidate_idle_decoder": {
+    "frames": 74,
+    "strict_audio_video_decode_passed": true
+  }
+}

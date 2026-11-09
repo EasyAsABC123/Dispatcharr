@@ -219,3 +219,9 @@ pub use ranges::{
     downstream_length_headers, parse_client_range, parse_content_range, representation_length,
     ContentRange, LengthRequest, RangeOverflow,
 };
+
+mod seeks;
+pub use seeks::{
+    cap_open_ended_range, is_full_restart_range, is_near_eof_probe, should_displace_busy_playback,
+    should_preempt_plain_reconnect, EOF_PROBE_TAIL_BYTES, EOF_PROBE_UNKNOWN_LENGTH_MIN,
+};

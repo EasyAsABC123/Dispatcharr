@@ -1,0 +1,150 @@
+{
+  "scope": "one paired many-channel full-retention diagnostic; memory gate failed; no gain accepted",
+  "passed_delivery": true,
+  "memory_gate_passed": false,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "artifact": "artifacts/rust/m2-many-channel-retention-diagnostic-1/run.json",
+  "candidate_image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+  "candidate_source_tree_sha256": "9610d95e612c3736113eadb97bb7322b6d0a91d7064d13133334b57f21344dcc",
+  "comparisons": [
+    {
+      "scenario": "many-channel",
+      "viewers": 10,
+      "trial": 1,
+      "passed": false,
+      "failures": [
+        "memory_bytes_peak ratio 1.0095 exceeds 1.0000"
+      ],
+      "candidate_over_baseline": {
+        "cpu_percent_mean": 0.22353535991910511,
+        "memory_bytes_peak": 1.009465306753207,
+        "first_byte_ms_p95": 0.06894402217549792
+      }
+    }
+  ],
+  "cleanup": "isolated project removed",
+  "configured_retention_seconds": 60,
+  "configured_local_ring_bytes_per_channel": 16777216,
+  "configured_local_ring_limit_ten_channels": 167772160,
+  "direct_local_retained_bytes_observed": false,
+  "direct_redis_retained_bytes_observed": false,
+  "components": {
+    "baseline": {
+      "summary": {
+        "bytes": 165802464,
+        "requests": 10,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 61.426418650000414,
+        "bytes_per_second": 2763374.4,
+        "first_byte_ms_median": 78.30318199921749,
+        "first_byte_ms_p95": 116.84456099465024,
+        "first_byte_samples": 10,
+        "viewers_without_data": 0,
+        "error_kinds": {},
+        "cpu_percent_mean": 23.7345,
+        "memory_bytes_peak": 542826823.68
+      },
+      "containers": [
+        {
+          "service": "baseline",
+          "container_id": "132c01ef32cf090eadba624ab2dbda179b40f51984bd3025d9d90de4a3f0d98f",
+          "cpu_percent_mean": 20.976,
+          "docker_working_memory_bytes_peak": 452355686.4,
+          "process_rss_bytes_sum_peak_diagnostic": 577142784,
+          "process_name_rss_sum_peaks_diagnostic": {
+            "python": 14589952,
+            "postgres": 142557184,
+            "redis-server": 173199360,
+            "uwsgi": 246804480
+          },
+          "cpu_memory_sample_count": 20,
+          "rss_sample_count": 10
+        },
+        {
+          "service": "origin",
+          "container_id": "06a7dc66c46e094f3d152c8799090ffdcbc3cadbe21088846f7b5be65ae82f10",
+          "cpu_percent_mean": 2.7585,
+          "docker_working_memory_bytes_peak": 90796195.84,
+          "process_rss_bytes_sum_peak_diagnostic": 24580096,
+          "process_name_rss_sum_peaks_diagnostic": {
+            "python": 24580096
+          },
+          "cpu_memory_sample_count": 20,
+          "rss_sample_count": 10
+        }
+      ],
+      "observed_postgres_process_count_range": [
+        9,
+        9
+      ],
+      "observed_postgres_process_count_median": 9.0,
+      "postgres_count_note": "Includes postmaster/background processes; pg_stat_activity/session state/private/PSS were not collected."
+    },
+    "candidate": {
+      "summary": {
+        "bytes": 166534160,
+        "requests": 10,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 60.421738851000555,
+        "bytes_per_second": 2775569.3333333335,
+        "first_byte_ms_median": 6.8131340012769215,
+        "first_byte_ms_p95": 8.055734004301485,
+        "first_byte_samples": 10,
+        "viewers_without_data": 0,
+        "error_kinds": {},
+        "cpu_percent_mean": 5.3055,
+        "memory_bytes_peak": 547964846.08
+      },
+      "containers": [
+        {
+          "service": "baseline",
+          "container_id": "132c01ef32cf090eadba624ab2dbda179b40f51984bd3025d9d90de4a3f0d98f",
+          "cpu_percent_mean": 0.6405,
+          "docker_working_memory_bytes_peak": 291189555.2,
+          "process_rss_bytes_sum_peak_diagnostic": 451133440,
+          "process_name_rss_sum_peaks_diagnostic": {
+            "python": 14589952,
+            "postgres": 266264576,
+            "redis-server": 170278912
+          },
+          "cpu_memory_sample_count": 20,
+          "rss_sample_count": 10
+        },
+        {
+          "service": "origin",
+          "container_id": "06a7dc66c46e094f3d152c8799090ffdcbc3cadbe21088846f7b5be65ae82f10",
+          "cpu_percent_mean": 2.629,
+          "docker_working_memory_bytes_peak": 91236597.76,
+          "process_rss_bytes_sum_peak_diagnostic": 24584192,
+          "process_name_rss_sum_peaks_diagnostic": {
+            "python": 24584192
+          },
+          "cpu_memory_sample_count": 20,
+          "rss_sample_count": 10
+        },
+        {
+          "service": "candidate",
+          "container_id": "3694be320bf66119f73266fab0bbacf23abd2392fe2f90a5ccbb367823024d7d",
+          "cpu_percent_mean": 2.036,
+          "docker_working_memory_bytes_peak": 167143014.4,
+          "process_rss_bytes_sum_peak_diagnostic": 174546944,
+          "process_name_rss_sum_peaks_diagnostic": {
+            "dispatcharr-rs": 174546944
+          },
+          "cpu_memory_sample_count": 20,
+          "rss_sample_count": 10
+        }
+      ],
+      "observed_postgres_process_count_range": [
+        14,
+        14
+      ],
+      "observed_postgres_process_count_median": 14.0,
+      "postgres_count_note": "Includes postmaster/background processes; pg_stat_activity/session state/private/PSS were not collected."
+    }
+  },
+  "interpretation": "Full-group working-memory Rust/source1.009465(+4.90MiB) fails declared bound. Native process159.4MiB working-memory supports local-ring retention hypothesis; PG+Redis baseline-container difference and extra PostgreSQL processes also matter. Per-component peaks are independent, and RSS overcounts shared pages. Direct retained-byte plus pg_stat_activity/private/PSS telemetry required before causal claims."
+}

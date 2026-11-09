@@ -1,0 +1,574 @@
+{
+  "scope": "full Compose encoded H264 byte/decoder, attempt-cookie and provider-quota contracts",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_worker_scope": "fresh source worker per mode after separately preserved reopen failure; Rust process reused across all modes to verify cookie isolation",
+  "candidate_build_manifest": "artifacts/rust/candidate-build-m2-http-m6-pipeline-image7-1/build.json",
+  "candidate_build_manifest_sha256": "d73bcc572a7ff4c4901d976b12730cc4ce65aad71483a4f4da7407f257fb740e",
+  "candidate_image_id": "sha256:48a362b4a67141de58e626cce8e33f81eab53f1ee5ae002548059dad6dc1d25c",
+  "candidate_source_tree_sha256": "47137251f5729260c9e79293bfe436171f86ac07fc1233ed08b319e8b94382d7",
+  "fixture": {
+    "active": 0,
+    "maximum_active": 0,
+    "connections": 0,
+    "disconnections": 0,
+    "requests": [],
+    "paths": {},
+    "decoded_bytes": 0,
+    "wire_bytes": 0,
+    "fixture_sha256": "38dc5af5d5b71da94fd4639b75bfce930f575ee65337042c5e30c0ce04cc5edf",
+    "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+    "prefix_bytes": 770048
+  },
+  "provider_max_streams": 1,
+  "cases": [
+    {
+      "backend": "baseline",
+      "mode": "cookie-gzip",
+      "independent_source_worker": true,
+      "rust_process_reused_across_modes": false,
+      "during": {
+        "owner": "080dc894e7bf:254",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 17,
+        "input_index": 6
+      },
+      "quota_rejection": {
+        "status": 503,
+        "body": {
+          "error": "All active M3U profiles have reached maximum connection limits",
+          "waited": "2s"
+        }
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 2302812,
+        "media_bytes": 1494224,
+        "packets": 12249,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/0.ts",
+          "canonical": "/live/0.ts",
+          "mode": "cookie-gzip",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        },
+        {
+          "path": "/encoded/gzip/0.ts",
+          "canonical": "/live/0.ts",
+          "mode": "cookie-gzip",
+          "cookie_present": true,
+          "cookie_valid": true,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "mode": "identity-clean",
+      "independent_source_worker": true,
+      "rust_process_reused_across_modes": false,
+      "during": {
+        "owner": "080dc894e7bf:539",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 17,
+        "input_index": 6
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535208,
+        "media_bytes": 997340,
+        "packets": 8166,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/1.ts",
+          "canonical": "/live/1.ts",
+          "mode": "identity-clean",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "mode": "deflate",
+      "independent_source_worker": true,
+      "rust_process_reused_across_modes": false,
+      "during": {
+        "owner": "080dc894e7bf:840",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 17,
+        "input_index": 6
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535208,
+        "media_bytes": 997340,
+        "packets": 8166,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/2.ts",
+          "canonical": "/live/2.ts",
+          "mode": "deflate",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "mode": "raw",
+      "independent_source_worker": true,
+      "rust_process_reused_across_modes": false,
+      "during": {
+        "owner": "080dc894e7bf:1142",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 17,
+        "input_index": 6
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535208,
+        "media_bytes": 997340,
+        "packets": 8166,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/3.ts",
+          "canonical": "/live/3.ts",
+          "mode": "raw",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "mode": "stacked",
+      "independent_source_worker": true,
+      "rust_process_reused_across_modes": false,
+      "during": {
+        "owner": "080dc894e7bf:1444",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 17,
+        "input_index": 6
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535208,
+        "media_bytes": 997340,
+        "packets": 8166,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/4.ts",
+          "canonical": "/live/4.ts",
+          "mode": "stacked",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "mode": "cookie-gzip",
+      "independent_source_worker": false,
+      "rust_process_reused_across_modes": true,
+      "during": {
+        "owner": "rust:f0395693-caf2-4bdb-b5ac-6f436570c3c1",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 18,
+        "input_index": 6
+      },
+      "quota_rejection": {
+        "status": 503,
+        "body": {
+          "error": "All active M3U profiles have reached maximum connection limits"
+        }
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535772,
+        "media_bytes": 997340,
+        "packets": 8169,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/0.ts",
+          "canonical": "/live/0.ts",
+          "mode": "cookie-gzip",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        },
+        {
+          "path": "/encoded/gzip/0.ts",
+          "canonical": "/live/0.ts",
+          "mode": "cookie-gzip",
+          "cookie_present": true,
+          "cookie_valid": true,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "mode": "identity-clean",
+      "independent_source_worker": false,
+      "rust_process_reused_across_modes": true,
+      "during": {
+        "owner": "rust:3be8ef66-c7ea-4092-a61c-4d956a03d974",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 18,
+        "input_index": 6
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535960,
+        "media_bytes": 997340,
+        "packets": 8170,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/1.ts",
+          "canonical": "/live/1.ts",
+          "mode": "identity-clean",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "mode": "deflate",
+      "independent_source_worker": false,
+      "rust_process_reused_across_modes": true,
+      "during": {
+        "owner": "rust:e9830cf4-9891-4ba3-a828-eb4f860c5906",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 18,
+        "input_index": 6
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535772,
+        "media_bytes": 997340,
+        "packets": 8169,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/2.ts",
+          "canonical": "/live/2.ts",
+          "mode": "deflate",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "mode": "raw",
+      "independent_source_worker": false,
+      "rust_process_reused_across_modes": true,
+      "during": {
+        "owner": "rust:a376c408-7956-4356-87cc-3db97c5175c8",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 18,
+        "input_index": 6
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535772,
+        "media_bytes": 997340,
+        "packets": 8169,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/3.ts",
+          "canonical": "/live/3.ts",
+          "mode": "raw",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "mode": "stacked",
+      "independent_source_worker": false,
+      "rust_process_reused_across_modes": true,
+      "during": {
+        "owner": "rust:bd50013f-139d-4917-aff9-87a568b0be05",
+        "slots": 1,
+        "clients": 1,
+        "metadata_fields": 18,
+        "input_index": 6
+      },
+      "after": {
+        "owner": null,
+        "slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null
+      },
+      "reader": {
+        "bytes": 1535772,
+        "media_bytes": 997340,
+        "packets": 8169,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      },
+      "prefix_sha256": "b320ec775f5f925c04b916e74e7e3d47465ee6d6ad3255a260afda7c046d995d",
+      "prefix_reference_equal": true,
+      "decoder": {
+        "frames": 74,
+        "audio_video": true
+      },
+      "requests": [
+        {
+          "path": "/live/4.ts",
+          "canonical": "/live/4.ts",
+          "mode": "stacked",
+          "cookie_present": false,
+          "cookie_valid": false,
+          "user_agent_present": true
+        }
+      ],
+      "connections": 1,
+      "passed": true
+    }
+  ],
+  "comparisons": [
+    {
+      "mode": "cookie-gzip",
+      "prefix_equal": true
+    },
+    {
+      "mode": "identity-clean",
+      "prefix_equal": true
+    },
+    {
+      "mode": "deflate",
+      "prefix_equal": true
+    },
+    {
+      "mode": "raw",
+      "prefix_equal": true
+    },
+    {
+      "mode": "stacked",
+      "prefix_equal": true
+    }
+  ],
+  "cleanup": "isolated Compose project removed",
+  "artifact": "artifacts/rust/m2-upstream-media-image7-2/upstream-media.json",
+  "prior_source_reopen_failure": "artifacts/rust/m2-upstream-media-image7-1/upstream-media.json"
+}

@@ -11,6 +11,12 @@ use std::{collections::BTreeMap, sync::OnceLock};
 pub use validation::{validate_playlist_head, HeadValidation, VALIDATION_READ_BYTES};
 mod projection;
 pub use projection::{project_entry, ProjectedStream, ProjectionContext, ProjectionError};
+mod cache;
+pub use cache::{CacheDownload, CacheError, DownloadStats};
+mod uploads;
+pub use uploads::{with_uploaded_playlist, UploadError, UploadLimits};
+mod prepared;
+pub use prepared::{prepare_playlist, PreparationError, PreparationLimits, PreparedPlaylist};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Entry {

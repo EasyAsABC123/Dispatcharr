@@ -43,8 +43,20 @@ bytes/frame, match the source five-link decoding limit and raw-deflate fallback,
 and retain a bounded64KiB first-output probe. Cookie/header resource budgets are
 explicit safety caps. Six codec tests, six native HTTP tests (including real
 Redis cancellation/failure provider rollback), and nineteen existing HTTP
-regressions pass. Frozen image5 predates these cookie/codec changes; actual
-encoded H264/cookie playback on a new immutable image remains required.
+regressions pass. Frozen image5 predates these cookie/codec changes.
+
+Frozen image7 passed the full Compose encoded H264 gate: cookie-gzip redirect,
+clean-cookie identity, ZLIB deflate, raw deflate and stacked gzip/deflate on both
+backends. All ten captures decoded74video frames with audio; every770048-byte
+prefix matched the original fixture, including all five source/Rust pairs.
+Provider limit503 rejected an additional stream without another origin; every
+case cleared owner/provider/client/metadata/input state. Rust reused the same
+process across all five modes, proving cookies did not leak into later channels.
+Source used a fresh worker per mode after a separately preserved source reopen
+failure (cookie-gzip passed, subsequent identity stalled with no input index).
+This functional isolation is explicit and cannot establish performance gains.
+Exact image7/source binding and comparisons:
+`scripts/rust-integration/verified-upstream-media-image7-1.json`.
 
 Environment proxies/custom CA bundles, all cookie-policy edge cases and complete
 malformed-encoding partial-output equivalence remain separate gaps. Do not enable

@@ -13,6 +13,10 @@ mod channel_writes;
 mod channels;
 mod core_reads;
 mod import_batches;
+mod import_groups;
+pub use import_groups::{
+    GroupImportCounts, ImportedGroup, MAX_IMPORT_GROUPS, MAX_IMPORT_GROUP_BYTES,
+};
 mod json_compat;
 pub mod realtime;
 mod startup;
@@ -21,6 +25,7 @@ pub use import_batches::{
 };
 mod passwords;
 mod playback;
+mod provider_mutations;
 mod provider_reads;
 mod stream_validation;
 mod stream_writes;

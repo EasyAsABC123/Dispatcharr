@@ -114,3 +114,24 @@ Include PostgreSQL, Redis, worker and fixture resources. Parser-only throughput
 does not establish import-job savings or full-application performance acceptance.
 
 The latest component gate passed [2,133 source comparisons](../scripts/rust-ingest-parity/verified-components-5.json), including 400 row projections. The [six-scenario real PostgreSQL gate](../scripts/rust-ingest-parity/verified-batch-pipeline-sql-5.json) now joins the streaming parser, typed projection and batch sink, and checks the resulting rows against the original container. These gates do not enable scheduled refresh APIs.
+
+The next working-tree increment stages decoded HTTP chunks to disk with only a
+32-KiB validation prefix in memory. Empty, invalid, oversized and dropped
+downloads retain the old cache and remove their staging file. An existing
+`.tmp` file is preserved until account-lock recovery establishes ownership;
+unowned staging-file recovery is an explicit remaining job integration gate.
+HTTP status handling, authentication, download progress and final job events are
+still separate from this disk component.
+
+Uploaded files now have a streaming reader for case-sensitive `.gz`, `.xz` and
+`.zip` suffixes. ZIP selection preserves the first matching lowercase `.m3u`
+name and Python's last-entry lookup for duplicate names, without extracting
+provider-controlled paths. Stored, deflate, bzip2 and ZIP-LZMA members are covered.
+The XZ reader uses statically linked liblzma through Rust and accepts legacy
+LZMA streams, concatenated members and the original trailing-data behavior.
+Expanded bytes, source bytes, XZ dictionary memory and ZIP metadata have explicit
+limits; an exhausted limit fails the refresh. The calling job must consume the
+reader completely before committing rows, so a late CRC error cannot publish a
+partial refresh. The [original-runtime comparison](../scripts/rust-ingest-parity/verified-preparation-original-runtime-14.json) passed all 2,283 cases under the pinned image’s Python3.13.18/Unicode15.1, including 40 upload, 30 download-cache and 80 parsed-cache cases. Seventeen focused Rust tests cover bounds and late failure recovery. Container job integration remains pending; this is not a completed M6 or import performance result.
+
+Provider group synchronization also passed [eleven real-source SQL scenarios](../scripts/rust-ingest-parity/verified-groups-batch-sql-13.json), alongside the six stream-batch checks. The sink preserves existing user settings and disabled flags, normalizes legacy JSON only where the source does, merges only `xc_id`, and retains the source’s separate group/create/update write boundaries on failure. Stale cleanup, channel rollups and full refresh orchestration remain open.

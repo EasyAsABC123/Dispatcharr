@@ -1,0 +1,20 @@
+{
+  "scope": "bounded per-attempt upstream HTTP codecs/cookies and native cancellation/quota component gates",
+  "passed": true,
+  "codec_unit_tests": 6,
+  "native_transport_tests": 6,
+  "existing_native_http_regressions": 19,
+  "strict_all_targets_clippy_passed": true,
+  "source_fixture": "scripts/rust-integration/verified-upstream-http-source-1.json",
+  "actual_image_fixture": "scripts/rust-integration/verified-upstream-media-image7-1.json",
+  "source_sha256": {
+    "rust/crates/stream-http/src/upstream.rs": "eda993b504a184b72a139d969d9bdbac559fdec0e61fb1821752a6817c9fd9f8",
+    "rust/crates/stream-http/src/engine.rs": "08d228ebbd6ae29c27136d2134ca0baab7b58b71fafe02a7165e9dd43bb706a4",
+    "rust/crates/stream-http/Cargo.toml": "d7350babdb4b652fa09367aff97c73e5bb5a6d350dcc6e0db4ce62e1ae504255",
+    "rust/crates/stream-http/tests/upstream_native.rs": "9ba2458a6debd3516361b4ac7322ccac9d2f471dd508a884e88086feff6a4337",
+    "rust/Cargo.lock": "60f7595d362f94fab6d167cba0cd6a883c59e7d67848fa8f13ab43c61a2bc097"
+  },
+  "artifact_directory": "artifacts/rust/m2-upstream-rust-1",
+  "application_performance_verified": false,
+  "milestone_complete": false
+}
