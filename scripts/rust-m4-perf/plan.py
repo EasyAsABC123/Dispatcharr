@@ -2,9 +2,42 @@
 """Frozen M4 experiment policy; application credit belongs to Dispatcharr authors."""
 import hashlib
 import json
+import base64
+import time
 from pathlib import Path
 
 FORMAT = 1
+
+
+def validate_fixture_tokens(seed, required_seconds, now=None):
+    """Check fixture lifetime only; actual Source/native authenticate signatures.
+
+    A full matrix can outlast the production30-minute default. Never log tokens
+    or silently change application auth configuration to hide fixture expiry.
+    """
+    now = time.time() if now is None else now
+    tokens = [user['token'] for user in seed['users']] + [seed['observer_token']]
+    if not seed['users']:
+        raise ValueError('Synthetic viewers missing')
+    remaining = []
+    for token in tokens:
+        try:
+            parts = token.split('.')
+            if len(parts) != 3:
+                raise ValueError
+            payload = parts[1].encode('ascii')
+            claims = json.loads(base64.b64decode(payload+b'='*((-len(payload))%4),
+                                                altchars=b'-_', validate=True))
+            expiry = claims['exp']
+            if type(expiry) is not int or expiry-now < required_seconds:
+                raise ValueError
+            remaining.append(expiry-now)
+        except (ValueError, TypeError, KeyError, UnicodeError):
+            raise ValueError('Synthetic token lifetime insufficient or malformed') from None
+    return {'token_count':len(tokens), 'minimum_remaining_seconds':int(min(remaining)),
+            'application_jwt_settings_modified':False}
+
+
 PLAN = {
     'format_version': FORMAT,
     'scope': 'Sustained native XC VOD and archive catch-up playback subset; not full application acceptance',

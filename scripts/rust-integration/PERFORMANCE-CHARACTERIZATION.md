@@ -282,3 +282,5 @@ background jobs, long-run growth and full M5/application acceptance remain open.
 Later shared-auth and gateway changes must receive their own package/resource
 gates. Exact tools, raw samples, isolation record and cleanup are retained in
 `artifacts/rust/m5-api-resource-matrix-1/`.
+
+Image20 also has a completed [VOD/catch-up playback matrix](../../docs/rust-m4-performance.md): four workloads, three isolated paired trials each, with actual decoder/WebSocket checks and full selected-service resource samples. Those results apply only to that immutable image and synthetic playback subset; no completed M4 or full-application acceptance is implied.

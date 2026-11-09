@@ -18,7 +18,7 @@ import time
 import urllib.request
 import uuid
 
-from plan import PLAN, authorize_quiet, digest, final_acceptance, freeze, validate_limits, validate_plan
+from plan import PLAN, authorize_quiet, digest, final_acceptance, freeze, validate_fixture_tokens, validate_limits, validate_plan
 from workload import compare_pair, run_continuous, validate_phase
 from observer import Observer
 ROOT = Path(__file__).resolve().parents[2]
@@ -198,6 +198,8 @@ def main():
             env=environment, input=(tools / 'scripts/rust-m4-perf/seed.py').read_bytes(), capture_output=True, timeout=60)
         seed_run.check_returncode()
         seed = json.loads(seed_run.stdout.splitlines()[-1])
+        report['fixture_auth'] = validate_fixture_tokens(seed, 3600)
+        report['fixture_auth']['synthetic_token_lifetime_seconds'] = seed['fixture_access_token_lifetime_seconds']
         command(compose + ['exec', '-T', 'baseline', '/dispatcharrpy/bin/python',
                            '/verification/supervisor.py', 'control', 'stop'])
         command(compose + ['up', '-d', '--no-deps', 'data-init', 'source', 'candidate'])
@@ -299,6 +301,7 @@ def main():
                     report['pairs'].append(pair)
                     for backend in order:
                         authorize_quiet(args.quiet_authorization, frozen['plan_sha256'], manifest['image_id'])
+                        validate_fixture_tokens(seed, plan['warmup_seconds']+plan['measurement_seconds']+120)
                         base = reset(backend)
                         ids = selection(backend)
                         running = {identifier[:12] for identifier in command(['docker', 'ps', '-q']).splitlines()}

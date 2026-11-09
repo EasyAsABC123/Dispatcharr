@@ -5,11 +5,29 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from plan import PLAN, authorize_quiet, digest, freeze, validate_plan
+from plan import PLAN, authorize_quiet, digest, freeze, validate_fixture_tokens, validate_plan
 from workload import compare_pair, validate_phase
 
 
 class ExperimentFaultTests(unittest.TestCase):
+    def test_synthetic_tokens_must_outlast_the_matrix_and_every_phase(self):
+        import base64
+        def token(exp):
+            payload=base64.urlsafe_b64encode(json.dumps({'exp':exp}).encode()).decode().rstrip('=')
+            return 'fixture.'+payload+'.fixture'
+        now=10000
+        seed={'users':[{'token':token(now+7200)}], 'observer_token':token(now+7200)}
+        self.assertEqual(validate_fixture_tokens(seed,3600,now)['minimum_remaining_seconds'],7200)
+        # Original30-minute fixture tokens cannot start a60-minute horizon.
+        seed['users'][0]['token']=token(now+1800)
+        with self.assertRaises(ValueError):validate_fixture_tokens(seed,3600,now)
+        seed['users'][0]['token']=token(now+7200)
+        seed['observer_token']=token(now+60)
+        with self.assertRaises(ValueError):validate_fixture_tokens(seed,195,now)
+        for malformed in ['invalid',token(True),token('20000')]:
+            seed['observer_token']=malformed
+            with self.assertRaises(ValueError):validate_fixture_tokens(seed,195,now)
+
     def phase(self):
         return {'viewers': [{'measured_bytes': 500000 * 60, 'status': 200,
                             'errors': [], 'unexpected_eof': False,
