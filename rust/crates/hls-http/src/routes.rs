@@ -78,8 +78,23 @@ async fn authenticate_inner(
             })
             .collect(),
     };
-    if let Err(reason) = gateway.inner.resolver.authenticate_optional(auth).await {
+    if let Err(reason) = gateway
+        .inner
+        .resolver
+        .authenticate_optional(auth.clone())
+        .await
+    {
         return error(reason);
+    }
+    if request.uri().path().starts_with("/api/proxy/hls/sessions/") {
+        if let Err(reason) = gateway
+            .inner
+            .resolver
+            .authorize_hls_control(auth, request.method() == Method::DELETE)
+            .await
+        {
+            return error(reason);
+        }
     }
     if request.method() == Method::HEAD {
         return error(PlaybackError {

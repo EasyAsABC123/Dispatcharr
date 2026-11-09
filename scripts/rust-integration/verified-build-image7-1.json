@@ -1,0 +1,19 @@
+{
+  "scope": "image7-build-and-workspace-regressions",
+  "passed": true,
+  "workspace_suites": 65,
+  "passed_tests": 139,
+  "ignored_external_fixture_tests": 119,
+  "workspace_log_sha256": "ab61f539d3d6b11388f892c24192e330449ae476a0f57968e032950005eaa015",
+  "candidate_image_id": "sha256:48a362b4a67141de58e626cce8e33f81eab53f1ee5ae002548059dad6dc1d25c",
+  "source_tree_sha256": "47137251f5729260c9e79293bfe436171f86ac07fc1233ed08b319e8b94382d7",
+  "source_archive_sha256": "9835c9b78b6c28c3e20007197520fdc89760c66af8eae03b988019ce890530a7",
+  "source_archive": "artifacts/rust/candidate-build-m2-http-m6-pipeline-image7-1/source.tar",
+  "notes": [
+    "Workspace unit, HTTP and documentation tests passed with local loopback access.",
+    "Ignored Redis/SQL tests require explicit dedicated fixture runners; their separate evidence is required.",
+    "A preceding sandbox-restricted attempt failed to bind loopback; retained diagnostic log is not acceptance evidence.",
+    "Strict workspace all-target Clippy passed before the serving_range metadata normalization, which separately passed its real-Redis regression and package Clippy.",
+    "Image7 functional probes and performance acceptance are separate gates."
+  ]
+}

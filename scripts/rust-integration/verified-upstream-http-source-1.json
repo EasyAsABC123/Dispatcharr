@@ -1,0 +1,2455 @@
+{
+  "scope": "unchanged original HTTPStreamReader loopback transport characterization",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_sha256": "3186ce477cbacbe4d0b8c1f1acc3c87095e995c1e72dd5aaa0182a835c321833",
+  "class_ast_sha256": "959682e8aa30f8950362ea08f8c5f9fa0c283a5e0ea685847de704f479226b6c",
+  "requests_version": "2.34.2",
+  "urllib3_version": "2.8.0",
+  "urllib3_accept_encoding": "gzip,deflate",
+  "payload_sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+  "payload_bytes": 24064,
+  "fixture_proxy_environment": "HTTP(S)/ALL_PROXY cleared, NO_PROXY=*; Docker network none, loopback only",
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "cases": [
+    {
+      "case": "default-request-headers",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.002271385004860349,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "custom-user-agent",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0012442259976523928,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "Dispatcharr fixture agent",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "ua-empty",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0010534099928918295,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "ua-latin1",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0012486449995776638,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "\u00e9",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "ua-internal-tab",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0010796200003824197,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "Agent\tvalue",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "ua-leading-space",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0003260390003561042,
+      "response_status": null,
+      "request_count": 0,
+      "requests": [],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "ua-crlf",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.00026007700216723606,
+      "response_status": null,
+      "request_count": 0,
+      "requests": [],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "ua-emoji",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.00045097299880580977,
+      "response_status": null,
+      "request_count": 0,
+      "requests": [],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "content-encoding-gzip",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0010818809969350696,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/gzip",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "content-encoding-deflate",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0010590300007606857,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/deflate",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "content-encoding-raw-deflate",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0009965880017261952,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/raw-deflate",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "content-encoding-stacked-gzip-deflate",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0009925579943228513,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/body/stacked-gzip-deflate",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-200",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0009690670049167238,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/200",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-201",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0008585050018155016,
+      "response_status": 201,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/201",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-202",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0021177599992370233,
+      "response_status": 202,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/202",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-203",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.001523053004348185,
+      "response_status": 203,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/203",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-204",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0014633009996032342,
+      "response_status": 204,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/204",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-205",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0010426489970996045,
+      "response_status": 205,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/205",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-206",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0015303629988920875,
+      "response_status": 206,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/206",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-300",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.001338498004770372,
+      "response_status": 300,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/300",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-304",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0014443809996009804,
+      "response_status": 304,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/304",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-404",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0008330839991685934,
+      "response_status": 404,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/404",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "response-status-503",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0012987570007680915,
+      "response_status": 503,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/status/503",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-301",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.04279793200112181,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/redirect/code/301",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-302",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.04193729800317669,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/redirect/code/302",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-303",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.04196340899943607,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/redirect/code/303",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-307",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.041967859004216734,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/redirect/code/307",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-308",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.04195324900501873,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/redirect/code/308",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/body/identity",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-300",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0009921980017679743,
+      "response_status": 300,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/redirect/code/300",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-304",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0009841580031206831,
+      "response_status": 304,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/redirect/code/304",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-305",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0009893280002870597,
+      "response_status": 305,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/redirect/code/305",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-status-306",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0009365059959236532,
+      "response_status": 306,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/redirect/code/306",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-chain-29",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.05598404599732021,
+      "response_status": 200,
+      "request_count": 30,
+      "requests": [
+        {
+          "path": "/redirect/chain/29",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/28",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/27",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/26",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/25",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/24",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/23",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/22",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/21",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/20",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/19",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/18",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/17",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/16",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/15",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/14",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/13",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/12",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/11",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/10",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/9",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/8",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/7",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/6",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/5",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/4",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/3",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/2",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/1",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/0",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-chain-30",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.056894762004958466,
+      "response_status": 200,
+      "request_count": 31,
+      "requests": [
+        {
+          "path": "/redirect/chain/30",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/29",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/28",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/27",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/26",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/25",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/24",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/23",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/22",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/21",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/20",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/19",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/18",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/17",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/16",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/15",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/14",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/13",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/12",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/11",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/10",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/9",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/8",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/7",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/6",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/5",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/4",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/3",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/2",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/1",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/0",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-chain-31",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.016637172004266176,
+      "response_status": null,
+      "request_count": 31,
+      "requests": [
+        {
+          "path": "/redirect/chain/31",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/30",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/29",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/28",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/27",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/26",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/25",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/24",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/23",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/22",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/21",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/20",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/19",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/18",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/17",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/16",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/15",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/14",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/13",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/12",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/11",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/10",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/9",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/8",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/7",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/6",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/5",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/4",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/3",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/2",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/redirect/chain/1",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "redirect-cookie-within-attempt",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.042243177005730104,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/cookie/start",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/cookie/final",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": "attempt_cookie=fixed"
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "cookie-fresh-attempt",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.001125031994888559,
+      "response_status": 200,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/cookie/check",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "cookie-required-fresh-attempt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_payload_equal": false,
+      "eof": true,
+      "seconds": 0.0008865650015650317,
+      "response_status": 403,
+      "request_count": 1,
+      "requests": [
+        {
+          "path": "/cookie/final",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "cookie-cross-host",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0017752299972926266,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/cookie/cross-host",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        },
+        {
+          "path": "/cookie/check",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.2:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "url-basic-auth-same-host",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.04222229599690763,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/auth/same-host",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": true,
+          "authorization_scheme": "Basic"
+        },
+        {
+          "path": "/auth/final",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": true,
+          "authorization_scheme": "Basic"
+        }
+      ],
+      "fixture_contract_passed": true
+    },
+    {
+      "case": "url-basic-auth-cross-host",
+      "bytes": 24064,
+      "sha256": "ef953a44808e99f969e90b84d5a26cefe56864510226443d64c40b19a68ca845",
+      "decoded_payload_equal": true,
+      "eof": true,
+      "seconds": 0.0018566729995654896,
+      "response_status": 200,
+      "request_count": 2,
+      "requests": [
+        {
+          "path": "/auth/cross-host",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.1:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": true,
+          "authorization_scheme": "Basic"
+        },
+        {
+          "path": "/auth/final",
+          "http_version": "HTTP/1.1",
+          "headers": {
+            "Host": "127.0.0.2:34311",
+            "User-Agent": "python-requests/2.34.2",
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Cookie": null
+          },
+          "authorization_present": false,
+          "authorization_scheme": null
+        }
+      ],
+      "fixture_contract_passed": true
+    }
+  ],
+  "tool_sha256": "bdaf7b6e451cc792cf9b3b10eda22ed1d5b1a23ca9166299d1dadd68f53c0ce3",
+  "command_exit_code": 0,
+  "artifact": "artifacts/rust/m2-upstream-http-source-ua-1/upstream-semantics.json"
+}

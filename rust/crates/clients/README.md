@@ -46,3 +46,13 @@ Six real Redis era gates passed at `artifacts/rust/m2-client-era-2/evidence.json
 These verify metadata-only ghosts, corrupted metadata/capabilities without partial
 deletes, delayed/queued registration and cleanup, and successor/foreign safety.
 They do not replace an immutable two-worker application crash witness.
+
+Timeshift positive-admission work is being prepared in the new independent
+`timeshift` module during the native TS measurement quiet window. It prepares
+owned Lua arguments for the existing bounded supervised Redis transport; it
+does not change live or VOD REGISTER scripts. It preserves prior-position hop
+termination before cap checking, counts actual legacy live/VOD/Timeshift hashes,
+uses source ordering/policies and publishes a short-lived pending Timeshift
+client record atomically. This code is not yet compiled/tested or wired. Runtime
+source goldens, mixed-protocol admission races, cancellation, quota-full ordering,
+TTL/cleanup and the native HTTP/Compose gates remain required before acceptance.

@@ -3,6 +3,7 @@
 mod engine;
 mod retry;
 mod routes;
+mod upstream;
 
 pub use engine::{EngineConfig, MediaFrame, MediaStream, StreamEngine, StreamStatus};
 

@@ -79,13 +79,14 @@
       "baseline_video_frames": 75,
       "candidate_video_frames": 75,
       "cleanup_passed": true,
-      "evidence": "scripts/rust-vod-contracts/verified-compose.json"
+      "evidence": "scripts/rust-vod-contracts/verified-compose.json",
+      "also_covers": "literal positive/zero-profile redirect and React fallback"
     },
     "source_bare_profile_with_built_react": {
       "captured": true,
       "follow_status": 200,
       "media": false,
-      "candidate_image_alias_parity_verified": false,
+      "candidate_image_alias_parity_verified": true,
       "evidence": "scripts/rust-vod-contracts/profile-alias-characterization.json"
     }
   },
@@ -103,7 +104,7 @@
   },
   "source_hash_note": "Working-tree source hashes, not an immutable candidate Docker build binding. SQL test shares independently maintained Store/Auth crates.",
   "remaining_gates": [
-    "source-bound Rust application Compose native wire comparison",
+    "broader native wire/authentication/provider variants",
     "cold and malformed Range corner cases",
     "authenticated browser/session handoff differential probes",
     "legacy and Rust cross-worker session fencing/adoption",

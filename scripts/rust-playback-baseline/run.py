@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Repeated real-media Python playback baseline; never declares Rust gains."""
 import argparse
+import concurrent.futures
 import datetime
 import hashlib
 import importlib.util
@@ -20,6 +21,8 @@ import uuid
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT / 'scripts/rust-integration'))
+from fixture_ports import write_port_overlay
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 IMAGE = 'ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
 
@@ -168,9 +171,15 @@ def main():
         compose = [args.docker, 'compose', '-p', project, '-f', str(compose_file)]
         if args.candidate_overlay:
             compose += ['-f', str(args.candidate_overlay.resolve())]
+        fixture_ports = output / 'fixture-ports.yml'
+        selected_ports={'baseline':[5656],'origin':[8080]}
+        if args.candidate_overlay:selected_ports[args.candidate_service]=[args.candidate_port]
+        evidence['fixture_ports']=write_port_overlay(fixture_ports,selected_ports)
+        compose += ['-f',str(fixture_ports)]
         tool_paths = [*Path(__file__).parent.glob('*.py'), *Path(__file__).parent.glob('*.sh'),
                       Path(__file__).with_name('uwsgi.ini'), compose_file,
-                      ROOT / 'scripts/rust-perf/perf.py', ROOT / 'scripts/rust-baseline/dependencies.py']
+                      ROOT / 'scripts/rust-perf/perf.py', ROOT / 'scripts/rust-baseline/dependencies.py',
+                      ROOT / 'scripts/rust-integration/fixture_ports.py', fixture_ports]
         if args.candidate_overlay:
             tool_paths.append(args.candidate_overlay.resolve())
         evidence['tools_sha256'] = {str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -234,7 +243,7 @@ def main():
             fixture_id = (fixture['fixture_sha256'] + ':proxy-ts-2mbps-one-worker-codec' + fixture.get('codec', 'mpeg2')
                           + f'-shutdown{seed["proxy_settings"]["channel_shutdown_delay"]}'
                           + f'-retention{seed["proxy_settings"]["redis_chunk_ttl"]}'
-                          + f'-behind{seed["proxy_settings"]["new_client_behind_seconds"]}')
+                          + f'-behind{seed["proxy_settings"]["new_client_behind_seconds"]}:equal-decoder-priming3s')
             perf_environment = dict(environment)
             perf_environment['PATH'] = str(Path(args.docker).parent) + os.pathsep + environment['PATH']
             matrix = []
@@ -257,6 +266,7 @@ def main():
                 reset = None
                 if args.fresh_web_per_trial or args.candidate_overlay:
                     reset = {'mode': 'fresh-web-and-isolated-redis-per-trial',
+                             'candidate_recreated_for_fresh_dynamic_port': backend == 'candidate',
                              'reason': 'Independent trial characterization; cold-reopen failure tracked separately'}
                     reset['web_stop'] = json.loads(execute(compose + ['exec', '-T', 'baseline',
                         '/dispatcharrpy/bin/python', '/verification/supervisor.py', 'control', 'stop']))
@@ -287,7 +297,7 @@ def main():
                 revision = BASELINE + '@' + IMAGE
                 target = base
                 if backend == 'candidate':
-                    execute(compose + ['up', '-d', '--no-deps', '--no-build', args.candidate_service], timeout=60)
+                    execute(compose + ['up', '-d', '--no-deps', '--no-build', '--force-recreate', args.candidate_service], timeout=60)
                     target = endpoint(args.candidate_service, args.candidate_port)
                     deadline = time.monotonic() + 60
                     while True:
@@ -308,14 +318,39 @@ def main():
                         validate_build_manifest(candidate_manifest, revision,
                             inspected['Config']['Labels'].get('org.opencontainers.image.source-tree-sha256'))
                     evidence['candidate_image_source_bound'] = bool(candidate_manifest)
-                    decoded_candidate = execute(compose + ['exec', '-T', 'baseline', 'ffmpeg', '-hide_banner',
-                        '-loglevel', 'error', '-xerror', '-progress', 'pipe:1', '-nostats', '-i',
-                        'http://' + args.candidate_service + ':' + str(args.candidate_port) + seed['path'],
-                        '-t', '3', '-f', 'null', '-'], timeout=45)
-                    if not any(line.startswith('frame=') and int(line.split('=')[1]) > 0
-                               for line in decoded_candidate.splitlines()):
-                        raise RuntimeError('candidate decoder returned no frames')
-                    (output / (name + '.decode.log')).write_text(decoded_candidate)
+                # Both implementations enter a verified active stream before
+                # the identical warmup. Cold-burst behavior is a separate gate.
+                if not args.functional_only:
+                    internal_base = ('http://' + args.candidate_service + ':' + str(args.candidate_port)
+                                     if backend == 'candidate' else 'http://baseline:5656')
+                    priming = {'backend':backend,'scenario':scenario,'viewers':viewers,'trial':trial,
+                               'phase':'before identical warmup','channels':[]}
+                    priming_started=time.monotonic()
+                    def prime(item):
+                        number,channel=item
+                        decoded = execute(compose + ['exec', '-T', 'baseline', 'ffmpeg', '-hide_banner',
+                            '-loglevel', 'error', '-xerror', '-progress', 'pipe:1', '-nostats', '-i',
+                            internal_base + channel['path'], '-t', '3', '-f', 'null', '-'], timeout=45)
+                        frames = max((int(line.split('=')[1]) for line in decoded.splitlines()
+                                      if line.startswith('frame=')), default=0)
+                        if frames < 50:
+                            raise RuntimeError(backend + ' per-trial decoder priming returned fewer than50 frames')
+                        log = name + ('' if len(selected)==1 else '.channel-' + str(number)) + '.decode.log'
+                        (output / log).write_text(decoded)
+                        return {'frames':frames,'log':log,'completed_seconds':time.monotonic()-priming_started}
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=min(10,len(selected))) as pool:
+                        priming['channels']=list(pool.map(prime,enumerate(selected)))
+                    times=[row['completed_seconds'] for row in priming['channels']]
+                    priming['completion_spread_seconds']=max(times)-min(times)
+                    if len(selected)>1:
+                        if priming['completion_spread_seconds']>=args.shutdown_delay:
+                            raise RuntimeError('Parallel decoder spread exceeds shutdown delay; warmed scope cannot be established')
+                        channels=[channel['channel_uuid'] for channel in selected]
+                        script="local rows={};for _,id in ipairs(ARGV) do local p='live:channel:'..id;table.insert(rows,{channel=id,owner=redis.call('GET',p..':owner') or '',state=redis.call('HGET',p..':metadata','state') or ''}) end;return cjson.encode(rows)"
+                        priming['ready_channels']=json.loads(json.loads(execute(compose+['exec','-T','baseline','redis-cli','--json','EVAL',script,'0',*channels],timeout=15)))
+                        if any(not row['owner'] or row['state']!='active' for row in priming['ready_channels']):
+                            raise RuntimeError('All selected channels must retain active owners before warmed load')
+                    evidence.setdefault('decoder_priming',[]).append(priming)
                 urls.write_text(''.join(target + channel['path'] + '\n' for channel in selected))
                 before = get_json(origin + '/stats')
                 if args.functional_only:
@@ -348,10 +383,11 @@ def main():
                                     raise TimeoutError('functional web reset not ready')
                                 time.sleep(.25)
                         else:
-                            execute(compose + ['up', '-d', '--no-deps', '--no-build', args.candidate_service], timeout=60)
+                            execute(compose + ['up', '-d', '--no-deps', '--no-build', '--force-recreate', args.candidate_service], timeout=60)
                             # Docker may allocate a new host port after stop/start.
                             target = endpoint(args.candidate_service, args.candidate_port)
                             probe_reset['candidate_endpoint_refreshed'] = True
+                            probe_reset['candidate_recreated_for_fresh_dynamic_port'] = True
                             deadline = time.monotonic() + 60
                             while True:
                                 try:
@@ -385,7 +421,8 @@ def main():
                                 '--warmup', '15', '--ramp', '4', '--duration', '30',
                                 '--project', project, '--services', *services,
                                 '--compose-file', str(compose_file),
-                                *(['--compose-file', str(args.candidate_overlay.resolve())] if args.candidate_overlay else [])]
+                                *(['--compose-file', str(args.candidate_overlay.resolve())] if args.candidate_overlay else []),
+                                '--compose-file',str(fixture_ports)]
                         else:
                             urls.write_text(target + seed['path'] + '\n')
                             command = [sys.executable, str(Path(__file__).with_name('fault_probe.py')),
@@ -475,6 +512,7 @@ def main():
                 command = [sys.executable, str(ROOT / 'scripts/rust-perf/perf.py'), 'run',
                            '--compose-file', str(compose_file),
                            *(['--compose-file', str(args.candidate_overlay.resolve())] if args.candidate_overlay else []),
+                           '--compose-file',str(fixture_ports),
                            '--project', project,
                            '--services', *services, '--urls-file', str(urls),
                            '--scenario', 'many-channel' if scenario == 'many-channel' else 'same-channel',
@@ -541,7 +579,8 @@ def main():
                 'Baseline web stopped before Rust trials; PostgreSQL and Redis remain inside baseline container',
                 'Origin fixture included identically; inspect per-container resource samples',
                 'Fresh web/isolated Redis reset is explicit and cannot satisfy cold-reopen gate',
-                'Warmup ramp settings must match; failed cold burst is retained separately',
+                'Both backends receive per-trial per-channel3s/at least50-frame decoder priming before identical warmup',
+                'Steady-state only; failed cold burst is retained separately and is not repaired by priming',
             ]
             evidence['exit_code'] = 0
         except KeyboardInterrupt:

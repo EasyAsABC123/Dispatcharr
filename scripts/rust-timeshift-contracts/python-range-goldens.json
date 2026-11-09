@@ -1,0 +1,3471 @@
+{
+  "format_version": 1,
+  "scope": "immutable original pure Timeshift Range and length-header helpers",
+  "capture_complete": true,
+  "source_sha256": {
+    "apps/timeshift/views.py": "75852d0ec478b81fb758241e20101ce5d37e47636337845e18f8823037726b1a"
+  },
+  "vector_count": 246,
+  "cases": [
+    {
+      "function": "parse_client_range",
+      "input": null,
+      "output": null
+    },
+    {
+      "function": "parse_client_range",
+      "input": "",
+      "output": null
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=0-",
+      "output": [
+        0,
+        null
+      ]
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=7-100",
+      "output": [
+        7,
+        100
+      ]
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=-256",
+      "output": [
+        0,
+        256
+      ]
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=9000-",
+      "output": [
+        9000,
+        null
+      ]
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=+4-+9",
+      "output": [
+        4,
+        9
+      ]
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes= 4 - 9 ",
+      "output": [
+        4,
+        9
+      ]
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=5-2",
+      "output": [
+        5,
+        2
+      ]
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=bad-",
+      "output": null
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=1-2,3-4",
+      "output": null
+    },
+    {
+      "function": "parse_client_range",
+      "input": "Bytes=1-2",
+      "output": null
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=1_0-2_0",
+      "output": [
+        10,
+        20
+      ]
+    },
+    {
+      "function": "parse_client_range",
+      "input": "bytes=1--2",
+      "output": [
+        1,
+        -2
+      ]
+    },
+    {
+      "function": "parse_content_range",
+      "input": null,
+      "output": null
+    },
+    {
+      "function": "parse_content_range",
+      "input": "",
+      "output": null
+    },
+    {
+      "function": "parse_content_range",
+      "input": "bytes 7-100/500",
+      "output": {
+        "start": 7,
+        "end": 100,
+        "total": 500
+      }
+    },
+    {
+      "function": "parse_content_range",
+      "input": "bytes 7-100/*",
+      "output": {
+        "start": 7,
+        "end": 100,
+        "total": null
+      }
+    },
+    {
+      "function": "parse_content_range",
+      "input": "bytes */500",
+      "output": null
+    },
+    {
+      "function": "parse_content_range",
+      "input": "bytes -100/500",
+      "output": {
+        "start": 0,
+        "end": 100,
+        "total": 500
+      }
+    },
+    {
+      "function": "parse_content_range",
+      "input": "bytes 7-/500",
+      "output": {
+        "start": 7,
+        "end": null,
+        "total": 500
+      }
+    },
+    {
+      "function": "parse_content_range",
+      "input": "bytes bad-9/500",
+      "output": null
+    },
+    {
+      "function": "parse_content_range",
+      "input": "bytes 9-7/500",
+      "output": {
+        "start": 9,
+        "end": 7,
+        "total": 500
+      }
+    },
+    {
+      "function": "parse_content_range",
+      "input": "bytes 0-9/0",
+      "output": {
+        "start": 0,
+        "end": 9,
+        "total": 0
+      }
+    },
+    {
+      "function": "representation_length",
+      "input": [
+        null,
+        null
+      ],
+      "output": null
+    },
+    {
+      "function": "representation_length",
+      "input": [
+        null,
+        "500"
+      ],
+      "output": 500
+    },
+    {
+      "function": "representation_length",
+      "input": [
+        null,
+        "bad"
+      ],
+      "output": null
+    },
+    {
+      "function": "representation_length",
+      "input": [
+        "bytes 7-100/500",
+        "94"
+      ],
+      "output": 500
+    },
+    {
+      "function": "representation_length",
+      "input": [
+        "bytes 7-100/*",
+        "94"
+      ],
+      "output": null
+    },
+    {
+      "function": "representation_length",
+      "input": [
+        "bytes */500",
+        "0"
+      ],
+      "output": 0
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": null,
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7--1/0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7--1/0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=7-100",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 0--1/0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 0--1/0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 0-256/500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 0-256/500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=-256",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 490--1/0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 490--1/0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 490-499/500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 490-499/500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=490-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": null,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "0"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 0,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Length": "500"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 200,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": false,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": null,
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/500",
+        "upstream_content_length": "94"
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/500",
+        "Content-Length": "94"
+      }
+    },
+    {
+      "function": "downstream_headers",
+      "input": {
+        "range_header": "bytes=bad-",
+        "representation_length": 500,
+        "status_code": 206,
+        "streaming": true,
+        "upstream_content_range": "bytes 7-100/*",
+        "upstream_content_length": null
+      },
+      "output": {
+        "Accept-Ranges": "bytes",
+        "Content-Range": "bytes 7-100/*",
+        "Content-Length": "94"
+      }
+    }
+  ],
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "network_disabled": true,
+  "source_read_only": true
+}

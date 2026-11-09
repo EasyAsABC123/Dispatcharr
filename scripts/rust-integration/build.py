@@ -6,6 +6,7 @@ import io
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import tarfile
 import tempfile
@@ -49,6 +50,18 @@ def main():
                 info = tarfile.TarInfo(name)
                 info.size, info.mode, info.mtime = len(content), 0o644, 0
                 tar.addfile(info, io.BytesIO(content))
+        archive.seek(0)
+        # Retain the exact source bytes as well as their hashes. A source-bound
+        # image may be built between commits while parallel work continues; its
+        # archive must remain reconstructible independently of later edits.
+        with (destination/'source.tar').open('wb') as retained:
+            shutil.copyfileobj(archive,retained)
+        archive_digest=hashlib.sha256()
+        with (destination/'source.tar').open('rb') as retained:
+            for block in iter(lambda:retained.read(1024*1024),b''):
+                archive_digest.update(block)
+        report['source_archive_sha256']=archive_digest.hexdigest()
+        report['source_archive']='source.tar'
         archive.seek(0)
         command = ['docker', 'build', '-f', 'rust/Dockerfile.app', '-t', args.tag,
                    '--label', 'org.opencontainers.image.source-tree-sha256=' + source_sha, '-']

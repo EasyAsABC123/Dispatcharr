@@ -8,12 +8,20 @@ mod auth;
 mod channel_groups;
 mod channel_memberships;
 mod channel_profiles;
+mod channel_relations;
 mod channel_writes;
 mod channels;
 mod core_reads;
+mod import_batches;
 mod json_compat;
+pub mod realtime;
+mod startup;
+pub use import_batches::{
+    ImportCounts, ImportedStream, MAX_IMPORT_BATCH_BYTES, MAX_IMPORT_BATCH_ROWS,
+};
 mod passwords;
 mod playback;
+mod provider_reads;
 mod stream_validation;
 mod stream_writes;
 mod streams;
@@ -197,7 +205,13 @@ pub fn cidrs_allow(raw: &str, peer: IpAddr) -> bool {
         _ => peer,
     };
     raw.split(',')
-        .filter_map(|value| value.trim().parse::<ipnet::IpNet>().ok())
+        .filter_map(|value| {
+            let value = value.trim();
+            value
+                .parse::<ipnet::IpNet>()
+                .ok()
+                .or_else(|| value.parse::<IpAddr>().ok().map(ipnet::IpNet::from))
+        })
         .any(|network| network.contains(&peer))
 }
 
@@ -215,5 +229,8 @@ mod tests {
             "192.168.2.3".parse().unwrap()
         ));
         assert!(!cidrs_allow("", "127.0.0.1".parse().unwrap()));
+        assert!(cidrs_allow("127.0.0.1", "127.0.0.1".parse().unwrap()));
+        assert!(!cidrs_allow("127.0.0.1", "127.0.0.2".parse().unwrap()));
+        assert!(cidrs_allow("::1", "::1".parse().unwrap()));
     }
 }

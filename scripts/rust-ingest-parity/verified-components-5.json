@@ -1,0 +1,37 @@
+{
+  "scope": "M3U-parser-component-differential",
+  "passed": true,
+  "cases": 2133,
+  "failures": [],
+  "binary_sha256": "8961bf2981d5b7041eaf537d570fa2a69a4040d4d928d364e1d84e3d4e657b86",
+  "source_sha256": {
+    "apps/m3u/tasks.py": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+    "apps/m3u/utils.py": "9ddc50fe1e3916e6812007b1de9d7677341333b334850001128e1406d4ab91ae",
+    "apps/channels/models.py": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+    "scripts/rust-ingest-parity/run.py": "7238da9fee4918f31b5a7c8b98f763b4ed2946d33f3232570f5947acc9b4d438",
+    "rust/crates/ingest-core/examples/ingest_parity.rs": "27fcf3db2e139914af70a5142aefc044200dbc9cf56bdc0c4512fa200082047e",
+    "rust/crates/ingest-core/src/identity.rs": "a26a428d346c2fcce8e1fdafcd6baf7ca8beafc5bbf7d84b55c70206a4159776",
+    "rust/crates/ingest-core/src/lib.rs": "7f7e4f097d993d4a89afaf402244b31309304a43bb03c3f9c18cc5024d065daa",
+    "rust/crates/ingest-core/src/projection.rs": "e9bf4c4745c3a5e2c3232edb4f8299d88846fedf993e35c2a6481db719e4f5f9",
+    "rust/crates/ingest-core/src/reader.rs": "90ebdde2c67f0fdc307a353f9d3c12245b77782f6fb4bc614627cf49eed480b4",
+    "rust/crates/ingest-core/src/validation.rs": "4ed0b686973afec42ac63053c5d8bbf51f7357324fd4e094b770c9f000d1adf4",
+    "rust/crates/ingest-core/tests/parser.rs": "adf6bc98921f25dfb759cbdef7b9711f41abe41e29f09b6b4fa202e095565107",
+    "rust/crates/ingest-core/tests/reader.rs": "2cef72ce7db3aeeeffecc482d4756c56699ad3b3732cadbf3aa8236f41b8df40"
+  },
+  "application_performance_verified": false,
+  "ingestion_jobs_migrated": false,
+  "raw_evidence_directory": "artifacts/rust/m6-ingest-projection-5",
+  "raw_report_sha256": "65b5d7cbff9c1121c5bddfa824d17828c35344574f78071aeba6ab9595e3805f",
+  "python_runtime": "3.14.9 (main, Nov  2 2026, 12:21:11) [GCC 16.2.1 20260810]",
+  "case_groups": {
+    "extinf": 810,
+    "playlists": 160,
+    "hashes": 500,
+    "download_head_validation": 263,
+    "row_projection": 400
+  },
+  "notes": [
+    "Actual unchanged source AST runs under the recorded host Python; original-container SQL pipeline proof is separate.",
+    "No complete ingestion job or application performance acceptance is established."
+  ]
+}

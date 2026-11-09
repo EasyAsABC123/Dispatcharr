@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "rust_timeshift_sql_passed": true,
+  "rust_timeshift_media": {
+    "native_http_passed": true,
+    "positive_limit_live_refusal_and_retry_verified": true,
+    "store_auth": "real Django schema, AuthService and JWT handshake",
+    "bytes": 1880000,
+    "sha256": "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0",
+    "strict_audio_and_video_decode_passed": true,
+    "frames": 74,
+    "source_bound_candidate_image": false
+  },
+  "fixture_start_attempts": [
+    {
+      "attempt": 1,
+      "started": true
+    }
+  ],
+  "scope": "Actual Django Store/Auth/JWT positive-limit refusal and same-capability retry through native Rust HTTP, source bytes/grace and pinned A/V decoder; host service against Docker fixture",
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "source_bound_candidate_image": false,
+  "evidence": "artifacts/rust/m4-timeshift-positive-native-sql-1/vod-contracts.json"
+}

@@ -599,6 +599,134 @@ async fn malformed_or_duplicate_authentication_never_downgrades_to_anonymous() {
     assert!(engine.status().is_empty());
 }
 
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn source_metadata_is_promoted_before_native_response_and_cannot_regress_on_timer() {
+    use dispatcharr_clients::{ClientConfig, ClientStore};
+    use dispatcharr_coordination::{Coordinator, LeaseConfig};
+    use dispatcharr_input_store::InputStore;
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let coordinator = Coordinator::connect(&redis_url, LeaseConfig::default())
+        .await
+        .unwrap();
+    let clients = ClientStore::connect(&redis_url, ClientConfig::default())
+        .await
+        .unwrap();
+    let inputs = InputStore::connect(&redis_url, Default::default())
+        .await
+        .unwrap();
+    let mut limits = config();
+    limits.source_initialization = true;
+    limits.flush_partial_chunks = false;
+    limits.initial_buffer_chunks = 4;
+    let engine = StreamEngine::new_with_shared_inputs(
+        limits,
+        Some(coordinator),
+        Some(clients.clone()),
+        Some(inputs),
+    )
+    .unwrap();
+    let (url, _, origin) = start_origin().await;
+    let mut source = limited_source(url);
+    source.startup_behind = Duration::from_secs(10);
+    let channel = source.channel_id.clone();
+    let body = engine.play(source).await.unwrap().into_body();
+    let (metadata, index) = clients.channel_snapshot(&channel).await.unwrap().unwrap();
+    assert_eq!(metadata.get("state").map(String::as_str), Some("active"));
+    assert!(
+        metadata
+            .get("connection_ready_time")
+            .unwrap()
+            .parse::<f64>()
+            .unwrap()
+            > 0.0
+    );
+    assert_eq!(
+        metadata.get("clients_at_activation").map(String::as_str),
+        Some("1")
+    );
+    assert!(index >= 4);
+    time::sleep(Duration::from_millis(1100)).await;
+    let (metadata, _) = clients.channel_snapshot(&channel).await.unwrap().unwrap();
+    assert_eq!(metadata.get("state").map(String::as_str), Some("active"));
+    drop(body);
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
+    assert!(clients.channel_snapshot(&channel).await.unwrap().is_none());
+    clients.shutdown().await;
+    origin.abort();
+}
+
+#[tokio::test]
+async fn native_source_rejects_partial_content_without_a_range_request() {
+    let (base, origin) = serve(Router::new().route(
+        "/partial",
+        get(|| async {
+            Response::builder()
+                .status(StatusCode::PARTIAL_CONTENT)
+                .header("Content-Type", "video/mp2t")
+                .body(Body::from(vec![0x47; 188 * 8]))
+                .unwrap()
+        }),
+    ))
+    .await;
+    let engine = StreamEngine::new(config()).unwrap();
+    assert_eq!(
+        engine
+            .play(source(format!("{base}/partial"), "unexpected206"))
+            .await
+            .unwrap_err()
+            .status,
+        502
+    );
+    assert!(engine.status().is_empty());
+    origin.abort();
+}
+
+#[tokio::test]
+async fn native_http_redirects_allow_fifteen_hops_and_reject_thirty_one() {
+    use axum::extract::Path;
+    let counts = Arc::new(Counts::default());
+    let app = Router::new()
+        .route(
+            "/redirect/{remaining}",
+            get(
+                |Path(remaining): Path<u8>, State(counts): State<Arc<Counts>>| async move {
+                    if remaining == 0 {
+                        packet_origin(counts, 100)
+                    } else {
+                        Response::builder()
+                            .status(StatusCode::FOUND)
+                            .header("Location", format!("/redirect/{}", remaining - 1))
+                            .body(Body::empty())
+                            .unwrap()
+                    }
+                },
+            ),
+        )
+        .with_state(counts.clone());
+    let (base, origin) = serve(app).await;
+    let engine = StreamEngine::new(config()).unwrap();
+    let response = engine
+        .play(source(format!("{base}/redirect/15"), "redirect15"))
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+    assert_eq!(counts.connections.load(Ordering::SeqCst), 1);
+    drop(response);
+    assert!(engine.shutdown_wait(Duration::from_secs(1)).await);
+    let engine = StreamEngine::new(config()).unwrap();
+    assert_eq!(
+        engine
+            .play(source(format!("{base}/redirect/31"), "redirect31"))
+            .await
+            .unwrap_err()
+            .status,
+        502
+    );
+    assert_eq!(counts.connections.load(Ordering::SeqCst), 1);
+    origin.abort();
+}
+
 async fn redis_coordinator() -> (
     dispatcharr_coordination::Coordinator,
     redis::aio::MultiplexedConnection,
@@ -1353,6 +1481,16 @@ async fn stop_through_follower_cancels_owner_and_all_accounting_with_held_body_f
 }
 
 async fn shared_workers(remote_stop: bool) {
+    shared_workers_mode(remote_stop, false).await;
+}
+
+#[tokio::test]
+#[ignore = "requires disposable Redis; execute run-redis.py --http"]
+async fn shared_source_followers_wait_for_committed_ready_metadata_before_media() {
+    shared_workers_mode(false, true).await;
+}
+
+async fn shared_workers_mode(remote_stop: bool, source_mode: bool) {
     use dispatcharr_clients::{ClientConfig, ClientStore};
     use dispatcharr_coordination::{Coordinator, LeaseConfig};
     use dispatcharr_input_store::{InputConfig, InputStore};
@@ -1370,15 +1508,21 @@ async fn shared_workers(remote_stop: bool) {
     let inputs = InputStore::connect(&redis_url, InputConfig::default())
         .await
         .unwrap();
+    let mut limits = config();
+    if source_mode {
+        limits.source_initialization = true;
+        limits.flush_partial_chunks = false;
+        limits.initial_buffer_chunks = 4;
+    }
     let first = StreamEngine::new_with_shared_inputs(
-        config(),
+        limits.clone(),
         Some(coordinator.clone()),
         Some(first_clients.clone()),
         Some(inputs.clone()),
     )
     .unwrap();
     let second = StreamEngine::new_with_shared_inputs(
-        config(),
+        limits,
         Some(coordinator),
         Some(second_clients.clone()),
         Some(inputs.clone()),
@@ -1419,6 +1563,9 @@ async fn shared_workers(remote_stop: bool) {
         .await
         .unwrap()
         .unwrap();
+    if source_mode {
+        assert_eq!(metadata["state"], "active");
+    }
     assert_eq!(metadata["client_count"], 2);
     drop(owner);
     // The owner must keep ingesting for viewers on another worker, even after

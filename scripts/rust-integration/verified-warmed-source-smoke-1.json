@@ -1,0 +1,101 @@
+{
+  "scope": "warmed source10/100viewer delivery smoke; concurrent functionals, no resource comparison",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "run_artifact": "artifacts/rust/m2-warmed-source-smoke-1/run.json",
+  "decoder_priming": [
+    {
+      "backend": "baseline",
+      "scenario": "same-channel",
+      "viewers": 10,
+      "trial": 1,
+      "phase": "before identical warmup",
+      "channels": [
+        {
+          "frames": 74,
+          "log": "baseline-same-channel-viewers-10-trial-1.json.decode.log"
+        }
+      ]
+    },
+    {
+      "backend": "baseline",
+      "scenario": "same-channel",
+      "viewers": 100,
+      "trial": 1,
+      "phase": "before identical warmup",
+      "channels": [
+        {
+          "frames": 74,
+          "log": "baseline-same-channel-viewers-100-trial-1.json.decode.log"
+        }
+      ]
+    }
+  ],
+  "fixture_ports": {
+    "host_range": [
+      61000,
+      65000
+    ],
+    "kernel_ephemeral_range": [
+      32768,
+      60999
+    ],
+    "services": {
+      "baseline": [
+        {
+          "host": 63046,
+          "container": 5656
+        }
+      ],
+      "origin": [
+        {
+          "host": 63047,
+          "container": 8080
+        }
+      ]
+    },
+    "selection": "bind probes held together until overlay is written; released before Docker starts"
+  },
+  "cleanup": "isolated project removed",
+  "measurements": [
+    {
+      "artifact": "artifacts/rust/m2-warmed-source-smoke-1/baseline-same-channel-viewers-10-trial-1.json",
+      "summary": {
+        "bytes": 38380200,
+        "requests": 10,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.153349127002002,
+        "bytes_per_second": 3838020.0,
+        "first_byte_ms_median": 80.20816700081923,
+        "first_byte_ms_p95": 113.66559200541815,
+        "first_byte_samples": 10,
+        "viewers_without_data": 0,
+        "error_kinds": {},
+        "cpu_percent_mean": 4.283333333333333,
+        "memory_bytes_peak": 374048030.71999997
+      },
+      "sample_errors": []
+    },
+    {
+      "artifact": "artifacts/rust/m2-warmed-source-smoke-1/baseline-same-channel-viewers-100-trial-1.json",
+      "summary": {
+        "bytes": 391222172,
+        "requests": 100,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 11.262730555994494,
+        "bytes_per_second": 39122217.2,
+        "first_byte_ms_median": 1036.0700495002675,
+        "first_byte_ms_p95": 1365.9871190029662,
+        "first_byte_samples": 100,
+        "viewers_without_data": 0,
+        "error_kinds": {},
+        "cpu_percent_mean": 51.583333333333336,
+        "memory_bytes_peak": 423079444.48
+      },
+      "sample_errors": []
+    }
+  ]
+}

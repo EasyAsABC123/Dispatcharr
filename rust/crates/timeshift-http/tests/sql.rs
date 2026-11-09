@@ -19,9 +19,14 @@ async fn actual_store_auth_channel_visibility_bound_playback_and_active_user_con
         store.clone(),
         AuthConfig::new("playback-fixture-only".into()).unwrap(),
     );
-    let service = CatchupSessions::new(store.clone(), auth, &redis_url, SessionConfig::default())
-        .await
-        .unwrap();
+    let service = CatchupSessions::new(
+        store.clone(),
+        auth.clone(),
+        &redis_url,
+        SessionConfig::default(),
+    )
+    .await
+    .unwrap();
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let address = listener.local_addr().unwrap();
     let router = service.clone().router();
@@ -118,6 +123,62 @@ async fn actual_store_auth_channel_visibility_bound_playback_and_active_user_con
         .execute(store.pool())
         .await
         .unwrap();
+    // A Redirect channel still proxies established API capabilities. Only a
+    // bare Redirect handoff applies the user's allowed-provider profile list.
+    let original_profile: Option<i64> = sqlx::query_scalar(
+        "SELECT stream_profile_id::bigint FROM dispatcharr_channels_channel WHERE uuid=$1",
+    )
+    .bind(channel)
+    .fetch_one(store.pool())
+    .await
+    .unwrap();
+    let redirect_profile: i64 = sqlx::query_scalar(
+        "SELECT id::bigint FROM core_streamprofile WHERE locked AND name='Redirect'",
+    )
+    .fetch_one(store.pool())
+    .await
+    .unwrap();
+    sqlx::query("UPDATE dispatcharr_channels_channel SET stream_profile_id=$1 WHERE uuid=$2")
+        .bind(redirect_profile)
+        .bind(channel)
+        .execute(store.pool())
+        .await
+        .unwrap();
+    let mut restricted = owner.clone();
+    restricted
+        .custom_properties
+        .as_object_mut()
+        .unwrap()
+        .insert("allowed_m3u_profile_ids".into(), json!([]));
+    let proxy = provider
+        .resolve(
+            restricted.clone(),
+            binding.channel.clone(),
+            binding.start.clone(),
+            Some("30"),
+        )
+        .await
+        .unwrap();
+    assert!(proxy.redirect);
+    assert!(!proxy.candidates.is_empty());
+    let redirect = provider
+        .resolve_redirect(
+            restricted,
+            binding.channel.clone(),
+            binding.start.clone(),
+            Some("30"),
+        )
+        .await;
+    assert!(matches!(
+        redirect,
+        Err(dispatcharr_store::StoreError::StatusBody(503, _))
+    ));
+    sqlx::query("UPDATE dispatcharr_channels_channel SET stream_profile_id=$1 WHERE uuid=$2")
+        .bind(original_profile)
+        .bind(channel)
+        .execute(store.pool())
+        .await
+        .unwrap();
     // Authorization is bound at mint: a later channel permission change affects
     // new handshakes, while the valid original capability still resolves.
     sqlx::query("UPDATE dispatcharr_channels_channel SET user_level=99 WHERE uuid=$1")
@@ -136,7 +197,7 @@ async fn actual_store_auth_channel_visibility_bound_playback_and_active_user_con
         .execute(store.pool())
         .await
         .unwrap();
-    let mut redis = redis::Client::open(redis_url)
+    let mut redis = redis::Client::open(redis_url.as_str())
         .unwrap()
         .get_multiplexed_async_connection()
         .await
@@ -166,6 +227,193 @@ async fn actual_store_auth_channel_visibility_bound_playback_and_active_user_con
         .execute(store.pool())
         .await
         .unwrap();
+    let _: () = redis.expire(&key, 600).await.unwrap();
+    if let Ok(origin) = std::env::var("TIMESHIFT_ARCHIVE_ORIGIN") {
+        let original_limits: Option<Value> = sqlx::query_scalar(
+            "SELECT value FROM core_coresettings WHERE key='user_limit_settings'",
+        )
+        .fetch_optional(store.pool())
+        .await
+        .unwrap();
+        sqlx::query("UPDATE accounts_user SET stream_limit=1 WHERE id=$1")
+            .bind(owner.id)
+            .execute(store.pool())
+            .await
+            .unwrap();
+        sqlx::query("INSERT INTO core_coresettings(key,name,value) VALUES ('user_limit_settings','Fixture user limits',$1) ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value").bind(json!({"terminate_on_limit_exceeded":false,"prioritize_single_client_channels":true,"ignore_same_channel_connections":false,"terminate_oldest":true})).execute(store.pool()).await.unwrap();
+        let original_server: String = sqlx::query_scalar(
+            "SELECT server_url FROM m3u_m3uaccount WHERE name='Rust VOD fixture XC'",
+        )
+        .fetch_one(store.pool())
+        .await
+        .unwrap();
+        sqlx::query("UPDATE m3u_m3uaccount SET server_url=$1 WHERE name='Rust VOD fixture XC'")
+            .bind(format!("{origin}/player_api.php"))
+            .execute(store.pool())
+            .await
+            .unwrap();
+        let coordinator = dispatcharr_coordination::Coordinator::connect(
+            &redis_url,
+            dispatcharr_coordination::LeaseConfig {
+                namespace: format!("test:actual-native-archive:{}", uuid::Uuid::new_v4()),
+                ..Default::default()
+            },
+        )
+        .await
+        .unwrap();
+        let media = CatchupMedia::new(
+            store.clone(),
+            auth,
+            service.clone(),
+            coordinator,
+            &redis_url,
+            CatchupMediaConfig::default(),
+        )
+        .await
+        .unwrap();
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let media_address = listener.local_addr().unwrap();
+        let router = media.clone().router();
+        let media_server = tokio::spawn(async move {
+            axum::serve(
+                listener,
+                router.into_make_service_with_connect_info::<std::net::SocketAddr>(),
+            )
+            .await
+            .unwrap();
+        });
+        let created = client
+            .post(format!("http://{address}/api/catchup/sessions/"))
+            .bearer_auth(&token)
+            .json(&json!({"channel_uuid":channel,"start":"2026-11-09T11:00:00Z","duration":30}))
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(created.status(), 201);
+        let created = created.json::<Value>().await.unwrap();
+        let media_sid = created["session_id"].as_str().unwrap();
+        let live_key = format!(
+            "live:channel:{}:clients:{}",
+            uuid::Uuid::new_v4(),
+            uuid::Uuid::new_v4()
+        );
+        let _: () = redis
+            .hset_multiple(
+                &live_key,
+                &[
+                    ("user_id", owner.id.to_string()),
+                    ("connected_at", "1".into()),
+                ],
+            )
+            .await
+            .unwrap();
+        let refused = client
+            .get(format!(
+                "http://{media_address}{}",
+                created["playback_url"].as_str().unwrap()
+            ))
+            .header("Range", "bytes=0-1879999")
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(refused.status(), 403);
+        assert_eq!(refused.text().await.unwrap(), "Stream limit exceeded");
+        assert_eq!(
+            redis
+                .get::<_, Option<i64>>(format!(
+                    "profile_connections:{}",
+                    descriptor.candidates[0].profile_id
+                ))
+                .await
+                .unwrap()
+                .unwrap_or(0),
+            0
+        );
+        assert!(!redis
+            .exists::<_, bool>(format!("timeshift:pool:{media_sid}"))
+            .await
+            .unwrap());
+        let _: () = redis.del(&live_key).await.unwrap();
+        let response = client
+            .get(format!(
+                "http://{media_address}{}",
+                created["playback_url"].as_str().unwrap()
+            ))
+            .header("Range", "bytes=0-1879999")
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(response.status(), 206);
+        assert_eq!(
+            response.headers()["content-range"],
+            "bytes 0-1879999/15001836"
+        );
+        assert_eq!(response.headers()["content-length"], "1880000");
+        let bytes = response.bytes().await.unwrap();
+        assert_eq!(bytes.len(), 1_880_000);
+        use sha2::{Digest, Sha256};
+        assert_eq!(
+            format!("{:x}", Sha256::digest(&bytes)),
+            "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0"
+        );
+        std::fs::write(
+            std::env::var("TIMESHIFT_RUST_MEDIA_FILE")
+                .expect("bounded media evidence path required"),
+            &bytes,
+        )
+        .unwrap();
+        let media_key = format!("timeshift:session:{media_sid}");
+        tokio::time::timeout(std::time::Duration::from_secs(12), async {
+            while redis.exists::<_, bool>(&media_key).await.unwrap() {
+                tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+            }
+        })
+        .await
+        .expect("source native post-body grace cleanup");
+        assert!(!redis
+            .exists::<_, bool>(format!("timeshift:pool:{media_sid}"))
+            .await
+            .unwrap());
+        assert!(!redis
+            .exists::<_, bool>(format!("live:channel:{media_sid}:owner"))
+            .await
+            .unwrap());
+        assert_eq!(
+            redis
+                .get::<_, i64>(format!(
+                    "profile_connections:{}",
+                    descriptor.candidates[0].profile_id
+                ))
+                .await
+                .unwrap(),
+            0
+        );
+        assert!(media.shutdown().await);
+        media_server.abort();
+        sqlx::query("UPDATE accounts_user SET stream_limit=$1 WHERE id=$2")
+            .bind(owner.stream_limit)
+            .bind(owner.id)
+            .execute(store.pool())
+            .await
+            .unwrap();
+        if let Some(value) = original_limits {
+            sqlx::query("UPDATE core_coresettings SET value=$1 WHERE key='user_limit_settings'")
+                .bind(value)
+                .execute(store.pool())
+                .await
+                .unwrap();
+        } else {
+            sqlx::query("DELETE FROM core_coresettings WHERE key='user_limit_settings'")
+                .execute(store.pool())
+                .await
+                .unwrap();
+        }
+        sqlx::query("UPDATE m3u_m3uaccount SET server_url=$1 WHERE name='Rust VOD fixture XC'")
+            .bind(original_server)
+            .execute(store.pool())
+            .await
+            .unwrap();
+    }
     assert!(service.delete(session, owner.id).await);
     assert!(!redis.exists::<_, bool>(&key).await.unwrap());
     server.abort();

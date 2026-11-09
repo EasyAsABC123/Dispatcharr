@@ -313,6 +313,36 @@ impl PlaybackResolver for AuthService {
         })
     }
 
+    fn authorize_hls_control(
+        &self,
+        request: PlaybackRequest,
+        check_stream_acl: bool,
+    ) -> BoxFuture<'_, Result<(), PlaybackError>> {
+        Box::pin(async move {
+            let user=self.authenticate(&request).await.map_err(playback_error)?
+                .ok_or_else(||PlaybackError{status:401,body:serde_json::json!({"detail":"Authentication credentials were not provided."})})?;
+            if user.user_level < 1
+                || !self
+                    .store
+                    .network_allowed(self.client_ip(&request), "UI", Some(&user))
+                    .await
+                    .map_err(playback_error)?
+            {
+                return Err(playback_error(StoreError::PermissionDenied));
+            }
+            if check_stream_acl
+                && !self
+                    .store
+                    .network_allowed(self.client_ip(&request), "STREAMS", Some(&user))
+                    .await
+                    .map_err(playback_error)?
+            {
+                return Err(PlaybackError::new(403, "Forbidden"));
+            }
+            Ok(())
+        })
+    }
+
     fn authorize_hls_owner(
         &self,
         request: PlaybackRequest,

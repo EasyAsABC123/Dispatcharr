@@ -76,6 +76,7 @@ fn provider(row: &PgRow) -> Result<Value, StoreError> {
         let item = match field {
             "auto_sync_channel_start" | "auto_sync_channel_end" => float(raw[field].clone()),
             "last_seen" => timestamp(&raw[field]),
+            "custom_properties" => crate::provider_reads::profile_properties(&raw[field]),
             _ => raw[field].clone(),
         };
         value.insert(

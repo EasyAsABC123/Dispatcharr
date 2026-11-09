@@ -1,0 +1,76 @@
+{
+  "format_version": 1,
+  "scope": "actual JWT-issued capability positive-cap refusal and retry against source accounting fixture",
+  "capture_complete": true,
+  "expected_control_behaviors_passed": true,
+  "configuration": {
+    "user_limit": 1,
+    "terminate_on_limit_exceeded": false,
+    "existing_live_record": "synthetic owned source-accounting hash; no media body"
+  },
+  "events": [
+    {
+      "case": "existing-live-refusal",
+      "status": 403,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "21",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 21,
+      "sha256": "32891c7310222eda5a69d379291c6e2bb68b7d2b00516440d086361a9ae4b02e",
+      "state": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0
+      },
+      "error_body": "Stream limit exceeded"
+    },
+    {
+      "case": "same-capability-retry",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-1879999/15001836",
+        "content-length": "1880000",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 1880000,
+      "sha256": "5eb05561584b30d6ef1c1f27a26d27bf2572e5580e29dff45ec9bd2b6c19f8a0",
+      "state": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 59,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1
+      },
+      "media_file": "limit-source.ts",
+      "decoder": {
+        "frames": 74,
+        "strict_audio_video_decode_passed": true
+      }
+    }
+  ],
+  "after_grace": {
+    "api_exists": false,
+    "api_ttl": -2,
+    "pool_exists": false,
+    "pool_ttl": -2,
+    "pool_busy": null,
+    "profile_connections": 0,
+    "stats_client_count": 0
+  },
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m4-timeshift-native-limit-source-1/vod-contracts.json"
+}

@@ -23,12 +23,15 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--docker',default='docker')
     parser.add_argument('--output',required=True,type=Path)
+    parser.add_argument('--candidate-image')
+    parser.add_argument('--candidate-build-manifest',type=Path)
     parser.add_argument('--warm-only',action='store_true')
     parser.add_argument('--routes-only',action='store_true')
     parser.add_argument('--cold-only',action='store_true')
     parser.add_argument('--cold-mode',choices=['stall','fail','empty'],default='stall')
     parser.add_argument('--ghost-seconds',type=int,default=0,help='0 preserves defaults;1..30 is an explicit fixture-only class override')
     args=parser.parse_args()
+    if bool(args.candidate_image)!=bool(args.candidate_build_manifest) or (args.candidate_image and not args.routes_only):parser.error('candidate characterization requires routes-only, image and manifest')
     if not 0<=args.ghost_seconds<=30:parser.error('ghost seconds must be0..30')
     args.docker=shutil.which(args.docker)
     if not args.docker:parser.error('Docker not found')
@@ -36,8 +39,18 @@ def main():
     if any(output.iterdir()):parser.error('output must be empty')
     report={'scope':'original TS cold/warm resource and rejection wire contracts','passed':False,'application_performance_verified':False,'milestone_complete':False,
             'baseline_commit':BASELINE,'baseline_image':IMAGE,'fixture_ghost_seconds':args.ghost_seconds or 50,'default_class_config':not bool(args.ghost_seconds),'cold_mode':args.cold_mode,'observations':[],'snapshots':[],'commands':[]}
+    manifest=None
+    if args.candidate_build_manifest:
+        raw=args.candidate_build_manifest.read_bytes();manifest=json.loads(raw)
+        hashes=manifest.get('source_sha256',{})
+        digest=hashlib.sha256(json.dumps(hashes,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        if not manifest.get('passed') or not hashes or digest!=manifest.get('source_tree_sha256'):parser.error('invalid passing source-bound candidate manifest')
+        report.update(backend='candidate',candidate_build_manifest=str(args.candidate_build_manifest),candidate_build_manifest_sha256=hashlib.sha256(raw).hexdigest(),candidate_image_id=manifest['image_id'])
     project='dispatcharr-cold-life-'+uuid.uuid4().hex[:12];report['project']=project
-    overlay=output/'cold-overlay.json';overlay.write_text(json.dumps({'services':{'origin':{'entrypoint':['/dispatcharrpy/bin/python','/integration/cold_origin.py'],'volumes':[str(ROOT/'scripts/rust-integration')+':/integration:ro']}}}))
+    overlay=output/'cold-overlay.json'
+    services={'origin':{'entrypoint':['/dispatcharrpy/bin/python','/integration/cold_origin.py'],'volumes':[str(ROOT/'scripts/rust-integration')+':/integration:ro']}}
+    if args.candidate_image:services['candidate']={'image':args.candidate_image}
+    overlay.write_text(json.dumps({'services':services}))
     paths=[Path(__file__).resolve(),*[Path(__file__).with_name(name) for name in ('shared_ts.py','cold_ts.py','cold_origin.py','cold_config.py','cold_supervisor.py','seed_accounts.py')],
            ROOT/'docker/compose.rust-playback.yml',ROOT/'docker/compose.rust-candidate.yml',*[ROOT/'scripts/rust-playback-baseline'/name for name in ('seed.py','start.sh','supervisor.py','uwsgi.ini','origin.py')]]
     report['tool_sha256']={str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
@@ -74,6 +87,14 @@ def main():
                 wait(lambda:http(base+'/proxy/ts/stream/missing')[0]==404,60)
             else:
                 command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/verification/supervisor.py','control','start'])
+            if args.candidate_image:
+                command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/verification/supervisor.py','control','stop'])
+                command(compose+['up','-d','--no-build','--force-recreate','candidate'])
+                base=endpoint('candidate',9192)
+                wait(lambda:http(base+'/health/ready')[0]==200,60,'candidate ready')
+                container=command(compose+['ps','-q','candidate']).strip()
+                inspection=json.loads(command([args.docker,'inspect',container]))[0]
+                if inspection['Image']!=manifest['image_id'] or inspection['Config']['Labels'].get('org.opencontainers.image.source-tree-sha256')!=manifest['source_tree_sha256']:raise RuntimeError('candidate immutable image binding mismatch')
             if not args.warm_only and not args.routes_only:
                 selected=seed['channels'][0];channel=selected['channel_uuid'];token=accounts['viewer']['access'];headers={'Authorization':'Bearer '+token}
                 for path in (selected['origin_path'],selected['backup_origin_path']):control(path,args.cold_mode)
@@ -102,8 +123,20 @@ def main():
                         for method in ('HEAD','GET') if '/hls/' in path else ('HEAD',):
                             result={'label':label,'path':path,'method':method,**capture(base+path,5,headers,method=method)}
                             report['observations'].append(result)
+                for label,token in [('anonymous',None),('invalid','invalid-fixture-token'),('viewer',accounts['viewer']['access']),('standard',accounts['standard']['access']),('admin',accounts['admin']['access'])]:
+                    for method in ('HEAD','DELETE'):
+                        headers={'Authorization':'Bearer '+token} if token else {}
+                        report['observations'].append({'label':label,'path':'/api/proxy/hls/sessions/missing/','method':method,
+                            **capture(base+'/api/proxy/hls/sessions/missing/',5,headers,method=method)})
                 report['origin_after_routes']=http(origin+'/stats')[1]
-                report['passed']=report['origin_after_routes']['connections']==0 and all(row['status'] is not None for row in report['observations'])
+                for row in report['observations']:
+                    if '/api/' in row['path']:
+                        expected=401 if row['label'] in ('anonymous','invalid') else 403 if row['label']=='viewer' else 405 if row['method']=='HEAD' else 404
+                    else:
+                        expected=401 if row['label']=='invalid' or (row['path']=='/proxy/ts/status' and row['label']=='anonymous') else 405 if row['method']=='HEAD' else 410
+                    row['expected_status']=expected
+                    row['contract_passed']=row['status']==expected and (row['method']!='HEAD' or row['bytes']==0) and (expected!=401 or row.get('headers',{}).get('WWW-Authenticate')=='Bearer realm="api"')
+                report['passed']=report['origin_after_routes']['connections']==0 and all(row['contract_passed'] for row in report['observations'])
             else:
                 # Reach an actual active state with valid media, then observe a new
                 # head-position viewer while the origin sends no further payload.

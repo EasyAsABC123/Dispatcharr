@@ -1,0 +1,293 @@
+{
+  "scope": "10 warmed channels functional source/frozen-Rust delivery smoke; not isolated resource comparison",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "artifact": "artifacts/rust/m2-many-channel-smoke-1/run.json",
+  "candidate_build_manifest_sha256": "8d55601effde90d581822d4ad00a25240c4930b60871fce2e2bd8e59cea03665",
+  "candidate_image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+  "candidate_source_tree_sha256": "9610d95e612c3736113eadb97bb7322b6d0a91d7064d13133334b57f21344dcc",
+  "decoder_priming": [
+    {
+      "backend": "baseline",
+      "scenario": "many-channel",
+      "viewers": 10,
+      "trial": 1,
+      "phase": "before identical warmup",
+      "channels": [
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-0.decode.log",
+          "completed_seconds": 6.468598371000553
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-1.decode.log",
+          "completed_seconds": 6.44805141499819
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-2.decode.log",
+          "completed_seconds": 6.767850373995316
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-3.decode.log",
+          "completed_seconds": 6.767978547999519
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-4.decode.log",
+          "completed_seconds": 6.827643343000091
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-5.decode.log",
+          "completed_seconds": 6.447338583995588
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-6.decode.log",
+          "completed_seconds": 6.928513275001023
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-7.decode.log",
+          "completed_seconds": 6.44730582399643
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-8.decode.log",
+          "completed_seconds": 6.44797237199964
+        },
+        {
+          "frames": 74,
+          "log": "baseline-many-channel-viewers-10-trial-1.json.channel-9.decode.log",
+          "completed_seconds": 6.5182740859963815
+        }
+      ],
+      "completion_spread_seconds": 0.48120745100459317,
+      "ready_channels": [
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "11ca0bac-7532-414a-9d5b-9790cb6784a1"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "45342aff-1076-5f3b-89e6-9a30509cebbf"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "b3cee3a2-4920-59a0-a25a-2b1e41dba054"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "1269d1a6-bce6-5e48-88c6-4beccc2e7e3b"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "62b6ec5b-ecdd-506b-ba14-8e31f7343a05"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "c586ff10-c149-52eb-93f9-a1300727a0d0"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "cb3c6af5-3779-5a7a-82a5-aee230aa7d8e"
+        },
+        {
+          "state": "active",
+          "owner": "090d552efcba:318",
+          "channel": "8e972c1b-14a2-5a7b-ae73-d3acd17b7955"
+        }
+      ]
+    },
+    {
+      "backend": "candidate",
+      "scenario": "many-channel",
+      "viewers": 10,
+      "trial": 1,
+      "phase": "before identical warmup",
+      "channels": [
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-0.decode.log",
+          "completed_seconds": 6.265628191002179
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-1.decode.log",
+          "completed_seconds": 6.268884883000283
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-2.decode.log",
+          "completed_seconds": 6.269059568003286
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-3.decode.log",
+          "completed_seconds": 6.268627865996677
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-4.decode.log",
+          "completed_seconds": 6.266074254002888
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-5.decode.log",
+          "completed_seconds": 6.270657282999309
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-6.decode.log",
+          "completed_seconds": 6.267382591002388
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-7.decode.log",
+          "completed_seconds": 6.266102554996905
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-8.decode.log",
+          "completed_seconds": 6.27217817500059
+        },
+        {
+          "frames": 74,
+          "log": "candidate-many-channel-viewers-10-trial-1.json.channel-9.decode.log",
+          "completed_seconds": 6.268840402000933
+        }
+      ],
+      "completion_spread_seconds": 0.006549983998411335,
+      "ready_channels": [
+        {
+          "state": "active",
+          "owner": "rust:84e91d11-2acb-4da6-8a52-8d44025dc29b",
+          "channel": "11ca0bac-7532-414a-9d5b-9790cb6784a1"
+        },
+        {
+          "state": "active",
+          "owner": "rust:4c657dca-ce58-4407-808a-de2548556ad0",
+          "channel": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6"
+        },
+        {
+          "state": "active",
+          "owner": "rust:36834a81-2eb2-4b7b-8826-25fd2b866a22",
+          "channel": "45342aff-1076-5f3b-89e6-9a30509cebbf"
+        },
+        {
+          "state": "active",
+          "owner": "rust:e1bf2ffc-9128-4b62-8c24-457806719073",
+          "channel": "b3cee3a2-4920-59a0-a25a-2b1e41dba054"
+        },
+        {
+          "state": "active",
+          "owner": "rust:e4959c2d-6ce7-4d7f-adfc-61e687e06cdc",
+          "channel": "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        },
+        {
+          "state": "active",
+          "owner": "rust:6e123f4f-3196-4868-8440-1b6ee3654ea4",
+          "channel": "1269d1a6-bce6-5e48-88c6-4beccc2e7e3b"
+        },
+        {
+          "state": "active",
+          "owner": "rust:03617ccf-2f2e-4a24-bdfa-5095102c53e1",
+          "channel": "62b6ec5b-ecdd-506b-ba14-8e31f7343a05"
+        },
+        {
+          "state": "active",
+          "owner": "rust:86c80c96-7d65-40fc-83d8-0ee70f643d36",
+          "channel": "c586ff10-c149-52eb-93f9-a1300727a0d0"
+        },
+        {
+          "state": "active",
+          "owner": "rust:16af51be-7f19-4d65-8844-ca7ea7a1c337",
+          "channel": "cb3c6af5-3779-5a7a-82a5-aee230aa7d8e"
+        },
+        {
+          "state": "active",
+          "owner": "rust:65fc3068-cbe0-4c78-8171-06f3bd5d22fa",
+          "channel": "8e972c1b-14a2-5a7b-ae73-d3acd17b7955"
+        }
+      ]
+    }
+  ],
+  "cleanup": "isolated project removed",
+  "retention_window_fully_populated": false,
+  "pending": "Longer isolated many-channel study must measure local ring plus Redis retention before optimizing architecture.",
+  "measurements": [
+    {
+      "backend": "baseline",
+      "artifact": "artifacts/rust/m2-many-channel-smoke-1/baseline-many-channel-viewers-10-trial-1.json",
+      "sha256": "77eb77a9bb0685b14c961f8ff9a0c6781fc656c45a6ade945805f76946ee4f02",
+      "summary": {
+        "bytes": 38380200,
+        "requests": 10,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.64900342799956,
+        "bytes_per_second": 3838020.0,
+        "first_byte_ms_median": 88.57094150152989,
+        "first_byte_ms_p95": 115.75728000025265,
+        "first_byte_samples": 10,
+        "viewers_without_data": 0,
+        "error_kinds": {},
+        "cpu_percent_mean": 25.876666666666665,
+        "memory_bytes_peak": 427798036.48
+      },
+      "sample_errors": [],
+      "upstreams_before": 10,
+      "upstreams_after": 10,
+      "extra_origin_connections_during_load": 0,
+      "cleanup_completed": true,
+      "upstreams_after_cleanup": 0
+    },
+    {
+      "backend": "candidate",
+      "artifact": "artifacts/rust/m2-many-channel-smoke-1/candidate-many-channel-viewers-10-trial-1.json",
+      "sha256": "a687d0c309af113358e5fcc6ca38f73eedfac99eebb8bea661a00bee93ba29af",
+      "summary": {
+        "bytes": 40974600,
+        "requests": 10,
+        "errors": 0,
+        "empty_responses": 0,
+        "elapsed_seconds": 10.232948210003087,
+        "bytes_per_second": 4097460.0,
+        "first_byte_ms_median": 7.077154001308372,
+        "first_byte_ms_p95": 8.471437999105547,
+        "first_byte_samples": 10,
+        "viewers_without_data": 0,
+        "error_kinds": {},
+        "cpu_percent_mean": 5.336666666666667,
+        "memory_bytes_peak": 342569779.2
+      },
+      "sample_errors": [],
+      "upstreams_before": 10,
+      "upstreams_after": 10,
+      "extra_origin_connections_during_load": 0,
+      "cleanup_completed": true,
+      "upstreams_after_cleanup": 0
+    }
+  ]
+}

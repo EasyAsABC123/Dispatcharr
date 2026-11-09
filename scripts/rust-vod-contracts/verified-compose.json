@@ -5,9 +5,9 @@
   "passed": true,
   "cleanup_passed": true,
   "candidate_provenance": {
-    "image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
-    "source_tree_sha256": "9610d95e612c3736113eadb97bb7322b6d0a91d7064d13133334b57f21344dcc",
-    "build_manifest_sha256": "8d55601effde90d581822d4ad00a25240c4930b60871fce2e2bd8e59cea03665"
+    "image_id": "sha256:5f32be58351267d8196281bf3e7f2cf690f6995272b40c735b79935b60057b5e",
+    "source_tree_sha256": "3fbcd0564daa8c9be9be87481d6c7530de15d9fa1101aae9f7f7c1656b2185ec",
+    "build_manifest_sha256": "affa25f6e11648aec162722be70ac72556bb690268221a6cbe07b5539c677680"
   },
   "wire_comparison": {
     "format_version": 1,
@@ -24,6 +24,12 @@
       "resource/performance matrix"
     ]
   },
+  "profile_alias_comparison": {
+    "captured_wire_matches": true,
+    "differences": [],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
   "decoders": [
     {
       "backend": "baseline",
@@ -38,8 +44,8 @@
       "strict_decoder_passed": true
     }
   ],
-  "scope": "Frozen source-bound Docker native XC VOD seven-case byte/header comparison and actual A/V decode",
-  "performance_verified": false,
+  "evidence": "artifacts/rust/m4-timeshift-positive-frozen-compose-1/vod-contracts.json",
   "application_parity_verified": false,
-  "evidence": "artifacts/rust/m4-vod-candidate-wire-2/vod-contracts.json"
+  "performance_verified": false,
+  "scope": "Frozen source-bound native VOD seven-case and literal profile/React alias comparison"
 }

@@ -5,15 +5,29 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from unittest import mock
+import contextlib
+import io
 
 spec=importlib.util.spec_from_file_location('integration_runner',Path(__file__).with_name('run.py'))
 runner=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
 
 class IntegrationRunnerTests(unittest.TestCase):
+    def test_trusted_proxy_mode_cannot_be_enabled_for_default_or_unmarked_suites(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            target=Path(temporary)/'must-not-exist'
+            for options in [['--contract-suites','proxy_auth'],['--trusted-proxy-fixture']]:
+                with mock.patch('sys.argv',['run.py','--output',str(target),*options]),contextlib.redirect_stderr(io.StringIO()):
+                    with self.assertRaises(SystemExit) as result:runner.main()
+                    self.assertEqual(result.exception.code,2)
+                self.assertFalse(target.exists())
+
     def test_suite_selection_is_explicit_canonical_and_cannot_silently_skip_typos(self):
         self.assertEqual(runner.contract_suites('all'),list(runner.CONTRACT_SUITES))
         self.assertEqual(runner.contract_suites('groups,core'),['core','groups'])
+        self.assertEqual(runner.contract_suites('proxy_auth'),['proxy_auth'])
+        self.assertNotIn('proxy_auth',runner.contract_suites('all'))
         for value in ('','unknown','core,core','all,groups'):
             with self.assertRaises(ValueError):runner.contract_suites(value)
 

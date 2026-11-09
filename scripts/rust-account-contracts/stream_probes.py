@@ -161,14 +161,50 @@ def run(http,baseline,candidate,accounts,record):
         response=invoke(baseline,groups,{'name':prefix+'-group'},'POST')
         if response[0]!=201:raise AssertionError('Group fixture creation failed')
         group=response[1]['id']
-        alpha=create_reference('alpha',{'url':'http://example.invalid/alpha.ts','channel_group':group,'is_catchup':True,'catchup_days':3})
+        alpha=create_reference('alpha',{'url':'http://example.invalid/alpha.ts','channel_group':group,'is_catchup':True,'catchup_days':3,
+                                      'stream_stats':{'codec':'probe-alpha'},'stream_stats_updated_at':FIXED})
         beta=create_reference('beta',{'url':'http://example.invalid/beta.ts','is_stale':True,'is_radio':True,'tvg_id':'probe-beta'})
         provided=create_reference('provider',{'url':'http://example.invalid/provider.ts','m3u_account':provider,
                     'is_custom':False,'channel_group':group,'stream_hash':prefix+'-provided-hash'})
         hidden=create_reference('inactive',{'url':'http://example.invalid/inactive.ts','m3u_account':inactive,'is_custom':False,'channel_group':group})
-        response=invoke(baseline,channels,{'name':prefix+'-shared-channel','streams':[alpha,provided],'channel_profile_ids':[]},'POST')
+        response=invoke(baseline,channels,{'name':prefix+'-shared-channel','streams':[alpha,provided,hidden],
+                                          'hidden_from_output':True,'channel_profile_ids':[]},'POST')
         if response[0]!=201:raise AssertionError('Assigned fixture creation failed')
         shared_channel=(response[1]['id'],response[1]['name'])
+        relation=channels+str(shared_channel[0])+'/streams/'
+        for role,status in [('admin',200),('standard',200),('viewer',403),('inactive',401),(None,401)]:
+            token=accounts[role]['access'] if role else None
+            compare('channel-streams-'+str(role),relation,status,token)
+            compare('channel-stats-'+str(role),relation+'stats/',status,token)
+        for name,params,status in [
+            ('since-before',{'since':'2020-01-02T03:04:04Z'},200),
+            ('since-exact-exclusive',{'since':FIXED},200),
+            ('since-naive',{'since':'2020-01-02T03:04:04'},200),
+            ('since-date',{'since':'2020-01-02'},200),
+            ('invalid-since',{'since':'invalid'},400),
+            ('ids-selected',{'ids':str(alpha)+','+str(hidden)},200),
+            ('ids-large',{'ids':'99999999999999999999999999999999999999999'},200),
+            ('ids-empty',{'ids':' , , '},200),
+            ('ids-numeric-format',{'ids':' +'+str(alpha)+',1_000'},200),
+            ('ids-invalid',{'ids':'1.0'},400),
+            ('ids-and-since',{'ids':str(hidden),'since':'2020-01-01'},200),
+            ('empty-query-ignored',{'ids':'','since':''},200)]:
+            compare('channel-stats-'+name,relation+'stats/?'+urlencode(params),status)
+        compare('missing-channel-before-invalid-stats',channels+'2147483647/streams/stats/?since=invalid&ids=invalid',404)
+        compare('missing-channel-streams',channels+'2147483647/streams/',404)
+        # Besides body equality, assert the source ordering and null-delta
+        # semantics so a mutual empty result cannot count as successful proof.
+        def relation_reference():
+            ordered=invoke(baseline,relation)
+            stats=invoke(baseline,relation+'stats/')
+            delta=invoke(baseline,relation+'stats/?since=2020-01-02T03:04:04Z')
+            passed=(ordered[0]==stats[0]==delta[0]==200
+                    and [row['id'] for row in ordered[1]]==[alpha,provided,hidden]
+                    and [row['id'] for row in stats[1]]==[hidden,provided,alpha]
+                    and [row['id'] for row in delta[1]]==[alpha]
+                    and delta[1][0]['stream_stats']=={'codec':'probe-alpha'})
+            record('streams:channel-relations-reference-semantics',passed,{'ordered_stream_count':len(ordered[1]) if ordered[0]==200 else None})
+        capture('channel-relations-reference-semantics',relation_reference)
         for role,status in [('admin',200),('standard',200),('viewer',403),('inactive',401),(None,401)]:compare('list-'+str(role),root,status,accounts[role]['access'] if role else None)
         for name,params in [('name',{'name':prefix}),('search',{'search':'"'+prefix+'" "alpha"'}),
              ('group',{'channel_group':prefix+'-group'}),('group-name-exact',{'channel_group_name':prefix+'-group'}),

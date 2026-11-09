@@ -57,6 +57,8 @@ def run(http,baseline,candidate,accounts,record):
             created.append((value[1]['id'],value[1]['name']))
         for role,expected in [('admin',200),('standard',200),('viewer',403),('inactive',401),(None,401)]:
             compare('list-'+str(role),root,expected,accounts[role]['access'] if role else None)
+            for action in ['ids','summary']:
+                compare(action+'-'+str(role),root+action+'/',expected,accounts[role]['access'] if role else None)
         cases=[('all',{'visibility_filter':'all'}),('hidden',{'visibility_filter':'hidden'}),
                ('nested-streams',{'include_streams':'true','visibility_filter':'all'}),
                ('name-filter',{'name':prefix,'visibility_filter':'all'}),
@@ -81,8 +83,14 @@ def run(http,baseline,candidate,accounts,record):
                ('page-last',{'page':'last','page_size':'1','visibility_filter':'all'}),
                ('page-size-bad-fallback',{'page_size':'bad','visibility_filter':'all'}),
                ('page-size-max',{'page_size':'10001','visibility_filter':'all'})]
-        for name,params in cases:compare(name,root+'?'+urlencode(params))
+        for name,params in cases:
+            compare(name,root+'?'+urlencode(params))
+            for action in ['ids','summary']:
+                compare(action+'-'+name,root+action+'/?'+urlencode(params))
         compare('nul-search-validation',root+'?'+urlencode({'search':'\0'}),400)
+        for action in ['ids','summary']:
+            compare(action+'-nul-search-validation',root+action+'/?'+urlencode({'search':'\0'}),400)
+            compare(action+'-ignores-invalid-pagination',root+action+'/?page=invalid&page_size=1')
         for name,params in [('invalid-page',{'page':'bad'}),('zero-page',{'page':'0'}),
                             ('missing-page',{'page':'999999'})]:compare(name,root+'?'+urlencode(params),404)
         for object_id,_ in created:
@@ -98,6 +106,8 @@ def run(http,baseline,candidate,accounts,record):
         original_user=before[1]
         if invoke(baseline,userpath,{'custom_properties':{'hide_adult_content':True}},'PATCH')[0]!=200:raise AssertionError('Adult preference seed failed')
         compare('standard-hide-adult-list',root,token=standard)
+        for action in ['ids','summary']:
+            compare(action+'-standard-hide-adult',root+action+'/',token=standard)
         compare('standard-hide-adult-detail',root+str(created[0][0])+'/',404,standard)
         restore_user()
         value=invoke(baseline,profiles,{'name':prefix+'-profile','start_empty':True},'POST')
@@ -107,6 +117,9 @@ def run(http,baseline,candidate,accounts,record):
         if invoke(baseline,membership,{'enabled':True},'PATCH')[0]!=200:raise AssertionError('Profile fixture assignment failed')
         if invoke(baseline,userpath,{'channel_profiles':[profile[0]]},'PATCH')[0]!=200:raise AssertionError('User fixture assignment failed')
         compare('standard-assigned-profile-only',root,token=standard)
+        for action in ['ids','summary']:
+            compare(action+'-standard-assigned-profile',root+action+'/',token=standard)
+            compare(action+'-standard-other-profile-hidden',root+action+'/?channel_profile_id=2147483647',token=standard)
         compare('standard-explicit-profile',root+'?channel_profile_id='+str(profile[0]),token=standard)
         compare('standard-show-disabled-retains-own-scope',root+'?channel_profile_id='+str(profile[0])+'&show_disabled=',token=standard)
         compare('standard-other-profile-hidden',root+'?channel_profile_id=2147483647',token=standard)

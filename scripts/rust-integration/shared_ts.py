@@ -145,9 +145,12 @@ def main():
     parser.add_argument('--candidate-image')
     parser.add_argument('--candidate-build-manifest', type=Path)
     parser.add_argument('--backends', nargs='+', choices=['baseline', 'candidate'], default=['baseline', 'candidate'])
-    parser.add_argument('--cases', nargs='+', choices=['shared-demand', 'stop', 'owner-crash'], default=['shared-demand', 'stop', 'owner-crash'])
+    parser.add_argument('--cases', nargs='+', choices=['shared-demand', 'stop', 'owner-crash', 'all-workers-down'], default=['shared-demand', 'stop', 'owner-crash'])
     parser.add_argument('--cleanup-timeout', type=float, default=90)
+    parser.add_argument('--require-active-metadata',action='store_true')
     args = parser.parse_args()
+    if 'all-workers-down' in args.cases and (args.cases[-1] != 'all-workers-down' or args.backends != ['candidate']):
+        parser.error('all-workers-down requires candidate-only and must be final')
     if 'owner-crash' in args.cases and args.cases[-1] != 'owner-crash':
         parser.error('owner-crash must be the final case')
     if not 10 <= args.cleanup_timeout <= 150:
@@ -166,7 +169,7 @@ def main():
     project = 'dispatcharr-shared-ts-' + uuid.uuid4().hex[:12]
     report = {'scope': 'two-worker-native-TS-functional-contracts', 'passed': False,
               'application_performance_verified': False, 'milestone_complete': False,
-              'project': project, 'baseline_commit': BASELINE, 'baseline_image': IMAGE,
+              'require_active_metadata':args.require_active_metadata, 'project': project, 'baseline_commit': BASELINE, 'baseline_image': IMAGE,
               'checks': [], 'cases': [], 'commands': []}
     manifest = None
     if args.candidate_build_manifest:
@@ -296,9 +299,13 @@ def main():
                     reader_a = Reader(base_a + selected['path'], directory / 'owner.ts')
                     readers.append(reader_a)
                     wait(lambda: reader_a.snapshot()['bytes'] >= 750000, 25, 'owner media readiness')
+                    result['owner_first_media_metadata']=snapshot(channel,profile)
+                    if args.require_active_metadata:record(backend+':'+case+':owner-first-media-active',result['owner_first_media_metadata']['state']=='active',result['owner_first_media_metadata'])
                     reader_b = Reader(base_b + selected['path'], directory / 'follower.ts')
                     readers.append(reader_b)
                     wait(lambda: reader_b.snapshot()['bytes'] >= 750000, 25, 'follower media readiness')
+                    result['follower_first_media_metadata']=snapshot(channel,profile)
+                    if args.require_active_metadata:record(backend+':'+case+':follower-first-media-active',result['follower_first_media_metadata']['state']=='active',result['follower_first_media_metadata'])
                     state = snapshot(channel, profile)
                     result['shared'] = state
                     current = origin_snapshot()
@@ -316,6 +323,29 @@ def main():
                         status, response = http(base_b + '/proxy/ts/stop/' + channel, method='POST', token=admin)
                         record(backend + ':follower-global-stop-response', status == 200 and response == {'message':'Channel stop request sent','channel_id':channel,'previous_state':{'state':state['state']}}, {'status': status, 'body': response})
                         wait(lambda: reader_a.snapshot()['ended'] and reader_b.snapshot()['ended'], 20, 'global stop reaches both viewers')
+                    elif case == 'all-workers-down':
+                        command(compose + ['kill', '-s', 'SIGKILL', service_a, service_b])
+                        wait(lambda: origin_snapshot()['active'] == 0, 10, 'all crashed upstream sockets close')
+                        # Observe an arbitrarily later application restart, after
+                        # both the coordinator lease and expiring input fence.
+                        while time.monotonic() - began < 65:
+                            time.sleep(max(0,min(.5,65-(time.monotonic()-began))))
+                        abandoned=snapshot(channel,profile)
+                        result['before_restart']=abandoned
+                        record(backend+':durable-orphan-index-witness',abandoned['owner'] is None and abandoned['input_index'] is not None and abandoned['timestamps']==0,abandoned)
+                        command(compose + ['rm','-f',service_b])
+                        restart=time.monotonic()
+                        command(compose + ['up','-d','--no-build',service_b])
+                        base_b=endpoint(service_b,port)
+                        wait(lambda:http(base_b+'/health/ready')[0]==200,30,'late replica restart ready')
+                        container=command(compose+['ps','-q',service_b]).strip()
+                        inspection=json.loads(command([args.docker,'inspect',container]))[0]
+                        record(service_b+':restart-immutable-image',inspection['Image']==manifest['image_id'] and inspection['Config']['Labels'].get('org.opencontainers.image.source-tree-sha256')==manifest['source_tree_sha256'])
+                        wait(lambda:clean(channel,profile),10,'late automatic catalog and coordinator cleanup')
+                        result['restart_cleanup_seconds']=time.monotonic()-restart
+                        record(backend+':late-restart-resource-recovery',result['restart_cleanup_seconds']<=15,{'seconds':result['restart_cleanup_seconds'],'state':snapshot(channel,profile)})
+                        record(backend+':late-restart-no-invented-takeover',origin_snapshot()['connections']-before['connections']==1)
+                        cleanup_passed=True
                     else:
                         if backend == 'baseline':
                             pid = json.loads(command(compose + ['exec', '-T', 'baseline', '/dispatcharrpy/bin/python', '/verification/supervisor.py', 'control', 'status']))['pid']
@@ -346,7 +376,7 @@ def main():
                     record(backend + ':' + case + ':packet-sync', all(item['sync_errors'] == 0 and item.get('content_type') == 'video/mp2t' for item in result['readers']))
                     result['decoders'] = [decode(directory / name) for name in ('owner.ts', 'follower.ts')]
                     record(backend + ':' + case + ':actual-decoder', all(item['frames'] >= 50 and item['video_and_audio'] for item in result['decoders']), result['decoders'])
-                    if case == 'owner-crash':
+                    if case in ('owner-crash','all-workers-down'):
                         break
             report['passed'] = all(item['passed'] for item in report['checks'])
             baseline_checks=[item for item in report['checks'] if item['name'].startswith('baseline:') and item['name']!='baseline:owner-crash-resource-recovery']

@@ -100,7 +100,6 @@ pub type MediaStream =
 
 pub(crate) struct Inner {
     config: EngineConfig,
-    client: reqwest::Client,
     sessions: Mutex<HashMap<String, Arc<Session>>>,
     slots: Arc<Semaphore>,
     coordinator: Option<Coordinator>,
@@ -133,6 +132,8 @@ struct Session {
     idle_watching: AtomicBool,
     native_initializing: AtomicBool,
     upstream_admitted: AtomicBool,
+    ready_requested: AtomicBool,
+    metadata_wake: Notify,
     publisher: Mutex<Option<(InputStore, String)>>,
     _permit: OwnedSemaphorePermit,
 }
@@ -205,17 +206,14 @@ impl StreamEngine {
         {
             return Err(PlaybackError::new(500, "Invalid streaming resource limits"));
         }
-        let client = reqwest::Client::builder()
-            .connect_timeout(config.connect_timeout)
-            .read_timeout(config.read_timeout)
-            .redirect(reqwest::redirect::Policy::limited(10))
-            .build()
+        // Validate the HTTP builder at construction, but each provider attempt
+        // owns its own client/session cookie jar, matching HTTPStreamReader.
+        crate::upstream::Attempt::new(config.connect_timeout, config.read_timeout)
             .map_err(|_| PlaybackError::new(500, "HTTP client initialization failed"))?;
         let slots = Arc::new(Semaphore::new(config.max_channels));
         Ok(Self {
             inner: Arc::new(Inner {
                 config,
-                client,
                 sessions: Mutex::new(HashMap::new()),
                 slots,
                 coordinator,
@@ -359,6 +357,8 @@ impl StreamEngine {
                         register_client && self.inner.config.source_initialization,
                     ),
                     upstream_admitted: AtomicBool::new(false),
+                    ready_requested: AtomicBool::new(false),
+                    metadata_wake: Notify::new(),
                     publisher: Mutex::new(None),
                     _permit: permit,
                 });
@@ -802,6 +802,24 @@ async fn run_follower(
         if *stop.borrow() {
             return PlaybackError::new(503, "Stream stopped");
         }
+        if inner.config.source_initialization
+            && session.ready_requested.load(Ordering::Acquire)
+            && matches!(*session.startup.borrow(), Startup::Pending)
+        {
+            if let Some(clients) = &inner.clients {
+                match clients.channel_snapshot(&session.source.channel_id).await {
+                    Ok(Some((fields, _)))
+                        if fields.get("state").is_some_and(|state| {
+                            state == "active" || state == "waiting_for_clients"
+                        }) =>
+                    {
+                        session.startup.send_replace(Startup::Ready);
+                    }
+                    Ok(_) => {}
+                    Err(_) => return PlaybackError::new(503, "Channel metadata unavailable"),
+                }
+            }
+        }
         if cursor.is_none()
             || last_snapshot.is_none_or(|time| time.elapsed() >= Duration::from_secs(1))
         {
@@ -902,7 +920,7 @@ async fn run_follower(
                     .store((timestamp * 1000.0) as u64, Ordering::Relaxed);
                 session.connecting.store(false, Ordering::Relaxed);
                 if sequence >= inner.config.initial_buffer_chunks {
-                    session.startup.send_replace(Startup::Ready);
+                    session.request_ready(inner);
                 }
                 last_media = Instant::now();
                 continue;
@@ -1183,6 +1201,24 @@ fn epoch_seconds() -> f64 {
 }
 
 impl Session {
+    fn request_ready(&self, inner: &Inner) {
+        if !matches!(*self.startup.borrow(), Startup::Pending)
+            || self.ready_requested.swap(true, Ordering::AcqRel)
+        {
+            return;
+        }
+        if inner.config.source_initialization && inner.clients.is_some() {
+            // In application mode only the metadata producer may acknowledge
+            // readiness, after its Redis state write. Followers observe that
+            // same committed state before returning their first response.
+            if !self.following.load(Ordering::Acquire) {
+                self.metadata_wake.notify_one();
+            }
+        } else {
+            self.startup.send_replace(Startup::Ready);
+        }
+    }
+
     async fn publish_data(
         &self,
         data: Arc<[u8]>,
@@ -1236,7 +1272,7 @@ async fn channel_metadata_worker(
         if *stop.borrow() {
             break;
         }
-        tokio::select! {_=stop.changed()=>break,_=timer.tick()=>{}}
+        tokio::select! {_=stop.changed()=>break,_=timer.tick()=>{},_=session.metadata_wake.notified()=>{}}
         if clients
             .channel_is_stopping(&session.source.channel_id)
             .await
@@ -1246,7 +1282,25 @@ async fn channel_metadata_worker(
             session.channel.stop();
             break;
         }
+        let promotion = session.ready_requested.load(Ordering::Acquire)
+            && matches!(*session.startup.borrow(), Startup::Pending);
+        let activation_clients = if promotion {
+            match clients
+                .channel_client_count(&session.source.channel_id)
+                .await
+            {
+                Ok(count) => Some(count),
+                Err(_) => {
+                    session.stop.send_replace(true);
+                    break;
+                }
+            }
+        } else {
+            None
+        };
         let state = match &*session.startup.borrow() {
+            Startup::Pending if activation_clients.is_some_and(|count| count > 0) => "active",
+            Startup::Pending if activation_clients.is_some() => "waiting_for_clients",
             Startup::Pending if session.upstream_admitted.load(Ordering::Acquire) => "connecting",
             Startup::Pending => "initializing",
             Startup::Failed(_) => "error",
@@ -1258,6 +1312,16 @@ async fn channel_metadata_worker(
             previous_state = state.into();
         }
         let mut fields = BTreeMap::new();
+        if let Some(count) = activation_clients {
+            fields.insert("connection_ready_time".into(), epoch_seconds().to_string());
+            fields.insert(
+                "buffer_chunks".into(),
+                session.buffer_index.load(Ordering::Relaxed).to_string(),
+            );
+            if count > 0 {
+                fields.insert("clients_at_activation".into(), count.to_string());
+            }
+        }
         {
             let current = session.current.lock().unwrap();
             for (name, value) in &session.source.metadata {
@@ -1310,6 +1374,9 @@ async fn channel_metadata_worker(
             session.stop.send_replace(true);
             session.channel.stop();
             break;
+        }
+        if promotion {
+            session.startup.send_replace(Startup::Ready);
         }
     }
     if shared {
@@ -1376,22 +1443,26 @@ async fn drive_candidate(
         input.marker.arm();
         input.mark_chunk = true;
     }
-    let mut request = inner
-        .client
-        .get(&candidate.url)
-        .header("User-Agent", &candidate.user_agent);
-    for (name, value) in &candidate.headers {
-        request = request.header(name, value);
-    }
+    let Ok(attempt) =
+        crate::upstream::Attempt::new(inner.config.connect_timeout, inner.config.read_timeout)
+    else {
+        return;
+    };
+    let Ok(request) = attempt.request(&candidate.url, &candidate.user_agent, &candidate.headers)
+    else {
+        return;
+    };
     let response = tokio::select! {
         _ = stop.changed() => return, _ = lost.changed() => return,
         response = request.send() => response,
     };
     let Ok(response) = response else { return };
-    if !response.status().is_success() {
+    if response.status() != reqwest::StatusCode::OK || attempt.cookie_budget_exceeded() {
         return;
     }
-    let mut bytes = response.bytes_stream();
+    let Ok(mut bytes) = crate::upstream::body(response) else {
+        return;
+    };
     let InputAccumulator {
         assembler,
         marker,
@@ -1457,7 +1528,7 @@ async fn drive_candidate(
             let began = *first_media.get_or_insert_with(Instant::now);
             session.connecting.store(false, Ordering::Relaxed);
             if session.buffer_index.load(Ordering::Relaxed) >= inner.config.initial_buffer_chunks {
-                session.startup.send_replace(Startup::Ready);
+                session.request_ready(inner);
             }
             if !stable_noted && began.elapsed() >= inner.config.stable_connection_threshold {
                 retry.stable(current);
@@ -1477,7 +1548,7 @@ async fn drive_candidate(
         retry.had_media = true;
         session.connecting.store(false, Ordering::Relaxed);
         if session.buffer_index.load(Ordering::Relaxed) >= inner.config.initial_buffer_chunks {
-            session.startup.send_replace(Startup::Ready);
+            session.request_ready(inner);
         }
     }
 }

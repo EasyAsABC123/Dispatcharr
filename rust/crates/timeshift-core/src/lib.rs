@@ -213,3 +213,9 @@ pub fn candidate_urls(
 pub fn utc_timestamp(value: i64) -> Option<NaiveDateTime> {
     DateTime::<Utc>::from_timestamp(value, 0).map(|value| value.naive_utc())
 }
+
+mod ranges;
+pub use ranges::{
+    downstream_length_headers, parse_client_range, parse_content_range, representation_length,
+    ContentRange, LengthRequest, RangeOverflow,
+};

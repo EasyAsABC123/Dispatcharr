@@ -38,6 +38,24 @@ impl PlaybackResolver for Resolver {
     fn authorize_admin(&self, _: PlaybackRequest) -> BoxFuture<'_, Result<(), PlaybackError>> {
         Box::pin(async { Err(PlaybackError::new(403, "Forbidden")) })
     }
+    fn authorize_hls_control(
+        &self,
+        request: PlaybackRequest,
+        _stream: bool,
+    ) -> BoxFuture<'_, Result<(), PlaybackError>> {
+        Box::pin(async move {
+            if request.header("x-owner").is_some()
+                || request.header("authorization") == Some("Bearer valid")
+            {
+                Ok(())
+            } else {
+                Err(PlaybackError::new(
+                    401,
+                    "Authentication credentials were not provided.",
+                ))
+            }
+        })
+    }
     fn authorize_hls_owner(
         &self,
         request: PlaybackRequest,
@@ -895,6 +913,33 @@ async fn capability_auth_and_head_are_checked_before_token_or_origin_work() {
             gateway.router().oneshot(invalid).await.unwrap().status(),
             401
         );
+    }
+    for (method, token, expected) in [
+        ("HEAD", None, 401),
+        ("DELETE", None, 401),
+        ("GET", None, 401),
+        ("HEAD", Some("Bearer invalid"), 401),
+        ("HEAD", Some("Bearer valid"), 405),
+        ("DELETE", Some("Bearer valid"), 404),
+    ] {
+        let mut request = Request::builder()
+            .method(method)
+            .uri("/api/proxy/hls/sessions/missing/");
+        if let Some(token) = token {
+            request = request.header("authorization", token);
+        }
+        let response = gateway
+            .router()
+            .oneshot(request.body(Body::empty()).unwrap())
+            .await
+            .unwrap();
+        assert_eq!(response.status().as_u16(), expected, "management {method}");
+        if expected == 401 {
+            assert_eq!(
+                response.headers()["www-authenticate"],
+                "Bearer realm=\"api\""
+            );
+        }
     }
     assert_eq!(count.load(Ordering::SeqCst), 0);
     assert!(engine.status().is_empty());

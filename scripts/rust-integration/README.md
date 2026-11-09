@@ -5,6 +5,22 @@ application and contracts being ported. See [ATTRIBUTION.md](../../ATTRIBUTION.m
 This harness verifies a partial derivative backend; it does not establish full
 backend parity or application performance savings.
 
+The latest [source-bound management/startup evidence](verified-integration-m5-startup-relations-1.json)
+passed 655 default checks and a separate 38-check trusted-proxy run (20 additional
+proxy contracts). It includes the initial failed full attempt and the recorded
+62-second separation required by independent tests sharing real login budgets.
+See [startup contracts](../rust-account-contracts/STARTUP-CONTRACTS.md) for the
+opt-in proxy fixture and remaining migration gates. External IP lookup is
+disabled through the original model in these disposable fixtures.
+
+The subsequent [M6 provider/EPG read evidence](verified-integration-m6-provider-reads-image6-1.json)
+passed 114 focused, 751 complete default and38 isolated proxy checks on image6.
+It preserves the initial list-order failures and actual PostgreSQL/ORM ordering
+diagnostics. Provider usage fixtures distinguish DB viewers1, Redis reservations7
+and XC reported connections11 instead of allowing all-zero getters to mask gaps.
+See [provider read contracts](../rust-account-contracts/PROVIDER-READ-CONTRACTS.md)
+for field/permission semantics and unsupported writes/jobs.
+
 Build a source-bound immutable candidate, then run the disposable Compose probe:
 
 ```sh
@@ -45,8 +61,10 @@ for cleanup. The [first combined image](verified-runtime-shutdown-1.json) passed
 
 Use fresh output directories. Docker Engine, Docker Compose, and Buildx must be
 available. The build runner records the normalized source archive hash, every
-included file hash, image ID, worktree status, and build log. The integration
-runner archives the pinned original Python revision and uses its actual migrated
+included file hash, image ID, worktree status, and build log. It
+also retains the exact normalized `source.tar` for new builds, so dirty
+worktree snapshots remain reconstructible after parallel code changes.
+The integration runner archives the pinned original Python revision and uses its actual migrated
 PostgreSQL schema, Redis, Django password hashes, and SimpleJWT implementation.
 It starts only disposable services with loopback host ports and fixture-only
 credentials. It removes that Compose project's containers and volumes on exit;

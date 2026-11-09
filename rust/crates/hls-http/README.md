@@ -101,3 +101,29 @@ The app exposes positive configuration variables
 `RUST_OUTPUT_OPERATIONS` (16), `RUST_HLS_CACHE_BYTES` (512 MiB),
 `RUST_HLS_REQUESTS_PER_SESSION` (8), and `RUST_HLS_SEGMENT_TTL_SECONDS` (100).
 Manager/session capacities inherit `RUST_MAX_CHANNELS` / `RUST_MAX_CLIENTS`.
+
+HLS capability requests follow DRF optional authentication: anonymous polls are
+allowed, but a presented recognized credential is validated before capability
+lookup or session activity changes. HEAD authenticates then returns405 without
+opening input or touching a token. Duplicate/non-text credential headers fail
+closed.401 responses carry `WWW-Authenticate: Bearer realm="api"`. The optional
+resolver hook defaults to501 for presented recognized credentials when an adapter
+has no authenticator, preventing accidental anonymous downgrade.
+
+The pinned original18-request method/auth oracle and both frozen Rust replicas
+pass these checks, including invalidBearer before missing-token410 and zero
+upstream requests from method probes. Native TS HEAD also authenticates without
+resolving a channel. Evidence: `m2-playback-head-source-1` and
+`m2-source-compat-replica-1` under `artifacts/rust`. These are HTTP contract gates,
+not an application performance claim.
+
+Management permissions precede method dispatch and capability lookup, matching
+`HlsSessionDestroyAPIView`: anonymous/invalid credentials return401, basic users
+403, and standard/admin HEAD405; a permitted DELETE for a missing or foreign
+session returns404. STREAMS access is checked for DELETE before lookup; unsupported
+HEAD checks standard/UI permission without entering the DELETE handler. Exact
+owner enforcement remains after a session is found, including no admin override.
+All28 source-versus-frozen-image method/role cases match status, parsed JSON or
+empty HEAD body, and authentication challenge header, with zero upstream opens.
+Evidence: `scripts/rust-integration/verified-hls-control-image4-1.json`. All10 HLS
+HTTP regressions also pass against real Redis after this ordering change.

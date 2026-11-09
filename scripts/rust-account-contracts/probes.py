@@ -242,11 +242,16 @@ def run_app_data(http, baseline, candidate, accounts, record):
 
 def run_core(http, baseline, candidate, accounts, record):
     """Load source-vs-candidate core settings/profile read contracts."""
+    validate_fixture(baseline,candidate,accounts)
     spec=importlib.util.spec_from_file_location('dispatcharr_core_read_probes',
                                                Path(__file__).with_name('core_probes.py'))
     module=importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.run(http,baseline,candidate,accounts,record)
+    spec=importlib.util.spec_from_file_location('dispatcharr_startup_probes',Path(__file__).with_name('startup_probes.py'))
+    startup=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(startup)
+    startup.run(http,baseline,candidate,accounts,record)
 
 
 def run_profiles(http, baseline, candidate, accounts, record):
@@ -329,6 +334,26 @@ def run_streams(http, baseline, candidate, accounts, record):
     validate_fixture(baseline,candidate,dict(accounts,viewer=accounts['standard']))
     spec=importlib.util.spec_from_file_location('dispatcharr_stream_probes',
                                                Path(__file__).with_name('stream_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_proxy_auth(http,baseline,candidate,accounts,record):
+    """Requires root runner's separately selected trusted-proxy fixture."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_proxy_auth_probes',
+                                               Path(__file__).with_name('proxy_auth_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_provider_reads(http,baseline,candidate,accounts,record):
+    """Original provider/EPG management read contracts, no import writes."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_provider_read_probes',
+                                               Path(__file__).with_name('provider_read_probes.py'))
     module=importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.run(http,baseline,candidate,accounts,record)

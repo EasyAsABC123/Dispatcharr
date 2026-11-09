@@ -79,7 +79,7 @@ def process_resources(ids):
 
 def viewer(url, deadline, timeout, slow_delay):
     result = {'bytes': 0, 'requests': 0, 'errors': 0, 'empty_responses': 0,
-              'first_byte_ms': []}
+              'first_byte_ms': [], 'error_kinds': {}}
     while time.monotonic() < deadline:
         began = time.monotonic()
         try:
@@ -102,9 +102,12 @@ def viewer(url, deadline, timeout, slow_delay):
                         time.sleep(min(slow_delay, max(0, deadline - time.monotonic())))
                 if first and time.monotonic() < deadline:
                     result['empty_responses'] += 1
-        except Exception:
+        except Exception as error:
             if time.monotonic() < deadline:
                 result['errors'] += 1
+                code=getattr(error,'code',None)
+                kind='HTTP'+str(code) if isinstance(code,int) else type(error).__name__
+                result['error_kinds'][kind]=result['error_kinds'].get(kind,0)+1
             time.sleep(min(0.1, max(0, deadline - time.monotonic())))
     return result
 
@@ -158,6 +161,10 @@ def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1, wa
                    if latencies else None,
                    first_byte_samples=len(latencies),
                    viewers_without_data=sum(row['bytes'] == 0 for row in outcomes))
+    summary['error_kinds']={}
+    for row in outcomes:
+        for kind,count in row.get('error_kinds',{}).items():
+            summary['error_kinds'][kind]=summary['error_kinds'].get(kind,0)+count
     if ids:
         summary.update(cpu_percent_mean=statistics.mean(row['cpu_percent'] for row in samples)
                        if samples else None,

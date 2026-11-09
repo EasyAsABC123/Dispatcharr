@@ -169,6 +169,20 @@ pub trait PlaybackResolver: Send + Sync + 'static {
     }
     fn authorize_admin(&self, request: PlaybackRequest)
         -> BoxFuture<'_, Result<(), PlaybackError>>;
+    /// Standard-user permissions precede method dispatch and capability lookup.
+    /// STREAMS ACL applies to DELETE handlers, not unsupported HEAD dispatch.
+    fn authorize_hls_control(
+        &self,
+        _request: PlaybackRequest,
+        _check_stream_acl: bool,
+    ) -> BoxFuture<'_, Result<(), PlaybackError>> {
+        Box::pin(async {
+            Err(PlaybackError::new(
+                501,
+                "HLS control authentication unavailable",
+            ))
+        })
+    }
     fn authorize_hls_owner(
         &self,
         _request: PlaybackRequest,

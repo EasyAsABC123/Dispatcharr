@@ -111,3 +111,12 @@ both passed and decoded 74 video frames with audio. Evidence:
 explicit resource-recovery improvement under the approved cleanup/rollback gates;
 it must meet its own numeric deadline. It is not a claim of identical crash leaks
 or an application performance gain.
+
+The frozen application image also passed the full Compose all-workers-down gate:
+both replicas were killed, then65seconds elapsed past the input TTL. A passive
+replica restart reclaimed index/provider leftovers automatically in5.406seconds
+without any upstream reconnect. Both pre-crash streams decoded74video frames
+with audio. This verifies the application wiring of the durable catalog and
+Coordinator recovery, separately from live-follower recovery26.647seconds.
+Evidence: `artifacts/rust/m2-source-compat-all-workers-down-1/shared-ts.json` and
+`scripts/rust-integration/verified-all-workers-down-source-compat-1.json`.

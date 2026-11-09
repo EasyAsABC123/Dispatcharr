@@ -58,20 +58,92 @@
       "tests": 1,
       "cancellation_variants": 2,
       "scope": "owner namespace isolated; provider quota shared with live"
+    },
+    "native_api_capability_media_http_redis": {
+      "passed": true,
+      "tests": 4,
+      "authorization_resolver": "fake only in host tests; actual-schema media gate separate",
+      "also_covers": "Remaining two original native missing-auth/HEAD wire cases; nosniff on provider errors/416",
+      "source_wire_cases_total_across_suites": 24
+    },
+    "archive_pool_real_redis": {
+      "passed": true,
+      "tests": 5,
+      "assertions": [
+        "provider capacity and no live phantom",
+        "source startup versus established grace",
+        "byte telemetry finalization",
+        "held ticket shutdown",
+        "foreign token fencing",
+        "missing pool metadata still cleans owned stats",
+        "user preemption before full provider; pending accounting rollback"
+      ]
+    },
+    "archive_pool_delayed_actual_redis_reply": {
+      "passed": true,
+      "tests": 1,
+      "mutations": [
+        "ADMIT",
+        "CREATE",
+        "START",
+        "HEARTBEAT"
+      ],
+      "assertion": "reservation and metadata ownership held until actual reply then fenced rollback",
+      "also_covers": "Remote cumulative watermark prevents double-counting after committed heartbeat reply cancellation; working tree after frozen image"
+    },
+    "actual_django_native_http_media_decode": {
+      "passed": true,
+      "evidence": "scripts/rust-timeshift-contracts/verified-native-media.json",
+      "bytes": 1880000,
+      "frames": 74,
+      "source_bound_candidate_image": false,
+      "positive_limit_refusal_retry_verified": true
+    },
+    "original_python_range_vectors": {
+      "passed": true,
+      "vectors": 246,
+      "tests": 2,
+      "also_covers": "explicit arithmetic overflow rejection"
+    },
+    "frozen_app_compose_slice": {
+      "passed": true,
+      "api_cases": 24,
+      "media_cases": 6,
+      "decoder_cases": 4,
+      "cleanup_passed": true,
+      "evidence": "scripts/rust-timeshift-contracts/verified-compose.json",
+      "positive_user_cap_cases": 2,
+      "source_profile_context": "Default Proxy channel; Redirect-context follow-up separate"
+    },
+    "shared_positive_timeshift_admission": {
+      "passed": true,
+      "real_redis_tests": 3,
+      "original_helper_cases": 6,
+      "evidence": "scripts/rust-timeshift-contracts/verified-admission.json"
     }
   },
   "post_test_source_sha256": {
-    "rust/crates/timeshift-core/src/lib.rs": "dda203bbbe6394ec8667aa98a2be080b09815a600fdd83e3ad48eac9f6afdfb8",
+    "rust/crates/timeshift-core/src/lib.rs": "ea3707d5db79f70d031577a9c31948a970ad07417fe1207ba482cb583f4cf50d",
     "rust/crates/timeshift-core/tests/python_vectors.rs": "2f976f2a34eada7f6e5c3c404c6c66865ba21111996b0a00c27808f5d03e11e1",
-    "rust/crates/timeshift-http/src/lib.rs": "5466970182e0e459616f3201d038af0d3afa51fb42f1f84148c8d3728b572d00",
+    "rust/crates/timeshift-http/src/lib.rs": "abd2e5352cd6b37296583e33686cb9f4057dbab9d26d1ef4b8dc513f33851b45",
     "rust/crates/timeshift-http/src/resolver.rs": "148060a0cbf6e26115a0fcd509eee83cbabfa95dcb7ba213f4820aac8dfef792",
     "rust/crates/timeshift-http/src/routes.rs": "fc7b1a10729793401e983f7268567df3fb875e9d8d76c243ba3288b14aeb992e",
     "rust/crates/timeshift-http/src/sessions.rs": "f2b907586aeb4795a7654fe2e5ad0380a27fbd9b570fb465b0eedc851b6fe770",
     "rust/crates/timeshift-http/tests/sessions.rs": "4a078bd5268ab31f73f308a3b854b2938745df2d093e8e45e14ddafc40db0087",
-    "rust/crates/timeshift-http/tests/sql.rs": "5b5a1037ec01dcc35b1d39e8b0abbf974e72cad0394251eee0abc1986708ab33",
-    "rust/crates/timeshift-http/src/playback_source.rs": "6410ad57d8fe68fd2414fc514bdeda401962798faaa224cfc234bd42a66bf286",
+    "rust/crates/timeshift-http/tests/sql.rs": "892792625ff308650a37690f4803c666c0b419088e20a0838eb77d886d703518",
+    "rust/crates/timeshift-http/src/playback_source.rs": "00d8f3ffa04627dd25fa42af34b9a161a9a3103924da09a633df741640c07acf",
     "rust/crates/timeshift-http/src/upstream.rs": "09d475ae243037a35ed973f32a3ea823866589ae57e5513921b81fe701575523",
-    "rust/crates/timeshift-http/tests/upstream.rs": "4bc661374c7038fbf885191e65c01a830aaed31e9f29e6bcdcacd5dfa5ca195f"
+    "rust/crates/timeshift-http/tests/upstream.rs": "4bc661374c7038fbf885191e65c01a830aaed31e9f29e6bcdcacd5dfa5ca195f",
+    "rust/crates/timeshift-http/src/media.rs": "2f9f2e3cf6db71a5b46c26dbc5526f7cb6cc209876ea91c735bf2b70113026cb",
+    "rust/crates/timeshift-http/src/media_pool.rs": "3ccb29fb5745993d6839d5dfb9ffab8e71733e0bd15723428e63e19ecff94083",
+    "rust/crates/timeshift-http/tests/media.rs": "62dc29da59ee7987cbe80db99bce8ba562bc7a3c1355809019b5a1bcaa813a6e",
+    "rust/crates/timeshift-http/tests/media_cancel.rs": "d4ca3c20c8d66fe3b9e14d1633c1c56d7dd577a3118fc2f6db1fe6c5e1d5fd0e",
+    "rust/crates/timeshift-http/tests/media_pool.rs": "1e0f7fd89138d4c5b180fc8a957902c6f834c9e72bf0992a6574b61dd939c2a1",
+    "rust/crates/timeshift-core/src/ranges.rs": "49b86daa066fccd304dc01d4d2cb1a4775e3f784f098f58d998ca3092228ac92",
+    "rust/crates/timeshift-core/tests/range_vectors.rs": "1558e6b4156e5a03add3f778ffe7f6c5df9e14ebc025f7159c70655385dc0e0e",
+    "rust/crates/clients/src/timeshift.rs": "1a92b672af09aad8f440104a8a0228d1ee0706ef5fe0d79a4956434162c9f46e",
+    "rust/crates/clients/tests/timeshift.rs": "2f57003114a0076bb783435ed69a76f319e96a329aac42480c3334273bdd8518",
+    "rust/crates/clients/tests/timeshift_source.rs": "9ba6c2402bdec03cfc00c2f7db29a156f7702b4e4bbd1cb55017e02fcfc8fbcc"
   },
   "source_hash_note": "Working-tree hashes; not an immutable candidate Docker image binding. Actual-schema test separately links evolving Store/Auth crates.",
   "normalizations": [
@@ -79,8 +151,8 @@
     "Allow methods compared as an unordered set"
   ],
   "remaining_gates": [
-    "app routing and source-bound candidate Docker comparison",
-    "native/XC playback and actual media decoder",
+    "broader frozen app source contracts after current API-capability slice",
+    "complete native direct-auth/XC playback; current actual decoder gate covers API capability only",
     "provider profile/server-group rotation and seven-format HTTP fallback",
     "busy pool seeks/reconnects/stream generations and grace cleanup",
     "complete position/statistics/WebSocket effects",

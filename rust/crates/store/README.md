@@ -24,8 +24,8 @@ ordered streams and active provider profiles. Initially it supports only the
 locked native Proxy profile and Standard providers with identity transforms.
 Other profiles/protocols/credential transforms fail explicitly. Capacity limits
 are passed to the HTTP engine; they must be reserved atomically before upstream
-input starts. Per-user stream limits remain an explicit unsupported case until
-distributed user-slot accounting exists.
+input starts. Per-user stream limits are enforced by the engine's distributed
+client leases; admission fails closed when the required coordinator is absent.
 
 Current unit tests check PBKDF2 Python vectors, Unicode/legacy hashes, malformed
 and oversized hashes, JWT signature/type/expiry behavior, forwarding trust,
@@ -84,6 +84,30 @@ default/empty memberships, user visibility and relation cleanup. The subsequent
 also verified single/bulk membership mutations and channel read serialization,
 filters, pagination and visibility. Core mutation side effects and pending gates are
 tracked in [CORE-CONTRACTS.md](../../../scripts/rust-account-contracts/CORE-CONTRACTS.md).
+
+The latest combined immutable image passed all
+[518 real-schema HTTP/media checks](../../../scripts/rust-integration/verified-integration-m5-full-518.json).
+The same image subsequently passed the packaged React, HEAD and bounded shutdown
+[runtime checks](../../../scripts/rust-integration/verified-runtime-shutdown-1.json),
+after which its retained disposable fixture was removed. Stream-management scope
+and remaining gaps are recorded in
+[STREAM-CONTRACTS.md](../../../scripts/rust-account-contracts/STREAM-CONTRACTS.md).
+The newer [655 default / 38 proxy checks](../../../scripts/rust-integration/verified-integration-m5-startup-relations-1.json)
+verify startup helpers, configured setup, optional-IP-lookup-disabled environment,
+trusted proxy sign-in, lightweight channel IDs/summary and stream/stat relations.
+These additions are not included in the earlier 518-check result. See
+[STARTUP-CONTRACTS.md](../../../scripts/rust-account-contracts/STARTUP-CONTRACTS.md)
+for fixture policy and remaining gates. No application resource savings are
+claimed by these tests.
+
+Provider/account/profile/filter/server-group and EPG source/data reads are now
+implemented as an additive M6 slice. Their immutable image6
+[114 focused / 751 default / 38 proxy checks](../../../scripts/rust-integration/verified-integration-m6-provider-reads-image6-1.json)
+passed after preserving source join/prefetch order; earlier failures remain
+recorded. See
+[PROVIDER-READ-CONTRACTS.md](../../../scripts/rust-account-contracts/PROVIDER-READ-CONTRACTS.md)
+for exact role/password/default/cron/expiration/count behavior and the queued
+golden gates. Job-triggering management writes remain explicitly unsupported.
 The later [356-check run](../../../scripts/rust-integration/verified-integration-m5-channel-crud-2.json)
 verified supported channel writes, stream ordering/catchup, raw/effective
 overrides, group ownership and profile-selection creation side effects. Remaining

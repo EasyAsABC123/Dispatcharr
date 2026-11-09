@@ -1,0 +1,23 @@
+{
+  "scope": "M3U-parser-component-differential",
+  "passed": true,
+  "cases": 970,
+  "failures": [],
+  "binary_sha256": "cd61a9050e0ba3443e932956b81bc71c49143fc04f6952c1fb7442543b3baa6c",
+  "source_sha256": {
+    "apps/m3u/tasks.py": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+    "apps/m3u/utils.py": "9ddc50fe1e3916e6812007b1de9d7677341333b334850001128e1406d4ab91ae",
+    "scripts/rust-ingest-parity/run.py": "948657203b9276a51ccd43d26eda06a6e95d46f64245fb882ef423d42d49ddf6",
+    "rust/crates/ingest-core/examples/ingest_parity.rs": "4782e0ec614366e580560efc2452474ffd51b80713cb79440178c0c2ce7f286a",
+    "rust/crates/ingest-core/src/lib.rs": "96a7a1f886718b3aeed3c959fbdbb5d7d0c970b502d6fa1d2c156ad12b606cdb",
+    "rust/crates/ingest-core/tests/parser.rs": "299c5f0d791b20a70df3fd9593f25a72b422ec9ff00bec5e3261522b82a4fcab"
+  },
+  "application_performance_verified": false,
+  "ingestion_jobs_migrated": false,
+  "raw_evidence_directory": "artifacts/rust/m6-ingest-parser-1",
+  "raw_report_sha256": "2c7e26124a6c1fa89e72dd432c94392e198e127805535a782b6a2ab2f4f20084",
+  "notes": [
+    "970 original-source parser/entry cases passed before bounded file-reader and hash module additions.",
+    "Reader, identity and job integration must be validated separately; no complete M6 or ingestion performance claim."
+  ]
+}

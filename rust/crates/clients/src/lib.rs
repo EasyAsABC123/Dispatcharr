@@ -5,6 +5,7 @@ mod channel;
 mod era;
 mod hls;
 mod scripts;
+pub mod timeshift;
 pub mod vod;
 pub use hls::HlsSessionInfo;
 

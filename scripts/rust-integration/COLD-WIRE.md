@@ -34,3 +34,9 @@ Do not translate authentication, user/provider admission or registration errors
 into200 TS packets. Do not emulate original resource lifecycle by delaying only
 an already-released HTTP error response. A future immutable Rust image must be
 retested against these wire and Redis transitions before accepting parity.
+
+The frozen `m2-source-compat-1` image now matches all three recorded source cold
+status/type/body hashes. Candidate/source first-body timing differences remain
+quantified (+0.838/+0.831/+0.344seconds for503/stall/empty cases). Durable result:
+`verified-cold-wire-source-compat-1.json`. This closes those measured wire cases;
+it does not assert every initialization/stop/error transition is equivalent.

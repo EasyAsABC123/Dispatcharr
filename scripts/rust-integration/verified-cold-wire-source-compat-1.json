@@ -1,0 +1,39 @@
+{
+  "scope": "cold TS status/content-type/packet parity with separately captured pinned original source; numeric timing differences retained",
+  "passed": true,
+  "source_artifact": "artifacts/rust/m2-cold-wire-2/cold-ts.json",
+  "candidate_artifact": "artifacts/rust/m2-source-compat-cold-1/cold-ts.json",
+  "candidate_image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+  "candidate_build_manifest_sha256": "8d55601effde90d581822d4ad00a25240c4930b60871fce2e2bd8e59cea03665",
+  "comparisons": [
+    {
+      "mode": "fail",
+      "status_equal": true,
+      "body_sha256_equal": true,
+      "content_type_equal": true,
+      "source_seconds": 50.05701766799757,
+      "candidate_seconds": 50.89351287699537,
+      "candidate_minus_source_seconds": 0.8364952089978033
+    },
+    {
+      "mode": "stall",
+      "status_equal": true,
+      "body_sha256_equal": true,
+      "content_type_equal": true,
+      "source_seconds": 50.14512584300246,
+      "candidate_seconds": 50.97369234999496,
+      "candidate_minus_source_seconds": 0.8285665069925017
+    },
+    {
+      "mode": "empty",
+      "status_equal": true,
+      "body_sha256_equal": true,
+      "content_type_equal": true,
+      "source_seconds": 50.04877802300325,
+      "candidate_seconds": 50.38990980199742,
+      "candidate_minus_source_seconds": 0.3411317789941677
+    }
+  ],
+  "application_performance_verified": false,
+  "milestone_complete": false
+}

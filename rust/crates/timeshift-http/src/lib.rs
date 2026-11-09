@@ -15,3 +15,9 @@ pub use playback_source::{CatchupCandidate, CatchupSource, SqlCatchupResolver};
 
 mod upstream;
 pub use upstream::{ArchiveClient, ArchiveFailure, ArchiveMedia, ArchiveOpen, ArchiveRequest};
+
+mod media_pool;
+pub use media_pool::{ArchivePool, ArchivePoolConfig, ArchivePoolRequest, ArchiveTicket};
+
+mod media;
+pub use media::{ArchiveResolver, CatchupMedia, CatchupMediaConfig, SqlArchiveResolver};

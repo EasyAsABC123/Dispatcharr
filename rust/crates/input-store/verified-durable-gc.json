@@ -11,11 +11,13 @@
   "batch_limit": 32,
   "poll_seconds": 5,
   "source_sha256": {
-    "rust/crates/input-store/src/gc.rs": "cf63d09392009427e3045372b20f9b44b9a4fb41abcdbde8b50c289f6806edaa",
+    "rust/crates/input-store/src/gc.rs": "1661e2daf4716dd1a7d479b455fb7b64c74138a62fa6abbef94f75d80aae9f6b",
     "rust/crates/input-store/src/lib.rs": "7a43ce1e6a4f8b4ba08cb508e6e436bab0b2c826784f7b6abc58a90c4175b761",
-    "rust/crates/input-store/tests/gc.rs": "ed6f19435a7c91f4582a633201a7a3b41852a3fe213a7f9dd904d8d0675a638b",
+    "rust/crates/input-store/tests/gc.rs": "7e5dca9c5900ea7b2b3619820ef42956e18b715c8dcc656275a03563adf7798d",
     "rust/crates/input-store/tests/redis.rs": "bc2732d49c3022acf488710c62600ba8099b393926b01bbbfe376407b22c7b3d"
   },
-  "evidence_directory": "artifacts/rust/m2-input-durable-gc-1",
-  "mixed_producers_supported": false
+  "evidence_directory": "artifacts/rust/m2-input-durable-gc-2",
+  "mixed_producers_supported": false,
+  "media_regressions_evidence": "artifacts/rust/m2-input-durable-gc-1/media-regressions.log",
+  "followup": "Changed legacy index preserves legacy data and removes only the matching stale Rust GC marker."
 }

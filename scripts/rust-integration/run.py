@@ -22,15 +22,16 @@ from tool_snapshot import snapshot_sources
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
-                 'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams')
+                 'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads')
+OPTIONAL_CONTRACT_SUITES=('proxy_auth',)
 
 
 def contract_suites(value):
     if value=='all':return list(CONTRACT_SUITES)
     names=[name.strip() for name in value.split(',') if name.strip()]
-    if not names or set(names)-set(CONTRACT_SUITES) or len(names)!=len(set(names)):
+    if not names or set(names)-set(CONTRACT_SUITES+OPTIONAL_CONTRACT_SUITES) or len(names)!=len(set(names)):
         raise ValueError('Expected unique known contract suite names or all')
-    return [name for name in CONTRACT_SUITES if name in names]
+    return [name for name in CONTRACT_SUITES+OPTIONAL_CONTRACT_SUITES if name in names]
 
 
 def digest(value):
@@ -113,9 +114,12 @@ def main():
     parser.add_argument('--candidate-image',help='Unique prebuilt image tag; keeps earlier measured tags unchanged')
     parser.add_argument('--candidate-build-manifest',type=Path)
     parser.add_argument('--contract-suites',default='all',help='Comma-separated oracle suites or all (default); foundational auth/schema/media checks always run')
+    parser.add_argument('--trusted-proxy-fixture',action='store_true',help='Only for the isolated proxy_auth suite: trust peers explicitly on both disposable fixture services')
     args = parser.parse_args()
     try:selected_suites=contract_suites(args.contract_suites)
     except ValueError as error:parser.error(str(error))
+    if ('proxy_auth' in selected_suites or args.trusted_proxy_fixture) and not (args.trusted_proxy_fixture and selected_suites==['proxy_auth']):
+        parser.error('proxy_auth requires --trusted-proxy-fixture and must run as the only selected suite')
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
@@ -150,6 +154,12 @@ def main():
                            BASELINE_EVIDENCE_DIR=str(output), FIXTURE_SECONDS='180')
         compose = ['docker', 'compose', '-p', project, '-f', str(tool_source/'docker/compose.rust-playback.yml'),
                    '-f', str(overlay)]
+        if args.trusted_proxy_fixture:
+            trust=output/'trusted-proxy-fixture.yml'
+            trust.write_text('services:\n  baseline:\n    environment:\n      DISPATCHARR_TRUSTED_PROXIES: "0.0.0.0/0,::/0"\n  candidate:\n    environment:\n      DISPATCHARR_TRUSTED_PROXIES: "0.0.0.0/0,::/0"\n')
+            report['trusted_proxy_fixture']=True
+            report['trusted_proxy_overlay_sha256']=hashlib.sha256(trust.read_bytes()).hexdigest()
+            compose+=['-f',str(trust)]
 
         def command(args, timeout=120, payload=None):
             return subprocess.check_output(args, cwd=ROOT, env=environment, text=True,
@@ -237,8 +247,18 @@ def main():
                                  ('core','run_core'),('profiles','run_profiles'),('memberships','run_memberships'),
                                  ('channel_reads','run_channel_reads'),('channel_crud','run_channel_crud'),
                                  ('groups','run_groups'),('channel_stops','run_channel_stops'),
-                                 ('group_cleanup','run_group_cleanup'),('streams','run_streams')]:
+                                 ('group_cleanup','run_group_cleanup'),('streams','run_streams'),
+                                 ('provider_reads','run_provider_reads'),
+                                 ('proxy_auth','run_proxy_auth')]:
                 if suite in selected_suites:
+                    if suite=='core' and 'account_crud' in selected_suites:
+                        # Both independent suites deliberately test password
+                        # sign-in. The fixture's source login budget is 3/min,
+                        # and foundation spends one extra Rust attempt. Let
+                        # those real budgets expire instead of resetting or
+                        # bypassing application state between contracts.
+                        report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
+                        for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             status = 0 if all(check['passed'] for check in report['checks']) else 1

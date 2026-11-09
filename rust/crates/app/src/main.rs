@@ -1,9 +1,11 @@
 //! Derivative Dispatcharr backend port. Original project credit: ATTRIBUTION.md.
 mod control;
 mod playback;
+mod response_headers;
 use axum::{
     extract::State,
-    http::StatusCode,
+    http::{header, StatusCode},
+    response::{IntoResponse, Response},
     routing::{any, get},
     Json, Router,
 };
@@ -73,6 +75,36 @@ async fn api_not_found() -> (StatusCode, Json<serde_json::Value>) {
     )
 }
 
+async fn legacy_react_alias() -> Response {
+    let Some(path) = env::var_os("RUST_FRONTEND_DIR") else {
+        return (
+            StatusCode::NOT_IMPLEMENTED,
+            Json(serde_json::json!({"error":"Bundled React is required for this legacy alias"})),
+        )
+            .into_response();
+    };
+    let index = std::path::PathBuf::from(path).join("index.html");
+    // Bound this exceptional alias separately from normal static-file streaming.
+    if tokio::fs::metadata(&index)
+        .await
+        .is_ok_and(|metadata| metadata.len() <= 1024 * 1024)
+    {
+        if let Ok(bytes) = tokio::fs::read(index).await {
+            return (
+                StatusCode::OK,
+                [(header::CONTENT_TYPE, "text/html; charset=utf-8")],
+                bytes,
+            )
+                .into_response();
+        }
+    }
+    (
+        StatusCode::INTERNAL_SERVER_ERROR,
+        Json(serde_json::json!({"error":"Bundled React unavailable"})),
+    )
+        .into_response()
+}
+
 async fn run() -> Result<(), String> {
     let bind: SocketAddr = env::var("RUST_BIND")
         .unwrap_or_else(|_| "127.0.0.1:9192".into())
@@ -96,6 +128,9 @@ async fn run() -> Result<(), String> {
     config.flush_partial_chunks = false;
     config.source_initialization = true;
     config.startup_timeout = Duration::from_secs(60);
+    // Original HTTPStreamReader uses requests timeout=(5,30).
+    config.connect_timeout = Duration::from_secs(5);
+    config.read_timeout = Duration::from_secs(30);
     config.max_channels = positive("RUST_MAX_CHANNELS", config.max_channels)?;
     config.max_viewers_per_channel = positive(
         "RUST_MAX_VIEWERS_PER_CHANNEL",
@@ -227,7 +262,7 @@ async fn run() -> Result<(), String> {
             .map_err(|_| "Invalid fMP4 configuration".to_string())
         })
         .transpose()?;
-    let vod = if let Some(coordinator) = coordinator {
+    let vod = if let Some(coordinator) = coordinator.clone() {
         Some(
             dispatcharr_vod_http::VodEngine::new(
                 store.clone(),
@@ -247,6 +282,39 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
+    let (catchup_sessions, catchup) = if let Some(coordinator) = coordinator {
+        let redis_url =
+            env::var("REDIS_URL").map_err(|_| "Redis catch-up configuration missing")?;
+        let sessions = dispatcharr_timeshift_http::CatchupSessions::new(
+            store.clone(),
+            auth.clone(),
+            &redis_url,
+            dispatcharr_timeshift_http::SessionConfig::default(),
+        )
+        .await
+        .map_err(|_| "Catch-up sessions initialization failed (credentials omitted)")?;
+        let media = dispatcharr_timeshift_http::CatchupMedia::new(
+            store.clone(),
+            auth.clone(),
+            sessions.clone(),
+            coordinator,
+            &redis_url,
+            dispatcharr_timeshift_http::CatchupMediaConfig {
+                pool: dispatcharr_timeshift_http::ArchivePoolConfig {
+                    max_sessions: positive("RUST_MAX_TIMESHIFT_SESSIONS", 1024)?,
+                    ..Default::default()
+                },
+                max_upstreams: positive("RUST_MAX_TIMESHIFT_UPSTREAMS", 1024)?,
+                body_frame_bytes: positive("RUST_TIMESHIFT_FRAME_BYTES", 64 * 1024)?,
+                ..Default::default()
+            },
+        )
+        .await
+        .map_err(|_| "Catch-up media initialization failed (credentials omitted)")?;
+        (Some(sessions), Some(media))
+    } else {
+        (None, None)
+    };
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(store)
@@ -264,6 +332,22 @@ async fn run() -> Result<(), String> {
     if let Some(vod) = &vod {
         app = app.merge(vod.clone().router());
     }
+    if let Some(sessions) = catchup_sessions {
+        app = app.merge(sessions.router());
+    }
+    if let Some(media) = &catchup {
+        app = app.merge(media.clone().router());
+    }
+    // Source bare-profile redirects duplicate the profile and render React.
+    app = app
+        .route(
+            "/proxy/vod/{kind}/{content_id}/{session_id}/{profile_id}",
+            get(legacy_react_alias),
+        )
+        .route(
+            "/proxy/vod/{kind}/{content_id}/{session_id}/{profile_id}/{legacy_profile_id}/",
+            get(legacy_react_alias),
+        );
     // Backend paths must keep an HTTP error response rather than receiving
     // the React navigation fallback when a route has not been migrated yet.
     for prefix in ["api", "proxy", "output", "admin"] {
@@ -281,6 +365,7 @@ async fn run() -> Result<(), String> {
                 .fallback(tower_http::services::ServeFile::new(index)),
         );
     }
+    app = app.layer(axum::middleware::from_fn(response_headers::apply));
     let listener = tokio::net::TcpListener::bind(bind)
         .await
         .map_err(|_| "Cannot bind HTTP listener")?;
@@ -292,6 +377,7 @@ async fn run() -> Result<(), String> {
     let signal_hls = hls.clone();
     let signal_fmp4 = fmp4.clone();
     let signal_vod = vod.clone();
+    let signal_catchup = catchup.clone();
     let server = axum::serve(
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
@@ -305,6 +391,7 @@ async fn run() -> Result<(), String> {
             signal_hls,
             signal_fmp4,
             signal_vod,
+            signal_catchup,
         ));
         let _ = shutdown_started.send(cleanup);
         // Return immediately: Axum stops accepting while cleanup runs.
@@ -313,7 +400,7 @@ async fn run() -> Result<(), String> {
     tokio::pin!(server);
     tokio::select! {
         result=&mut server=>{
-            let _=tokio::time::timeout(shutdown_timeout,shutdown_components(engine,clients,hls,fmp4,vod)).await;
+            let _=tokio::time::timeout(shutdown_timeout,shutdown_components(engine,clients,hls,fmp4,vod,catchup)).await;
             result.map_err(|_|"HTTP server failed".to_string())
         },
         cleanup=&mut shutdown_notice=>{
@@ -354,9 +441,10 @@ async fn shutdown_components(
     hls: Option<dispatcharr_hls_http::HlsGateway>,
     fmp4: Option<dispatcharr_fmp4_http::Fmp4Gateway>,
     vod: Option<dispatcharr_vod_http::VodEngine>,
+    catchup: Option<dispatcharr_timeshift_http::CatchupMedia>,
 ) {
     engine.shutdown();
-    let (live, _, _, vod) = tokio::join!(
+    let (live, _, _, vod, catchup) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
             if let Some(hls) = hls {
@@ -375,8 +463,15 @@ async fn shutdown_components(
                 true
             }
         },
+        async {
+            if let Some(media) = catchup {
+                media.shutdown().await
+            } else {
+                true
+            }
+        },
     );
-    if !live || !vod {
+    if !live || !vod || !catchup {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }
     if let Some(clients) = clients {

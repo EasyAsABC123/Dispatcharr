@@ -1,0 +1,293 @@
+{
+  "scope": "source versus immutable image HLS control/capability and native HEAD authentication ordering",
+  "passed": true,
+  "source_artifact": "artifacts/rust/m3-hls-control-source-1/cold-lifecycle.json",
+  "candidate_artifact": "artifacts/rust/m3-hls-control-image4-1/cold-lifecycle.json",
+  "candidate_build_manifest": "artifacts/rust/candidate-build-m4-catchup-compatible-2/build.json",
+  "candidate_build_manifest_sha256": "badeefc4a36dbaeb92555b042a870c6294e23e94de616f89ae71d11048f8ff5f",
+  "candidate_image_id": "sha256:3401f2f7fe1d7eb3443c5a29e5cfa0cbd0246a0601cd37dc6e2980b8d0480482",
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "comparisons": [
+    {
+      "credentials": "anonymous",
+      "method": "HEAD",
+      "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "invalid",
+      "method": "HEAD",
+      "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "valid",
+      "method": "HEAD",
+      "path": "/proxy/ts/stream/11ca0bac-7532-414a-9d5b-9790cb6784a1?output_format=ts",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "anonymous",
+      "method": "HEAD",
+      "path": "/proxy/hls/missing/index.m3u8",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "anonymous",
+      "method": "GET",
+      "path": "/proxy/hls/missing/index.m3u8",
+      "source_status": 410,
+      "candidate_status": 410,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "invalid",
+      "method": "HEAD",
+      "path": "/proxy/hls/missing/index.m3u8",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "invalid",
+      "method": "GET",
+      "path": "/proxy/hls/missing/index.m3u8",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "valid",
+      "method": "HEAD",
+      "path": "/proxy/hls/missing/index.m3u8",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "valid",
+      "method": "GET",
+      "path": "/proxy/hls/missing/index.m3u8",
+      "source_status": 410,
+      "candidate_status": 410,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "anonymous",
+      "method": "HEAD",
+      "path": "/proxy/hls/missing/1.ts",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "anonymous",
+      "method": "GET",
+      "path": "/proxy/hls/missing/1.ts",
+      "source_status": 410,
+      "candidate_status": 410,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "invalid",
+      "method": "HEAD",
+      "path": "/proxy/hls/missing/1.ts",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "invalid",
+      "method": "GET",
+      "path": "/proxy/hls/missing/1.ts",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "valid",
+      "method": "HEAD",
+      "path": "/proxy/hls/missing/1.ts",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "valid",
+      "method": "GET",
+      "path": "/proxy/hls/missing/1.ts",
+      "source_status": 410,
+      "candidate_status": 410,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "anonymous",
+      "method": "HEAD",
+      "path": "/proxy/ts/status",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "invalid",
+      "method": "HEAD",
+      "path": "/proxy/ts/status",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "valid",
+      "method": "HEAD",
+      "path": "/proxy/ts/status",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "anonymous",
+      "method": "HEAD",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "anonymous",
+      "method": "DELETE",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "invalid",
+      "method": "HEAD",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "invalid",
+      "method": "DELETE",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 401,
+      "candidate_status": 401,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "viewer",
+      "method": "HEAD",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 403,
+      "candidate_status": 403,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "viewer",
+      "method": "DELETE",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 403,
+      "candidate_status": 403,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "standard",
+      "method": "HEAD",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "standard",
+      "method": "DELETE",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 404,
+      "candidate_status": 404,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "admin",
+      "method": "HEAD",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 405,
+      "candidate_status": 405,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    },
+    {
+      "credentials": "admin",
+      "method": "DELETE",
+      "path": "/api/proxy/hls/sessions/missing/",
+      "source_status": 404,
+      "candidate_status": 404,
+      "status_equal": true,
+      "json_or_empty_body_equal": true,
+      "www_authenticate_equal": true
+    }
+  ]
+}

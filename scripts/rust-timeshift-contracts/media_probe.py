@@ -21,7 +21,7 @@ def request(base, path, *, method='GET', body=None, headers=None, limit=2_000_00
         return response.status, dict(response.headers), payload
 
 
-def capture(base, origin, seed, output, observe):
+def capture(base, origin, seed, output, observe, prefix='timeshift'):
     output = Path(output)
     events = []
     for mode in ['all','query-only','html-first','forbidden','not-found','server-error']:
@@ -41,7 +41,7 @@ def capture(base, origin, seed, output, observe):
             'headers':{key.lower():value for key,value in headers.items() if key.lower() in ('content-type','content-length','content-range','accept-ranges','cache-control','pragma','x-content-type-options')},
             'elapsed_seconds':round(elapsed,3)}
         if status in (200,206):
-            path = output/('timeshift-'+mode+'.ts')
+            path = output/(prefix+'-'+mode+'.ts')
             path.write_bytes(payload)
             event['media_file'] = path.name
         else:

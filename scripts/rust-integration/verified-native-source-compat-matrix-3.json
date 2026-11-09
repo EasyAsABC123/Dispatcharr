@@ -1,0 +1,1240 @@
+{
+  "scope": "native TS same-channel characterization only; no accepted full-application performance gain",
+  "matrix_completed": true,
+  "measurement_quality_passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "known_exclusions": [
+    "frontend and GUI viewing",
+    "WebSocket stats delivery",
+    "equivalent application event broadcasts",
+    "many-channel and slow-reader resource matrices"
+  ],
+  "primary_scope": "Docker CPU and working-memory summed across baseline/PostgreSQL/Redis, origin, and candidate when present; source web stopped for candidate measurements",
+  "rss_scope": "Per-process RSS diagnostic sums may overcount shared PostgreSQL pages; not the primary memory comparison",
+  "observer_scope": "Docker stats plus Docker top RSS every >=5s; observer command durations retained; observer host work is outside container CPU totals",
+  "run_artifact": "artifacts/rust/m2-native-source-compat-matrix-3/run.json",
+  "run_sha256": "0941ea6eab5f4fc3914def7cd0d5ed22412baca3cef36b66de65b2dd03276d20",
+  "candidate_build_manifest_sha256": "8d55601effde90d581822d4ad00a25240c4930b60871fce2e2bd8e59cea03665",
+  "candidate_image_source_bound": true,
+  "workload_configuration": {
+    "docker": "/tmp/dispatcharr-docker/docker",
+    "output": "artifacts/rust/m2-native-source-compat-matrix-3",
+    "viewers": [
+      1,
+      10,
+      100
+    ],
+    "trials": 3,
+    "warmup": 15.0,
+    "duration": 60.0,
+    "warmup_ramp": 0,
+    "timeout": 10,
+    "scenarios": [
+      "same-channel"
+    ],
+    "fixture_seconds": 1800,
+    "fixture_codec": "h264",
+    "vod_fixture": false,
+    "shutdown_delay": 5,
+    "retention_seconds": 60,
+    "startup_behind": 5,
+    "cleanup_timeout": 60,
+    "start_signal": null,
+    "candidate_overlay": "artifacts/rust/candidate-build-m2-source-compat-1/candidate-overlay.yml",
+    "candidate_build_manifest": "artifacts/rust/candidate-build-m2-source-compat-1/build.json",
+    "max_cpu_ratio": 1,
+    "max_memory_ratio": 1,
+    "max_latency_ratio": 1.1,
+    "require_comparison": false,
+    "functional_only": false,
+    "functional_probes": [
+      "mixed",
+      "stall",
+      "failover"
+    ],
+    "candidate_service": "candidate",
+    "candidate_port": 9192,
+    "fresh_web_per_trial": true,
+    "measurement_quality": "isolated-characterization"
+  },
+  "declared_resource_comparison_passed": true,
+  "counts": [
+    {
+      "viewers": 1,
+      "paired_trials": [
+        {
+          "trial": 1,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-1-trial-1.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 16375552,
+              "requests": 1,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.43474363700079,
+              "bytes_per_second": 272925.86666666664,
+              "first_byte_ms_median": 12.625169998500496,
+              "first_byte_ms_p95": 12.625169998500496,
+              "first_byte_samples": 1,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 2.862,
+              "memory_bytes_peak": 749836697.6
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 2.5645,
+                "docker_working_memory_bytes_peak": 285317529.6,
+                "process_rss_bytes_sum_peak_diagnostic": 391954432,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 121081856,
+                  "redis-server": 29831168,
+                  "uwsgi": 226533376
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.2975,
+                "docker_working_memory_bytes_peak": 465777459.2,
+                "process_rss_bytes_sum_peak_diagnostic": 24043520,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24043520
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.31257311300578294
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-1-trial-1.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 16397548,
+              "requests": 1,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.38308441999834,
+              "bytes_per_second": 273292.4666666667,
+              "first_byte_ms_median": 3.2382399949710816,
+              "first_byte_ms_p95": 3.2382399949710816,
+              "first_byte_samples": 1,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 0.847,
+              "memory_bytes_peak": 618376724.48
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.17300000000000001,
+                "docker_working_memory_bytes_peak": 134532300.8,
+                "process_rss_bytes_sum_peak_diagnostic": 162971648,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 117166080,
+                  "redis-server": 31272960
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.329,
+                "docker_working_memory_bytes_peak": 464938598.4,
+                "process_rss_bytes_sum_peak_diagnostic": 24047616,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24047616
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "5a06bd94d95ec0deabfe1ca1ea3118d66d7e273f9d510667c38e70d063cae015",
+                "cpu_percent_mean": 0.345,
+                "docker_working_memory_bytes_peak": 19870515.2,
+                "process_rss_bytes_sum_peak_diagnostic": 30142464,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 30142464
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.4654699649909162
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.2959468902865129,
+            "memory_bytes_peak": 0.8246818626765487,
+            "bytes_per_second": 1.001343221895665,
+            "first_byte_ms_p95": 0.2564908033203268
+          }
+        },
+        {
+          "trial": 2,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-1-trial-2.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 16375552,
+              "requests": 1,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.4377704619983,
+              "bytes_per_second": 272925.86666666664,
+              "first_byte_ms_median": 11.123349002446048,
+              "first_byte_ms_p95": 11.123349002446048,
+              "first_byte_samples": 1,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 2.84,
+              "memory_bytes_peak": 754555289.6
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 2.532,
+                "docker_working_memory_bytes_peak": 290245836.8,
+                "process_rss_bytes_sum_peak_diagnostic": 406528000,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 134742016,
+                  "redis-server": 30310400,
+                  "uwsgi": 226947072
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.308,
+                "docker_working_memory_bytes_peak": 464938598.4,
+                "process_rss_bytes_sum_peak_diagnostic": 24047616,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24047616
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.31168599399825325
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-1-trial-2.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 16397548,
+              "requests": 1,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.38313064600516,
+              "bytes_per_second": 273292.4666666667,
+              "first_byte_ms_median": 3.1201859965221956,
+              "first_byte_ms_p95": 3.1201859965221956,
+              "first_byte_samples": 1,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 0.841,
+              "memory_bytes_peak": 618796154.88
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.17149999999999999,
+                "docker_working_memory_bytes_peak": 135266304.0,
+                "process_rss_bytes_sum_peak_diagnostic": 163303424,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 117223424,
+                  "redis-server": 31547392
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.3285,
+                "docker_working_memory_bytes_peak": 464728883.2,
+                "process_rss_bytes_sum_peak_diagnostic": 24047616,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24047616
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "28ce64705c6f8c573d783be4ee8d385f5ba9946b84e4b67505ff1590d631b93c",
+                "cpu_percent_mean": 0.34099999999999997,
+                "docker_working_memory_bytes_peak": 19807600.64,
+                "process_rss_bytes_sum_peak_diagnostic": 29626368,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 29626368
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.46081223298824625
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.2961267605633803,
+            "memory_bytes_peak": 0.8200806003335186,
+            "bytes_per_second": 1.001343221895665,
+            "first_byte_ms_p95": 0.2805077855451681
+          }
+        },
+        {
+          "trial": 3,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-1-trial-3.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 16375552,
+              "requests": 1,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.43556021700351,
+              "bytes_per_second": 272925.86666666664,
+              "first_byte_ms_median": 10.271355997247156,
+              "first_byte_ms_p95": 10.271355997247156,
+              "first_byte_samples": 1,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 2.757,
+              "memory_bytes_peak": 773953945.5999999
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 2.4355,
+                "docker_working_memory_bytes_peak": 309015347.2,
+                "process_rss_bytes_sum_peak_diagnostic": 414056448,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 142405632,
+                  "redis-server": 30056448,
+                  "uwsgi": 227069952
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.3215,
+                "docker_working_memory_bytes_peak": 465043456.0,
+                "process_rss_bytes_sum_peak_diagnostic": 24051712,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24051712
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.31567113200435415
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-1-trial-3.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 16397548,
+              "requests": 1,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.38309056599974,
+              "bytes_per_second": 273292.4666666667,
+              "first_byte_ms_median": 3.2214090024353936,
+              "first_byte_ms_p95": 3.2214090024353936,
+              "first_byte_samples": 1,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 0.8455,
+              "memory_bytes_peak": 641330053.12
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.1965,
+                "docker_working_memory_bytes_peak": 156971827.2,
+                "process_rss_bytes_sum_peak_diagnostic": 184086528,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 138244096,
+                  "redis-server": 31309824
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.327,
+                "docker_working_memory_bytes_peak": 464938598.4,
+                "process_rss_bytes_sum_peak_diagnostic": 24051712,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24051712
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "27c6e31b62fda5123d9a514a8999d68f741d2fc6e762a95a2bcb65abb85664da",
+                "cpu_percent_mean": 0.322,
+                "docker_working_memory_bytes_peak": 19839057.92,
+                "process_rss_bytes_sum_peak_diagnostic": 30224384,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 30224384
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.46485946200118633
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.3066739209285455,
+            "memory_bytes_peak": 0.8286411055412547,
+            "bytes_per_second": 1.001343221895665,
+            "first_byte_ms_p95": 0.31363035253561156
+          }
+        }
+      ],
+      "paired_ratio_medians": {
+        "cpu_percent_mean": 0.2961267605633803,
+        "memory_bytes_peak": 0.8246818626765487,
+        "bytes_per_second": 1.001343221895665,
+        "first_byte_ms_p95": 0.2805077855451681
+      },
+      "paired_ratio_ranges": {
+        "cpu_percent_mean": [
+          0.2959468902865129,
+          0.3066739209285455
+        ],
+        "memory_bytes_peak": [
+          0.8200806003335186,
+          0.8286411055412547
+        ],
+        "bytes_per_second": [
+          1.001343221895665,
+          1.001343221895665
+        ],
+        "first_byte_ms_p95": [
+          0.2564908033203268,
+          0.31363035253561156
+        ]
+      }
+    },
+    {
+      "viewers": 10,
+      "paired_trials": [
+        {
+          "trial": 1,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-10-trial-1.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 166314200,
+              "requests": 10,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 61.40197143400292,
+              "bytes_per_second": 2771903.3333333335,
+              "first_byte_ms_median": 81.67027449962916,
+              "first_byte_ms_p95": 115.49891700269654,
+              "first_byte_samples": 10,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 4.441,
+              "memory_bytes_peak": 783076556.8
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 4.111,
+                "docker_working_memory_bytes_peak": 318033100.8,
+                "process_rss_bytes_sum_peak_diagnostic": 442970112,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 165466112,
+                  "redis-server": 30371840,
+                  "uwsgi": 232611840
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.33,
+                "docker_working_memory_bytes_peak": 465148313.6,
+                "process_rss_bytes_sum_peak_diagnostic": 24051712,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24051712
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.31383041199296713
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-10-trial-1.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 163975480,
+              "requests": 10,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.38234090900369,
+              "bytes_per_second": 2732924.6666666665,
+              "first_byte_ms_median": 6.630144500377355,
+              "first_byte_ms_p95": 8.618681000370998,
+              "first_byte_samples": 10,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 0.906,
+              "memory_bytes_peak": 662133800.96
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.18,
+                "docker_working_memory_bytes_peak": 176580198.4,
+                "process_rss_bytes_sum_peak_diagnostic": 335028224,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 289361920,
+                  "redis-server": 31133696
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.3325,
+                "docker_working_memory_bytes_peak": 465148313.6,
+                "process_rss_bytes_sum_peak_diagnostic": 24051712,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24051712
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "c3e9514aa70ad23ff653d18a5f6b78e4d951aa3e218647ee2a5a12f823c73ca1",
+                "cpu_percent_mean": 0.3935,
+                "docker_working_memory_bytes_peak": 21023948.8,
+                "process_rss_bytes_sum_peak_diagnostic": 30650368,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 30650368
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.4626596000161953
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.20400810628236885,
+            "memory_bytes_peak": 0.8455543652919123,
+            "bytes_per_second": 0.9859379415588084,
+            "first_byte_ms_p95": 0.0746213144160458
+          }
+        },
+        {
+          "trial": 2,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-10-trial-2.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 165802464,
+              "requests": 10,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.98327131100086,
+              "bytes_per_second": 2763374.4,
+              "first_byte_ms_median": 78.04176750141778,
+              "first_byte_ms_p95": 112.91951099701691,
+              "first_byte_samples": 10,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 5.463,
+              "memory_bytes_peak": 782552268.8
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 5.127,
+                "docker_working_memory_bytes_peak": 318137958.4,
+                "process_rss_bytes_sum_peak_diagnostic": 444301312,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 166039552,
+                  "redis-server": 30699520,
+                  "uwsgi": 233029632
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.336,
+                "docker_working_memory_bytes_peak": 465043456.0,
+                "process_rss_bytes_sum_peak_diagnostic": 24059904,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24059904
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.31193670100765303
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-10-trial-2.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 163975480,
+              "requests": 10,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.38317703999928,
+              "bytes_per_second": 2732924.6666666665,
+              "first_byte_ms_median": 6.995290001214016,
+              "first_byte_ms_p95": 8.267371005786117,
+              "first_byte_samples": 10,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 0.867,
+              "memory_bytes_peak": 663559864.32
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.196,
+                "docker_working_memory_bytes_peak": 176580198.4,
+                "process_rss_bytes_sum_peak_diagnostic": 336543744,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 290607104,
+                  "redis-server": 31404032
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.307,
+                "docker_working_memory_bytes_peak": 465253171.2,
+                "process_rss_bytes_sum_peak_diagnostic": 24055808,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24055808
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "36e135d53e905012410ab85594e01d0ea67e76f4290a0278417a85108d864c81",
+                "cpu_percent_mean": 0.364,
+                "docker_working_memory_bytes_peak": 22827499.52,
+                "process_rss_bytes_sum_peak_diagnostic": 30642176,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 30642176
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.4654236429851153
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.1587040087863811,
+            "memory_bytes_peak": 0.8479431863861719,
+            "bytes_per_second": 0.988980959896953,
+            "first_byte_ms_p95": 0.0732147255402525
+          }
+        },
+        {
+          "trial": 3,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-10-trial-3.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 163755520,
+              "requests": 10,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.37227718500071,
+              "bytes_per_second": 2729258.6666666665,
+              "first_byte_ms_median": 88.00564150078571,
+              "first_byte_ms_p95": 122.1529889953672,
+              "first_byte_samples": 10,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 4.534,
+              "memory_bytes_peak": 780245401.5999999
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 4.2045,
+                "docker_working_memory_bytes_peak": 315621376.0,
+                "process_rss_bytes_sum_peak_diagnostic": 440074240,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 164581376,
+                  "redis-server": 30703616,
+                  "uwsgi": 230273024
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.3295,
+                "docker_working_memory_bytes_peak": 465672601.6,
+                "process_rss_bytes_sum_peak_diagnostic": 24059904,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24059904
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.3186442840160453
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-10-trial-3.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 163975480,
+              "requests": 10,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.383010213998205,
+              "bytes_per_second": 2732924.6666666665,
+              "first_byte_ms_median": 7.42832250034553,
+              "first_byte_ms_p95": 8.574289000534918,
+              "first_byte_samples": 10,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 0.8445,
+              "memory_bytes_peak": 659701104.64
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.1675,
+                "docker_working_memory_bytes_peak": 176055910.4,
+                "process_rss_bytes_sum_peak_diagnostic": 336343040,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 290365440,
+                  "redis-server": 31444992
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.2955,
+                "docker_working_memory_bytes_peak": 464624025.6,
+                "process_rss_bytes_sum_peak_diagnostic": 24059904,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24059904
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "9cd4d5bd759e9586419dea57a14f9de7c16187a5f25ea15d6b634557993dafcb",
+                "cpu_percent_mean": 0.3815,
+                "docker_working_memory_bytes_peak": 20698890.24,
+                "process_rss_bytes_sum_peak_diagnostic": 30801920,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 30801920
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.4675866449979367
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.18625937362152625,
+            "memory_bytes_peak": 0.8455046364735923,
+            "bytes_per_second": 1.001343221895665,
+            "first_byte_ms_p95": 0.07019303474317856
+          }
+        }
+      ],
+      "paired_ratio_medians": {
+        "cpu_percent_mean": 0.18625937362152625,
+        "memory_bytes_peak": 0.8455543652919123,
+        "bytes_per_second": 0.988980959896953,
+        "first_byte_ms_p95": 0.0732147255402525
+      },
+      "paired_ratio_ranges": {
+        "cpu_percent_mean": [
+          0.1587040087863811,
+          0.20400810628236885
+        ],
+        "memory_bytes_peak": [
+          0.8455046364735923,
+          0.8479431863861719
+        ],
+        "bytes_per_second": [
+          0.9859379415588084,
+          1.001343221895665
+        ],
+        "first_byte_ms_p95": [
+          0.07019303474317856,
+          0.0746213144160458
+        ]
+      }
+    },
+    {
+      "viewers": 100,
+      "paired_trials": [
+        {
+          "trial": 1,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-100-trial-1.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 1649325128,
+              "requests": 100,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.99979723099386,
+              "bytes_per_second": 27488752.133333333,
+              "first_byte_ms_median": 1210.531112003082,
+              "first_byte_ms_p95": 1744.5603130036034,
+              "first_byte_samples": 100,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 23.794999999999998,
+              "memory_bytes_peak": 843159961.5999999
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 23.439,
+                "docker_working_memory_bytes_peak": 377697075.2,
+                "process_rss_bytes_sum_peak_diagnostic": 672284672,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 342441984,
+                  "redis-server": 31342592,
+                  "uwsgi": 293724160
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.356,
+                "docker_working_memory_bytes_peak": 465987174.4,
+                "process_rss_bytes_sum_peak_diagnostic": 24064000,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24064000
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.3202506309899036
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-100-trial-1.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 1639740324,
+              "requests": 100,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.38148373799777,
+              "bytes_per_second": 27329005.4,
+              "first_byte_ms_median": 36.16801000316627,
+              "first_byte_ms_p95": 41.33804499724647,
+              "first_byte_samples": 100,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 1.8905,
+              "memory_bytes_peak": 665573130.24
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.3065,
+                "docker_working_memory_bytes_peak": 176685056.0,
+                "process_rss_bytes_sum_peak_diagnostic": 337661952,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 291893248,
+                  "redis-server": 31236096
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.3415,
+                "docker_working_memory_bytes_peak": 466406604.8,
+                "process_rss_bytes_sum_peak_diagnostic": 24064000,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24064000
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "a8d5d5bcad7c6bd25c4e66b86c2534bf957e17870f9b83dca2454231fa86e238",
+                "cpu_percent_mean": 1.2425,
+                "docker_working_memory_bytes_peak": 24473763.84,
+                "process_rss_bytes_sum_peak_diagnostic": 33468416,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 33468416
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.4656916970052407
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.07944946417314563,
+            "memory_bytes_peak": 0.7893794304191022,
+            "bytes_per_second": 0.9941886509595457,
+            "first_byte_ms_p95": 0.023695394586888716
+          }
+        },
+        {
+          "trial": 2,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-100-trial-2.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 1636275860,
+              "requests": 100,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.37307549499383,
+              "bytes_per_second": 27271264.333333332,
+              "first_byte_ms_median": 946.177923502546,
+              "first_byte_ms_p95": 1315.255014997092,
+              "first_byte_samples": 100,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 24.6235,
+              "memory_bytes_peak": 859308032.0
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 24.283,
+                "docker_working_memory_bytes_peak": 393006284.8,
+                "process_rss_bytes_sum_peak_diagnostic": 613670912,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14536704,
+                  "postgres": 288305152,
+                  "redis-server": 31543296,
+                  "uwsgi": 298262528
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.3405,
+                "docker_working_memory_bytes_peak": 466721177.6,
+                "process_rss_bytes_sum_peak_diagnostic": 24068096,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24068096
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.3227193980055745
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-100-trial-2.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 1639740512,
+              "requests": 100,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.38211368700286,
+              "bytes_per_second": 27329008.533333335,
+              "first_byte_ms_median": 31.56958700128598,
+              "first_byte_ms_p95": 34.951185996760614,
+              "first_byte_samples": 100,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 1.6560000000000001,
+              "memory_bytes_peak": 665908674.56
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.3105,
+                "docker_working_memory_bytes_peak": 177314201.6,
+                "process_rss_bytes_sum_peak_diagnostic": 337698816,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14532608,
+                  "postgres": 291926016,
+                  "redis-server": 31240192
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.3315,
+                "docker_working_memory_bytes_peak": 465462886.4,
+                "process_rss_bytes_sum_peak_diagnostic": 24064000,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24064000
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "6ff8aacf50314910ffb536132b4738e888a6dc8a5edaf711d0436361683982a6",
+                "cpu_percent_mean": 1.014,
+                "docker_working_memory_bytes_peak": 24326963.2,
+                "process_rss_bytes_sum_peak_diagnostic": 33824768,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 33824768
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.46316278701124247
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.0672528275834061,
+            "memory_bytes_peak": 0.7749359365466747,
+            "bytes_per_second": 1.002117400913071,
+            "first_byte_ms_p95": 0.026573695289683338
+          }
+        },
+        {
+          "trial": 3,
+          "baseline": {
+            "artifact": "baseline-same-channel-viewers-100-trial-3.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 1649836864,
+              "requests": 100,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.994375450005464,
+              "bytes_per_second": 27497281.066666666,
+              "first_byte_ms_median": 1226.2643430003664,
+              "first_byte_ms_p95": 1790.0106779998168,
+              "first_byte_samples": 100,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 25.4985,
+              "memory_bytes_peak": 860146892.8
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 25.15,
+                "docker_working_memory_bytes_peak": 393950003.2,
+                "process_rss_bytes_sum_peak_diagnostic": 676458496,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14536704,
+                  "postgres": 342175744,
+                  "redis-server": 31567872,
+                  "uwsgi": 298053632
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.3485,
+                "docker_working_memory_bytes_peak": 466196889.6,
+                "process_rss_bytes_sum_peak_diagnostic": 24068096,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24068096
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.3231909559981432
+          },
+          "candidate": {
+            "artifact": "candidate-same-channel-viewers-100-trial-3.json",
+            "measurement_valid": true,
+            "summary": {
+              "bytes": 1639739572,
+              "requests": 100,
+              "errors": 0,
+              "empty_responses": 0,
+              "elapsed_seconds": 60.382853695999074,
+              "bytes_per_second": 27328992.866666667,
+              "first_byte_ms_median": 38.917633501114324,
+              "first_byte_ms_p95": 44.993390001764055,
+              "first_byte_samples": 100,
+              "viewers_without_data": 0,
+              "error_kinds": {},
+              "cpu_percent_mean": 1.5905,
+              "memory_bytes_peak": 669243146.24
+            },
+            "containers": [
+              {
+                "service": "baseline",
+                "container_id": "31cf025ae3e09bbd8f65ed2d498221a279dc7eb77e5b20e66f23eec6e0b1912a",
+                "cpu_percent_mean": 0.28950000000000004,
+                "docker_working_memory_bytes_peak": 177314201.6,
+                "process_rss_bytes_sum_peak_diagnostic": 337965056,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 14536704,
+                  "postgres": 292102144,
+                  "redis-server": 31326208
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "origin",
+                "container_id": "12ed8622d644644d37b31c239fbfd061d8014d5e1f13a861f5b0afcfab270375",
+                "cpu_percent_mean": 0.309,
+                "docker_working_memory_bytes_peak": 466721177.6,
+                "process_rss_bytes_sum_peak_diagnostic": 24072192,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "python": 24072192
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              },
+              {
+                "service": "candidate",
+                "container_id": "0f045fa83a11b5b8e1ec9da70b6dccde166a0611ab8310e0f5610f3bfa176360",
+                "cpu_percent_mean": 0.992,
+                "docker_working_memory_bytes_peak": 25931284.48,
+                "process_rss_bytes_sum_peak_diagnostic": 34111488,
+                "process_name_rss_sum_peaks_diagnostic": {
+                  "dispatcharr-rs": 34111488
+                },
+                "cpu_memory_sample_count": 20,
+                "rss_sample_count": 10
+              }
+            ],
+            "observer_seconds_total": 0.4671195630071452
+          },
+          "candidate_over_baseline": {
+            "cpu_percent_mean": 0.06237621820891425,
+            "memory_bytes_peak": 0.7780568084847008,
+            "bytes_per_second": 0.9938798239872522,
+            "first_byte_ms_p95": 0.02513582212372068
+          }
+        }
+      ],
+      "paired_ratio_medians": {
+        "cpu_percent_mean": 0.0672528275834061,
+        "memory_bytes_peak": 0.7780568084847008,
+        "bytes_per_second": 0.9941886509595457,
+        "first_byte_ms_p95": 0.02513582212372068
+      },
+      "paired_ratio_ranges": {
+        "cpu_percent_mean": [
+          0.06237621820891425,
+          0.07944946417314563
+        ],
+        "memory_bytes_peak": [
+          0.7749359365466747,
+          0.7893794304191022
+        ],
+        "bytes_per_second": [
+          0.9938798239872522,
+          1.002117400913071
+        ],
+        "first_byte_ms_p95": [
+          0.023695394586888716,
+          0.026573695289683338
+        ]
+      }
+    }
+  ],
+  "candidate_image_id": "sha256:964c50cd90f5e9648f3c716ec0adc49072d2a0586fce1e2d4225029a422c2034",
+  "candidate_source_tree_sha256": "9610d95e612c3736113eadb97bb7322b6d0a91d7064d13133334b57f21344dcc",
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "captured_tools_manifest": "artifacts/rust/m2-native-source-compat-matrix-3/captured-tools.json",
+  "artifact_sha256": {
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-1-trial-1.json": "796a6c1bf59da89101cbc6a75672d2e3e3b1abc0c7cc80491e7e25a5922946f5",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-1-trial-1.json": "545472e38475782d14a89b87b5bf934cea957b0b1789c519d8aaee82dc74025f",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-1-trial-2.json": "49a5f3ff312f14bc7bbac0c27ef2a5af045da5e05dcc44e64ab6f5c10fa58bcf",
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-1-trial-2.json": "4f87fbd8589fe64524e826d29692671089eee9bf6b4121de9b444d8a1cc6774b",
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-1-trial-3.json": "c0af394fd14d7bded930c6fa8b51ef0174e1e79fe6ef7a77959953437d7c1e6e",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-1-trial-3.json": "59fb1d93083bd7fef9c0d2aa65b4e00b6f821227d8e813c2af0d5a6a7022ee85",
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-10-trial-1.json": "6e4e0c3ccf962a47073f09cd1b77ab850ea5e1c6284a4eae69ad0b86ea744c5b",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-10-trial-1.json": "eff2a14ba24b27066363496ce69899a4e817462e06adc8d410242b6ac238642d",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-10-trial-2.json": "26748ec9685868bfb32b77e13c2c7bef91d33aeb065143650fa722c322800a08",
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-10-trial-2.json": "1bd85a47720c3ea42c4920bb6597b5f6aff2c985af4f5617688504bcee893d52",
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-10-trial-3.json": "372fcb28449463f7cd3a96bc29885579eddde0901bf3a085bc4436ffd4a24769",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-10-trial-3.json": "8c036704002cf2517a484c613bcfddabb0ad425fa489719706ae25b0def5bc97",
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-100-trial-1.json": "28056affb0cd3942c1c8ee205d5747c6bb1bd0f528e4ba87c78fb1dc3c7d7fc3",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-100-trial-1.json": "88bb1ad064de90f8ef35900c3ea5efd92a64b022e72e0455eb423aca32af6f95",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-100-trial-2.json": "8ec2920baba112e3eea3097faf8da6a20d30f1c4e3e69908a6bce9f400d0065f",
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-100-trial-2.json": "94b1808ff7c6ba10b2396d5e3a158d20fc8ac932ffd769d4612188ac325a2a2b",
+    "artifacts/rust/m2-native-source-compat-matrix-3/baseline-same-channel-viewers-100-trial-3.json": "d6a19648d2c8495a52d98e0bd9329f3d04022d3c0b204dbad995e22d237ba5bb",
+    "artifacts/rust/m2-native-source-compat-matrix-3/candidate-same-channel-viewers-100-trial-3.json": "22b4711e7e49edd72588de5c88c8651be60d6538e8d45a0e94ea0f4ed2243548"
+  },
+  "excluded_side_effects_note": "Source WebSocket statistics and equivalent event broadcasts remain unported; frontend viewing is not exercised. Image1 also predates the metadata Ready barrier correction. These observations do not verify current HEAD or a full-application performance gain."
+}

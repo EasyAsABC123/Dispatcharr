@@ -1,5 +1,6 @@
 //! Provider setup ported from Dispatcharr's catch-up view/helpers.
 //! Original Dispatcharr authors and contributors retain all application credit.
+use dispatcharr_contracts::UserLimitPolicy;
 use dispatcharr_store::{ChannelIdentity, Store, StoreError, User};
 use dispatcharr_timeshift_core::{
     candidate_urls, client_duration_window, parse_timestamp, programme_age_days,
@@ -18,6 +19,7 @@ pub struct CatchupCandidate {
     pub max_streams: u32,
     pub provider_stream_id: String,
     pub provider_timestamp: String,
+    pub provider_timezone: Option<String>,
     pub credentials: ProviderCredentials,
     pub urls: Vec<String>,
     pub user_agent: String,
@@ -28,6 +30,7 @@ pub struct CatchupSource {
     pub timestamp: String,
     pub duration_window: u32,
     pub redirect: bool,
+    pub limit_policy: UserLimitPolicy,
     pub candidates: Vec<CatchupCandidate>,
 }
 #[derive(Clone)]
@@ -46,6 +49,29 @@ impl SqlCatchupResolver {
         channel: ChannelIdentity,
         timestamp: String,
         duration_hint: Option<&str>,
+    ) -> Result<CatchupSource, StoreError> {
+        self.resolve_context(user, channel, timestamp, duration_hint, false)
+            .await
+    }
+    /// Bare Redirect handoff alone applies allowed_m3u_profile_ids. Existing
+    /// API capabilities continue proxying even on a Redirect-profile channel.
+    pub async fn resolve_redirect(
+        &self,
+        user: User,
+        channel: ChannelIdentity,
+        timestamp: String,
+        duration_hint: Option<&str>,
+    ) -> Result<CatchupSource, StoreError> {
+        self.resolve_context(user, channel, timestamp, duration_hint, true)
+            .await
+    }
+    async fn resolve_context(
+        &self,
+        user: User,
+        channel: ChannelIdentity,
+        timestamp: String,
+        duration_hint: Option<&str>,
+        restrict_redirect: bool,
     ) -> Result<CatchupSource, StoreError> {
         if user.custom_properties.get("catchup_enabled") == Some(&Value::Bool(false))
             || self
@@ -99,7 +125,7 @@ impl SqlCatchupResolver {
             let days = row.try_get::<i32, _>("catchup_days").unwrap_or(0);
             !(days <= 0 || days as u64 >= age)
         });
-        let allowed = if redirect {
+        let allowed = if redirect && restrict_redirect {
             user.custom_properties
                 .get("allowed_m3u_profile_ids")
                 .filter(|value| !value.is_null())
@@ -200,24 +226,46 @@ impl SqlCatchupResolver {
                 max_streams: row.try_get::<i32, _>("max_streams")?.max(0) as u32,
                 provider_stream_id: stream,
                 provider_timestamp: local_timestamp,
+                provider_timezone: zone.map(str::to_owned),
                 credentials,
                 urls,
                 user_agent: row.try_get("user_agent")?,
             });
         }
         if candidates.is_empty() {
-            return Err(if redirect {
+            return Err(if redirect && restrict_redirect {
                 StoreError::StatusBody(503, json!("No available stream"))
             } else {
                 StoreError::StatusBody(400, json!("Cannot build timeshift URL"))
             });
         }
+        let limits = self.store.setting("user_limit_settings").await?;
+        let defaults = UserLimitPolicy::default();
+        let limit_policy = UserLimitPolicy {
+            terminate_on_limit_exceeded: limits
+                .get("terminate_on_limit_exceeded")
+                .and_then(Value::as_bool)
+                .unwrap_or(defaults.terminate_on_limit_exceeded),
+            prioritize_single_client_channels: limits
+                .get("prioritize_single_client_channels")
+                .and_then(Value::as_bool)
+                .unwrap_or(defaults.prioritize_single_client_channels),
+            ignore_same_channel_connections: limits
+                .get("ignore_same_channel_connections")
+                .and_then(Value::as_bool)
+                .unwrap_or(defaults.ignore_same_channel_connections),
+            terminate_oldest: limits
+                .get("terminate_oldest")
+                .and_then(Value::as_bool)
+                .unwrap_or(defaults.terminate_oldest),
+        };
         Ok(CatchupSource {
             user,
             channel,
             timestamp,
             duration_window,
             redirect,
+            limit_policy,
             candidates,
         })
     }

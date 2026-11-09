@@ -16,6 +16,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--docker', default='docker')
+    parser.add_argument('--wire-ranges', action='store_true', help='Capture native archive pure range/length-header contracts')
     args = parser.parse_args()
     if args.output.exists():
         parser.error('Output must be new')
@@ -28,7 +29,7 @@ def main():
                    '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges:true',
                    '-e', 'PYTHONDONTWRITEBYTECODE=1', '-v', str(source)+':/app:ro',
                    '-v', str(Path(__file__).resolve().parent)+':/verification:ro',
-                   '--entrypoint', '/dispatcharrpy/bin/python', IMAGE, '/verification/capture_helpers.py']
+                   '--entrypoint', '/dispatcharrpy/bin/python', IMAGE, '/verification/'+('capture_ranges.py' if args.wire_ranges else 'capture_helpers.py')]
         result = subprocess.run(command, check=True, capture_output=True, text=True, timeout=60)
         report = json.loads(result.stdout)
         report.update(source_commit=BASELINE, source_image=IMAGE,

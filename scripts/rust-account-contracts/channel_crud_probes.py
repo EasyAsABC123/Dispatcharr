@@ -115,6 +115,13 @@ def run(http,baseline,candidate,accounts,record):
             if auto is None:raise AssertionError('Auto channel creation failed')
             autopath=root+str(auto)+'/'
             add('override-get',invoke(base,autopath),200)
+            effective_params=urlencode({'name':prefix+'-effective','visibility_filter':'all'})
+            summary=invoke(base,root+'summary/?'+effective_params)
+            if summary[0]!=200 or not isinstance(summary[1],list) or len(summary[1])!=1:
+                raise AssertionError('Effective summary fixture missing')
+            if summary[1][0]['id']!=auto or summary[1][0]['name']!=prefix+'-effective' or summary[1][0]['channel_number']!=2.0:
+                raise AssertionError('Effective summary values differ')
+            add('effective-summary',(200,summary[1][0]),200)
             reserved=create('override-reservation-default',{})
             if reserved is None:raise AssertionError('Reserved default-number fixture missing')
             add('override-number-reserved-get',invoke(base,root+str(reserved)+'/'),200)

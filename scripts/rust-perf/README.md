@@ -134,3 +134,13 @@ enough connection startups. First byte is not first decodable frame. The report
 always states `application_performance_verified:false`, even when this narrower
 resource gate passes. The existing single-pair CLI comparison also enforces a
 95% throughput floor, so frozen budgets cannot choose a lower floor.
+
+Process RSS is also sampled through `docker top -eo pid,comm,rss` at most once
+per five seconds, separately from the primary Docker stats samples. Each process
+sample allows at most16 containers,4096 processes/container,1MiB textual output
+and3seconds/container. Samples include process names/PIDs/RSS only (no command
+arguments), plus observer elapsed time. PostgreSQL shared pages can appear in
+multiple process RSS values, so these diagnostic sums are **not** the primary
+memory comparison. Existing `memory_bytes` and `memory_bytes_peak` represent
+Docker stats working-memory usage, not process RSS. The observation commands add
+host CPU work; their measured elapsed time is retained with every process sample.

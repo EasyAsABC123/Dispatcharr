@@ -1,47 +1,72 @@
-# Native catch-up session API prototype (M4, in progress)
+# Native catch-up slice (M4, in progress)
 
-Original application authorship and credit belong entirely to the original
-Dispatcharr contributors. See the retained AGPL LICENSE and ATTRIBUTION.md.
+All original application authorship and credit belong entirely to the original
+Dispatcharr authors and contributors. See the retained AGPL LICENSE and
+ATTRIBUTION.md. Full Timeshift parity and performance acceptance remain open.
 
-This additive crate begins the native authenticated catch-up handshake,
-ownership/revocation, bound playback identity resolution and position metadata
-contracts. It reuses Store/Auth channel visibility and the bounded supervised
-Redis transport. Session handshake TTL is 60 seconds; authorized playback/position
-extends the source's 600-second sliding idle window. Bound playback loads the
-stored channel without repeating mint-time profile filtering, while refreshing
-active user state and checking access if a provider pool names another user.
+`CatchupSessions` implements the native authenticated session handshake,
+ownership/revocation, bound identity and position metadata using Store/Auth and
+bounded supervised Redis transport. Handshake TTL is 60 seconds; authorized
+playback/position extends the source's 600-second sliding window. Bound playback
+loads the stored channel without repeating mint-time profile filtering, refreshes
+active-user state and checks visibility if the pool names a different user.
 
-This is not a Timeshift streaming implementation and is not app-wired. HTTP,
-actual-schema/source differential evidence, arbitrary serializer corner cases,
-Redis cancellation/failure cases, complete position WebSocket effects, native
-and XC playback, provider reservations/format fallback/range generation/grace,
-Docker decoding and performance remain open. No M4 completion, application
-parity or performance gain is claimed.
+`SqlCatchupResolver` reads actual Django provider descriptors: client duration
+precedence, real EPG fallback, default-profile timezone, active XC identity
+credentials and seven ordered URL shapes. Unsupported account transforms/server
+groups fail closed. `ArchiveClient` handles cached-format priority, cached-CDN
+redirect suppression, portal fallback, PHP/JSON rejection, verbatim partial
+bytes, terminal 416 and source error classes. Its request permit remains attached
+to the incremental body; it does not buffer the archive file.
 
-Verification so far: four real Redis/loopback HTTP contracts pass, covering 22
-session API wire cases from a 24-case original Python Docker capture, session
-schema/ownership/revocation and bound-visibility/active-user/position TTL behavior.
-The two remaining captured cases are native playback error endpoints. The host
-wire tests use a fake authorization resolver. A separate actual Django
-PostgreSQL/Auth/Redis integration test passes using a real JWT in Rust HTTP:
-handshake, mint-time visibility versus bound playback, current active-user
-checks without unauthorized TTL refresh, and revocation. Strict Clippy for this
-crate and all targets passes. None of these checks exercises a media body.
+The app-wired `CatchupMedia` route at `/proxy/catchup/{uuid}` supports established
+API capabilities. It checks authentication/global network rules before resolving
+the capability, rejects owner mismatches and streams through bounded supervised
+body tasks. `ArchivePool` uses scoped provider leases, token-fenced pool/stat
+hashes, source format caching, startup-versus-grace cleanup and bounded shutdown.
+Cancellation rollback retains ownership through actual Redis mutation replies.
+A cumulative remote byte watermark prevents double-counting a committed
+heartbeat whose reply is cancelled.
 
-The additive `ArchiveClient` provider transport now has four passing real
-loopback HTTP contracts: seven-shape/cached-format ordering, cached CDN
-redirect suppression and fallback, PHP/JSON rejection, verbatim partial byte
-ranges, terminal 416, decisive provider denials versus 5xx cascade, request
-capacity held through body ownership, and initial network failure. It keeps
-only a prefix/network frame while handing off an incremental response; it does
-not buffer the archive file. It is not yet connected to a Timeshift media route,
-provider lease, user admission or statistics/grace supervisor.
+Positive user admission uses an independent `clients::timeshift` module;
+existing live and VOD Lua is unchanged. It preserves literal hop-before-cap
+ordering, counts actual legacy live/VOD/catch-up records, applies source policies
+and publishes a pending reservation before provider quota. Pending TTL refresh
+continues through slow setup; cleanup cancels/joins its refresh task and drains
+admitted mutations. START verifies the admission fence before publishing media.
+Source-literal stop values/TTLs and generation stop targets are retained.
 
-Original media behavior is now captured separately under Compose:
-`scripts/rust-timeshift-contracts/python-media-goldens.json`. Three paced
-H264/AAC Range responses returned identical bytes and passed strict audio/video
-decoding (74 video frames). PATH-to-QUERY fallback and PHP200 rejection were
-observed. Successful responses released provider capacity then removed native
-API/pool/stats records after grace. Provider failures released capacity and
-retained their API session for retry. These are source goldens, not candidate
-media parity evidence.
+Completed verification:
+
+- 207 timestamp/timezone/provider-URL and 246 Range/header source vectors match
+  the Rust core, with explicit overflow rejection.
+- 24 captured native API/error cases match a frozen Docker app against original
+  source. Four Redis/session tests also cover ownership, active-user/visibility
+  and position TTLs; four HTTP transport tests cover media selection/byte rules.
+- Three shared-admission tests and six original-helper differential cases use
+  actual Redis, including cross-protocol races, hop ordering, source stop keys,
+  same-session exemption and corruption guards. These helper fixtures use owned
+  synthetic existing connection records and explicit policy inputs.
+- Four native HTTP, five pool/order/shutdown and one delayed actual Redis test
+  cover positive limits, provider-full ordering, fences, missing-hash cleanup,
+  unread bodies and ADMIT/CREATE/START/HEARTBEAT cancellation.
+- Actual Django Store/Auth/JWT native HTTP passed positive-limit 403 refusal,
+  retry of the same capability 206 with exact 1,880,000 source bytes, grace cleanup
+  and strict A/V decoding 74 frames. Refusal uses an explicitly synthetic owned
+  live accounting record, not a fake authorization/provider resolver.
+- Frozen image 5 matches all 24 API/error cases, six actual media/provider/lifecycle
+  scenarios and actual-JWT positive-limit refusal/retry. All four candidate
+  catch-up captures strictly decode audio/video 74 frames. Image/source binding
+  and Compose cleanup passed. Native VOD 7 cases and both profile/React aliases
+  also match in that run.
+- Compile and strict Clippy for all targets pass. Evidence is in
+  `scripts/rust-timeshift-contracts/verified-{contracts,admission,native-media,compose}.json`.
+
+Remaining gates: direct-auth mint/adoption and XC playback; idle/busy/cross-worker
+pool adoption, cached final URL reuse and seeks/generation handoff; broader
+positive-cap/preemption/stop reasons; complete range position, stream statistics,
+pubsub/WebSocket effects; transforms/server groups and failure recovery;
+serializer/OPTIONS/path and unusual timestamp/integer corners; full resource
+comparison. Existing media/admission reuse fails explicitly until its remaining
+contracts are ported. See the contract scripts' MILESTONES.md. No M4 completion,
+application parity or performance gain is claimed.

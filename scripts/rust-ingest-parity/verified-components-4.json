@@ -1,0 +1,36 @@
+{
+  "scope": "M3U-parser-component-differential",
+  "passed": true,
+  "cases": 1733,
+  "failures": [],
+  "binary_sha256": "0735d352dd245e827f90ca1a235d271962517b8869f12284eedeeb9192b29987",
+  "source_sha256": {
+    "apps/m3u/tasks.py": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+    "apps/m3u/utils.py": "9ddc50fe1e3916e6812007b1de9d7677341333b334850001128e1406d4ab91ae",
+    "apps/channels/models.py": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+    "scripts/rust-ingest-parity/run.py": "0732c80d2d28fa9905dcfe04ad2499024f063caaa031952da8c65860d5d044cf",
+    "rust/crates/ingest-core/examples/ingest_parity.rs": "bb42a3f2b1068fdc8cf07cc58d62c210c5716b0548120159023ca353569ad532",
+    "rust/crates/ingest-core/src/identity.rs": "a26a428d346c2fcce8e1fdafcd6baf7ca8beafc5bbf7d84b55c70206a4159776",
+    "rust/crates/ingest-core/src/lib.rs": "adb77d3adbfdf487f0a8b42ab58e15ddc64ce7030239521c2bdcd58c273a32ad",
+    "rust/crates/ingest-core/src/reader.rs": "90ebdde2c67f0fdc307a353f9d3c12245b77782f6fb4bc614627cf49eed480b4",
+    "rust/crates/ingest-core/src/validation.rs": "4ed0b686973afec42ac63053c5d8bbf51f7357324fd4e094b770c9f000d1adf4",
+    "rust/crates/ingest-core/tests/parser.rs": "adf6bc98921f25dfb759cbdef7b9711f41abe41e29f09b6b4fa202e095565107",
+    "rust/crates/ingest-core/tests/reader.rs": "2cef72ce7db3aeeeffecc482d4756c56699ad3b3732cadbf3aa8236f41b8df40"
+  },
+  "application_performance_verified": false,
+  "ingestion_jobs_migrated": false,
+  "raw_evidence_directory": "artifacts/rust/m6-ingest-verified-4",
+  "raw_report_sha256": "4ea1bdaf45588fb11f647dd76264b3a932a315b743949532648aebd25ac51636",
+  "python_runtime": "3.14.9 (main, Nov  2 2026, 12:21:11) [GCC 16.2.1 20260810]",
+  "case_groups": {
+    "extinf": 810,
+    "playlists": 160,
+    "hashes": 500,
+    "download_head_validation": 263
+  },
+  "notes": [
+    "Actual source AST runs under the recorded host Python runtime; original-container SQL proof is separate.",
+    "Seven Rust unit/reader regressions also passed before this run.",
+    "No complete ingestion job or performance acceptance is established."
+  ]
+}

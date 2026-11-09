@@ -103,9 +103,11 @@ impl AuthService {
         let channels = crate::channels::router(self.clone());
         let channel_groups = crate::channel_groups::router(self.clone());
         let streams = crate::streams::router(self.clone());
+        let startup = crate::startup::router(self.clone());
+        let providers = crate::provider_reads::router(self.clone());
         Router::new()
             .route("/api/accounts/token/", post(login))
-            .route("/api/accounts/auth/login/", post(login))
+            .route("/api/accounts/auth/login/", post(login_alias))
             .route("/api/accounts/token/refresh/", post(refresh))
             .route("/api/accounts/auth/logout/", post(logout))
             .with_state(self)
@@ -115,6 +117,8 @@ impl AuthService {
             .merge(channels)
             .merge(channel_groups)
             .merge(streams)
+            .merge(startup)
+            .merge(providers)
     }
 
     pub fn client_ip(&self, request: &PlaybackRequest) -> IpAddr {
@@ -148,7 +152,16 @@ impl AuthService {
         peer
     }
 
-    fn throttle(&self, ip: IpAddr, kind: &'static str, record: bool) -> Result<(), StoreError> {
+    pub(crate) fn explicit_trusted_proxies(&self) -> Option<&str> {
+        self.config.trusted_proxies.as_deref()
+    }
+
+    pub(crate) fn throttle(
+        &self,
+        ip: IpAddr,
+        kind: &'static str,
+        record: bool,
+    ) -> Result<(), StoreError> {
         let now = Instant::now();
         let mut buckets = self.attempts.lock().unwrap();
         buckets.retain(|_, history| {
@@ -237,7 +250,7 @@ impl AuthService {
         Ok(claims)
     }
 
-    fn mint(&self, id: Value, kind: &str) -> Result<String, StoreError> {
+    pub(crate) fn mint(&self, id: Value, kind: &str) -> Result<String, StoreError> {
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map_err(|_| StoreError::Unsupported("clock before epoch"))?
@@ -326,29 +339,39 @@ impl AuthService {
         if !self.store.network_allowed(ip, "UI", None).await? {
             return Err(StoreError::Forbidden);
         }
+        if !body.is_object() {
+            // Original custom token view calls request.data.get before DRF
+            // serializer validation and therefore crashes for non-mappings.
+            return Err(StoreError::StatusBody(
+                500,
+                json!({"detail":"Invalid login payload."}),
+            ));
+        }
         let mut errors = serde_json::Map::new();
+        let mut values = serde_json::Map::new();
         for name in ["username", "password"] {
             match body.get(name) {
                 None => {
                     errors.insert(name.to_string(), json!(["This field is required."]));
                 }
-                Some(Value::String(value)) if value.trim().is_empty() => {
-                    errors.insert(name.to_string(), json!(["This field may not be blank."]));
-                }
-                Some(Value::String(_)) => (),
-                Some(Value::Null) => {
-                    errors.insert(name.to_string(), json!(["This field may not be null."]));
-                }
-                Some(_) => {
-                    errors.insert(name.to_string(), json!(["Not a valid string."]));
-                }
+                Some(value) => match crate::admin_writes::character(name, value, None, false) {
+                    Ok(value) => {
+                        values.insert(name.into(), Value::String(value));
+                    }
+                    Err(StoreError::InvalidInput(value)) => {
+                        if let Some(value) = value.get(name) {
+                            errors.insert(name.into(), value.clone());
+                        }
+                    }
+                    Err(error) => return Err(error),
+                },
             }
         }
         if !errors.is_empty() {
             return Err(StoreError::InvalidInput(Value::Object(errors)));
         }
-        let username = body["username"].as_str().unwrap().trim();
-        let password = body["password"].as_str().unwrap().trim().to_owned();
+        let username = values["username"].as_str().unwrap();
+        let password = values["password"].as_str().unwrap().to_owned();
         let user = self.store.user_by_username(username).await?;
         let encoded = user
             .as_ref()
@@ -373,10 +396,21 @@ impl AuthService {
                 .ok_or(StoreError::Unauthorized(
                     "No active account found with the given credentials",
                 ))?;
-        sqlx::query("UPDATE accounts_user SET last_login=NOW() WHERE id=$1")
-            .bind(user.id)
-            .execute(self.store.pool())
-            .await?;
+        // The original custom view looks up the untrimmed request username
+        // after authentication. Padded names may authenticate successfully
+        // without updating last_login; do not silently change that behavior.
+        if crate::channels::truthy(body.get("username")) {
+            let raw = &body["username"];
+            let logged_username = if let Some(value) = raw.as_str() {
+                value.to_owned()
+            } else {
+                crate::admin_writes::character("username", raw, None, false)?
+            };
+            sqlx::query("UPDATE accounts_user SET last_login=NOW() WHERE username=$1")
+                .bind(logged_username)
+                .execute(self.store.pool())
+                .await?;
+        }
         Ok(TokenPair {
             access: self.mint(json!(user.id.to_string()), "access")?,
             refresh: self.mint(json!(user.id.to_string()), "refresh")?,
@@ -407,13 +441,22 @@ impl AuthService {
         request: &PlaybackRequest,
         token: &str,
     ) -> Result<Value, StoreError> {
+        self.refresh_network(request).await?;
+        self.refresh_after_network(token).await
+    }
+
+    async fn refresh_network(&self, request: &PlaybackRequest) -> Result<(), StoreError> {
         if !self
             .store
             .network_allowed(self.client_ip(request), "UI", None)
             .await?
         {
-            return Err(StoreError::Forbidden);
+            return Err(StoreError::StatusBody(403, json!({"error":"Unauthorized"})));
         }
+        Ok(())
+    }
+
+    async fn refresh_after_network(&self, token: &str) -> Result<Value, StoreError> {
         let claims = self.decode_token(token, "refresh")?;
         let user = self
             .store
@@ -461,12 +504,31 @@ async fn login(
     }
 }
 
+async fn login_alias(
+    State(service): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
+) -> Response {
+    // AuthViewSet authenticates before delegating to TokenObtainPairView,
+    // whereas the direct token view explicitly has no authentication classes.
+    if let Err(error) = service.authenticate(&request(peer, headers.clone())).await {
+        return error.into_response();
+    }
+    login(State(service), ConnectInfo(peer), headers, body).await
+}
+
 async fn refresh(
     State(service): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
 ) -> Response {
+    let request = request(peer, headers);
+    // The source checks UI policy before accessing/parsing request.data.
+    if let Err(error) = service.refresh_network(&request).await {
+        return error.into_response();
+    }
     let body = match body {
         Ok(Json(body)) => body,
         Err(_) => {
@@ -477,14 +539,21 @@ async fn refresh(
                 .into_response()
         }
     };
-    let Some(token) = body.get("refresh").and_then(Value::as_str) else {
+    if !body.is_object() {
+        return StoreError::InvalidInput(json!({"non_field_errors":[format!("Invalid data. Expected a dictionary, but got {}.",crate::channel_memberships::datatype(&body))]})).into_response();
+    }
+    let Some(value) = body.get("refresh") else {
         return (
             StatusCode::BAD_REQUEST,
             Json(json!({"refresh":["This field is required."]})),
         )
             .into_response();
     };
-    match service.refresh(&request(peer, headers), token).await {
+    let token = match crate::admin_writes::character("refresh", value, None, false) {
+        Ok(token) => token,
+        Err(error) => return error.into_response(),
+    };
+    match service.refresh_after_network(&token).await {
         Ok(body) => Json(body).into_response(),
         Err(error) => error.into_response(),
     }
@@ -495,26 +564,8 @@ async fn logout(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
 ) -> Response {
-    if ["authorization", "x-api-key"].iter().any(|name| {
-        headers
-            .get(*name)
-            .is_some_and(|value| value.to_str().is_err())
-    }) {
-        return StoreError::Unauthorized("Invalid authentication header").into_response();
-    }
-    let request = request(peer, headers);
-    match service.authenticate(&request).await {
-        Ok(Some(user)) => match service
-            .store
-            .network_allowed(service.client_ip(&request), "UI", Some(&user))
-            .await
-        {
-            Ok(true) => Json(json!({"message":"Logout successful"})).into_response(),
-            Ok(false) => StoreError::Forbidden.into_response(),
-            Err(error) => error.into_response(),
-        },
-        Ok(None) => StoreError::Unauthorized("Authentication credentials were not provided.")
-            .into_response(),
+    match service.account_user(peer, headers, false).await {
+        Ok(_) => Json(json!({"message":"Logout successful"})).into_response(),
         Err(error) => error.into_response(),
     }
 }

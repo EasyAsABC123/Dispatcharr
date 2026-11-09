@@ -21,7 +21,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M3 | Complete live playback formats and profiles | M2 | In progress (HLS component and gateway) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
 | M4 | VOD and timeshift parity | M2 | In progress (native VOD slice) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
 | M5 | Accounts, settings, and channel control APIs | M2 | In progress (independent account contracts) | API/permission/database/React workflow parity and API benchmarks |
-| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | Planned | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
+| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (streaming M3U parser component) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | Planned | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | Planned | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | Planned | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
@@ -32,7 +32,10 @@ and the application image now bundles its production build. This does not close
 browser workflow parity. Real-schema management coverage reached 405 integrated
 checks, plus 11 unique checks from a focused cleanup suite, followed by
 [518 combined checks](../scripts/rust-integration/verified-integration-m5-full-518.json)
-after stream management was added. Two-replica TS probes
+after stream management was added, then
+[655 default checks plus 20 additional proxy contracts](../scripts/rust-integration/verified-integration-m5-startup-relations-1.json), then
+[751 default checks including provider read APIs](../scripts/rust-integration/verified-integration-m6-provider-reads-image6-1.json).
+Two-replica TS probes
 passed shared demand, global stop and owner-crash cleanup with strict decoding.
 The earlier Rust image needed 87.1 seconds for owner-crash cleanup; the new image
 needed 26.6 seconds in the same functional probe, with all six captures decoded.
@@ -43,15 +46,31 @@ headers also [passed](../scripts/rust-integration/verified-runtime-shutdown-1.js
 The process exited successfully in 12.14 seconds and drained the channel's
 owner, clients, metadata and input index before closing retained connections.
 
-Cold initialization remains an explicit M2 gap: the unchanged source can wait
+The cold initialization capture established that the unchanged source can wait
 about 50 seconds, then return HTTP 200 with one 188-byte TS error packet; the
 earlier Rust image returned JSON 502/504. The new source-bound image includes
 four-full-chunk readiness, live positioning after readiness, and native cold
-error packets; targeted real-Redis tests pass. Default-timeout wire comparisons
-are being re-run. User/provider capacity and invalid
+error packets. All three default-timeout cold cases
+[matched](../scripts/rust-integration/verified-cold-wire-source-compat-1.json).
+User/provider capacity and invalid
 credentials are distinct pre-stream JSON errors. Source-ready state also requires
-four buffered chunks. These contracts must be matched before accepting a native
-TS performance comparison. No application resource savings are established yet.
+four buffered chunks. A later metadata-before-response ordering fix passed
+owner and follower real-Redis tests and is queued for its fresh Docker gate.
+
+The corrected same-channel [native TS characterization](../scripts/rust-integration/verified-native-source-compat-matrix-3.json)
+completed all 18 measurements and decoder priming checks at 1/10/100 viewers,
+with zero delivery/observer errors. Paired median Rust/source CPU ratios were
+0.296/0.186/0.0673 and container working-memory ratios 0.825/0.846/0.778.
+The totals include backend, PostgreSQL, Redis and origin. This is a warmed,
+partial-backend characterization: browser/realtime/event equivalence, many-channel
+and slow-reader resource gates remain open. It does not accept a complete
+milestone or full-application performance gain.
+
+Frozen native timeshift/VOD comparison also
+[passed](../scripts/rust-timeshift-contracts/verified-compose.json): 24 API/error
+cases, six archive media/lifecycle scenarios, strict audio/video decoding and
+literal source profile aliases. Positive shared timeshift admission is a later
+frozen-image follow-up. M6 now has [2,133 parser/hash/validation/projection cases](../scripts/rust-ingest-parity/verified-components-5.json) and [six actual-source database scenarios](../scripts/rust-ingest-parity/verified-batch-pipeline-sql-5.json), including the parser-to-database pipeline; see [ingestion gates](rust-ingestion.md).
 
 The core Compose run has passed, the load-harness Compose selftest has passed,
 and Python baseline runs have passed (48 focused tests and a separate broader

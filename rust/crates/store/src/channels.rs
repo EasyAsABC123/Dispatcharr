@@ -224,7 +224,7 @@ pub(crate) fn serialize(
     value.insert("source_stream".into(),if raw["auto_created"]==true{streams.first().map(|value|json!({"id":value["raw"]["id"],"name":value["raw"]["name"],"account_id":value["raw"]["m3u_account_id"],"account_name":value["account_name"]})).unwrap_or(Value::Null)}else{Value::Null});
     Ok(Value::Object(value))
 }
-fn scope<'a>(query: &mut QueryBuilder<'a, Postgres>, user: &User) {
+pub(crate) fn scope<'a>(query: &mut QueryBuilder<'a, Postgres>, user: &User) {
     if user.user_level >= 10 {
         return;
     }
@@ -539,6 +539,60 @@ async fn list(
     }
     read(auth, user, params, base_url(&headers, &uri)?, None).await
 }
+
+async fn lightweight(
+    auth: AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    params: HashMap<String, String>,
+    summary: bool,
+) -> Result<Json<Value>, StoreError> {
+    let user = auth.account_user(peer, headers, false).await?;
+    if user.user_level < 1 {
+        return Err(StoreError::PermissionDenied);
+    }
+    // Reuse the channel filters and effective ordering, without fetching
+    // channel/stream graphs or applying pagination to these flat actions.
+    let (_, from) = SELECT
+        .split_once(" FROM dispatcharr_channels_channel c LEFT JOIN")
+        .expect("fixed channel query");
+    let fields = if summary {
+        "jsonb_build_object('id',c.id,'uuid',c.uuid,'name',COALESCE(o.name,c.name),'logo_id',COALESCE(o.logo_id,c.logo_id),'channel_number',COALESCE(o.channel_number,c.channel_number),'epg_data_id',COALESCE(o.epg_data_id,c.epg_data_id),'channel_group_id',COALESCE(o.channel_group_id,c.channel_group_id))"
+    } else {
+        "to_jsonb(c.id)"
+    };
+    let mut query = QueryBuilder::new(format!(
+        "SELECT {fields} FROM dispatcharr_channels_channel c LEFT JOIN{from}"
+    ));
+    filters(&mut query, &params, &user, &auth, false).await?;
+    order(&mut query, &params);
+    let mut values = query
+        .build_query_scalar::<Value>()
+        .fetch_all(auth.store.pool())
+        .await?;
+    if summary {
+        for value in &mut values {
+            value["channel_number"] = float(value["channel_number"].clone());
+        }
+    }
+    Ok(Json(Value::Array(values)))
+}
+async fn ids(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    Query(params): Query<HashMap<String, String>>,
+) -> Result<Json<Value>, StoreError> {
+    lightweight(auth, peer, headers, params, false).await
+}
+async fn summary(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    Query(params): Query<HashMap<String, String>>,
+) -> Result<Json<Value>, StoreError> {
+    lightweight(auth, peer, headers, params, true).await
+}
 async fn retrieve(
     State(auth): State<AuthService>,
     Path(id): Path<String>,
@@ -558,6 +612,16 @@ async fn retrieve(
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
+        .route("/api/channels/channels/ids/", get(ids))
+        .route("/api/channels/channels/summary/", get(summary))
+        .route(
+            "/api/channels/channels/{id}/streams/",
+            get(crate::channel_relations::streams),
+        )
+        .route(
+            "/api/channels/channels/{id}/streams/stats/",
+            get(crate::channel_relations::stats),
+        )
         .route(
             "/api/channels/channels/",
             get(list).post(crate::channel_writes::create),

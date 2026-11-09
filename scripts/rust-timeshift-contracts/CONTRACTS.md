@@ -63,3 +63,28 @@ session prototype's real Redis/loopback suite matches 22 API cases. This does no
 claim Rust playback parity. Reproduce session capture through
 `scripts/rust-vod-contracts/run.py --timeshift-sessions --output <new-directory>`;
 add `--timeshift-rust-test` for the actual Store/Auth/Redis coupling test.
+
+Additional completed source evidence: `python-range-goldens.json` records 246
+pure Range/representation/header vectors matched by the Rust core;
+`python-media-goldens.json` records six actual native media/provider scenarios.
+Three successful paced Range cases returned identical bytes and passed strict
+H264/AAC decoding (74 video frames). They released capacity, marked the pool
+idle, then removed native API/pool/stats after grace. 403/404/500 provider modes
+released capacity without removing API authorization. Global format caching
+changes subsequent URL-shape order; source bare-profile VOD React fallback is
+tracked separately in the VOD evidence. The additive native API-capability media/pool code now compiles and passes
+eight targeted HTTP/Redis/cancellation checks plus the actual Store/Auth/JWT
+native Range/hash/grace and strict A/V decoder gate (74 frames). See
+`verified-native-media.json`; app wiring/frozen image and the broader source
+contracts remain open.
+
+Positive-admission source ordering (code preparation, runtime oracle pending):
+`_terminate_previous_timeshift_sessions` runs before cap checks for unlimited
+users too. It compares actual stats-key media IDs (`channelPK_opaqueSession`)
+with programme media IDs (`channelPK_safeTimestamp`), so ordinary same-user
+same-channel opaque sessions are displaced as `hop`, even for the same show.
+This literal identity mismatch must not be silently corrected. Hard-cap tests
+therefore need another channel/live/VOD; changing User-Agent alone only avoids
+fingerprint adoption. Source limit-stop values/TTLs are live `true`/30seconds,
+VOD `true`/60seconds, Timeshift `limit`/60seconds; hop is `hop`/60seconds.
+Complete pubsub/WebSocket and generation effects remain separate gates.
