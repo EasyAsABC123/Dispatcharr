@@ -63,6 +63,50 @@ fn failure(status: u16, message: &'static str, decisive: bool) -> ArchiveFailure
     }
 }
 impl ArchiveClient {
+    /// Source busy-tail passthrough skips MPEG-TS inspection and redirects.
+    pub async fn open_probe(
+        &self,
+        url: &str,
+        user_agent: &str,
+        range: &str,
+    ) -> Result<ArchiveOpen, ArchiveFailure> {
+        let permit = self
+            .requests
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| failure(503, "Stream slot busy", false))?;
+        let mut builder = self
+            .direct
+            .get(url)
+            .header(header::ACCEPT_ENCODING, "identity")
+            .header(header::RANGE, range);
+        if !user_agent.is_empty() {
+            builder = builder.header(header::USER_AGENT, user_agent);
+        }
+        let response = builder
+            .send()
+            .await
+            .map_err(|_| failure(503, "Stream slot busy", false))?;
+        if response.status() == StatusCode::RANGE_NOT_SATISFIABLE {
+            return Ok(ArchiveOpen::Unsatisfiable {
+                content_range: response
+                    .headers()
+                    .get(header::CONTENT_RANGE)
+                    .and_then(|value| value.to_str().ok())
+                    .map(str::to_owned),
+            });
+        }
+        if response.status() != StatusCode::OK && response.status() != StatusCode::PARTIAL_CONTENT {
+            return Err(failure(503, "Stream slot busy", false));
+        }
+        Ok(ArchiveOpen::Media(ArchiveMedia {
+            response,
+            prefix: None,
+            format_index: None,
+            used_cached_final: true,
+            _permit: permit,
+        }))
+    }
     pub fn new(
         max_requests: usize,
         connect: Duration,

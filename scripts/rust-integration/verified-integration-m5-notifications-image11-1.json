@@ -1,0 +1,44 @@
+{
+  "attribution": "All original application credit belongs to Dispatcharr authors and contributors; see ATTRIBUTION.md.",
+  "scope": "Original notification read/count/detail and personal dismissal contracts, shared developer condition/settings caches, plus full existing regression suites. Excludes collection-valued dismissal actions added after image11, admin notification writes, production/scheduling/websocket jobs, actual concurrent Postgres-read cache invalidation, unrelated Timeshift/media/diagnostic/performance acceptance.",
+  "image_id": "sha256:363679ce182bea55be97b873c1faffb3024e5abdae0886f655c6678b00943f33",
+  "source_tree_sha256": "d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0",
+  "build_manifest": "artifacts/rust/candidate-build-m5-notifications-image11-1/build.json",
+  "proofs": [
+    {
+      "report": "artifacts/rust/m5-notification-integration-image11-2/integration.json",
+      "raw_report_sha256": "5372919ef4ae61056ee194129feaa3417788c2dcf90637711ee1bcaee36a90bd",
+      "checks": 118,
+      "passed": true,
+      "cleanup": "project removed",
+      "resources_retained": false,
+      "tool_snapshot_manifest_sha256": "e0626fb90cb1487ba593ac1d0e95bd2e4037b981b69cbb41023032550bb98caa",
+      "tool_snapshot_files": 133
+    },
+    {
+      "report": "artifacts/rust/m5-notification-full-integration-image11-1/integration.json",
+      "raw_report_sha256": "e504ae17dfca17ded9285c31ee4ab6ba238fa7c8f04449ecd0e971857f8b933d",
+      "checks": 994,
+      "passed": true,
+      "cleanup": "project removed",
+      "resources_retained": false,
+      "tool_snapshot_manifest_sha256": "2f382c3bb01f1f657226a08fb01a21acf0830f00a9f75e9f98f7145e7655bb94",
+      "tool_snapshot_files": 134
+    }
+  ],
+  "historical_fixture_failure": {
+    "report": "artifacts/rust/m5-notification-integration-image11-1/integration.json",
+    "raw_report_sha256": "eb8abe7e40eb40b7fa8cc5a1e6422c9231a9c15e59dc174bbf8fb615f07c3d58",
+    "cause": "Management fixture helpers initially ran application initialization, which synchronized away temporary developer notification rows. Corrected notification preparation uses the original supported shell-management initialization branch; service/API code unchanged.",
+    "cleanup": "project removed",
+    "resources_retained": false
+  },
+  "additional_component_proof": {
+    "report": "artifacts/rust/m5-notification-cache-2/cache-contracts.json",
+    "raw_report_sha256": "ae48d3b36f151d461910ab0af7cf1c364a3f44a9ece7967c3d4fa0d2c1016447",
+    "scope": "Post-image11 Redis held-loader version bump prevents stale fill; stable fill decoded by original Django; primitive encode/decode/TTL/oversized cap. Actual concurrent PostgreSQL-read invalidation and collection HTTP cases remain unproven.",
+    "passed": true,
+    "container_removed": true,
+    "source_snapshot_manifest_sha256": "dc7355dfc95bdd7ae26afbf813fed31535ff1b8db8f538d8679af5864f382313"
+  }
+}

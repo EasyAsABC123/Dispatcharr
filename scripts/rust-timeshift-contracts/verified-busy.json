@@ -1,0 +1,80 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "format_version": 1,
+  "scope": "Host actual-schema/Auth/JWT and immutable Docker native same-session busy middle seek, full reconnect and near-EOF passthrough compared with original backend",
+  "evidence": "artifacts/rust/m4-timeshift-busy-native-sql-1/vod-contracts.json",
+  "evidence_sha256": "a1daf06bf1196e81cc4fc1bf2d58a75b7a8015010a866799314534f0b3d25c8e",
+  "sql_log_sha256": "b94861167712d933ed0351c4a7e3218cddb3e644e7dec176aeaca5a5b6a685b4",
+  "native_actual_sql_busy_cases_passed": 3,
+  "controlled_established_body_min_seconds": 2.5,
+  "captured_payloads": [
+    {
+      "case": "middle-seek",
+      "status": 206,
+      "captured_bytes": 256,
+      "captured_sha256": "869eee20827b8ebaa0fe00cd53e1a1cf5b6802c884f3382f50ea9fe71647fde2",
+      "capture_is_prefix": false
+    },
+    {
+      "case": "plain-reconnect",
+      "status": 200,
+      "captured_bytes": 65536,
+      "captured_sha256": "fa79ce3fca2e93302d0dc1c112216f93326d89df5693f1686e75c37832c64564",
+      "capture_is_prefix": true
+    },
+    {
+      "case": "near-eof-probe",
+      "status": 206,
+      "captured_bytes": 256,
+      "captured_sha256": "fde240ed13df7bc20b0faa2d059ff3f0fd094375940e67a28d4e365f99467599",
+      "capture_is_prefix": false
+    }
+  ],
+  "retained_profile_handoff_test_passed": true,
+  "cancelled_handoff_cleanup_test_passed": true,
+  "tail_probe_active_metadata_and_quota_unchanged_test_passed": true,
+  "held_tail_probe_shutdown_and_no_new_admission_test_passed": true,
+  "source_generation_numeric_and_terminal_controls_test_passed": true,
+  "strict_clippy_all_targets_passed": true,
+  "targeted_tests": {
+    "native_http": 5,
+    "pool": 9,
+    "delayed_actual_redis": 2,
+    "provider_transport": 5,
+    "native_sessions_previously_passed": 4
+  },
+  "source_bound_candidate_image": true,
+  "continuous_quota_sampling_verified": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
+  "remaining_gates": [
+    "cross-worker/fingerprint/programme/profile adoption",
+    "direct-auth and XC playback",
+    "full telemetry/position/pubsub/WebSocket side effects",
+    "provider failure and recovery matrix",
+    "resource/performance acceptance"
+  ],
+  "candidate_provenance": {
+    "image_id": "sha256:363679ce182bea55be97b873c1faffb3024e5abdae0886f655c6678b00943f33",
+    "source_tree_sha256": "d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0",
+    "build_manifest_sha256": "4e16fc9946aafb9cef2c1e3d14140c2af187bd7b9de6a4d055761bcdcef91f8a"
+  },
+  "frozen_compose_evidence": "artifacts/rust/m4-timeshift-busy-frozen-compose-1/vod-contracts.json",
+  "frozen_compose_evidence_sha256": "f0058c45186e003f670092f6c7b0ad7340ac1b54005598e05835b48588ca2a65",
+  "frozen_compose_comparison": {
+    "captured_busy_controls_match": true,
+    "differences": [],
+    "normalizations": [
+      "elapsed time and queued old-response bytes are observed, not equated",
+      "immediate client-close scheduling is observed; established grace is checked after 9 seconds",
+      "busy statistics byte totals reflect differently buffered delivery and remain a separate contract"
+    ],
+    "continuous_quota_sampling_verified": false,
+    "application_parity_verified": false,
+    "performance_verified": false
+  }
+}

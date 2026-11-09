@@ -498,6 +498,125 @@ async fn actual_store_auth_channel_visibility_bound_playback_and_active_user_con
                 .unwrap());
             assert!(service.delete(sid, owner.id).await);
         }
+        if std::env::var("TIMESHIFT_RUST_BUSY").as_deref() == Ok("1") {
+            let golden: Value = serde_json::from_str(include_str!(
+                "../../../../scripts/rust-timeshift-contracts/python-busy-seek-goldens.json"
+            ))
+            .unwrap();
+            for (index, range) in [
+                Some("bytes=1880000-1880255"),
+                None,
+                Some("bytes=14999900-15000155"),
+            ]
+            .into_iter()
+            .enumerate()
+            {
+                let cap=client.post(format!("http://{address}/api/catchup/sessions/"))
+                    .bearer_auth(&token).json(&json!({"channel_uuid":channel,"start":"2026-11-09T11:00:00Z","duration":30}))
+                    .send().await.unwrap().json::<Value>().await.unwrap();
+                let sid = cap["session_id"].as_str().unwrap();
+                let route = format!(
+                    "http://{media_address}{}",
+                    cap["playback_url"].as_str().unwrap()
+                );
+                let mut first = client
+                    .get(&route)
+                    .header("Range", "bytes=0-")
+                    .send()
+                    .await
+                    .unwrap();
+                assert_eq!(first.status(), 206);
+                let mut initial = Vec::with_capacity(65536);
+                tokio::time::timeout(std::time::Duration::from_secs(5), async {
+                    while initial.len() < 65536 {
+                        let chunk = first
+                            .chunk()
+                            .await
+                            .unwrap()
+                            .expect("active initial archive body");
+                        initial
+                            .extend_from_slice(&chunk[..(65536 - initial.len()).min(chunk.len())]);
+                    }
+                })
+                .await
+                .unwrap();
+                let began = std::time::Instant::now();
+                let key = format!("timeshift:pool:{sid}");
+                let counter = format!(
+                    "profile_connections:{}",
+                    descriptor.candidates[0].profile_id
+                );
+                assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+                let mut request = client.get(&route);
+                if let Some(range) = range {
+                    request = request.header("Range", range);
+                }
+                let mut replacement = request.send().await.unwrap();
+                assert_eq!(
+                    replacement.status().as_u16(),
+                    if index == 1 { 200 } else { 206 }
+                );
+                let mut captured = Vec::with_capacity(65536);
+                if index == 1 {
+                    tokio::time::timeout(std::time::Duration::from_secs(5), async {
+                        while captured.len() < 65536 {
+                            let chunk = replacement
+                                .chunk()
+                                .await
+                                .unwrap()
+                                .expect("restarted archive prefix");
+                            captured.extend_from_slice(
+                                &chunk[..(65536 - captured.len()).min(chunk.len())],
+                            );
+                        }
+                    })
+                    .await
+                    .unwrap();
+                    tokio::time::sleep(std::time::Duration::from_millis(2500)).await;
+                    drop(replacement);
+                } else {
+                    captured.extend_from_slice(&replacement.bytes().await.unwrap());
+                    assert_eq!(captured.len(), 256);
+                }
+                assert_eq!(
+                    format!("{:x}", Sha256::digest(&captured)),
+                    golden["events"][index]["captured_sha256"].as_str().unwrap()
+                );
+                if index == 2 {
+                    assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+                    assert_eq!(redis.hget::<_, _, String>(&key, "busy").await.unwrap(), "1");
+                    assert!(first.chunk().await.unwrap().is_some());
+                    tokio::time::sleep(std::time::Duration::from_secs_f64(
+                        (2.5 - began.elapsed().as_secs_f64()).max(0.0),
+                    ))
+                    .await;
+                } else {
+                    tokio::time::timeout(std::time::Duration::from_secs(5), async {
+                        let mut queued = 0;
+                        while let Ok(Some(chunk)) = first.chunk().await {
+                            queued += chunk.len();
+                            assert!(queued < 2_000_001, "old generation must terminate");
+                        }
+                    })
+                    .await
+                    .expect("old busy generation must terminate");
+                }
+                drop(first);
+                tokio::time::sleep(std::time::Duration::from_secs(9)).await;
+                assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 0);
+                if index != 0 {
+                    assert!(!redis.exists::<_, bool>(&key).await.unwrap());
+                    assert!(!redis
+                        .exists::<_, bool>(format!("timeshift:session:{sid}"))
+                        .await
+                        .unwrap());
+                } else {
+                    assert!(redis.exists::<_, bool>(&key).await.unwrap());
+                }
+                let _ = service.delete(sid, owner.id).await;
+                println!("actual_busy_archive_case_{}: exact source bytes, quota and generation cleanup passed",index);
+            }
+        }
         assert!(media.shutdown().await);
         media_server.abort();
         sqlx::query("UPDATE accounts_user SET stream_limit=$1 WHERE id=$2")

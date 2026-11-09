@@ -33,6 +33,7 @@ impl StreamEngine {
     pub fn controls_router(&self, resolver: Arc<dyn PlaybackResolver>) -> Router {
         Router::new()
             .route("/proxy/ts/status", get(status).head(admin_head))
+            .route("/internal/proxy/ts/v1/memory", get(memory).head(admin_head))
             .route(
                 "/proxy/ts/stop_client/{channel_id}",
                 post(stop_client).head(admin_channel_head),
@@ -175,6 +176,24 @@ async fn stream(
     }
 }
 
+async fn memory(
+    State(app): State<App>,
+    Query(query): Query<Vec<(String, String)>>,
+    headers: HeaderMap,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+) -> Response {
+    let request = match request(String::new(), query, headers, peer) {
+        Ok(request) => request,
+        Err(failure) => return error(failure),
+    };
+    if let Err(failure) = app.resolver.authorize_admin(request).await {
+        return error(failure);
+    }
+    match app.engine.memory_diagnostics().await {
+        Ok(value) => Json(value).into_response(),
+        Err(failure) => error(failure),
+    }
+}
 async fn status(
     State(app): State<App>,
     Query(query): Query<Vec<(String, String)>>,

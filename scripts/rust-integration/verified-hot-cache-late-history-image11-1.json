@@ -1,0 +1,62 @@
+{
+  "scope": "100 real late native viewers recover authoritative history outside bounded local cache",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "candidate_image_id": "sha256:363679ce182bea55be97b873c1faffb3024e5abdae0886f655c6678b00943f33",
+  "candidate_source_tree_sha256": "d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0",
+  "artifact": "artifacts/rust/m2-hot-cache-image11-late-history-1/retention.json",
+  "artifact_sha256": "8953fbce9e4dbbadb0b8c47c2434d99c995f2584bf6f535eb136f3a7cdd56593",
+  "fixture_codec": "mpeg2",
+  "viewers": 100,
+  "channels": 10,
+  "concurrency": 32,
+  "behind_seconds": 45,
+  "prefix_reference_age_range_seconds": [
+    35,
+    55
+  ],
+  "exact_historical_prefix_matches": 100,
+  "bytes_per_viewer": 1500000,
+  "decoder_frames": [
+    69,
+    69,
+    69,
+    69,
+    69,
+    69,
+    69,
+    69,
+    69,
+    69
+  ],
+  "decoder_scope": "video/audio maps with initial mid-GOP reference warnings permitted; byte-prefix proof is exact",
+  "no_extra_upstream": true,
+  "local_cache_limit_per_channel_bytes": 4194304,
+  "final_retained_local_payload_bytes": 40938880,
+  "final_retained_redis_payload_bytes": 150962120,
+  "history_seconds": 60,
+  "cleanup": "isolated Compose project removed",
+  "changed_tool_sources": [],
+  "tool_sha256": {
+    "scripts/rust-integration/retention_probe.py": "adca2d5252ff5c410862116085c2a2678933bd9f0301055be821aefd68c368ad",
+    "scripts/rust-integration/collect_fixture_memory.py": "3d173783e7b1a035dda9593779780e2afdd6b9f512c9889969c187001f9070db",
+    "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-integration/seed_accounts.py": "c1f4945a51084a2c83c747de77647fe6eeec9c6202bbf1eb1c13551973674e62",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "80ce607d050f72b8aea8399a3a769d8cd067e59beb16ee09349a5e356b11fddd",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+  },
+  "limitations": [
+    "Functional concurrent fixture, not isolated CPU/RSS/Docker working-memory comparison",
+    "Mid-GOP late seek decoder permits initial missing-reference warnings; exact opening byte-prefix is independently verified",
+    "Only ten representative late captures decoded; all100 prefix and length checks passed",
+    "Source settings mutation is disposable fixture-only; original source implementation unchanged"
+  ]
+}

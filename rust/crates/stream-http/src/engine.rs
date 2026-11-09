@@ -7,7 +7,9 @@ use dispatcharr_contracts::{
 use dispatcharr_coordination::{AcquireRequest, Coordinator, ProviderReservation};
 use dispatcharr_input_store::InputStore;
 use dispatcharr_stream_core::ts::{DiscontinuityMarker, PacketAssembler, PACKET_SIZE};
-use dispatcharr_stream_runtime::{Channel, OwnedChunk, OwnedDelivery, Viewer};
+use dispatcharr_stream_runtime::{Channel, Viewer};
+#[path = "history.rs"]
+mod history;
 use futures_util::StreamExt;
 use serde::Serialize;
 use std::{
@@ -30,6 +32,9 @@ pub struct EngineConfig {
     pub max_channels: usize,
     pub max_viewers_per_channel: usize,
     pub retained_bytes_per_channel: usize,
+    /// Recent in-process payload cache when shared authoritative history exists.
+    /// The backing input store retains its independent full history contract.
+    pub shared_hot_cache_bytes: usize,
     pub retention: Duration,
     pub chunk_bytes: usize,
     pub flush_interval: Duration,
@@ -62,6 +67,7 @@ impl Default for EngineConfig {
             max_channels: 32,
             max_viewers_per_channel: 400,
             retained_bytes_per_channel: 16 * 1024 * 1024,
+            shared_hot_cache_bytes: 4 * 1024 * 1024,
             retention: Duration::from_secs(30),
             chunk_bytes: PACKET_SIZE * 1361,
             flush_interval: Duration::from_millis(50),
@@ -82,6 +88,17 @@ impl Default for EngineConfig {
             max_candidates: 256,
             keepalive_interval: Duration::from_millis(500),
             max_keepalive_duration: Duration::from_secs(300),
+        }
+    }
+}
+
+impl EngineConfig {
+    fn local_cache_bytes(&self, shared: bool) -> usize {
+        if shared {
+            self.retained_bytes_per_channel
+                .min(self.shared_hot_cache_bytes.max(self.chunk_bytes))
+        } else {
+            self.retained_bytes_per_channel
         }
     }
 }
@@ -135,6 +152,7 @@ struct Session {
     ready_requested: AtomicBool,
     metadata_wake: Notify,
     publisher: Mutex<Option<(InputStore, String)>>,
+    input_owner: Mutex<Option<String>>,
     _permit: OwnedSemaphorePermit,
 }
 
@@ -191,6 +209,7 @@ impl StreamEngine {
             || config.chunk_bytes < PACKET_SIZE
             || !config.chunk_bytes.is_multiple_of(PACKET_SIZE)
             || config.chunk_bytes > config.retained_bytes_per_channel
+            || config.shared_hot_cache_bytes == 0
             || config.flush_interval.is_zero()
             || config.retention.is_zero()
             || config.connect_timeout.is_zero()
@@ -327,8 +346,12 @@ impl StreamEngine {
                     .clone()
                     .try_acquire_owned()
                     .map_err(|_| PlaybackError::new(503, "Channel capacity reached"))?;
+                let cache_bytes = self
+                    .inner
+                    .config
+                    .local_cache_bytes(self.inner.inputs.is_some());
                 let channel = Channel::new(
-                    self.inner.config.retained_bytes_per_channel,
+                    cache_bytes,
                     self.inner.config.retention,
                     self.inner.config.max_viewers_per_channel,
                 )
@@ -360,6 +383,7 @@ impl StreamEngine {
                     ready_requested: AtomicBool::new(false),
                     metadata_wake: Notify::new(),
                     publisher: Mutex::new(None),
+                    input_owner: Mutex::new(None),
                     _permit: permit,
                 });
                 sessions.insert(key.clone(), session.clone());
@@ -451,45 +475,111 @@ impl StreamEngine {
                 .await
                 .map_err(|_| PlaybackError::new(504, "Stream initialization timed out"))??;
         }
+        let history = match &self.inner.inputs {
+            Some(store) => Some(history::History {
+                store: store.clone(),
+                channel: session.source.channel_id.clone(),
+                owner: session
+                    .input_owner
+                    .lock()
+                    .unwrap()
+                    .clone()
+                    .ok_or_else(|| PlaybackError::new(503, "Shared input owner unavailable"))?,
+                initial_behind_chunks: self.inner.config.initial_buffer_chunks,
+                read_timeout: self.inner.config.read_timeout,
+            }),
+            None => None,
+        };
+        if let Some(history) = &history {
+            history
+                .position(&mut state.viewer, startup_behind)
+                .await
+                .map_err(|_| PlaybackError::new(503, "Shared input position unavailable"))?;
+        }
         let keepalive_interval = self.inner.config.keepalive_interval;
         let max_keepalive_duration = self.inner.config.max_keepalive_duration;
         let stream = async_stream::stream! {
             let mut state = state;
             let mut stopped=state.client.as_ref().map(ClientLease::stopped);
             let mut last_media=Instant::now();
-            loop {
+            'transport: loop {
                 if stopped.as_ref().is_some_and(|control|*control.borrow()) {break;}
-                let next=match stopped.as_mut() {
-                    Some(control)=>tokio::select! { _=control.changed()=>break, next=time::timeout(keepalive_interval,state.viewer.next_owned())=>next },
-                    None=>time::timeout(keepalive_interval,state.viewer.next_owned()).await,
-                };
-                let next=match next {
-                    Ok(next)=>next,
-                    Err(_)=>{
-                        if !register_client {continue;}
-                        if last_media.elapsed()>=max_keepalive_duration {break;}
-                        if let Some(client)=&state.client {client.record_keepalive(188);}
-                        let frame=KeepaliveFrame {_client:state.client.clone(),_guard:state._guard.clone()};
-                        yield Ok::<MediaFrame,io::Error>(MediaFrame {data:Bytes::from_owner(frame),discontinuity:false});
-                        continue;
+                // Keep a historical read alive across keepalive ticks. Dropping
+                // and recreating it each tick would queue cancelled Redis reads.
+                let waiting=history::next(&mut state.viewer,history.as_ref());
+                tokio::pin!(waiting);
+                let next=loop {
+                    let client_stopped=async {
+                        match stopped.as_mut() {
+                            Some(control)=>{let _=control.changed().await;},
+                            None=>std::future::pending::<()>().await,
+                        }
+                    };
+                    tokio::select! {
+                        _=client_stopped=>break 'transport,
+                        next=&mut waiting=>break next,
+                        _=time::sleep(keepalive_interval)=>{
+                            if !register_client {continue;}
+                            if last_media.elapsed()>=max_keepalive_duration {break 'transport;}
+                            if let Some(client)=&state.client {client.record_keepalive(188);}
+                            let frame=KeepaliveFrame {_client:state.client.clone(),_guard:state._guard.clone()};
+                            yield Ok::<MediaFrame,io::Error>(MediaFrame {data:Bytes::from_owner(frame),discontinuity:false});
+                        }
                     }
                 };
                 match next {
-                    OwnedDelivery::Chunk(chunk) => {
+                    Ok(Some(chunk)) => {
                         last_media=Instant::now();
                         if let Some(client)=&state.client {client.record_bytes(chunk.as_ref().len());}
-                        // The frame retains both viewer and channel admission
-                        // until Hyper releases its final Bytes clone.
-                        let discontinuity=chunk.discontinuity;
+                        let discontinuity=chunk.discontinuity();
                         let frame = FrameOwner { chunk, _client:state.client.clone(), _guard: state._guard.clone() };
                         yield Ok::<MediaFrame, io::Error>(MediaFrame {data:Bytes::from_owner(frame),discontinuity});
                     }
-                    OwnedDelivery::Lagged { .. } => continue,
-                    OwnedDelivery::Stopped | OwnedDelivery::Cancelled => break,
+                    Ok(None)=>break,
+                    Err(error)=>{yield Err(error);break;},
                 }
             }
         };
         Ok(Box::pin(stream))
+    }
+
+    /// Versioned administrative diagnostics; not the source-compatible status API.
+    pub async fn memory_diagnostics(&self) -> Result<serde_json::Value, PlaybackError> {
+        let all = self.status();
+        let total = all.len();
+        let mut channels = Vec::new();
+        let mut local = 0u64;
+        let mut redis_logical = 0u64;
+        let mut redis_allocated = 0u64;
+        for status in all.into_iter().take(64) {
+            local += status.retained_bytes as u64;
+            let shared = if let Some(inputs) = &self.inner.inputs {
+                let value = inputs
+                    .retained_diagnostics(&status.channel_id)
+                    .await
+                    .map_err(|_| PlaybackError::new(503, "Retention diagnostics unavailable"))?;
+                redis_logical += value["logical_payload_bytes"].as_u64().unwrap_or(0);
+                redis_allocated += value["redis_known_key_allocation_bytes"]
+                    .as_u64()
+                    .unwrap_or(0);
+                value
+            } else {
+                serde_json::Value::Null
+            };
+            channels.push(serde_json::json!({"channel_id":status.channel_id,"state":status.state,
+                "local_subscriptions":status.viewer_count,"local_retained_payload_bytes":status.retained_bytes,
+                "received_bytes":status.received_bytes,"shared_input":shared}));
+        }
+        Ok(
+            serde_json::json!({"format_version":1,"channel_count":total,"sampled_channels":channels.len(),"truncated":total>64,
+            "local_retained_payload_bytes":local,"redis_logical_payload_bytes":redis_logical,
+            "redis_known_key_allocation_bytes":redis_allocated,
+            "configured_local_limit_bytes_per_channel":self.inner.config.local_cache_bytes(self.inner.inputs.is_some()),
+            "configured_authoritative_history_limit_bytes_per_channel":self.inner.config.retained_bytes_per_channel,
+            "configured_retention_seconds":self.inner.config.retention.as_secs_f64(),
+            "shared_input_configured":self.inner.inputs.is_some(),"channels":channels,
+            "scope":"Retained payload/key allocations only, excludes HTTP in-flight frames and allocator overhead; shared Redis bytes must not be summed across replica reports"}),
+        )
     }
 
     pub fn status(&self) -> Vec<StreamStatus> {
@@ -640,7 +730,7 @@ struct TransportState {
 }
 
 struct FrameOwner {
-    chunk: OwnedChunk,
+    chunk: history::Payload,
     _client: Option<ClientLease>,
     _guard: ViewerGuard,
 }
@@ -877,6 +967,7 @@ async fn run_follower(
                         return PlaybackError::new(503, "Channel input restarted");
                     }
                     owner = Some(current.clone());
+                    *session.input_owner.lock().unwrap() = Some(current.clone());
                     last_snapshot = Some(Instant::now());
                 }
                 Err(dispatcharr_input_store::Error::Capacity) => {
@@ -908,7 +999,7 @@ async fn run_follower(
                     .fetch_add(data.len() as u64, Ordering::Relaxed);
                 if session
                     .channel
-                    .publish_received(data, discontinuity, received)
+                    .publish_numbered(data, discontinuity, received, sequence)
                     .is_err()
                 {
                     return PlaybackError::new(503, "Stream stopped");
@@ -982,6 +1073,7 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
     }
     if let (Some(inputs), Some(lease)) = (&inner.inputs, &lease) {
         *session.publisher.lock().unwrap() = Some((inputs.clone(), lease.token().to_owned()));
+        *session.input_owner.lock().unwrap() = Some(lease.token().to_owned());
     }
     let metadata_task = inner.clients.as_ref().map(|clients| {
         let clients = clients.clone();
@@ -1245,7 +1337,15 @@ impl Session {
         } else {
             None
         };
-        let local = self.channel.publish_marked(data, discontinuity)?;
+        let local = match shared {
+            Some(sequence) => self.channel.publish_numbered(
+                data,
+                discontinuity,
+                Instant::now().into_std(),
+                sequence,
+            )?,
+            None => self.channel.publish_marked(data, discontinuity)?,
+        };
         let index = shared.unwrap_or(local);
         self.buffer_index.store(index, Ordering::Relaxed);
         Ok(index)

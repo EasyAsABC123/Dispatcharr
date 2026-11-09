@@ -29,6 +29,7 @@ def capture(base, origin, seed, observe):
             'Range':'bytes=0-','User-Agent':'fixture-busy-'+mode}),timeout=20)
         try:
             initial=first.read(65536)
+            first_body_began=time.monotonic()
             before=observe(cap['session_id'],True)
             began=time.monotonic()
             headers={'User-Agent':'fixture-busy-'+mode}
@@ -42,6 +43,8 @@ def capture(base, origin, seed, observe):
                 # the full response; byte ranges are read to their bounded EOF.
                 payload=second.read(65536 if new_range is None else 2_000_001)
                 if len(payload)>2_000_000:raise ValueError('busy probe exceeds bounded capture')
+                if new_range is None:
+                    time.sleep(2.5)
                 event={'case':mode,'range':new_range,'status':second.status,
                     'headers':{k.lower():v for k,v in second.headers.items() if k.lower() in ('content-type','content-length','content-range','accept-ranges')},
                     'captured_bytes':len(payload),'captured_sha256':hashlib.sha256(payload).hexdigest(),
@@ -52,6 +55,8 @@ def capture(base, origin, seed, observe):
                 second.close()
             # Near-EOF probes must leave the first transfer running. Read one
             # bounded chunk rather than draining that full30second archive.
+            if mode=='near-eof-probe':
+                time.sleep(max(0,2.5-(time.monotonic()-first_body_began)))
             remainder=first.read(65536 if mode=='near-eof-probe' else 2_000_001)
             event['old_response_after_replacement_bytes']=len(remainder)
             event['old_response_read_was_bounded']=True
@@ -64,5 +69,30 @@ def capture(base, origin, seed, observe):
         event['origin']=json.loads(stats)
         events.append(event)
     return {'format_version':1,'scope':'original busy middle seek, plain reconnect and tail probe boundary characterization',
-            'capture_complete':len(events)==3,'events':events,
+            'capture_complete':len(events)==3,'events':events,'controlled_established_body_min_seconds':2.5,
             'continuous_quota_sampling_verified':False,'application_parity_verified':False,'performance_verified':False}
+
+
+def compare(source,candidate):
+    differences=[]
+    left={event['case']:event for event in source['events']}
+    right={event['case']:event for event in candidate['events']}
+    for case in sorted(left.keys()|right.keys()):
+        if case not in left or case not in right:
+            differences.append({'case':case,'field':'present'});continue
+        original,rewrite=left[case],right[case]
+        for field in ['range','status','headers','captured_bytes','captured_sha256','capture_is_prefix','initial_prefix_bytes','initial_prefix_sha256']:
+            if original.get(field)!=rewrite.get(field):differences.append({'case':case,'field':field})
+        for phase in ['before','during_replacement','after_grace']:
+            for field in ['api_exists','pool_exists','pool_busy','profile_connections','stats_client_count']:
+                if original[phase].get(field)!=rewrite[phase].get(field):differences.append({'case':case,'field':phase+'.'+field})
+        if case!='near-eof-probe' and rewrite['old_response_after_replacement_bytes']>=2_000_001:
+            differences.append({'case':case,'field':'old-response-not-terminated-within-bounded-read'})
+        if case=='near-eof-probe' and rewrite['old_response_after_replacement_bytes']!=65536:
+            differences.append({'case':case,'field':'old-response-did-not-continue'})
+        if original['origin']!=rewrite['origin']:differences.append({'case':case,'field':'origin-range-order-and-fixture'})
+    if any(side.get('controlled_established_body_min_seconds')!=2.5 for side in [source,candidate]):
+        differences.append({'case':'configuration','field':'controlled-body-lifetime'})
+    return {'captured_busy_controls_match':not differences,'differences':differences,
+        'normalizations':['elapsed time and queued old-response bytes are observed, not equated','immediate client-close scheduling is observed; established grace is checked after 9 seconds','busy statistics byte totals reflect differently buffered delivery and remain a separate contract'],
+        'continuous_quota_sampling_verified':False,'application_parity_verified':False,'performance_verified':False}

@@ -19,7 +19,7 @@ sys.path.insert(0,'/app')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
 import django
 django.setup()
-from apps.channels.models import ChannelGroup,ChannelGroupM3UAccount,Stream
+from apps.channels.models import Channel,ChannelOverride,ChannelStream,ChannelGroup,ChannelGroupM3UAccount,Stream
 from apps.m3u.models import M3UAccount
 from apps.m3u import tasks
 from core.models import StreamProfile
@@ -29,6 +29,107 @@ from django.utils import timezone
 def serialize(value):
     if isinstance(value,(datetime.datetime,datetime.date)):return value.isoformat()
     raise TypeError(type(value).__name__)
+
+
+def cleanup_oracle(template,other):
+    prefix='rust-cleanup-'+uuid.uuid4().hex
+    account=copy.copy(template);account.pk=None;account.name=prefix;account.locked=False
+    account.is_active=True;account.stale_stream_days=7
+    M3UAccount.objects.bulk_create([account])
+    enabled=ChannelGroup.objects.create(name=prefix+' enabled')
+    disabled=ChannelGroup.objects.create(name=prefix+' disabled')
+    ChannelGroupM3UAccount.objects.bulk_create([
+        ChannelGroupM3UAccount(channel_group=enabled,m3u_account=account,enabled=True),
+        ChannelGroupM3UAccount(channel_group=disabled,m3u_account=account,enabled=False)])
+    scan=timezone.now()
+    definitions=[('fresh-enabled',account,enabled,1,3),('fresh-disabled',account,disabled,1,0),
+                 ('old-disabled',account,disabled,30,7),('old-enabled',account,enabled,30,0),
+                 ('fresh-null-group',account,None,1,0),('exact-retention-boundary',account,enabled,7,0),
+                 ('other-account-untouched',other,disabled,30,0)]
+    streams=[]
+    for suffix,owner,group,days,catchup in definitions:
+        streams.append(Stream(name=prefix+' '+suffix,tvg_id=prefix+' '+suffix,url='http://origin:8080/live/0.ts',
+            m3u_account=owner,channel_group=group,last_seen=scan-datetime.timedelta(days=days),
+            is_catchup=bool(catchup),catchup_days=catchup))
+    Stream.objects.bulk_create(streams)
+    channel=Channel(name=prefix+' channel',channel_group=enabled)
+    Channel.objects.bulk_create([channel])
+    ChannelStream.objects.bulk_create([ChannelStream(channel=channel,stream=streams[0],order=1),
+                                      ChannelStream(channel=channel,stream=streams[2],order=2)])
+    from apps.channels.utils import rollup_catchup_for_channels
+    rollup_catchup_for_channels([channel.pk])
+    initial_streams=list(Stream.objects.filter(tvg_id__startswith=prefix).values())
+    initial_links=list(ChannelStream.objects.filter(channel=channel).values())
+    def snapshot():
+        return {'streams':list(Stream.objects.filter(tvg_id__startswith=prefix).order_by('tvg_id').values('tvg_id','m3u_account_id','channel_group_id','is_catchup','catchup_days')),
+                'channel':Channel.objects.filter(pk=channel.pk).values('is_catchup','catchup_days').get(),
+                'links':list(ChannelStream.objects.filter(channel=channel).order_by('stream__tvg_id').values_list('stream__tvg_id',flat=True))}
+    initial_channel=snapshot()['channel']
+    steps=[]
+    for name,days,active in [('overlap-and-null-group',7,True),('idempotent-repeat',7,True),
+                             ('zero-retention',0,True),('overflow-retention',2147483647,True),('inactive-account-refusal',0,False)]:
+        M3UAccount.objects.filter(pk=account.pk).update(stale_stream_days=days,is_active=active)
+        before=Stream.objects.filter(m3u_account=account).count()
+        selected_groups=ChannelGroup.objects.filter(m3u_accounts__m3u_account=account,m3u_accounts__enabled=True).values_list('id',flat=True)
+        disabled_matches=Stream.objects.filter(m3u_account=account).exclude(channel_group__in=selected_groups).count()
+        try:stale_matches=Stream.objects.filter(m3u_account=account,last_seen__lt=scan-datetime.timedelta(days=days)).count()
+        except OverflowError:stale_matches=None
+        error=False;reported=None
+        try:reported=tasks.cleanup_streams(account.pk,scan)
+        except Exception:error=True
+        after=Stream.objects.filter(m3u_account=account).count()
+        steps.append({'name':name,'stale_stream_days':days,'is_active':active,'error':error,'reported_total':reported,
+            'disabled_group_matches':disabled_matches,'stale_matches':stale_matches,'deleted_streams':before-after,'expected':snapshot()})
+    ChannelStream.objects.filter(channel=channel).delete()
+    Stream.objects.filter(tvg_id__startswith=prefix).delete()
+    Stream.objects.bulk_create([Stream(**row) for row in initial_streams])
+    ChannelStream.objects.bulk_create([ChannelStream(**row) for row in initial_links])
+    Channel.objects.filter(pk=channel.pk).update(**initial_channel)
+    M3UAccount.objects.filter(pk=account.pk).update(stale_stream_days=7,is_active=True)
+    return {'prefix':prefix,'account_id':account.pk,'channel_id':channel.pk,'scan_time':scan,'steps':steps}
+
+
+def group_cleanup_oracle(template,other):
+    prefix='rust-group-cleanup-'+uuid.uuid4().hex;scan=timezone.now()
+    account=copy.copy(template);account.pk=None;account.name=prefix;account.locked=False
+    account.is_active=True;account.stale_stream_days=7;M3UAccount.objects.bulk_create([account])
+    groups=[ChannelGroup(name=prefix+' '+suffix) for suffix in ['orphan','stream-only','override-only','shared','direct','boundary']]
+    ChannelGroup.objects.bulk_create(groups)
+    ChannelGroupM3UAccount.objects.bulk_create([ChannelGroupM3UAccount(channel_group=group,m3u_account=account,
+        last_seen=scan-datetime.timedelta(days=7 if index==5 else 30)) for index,group in enumerate(groups)]+
+        [ChannelGroupM3UAccount(channel_group=groups[3],m3u_account=other,enabled=False)])
+    stream=Stream(name=prefix,tvg_id=prefix,url='http://origin:8080/live/0.ts',m3u_account=other,channel_group=groups[1])
+    Stream.objects.bulk_create([stream])
+    channel=Channel(name=prefix,channel_group=groups[4]);Channel.objects.bulk_create([channel])
+    override=ChannelOverride(channel=channel,channel_group=groups[2]);ChannelOverride.objects.bulk_create([override])
+    stream.refresh_from_db();channel.refresh_from_db();override.refresh_from_db()
+    times={'stream':stream.updated_at,'channel':channel.updated_at,'override':override.updated_at}
+    initial_groups=list(ChannelGroup.objects.filter(name__startswith=prefix).values())
+    initial_relations=list(ChannelGroupM3UAccount.objects.filter(channel_group__name__startswith=prefix).values())
+    def snapshot():
+        stream.refresh_from_db();channel.refresh_from_db();override.refresh_from_db()
+        return {'groups':list(ChannelGroup.objects.filter(name__startswith=prefix).order_by('name').values_list('name',flat=True)),
+                'relations':list(ChannelGroupM3UAccount.objects.filter(channel_group__name__startswith=prefix)
+                    .order_by('channel_group__name','m3u_account_id').values('channel_group__name','m3u_account_id','enabled','last_seen','is_stale')),
+                'references':{'stream':stream.channel_group_id,'channel':channel.channel_group_id,'override':override.channel_group_id},
+                'timestamps_unchanged':{'stream':stream.updated_at==times['stream'],'channel':channel.updated_at==times['channel'],'override':override.updated_at==times['override']}}
+    steps=[]
+    for name,locked,account_name,days in [('locked-custom-skip-before-overflow',True,'custom',2147483647),
+        ('orphan-and-protected-groups',False,prefix,7),('idempotent-repeat',False,prefix,7),
+        ('zero-retention-boundary',False,prefix,0),('overflow-refusal',False,prefix,2147483647)]:
+        selected=copy.copy(account);selected.locked=locked;selected.name=account_name;selected.stale_stream_days=days
+        error=False;reported=None
+        try:reported=tasks.cleanup_stale_group_relationships(selected,scan)
+        except Exception:error=True
+        steps.append({'name':name,'account':{'id':account.pk,'name':account_name,'locked':locked,'stale_stream_days':days},
+                      'error':error,'reported':reported,'expected':snapshot()})
+    existing=set(ChannelGroup.objects.filter(name__startswith=prefix).values_list('id',flat=True))
+    ChannelGroup.objects.bulk_create([ChannelGroup(**row) for row in initial_groups if row['id'] not in existing])
+    ChannelGroupM3UAccount.objects.filter(channel_group__name__startswith=prefix).delete()
+    ChannelGroupM3UAccount.objects.bulk_create([ChannelGroupM3UAccount(**row) for row in initial_relations])
+    Stream.objects.filter(pk=stream.pk).update(channel_group=groups[1],updated_at=times['stream'])
+    ChannelOverride.objects.filter(pk=override.pk).update(channel_group=groups[2],updated_at=times['override'])
+    return {'prefix':prefix,'scan_time':scan,'stream_id':stream.pk,'channel_id':channel.pk,'override_id':override.pk,'times':times,'steps':steps}
 
 
 def main():
@@ -170,7 +271,9 @@ def main():
     ChannelGroupM3UAccount.objects.filter(channel_group__name__startswith=prefix).delete()
     ChannelGroup.objects.filter(name__startswith=prefix).exclude(pk=group.pk).delete()
     ChannelGroupM3UAccount.objects.bulk_create([ChannelGroupM3UAccount(**initial_relation_data)])
-    print(json.dumps({'account_id':account.id,'prefix':prefix,'initial':initial,'steps':steps,'group_steps':group_steps,
+    cleanup=cleanup_oracle(account,other)
+    group_cleanup=group_cleanup_oracle(account,other)
+    print(json.dumps({'account_id':account.id,'prefix':prefix,'initial':initial,'steps':steps,'group_steps':group_steps,'cleanup':cleanup,'group_cleanup':group_cleanup,
                       'group_id':group.id,'restored_ids':restored},default=serialize))
 
 

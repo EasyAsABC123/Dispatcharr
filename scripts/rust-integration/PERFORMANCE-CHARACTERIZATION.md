@@ -150,3 +150,94 @@ functional proof.
 
 Raw evidence: `artifacts/rust/m2-many-channel-retention-diagnostic-1/run.json`;
 component breakdown: `verified-many-retention-diagnostic-1.json`.
+
+## Retention and database observer validation
+
+The versioned admin-only `/internal/proxy/ts/v1/memory` endpoint now separates
+local retained payload, shared Redis logical payload and Redis allocation for
+known tracked input keys. It does not read media payloads, scan arbitrary keys,
+refresh TTLs or change the source-compatible status response. A real HTTP/Redis
+test independently observed24,064bytes in each storage layer with the current
+owner fence. Allocation exceeded payload, as expected. This validates the
+accounting; it does not establish full-ring occupancy or explain the failed
+many-channel memory gate. In-flight frames and allocator overhead are excluded;
+shared Redis totals must not be summed across replica reports.
+
+`collect_fixture_memory.py` reads `pg_stat_activity` and PostgreSQL
+`smaps_rollup` as the fixture's database OS user. It excludes its SQL observer,
+records no SQL text/credentials/client addresses, and reports private memory and
+PSS separately from RSS. One concurrent management-fixture smoke read all17
+PostgreSQL processes without permission failures:11client backends,127.26MiB
+PSS,96.39MiB private and432.54MiB RSS sum. These values illustrate why RSS sums
+cannot represent database working-memory. They are not a paired source/Rust
+comparison or evidence of a pool-size cause. Snapshots are not atomic.
+
+The previous memory failure remains open. No retention or pool behavior changed.
+Durable component evidence: `verified-retention-telemetry-1.json`.
+
+Frozen image10 subsequently passed a candidate-only75second functional capture
+at ten channels/readers. At the last snapshot its local rings retained143.97MiB
+of payload and shared Redis retained a second143.97MiB; tracked Redis keys
+allocated147.57MiB. All owner fences matched, all twenty prime/capture decodes
+returned75frames with video/audio, and cleanup removed the project. PostgreSQL
+had eight client backends,50.43MiB PSS and23.93MiB private memory. This proves
+duplicate full-history payload storage in that image. It does not establish its
+causal share of image1's earlier memory failure or measure an optimization gain.
+The run was concurrent functional work, with observer snapshots excluded from
+any performance gate. Full binding, samples and limitations:
+`verified-retention-image10-1.json`; proposed next gates:
+`docs/rust-native-retention-investigation.md`.
+
+Frozen image11 passes the smaller-cache functional gates without reducing the
+authoritative history. Ten channels retain39.04MiB locally plus143.97MiB of
+Redis history after75seconds. Native H264 owner/follower/shared-stop/crash gates
+and source/Rust HLS/fMP4 decoders pass. A separate100-viewer45second late-seek
+gate matches every opening prefix to old Redis media outside the cache and
+decodes ten representative video/audio captures. These concurrent functional
+runs prove retained-byte behavior; they do not establish a Docker working-memory
+or CPU gain. A separate isolated paired study follows below. Evidence:
+`verified-hot-cache-image11-1.json` and
+`verified-hot-cache-late-history-image11-1.json`.
+
+## Three paired ten-channel trials with the bounded cache
+
+Frozen image11 now passes six isolated measurements: three source/Rust pairs,
+alternating backend order, one viewer on each of ten channels,15second warmup
+and60second measurement. Both backends receive equal parallel per-channel
+decoder priming; all60primes decode at least74frames and all selected owners
+remain active before warmup. Every load has zero errors, empty responses,
+missing viewers or observer errors. Each phase closes all origins and final
+cleanup removes the project. The fixture remains300seconds/H264, matching the
+older failed diagnostic. Fresh trials restart upstreams from byte zero, so they
+need one trial's fixture lifetime rather than the entire matrix wall time.
+
+| Metric | Median paired Rust/source ratio | Range across three pairs |
+| --- | --- | --- |
+| Full-fixture CPU |0.22128|0.21767–0.24541|
+| Full-fixture Docker working memory |0.82405|0.81707–0.83216|
+| First-byte p95 |0.06490|0.06407–0.08029|
+| Delivered bytes/second |0.98898|0.98594–1.00134|
+
+Absolute backend medians are23.5855%CPU/source versus5.232%/Rust,
+515.93MiB/source versus421.74MiB/Rust working memory, and129.80ms/source versus
+9.12ms/Rust first-byte p95. Absolute backend medians and medians of paired ratios
+are different statistics. CPU100% means one fully used logical core. Primary
+memory is the simultaneous full-group Docker working-memory peak, including
+PostgreSQL, Redis and the identical origin. Independent container maxima are
+provided separately and must not be added as if simultaneous. RSS remains a
+diagnostic because PostgreSQL shared pages can be counted repeatedly.
+
+All declared native-slice budgets pass: CPU and memory ratios at most1,
+p95 at most1.1, throughput at least95%. The older image1 failure remains in its
+ledger. This new result establishes warmed native Proxy playback resource
+behavior for image11, not whole-application gains. React/browser execution,
+live WebSocket/event side effects, other profiles, cold reopen/burst behavior
+and HLS/fMP4 resource acceptance remain outside this experiment.
+
+Rust image: `sha256:363679ce182bea55be97b873c1faffb3024e5abdae0886f655c6678b00943f33`.
+
+Rust source: `d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0`.
+
+Durable evidence, exact paired values and component/RSS diagnostics:
+`verified-hot-cache-many-channel-image11-1.json`. Raw artifacts and immutable
+measured tool copies: `artifacts/rust/m2-hot-cache-many-channel-matrix-1/`.

@@ -62,6 +62,12 @@ def validate_build_manifest(manifest, image_id, source_label):
     return digest
 
 
+def required_fixture_seconds(phases, warmup, duration, timeout, independent_trials):
+    """Fresh workers start each origin request at byte zero, not a shared cursor."""
+    lifetimes = 1 if independent_trials else phases
+    return lifetimes * (warmup + duration + timeout) + 60
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--docker', default='docker')
@@ -122,13 +128,14 @@ def main():
     if args.require_comparison and (not args.candidate_overlay or args.trials < 3
             or args.measurement_quality != 'isolated-characterization' or args.warmup < 15 or args.duration < 60):
         parser.error('required comparison needs candidate,3trials,isolated quality,and at least15s/60s warmup/measurement')
-    # A continuously shared upstream can survive across trials. Do not permit
-    # timestamp wraps even when measurements omit optional scenario stages.
+    # Continuous upstreams need the full matrix lifetime. Explicit independent
+    # trials stop all upstreams and start each origin request from byte zero.
     estimated = args.trials * (len(args.viewers) if 'same-channel' in args.scenarios else 0)
     estimated += args.trials * (len(args.scenarios) - ('same-channel' in args.scenarios))
     if args.candidate_overlay:
         estimated *= 2
-    if args.fixture_seconds < estimated * (args.warmup + args.duration + args.timeout) + 60:
+    if args.fixture_seconds < required_fixture_seconds(estimated, args.warmup, args.duration, args.timeout,
+                                                      args.fresh_web_per_trial or bool(args.candidate_overlay)):
         parser.error('fixture duration is insufficient for the requested matrix')
     docker_executable = shutil.which(args.docker)
     if not docker_executable:
@@ -239,7 +246,8 @@ def main():
                     if time.monotonic() >= signal_deadline:
                         raise TimeoutError('measurement start signal not received')
                     time.sleep(.5)
-            print('Playback decoded. Starting resource measurements; avoid other CPU workloads.', flush=True)
+            print('Playback decoded. Starting functional protocol probes.' if args.functional_only else
+                  'Playback decoded. Starting resource measurements; avoid other CPU workloads.', flush=True)
             fixture_id = (fixture['fixture_sha256'] + ':proxy-ts-2mbps-one-worker-codec' + fixture.get('codec', 'mpeg2')
                           + f'-shutdown{seed["proxy_settings"]["channel_shutdown_delay"]}'
                           + f'-retention{seed["proxy_settings"]["redis_chunk_ttl"]}'

@@ -107,6 +107,28 @@ impl Channel {
         Ok(sequence)
     }
 
+    /// Cache a canonical shared-input sequence at its original receive age.
+    pub fn publish_numbered(
+        &self,
+        data: Arc<[u8]>,
+        discontinuity: bool,
+        received_at: std::time::Instant,
+        sequence: u64,
+    ) -> Result<u64, Error> {
+        let sequence = self
+            .inner
+            .state
+            .lock()
+            .unwrap()
+            .buffer
+            .as_mut()
+            .ok_or(Error::Stopped)?
+            .push_numbered(data, received_at, discontinuity, sequence)
+            .map_err(Error::Buffer)?;
+        self.inner.changed.notify_waiters();
+        Ok(sequence)
+    }
+
     pub fn subscribe(&self, behind: Duration) -> Result<Viewer, Error> {
         let permit = self.inner.slots.clone().try_acquire_owned().map_err(|_| {
             if self.inner.slots.is_closed() {
@@ -183,6 +205,13 @@ pub struct OwnedChunk {
     _viewer_permit: Arc<OwnedSemaphorePermit>,
 }
 
+/// Carries the same single-frame and viewer admission as an owned cache chunk
+/// when a transport delivers history loaded from its authoritative backing store.
+pub struct FrameLease {
+    _delivery_permit: OwnedSemaphorePermit,
+    _viewer_permit: Arc<OwnedSemaphorePermit>,
+}
+
 impl AsRef<[u8]> for OwnedChunk {
     fn as_ref(&self) -> &[u8] {
         &self.data
@@ -219,6 +248,33 @@ impl CancelHandle {
 }
 
 impl Viewer {
+    /// Next canonical sequence, including a cache miss before it is recovered.
+    pub fn next_sequence(&self) -> u64 {
+        self.sequence
+    }
+
+    /// Set a position selected by authoritative history without reacquiring
+    /// viewer admission. Missing local data is still an explicit Lagged result.
+    pub fn seek_sequence(&mut self, sequence: u64) -> Result<(), Error> {
+        if sequence == 0 {
+            return Err(Error::Buffer(BufferError::InvalidSequence));
+        }
+        if self.inner.state.lock().unwrap().buffer.is_none()
+            || self.cancelled.load(Ordering::Acquire)
+        {
+            return Err(Error::Stopped);
+        }
+        self.sequence = sequence;
+        Ok(())
+    }
+
+    pub async fn reserve_frame(&self) -> Result<FrameLease, Error> {
+        let permit = self.acquire_delivery().await.map_err(|_| Error::Stopped)?;
+        Ok(FrameLease {
+            _delivery_permit: permit,
+            _viewer_permit: self._permit.clone(),
+        })
+    }
     /// Choose the source-compatible position after initialization without
     /// releasing or reacquiring this viewer's admission slot.
     pub fn reposition(&mut self, behind: Duration) -> Result<(), Error> {
@@ -347,6 +403,40 @@ mod tests {
 
     fn channel(bytes: usize, viewers: usize) -> Channel {
         Channel::new(bytes, Duration::from_secs(5), viewers).unwrap()
+    }
+
+    #[tokio::test]
+    async fn historical_frame_slot_preserves_backpressure_and_viewer_admission() {
+        let channel = channel(4, 1);
+        let mut viewer = channel.subscribe(Duration::ZERO).unwrap();
+        channel
+            .publish_numbered(
+                Arc::from(&b"new"[..]),
+                false,
+                std::time::Instant::now(),
+                900,
+            )
+            .unwrap();
+        viewer.seek_sequence(100).unwrap();
+        assert!(matches!(
+            viewer.next_owned().await,
+            OwnedDelivery::Lagged { next_sequence: 900 }
+        ));
+        viewer.seek_sequence(100).unwrap();
+        let lease = viewer.reserve_frame().await.unwrap();
+        viewer.seek_sequence(101).unwrap();
+        assert!(
+            time::timeout(Duration::from_millis(10), viewer.next_owned())
+                .await
+                .is_err()
+        );
+        drop(viewer);
+        assert!(matches!(
+            channel.subscribe(Duration::ZERO),
+            Err(Error::AtCapacity)
+        ));
+        drop(lease);
+        assert!(channel.subscribe(Duration::ZERO).is_ok());
     }
 
     async fn pending<F: Future>(future: std::pin::Pin<&mut F>) {

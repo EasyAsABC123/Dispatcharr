@@ -16,7 +16,7 @@ from apps.channels.models import Channel, ChannelOverride, ChannelGroup, Channel
 from apps.m3u.models import M3UAccount, M3UAccountProfile, M3UFilter, ServerGroup
 from apps.epg.models import EPGSource, EPGData
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
-from core.models import CoreSettings
+from core.models import CoreSettings, SystemEvent
 from core.utils import RedisClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -141,4 +141,15 @@ users['_fixtures']['provider_reads']={'server_group_id':servers.pk,'xc_id':xc.pk
     'filter_ids':list(provider.filters.values_list('id',flat=True)),
     'epg_source_id':epg.pk,'override_epg_source_id':override_epg.pk,
     'epg_data_id':epg_row.pk,'override_epg_data_id':override_row.pk}
+# Read-only utility oracle rows use deterministic timestamps and bypass event
+# retention signals; this is a disposable database, never a production seed.
+SystemEvent.objects.filter(event_type='rust-probe-event-kind').delete()
+for ordinal in [1,2,3]:
+    event=SystemEvent(event_type='rust-probe-event-kind',channel_id='00000000-0000-0000-0000-000000000000' if ordinal==3 else None,
+        channel_name=None if ordinal==1 else 'rust-probe-event',details={'ordinal':ordinal,'fraction':1.5,'integral':2.0})
+    SystemEvent.objects.bulk_create([event])
+    SystemEvent.objects.filter(pk=event.pk).update(timestamp=datetime(2020,1,ordinal,3,4,5,123456 if ordinal==2 else 0,tzinfo=timezone.utc))
+known_event=SystemEvent(event_type='vod_stop',channel_name='rust-probe-display-event',details={'owned_fixture':True})
+SystemEvent.objects.bulk_create([known_event])
+SystemEvent.objects.filter(pk=known_event.pk).update(timestamp=datetime(2020,1,4,3,4,5,tzinfo=timezone.utc))
 print(json.dumps(users))

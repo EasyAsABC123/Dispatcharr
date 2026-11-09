@@ -1,0 +1,16 @@
+[package]
+name = "dispatcharr-upstream-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+bytes = "1"
+futures-util = "0.3"
+async-stream = "0.3"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream", "cookies"] }
+flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
+tokio = { version = "1", features = ["rt"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros"] }

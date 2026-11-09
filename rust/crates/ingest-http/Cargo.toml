@@ -1,0 +1,20 @@
+[package]
+name = "dispatcharr-ingest-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+dispatcharr-ingest-core = { path = "../ingest-core" }
+dispatcharr-upstream-http = { path = "../upstream-http" }
+bytes = "1"
+futures-util = "0.3"
+reqwest = { version = "0.12", default-features = false }
+tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
+
+[dev-dependencies]
+serde_json = "1"
+sha2 = "0.10"
+axum = "0.8"
+flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
+tokio = { version = "1", features = ["macros", "net", "rt-multi-thread"] }

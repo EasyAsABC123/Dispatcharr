@@ -370,7 +370,10 @@ pub(crate) async fn put(
     )
     .await
 }
-async fn remove(tx: &mut Transaction<'_, Postgres>, ids: &[i64]) -> Result<(), StoreError> {
+pub(crate) async fn remove(
+    tx: &mut Transaction<'_, Postgres>,
+    ids: &[i64],
+) -> Result<(), StoreError> {
     let channels=sqlx::query_scalar::<_,i64>("SELECT DISTINCT channel_id FROM dispatcharr_channels_channelstream WHERE stream_id=ANY($1)").bind(ids).fetch_all(&mut **tx).await?;
     sqlx::query("DELETE FROM dispatcharr_channels_channelstream WHERE stream_id=ANY($1)")
         .bind(ids)

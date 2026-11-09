@@ -5,9 +5,9 @@
   "passed": true,
   "cleanup_passed": true,
   "candidate_provenance": {
-    "image_id": "sha256:5d30b71b43e4b30549eaa82b692c60069def5e36c35f25eb4441fefe6c5a5a78",
-    "source_tree_sha256": "1c92452bfb6ba16c2d0ed9453c380978c8e7becf48970fba492eab6f5461396a",
-    "build_manifest_sha256": "e0c2ab16586699df2ea23106a9992c4659432040dbf67290a0451544b154d992"
+    "image_id": "sha256:363679ce182bea55be97b873c1faffb3024e5abdae0886f655c6678b00943f33",
+    "source_tree_sha256": "d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0",
+    "build_manifest_sha256": "4e16fc9946aafb9cef2c1e3d14140c2af187bd7b9de6a4d055761bcdcef91f8a"
   },
   "fixture_ports": {
     "host_range": [
@@ -21,34 +21,34 @@
     "services": {
       "baseline": [
         {
-          "host": 63855,
+          "host": 63118,
           "container": 5656
         },
         {
-          "host": 63856,
+          "host": 63119,
           "container": 5432
         },
         {
-          "host": 63857,
+          "host": 63120,
           "container": 6379
         }
       ],
       "origin": [
         {
-          "host": 63858,
+          "host": 63121,
           "container": 8080
         }
       ],
       "candidate": [
         {
-          "host": 63859,
+          "host": 63124,
           "container": 9192
         }
       ]
     },
     "selection": "bind probes held together until overlay is written; released before Docker starts",
     "tool_sha256": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
-    "overlay_sha256": "f20c60d744a725aae2e13fce56137248956897dac09d8c709f6b102f50e95e65"
+    "overlay_sha256": "3cb95e983337695999dda3aff8e468b771ac0dbfb2649fb71ae6277576f9f28e"
   },
   "fixture_start_attempts": [
     {
@@ -114,8 +114,8 @@
       "strict_decoder_passed": true
     }
   ],
-  "scope": "Frozen API-capability native catch-up/media/lifecycle, same-session idle Range reopen and Redirect positive-cap refusal/retry, plus native VOD/alias slice; not full M4 parity",
-  "evidence": "artifacts/rust/m4-timeshift-idle-frozen-compose-1/vod-contracts.json",
+  "scope": "Frozen API-capability native catch-up/media/lifecycle, same-session idle and busy seek/reconnect/tail controls, and Redirect positive-cap refusal/retry, plus native VOD/alias slice; not full M4 parity",
+  "evidence": "artifacts/rust/m4-timeshift-busy-frozen-compose-1/vod-contracts.json",
   "application_parity_verified": false,
   "performance_verified": false,
   "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
@@ -125,7 +125,8 @@
     "native_vod": 7,
     "literal_vod_profile_react_aliases": 2,
     "positive_native_limit_refusal_and_same_capability_retry": 2,
-    "same_session_idle_range_reopens": 3
+    "same_session_idle_range_reopens": 3,
+    "same_session_busy_seek_reconnect_tail_controls": 3
   },
   "catchup_decoders": [
     {
@@ -165,7 +166,7 @@
   },
   "remaining_gates": [
     "native direct-auth/XC flows",
-    "busy/cross-worker/fingerprint adoption and seeks/generation handoff",
+    "cross-worker/fingerprint/programme/profile adoption and broader generation/stop faults",
     "broader positive user policy and stop/preemption matrix",
     "complete statistics/position/pubsub/WebSocket effects",
     "provider transforms/server groups and failure corners",
@@ -179,6 +180,18 @@
       "numeric seek base tolerance 1e-9 seconds",
       "bounded sliding TTLs account for observer boot"
     ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "timeshift_busy_seek_comparison": {
+    "captured_busy_controls_match": true,
+    "differences": [],
+    "normalizations": [
+      "elapsed time and queued old-response bytes are observed, not equated",
+      "immediate client-close scheduling is observed; established grace is checked after 9 seconds",
+      "busy statistics byte totals reflect differently buffered delivery and remain a separate contract"
+    ],
+    "continuous_quota_sampling_verified": false,
     "application_parity_verified": false,
     "performance_verified": false
   }

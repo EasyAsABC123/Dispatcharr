@@ -244,6 +244,12 @@ class BuildManifestTests(unittest.TestCase):
 
 
 class MatrixValidationTests(unittest.TestCase):
+    def test_fixture_lifetime_tracks_connection_reuse_not_total_trial_walltime(self):
+        self.assertEqual(runner.required_fixture_seconds(6,15,60,10,False),570)
+        self.assertEqual(runner.required_fixture_seconds(6,15,60,10,True),145)
+        self.assertGreater(runner.required_fixture_seconds(6,15,60,10,False),300)
+        self.assertLess(runner.required_fixture_seconds(6,15,60,10,True),300)
+
     def test_required_comparison_cannot_use_one_short_trial(self):
         result = subprocess.run([sys.executable, str(HERE / 'run.py'), '--output', '/tmp/not-used',
                                  '--require-comparison', '--candidate-overlay', '/tmp/not-used.yml',

@@ -21,6 +21,7 @@ import urllib.error
 import urllib.request
 import uuid
 from playback_methods import probe as probe_methods
+from fixture_ports import write_port_overlay
 
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
@@ -187,10 +188,13 @@ def main():
     tag_overlay = output / 'candidate-image.json'
     tag_overlay.write_text(json.dumps({'services': {name: {'image': args.candidate_image or 'dispatcharr-rust-candidate:milestone2'}
                                                  for name in ('candidate', 'candidate-replica')}}))
+    ports = output / 'ports.yml'
+    report['ports'] = write_port_overlay(ports, {'baseline':[5656], 'origin':[8080],
+        'candidate':[9192], 'candidate-replica':[9192], 'python-replica':[5656]})
     tool_paths = [Path(__file__).resolve(), ROOT / 'docker/compose.rust-playback.yml', ROOT / 'docker/compose.rust-candidate.yml',
                   ROOT / 'docker/compose.rust-replicas.yml', *[ROOT / 'scripts/rust-playback-baseline' / name
                   for name in ('seed.py', 'origin.py', 'range_http.py', 'start.sh', 'supervisor.py', 'uwsgi.ini')],
-                  ROOT / 'scripts/rust-baseline/dependencies.py', ROOT / 'scripts/rust-integration/seed_accounts.py', ROOT / 'scripts/rust-integration/playback_methods.py']
+                  ROOT / 'scripts/rust-baseline/dependencies.py', ROOT / 'scripts/rust-integration/seed_accounts.py', ROOT / 'scripts/rust-integration/playback_methods.py', ROOT / 'scripts/rust-integration/fixture_ports.py']
     report['tool_sha256'] = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(tool_paths)}
 
     def record(name, passed, details=None, fatal=True):
@@ -213,7 +217,7 @@ def main():
         compose = [args.docker, 'compose', '-p', project,
                    '-f', str(ROOT / 'docker/compose.rust-playback.yml'),
                    '-f', str(ROOT / 'docker/compose.rust-candidate.yml'),
-                   '-f', str(ROOT / 'docker/compose.rust-replicas.yml'), '-f', str(tag_overlay)]
+                   '-f', str(ROOT / 'docker/compose.rust-replicas.yml'), '-f', str(tag_overlay), '-f', str(ports)]
 
         def command(values, timeout=120, payload=None):
             report['commands'].append(values)

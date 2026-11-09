@@ -1,0 +1,43 @@
+{
+  "scope": "component retention and readonly PostgreSQL observer validation; not a paired resource measurement",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "retention_endpoint": "/internal/proxy/ts/v1/memory",
+  "endpoint_format_version": 1,
+  "endpoint_authorization": "admin required; no playback resolution or origin work",
+  "nonzero_live_test": {
+    "fixture": "real HTTP origin and Redis Coordinator/ClientStore/InputStore",
+    "local_retained_payload_bytes": 24064,
+    "redis_logical_payload_bytes": 24064,
+    "fence_matches_owner": true,
+    "known_redis_key_allocation_exceeds_payload": true,
+    "test": "retained_diagnostics_separate_nonzero_local_ring_and_shared_redis_copy"
+  },
+  "postgres_observer_smoke": {
+    "fixture": "concurrent isolated management regression fixture; not source/Rust comparison",
+    "client_backend_count": 11,
+    "postgres_process_count": 17,
+    "postgres_pss_bytes_sum": 133445632,
+    "postgres_private_bytes_sum": 101072896,
+    "postgres_rss_bytes_sum_diagnostic": 453545984,
+    "unreadable_process_count": 0,
+    "query_texts_credentials_and_addresses_captured": false
+  },
+  "limitations": [
+    "24,064 bytes validates telemetry correctness, not full-ring occupancy or memory cause",
+    "PostgreSQL observer is a non-atomic process snapshot and ran concurrently with unrelated functional fixture work",
+    "No new Docker-image nonzero diagnostic gate or paired full-retention telemetry measurement yet",
+    "No retention or pool behavior changed"
+  ],
+  "evidence": {
+    "artifacts/rust/m2-retention-telemetry-1/auth-tests.log": "0346a3c5f907d660cbe68c7060ff6f8b155162126a67f2dbf95e5337ca907181",
+    "artifacts/rust/m2-retention-telemetry-1/input-tests.log": "ff40dc8894e43efc519ef0591dc2b36706d354eb970e49bba781f17a5471d39a",
+    "artifacts/rust/m2-retention-telemetry-1/nonzero-tests.log": "50ba7565433b72d1ea0699b4cbfd8048a9488403e7993e31478f1bf37b70a945",
+    "artifacts/rust/m2-retention-telemetry-1/postgres-collector-smoke.json": "4c22bfa83eeff5819b4b113100c692bd7245fab5ca9b8e519ed2b9a48d8d32f0"
+  },
+  "tools": {
+    "scripts/rust-integration/collect_fixture_memory.py": "3d173783e7b1a035dda9593779780e2afdd6b9f512c9889969c187001f9070db",
+    "scripts/rust-integration/test_fixture_memory.py": "993406b645355d76222f2b69de74057defb6b7874ac79e38df923c853aadb1d3"
+  }
+}

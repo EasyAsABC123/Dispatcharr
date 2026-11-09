@@ -13,6 +13,7 @@ pub enum BufferError {
     ChunkTooLarge,
     SequenceExhausted,
     ClockWentBackwards,
+    InvalidSequence,
 }
 
 #[derive(Clone, Debug)]
@@ -69,6 +70,19 @@ impl MediaBuffer {
         now: Instant,
         discontinuity: bool,
     ) -> Result<u64, BufferError> {
+        self.push_numbered(data, now, discontinuity, self.next_sequence)
+    }
+
+    /// Use an authoritative shared-input sequence. A forward gap invalidates
+    /// the contiguous local cache, while history can remain in shared storage.
+    /// Replays and backwards sequences never mutate the cache.
+    pub fn push_numbered(
+        &mut self,
+        data: Arc<[u8]>,
+        now: Instant,
+        discontinuity: bool,
+        sequence: u64,
+    ) -> Result<u64, BufferError> {
         if data.is_empty() {
             return Err(BufferError::EmptyChunk);
         }
@@ -78,15 +92,20 @@ impl MediaBuffer {
         if self.last_write.is_some_and(|previous| now < previous) {
             return Err(BufferError::ClockWentBackwards);
         }
-        let next = self
-            .next_sequence
+        if sequence < self.next_sequence {
+            return Err(BufferError::InvalidSequence);
+        }
+        let next = sequence
             .checked_add(1)
             .ok_or(BufferError::SequenceExhausted)?;
         self.expire(now);
+        if sequence != self.next_sequence {
+            self.chunks.clear();
+            self.bytes = 0;
+        }
         while self.bytes > self.max_bytes - data.len() {
             self.evict_front();
         }
-        let sequence = self.next_sequence;
         self.bytes += data.len();
         self.chunks.push_back(Chunk {
             sequence,
@@ -163,6 +182,35 @@ mod tests {
 
     fn buffer(bytes: usize) -> MediaBuffer {
         MediaBuffer::new(bytes, Duration::from_secs(10)).unwrap()
+    }
+
+    #[test]
+    fn shared_sequences_preserve_nonzero_cursor_and_clear_only_forward_gaps() {
+        let now = Instant::now();
+        let mut buffer = buffer(8);
+        buffer
+            .push_numbered(Arc::from(&b"a"[..]), now, false, 701)
+            .unwrap();
+        buffer
+            .push_numbered(Arc::from(&b"b"[..]), now, true, 702)
+            .unwrap();
+        assert!(matches!(buffer.read(701), Read::Chunk(c) if &*c.data==b"a"));
+        assert!(matches!(buffer.read(702), Read::Chunk(c) if c.discontinuity));
+        assert_eq!(
+            buffer.push_numbered(Arc::from(&b"c"[..]), now, false, 702),
+            Err(BufferError::InvalidSequence)
+        );
+        assert_eq!(buffer.retained_bytes(), 2);
+        buffer
+            .push_numbered(Arc::from(&b"d"[..]), now, false, 710)
+            .unwrap();
+        assert!(matches!(
+            buffer.read(702),
+            Read::Lagged { next_sequence: 710 }
+        ));
+        assert!(matches!(buffer.read(710), Read::Chunk(c) if &*c.data==b"d"));
+        assert_eq!(buffer.start_sequence(now, Duration::ZERO), 711);
+        assert_eq!(buffer.retained_bytes(), 1);
     }
 
     #[test]

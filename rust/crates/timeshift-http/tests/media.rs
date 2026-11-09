@@ -108,6 +108,7 @@ impl ArchiveResolver for Resolver {
                 2 => vec!["404"; 7],
                 3 => vec!["500"; 7],
                 4 => vec!["416"; 7],
+                5 => vec!["held"],
                 _ => vec!["html", "media"],
             };
             Ok(CatchupSource {
@@ -183,6 +184,33 @@ async fn origin(
                 let (start, end) = range.split_once('-').unwrap();
                 let start = start.parse::<usize>().unwrap();
                 let end = end.parse::<usize>().unwrap().min(bytes.len() - 1);
+                if path == "held" {
+                    let prefix =
+                        bytes::Bytes::copy_from_slice(&bytes[start..=(start + 65535).min(end)]);
+                    let body = Body::from_stream(futures_util::stream::unfold(
+                        Some(prefix),
+                        |first| async move {
+                            if let Some(prefix) = first {
+                                Some((Ok::<_, std::io::Error>(prefix), None))
+                            } else {
+                                std::future::pending().await
+                            }
+                        },
+                    ));
+                    return (
+                        StatusCode::PARTIAL_CONTENT,
+                        [
+                            ("content-type", "video/mp2t"),
+                            (
+                                "content-range",
+                                &format!("bytes {start}-{end}/{}", bytes.len()),
+                            ),
+                            ("content-length", &(end - start + 1).to_string()),
+                        ],
+                        body,
+                    )
+                        .into_response();
+                }
                 (
                     StatusCode::PARTIAL_CONTENT,
                     [
@@ -334,6 +362,60 @@ async fn fixture() -> Fixture {
         redis,
         hits,
     }
+}
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback HTTP"]
+async fn busy_tail_probe_preserves_active_quota_metadata_and_shutdown_cancels_held_probe_body() {
+    let mut fixture = fixture().await;
+    fixture.resolver.mode.store(5, Ordering::SeqCst);
+    let session = fixture.mint().await;
+    let route = session.json()["playback_url"].as_str().unwrap().to_owned();
+    let client = reqwest::Client::new();
+    let first = client
+        .get(format!("{}{}", fixture.base, route))
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(first.status(), 200);
+    let pool = format!("timeshift:pool:{}", session.session_id);
+    let counter = format!("profile_connections:{}", fixture.resolver.profile);
+    let before: std::collections::BTreeMap<String, String> =
+        fixture.redis.hgetall(&pool).await.unwrap();
+    let probe = client
+        .get(format!("{}{}", fixture.base, route))
+        .header("Range", "bytes=100-355")
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(probe.status(), 206);
+    assert_eq!(probe.bytes().await.unwrap().as_ref(), &payload()[100..=355]);
+    let after: std::collections::BTreeMap<String, String> =
+        fixture.redis.hgetall(&pool).await.unwrap();
+    assert_eq!(before, after);
+    assert_eq!(fixture.redis.get::<_, i64>(&counter).await.unwrap(), 1);
+    let held = client
+        .get(format!("{}{}", fixture.base, route))
+        .header("Range", "bytes=100-")
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(held.status(), 206);
+    assert_eq!(fixture.redis.get::<_, i64>(&counter).await.unwrap(), 1);
+    assert!(fixture.engine.shutdown().await);
+    assert_eq!(fixture.redis.get::<_, i64>(&counter).await.unwrap(), 0);
+    assert!(!fixture.redis.exists::<_, bool>(&pool).await.unwrap());
+    let hits = fixture.hits.load(Ordering::SeqCst);
+    let after = client
+        .get(format!("{}{}", fixture.base, route))
+        .header("Range", "bytes=100-355")
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(after.status(), 503);
+    assert_eq!(fixture.hits.load(Ordering::SeqCst), hits);
+    drop(held);
+    drop(first);
+    fixture.cleanup().await;
 }
 #[tokio::test]
 #[ignore = "requires disposable REDIS_TEST_URL and loopback HTTP"]

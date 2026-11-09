@@ -1,0 +1,189 @@
+{
+  "scope": "frozen image11 bounded local cache with full shared input history, functional media and lifecycle proof",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "candidate_image_id": "sha256:363679ce182bea55be97b873c1faffb3024e5abdae0886f655c6678b00943f33",
+  "candidate_source_tree_sha256": "d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0",
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "local_cache_limit_per_channel_bytes": 4194304,
+  "authoritative_history_limit_per_channel_bytes": 16777216,
+  "history_seconds": 60,
+  "replica_cases": [
+    {
+      "case": "shared-demand",
+      "owner_metadata_state": "active",
+      "follower_metadata_state": "active",
+      "cleanup_seconds": 4.123465071999817,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ],
+      "video_audio": true
+    },
+    {
+      "case": "stop",
+      "owner_metadata_state": "active",
+      "follower_metadata_state": "active",
+      "cleanup_seconds": 0.6401736159896245,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ],
+      "video_audio": true
+    },
+    {
+      "case": "owner-crash",
+      "owner_metadata_state": "active",
+      "follower_metadata_state": "active",
+      "cleanup_seconds": 26.659189044003142,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ],
+      "video_audio": true
+    }
+  ],
+  "replica_all_checks_passed": true,
+  "formats": [
+    {
+      "backend": "baseline",
+      "format": "hls",
+      "passed": true,
+      "frames": 74,
+      "video_audio": true
+    },
+    {
+      "backend": "baseline",
+      "format": "fmp4",
+      "passed": true,
+      "frames": 74,
+      "video_audio": true
+    },
+    {
+      "backend": "candidate",
+      "format": "hls",
+      "passed": true,
+      "frames": 74,
+      "video_audio": true
+    },
+    {
+      "backend": "candidate",
+      "format": "fmp4",
+      "passed": true,
+      "frames": 74,
+      "video_audio": true
+    }
+  ],
+  "retention_samples": [
+    {
+      "elapsed_seconds": 5.136210978991585,
+      "local_retained_payload_bytes": 28145480,
+      "redis_logical_payload_bytes": 28145480,
+      "redis_known_key_allocation_bytes": 28852917,
+      "all_owner_fences_match": true,
+      "postgres_client_backends": 8,
+      "postgres_pss_bytes_sum": 48254976,
+      "postgres_private_bytes_sum": 25223168
+    },
+    {
+      "elapsed_seconds": 30.132248422989505,
+      "local_retained_payload_bytes": 40938880,
+      "redis_logical_payload_bytes": 89553800,
+      "redis_known_key_allocation_bytes": 91797242,
+      "all_owner_fences_match": true,
+      "postgres_client_backends": 8,
+      "postgres_pss_bytes_sum": 50087936,
+      "postgres_private_bytes_sum": 25108480
+    },
+    {
+      "elapsed_seconds": 60.13983732499764,
+      "local_retained_payload_bytes": 40938880,
+      "redis_logical_payload_bytes": 148403440,
+      "redis_known_key_allocation_bytes": 152119191,
+      "all_owner_fences_match": true,
+      "postgres_client_backends": 8,
+      "postgres_pss_bytes_sum": 50265088,
+      "postgres_private_bytes_sum": 25153536
+    },
+    {
+      "elapsed_seconds": 75.13560856798722,
+      "local_retained_payload_bytes": 40938880,
+      "redis_logical_payload_bytes": 150962120,
+      "redis_known_key_allocation_bytes": 154741690,
+      "all_owner_fences_match": true,
+      "postgres_client_backends": 8,
+      "postgres_pss_bytes_sum": 48618496,
+      "postgres_private_bytes_sum": 25292800
+    }
+  ],
+  "late100history_image_gate": {
+    "passed": true,
+    "evidence": "scripts/rust-integration/verified-hot-cache-late-history-image11-1.json",
+    "viewers": 100,
+    "exact_historical_prefix_matches": 100,
+    "representative_decoder_frames": [
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69
+    ]
+  },
+  "component_gates": {
+    "normal_native_http": 20,
+    "real_redis_http": 11,
+    "real_redis_historical": 3,
+    "strict_all_target_clippy": "passed core/runtime/stream-http"
+  },
+  "cleanup": [
+    "isolated Compose project removed",
+    "isolated Compose project removed",
+    "isolated project removed"
+  ],
+  "limitations": [
+    "Functional runs were concurrent with other engineering checks; no isolated resource comparison",
+    "Payload/key counters exclude transport frames and allocator/server overhead",
+    "PostgreSQL observer snapshots are not atomic and are not a paired source/Rust comparison",
+    "Older image1 failed many-channel working-memory gate remains preserved",
+    "Full application parity including WebSocket/stats/events and frontend verification remains incomplete"
+  ],
+  "evidence": {
+    "artifacts/rust/m2-hot-cache-image11-replica-1/shared-ts.json": "e77171d7a27d81c2908bde78eaec12d5144c801a1df79b57e01ff5ec1c3720e1",
+    "artifacts/rust/m2-hot-cache-image11-retention-1/retention.json": "aac9bd84bd5212376960f613e258a5273363f82820a544c64fb403e4b5d6d7c0",
+    "artifacts/rust/m3-hot-cache-image11-formats-1/run.json": "bb9e38bbaaf5be5e2197e3a88265842b403148e44dc263462a8d859f0edbdec7"
+  }
+}

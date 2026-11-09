@@ -7,12 +7,42 @@ import json
 import os
 import sys
 if os.environ.get('POSTGRES_PASSWORD')!='playback-fixture-only':raise RuntimeError('Disposable fixture required')
+data=json.load(sys.stdin)
+# Notification setup is a management operation. Use the source's documented
+# management-command initialization branch so re-running this helper does not
+# synchronize away owned developer fixtures before the HTTP read under test.
+if str(data.get('action','')).startswith('notification_'):sys.argv.append('shell')
 sys.path.insert(0,'/app');os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
 import django
 django.setup()
 from apps.m3u.models import M3UAccount,ServerGroup
 
-data=json.load(sys.stdin)
+def sanitized_failure(kind,value,tb):
+    while tb.tb_next is not None:tb=tb.tb_next
+    print(json.dumps({'fixture_error_type':kind.__name__,'fixture_error_line':tb.tb_lineno}),file=sys.stderr)
+sys.excepthook=sanitized_failure
+if str(data.get('action','')).startswith('notification_'):
+    from notification_fixture import run
+    print(json.dumps(run(data)))
+    raise SystemExit(0)
+if data.get('action') in ('link_stream_profile','verify_stream_profile_removed'):
+    from core.models import StreamProfile
+    from apps.channels.models import Channel,ChannelOverride,Stream
+    import hashlib
+    account=M3UAccount.objects.get(name='rust-probe-inactive-provider',is_active=False)
+    stream=Stream.objects.get(name='rust-probe-read-count-a')
+    channel=Channel.objects.get(name='rust-probe-read-raw-epg-channel')
+    override=ChannelOverride.objects.get(channel__name='rust-probe-read-override-channel')
+    rows=[account,stream,channel,override]
+    if data['action']=='link_stream_profile':
+        profile=StreamProfile.objects.get(pk=data['profile_id'])
+        if profile.name!=data['profile_name'] or not profile.name.startswith('rust-probe-stream-profile-') or profile.locked or any(row.stream_profile_id is not None for row in rows):raise RuntimeError('Unsafe fixture profile relation')
+        for row in rows:type(row).objects.filter(pk=row.pk).update(stream_profile_id=profile.pk)
+    else:
+        if any(row.stream_profile_id is not None for row in rows):raise RuntimeError('Collector did not clear every relation')
+    fingerprint=hashlib.sha256(json.dumps([row.updated_at.isoformat() if row.updated_at is not None else None for row in rows]).encode()).hexdigest()
+    print(json.dumps({'relations':len(rows),'timestamp_sha256':fingerprint}))
+    raise SystemExit(0)
 if data.get('action')!='link_server_group':raise RuntimeError('Unsupported fixture action')
 account=M3UAccount.objects.get(pk=data['account_id'])
 group=ServerGroup.objects.get(pk=data['group_id'])

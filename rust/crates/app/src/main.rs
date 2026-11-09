@@ -123,6 +123,15 @@ async fn run() -> Result<(), String> {
     .await
     .map_err(|_| "Database connection failed (credentials omitted)")?;
     let auth = AuthService::new(store.clone(), auth_config);
+    let auth = if let Ok(url) = env::var("REDIS_URL") {
+        auth.with_notification_cache(
+            dispatcharr_store::NotificationCache::connect(&url)
+                .await
+                .map_err(|_| "Notification cache initialization failed (credentials omitted)")?,
+        )
+    } else {
+        auth
+    };
     let mut config = EngineConfig::default();
     config.initial_buffer_chunks = 4;
     config.flush_partial_chunks = false;

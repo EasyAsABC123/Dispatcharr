@@ -1,0 +1,33 @@
+{
+  "scope": "original-vs-Rust-real-HTTP-download-and-cache",
+  "passed": true,
+  "cases": 13,
+  "failures": [],
+  "goldens_sha256": "a1d4c749b60b354e4cf7d9511c2a27ef450a6d3673aea274498cde01dc0de953",
+  "binary_sha256": "503dd70071033f1c0cfbcecde3d018c87fb534f4acbb6107f70063644cf0486d",
+  "capture_tool_sha256": "ca7b6f7e60fe37959129fdf615a18643f050ef04f59a02137d86ecedfcb068bd",
+  "comparison_tool_sha256": "ca7b6f7e60fe37959129fdf615a18643f050ef04f59a02137d86ecedfcb068bd",
+  "original_runtime": {
+    "python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "requests": "2.34.2",
+    "source_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981"
+  },
+  "application_performance_verified": false,
+  "ingestion_jobs_migrated": false,
+  "raw_evidence_directory": "artifacts/rust/m6-http-fetch-original-16",
+  "raw_report_sha256": "e098594d5291dd3c768c03d45bb0b485a8ae84ac3fd4d223800b7921171b6770",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "scope_notes": [
+    "Actual unchanged fetch_m3u_lines with real original Requests ran against loopback HTTP inside pinned network-isolated Docker. Only account/status/progress sinks were isolated; full jobs are not exercised.",
+    "Thirteen cases compare decoded cache bytes, success/status/error categories, temporary-file cleanup, invalid/empty-body messages, request headers and redirect-cookie isolation.",
+    "Raw HTTP-status error text charset mapping, account/progress/WebSocket events, job/cache reuse orchestration and import performance remain open.",
+    "Four local HTTP lifecycle tests separately exercise bounded disk staging, abort/shutdown admission, existing-owner staging protection and oversized/error responses."
+  ],
+  "source_sha256": {
+    "rust/Cargo.lock": "b9c33cb6fda7f793667f63cd58898803a91a71fa1c0b480a4de7883cded16b59",
+    "rust/crates/ingest-http/Cargo.toml": "90b982d8b48a5c277cd6582f90625d7dc254e93d7e2bb9465dd693aa20d69a1d",
+    "rust/crates/ingest-http/examples/fetch_parity.rs": "18fb6434905fb63ddf20d97ac4ad1f0536f5f6ccdddd5f17efe72bb7853e2147",
+    "rust/crates/ingest-http/src/lib.rs": "4627a90e11766a9e234044b54f688f51e62b63539319e6c5f7a93c0643e5674e",
+    "rust/crates/ingest-http/tests/http.rs": "d87ba6eb8ebefd7cc07046e45ff2046be8d6c84886ab980eaf30b47f0ab87754"
+  }
+}

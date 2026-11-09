@@ -17,7 +17,9 @@ mod upstream;
 pub use upstream::{ArchiveClient, ArchiveFailure, ArchiveMedia, ArchiveOpen, ArchiveRequest};
 
 mod media_pool;
-pub use media_pool::{ArchivePool, ArchivePoolConfig, ArchivePoolRequest, ArchiveTicket};
+pub use media_pool::{
+    ArchivePool, ArchivePoolConfig, ArchivePoolRequest, ArchiveProbe, ArchiveTicket,
+};
 
 mod media;
 pub use media::{ArchiveResolver, CatchupMedia, CatchupMediaConfig, SqlArchiveResolver};

@@ -1,0 +1,394 @@
+{
+  "scope": "three paired warmed nativeTS10channel/10viewer isolated resource characterization, not whole application",
+  "matrix_completed": true,
+  "measurement_quality_passed": true,
+  "declared_resource_comparison_passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "candidate_image_id": "sha256:363679ce182bea55be97b873c1faffb3024e5abdae0886f655c6678b00943f33",
+  "candidate_source_tree_sha256": "d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0",
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "configuration": {
+    "docker": "/tmp/dispatcharr-docker/docker",
+    "output": "artifacts/rust/m2-hot-cache-many-channel-matrix-1",
+    "viewers": [
+      10
+    ],
+    "trials": 3,
+    "warmup": 15.0,
+    "duration": 60.0,
+    "warmup_ramp": 0,
+    "timeout": 10,
+    "scenarios": [
+      "many-channel"
+    ],
+    "fixture_seconds": 300,
+    "fixture_codec": "h264",
+    "vod_fixture": false,
+    "shutdown_delay": 5,
+    "retention_seconds": 60,
+    "startup_behind": 5,
+    "cleanup_timeout": 60,
+    "start_signal": null,
+    "candidate_overlay": "artifacts/rust/m5-notification-integration-image11-1/candidate-overlay.yml",
+    "candidate_build_manifest": "artifacts/rust/candidate-build-m5-notifications-image11-1/build.json",
+    "max_cpu_ratio": 1,
+    "max_memory_ratio": 1,
+    "max_latency_ratio": 1.1,
+    "require_comparison": true,
+    "functional_only": false,
+    "functional_probes": [
+      "mixed",
+      "stall",
+      "failover"
+    ],
+    "candidate_service": "candidate",
+    "candidate_port": 9192,
+    "fresh_web_per_trial": true,
+    "measurement_quality": "isolated-characterization"
+  },
+  "measurements": [
+    {
+      "backend": "baseline",
+      "trial": 1,
+      "bytes": 165802464,
+      "requests": 10,
+      "errors": 0,
+      "empty_responses": 0,
+      "elapsed_seconds": 61.42543218898936,
+      "bytes_per_second": 2763374.4,
+      "first_byte_ms_median": 81.73295350570697,
+      "first_byte_ms_p95": 113.5761360055767,
+      "first_byte_samples": 10,
+      "viewers_without_data": 0,
+      "error_kinds": {},
+      "cpu_percent_mean": 24.036,
+      "memory_bytes_peak": 536650711.04
+    },
+    {
+      "backend": "candidate",
+      "trial": 1,
+      "bytes": 163975480,
+      "requests": 10,
+      "errors": 0,
+      "empty_responses": 0,
+      "elapsed_seconds": 60.365804501008824,
+      "bytes_per_second": 2732924.6666666665,
+      "first_byte_ms_median": 7.369419501628727,
+      "first_byte_ms_p95": 9.119422000367194,
+      "first_byte_samples": 10,
+      "viewers_without_data": 0,
+      "error_kinds": {},
+      "cpu_percent_mean": 5.232,
+      "memory_bytes_peak": 442226442.24
+    },
+    {
+      "backend": "candidate",
+      "trial": 2,
+      "bytes": 163975480,
+      "requests": 10,
+      "errors": 0,
+      "empty_responses": 0,
+      "elapsed_seconds": 60.363253543997416,
+      "bytes_per_second": 2732924.6666666665,
+      "first_byte_ms_median": 7.347069498791825,
+      "first_byte_ms_p95": 9.653098997659981,
+      "first_byte_samples": 10,
+      "viewers_without_data": 0,
+      "error_kinds": {},
+      "cpu_percent_mean": 5.219,
+      "memory_bytes_peak": 442027212.8
+    },
+    {
+      "backend": "baseline",
+      "trial": 2,
+      "bytes": 163755520,
+      "requests": 10,
+      "errors": 0,
+      "empty_responses": 0,
+      "elapsed_seconds": 60.808159737003734,
+      "bytes_per_second": 2729258.6666666665,
+      "first_byte_ms_median": 118.41978350275895,
+      "first_byte_ms_p95": 150.65673900244292,
+      "first_byte_samples": 10,
+      "viewers_without_data": 0,
+      "error_kinds": {},
+      "cpu_percent_mean": 23.5855,
+      "memory_bytes_peak": 540991815.68
+    },
+    {
+      "backend": "baseline",
+      "trial": 3,
+      "bytes": 166314200,
+      "requests": 10,
+      "errors": 0,
+      "empty_responses": 0,
+      "elapsed_seconds": 61.33792653599812,
+      "bytes_per_second": 2771903.3333333335,
+      "first_byte_ms_median": 97.26723250059877,
+      "first_byte_ms_p95": 129.80277299357112,
+      "first_byte_samples": 10,
+      "viewers_without_data": 0,
+      "error_kinds": {},
+      "cpu_percent_mean": 21.965500000000002,
+      "memory_bytes_peak": 559708897.28
+    },
+    {
+      "backend": "candidate",
+      "trial": 3,
+      "bytes": 163975480,
+      "requests": 10,
+      "errors": 0,
+      "empty_responses": 0,
+      "elapsed_seconds": 60.36845676699886,
+      "bytes_per_second": 2732924.6666666665,
+      "first_byte_ms_median": 7.516859499446582,
+      "first_byte_ms_p95": 8.424225001363084,
+      "first_byte_samples": 10,
+      "viewers_without_data": 0,
+      "error_kinds": {},
+      "cpu_percent_mean": 5.3905,
+      "memory_bytes_peak": 465766973.43999994
+    }
+  ],
+  "paired_ratios": [
+    {
+      "trial": 1,
+      "passed": true,
+      "cpu_percent_mean": 0.21767348976535197,
+      "memory_bytes_peak": 0.8240489263174349,
+      "first_byte_ms_p95": 0.08029346939500936,
+      "bytes_per_second": 0.988980959896953
+    },
+    {
+      "trial": 2,
+      "passed": true,
+      "cpu_percent_mean": 0.2212800237434017,
+      "memory_bytes_peak": 0.8170682069272964,
+      "first_byte_ms_p95": 0.06407346303641588,
+      "bytes_per_second": 1.001343221895665
+    },
+    {
+      "trial": 3,
+      "passed": true,
+      "cpu_percent_mean": 0.24540757096355648,
+      "memory_bytes_peak": 0.8321593165723705,
+      "first_byte_ms_p95": 0.06490019286244617,
+      "bytes_per_second": 0.9859379415588084
+    }
+  ],
+  "paired_ratio_summary": {
+    "cpu_percent_mean": {
+      "median": 0.2212800237434017,
+      "minimum": 0.21767348976535197,
+      "maximum": 0.24540757096355648
+    },
+    "memory_bytes_peak": {
+      "median": 0.8240489263174349,
+      "minimum": 0.8170682069272964,
+      "maximum": 0.8321593165723705
+    },
+    "first_byte_ms_p95": {
+      "median": 0.06490019286244617,
+      "minimum": 0.06407346303641588,
+      "maximum": 0.08029346939500936
+    },
+    "bytes_per_second": {
+      "median": 0.988980959896953,
+      "minimum": 0.9859379415588084,
+      "maximum": 1.001343221895665
+    }
+  },
+  "absolute_backend_medians": {
+    "baseline": {
+      "cpu_percent_mean": 23.5855,
+      "memory_bytes_peak": 540991815.68,
+      "first_byte_ms_p95": 129.80277299357112,
+      "bytes_per_second": 2763374.4
+    },
+    "candidate": {
+      "cpu_percent_mean": 5.232,
+      "memory_bytes_peak": 442226442.24,
+      "first_byte_ms_p95": 9.119422000367194,
+      "bytes_per_second": 2732924.6666666665
+    }
+  },
+  "per_container_independent_peaks_and_cpu": {
+    "baseline": {
+      "baseline": [
+        {
+          "trial": 1,
+          "cpu_percent_mean": 21.2425,
+          "working_memory_bytes_peak": 445854515.2
+        },
+        {
+          "trial": 2,
+          "cpu_percent_mean": 20.6415,
+          "working_memory_bytes_peak": 450258534.4
+        },
+        {
+          "trial": 3,
+          "cpu_percent_mean": 18.802,
+          "working_memory_bytes_peak": 468923187.2
+        }
+      ],
+      "origin": [
+        {
+          "trial": 1,
+          "cpu_percent_mean": 2.7935,
+          "working_memory_bytes_peak": 92295659.52
+        },
+        {
+          "trial": 2,
+          "cpu_percent_mean": 2.944,
+          "working_memory_bytes_peak": 91184168.96
+        },
+        {
+          "trial": 3,
+          "cpu_percent_mean": 3.1635,
+          "working_memory_bytes_peak": 91205140.48
+        }
+      ]
+    },
+    "candidate": {
+      "baseline": [
+        {
+          "trial": 1,
+          "cpu_percent_mean": 0.6715,
+          "working_memory_bytes_peak": 292552704.0
+        },
+        {
+          "trial": 2,
+          "cpu_percent_mean": 0.6375,
+          "working_memory_bytes_peak": 292657561.6
+        },
+        {
+          "trial": 3,
+          "cpu_percent_mean": 0.6615,
+          "working_memory_bytes_peak": 315411660.8
+        }
+      ],
+      "origin": [
+        {
+          "trial": 1,
+          "cpu_percent_mean": 2.692,
+          "working_memory_bytes_peak": 91582627.84
+        },
+        {
+          "trial": 2,
+          "cpu_percent_mean": 2.6685,
+          "working_memory_bytes_peak": 90869596.16
+        },
+        {
+          "trial": 3,
+          "cpu_percent_mean": 2.6595,
+          "working_memory_bytes_peak": 90649395.2
+        }
+      ],
+      "candidate": [
+        {
+          "trial": 1,
+          "cpu_percent_mean": 1.8685,
+          "working_memory_bytes_peak": 60460892.16
+        },
+        {
+          "trial": 2,
+          "cpu_percent_mean": 1.913,
+          "working_memory_bytes_peak": 59957575.68
+        },
+        {
+          "trial": 3,
+          "cpu_percent_mean": 2.0695,
+          "working_memory_bytes_peak": 60660121.6
+        }
+      ]
+    }
+  },
+  "process_rss_diagnostic": {
+    "baseline": [
+      {
+        "trial": 1,
+        "named_process_rss_sum_peaks_diagnostic": {
+          "python": 39153664,
+          "postgres": 138629120,
+          "redis-server": 173301760,
+          "uwsgi": 240177152
+        }
+      },
+      {
+        "trial": 2,
+        "named_process_rss_sum_peaks_diagnostic": {
+          "python": 39165952,
+          "postgres": 156975104,
+          "redis-server": 173314048,
+          "uwsgi": 240238592
+        }
+      },
+      {
+        "trial": 3,
+        "named_process_rss_sum_peaks_diagnostic": {
+          "python": 39170048,
+          "postgres": 166428672,
+          "redis-server": 173871104,
+          "uwsgi": 238149632
+        }
+      }
+    ],
+    "candidate": [
+      {
+        "trial": 1,
+        "named_process_rss_sum_peaks_diagnostic": {
+          "python": 39157760,
+          "postgres": 266924032,
+          "redis-server": 169897984,
+          "dispatcharr-rs": 72105984
+        }
+      },
+      {
+        "trial": 2,
+        "named_process_rss_sum_peaks_diagnostic": {
+          "python": 39165952,
+          "postgres": 266899456,
+          "redis-server": 169697280,
+          "dispatcharr-rs": 71413760
+        }
+      },
+      {
+        "trial": 3,
+        "named_process_rss_sum_peaks_diagnostic": {
+          "python": 39174144,
+          "postgres": 289398784,
+          "redis-server": 169668608,
+          "dispatcharr-rs": 72208384
+        }
+      }
+    ]
+  },
+  "decoder_priming_count": 60,
+  "minimum_priming_frames": 74,
+  "all_selected_owners_active_before_warmup": true,
+  "all_origins_closed_after_each_measurement": true,
+  "cleanup": "isolated project removed",
+  "primary_memory_scope": "Simultaneous Docker working-memory peak of full fixture group: backend, Redis, PostgreSQL and identical origin; Source web stopped during Rust phase",
+  "component_memory_scope": "independent container peaks; do not sum noncoincident maxima",
+  "rss_scope": "diagnostic only; RSS sums overcount shared PostgreSQL pages, not primary memory result",
+  "known_exclusions": [
+    "Frontend/React/browser GUI not exercised",
+    "WebSocket/live event side effects missing from this image; no full application parity or gain",
+    "Warmed native Proxy profile only; not cold burst/reopen, all profiles, or HLS/fMP4 resource acceptance",
+    "Image11 result cannot be attached retroactively to older images or mutable current source"
+  ],
+  "run_artifact": "artifacts/rust/m2-hot-cache-many-channel-matrix-1/run.json",
+  "run_sha256": "ebb6d6b085abdbf1e454c8c0440e9fa5b5f4de5b66f8e675a18d2bd752c2800d",
+  "captured_tools_manifest": "artifacts/rust/m2-hot-cache-many-channel-matrix-1/captured-tools.json",
+  "artifact_sha256": {
+    "artifacts/rust/m2-hot-cache-many-channel-matrix-1/baseline-many-channel-viewers-10-trial-1.json": "7f66ae6204dea6294c1fb43b46fe18962f2ac92b47bb0b04f8bec8ebbcb6281a",
+    "artifacts/rust/m2-hot-cache-many-channel-matrix-1/candidate-many-channel-viewers-10-trial-1.json": "a54f82cb8828b9d98ff88773e20001ec1a7630ecdab2b472dcb56cf5e10be8dd",
+    "artifacts/rust/m2-hot-cache-many-channel-matrix-1/candidate-many-channel-viewers-10-trial-2.json": "ccd66fee9f62fc01a553f6f7970b3f106952ab836a3274a97ca0c46f1c271c6d",
+    "artifacts/rust/m2-hot-cache-many-channel-matrix-1/baseline-many-channel-viewers-10-trial-2.json": "cae8233f5b5ab1e569c1c9940ec0e6a3ae0fd78baf2ed20ae8ca8e8e04621851",
+    "artifacts/rust/m2-hot-cache-many-channel-matrix-1/baseline-many-channel-viewers-10-trial-3.json": "d2a640c584cc4c9c1b24cb5637aad51d5022805bccc658f5b891bd13bcff0c49",
+    "artifacts/rust/m2-hot-cache-many-channel-matrix-1/candidate-many-channel-viewers-10-trial-3.json": "f659b016493c562cd6b3bbae8f56f255ec07450a7040c42308a0875a1d9d98cd"
+  }
+}

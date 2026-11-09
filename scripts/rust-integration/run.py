@@ -22,7 +22,7 @@ from tool_snapshot import snapshot_sources
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
-                 'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud')
+                 'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud','core_utilities','core_stream_crud','notifications')
 OPTIONAL_CONTRACT_SUITES=('proxy_auth',)
 
 
@@ -168,6 +168,19 @@ def main():
         def execute(service, script, payload=None):
             return command(compose + ['exec', '-T', service, '/dispatcharrpy/bin/python', script], payload=payload)
 
+        def metadata_fixture(payload):
+            try:
+                return json.loads(execute('baseline','/integration/metadata_fixture.py',json.dumps(payload)))
+            except subprocess.CalledProcessError as error:
+                details={'action':payload.get('action'),'error_type':type(error).__name__}
+                try:
+                    diagnostic=json.loads(error.stderr.strip().splitlines()[-1])
+                    for key in ('fixture_error_type','fixture_error_line'):
+                        if type(diagnostic.get(key)) in (str,int):details[key]=diagnostic[key]
+                except (ValueError,IndexError,TypeError):pass
+                record('metadata-fixture:failure',False,details)
+                raise
+
         def endpoint(service, port):
             return 'http://' + command(compose + ['port', service, str(port)]).strip()
 
@@ -251,6 +264,9 @@ def main():
                                  ('provider_reads','run_provider_reads'),
                                  ('server_group_crud','run_server_group_crud'),
                                  ('filter_crud','run_filter_crud'),
+                                 ('core_utilities','run_core_utilities'),
+                                 ('core_stream_crud','run_core_stream_crud'),
+                                 ('notifications','run_notifications'),
                                  ('proxy_auth','run_proxy_auth')]:
                 if suite in selected_suites:
                     if suite=='core' and 'account_crud' in selected_suites:
@@ -262,8 +278,8 @@ def main():
                         report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
                         for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
-                    if suite=='server_group_crud':
-                        extra=(lambda payload:json.loads(execute('baseline','/integration/metadata_fixture.py',json.dumps(payload))),)
+                    if suite in ('server_group_crud','core_stream_crud','notifications'):
+                        extra=(metadata_fixture,)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             status = 0 if all(check['passed'] for check in report['checks']) else 1
             report['passed'] = status == 0

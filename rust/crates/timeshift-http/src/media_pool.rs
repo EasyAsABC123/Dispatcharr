@@ -64,9 +64,12 @@ struct Entry {
     token: String,
     lease: Mutex<Option<Arc<Lease>>>,
     lifecycle: AtomicU64,
+    handoff_pending: AtomicBool,
+    retained_provider: AtomicBool,
     reopened: Notify,
     active: AtomicBool,
     streaming: AtomicBool,
+    generation: AtomicU64,
     bytes: AtomicU64,
     started: Mutex<Instant>,
     operations: AtomicUsize,
@@ -81,6 +84,7 @@ struct Inner {
     coordinator: Coordinator,
     entries: Mutex<HashMap<String, Arc<Entry>>>,
     slots: Arc<Semaphore>,
+    probe_slots: Arc<Semaphore>,
     config: ArchivePoolConfig,
     stopped: watch::Sender<bool>,
     cleanup_failed: AtomicBool,
@@ -95,12 +99,39 @@ pub struct ArchiveTicket {
     refreshed: Option<ArchivePoolRequest>,
     rollback: Option<Rollback>,
 }
+/// A cached tail probe does not own or release the active stream's provider.
+pub struct ArchiveProbe {
+    inner: Arc<Inner>,
+    final_url: String,
+    length: Option<i128>,
+    _permit: OwnedSemaphorePermit,
+}
+impl ArchiveProbe {
+    pub fn final_url(&self) -> &str {
+        &self.final_url
+    }
+    pub fn length(&self) -> Option<i128> {
+        self.length
+    }
+    pub fn stopped(&self) -> watch::Receiver<bool> {
+        self.inner.stopped.subscribe()
+    }
+}
 struct Rollback {
     inner: Arc<Inner>,
     entry: Arc<Entry>,
 }
 struct Operation {
     entry: Arc<Entry>,
+}
+struct SeekAttempt {
+    entry: Arc<Entry>,
+}
+impl Drop for SeekAttempt {
+    fn drop(&mut self) {
+        self.entry.handoff_pending.store(false, Ordering::SeqCst);
+        self.entry.reopened.notify_waiters();
+    }
 }
 impl Operation {
     fn new(entry: &Arc<Entry>) -> Self {
@@ -170,6 +201,143 @@ fn keys(entry: &Entry) -> Vec<String> {
     ]
 }
 impl ArchivePool {
+    pub async fn busy_probe(
+        &self,
+        request: &ArchivePoolRequest,
+        range: Option<&str>,
+    ) -> Result<Option<ArchiveProbe>, StoreError> {
+        if dispatcharr_timeshift_core::parse_client_range(range).is_none() {
+            return Ok(None);
+        }
+        if *self.inner.stopped.borrow() {
+            return Err(unavailable());
+        }
+        let existing = self
+            .inner
+            .entries
+            .lock()
+            .unwrap()
+            .get(&request.session_id)
+            .cloned();
+        let Some(entry) = existing.filter(|entry| {
+            entry.lifecycle.load(Ordering::SeqCst) & 3 == 0
+                && entry.streaming.load(Ordering::SeqCst)
+        }) else {
+            return Ok(None);
+        };
+        if entry.request.provider_profile_id != request.provider_profile_id
+            || entry.request.virtual_channel_id != request.virtual_channel_id
+            || entry.request.pool_fields.get("user_id") != request.pool_fields.get("user_id")
+        {
+            return Ok(None);
+        }
+        let permit = self
+            .inner
+            .probe_slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| unavailable())?;
+        let (snapshot,_):(Vec<Option<String>>,Operation)=self.inner.transport.command(
+            "if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[1],'busy')~='1' then return {} end return {redis.call('HGET',KEYS[1],'final_url'),redis.call('HGET',KEYS[1],'content_length')}",
+            &[pool(&entry)],&[entry.token.as_bytes()],Operation::new(&entry)
+        ).await.map_err(|_|unavailable())?;
+        if snapshot.len() != 2 {
+            return Ok(None);
+        }
+        let length = snapshot[1].as_deref().and_then(|value| value.parse().ok());
+        if !dispatcharr_timeshift_core::is_near_eof_probe(range, length) {
+            return Ok(None);
+        }
+        let Some(final_url) = snapshot[0]
+            .clone()
+            .filter(|url| !url.is_empty() && url.len() <= 16384)
+        else {
+            return Ok(None);
+        };
+        let probe = ArchiveProbe {
+            inner: self.inner.clone(),
+            final_url,
+            length,
+            _permit: permit,
+        };
+        Ok(Some(
+            check_existing(&self.inner, &entry, request, probe).await?,
+        ))
+    }
+    /// A seek waits for the old supervised body to drain its final mutation,
+    /// while retaining its provider reservation continuously across handoff.
+    pub async fn open_playback(
+        &self,
+        request: ArchivePoolRequest,
+        range: Option<&str>,
+    ) -> Result<ArchiveTicket, StoreError> {
+        if *self.inner.stopped.borrow() {
+            return Err(unavailable());
+        }
+        let existing = self
+            .inner
+            .entries
+            .lock()
+            .unwrap()
+            .get(&request.session_id)
+            .cloned();
+        let Some(entry) = existing.filter(|entry| {
+            entry.lifecycle.load(Ordering::SeqCst) & 3 == 0
+                && entry.streaming.load(Ordering::SeqCst)
+        }) else {
+            return self.open(request).await;
+        };
+        if entry.request.provider_profile_id != request.provider_profile_id
+            || entry.request.virtual_channel_id != request.virtual_channel_id
+            || entry.request.pool_fields.get("user_id") != request.pool_fields.get("user_id")
+        {
+            return Err(StoreError::Unsupported(
+                "archive programme/profile busy adoption is not yet implemented",
+            ));
+        }
+        let (snapshot,_):(Vec<Option<String>>,Operation)=self.inner.transport.command(
+            "if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return {} end return {redis.call('HGET',KEYS[1],'content_length'),redis.call('HGET',KEYS[1],'serving_range')}",
+            &[pool(&entry)],&[entry.token.as_bytes()],Operation::new(&entry)
+        ).await.map_err(|_|unavailable())?;
+        if snapshot.len() != 2 {
+            return Err(unavailable());
+        }
+        let length = snapshot[0].as_deref().and_then(|value| value.parse().ok());
+        let displace = dispatcharr_timeshift_core::should_displace_busy_playback(
+            range,
+            length,
+            snapshot[1].as_deref(),
+        );
+        let restart = dispatcharr_timeshift_core::is_full_restart_range(range);
+        if !(displace || restart) {
+            return Err(StoreError::StatusBody(503, json!("Stream slot busy")));
+        }
+        if entry
+            .handoff_pending
+            .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
+            .is_err()
+        {
+            return Err(StoreError::StatusBody(503, json!("Stream slot busy")));
+        }
+        let attempt = SeekAttempt {
+            entry: entry.clone(),
+        };
+        let pool = self.clone();
+        // Task ownership outlives a dropped HTTP setup future. Once the old
+        // stream is cancelled, every exit must release or transfer its quota.
+        self.inner.runtime.spawn(async move {
+            let attempt=attempt;
+            let (result,_):(i64,Operation)=pool.inner.transport.command(
+                "if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('EXISTS',KEYS[2])~=0 then return 0 end local generation=redis.call('GET',KEYS[3]) or '1';redis.call('SET',KEYS[2],generation,'EX',60);return 1",
+                &[super::media_pool::pool(&entry),keys(&entry)[6].clone(),keys(&entry)[5].clone()],&[entry.token.as_bytes()],Operation::new(&entry)
+            ).await.map_err(|_|unavailable())?;
+            if result!=1 {return Err(unavailable());}
+            entry.stop.send_replace(true);
+            let ticket=pool.reopen(entry,request).await;
+            drop(attempt);
+            ticket
+        }).await.map_err(|_|unavailable())?
+    }
     pub async fn connect(
         redis_url: &str,
         coordinator: Coordinator,
@@ -199,6 +367,7 @@ impl ArchivePool {
         .await
         .map_err(|_| unavailable())?;
         let slots = Arc::new(Semaphore::new(config.max_sessions));
+        let probe_slots = Arc::new(Semaphore::new(config.max_sessions));
         let (stopped, _) = watch::channel(false);
         Ok(Self {
             inner: Arc::new(Inner {
@@ -207,6 +376,7 @@ impl ArchivePool {
                 coordinator,
                 entries: Mutex::new(HashMap::new()),
                 slots,
+                probe_slots,
                 config,
                 stopped,
                 cleanup_failed: AtomicBool::new(false),
@@ -268,9 +438,12 @@ impl ArchivePool {
             token: uuid::Uuid::new_v4().to_string(),
             lease: Mutex::new(None),
             lifecycle: AtomicU64::new(0),
+            handoff_pending: AtomicBool::new(false),
+            retained_provider: AtomicBool::new(false),
             reopened: Notify::new(),
             active: AtomicBool::new(true),
             streaming: AtomicBool::new(false),
+            generation: AtomicU64::new(0),
             bytes: AtomicU64::new(0),
             started: Mutex::new(Instant::now()),
             operations: AtomicUsize::new(0),
@@ -417,7 +590,10 @@ impl ArchivePool {
         let epoch = loop {
             let state = entry.lifecycle.load(Ordering::SeqCst);
             match state & 3 {
-                1 if tokio::time::Instant::now() < deadline => {
+                0 | 1
+                    if tokio::time::Instant::now() < deadline
+                        && (state & 3 == 1 || entry.handoff_pending.load(Ordering::SeqCst)) =>
+                {
                     tokio::time::sleep(Duration::from_millis(5)).await
                 }
                 2 => {
@@ -438,6 +614,11 @@ impl ArchivePool {
             }
         };
         entry.reopened.notify_waiters();
+        let was_handoff = entry.handoff_pending.swap(false, Ordering::SeqCst);
+        let retained = entry.retained_provider.swap(false, Ordering::SeqCst);
+        if was_handoff && !*self.inner.stopped.borrow() {
+            entry.stop.send_replace(false);
+        }
         entry.active.store(true, Ordering::SeqCst);
         entry.streaming.store(false, Ordering::SeqCst);
         entry.bytes.store(0, Ordering::SeqCst);
@@ -446,43 +627,7 @@ impl ArchivePool {
             inner: self.inner.clone(),
             entry: entry.clone(),
         };
-        let prepared = timeshift::prepare(Admission {
-            mode: timeshift::AdmissionMode::Check,
-            session_id: &request.session_id,
-            channel_id: request.channel_id,
-            programme_media_id: request
-                .pool_fields
-                .get("media_id")
-                .map(String::as_str)
-                .unwrap_or(""),
-            fields: &request.client_fields,
-            stream_limit: request.stream_limit,
-            policy: &request.limit_policy,
-            owner_token: &entry.token,
-            now: &timestamp(),
-            ttl: self.inner.config.pending_admission_ttl,
-            scan_limit: self.inner.config.admission_scan_limit,
-        })
-        .map_err(|_| unavailable())?;
-        let args: Vec<_> = prepared.args.iter().map(Vec::as_slice).collect();
-        let (result, _): (Vec<String>, Operation) = self
-            .inner
-            .transport
-            .command(
-                timeshift::SCRIPT,
-                &prepared.keys,
-                &args,
-                Operation::new(&entry),
-            )
-            .await
-            .map_err(|_| unavailable())?;
-        match timeshift::decode(result) {
-            Ok(true) => {}
-            Err(dispatcharr_clients::Error::UserLimit) => {
-                return Err(StoreError::StatusBody(403, json!("Stream limit exceeded")))
-            }
-            _ => return Err(unavailable()),
-        }
+        check_existing(&self.inner, &entry, &request, ()).await?;
         start_setup_refresh(&self.inner, &entry);
         let lease = entry
             .lease
@@ -498,7 +643,11 @@ impl ArchivePool {
         // This owned task retains rollback through quota reservation even when
         // the HTTP setup future is dropped before Redis returns.
         let task = self.inner.runtime.spawn(async move {
-            let result = lease.reserve_provider(provider).await;
+            let result = if retained {
+                Ok(())
+            } else {
+                lease.reserve_provider(provider).await
+            };
             (result, rollback)
         });
         let (reserved, rollback) = task.await.map_err(|_| unavailable())?;
@@ -509,8 +658,8 @@ impl ArchivePool {
             _ => unavailable(),
         })?;
         let (result,rollback):(i64,Rollback)=self.inner.transport.command(
-            "if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[1],'busy')~='0' or redis.call('EXISTS',KEYS[2])~=0 then return 0 end redis.call('HSET',KEYS[1],'busy','1','last_activity',ARGV[2]);redis.call('EXPIRE',KEYS[1],600);return 1",
-            &[pool(&entry),keys(&entry)[6].clone()],&[entry.token.as_bytes(),timestamp().as_bytes()],rollback
+            "if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or (redis.call('HGET',KEYS[1],'busy')~='0' and ARGV[3]~='1') or (redis.call('EXISTS',KEYS[2])~=0 and ARGV[3]~='1') then return 0 end redis.call('HSET',KEYS[1],'busy','1','last_activity',ARGV[2]);redis.call('EXPIRE',KEYS[1],600);return 1",
+            &[pool(&entry),keys(&entry)[6].clone()],&[entry.token.as_bytes(),timestamp().as_bytes(),if retained {b"1"} else {b"0"}],rollback
         ).await.map_err(|_|unavailable())?;
         if result != 1 || *self.inner.stopped.borrow() || *entry.stop.borrow() {
             return Err(unavailable());
@@ -557,12 +706,15 @@ impl ArchivePool {
     pub async fn shutdown(&self) -> bool {
         self.inner.stopped.send_replace(true);
         self.inner.slots.close();
+        self.inner.probe_slots.close();
         for entry in self.inner.entries.lock().unwrap().values() {
             entry.stop.send_replace(true);
         }
         let result = tokio::time::timeout(self.inner.config.shutdown_timeout, async {
             loop {
-                if self.inner.entries.lock().unwrap().is_empty() && self.inner.coordinator.is_idle()
+                if self.inner.entries.lock().unwrap().is_empty()
+                    && self.inner.coordinator.is_idle()
+                    && self.inner.probe_slots.available_permits() == self.inner.config.max_sessions
                 {
                     return;
                 }
@@ -679,9 +831,10 @@ impl ArchiveTicket {
             )
             .await
             .map_err(|_| unavailable())?;
-        if result != 1 {
+        if result < 1 {
             return Err(unavailable());
         }
+        entry.generation.store(result as u64, Ordering::SeqCst);
         *entry.started.lock().unwrap() = Instant::now();
         entry.streaming.store(true, Ordering::SeqCst);
         Ok(())
@@ -691,7 +844,7 @@ impl ArchiveTicket {
     pub async fn alive(&self) -> Result<bool, StoreError> {
         let owned = self.owned();
         let entry = &owned.entry;
-        let(result,_):(i64,Operation)=owned.inner.transport.command("if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('EXISTS',KEYS[2])~=0 then return 0 end return 1",&[pool(entry),keys(entry)[6].clone()],&[entry.token.as_bytes()],Operation::new(entry)).await.map_err(|_|unavailable())?;
+        let(result,_):(i64,Operation)=owned.inner.transport.command("if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return 0 end local stop=redis.call('GET',KEYS[2]);if stop=='reuse' or stop=='hop' or stop=='admin' or stop=='limit' then return 0 end if stop and string.match(stop,'^%d+$') and tonumber(stop)>=tonumber(ARGV[2]) then return 0 end return 1",&[pool(entry),keys(entry)[6].clone()],&[entry.token.as_bytes(),entry.generation.load(Ordering::SeqCst).to_string().as_bytes()],Operation::new(entry)).await.map_err(|_|unavailable())?;
         Ok(result == 1)
     }
     pub async fn heartbeat(&self) -> Result<bool, StoreError> {
@@ -707,12 +860,71 @@ impl ArchiveTicket {
                     entry.token.as_bytes(),
                     timestamp().as_bytes(),
                     entry.bytes.load(Ordering::Relaxed).to_string().as_bytes(),
+                    entry
+                        .generation
+                        .load(Ordering::SeqCst)
+                        .to_string()
+                        .as_bytes(),
                 ],
                 Operation::new(entry),
             )
             .await
             .map_err(|_| unavailable())?;
         Ok(result == 1)
+    }
+}
+async fn check_existing<G: Send + 'static>(
+    inner: &Arc<Inner>,
+    entry: &Arc<Entry>,
+    request: &ArchivePoolRequest,
+    guard: G,
+) -> Result<G, StoreError> {
+    if request
+        .client_fields
+        .iter()
+        .map(|(key, value)| key.len().saturating_add(value.len()))
+        .fold(0usize, usize::saturating_add)
+        > 65536
+    {
+        return Err(StoreError::Unsupported(
+            "archive admission exceeds bounded metadata budget",
+        ));
+    }
+    let prepared = timeshift::prepare(Admission {
+        mode: timeshift::AdmissionMode::Check,
+        session_id: &request.session_id,
+        channel_id: request.channel_id,
+        programme_media_id: request
+            .pool_fields
+            .get("media_id")
+            .map(String::as_str)
+            .unwrap_or(""),
+        fields: &request.client_fields,
+        stream_limit: request.stream_limit,
+        policy: &request.limit_policy,
+        owner_token: &entry.token,
+        now: &timestamp(),
+        ttl: inner.config.pending_admission_ttl,
+        scan_limit: inner.config.admission_scan_limit,
+    })
+    .map_err(|_| unavailable())?;
+    let args: Vec<_> = prepared.args.iter().map(Vec::as_slice).collect();
+    let (result, (_, guard)): (Vec<String>, (Operation, G)) = inner
+        .transport
+        .command(
+            timeshift::SCRIPT,
+            &prepared.keys,
+            &args,
+            (Operation::new(entry), guard),
+        )
+        .await
+        .map_err(|_| unavailable())?;
+    match timeshift::decode(result) {
+        Ok(true) => Ok(guard),
+        Err(dispatcharr_clients::Error::UserLimit) => {
+            Err(StoreError::StatusBody(403, json!("Stream limit exceeded")))
+        }
+        _ => Err(unavailable()),
     }
 }
 async fn wait_removed(inner: &Arc<Inner>, entry: &Arc<Entry>) -> Result<(), StoreError> {
@@ -767,8 +979,11 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
         }
         notified.await;
     }
+    let handoff =
+        entry.handoff_pending.load(Ordering::SeqCst) && entry.streaming.load(Ordering::SeqCst);
+    entry.retained_provider.store(handoff, Ordering::SeqCst);
     let lease = entry.lease.lock().unwrap().clone();
-    if let Some(lease) = &lease {
+    if let Some(lease) = lease.as_ref().filter(|_| !handoff) {
         if lease.release_provider().await.is_err() {
             inner.cleanup_failed.store(true, Ordering::SeqCst);
         }
@@ -778,6 +993,9 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
     let mut remove_api = false;
     if streaming {
         let bytes = entry.bytes.load(Ordering::Relaxed);
+        let cleanup_generation = !handoff
+            && (bytes >= 65536
+                || entry.started.lock().unwrap().elapsed() >= Duration::from_secs(2));
         let (result, _) = inner
             .transport
             .command::<i64, _>(
@@ -787,6 +1005,8 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
                     entry.token.as_bytes(),
                     timestamp().as_bytes(),
                     bytes.to_string().as_bytes(),
+                    if handoff { b"1" } else { b"0" },
+                    if cleanup_generation { b"1" } else { b"0" },
                 ],
                 (),
             )
@@ -797,8 +1017,10 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
         }
         // Existing source pools suppress native grace for every transfer under
         // two seconds, including a large startup read. Preserve that branch.
-        remove_api = entry.started.lock().unwrap().elapsed() >= Duration::from_secs(2);
-        let delay = if remove_api {
+        remove_api = !handoff && entry.started.lock().unwrap().elapsed() >= Duration::from_secs(2);
+        let delay = if handoff {
+            inner.config.command_timeout
+        } else if remove_api {
             inner.config.disconnect_grace
         } else {
             inner.config.startup_idle
@@ -808,8 +1030,8 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
         reopened.as_mut().enable();
         entry.lifecycle.store(epoch | 2, Ordering::SeqCst);
         let mut stopped = inner.stopped.subscribe();
-        if !*stopped.borrow() {
-            tokio::select! {_=tokio::time::sleep(delay)=>{},_=stopped.changed()=>{},_=reopened=>{return;}}
+        if !*stopped.borrow() && (!handoff || entry.handoff_pending.load(Ordering::SeqCst)) {
+            tokio::select! {_=tokio::time::sleep(delay)=>{},_=stopped.changed()=>{},_=reopened=>{}}
         }
         if entry
             .lifecycle
@@ -888,13 +1110,15 @@ redis.call('SADD',KEYS[3],ARGV[4])
 redis.call('HSET',KEYS[1],'final_url',ARGV[6],'serving_range',ARGV[8])
 if ARGV[7]~='' then redis.call('HSET',KEYS[1],'content_length',ARGV[7]) end
 for i=2,4 do redis.call('EXPIRE',KEYS[i],60) end
-redis.call('SET',KEYS[6],'1','EX',600)
-return 1
+local generation=redis.call('INCR',KEYS[6]);redis.call('EXPIRE',KEYS[6],600);redis.call('DEL',KEYS[7])
+return generation
 "#;
 const HEARTBEAT: &str = r#"
 local function kind(key) local value=redis.call('TYPE',key);if type(value)=='table' then return value.ok end return value end
 for i,expected in ipairs({'hash','hash','set','hash','hash','string','string'}) do local actual=kind(KEYS[i]);if actual~='none' and actual~=expected then return redis.error_reply('CORRUPT archive metadata') end end
-if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('EXISTS',KEYS[7])~=0 then return 0 end
+if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return 0 end
+local stop=redis.call('GET',KEYS[7]);if stop=='reuse' or stop=='hop' or stop=='admin' or stop=='limit' then return 0 end
+if stop and string.match(stop,'^%d+$') and tonumber(stop)>=tonumber(ARGV[4]) then return 0 end
 if redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[1] then return 0 end
 if redis.call('EXISTS',KEYS[2])~=0 then
  local recorded=tonumber(redis.call('HGET',KEYS[2],'rust_total_bytes') or '0');local incoming=tonumber(ARGV[3])
@@ -914,7 +1138,8 @@ if redis.call('EXISTS',KEYS[4])~=0 then
  if not recorded or not incoming or recorded<0 or incoming<0 or incoming>9007199254740991 then return redis.error_reply('CORRUPT archive byte watermark') end
  if incoming>recorded then redis.call('HINCRBY',KEYS[4],'total_bytes',incoming-recorded);redis.call('HSET',KEYS[2],'rust_total_bytes',ARGV[3]) end
 end
-redis.call('HSET',KEYS[1],'busy','0','last_activity',ARGV[2]);redis.call('EXPIRE',KEYS[1],60)
+if ARGV[5]=='1' then redis.call('DEL',KEYS[6]) end
+redis.call('HSET',KEYS[1],'busy',ARGV[4]=='1' and '1' or '0','last_activity',ARGV[2]);redis.call('EXPIRE',KEYS[1],ARGV[4]=='1' and 600 or 60)
 return 1
 "#;
 const CLEANUP: &str = r#"
@@ -928,7 +1153,7 @@ if client_token==ARGV[1] then
  if redis.call('SCARD',KEYS[3])==0 then redis.call('DEL',KEYS[3]) end
 end
 if redis.call('HGET',KEYS[4],'rust_owner_token')==ARGV[1] then redis.call('DEL',KEYS[4]) end
-if redis.call('GET',KEYS[6])=='1' then redis.call('DEL',KEYS[6]) end
+redis.call('DEL',KEYS[6])
 redis.call('DEL',KEYS[7])
 if ARGV[2]=='1' and redis.call('HGET',KEYS[5],'user_id')==ARGV[3] then redis.call('DEL',KEYS[5]) end
 return 1

@@ -154,6 +154,48 @@ async fn partial_arbitrary_offsets_are_verbatim_and_416_is_terminal() {
     assert_eq!(*server.seen.lock().unwrap(), ["unsatisfiable"]);
 }
 #[tokio::test]
+async fn busy_probe_is_raw_passthrough_without_inspection_redirects_or_format_fallback() {
+    let server = server().await;
+    let client = client(1);
+    for (path, expected) in [
+        ("html", b"<html>provider error</html>".to_vec()),
+        ("ts", [b"preamble".as_slice(), ts().as_slice()].concat()),
+    ] {
+        let media = match client
+            .open_probe(
+                &format!("{}/{path}", server.base),
+                "fixture-agent",
+                "bytes=7-100",
+            )
+            .await
+        {
+            Ok(ArchiveOpen::Media(media)) => media,
+            _ => panic!("source probe accepts any successful body"),
+        };
+        assert_eq!(body(media).await, expected);
+    }
+    server.seen.lock().unwrap().clear();
+    assert!(client
+        .open_probe(
+            &format!("{}/redirect", server.base),
+            "fixture-agent",
+            "bytes=7-100"
+        )
+        .await
+        .is_err());
+    assert_eq!(*server.seen.lock().unwrap(), ["redirect"]);
+    assert!(matches!(
+        client
+            .open_probe(
+                &format!("{}/unsatisfiable", server.base),
+                "fixture-agent",
+                "bytes=7-100"
+            )
+            .await,
+        Ok(ArchiveOpen::Unsatisfiable { .. })
+    ));
+}
+#[tokio::test]
 async fn decisive_errors_stop_but_server_errors_cascade_and_cached_cdn_redirect_does_not_follow() {
     let server = server().await;
     let client = client(2);

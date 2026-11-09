@@ -93,3 +93,12 @@ normalized; read-only identity preservation is checked first. Relation IDs and
 shared fixture timestamps remain strict. Invalid profile selection is checked
 for the original 400-with-created-channel side effect. Unsupported EPG/DVR/engine
 side effects remain explicit gates documented in [CHANNEL-CONTRACTS.md](CHANNEL-CONTRACTS.md).
+
+Core helpers and StreamProfile writes passed94 focused/894 full checks on image10;
+see the integration `verified-integration-m6-core-image10-1.json`. Notification
+reads, shared conditions and personal dismissal passed118 focused/994 full
+checks on image11; see [NOTIFICATION-CONTRACTS.md](NOTIFICATION-CONTRACTS.md).
+The new suites are `core_utilities`, `core_stream_crud` and `notifications`.
+Notification fixture preparation uses the source's management initialization
+branch so repeated setup does not synchronize away disposable developer rows.
+Both backend requests receive independent condition-cache/dismissal resets.

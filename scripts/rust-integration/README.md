@@ -102,3 +102,15 @@ requires equivalent background work, valid delivered media, repeated paired
 trials, resource accounting for all services, and cleanup checks. The earlier
 prototype matrix was halted because its candidate lacked per-viewer telemetry;
 its partial results must not be presented as verified savings.
+
+Immutable image10 Core utilities/profile CRUD:94 focused/894 full source checks,
+recorded in [verified-integration-m6-core-image10-1.json](verified-integration-m6-core-image10-1.json).
+Immutable image11 notification reads/shared-cache/personal dismissal:118 focused/994
+full source checks, recorded in [verified-integration-m5-notifications-image11-1.json](verified-integration-m5-notifications-image11-1.json).
+These API checks establish neither resource gains nor unrelated media milestones.
+New selectable suites are `core_utilities`, `core_stream_crud`, `notifications`.
+The additional `run_notification_cache.py --output <empty-directory>` component
+runner freezes Rust bytes and uses an isolated original-runtime Redis for
+Python↔Rust primitive/cache TTL and version-barrier tests; it never touches an
+external Redis or production database. Collection dismissal HTTP cases added
+after image11 remain queued until the next frozen candidate.

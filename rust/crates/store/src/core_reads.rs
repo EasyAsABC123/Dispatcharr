@@ -146,8 +146,17 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route("/api/core/settings/{id}/", get(setting))
         .route("/api/core/useragents/", get(useragents))
         .route("/api/core/useragents/{id}/", get(useragent))
-        .route("/api/core/streamprofiles/", get(streamprofiles))
-        .route("/api/core/streamprofiles/{id}/", get(streamprofile))
+        .route(
+            "/api/core/streamprofiles/",
+            get(streamprofiles).post(crate::core_stream_writes::create),
+        )
+        .route(
+            "/api/core/streamprofiles/{id}/",
+            get(streamprofile)
+                .patch(crate::core_stream_writes::patch)
+                .put(crate::core_stream_writes::put)
+                .delete(crate::core_stream_writes::delete),
+        )
         .route("/api/core/outputprofiles/", get(outputprofiles))
         .route("/api/core/outputprofiles/{id}/", get(outputprofile))
         .with_state(auth)

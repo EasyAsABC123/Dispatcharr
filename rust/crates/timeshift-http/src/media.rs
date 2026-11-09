@@ -2,8 +2,9 @@
 //! Original Dispatcharr application credit belongs to upstream contributors.
 //! Full direct/XC, seek/adoption/admission/statistics parity remains unfinished.
 use crate::{
-    ArchiveClient, ArchiveOpen, ArchivePool, ArchivePoolConfig, ArchivePoolRequest, ArchiveRequest,
-    ArchiveTicket, CatchupSessions, CatchupSource, SessionBinding, SqlCatchupResolver,
+    ArchiveClient, ArchiveOpen, ArchivePool, ArchivePoolConfig, ArchivePoolRequest, ArchiveProbe,
+    ArchiveRequest, ArchiveTicket, CatchupSessions, CatchupSource, SessionBinding,
+    SqlCatchupResolver,
 };
 use axum::{
     body::Body,
@@ -246,7 +247,16 @@ impl CatchupMedia {
                 &request,
                 self.inner.resolver.client_ip(&request),
             );
-            let ticket = match self.inner.pool.open(pool_request).await {
+            if let Some(probe) = self.inner.pool.busy_probe(&pool_request, range).await? {
+                return self
+                    .probe_response(
+                        probe,
+                        &candidate.user_agent,
+                        range.expect("validated probe range"),
+                    )
+                    .await;
+            }
+            let ticket = match self.inner.pool.open_playback(pool_request, range).await {
                 Ok(ticket) => ticket,
                 Err(StoreError::StatusBody(503, message))
                     if message == json!("No available stream") =>
@@ -364,6 +374,88 @@ impl CatchupMedia {
         }
         Err(last_failure)
     }
+    async fn probe_response(
+        &self,
+        probe: ArchiveProbe,
+        user_agent: &str,
+        range: &str,
+    ) -> Result<Response, StoreError> {
+        let effective = dispatcharr_timeshift_core::cap_open_ended_range(
+            Some(range),
+            Some(dispatcharr_timeshift_core::EOF_PROBE_TAIL_BYTES),
+        )
+        .map_err(|_| StoreError::Unsupported("probe range exceeds bounded implementation"))?
+        .expect("existing probe range");
+        let stopped = probe.stopped();
+        let opened=tokio::select! {
+            result=self.inner.client.open_probe(probe.final_url(),user_agent,&effective)=>result,
+            _=wait_stopped(stopped)=>return Err(StoreError::StatusBody(503,json!("Stream slot busy"))),
+        }.map_err(|_|StoreError::StatusBody(503,json!("Stream slot busy")))?;
+        match opened {
+            ArchiveOpen::Unsatisfiable { .. } => {
+                let mut response = Response::builder()
+                    .status(416)
+                    .header("accept-ranges", "bytes")
+                    .header("x-content-type-options", "nosniff");
+                if let Some(length) = probe.length() {
+                    response = response.header("content-range", format!("bytes */{length}"));
+                }
+                response
+                    .body(Body::empty())
+                    .map_err(|_| StoreError::Unsupported("invalid probe range header"))
+            }
+            ArchiveOpen::Media(media) => {
+                let status = media.status();
+                let headers = media.headers();
+                let length = representation_length(
+                    headers.get("content-range").and_then(|v| v.to_str().ok()),
+                    headers.get("content-length").and_then(|v| v.to_str().ok()),
+                );
+                let lengths = downstream_length_headers(LengthRequest {
+                    range: Some(range),
+                    status: status.as_u16(),
+                    representation_length: length,
+                    upstream_range: headers.get("content-range").and_then(|v| v.to_str().ok()),
+                    upstream_length: headers.get("content-length").and_then(|v| v.to_str().ok()),
+                    streaming: true,
+                })
+                .map_err(|_| {
+                    StoreError::Unsupported("provider probe integer exceeds bounded implementation")
+                })?;
+                let mut downstream = HeaderMap::new();
+                downstream.insert(
+                    "content-type",
+                    headers
+                        .get("content-type")
+                        .cloned()
+                        .unwrap_or_else(|| axum::http::HeaderValue::from_static("video/mp2t")),
+                );
+                downstream.insert(
+                    "x-accel-buffering",
+                    axum::http::HeaderValue::from_static("no"),
+                );
+                downstream.insert(
+                    "x-content-type-options",
+                    axum::http::HeaderValue::from_static("nosniff"),
+                );
+                for (key, value) in lengths {
+                    downstream.insert(
+                        axum::http::HeaderName::from_bytes(key.as_bytes())
+                            .map_err(|_| StoreError::Unsupported("invalid probe header"))?,
+                        value
+                            .parse()
+                            .map_err(|_| StoreError::Unsupported("invalid probe header"))?,
+                    );
+                }
+                Ok((
+                    status,
+                    downstream,
+                    supervised_probe_body(media, probe, self.inner.config.body_frame_bytes),
+                )
+                    .into_response())
+            }
+        }
+    }
 }
 async fn wait_stopped(mut receiver: tokio::sync::watch::Receiver<bool>) {
     let _ = receiver.wait_for(|value| *value).await;
@@ -462,6 +554,51 @@ impl Drop for AbortBody {
     fn drop(&mut self) {
         self.0.abort();
     }
+}
+fn supervised_probe_body(
+    mut media: crate::ArchiveMedia,
+    probe: ArchiveProbe,
+    frame_bytes: usize,
+) -> Body {
+    let (tx, rx) = mpsc::channel::<Result<Bytes, io::Error>>(1);
+    let mut stopped = probe.stopped();
+    let task = tokio::spawn(async move {
+        let transfer = async {
+            loop {
+                let chunk = match media.next_chunk().await {
+                    Ok(Some(chunk)) => chunk,
+                    Ok(None) => return,
+                    Err(_) => {
+                        let _ = tx
+                            .send(Err(io::Error::other("archive probe body failed")))
+                            .await;
+                        return;
+                    }
+                };
+                for offset in (0..chunk.len()).step_by(frame_bytes) {
+                    if tx
+                        .send(Ok(
+                            chunk.slice(offset..(offset + frame_bytes).min(chunk.len()))
+                        ))
+                        .await
+                        .is_err()
+                    {
+                        return;
+                    }
+                }
+            }
+        };
+        tokio::select! {_=transfer=>{},_=stopped.wait_for(|value|*value)=>{}}
+        drop(media);
+        drop(probe);
+    });
+    let abort = AbortBody(task.abort_handle());
+    Body::from_stream(stream::unfold(
+        (rx, abort),
+        |(mut receiver, abort)| async move {
+            receiver.recv().await.map(|item| (item, (receiver, abort)))
+        },
+    ))
 }
 fn supervised_body(
     mut media: crate::ArchiveMedia,

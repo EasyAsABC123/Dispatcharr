@@ -1,0 +1,43 @@
+{
+  "attribution": "All original application credit belongs to Dispatcharr authors and contributors; see ATTRIBUTION.md.",
+  "scope": "Source-compatible core timezones and stored system-event reads; StreamProfile CRUD plus existing backend golden regressions. No performance, busy Timeshift handoff, nonzero diagnostic telemetry, notification or native job acceptance.",
+  "image_id": "sha256:e2b10b94ac04f3eb852619440d2c03178e5091788c6cf2a176fe930585c36bf6",
+  "source_tree_sha256": "12f046144cdee80ab24296369b5af3350df45c35979f35badfbc0b373718320d",
+  "build_manifest": "artifacts/rust/candidate-build-m6-core-image10-1/build.json",
+  "proofs": [
+    {
+      "report": "artifacts/rust/m6-core-integration-image10-3/integration.json",
+      "raw_report_sha256": "c04a95662865d4c1d149ac1450dc50a437c9d7181a02971b9a93370481e5e235",
+      "checks": 94,
+      "passed": true,
+      "cleanup": "project removed",
+      "resources_retained": false,
+      "tool_snapshot_manifest_sha256": "03620382317e3f9e09170f122dd18d4d7d29bf5e5458b16fb1f457a41fb4c210",
+      "tool_snapshot_files": 124
+    },
+    {
+      "report": "artifacts/rust/m6-core-full-integration-image10-1/integration.json",
+      "raw_report_sha256": "d1db509f3c9ee3ec1855b3915aab0b976a9452ef032bfbeecfa7bead74935f50",
+      "checks": 894,
+      "passed": true,
+      "cleanup": "project removed",
+      "resources_retained": false,
+      "tool_snapshot_manifest_sha256": "03620382317e3f9e09170f122dd18d4d7d29bf5e5458b16fb1f457a41fb4c210",
+      "tool_snapshot_files": 124
+    }
+  ],
+  "historical_fixture_failures": [
+    {
+      "report": "artifacts/rust/m6-core-integration-image10-1/integration.json",
+      "raw_report_sha256": "78013c30fdc844950587ef3f057b073de5c2150a774b6df61ab2afab799215fa",
+      "cause": "Source-only fixture timestamp fingerprint called isoformat on nullable legacy updated_at; corrected fixture preserves NULL. No Rust runtime change.",
+      "cleanup": "Project and temporary source removed; diagnostic run2 has cleanup sidecar."
+    },
+    {
+      "report": "artifacts/rust/m6-core-integration-image10-2/integration.json",
+      "raw_report_sha256": "223a298b6dee4e5393da77037dce03986c0c24b5691cda7cf118c255caceb866",
+      "cause": "Source-only fixture timestamp fingerprint called isoformat on nullable legacy updated_at; corrected fixture preserves NULL. No Rust runtime change.",
+      "cleanup": "Project and temporary source removed; diagnostic run2 has cleanup sidecar."
+    }
+  ]
+}

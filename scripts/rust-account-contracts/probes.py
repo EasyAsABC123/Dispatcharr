@@ -377,3 +377,29 @@ def run_filter_crud(http,baseline,candidate,accounts,record):
     module=importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.run(http,baseline,candidate,accounts,record)
+
+
+def run_core_utilities(http,baseline,candidate,accounts,record):
+    """Source core helper/profile contracts; only fixture mutations."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_core_utilities_probes',Path(__file__).with_name('core_utility_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record)
+
+
+def run_core_stream_crud(http,baseline,candidate,accounts,record,fixture):
+    """Source core helper/profile contracts; only fixture mutations."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_core_stream_crud_probes',Path(__file__).with_name('core_stream_crud_probes.py'))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record,fixture)
+
+
+def run_notifications(http,baseline,candidate,accounts,record,fixture):
+    """Read and personally dismiss original notifications with shared cache."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_notification_probes',Path(__file__).with_name('notification_probes.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record,fixture)

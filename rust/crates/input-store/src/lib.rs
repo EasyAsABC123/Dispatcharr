@@ -2,6 +2,7 @@
 //! Full original author/contributor credit retained in ATTRIBUTION.md.
 mod diagnostics;
 mod gc;
+mod retained;
 use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
 use std::{sync::Arc, time::Duration};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};

@@ -536,6 +536,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "dispatcharr-ingest-http"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "bytes",
+ "dispatcharr-ingest-core",
+ "dispatcharr-upstream-http",
+ "flate2",
+ "futures-util",
+ "reqwest",
+ "serde_json",
+ "sha2 0.10.9",
+ "tokio",
+]
+
+[[package]]
 name = "dispatcharr-input-store"
 version = "0.1.0"
 dependencies = [
@@ -590,6 +606,7 @@ dependencies = [
  "num-bigint",
  "pbkdf2",
  "rand 0.8.8",
+ "redis",
  "serde",
  "serde_json",
  "sha1",
@@ -619,6 +636,7 @@ dependencies = [
  "dispatcharr-input-store",
  "dispatcharr-stream-core",
  "dispatcharr-stream-runtime",
+ "dispatcharr-upstream-http",
  "flate2",
  "futures-util",
  "http-body-util",
@@ -670,6 +688,18 @@ dependencies = [
  "tokio",
  "url",
  "uuid",
+]
+
+[[package]]
+name = "dispatcharr-upstream-http"
+version = "0.1.0"
+dependencies = [
+ "async-stream",
+ "bytes",
+ "flate2",
+ "futures-util",
+ "reqwest",
+ "tokio",
 ]
 
 [[package]]

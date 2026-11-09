@@ -89,7 +89,7 @@ fingerprint adoption. Source limit-stop values/TTLs are live `true`/30seconds,
 VOD `true`/60seconds, Timeshift `limit`/60seconds; hop is `hop`/60seconds.
 Complete pubsub/WebSocket and generation effects remain separate gates.
 
-The frozen image 9 comparison includes established capabilities on a
+The frozen image 11 comparison includes established capabilities on a
 Redirect-profile channel whose user's allowed M3U profiles are empty. The
 original still proxies that bound capability; the allowed-profile filter belongs
 to the bare redirect selection path. Both apps matched positive-cap refusal and
@@ -110,11 +110,11 @@ Add a frozen candidate overlay/manifest to compare this slice; comparisons keep
 byte/status/header/order equality and timestamp preservation relationships.
 Rust local idle reuse has passed actual-schema/Auth/JWT HTTP, exact three-range
 hashes and seek/retention metadata checks, 21 targeted HTTP/Redis tests and strict
-Clippy. `verified-idle.json` records host and immutable image 9 proof. The frozen app
+Clippy. `verified-idle.json` records host and immutable image 11 proof. The frozen app
 comparison matches all three responses and metadata/lifecycle observations with
 strict A/V (74-frame) decoding; every previously captured image 7 control also
-passes in the same isolated run. Busy seek generation handoff and cross-worker adoption are separate
-unfinished contracts.
+passes in the same isolated run. Cross-worker/fingerprint/programme/profile adoption and broader stop/failure
+contracts remain unfinished.
 
 Busy source characterization is now in `python-busy-seek-goldens.json`. A middle
 seek cuts off the prior response and serves the requested 256 bytes from the same
@@ -124,4 +124,19 @@ transfer busy, with the existing single provider counter unchanged in before/
 during snapshots; the source's dedicated cached-CDN path has no pool/stat/profile
 side effects. These snapshots do not prove absence of a transient quota gap.
 `capture.py --busy-controls` records 448 immutable pure control vectors matched
-by Rust; HTTP busy handoff, side effects and cross-worker behavior remain open.
+by Rust; the actual-schema/Auth/JWT host test and frozen image 11 now match the
+three busy response/status/header/hash, before/during/eventual quota/lifecycle
+and old-body termination controls. Source and candidate hold established bodies
+at least 2.5 seconds after initial bytes, so startup retention cannot be confused
+with established disconnect grace. Queued old bytes, immediate TCP-close
+scheduling and busy byte-total timing are captured but not equated. Full
+telemetry and cross-worker behavior remain open.
+
+
+Native direct-auth source behavior is captured in `python-direct-auth-goldens.json`
+(15 cases): error ordering, direct caller-supplied SID playback, private 21600-second
+session-mint 301, retained query token, no API capability for that 301 SID, bare
+provider 302 with original timestamp shape, empty allowed-profile refusal and
+global network 403 JSON. Query tokens and provider credentials are redacted in
+Locations. Reproduce with `run.py --timeshift-direct-auth` in the VOD contract
+runner. This capture does not establish a Rust direct-auth implementation.

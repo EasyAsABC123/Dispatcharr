@@ -1,0 +1,217 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "format_version": 1,
+  "scope": "native direct-auth validation, bare redirects and authenticated client-supplied session only",
+  "capture_complete": true,
+  "events": [
+    {
+      "case": "missing-auth",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json",
+        "allow": "GET, OPTIONS",
+        "content-length": "36",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 36,
+      "sha256": "398d93874c3cffdf2e3bbfe6c09c7eeb17d2538c8c308bec017121fe5d664cb3",
+      "body": "{\"error\": \"Authentication required\"}"
+    },
+    {
+      "case": "missing-start",
+      "status": 400,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "allow": "GET, OPTIONS",
+        "content-length": "23",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 23,
+      "sha256": "03649bc202d006440790deb29bf7a25fa7eaf6e6c8f11ae0aeb3da6e01da0e21",
+      "body": "Missing start parameter"
+    },
+    {
+      "case": "invalid-start",
+      "status": 400,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "allow": "GET, OPTIONS",
+        "content-length": "17",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 17,
+      "sha256": "077477a51393f4d29226a1b54c20565edabdccb19d962a255d9d544ca80c2635",
+      "body": "Invalid timestamp"
+    },
+    {
+      "case": "invalid-header-auth",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json",
+        "allow": "GET, OPTIONS",
+        "content-length": "172",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 172,
+      "sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+      "body": "{\"detail\":\"Given token not valid for any token type\",\"code\":\"token_not_valid\",\"messages\":[{\"token_class\":\"AccessToken\",\"token_type\":\"access\",\"message\":\"Token is invalid\"}]}"
+    },
+    {
+      "case": "invalid-query-auth",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json",
+        "allow": "GET, OPTIONS",
+        "content-length": "36",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 36,
+      "sha256": "398d93874c3cffdf2e3bbfe6c09c7eeb17d2538c8c308bec017121fe5d664cb3",
+      "body": "{\"error\": \"Authentication required\"}"
+    },
+    {
+      "case": "disabled-user",
+      "status": 403,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "allow": "GET, OPTIONS",
+        "content-length": "20",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 20,
+      "sha256": "af8aedea5cade4d4334330aa48d64adf653a8089de239588c51da8c87ce83b72",
+      "body": "Catch-up is disabled"
+    },
+    {
+      "case": "unsupported-channel",
+      "status": 400,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "allow": "GET, OPTIONS",
+        "content-length": "40",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 40,
+      "sha256": "df665c0abce7b7fabbb9adf4da75c5063789fc06010eeb5d94a64e52e4598379",
+      "body": "Timeshift not supported for this channel"
+    },
+    {
+      "case": "missing-channel",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json",
+        "allow": "GET, OPTIONS",
+        "content-length": "30",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 30,
+      "sha256": "29ec7b8645d71f94a5fda75341c53db28b9c698d61d4afd075ef9591a8650132",
+      "body": "{\"detail\":\"Channel not found\"}"
+    },
+    {
+      "case": "mint-proxy-header",
+      "status": 301,
+      "headers": {
+        "location": "/proxy/catchup/0282858c-3869-471b-a58b-e913c1b6bd33?start=2026-11-09T11%3A00%3A00Z&duration=30&foo=one&foo=two&blank=&session_id=%3Csession%3E",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "allow": "GET, OPTIONS",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "mint-is-not-api-capability",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json",
+        "allow": "GET, OPTIONS",
+        "content-length": "48",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 48,
+      "sha256": "58eddc8d88ea5de84ad27ca8e8fb7aa3e301a481b24fa19a6e81d335eb87c49e",
+      "body": "{\"error\": \"Invalid or expired playback session\"}"
+    },
+    {
+      "case": "mint-proxy-query-token",
+      "status": 301,
+      "headers": {
+        "location": "/proxy/catchup/0282858c-3869-471b-a58b-e913c1b6bd33?start=2026-11-09T11%3A00%3A00Z&duration=30&token=%3Caccess-token%3E&session_id=%3Csession%3E",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "allow": "GET, OPTIONS",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "authenticated-client-session",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "content-length": "256",
+        "allow": "GET, OPTIONS",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 256,
+      "sha256": "222cc5871d7518afec470f6f067a46b5dd78b302f239ac7654f217b8876ecf38"
+    },
+    {
+      "case": "bare-redirect",
+      "status": 302,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "location": "http://origin:8080/timeshift/<provider-user>/<provider-password>/35/2026-11-09T11:00:00Z/fixture.ts",
+        "allow": "GET, OPTIONS",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "bare-redirect-no-allowed-profile",
+      "status": 503,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "allow": "GET, OPTIONS",
+        "content-length": "19",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 19,
+      "sha256": "8a734e98fdf672183da1b087d70cb7893f95818aadc601af7921f8f18910d01c",
+      "body": "No available stream"
+    },
+    {
+      "case": "global-network-denial",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json",
+        "allow": "GET, OPTIONS",
+        "content-length": "22",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 22,
+      "sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+      "body": "{\"error\": \"Forbidden\"}"
+    }
+  ],
+  "opaque_sessions_and_query_tokens_normalized": true,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "evidence": "artifacts/rust/m4-timeshift-direct-source-1/vod-contracts.json",
+  "evidence_sha256": "ab7395965b95382f0a0fe30b7dd0e14843032ebc7dbd6c6c3c67dd5f03653c89",
+  "implementation_verified": false,
+  "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md"
+}

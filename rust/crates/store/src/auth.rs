@@ -74,6 +74,7 @@ pub struct AuthService {
     attempts: Arc<Mutex<AttemptHistory>>,
     password_workers: Arc<tokio::sync::Semaphore>,
     pub(crate) channel_control: Option<Arc<dyn ChannelControl>>,
+    pub(crate) notification_cache: Option<crate::NotificationCache>,
 }
 
 type AttemptHistory = HashMap<(IpAddr, &'static str), VecDeque<Instant>>;
@@ -86,6 +87,7 @@ impl AuthService {
             attempts: Arc::new(Mutex::new(HashMap::new())),
             password_workers: Arc::new(tokio::sync::Semaphore::new(4)),
             channel_control: None,
+            notification_cache: None,
         }
     }
 
@@ -96,9 +98,16 @@ impl AuthService {
         self
     }
 
+    pub fn with_notification_cache(mut self, cache: crate::NotificationCache) -> Self {
+        self.notification_cache = Some(cache);
+        self
+    }
+
     pub fn router(self) -> Router {
         let accounts = crate::accounts::router(self.clone());
-        let core = crate::core_reads::router(self.clone());
+        let core = crate::core_reads::router(self.clone())
+            .merge(crate::core_utilities::router(self.clone()))
+            .merge(crate::notifications::router(self.clone()));
         let channel_profiles = crate::channel_profiles::router(self.clone());
         let channels = crate::channels::router(self.clone());
         let channel_groups = crate::channel_groups::router(self.clone());

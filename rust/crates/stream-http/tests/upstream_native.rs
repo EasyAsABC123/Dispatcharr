@@ -560,3 +560,71 @@ async fn statuses_redirect_boundaries_and_url_auth_match_original_reader() {
     server.abort();
     other_server.abort();
 }
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis: REDIS_TEST_URL"]
+async fn retained_diagnostics_separate_nonzero_local_ring_and_shared_redis_copy() {
+    let url = std::env::var("REDIS_TEST_URL").unwrap();
+    let coordinator = dispatcharr_coordination::Coordinator::connect(&url, Default::default())
+        .await
+        .unwrap();
+    let clients = dispatcharr_clients::ClientStore::connect(&url, Default::default())
+        .await
+        .unwrap();
+    let inputs = dispatcharr_input_store::InputStore::connect(&url, Default::default())
+        .await
+        .unwrap();
+    let app=Router::new().route("/live",get(||async{let data=payload();Response::new(Body::from_stream(async_stream::stream!{yield Ok::<_,Infallible>(Bytes::from(data));futures_util::future::pending::<()>().await;}))}));
+    let (base, server) = serve(app).await;
+    let mut limits = config();
+    limits.read_timeout = Duration::from_secs(5);
+    let engine = StreamEngine::new_with_shared_inputs(
+        limits,
+        Some(coordinator),
+        Some(clients.clone()),
+        Some(inputs),
+    )
+    .unwrap();
+    let id = format!(
+        "memory-{}",
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    );
+    let mut body = engine
+        .play(source(format!("{base}/live"), &id))
+        .await
+        .unwrap()
+        .into_body();
+    drop(body.frame().await.unwrap().unwrap());
+    let diagnostics = time::timeout(Duration::from_secs(2), async {
+        loop {
+            let value = engine.memory_diagnostics().await.unwrap();
+            if value["local_retained_payload_bytes"].as_u64() == Some(payload().len() as u64)
+                && value["redis_logical_payload_bytes"].as_u64() == Some(payload().len() as u64)
+            {
+                break value;
+            }
+            time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert_eq!(diagnostics["format_version"], 1);
+    assert_eq!(diagnostics["sampled_channels"], 1);
+    assert_eq!(
+        diagnostics["channels"][0]["shared_input"]["fence_matches_owner"],
+        true
+    );
+    assert!(
+        diagnostics["redis_known_key_allocation_bytes"]
+            .as_u64()
+            .unwrap()
+            > payload().len() as u64
+    );
+    drop(body);
+    idle(&engine).await;
+    clients.shutdown().await;
+    server.abort();
+}

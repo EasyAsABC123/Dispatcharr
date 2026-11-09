@@ -260,6 +260,137 @@ async fn idle_reopen_preserves_source_same_session_exemption_under_new_positive_
 }
 #[tokio::test]
 #[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn busy_seek_drains_previous_body_retains_quota_and_supersedes_old_generation() {
+    let (pool, mut redis, profile) = setup().await;
+    let sid = uuid::Uuid::new_v4().to_string();
+    let first = pool.open(request(&sid, profile)).await.unwrap();
+    first
+        .start(
+            "http://fixture.invalid/cached.ts",
+            Some(15_001_836),
+            Some("bytes=0-"),
+        )
+        .await
+        .unwrap();
+    first.forwarded(400);
+    let mut stopped = first.stopped();
+    let old = tokio::spawn(async move {
+        stopped.wait_for(|value| *value).await.unwrap();
+        // Simulate the old supervised body draining an admitted mutation.
+        tokio::time::sleep(Duration::from_millis(30)).await;
+        drop(first);
+    });
+    let cloned = pool.clone();
+    let req = request(&sid, profile);
+    let replacement = tokio::spawn(async move {
+        cloned
+            .open_playback(req, Some("bytes=1880000-1880255"))
+            .await
+    });
+    let mut observations = 0;
+    while !replacement.is_finished() {
+        assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 1);
+        observations += 1;
+        tokio::time::sleep(Duration::from_millis(1)).await;
+    }
+    assert!(observations >= 2);
+    old.await.unwrap();
+    let second = replacement.await.unwrap().unwrap();
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 1);
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(pool_key(&sid), "busy")
+            .await
+            .unwrap(),
+        "1"
+    );
+    second
+        .start(
+            "http://fixture.invalid/cached.ts",
+            Some(15_001_836),
+            Some("bytes=1880000-1880255"),
+        )
+        .await
+        .unwrap();
+    let generation = format!("timeshift:stream_gen:123_2026-11-09T11-00-00Z_fixture:{sid}");
+    assert_eq!(redis.get::<_, u64>(&generation).await.unwrap(), 2);
+    let stop = format!("timeshift:channel:123_2026-11-09T11-00-00Z_fixture:client:{sid}:stop");
+    for (value, alive) in [
+        ("1", true),
+        ("2", false),
+        ("reuse", false),
+        ("admin", false),
+        ("hop", false),
+        ("limit", false),
+        ("true", true),
+        ("unknown", true),
+    ] {
+        let _: () = redis.set(&stop, value).await.unwrap();
+        assert_eq!(
+            second.alive().await.unwrap(),
+            alive,
+            "source generation stop {value}"
+        );
+        assert_eq!(
+            second.heartbeat().await.unwrap(),
+            alive,
+            "source generation heartbeat {value}"
+        );
+    }
+    let _: () = redis.del(&stop).await.unwrap();
+    assert!(second.alive().await.unwrap());
+    second.forwarded(200);
+    assert!(second.heartbeat().await.unwrap());
+    assert_eq!(
+        redis
+            .hget::<_, _, u64>(metadata_key(&sid), "total_bytes")
+            .await
+            .unwrap(),
+        600
+    );
+    drop(second);
+    wait(async || pool.is_idle()).await;
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 0);
+    assert!(!redis.exists::<_, bool>(&generation).await.unwrap());
+    assert!(pool.shutdown().await);
+    let _: () = redis.del(profile_key(profile)).await.unwrap();
+}
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn cancelled_busy_setup_still_drains_and_releases_the_transferred_reservation() {
+    let (pool, mut redis, profile) = setup().await;
+    let sid = uuid::Uuid::new_v4().to_string();
+    let first = pool.open(request(&sid, profile)).await.unwrap();
+    first
+        .start(
+            "http://fixture.invalid/archive.ts",
+            Some(15_001_836),
+            Some("bytes=0-"),
+        )
+        .await
+        .unwrap();
+    let mut stopped = first.stopped();
+    let cloned = pool.clone();
+    let req = request(&sid, profile);
+    let call = tokio::spawn(async move {
+        cloned
+            .open_playback(req, Some("bytes=1880000-1880255"))
+            .await
+    });
+    stopped.wait_for(|value| *value).await.unwrap();
+    call.abort();
+    let _ = call.await;
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 1);
+    drop(first);
+    wait(async || pool.is_idle()).await;
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 0);
+    assert!(!redis.exists::<_, bool>(pool_key(&sid)).await.unwrap());
+    assert!(!redis.exists::<_, bool>(client_key(&sid)).await.unwrap());
+    assert!(pool.shutdown().await);
+    let _: () = redis.del(profile_key(profile)).await.unwrap();
+}
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
 async fn startup_release_has_no_live_phantom_preserves_api_and_busy_reentry_does_not_reserve() {
     let (pool, mut redis, profile) = setup().await;
     let sid = uuid::Uuid::new_v4().to_string();

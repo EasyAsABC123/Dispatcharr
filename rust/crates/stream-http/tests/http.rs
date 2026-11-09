@@ -1509,6 +1509,9 @@ async fn shared_workers_mode(remote_stop: bool, source_mode: bool) {
         .await
         .unwrap();
     let mut limits = config();
+    // Force both workers to recover older viewer positions from Redis instead
+    // of accidentally passing while retaining a second full local history.
+    limits.shared_hot_cache_bytes = limits.chunk_bytes * 2;
     if source_mode {
         limits.source_initialization = true;
         limits.flush_partial_chunks = false;
@@ -1572,6 +1575,11 @@ async fn shared_workers_mode(remote_stop: bool, source_mode: bool) {
     // its final local HTTP reader disappears.
     time::sleep(Duration::from_millis(1100)).await;
     assert_eq!(counts.active.load(Ordering::SeqCst), 1);
+    for engine in [&first, &second] {
+        let memory = engine.memory_diagnostics().await.unwrap();
+        assert!(memory["local_retained_payload_bytes"].as_u64().unwrap() <= 188 * 4);
+        assert!(memory["redis_logical_payload_bytes"].as_u64().unwrap() > 188 * 4);
+    }
     for _ in 0..4 {
         let bytes = follower
             .frame()
@@ -1672,6 +1680,41 @@ async fn head_authenticates_without_resolving_or_starting_an_origin() {
                 .as_u16(),
             expected
         );
+    }
+    assert_eq!(resolver.resolutions.load(Ordering::SeqCst), 0);
+    assert!(engine.status().is_empty());
+}
+
+#[tokio::test]
+async fn memory_diagnostics_are_versioned_admin_only_and_do_not_resolve_playback() {
+    let engine = StreamEngine::new(config()).unwrap();
+    let resolver = Arc::new(Resolver {
+        source: source("http://127.0.0.1:9/live".into(), "memory"),
+        resolutions: AtomicUsize::new(0),
+    });
+    for (token, expected) in [
+        (None, 403),
+        (Some("Bearer viewer"), 403),
+        (Some("Bearer admin"), 200),
+    ] {
+        let mut request = axum::http::Request::builder().uri("/internal/proxy/ts/v1/memory");
+        if let Some(token) = token {
+            request = request.header("authorization", token);
+        }
+        let response = engine
+            .controls_router(resolver.clone())
+            .oneshot(request.body(Body::empty()).unwrap())
+            .await
+            .unwrap();
+        assert_eq!(response.status().as_u16(), expected);
+        if expected == 200 {
+            let value: serde_json::Value =
+                serde_json::from_slice(&response.into_body().collect().await.unwrap().to_bytes())
+                    .unwrap();
+            assert_eq!(value["format_version"], 1);
+            assert_eq!(value["local_retained_payload_bytes"], 0);
+            assert_eq!(value["sampled_channels"], 0);
+        }
     }
     assert_eq!(resolver.resolutions.load(Ordering::SeqCst), 0);
     assert!(engine.status().is_empty());
