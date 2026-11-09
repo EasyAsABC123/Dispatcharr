@@ -1,0 +1,84 @@
+{
+  "format_version": 1,
+  "scope": "Frozen IMAGE14 admin management31 HTTP cases and actual active/idle stop lifecycle; not full M4",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m4-timeshift-management-all-frozen-compose-1/vod-contracts.json",
+  "evidence_sha256": "08367333cef4206ca2f89f14ea48f2a2715e9d8fa2ade09333b6544208158bbb",
+  "comparison": {
+    "captured_management_matches": true,
+    "differences": [],
+    "normalizations": [
+      "Allow order as unordered original DRF method set",
+      "Only top-level timestamp replaced after verifying it lies within each actual request interval"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_bound_candidate_image": true,
+  "http_cases": 31,
+  "real_media_control_cases": 2,
+  "real_redis_pool_tests": 11,
+  "prior_http_session_transport_regressions": 16,
+  "lib_tests": 4,
+  "strict_clippy_all_targets_passed": true,
+  "event_sink_component_only": {
+    "success_stop_attempts": 3,
+    "failure_injected": true,
+    "failure_does_not_change_stop_success": true,
+    "full_type_data_envelope_checked": true,
+    "stats_json_string_payload_checked": true,
+    "actual_redis_event_transport_verified": false
+  },
+  "source_compatibility_note": "Active admin stop revokes API/releases provider/closes body and removes visible stats; generator finalization temporarily re-creates a grace-only client hash. Both implementations remove that hash after grace and retain idle pool fingerprint. Idle stop has no ghost hash.",
+  "preserved_failures": [
+    {
+      "evidence": "artifacts/rust/m4-timeshift-management-native-sql-1/vod-contracts.json",
+      "reason": "Python EOF JSON parse location mismatch; fixed without rewriting failure"
+    },
+    {
+      "evidence": "artifacts/rust/m4-timeshift-management-active-native-sql-1/vod-contracts.json",
+      "reason": "Missing original transient grace-only client bookkeeping; literal behavior ported and regression tested"
+    }
+  ],
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
+  "remaining_gates": [
+    "Optional shared realtime sink wiring and actual Redis event delivery",
+    "Additional malformed JSON/path/integer/UUID/programme-position corners and serializer negotiation",
+    "Full cross-worker/adoption and metadata/mutation lifecycle faults",
+    "Actual Redis pubsub/WebSocket statistics delivery and all playback lifecycle event hooks",
+    "Resource/performance acceptance"
+  ],
+  "application_router_and_shutdown_compile_passed": true,
+  "candidate_management_harness_fault_tests": 4,
+  "host_service_evidence": {
+    "evidence": "artifacts/rust/m4-timeshift-management-active-native-sql-3/vod-contracts.json",
+    "sha256": "76c88da1c3d5570b3c65b3072d1d5d4f46d25426be4c01730899aececc92f75e",
+    "tested_working_bytes_sha256": {
+      "rust/crates/timeshift-http/src/management.rs": "8d2faa8047b3fb1bd5b63a73329132e454bf07ea06b46775a8c64fd7d1aa0185",
+      "rust/crates/timeshift-http/src/management_data.rs": "027bc538666ecfedcef89da69eecc6a0fcc810fc911404991c6d32147509404e",
+      "rust/crates/timeshift-http/src/management_programmes.rs": "ab5330a68195cb609fa2493464c03035dbc67ba65e45dac64f31de076ea476a5",
+      "rust/crates/timeshift-http/src/media_pool.rs": "c026b1f8d7e696940df96f5df4229686b4f014fd71c9710867ce4a893fc154d2",
+      "rust/crates/timeshift-http/src/media.rs": "d91e42fef227d94e8448066d3525ec6dc90bd7adfc5e97fa4de74b516b632a5a",
+      "rust/crates/timeshift-http/src/lib.rs": "1b8ea15db8b7d0d7cd1142909106a52d5a2008a372be5f2b0d7024a09c7bd4cb",
+      "rust/crates/timeshift-http/tests/media_pool.rs": "919bc988f9db6ed9609425043ec855f7dfecc38b64e177219564bef9ac3a6454",
+      "rust/crates/timeshift-http/tests/direct_sql.rs": "fd72afa723ca6fad0a37bcda27a0464942db15e552e3ca25eac94ee7074d1a0a",
+      "scripts/rust-timeshift-contracts/management_control.py": "28e3dc72f066f9ccd84e464a2c556d0a4a8d5b604e8ff80bdcefbabf9164957d",
+      "scripts/rust-timeshift-contracts/management_probe.py": "99eb360392249a971053affc4b45085234f80b4a567873ad2cd65d1b8b328e5a",
+      "scripts/rust-timeshift-contracts/native_direct_driver.py": "b8b92393b3e9be0677a4e492a05e3b6c82cb0d90282aa0da2ffeb703876b8cf1",
+      "scripts/rust-vod-contracts/run.py": "32ccc71efae41549f04dab252d8b627eb8f3a56faa2ff4ed1b251cbbce5ba4c8"
+    },
+    "source_bound_candidate_image": false
+  },
+  "candidate_provenance": {
+    "image_id": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
+    "source_tree_sha256": "3dee6610ccae2626a800e46dc8797170f25e919dde5cef07f4c501d1cbf833aa",
+    "build_manifest_sha256": "bc38dfedc61f381e755002b54c525d833e6f03077d959831f7045d644022292b"
+  },
+  "tool_manifest_sha256": "ffa1615b9f13e2cf4b0eed1786012b773bde4ff13886168eb4d36169b95ffb54",
+  "captured_tool_files": 249,
+  "application_router_and_shutdown_frozen_proof_passed": true
+}

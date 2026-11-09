@@ -21,5 +21,13 @@ pub use media_pool::{
     ArchivePool, ArchivePoolConfig, ArchivePoolRequest, ArchiveProbe, ArchiveTicket,
 };
 
+mod direct;
 mod media;
+mod xc;
 pub use media::{ArchiveResolver, CatchupMedia, CatchupMediaConfig, SqlArchiveResolver};
+pub use xc::XcIntent;
+
+mod management;
+mod management_data;
+mod management_programmes;
+pub use management::CatchupManagement;

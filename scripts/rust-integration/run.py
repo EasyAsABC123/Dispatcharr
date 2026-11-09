@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
                  'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud','core_utilities','core_stream_crud','notifications')
-OPTIONAL_CONTRACT_SUITES=('proxy_auth',)
+OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip')
 
 
 def contract_suites(value):
@@ -69,9 +69,11 @@ def candidate_overlay(template,destination,image):
         raise ValueError('Invalid candidate image reference')
     original='image: dispatcharr-rust-candidate:milestone2'
     text=template.read_text()
-    if text.count(original)!=1:
-        raise ValueError('Candidate Compose image slot changed; update the fixture adapter')
-    destination.write_text(text.replace(original,'image: '+image,1))
+    if text.count(original)==1:
+        text=text.replace(original,'image: '+image,1)
+    elif sum(line.strip() in ('image: '+image,'image: '+json.dumps(image)) for line in text.splitlines())!=1:
+        raise ValueError('Candidate Compose image slot changed or pinned image mismatches manifest')
+    destination.write_text(text)
     return destination
 
 
@@ -267,7 +269,7 @@ def main():
                                  ('core_utilities','run_core_utilities'),
                                  ('core_stream_crud','run_core_stream_crud'),
                                  ('notifications','run_notifications'),
-                                 ('proxy_auth','run_proxy_auth')]:
+                                 ('proxy_auth','run_proxy_auth'),('environment_ip','run_environment_ip')]:
                 if suite in selected_suites:
                     if suite=='core' and 'account_crud' in selected_suites:
                         # Both independent suites deliberately test password
@@ -278,7 +280,7 @@ def main():
                         report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
                         for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
-                    if suite in ('server_group_crud','core_stream_crud','notifications'):
+                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip'):
                         extra=(metadata_fixture,)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             status = 0 if all(check['passed'] for check in report['checks']) else 1

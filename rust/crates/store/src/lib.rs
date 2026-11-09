@@ -15,15 +15,22 @@ mod core_reads;
 mod core_stream_writes;
 mod core_utilities;
 mod django_pickle;
+mod ip_lookup;
 mod notifications;
+mod python_action;
+mod settings_groups;
+pub use ip_lookup::IpLookupConfig;
+mod xc_auth;
 pub use notifications::NotificationCache;
 mod import_batches;
 mod import_cleanup;
 mod import_groups;
-pub use import_cleanup::{StreamCleanupCounts, GroupCleanupAccount, GroupCleanupCounts};
+mod import_pipeline;
+pub use import_cleanup::{GroupCleanupAccount, GroupCleanupCounts, StreamCleanupCounts};
 pub use import_groups::{
     GroupImportCounts, ImportedGroup, MAX_IMPORT_GROUPS, MAX_IMPORT_GROUP_BYTES,
 };
+pub use import_pipeline::{CacheBatchCounts, CacheBatchRequest};
 mod json_compat;
 pub mod realtime;
 mod startup;
@@ -62,6 +69,10 @@ pub enum StoreError {
     NotFound,
     Unsupported(&'static str),
     RateLimited(u64),
+    XcDenied {
+        status: u16,
+        retry_after: Option<u64>,
+    },
     InvalidInput(Value),
     StatusBody(u16, Value),
 }
@@ -83,6 +94,9 @@ impl std::fmt::Display for StoreError {
             Self::Forbidden => formatter.write_str("Forbidden"),
             Self::PermissionDenied => formatter.write_str("Permission denied"),
             Self::NotFound => formatter.write_str("Not found"),
+            Self::XcDenied { status, .. } => {
+                write!(formatter, "XC request denied with status {status}")
+            }
             Self::RateLimited(wait) => write!(formatter, "Rate limited for {wait} seconds"),
             Self::InvalidInput(_) => formatter.write_str("Invalid input"),
             Self::StatusBody(status, _) => write!(formatter, "Request failed with status {status}"),

@@ -138,3 +138,13 @@ Missing fixture values fail the opted-in test; no missing-database path is treat
 as a pass. This test reads the fixture schema and credentials without creating
 or modifying accounts. Real HTTP mutation tests belong to the Compose integration
 suite and must use disposable databases.
+
+Core timezone/system-event helper reads and StreamProfile CRUD passed image10
+source comparisons (94 focused/894 full); see
+[CORE-UTILITY-WRITE-CONTRACTS.md](CORE-UTILITY-WRITE-CONTRACTS.md).
+Notification reads and personal dismissal passed image11 comparisons
+(118 focused/994 full), including contradictory shared cache states and original
+False/miss semantics. Notification production/admin scheduling and websocket
+transport remain separate responsibilities. Post-image11 collection action
+coercion is unit-proven against pinned Python/Unicode15.1 vectors and awaits
+new frozen HTTP proof; see the account probe NOTIFICATION-CONTRACTS.md.

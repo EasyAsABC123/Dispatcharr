@@ -11,7 +11,7 @@ data=json.load(sys.stdin)
 # Notification setup is a management operation. Use the source's documented
 # management-command initialization branch so re-running this helper does not
 # synchronize away owned developer fixtures before the HTTP read under test.
-if str(data.get('action','')).startswith('notification_'):sys.argv.append('shell')
+if str(data.get('action','')).startswith(('notification_','environment_ip_')):sys.argv.append('shell')
 sys.path.insert(0,'/app');os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
 import django
 django.setup()
@@ -21,6 +21,26 @@ def sanitized_failure(kind,value,tb):
     while tb.tb_next is not None:tb=tb.tb_next
     print(json.dumps({'fixture_error_type':kind.__name__,'fixture_error_line':tb.tb_lineno}),file=sys.stderr)
 sys.excepthook=sanitized_failure
+if str(data.get('action','')).startswith('environment_ip_'):
+    import time
+    from core.models import CoreSettings
+    from django.core.cache import cache
+    settings=CoreSettings.objects.get(key='system_settings')
+    value=settings.value if isinstance(settings.value,dict) else {}
+    restore=data['action']=='environment_ip_restore'
+    CoreSettings.objects.filter(pk=settings.pk).update(value={**value,'enable_ip_lookup':not restore})
+    cache.delete(CoreSettings.group_cache_key('system_settings'))
+    cache.delete('dispatcharr:ip_lookup_result');cache.delete('dispatcharr:ip_lookup_lock')
+    if not restore:
+        # The package proof intentionally cannot start a real public-provider
+        # lookup: even cached cases retain the original shared lock.
+        cache.set('dispatcharr:ip_lookup_lock',True,30)
+        mode=data.get('mode')
+        if mode!='locked-cold':
+            payload={'public_ip':'198.51.100.10' if mode=='fresh' else None,'local_ip':'127.0.0.1','country_code':'TS' if mode=='fresh' else None,'country_name':'Testland' if mode=='fresh' else None,'city':'Fixture City' if mode=='fresh' else None,'verified_at':time.time()}
+            cache.set('dispatcharr:ip_lookup_result',payload,3600)
+    print(json.dumps({'prepared':not restore,'restored_disabled':restore}))
+    raise SystemExit(0)
 if str(data.get('action','')).startswith('notification_'):
     from notification_fixture import run
     print(json.dumps(run(data)))

@@ -65,14 +65,22 @@ impl SqlCatchupResolver {
         self.resolve_context(user, channel, timestamp, duration_hint, true)
             .await
     }
-    async fn resolve_context(
+    /// First-hop validation must not require a usable provider profile: the
+    /// source returns the Proxy301 before any profile walk or reservation.
+    pub async fn validate_direct(
         &self,
-        user: User,
-        channel: ChannelIdentity,
-        timestamp: String,
-        duration_hint: Option<&str>,
-        restrict_redirect: bool,
-    ) -> Result<CatchupSource, StoreError> {
+        user: &User,
+        channel: &ChannelIdentity,
+        timestamp: &str,
+    ) -> Result<bool, StoreError> {
+        Ok(self.route_context(user, channel, timestamp).await?.0)
+    }
+    async fn route_context(
+        &self,
+        user: &User,
+        channel: &ChannelIdentity,
+        timestamp: &str,
+    ) -> Result<(bool, Option<i64>), StoreError> {
         if user.custom_properties.get("catchup_enabled") == Some(&Value::Bool(false))
             || self
                 .store
@@ -83,7 +91,7 @@ impl SqlCatchupResolver {
         {
             return Err(StoreError::StatusBody(403, json!("Catch-up is disabled")));
         }
-        if parse_timestamp(&timestamp).is_none() {
+        if parse_timestamp(timestamp).is_none() {
             return Err(StoreError::StatusBody(400, json!("Invalid timestamp")));
         }
         let settings = self.store.setting("stream_settings").await?;
@@ -97,6 +105,17 @@ impl SqlCatchupResolver {
             ));
         }
         let redirect = row.try_get::<Option<bool>, _>("redirect")?.unwrap_or(false);
+        Ok((redirect, default_agent))
+    }
+    async fn resolve_context(
+        &self,
+        user: User,
+        channel: ChannelIdentity,
+        timestamp: String,
+        duration_hint: Option<&str>,
+        restrict_redirect: bool,
+    ) -> Result<CatchupSource, StoreError> {
+        let (redirect, default_agent) = self.route_context(&user, &channel, &timestamp).await?;
         let duration_window = match duration_hint.and_then(client_duration_window) {
             Some(window) => window,
             None => self.epg_duration(channel.id, &timestamp).await,

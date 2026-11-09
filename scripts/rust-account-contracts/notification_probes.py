@@ -43,7 +43,7 @@ def run(http,baseline,candidate,accounts,record,fixture):
                 record('notifications:'+name+':witness:'+label,actual==expected and stored is expected,{'shown':actual,'cache_bool':stored})
             compare(name,root,before=lambda network=network,cached=cached:reset(network=network,cached=cached),after=witness)
         path=root+str(ids['public'])+'/dismiss/'
-        for name,body in [('no-body',None),('empty',{}),('accepted',{'action_taken':'accepted'}),('boolean',{'action_taken':True}),('zero',{'action_taken':0}),('null',{'action_taken':None})]:
+        for name,body in [('no-body',None),('empty',{}),('accepted',{'action_taken':'accepted'}),('boolean',{'action_taken':True}),('zero',{'action_taken':0}),('null',{'action_taken':None}),('collection-array',{'action_taken':[True,None,"a'b"]}),('collection-dict',{'action_taken':{'line':'\n'}}),('collection-unicode',{'action_taken':['東京','\u1c89','\u2007']})]:
             snapshots=[]
             def verify(label,base,result):
                 current=state();snapshots.append((current['dismissal_count'],current['actions_sha256']))
@@ -55,7 +55,7 @@ def run(http,baseline,candidate,accounts,record,fixture):
         def already_dismissed():
             reset();result=invoke(baseline,path,{'action_taken':'accepted'},'POST')
             if result[0]!=200:raise ValueError('Source fixture dismissal failed')
-        for name,body in [('repeat-null',{'action_taken':None}),('repeat-empty',{'action_taken':''}),('repeat-false',{'action_taken':False}),('repeat-truthy',{'action_taken':'changed'})]:
+        for name,body in [('repeat-null',{'action_taken':None}),('repeat-empty',{'action_taken':''}),('repeat-false',{'action_taken':False}),('repeat-truthy',{'action_taken':'changed'}),('repeat-empty-array',{'action_taken':[]}),('repeat-empty-object',{'action_taken':{}}),('repeat-object',{'action_taken':{'changed':True}})]:
             snapshots=[]
             def before():already_dismissed();snapshots.append(state())
             def after(label,base,result):

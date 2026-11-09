@@ -47,14 +47,14 @@ Completed verification:
   actual Redis, including cross-protocol races, hop ordering, source stop keys,
   same-session exemption and corruption guards. These helper fixtures use owned
   synthetic existing connection records and explicit policy inputs.
-- Four native HTTP, seven pool/order/shutdown and two delayed actual Redis tests
+- Five native HTTP, nine pool/order/shutdown and two delayed actual Redis tests
   cover positive limits, provider-full ordering, fences, missing-hash cleanup,
   unread bodies and ADMIT/CREATE/START/HEARTBEAT cancellation.
 - Actual Django Store/Auth/JWT native HTTP passed positive-limit 403 refusal,
   retry of the same capability 206 with exact 1,880,000 source bytes, grace cleanup
   and strict A/V decoding 74 frames. Refusal uses an explicitly synthetic owned
   live accounting record, not a fake authorization/provider resolver.
-- Frozen image 9 matches all 24 API/error cases, six actual media/provider/lifecycle
+- Frozen image 11 matches all 24 API/error cases, six actual media/provider/lifecycle
   scenarios and actual-JWT positive-limit refusal/retry on an established Redirect
   capability with an empty allowed-profile list. All four candidate
   catch-up captures strictly decode audio/video 74 frames. Image/source binding
@@ -63,12 +63,12 @@ Completed verification:
 - Compile and strict Clippy for all targets pass. Evidence is in
   `scripts/rust-timeshift-contracts/verified-{contracts,admission,native-media,compose}.json`.
 
-Remaining gates: direct-auth mint/adoption and XC playback; fingerprint/busy/cross-worker
-pool adoption and seeks/generation handoff; broader
+Remaining gates: additional direct-auth/fingerprint/control corners and frozen XC playback proof; cross-worker/programme/profile
+pool adoption and broader generation/stop faults; broader
 positive-cap/preemption/stop reasons; complete range position, stream statistics,
 pubsub/WebSocket effects; transforms/server groups and failure recovery;
 serializer/OPTIONS/path and unusual timestamp/integer corners; full resource
-comparison. Unsupported programme/profile adoption and busy/cross-worker reuse fail explicitly
+comparison. Unsupported programme/profile adoption and cross-worker reuse fail explicitly
 until their remaining contracts are ported. See the contract scripts' MILESTONES.md. No M4 completion,
 application parity or performance gain is claimed.
 
@@ -79,15 +79,46 @@ bytes and connection/channel start times. Source characterization, 21 targeted H
 reply cancellation case, strict Clippy and actual Django Store/Auth/JWT native
 HTTP proof have passed. Three Range responses match source hashes, preserve
 1,880,512 cumulative bytes and start times, retain the source middle-seek base,
-and cancel prior grace through startup retention. See `verified-idle.json`. Frozen image 9 also matches the original three Range/status/header/hash
+and cancel prior grace through startup retention. See `verified-idle.json`. Frozen image 11 also matches the original three Range/status/header/hash
 responses, metadata relationships, cleanup cancellation and retention; its
 established reopen strictly decodes audio/video (74 frames). See immutable
 provenance in `verified-compose.json`. This establishes only this local idle
-slice, with busy/fingerprint/cross-worker behavior still open.
+slice; fingerprint/cross-worker/programme/profile behavior remains open.
 
 Busy-control preparation is separate: 448 pure decision vectors captured from
 immutable original views match `timeshift-core`, including full restart versus
 bounded startup Range, near-EOF thresholds and capped open-ended tail ranges.
 Original busy middle-seek, plain-reconnect and tail-probe HTTP/Redis snapshots
-are recorded in `python-busy-seek-goldens.json`; these are source characterization,
-not Rust busy-playback implementation or continuous quota sampling.
+are recorded in `python-busy-seek-goldens.json`; the frozen image 11 app now matches their three-case wire/quota/lifecycle
+comparison. The runtime drains old bodies while retaining provider quota,
+increments and fences stream generations, and handles tail probes through
+a separately bounded raw cached-URL path without pool/stat/profile mutations.
+Held probe bodies participate in shutdown. Both the actual-schema/Auth/JWT host
+proof and immutable Compose proof passed; see `verified-busy.json`. Continuous
+quota sampling, full statistics and cross-worker adoption remain separate gates.
+
+Native direct-auth entry now matches 15 original wire cases in immutable image 12,
+including caller-supplied session byte ranges, first-hop redirect minting and
+provider Redirect formats. See `verified-direct.json`. XC PATH and
+`/streaming/timeshift.php` adapters additionally match 23 actual-source cases
+against native Rust and real original PostgreSQL/Redis: required-query ordering,
+wrong credentials, channel visibility, inactive XC users, ignored Bearer headers,
+XC network precedence, HEAD, supplied sessions and both Redirect layouts.
+The XC adapter calls the shared Store XC authenticator directly and retains the
+original authors' behavior. See `verified-xc-routes.json`; immutable image 13 now matches all 23 XC cases and repeats the 15 native
+direct cases, with fixture cleanup and media decode passing. Strict all-target Clippy, four library tests and
+25 HTTP/Redis/runtime regressions pass. No full M4 completion or performance
+acceptance follows from these slices.
+
+The `management*` modules match31 original admin HTTP cases on actual Django
+PostgreSQL/Redis, including populated statistics, guide advancement, first50
+valid sessions, permission/JSON/method handling and synthetic stop cleanup.
+Active and idle real-media stops also match body cancellation, provider release,
+API revocation and raw grace/pool lifecycle. In particular, original active-stop
+finalization briefly re-creates a grace-only client hash; both implementations
+remove it after grace and retain the idle fingerprint. Eleven real Redis pool
+regressions cover cancellation/reopen fences and that compatibility branch.
+A deliberately failing test event sink verifies three full stats-envelope
+attempts without changing stop success. Application router/shutdown wiring compiles with strict Clippy; frozen Compose
+management proof and actual shared event transport remain pending. See
+MANAGEMENT-CONTRACTS.md and verified-management.json.

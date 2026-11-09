@@ -114,3 +114,17 @@ runner freezes Rust bytes and uses an isolated original-runtime Redis for
 Python↔Rust primitive/cache TTL and version-barrier tests; it never touches an
 external Redis or production database. Collection dismissal HTTP cases added
 after image11 remain queued until the next frozen candidate.
+
+The optional `environment_ip` suite checks frozen package enabled-IP cached and
+locked-cold responses without public-provider requests. The separate
+`run_ip_lookup.py --output <empty-directory>` fixture captures actual original
+Django worker/API behavior and compares native real HTTP/SQL/Redis using private
+provider endpoints, preserving the source code and transport order. It now
+retains exact Rust bytes and hashes in `rust-source.tar`. See account probe
+IP-LOOKUP-CONTRACTS.md for bounds and the separate browser/default-map gates.
+
+Immutable builders now write both `candidate-overlay.yml` bound to the image tag
+and `candidate-overlay-template.yml`, with separate hashes. Fixture adapters
+accept the original image slot or an exactly matching pinned image and reject
+stale/prefix mismatches. Older build directories may lack these optional files;
+`docker/compose.rust-candidate.yml` remains the template fallback.

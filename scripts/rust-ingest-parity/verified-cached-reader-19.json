@@ -1,0 +1,49 @@
+{
+  "scope": "bounded-original-parsed-cache-reader",
+  "passed": true,
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_runtime": {
+    "python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "unicode_version": "15.1.0"
+  },
+  "original_runtime_differential_cases": 2283,
+  "focused_and_core_tests_passed": 22,
+  "strict_all_target_clippy_passed": true,
+  "raw_report_sha256": "436b2405f97a6e91233fa7a428f25ef1e1d0fab735dcf2f879feaba7d40d0174",
+  "source_hashes": {
+    "apps/m3u/tasks.py": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+    "apps/m3u/utils.py": "9ddc50fe1e3916e6812007b1de9d7677341333b334850001128e1406d4ab91ae",
+    "apps/channels/models.py": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+    "core/utils.py": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+    "scripts/rust-ingest-parity/run.py": "1b12dd27235135e0dd906b5b838ab490e2bf441ab2155e7e4012e5de5b0e7b96",
+    "rust/Cargo.lock": "4198d30075e64af2a5b3732ae7afa395b7de203c2ee2243d26229529cda3b2b2",
+    "rust/rust-toolchain.toml": "c33d1f0b1b8fda448bea32d7dc867aa64947c87169fd9de7122ffccad1dd80f9",
+    "rust/crates/ingest-core/Cargo.toml": "3077bb48b30c5a73fac452ec4756b71fa447976e3d76080062a9390ede6adc64",
+    "rust/crates/ingest-core/examples/filter_probe.rs": "86c2146c919aa0a18027d51f5ff81c6651bd0d1e4e0aebecfbde622c5f4b5819",
+    "rust/crates/ingest-core/examples/ingest_parity.rs": "1871597dc60151271e991455f5c1ac8f58e5ece64df8edd1c0fbaa1ef2a2abb1",
+    "rust/crates/ingest-core/src/cache.rs": "b3ce35bef58ffb391a9e2114187de7c6c5104aa4578c58cb0a3ca71e6721daed",
+    "rust/crates/ingest-core/src/cached.rs": "021f0903c4dc2c6ef2b0156b527242495498827be9ce6bab572bd3f7c74980b9",
+    "rust/crates/ingest-core/src/identity.rs": "a26a428d346c2fcce8e1fdafcd6baf7ca8beafc5bbf7d84b55c70206a4159776",
+    "rust/crates/ingest-core/src/lib.rs": "9442bd205f2392153696f1a29c03ac96a1f46c078a4b5a6f20947ef52e28d758",
+    "rust/crates/ingest-core/src/prepared.rs": "502070f5f5b16a3ec851ca88d9334a7e9f9779dfbfd769b2fae15a6855590c12",
+    "rust/crates/ingest-core/src/projection.rs": "80dcf2a896015c9e626fa67b3c531b22f7357b1ee6d454b5724f96dd4cd6c7b0",
+    "rust/crates/ingest-core/src/reader.rs": "90ebdde2c67f0fdc307a353f9d3c12245b77782f6fb4bc614627cf49eed480b4",
+    "rust/crates/ingest-core/src/uploads.rs": "d4b2a7ac8534aefc6ab4efe0943c7adc343ee37635c76c4ea35d870bdbf11f18",
+    "rust/crates/ingest-core/src/validation.rs": "4ed0b686973afec42ac63053c5d8bbf51f7357324fd4e094b770c9f000d1adf4",
+    "rust/crates/ingest-core/tests/cache.rs": "a4f38ad61e7b175446ec223ad9fe59e7f38603726cf271dc3544b646b19adfb8",
+    "rust/crates/ingest-core/tests/cached.rs": "c83472486537a15b4383d72b4982fddc3c4df74032dbe88322879879157033fc",
+    "rust/crates/ingest-core/tests/parser.rs": "adf6bc98921f25dfb759cbdef7b9711f41abe41e29f09b6b4fa202e095565107",
+    "rust/crates/ingest-core/tests/prepared.rs": "b2c7e4d8e77ebd058d8cf9e09728f62d508efb85bee1e9b0022b3a7d67bc8fbf",
+    "rust/crates/ingest-core/tests/reader.rs": "2cef72ce7db3aeeeffecc482d4756c56699ad3b3732cadbf3aa8236f41b8df40",
+    "rust/crates/ingest-core/tests/uploads.rs": "3a5b2e86d0e873f3d8fc7820c399f05606caf14a82f67eb3c6bc069bac8ea21a"
+  },
+  "evidence_directory": "artifacts/rust/m6-cached-reader-19",
+  "ingestion_jobs_migrated": false,
+  "application_performance_verified": false,
+  "notes": [
+    "Read-only descriptor validates complete cache and JSON EOF before exposing consumer callbacks; second pass retains one entry and bounded ordered groups.",
+    "Recovery tests cover malformed tail and oversized fields without callbacks, atomic file replacement, duplicate group ordering, and callback failure/retry.",
+    "Legacy in-place cache writers require a separate cutover gate; native producers replace atomically.",
+    "No refresh endpoint or destructive cleanup orchestration is enabled by this component gate."
+  ]
+}

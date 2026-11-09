@@ -55,7 +55,8 @@ pub(crate) fn router(auth: AuthService) -> Router {
 }
 
 impl AuthService {
-    pub(crate) async fn account_user(
+    /// REST authentication/UI-network policy, preserving raw header validation.
+    pub async fn account_user(
         &self,
         peer: SocketAddr,
         headers: HeaderMap,
@@ -69,8 +70,17 @@ impl AuthService {
             return Err(StoreError::Unauthorized("Invalid authentication header"));
         }
         let request = request(peer, headers);
+        self.authorize_ui(&request, admin).await
+    }
+    /// Request-based REST policy for management adapters. This is independent
+    /// of native media and XC authentication and has no STREAMS gate.
+    pub async fn authorize_ui(
+        &self,
+        request: &dispatcharr_contracts::PlaybackRequest,
+        admin: bool,
+    ) -> Result<User, StoreError> {
         let user = self
-            .authenticate(&request)
+            .authenticate(request)
             .await?
             .ok_or(StoreError::Unauthorized(
                 "Authentication credentials were not provided.",
@@ -78,12 +88,18 @@ impl AuthService {
         if (admin && user.user_level < 10)
             || !self
                 .store
-                .network_allowed(self.client_ip(&request), "UI", Some(&user))
+                .network_allowed(self.client_ip(request), "UI", Some(&user))
                 .await?
         {
             return Err(StoreError::PermissionDenied);
         }
         Ok(user)
+    }
+    pub async fn authorize_ui_admin(
+        &self,
+        request: &dispatcharr_contracts::PlaybackRequest,
+    ) -> Result<User, StoreError> {
+        self.authorize_ui(request, true).await
     }
 }
 

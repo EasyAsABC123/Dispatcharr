@@ -49,3 +49,12 @@ checking. Use distinct fixture users for independent viewers, assert
 actual provider/session counts in both backends, and retain the source-adoption
 scenario as a separate functional/load workload. Do not compare a source
 adopted stream against 100 independent Rust upstreams and call it fanout parity.
+
+XC route follow-up: `--timeshift-rust-xc` records the original 23-case PATH/QUERY
+oracle and drives a native Rust service against the same actual Django
+PostgreSQL/Redis/origin fixture. It checks credential/network ordering, native
+JWT bypass for XC, inactive-user compatibility, redirects, HEAD and exact
+partial-media bytes. `verified-xc-routes.json` records this host-service proof.
+Use `--timeshift-xc --candidate-overlay <overlay> --candidate-build-manifest
+<build.json>` for the separate frozen-image comparison; a host pass does not
+complete that gate. Neither result establishes whole M4 or performance parity.

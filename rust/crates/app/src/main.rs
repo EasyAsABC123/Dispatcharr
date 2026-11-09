@@ -291,7 +291,7 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
-    let (catchup_sessions, catchup) = if let Some(coordinator) = coordinator {
+    let (catchup_sessions, catchup, catchup_management) = if let Some(coordinator) = coordinator {
         let redis_url =
             env::var("REDIS_URL").map_err(|_| "Redis catch-up configuration missing")?;
         let sessions = dispatcharr_timeshift_http::CatchupSessions::new(
@@ -320,9 +320,17 @@ async fn run() -> Result<(), String> {
         )
         .await
         .map_err(|_| "Catch-up media initialization failed (credentials omitted)")?;
-        (Some(sessions), Some(media))
+        let management = dispatcharr_timeshift_http::CatchupManagement::new(
+            store.clone(),
+            auth.clone(),
+            media.clone(),
+            &redis_url,
+        )
+        .await
+        .map_err(|_| "Catch-up management initialization failed (credentials omitted)")?;
+        (Some(sessions), Some(media), Some(management))
     } else {
-        (None, None)
+        (None, None, None)
     };
     let mut app = Router::new()
         .route("/health/ready", get(health))
@@ -346,6 +354,9 @@ async fn run() -> Result<(), String> {
     }
     if let Some(media) = &catchup {
         app = app.merge(media.clone().router());
+    }
+    if let Some(management) = &catchup_management {
+        app = app.merge(management.clone().router());
     }
     // Source bare-profile redirects duplicate the profile and render React.
     app = app
@@ -387,6 +398,7 @@ async fn run() -> Result<(), String> {
     let signal_fmp4 = fmp4.clone();
     let signal_vod = vod.clone();
     let signal_catchup = catchup.clone();
+    let signal_catchup_management = catchup_management.clone();
     let server = axum::serve(
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
@@ -401,6 +413,7 @@ async fn run() -> Result<(), String> {
             signal_fmp4,
             signal_vod,
             signal_catchup,
+            signal_catchup_management,
         ));
         let _ = shutdown_started.send(cleanup);
         // Return immediately: Axum stops accepting while cleanup runs.
@@ -409,7 +422,7 @@ async fn run() -> Result<(), String> {
     tokio::pin!(server);
     tokio::select! {
         result=&mut server=>{
-            let _=tokio::time::timeout(shutdown_timeout,shutdown_components(engine,clients,hls,fmp4,vod,catchup)).await;
+            let _=tokio::time::timeout(shutdown_timeout,shutdown_components(engine,clients,hls,fmp4,vod,catchup,catchup_management)).await;
             result.map_err(|_|"HTTP server failed".to_string())
         },
         cleanup=&mut shutdown_notice=>{
@@ -451,9 +464,10 @@ async fn shutdown_components(
     fmp4: Option<dispatcharr_fmp4_http::Fmp4Gateway>,
     vod: Option<dispatcharr_vod_http::VodEngine>,
     catchup: Option<dispatcharr_timeshift_http::CatchupMedia>,
+    catchup_management: Option<dispatcharr_timeshift_http::CatchupManagement>,
 ) {
     engine.shutdown();
-    let (live, _, _, vod, catchup) = tokio::join!(
+    let (live, _, _, vod, catchup, management) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
             if let Some(hls) = hls {
@@ -479,8 +493,15 @@ async fn shutdown_components(
                 true
             }
         },
+        async {
+            if let Some(management) = catchup_management {
+                management.shutdown().await
+            } else {
+                true
+            }
+        },
     );
-    if !live || !vod || !catchup {
+    if !live || !vod || !catchup || !management {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }
     if let Some(clients) = clients {

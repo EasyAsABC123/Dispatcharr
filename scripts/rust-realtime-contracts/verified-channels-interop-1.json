@@ -1,0 +1,74 @@
+{
+  "scope": "real original Python and two Rust process ChannelsRedis interoperability",
+  "passed": true,
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "python_runtime": {
+    "channels_redis": "4.3.0",
+    "msgpack": "1.2.4"
+  },
+  "checks": [
+    {
+      "sender": "sync",
+      "three_processes_received_exact_envelope": true
+    },
+    {
+      "sender": "async",
+      "three_processes_received_exact_envelope": true
+    },
+    {
+      "sender": "rust-first",
+      "three_processes_received_exact_envelope": true
+    },
+    {
+      "sender": "rust-second",
+      "three_processes_received_exact_envelope": true
+    },
+    {
+      "case": "Python direct-channel string selector",
+      "only_target_received": true
+    },
+    {
+      "case": "Rust disconnect preserves Python and other Rust members",
+      "passed": true
+    }
+  ],
+  "group_members_after_close": 0,
+  "cleanup": "isolated Compose project removed",
+  "tool_sha256": {
+    "scripts/rust-realtime-contracts/interop.py": "3be7185f1ea974fbee17bedff53ae9b3ab4f7567fd9939052ab89291fdf62b1f",
+    "scripts/rust-realtime-contracts/python_peer.py": "38ad110e991519ce30c6fd60f13b5e3a14e8efb7edddee2d73da5f6d2e1fc2de",
+    "rust/crates/realtime/src/bus.rs": "a70599e660d9454899ceef37997645f86b8b59b06706968b38b74afd1b54bd32",
+    "rust/crates/realtime/src/codec.rs": "1283972bba61a146be194e62d8976bc1fc37aa2b27d3a7703a1138cb2545a9fc",
+    "rust/crates/realtime/examples/bus_peer.rs": "e0e34a225d519319960b2d431de600dbfb90d4ce8905a7ee6035b68c0ab25862",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1"
+  },
+  "rust_peer_sha256": "06f072b6c12393d209188cd4614649ec3dd512cee430b7a1d5702e839d8892dc",
+  "artifact": "artifacts/rust/m7-channels-interop-3/interop.json",
+  "artifact_sha256": "6d0a802ffc196fa6bf79340caee445966571e410c3bbe8412ef43aadab1a7fce",
+  "ambient_original_startup_events": [
+    {
+      "type": "update",
+      "data_type": "notifications_cleared"
+    },
+    {
+      "type": "update",
+      "data_type": "notifications_cleared"
+    }
+  ],
+  "limitations": [
+    "Transport component only; Rust gateway not app-wired and browser/role/preview gates remain",
+    "FIFO and cancellation validated separately against real Redis; no performance gain claim",
+    "Earlier probes assumed empty event bus; failures preserved, correlated oracle records unrelated original notifications_cleared events"
+  ]
+}

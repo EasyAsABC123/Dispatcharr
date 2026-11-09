@@ -69,3 +69,33 @@ def capture(base,seed,control,label):
         fetch('global-network-denial',path+start,token)
         return {'format_version':1,'scope':'native direct-auth validation, bare redirects and authenticated client-supplied session only','capture_complete':len(events)==15,'events':events,'opaque_sessions_and_query_tokens_normalized':True,'application_parity_verified':False,'performance_verified':False}
     finally:control('restore',label)
+
+
+def compare(source,candidate):
+    differences=[]
+    expected={event['case']:event for event in source['events']}
+    actual={event['case']:event for event in candidate['events']}
+    for case in sorted(expected.keys()|actual.keys()):
+        if case not in expected or case not in actual:
+            differences.append({'case':case,'field':'present'});continue
+        left,right=expected[case],actual[case]
+        if left['status']!=right['status']:differences.append({'case':case,'field':'status'})
+        lh,rh=dict(left['headers']),dict(right['headers'])
+        json_body=lh.get('content-type')=='application/json' and rh.get('content-type')=='application/json'
+        if json_body:
+            try:equal=json.loads(left.get('body',''))==json.loads(right.get('body',''))
+            except ValueError:equal=False
+            if not equal:differences.append({'case':case,'field':'json-body'})
+            # Django JsonResponse and DRF serialize spacing/order differently;
+            # retain correct transport lengths on both sides of semantic JSON.
+            for event,headers in [(left,lh),(right,rh)]:
+                if headers.pop('content-length',None)!=str(event['bytes']):differences.append({'case':case,'field':'json-content-length'})
+        else:
+            for field in ['bytes','sha256','body']:
+                if left.get(field)!=right.get(field):differences.append({'case':case,'field':field})
+        for headers in [lh,rh]:
+            if 'allow' in headers:headers['allow']=sorted(part.strip() for part in headers['allow'].split(','))
+        if lh!=rh:differences.append({'case':case,'field':'headers'})
+    return {'captured_direct_auth_matches':not differences,'differences':differences,
+        'normalizations':['opaque redirect SID and query token values','Allow method order is a set; original DRF order varies by Python hash seed','JSON object content compared semantically; each Content-Length must match its actual body bytes'],
+        'application_parity_verified':False,'performance_verified':False}

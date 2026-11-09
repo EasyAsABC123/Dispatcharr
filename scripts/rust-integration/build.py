@@ -43,6 +43,8 @@ def main():
               'git_revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
               'worktree_status': subprocess.check_output(['git', 'status', '--short'], cwd=ROOT, text=True),
               'source_scope': 'immutable Rust tree, tracked unchanged React frontend, LICENSE and ATTRIBUTION.md; excludes local environment/dependency/build artifacts'}
+    overlay_template=(ROOT/'docker/compose.rust-candidate.yml').read_text()
+    if overlay_template.count('image: dispatcharr-rust-candidate:milestone2')!=1:parser.error('Candidate Compose image slot changed')
     status = 1
     with tempfile.TemporaryFile() as archive:
         with tarfile.open(fileobj=archive, mode='w') as tar:
@@ -92,6 +94,11 @@ def main():
                 report['runtime_packages_sha256'] = hashlib.sha256(packages.encode()).hexdigest()
                 report['runtime_packages_frozen'] = True
                 report['media_runtime_scope'] = 'Exact pinned original FFmpeg/ffprobe ELF closure in isolated prefix; no Python runtime copied'
+                overlay=overlay_template.replace('image: dispatcharr-rust-candidate:milestone2','image: '+args.tag,1)
+                (destination/'candidate-overlay.yml').write_text(overlay)
+                (destination/'candidate-overlay-template.yml').write_text(overlay_template)
+                report['candidate_overlay_sha256']=hashlib.sha256(overlay.encode()).hexdigest()
+                report['candidate_overlay_template_sha256']=hashlib.sha256(overlay_template.encode()).hexdigest()
             report.update(passed=True, image_id=inspected['Id'], platform=inspected['Os'] + '/' + inspected['Architecture'])
             status = 0
         except (OSError, ValueError, subprocess.SubprocessError, RuntimeError) as error:

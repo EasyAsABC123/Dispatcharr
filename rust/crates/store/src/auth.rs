@@ -1,4 +1,4 @@
-use crate::{cidrs_allow, verify_password, Store, StoreError, User};
+use crate::{cidrs_allow, Store, StoreError, User};
 use axum::{
     extract::{ConnectInfo, State},
     http::{HeaderMap, StatusCode},
@@ -75,6 +75,8 @@ pub struct AuthService {
     password_workers: Arc<tokio::sync::Semaphore>,
     pub(crate) channel_control: Option<Arc<dyn ChannelControl>>,
     pub(crate) notification_cache: Option<crate::NotificationCache>,
+    pub(crate) event_sink: Option<Arc<dyn dispatcharr_contracts::UpdateEventSink>>,
+    pub(crate) ip_lookup: crate::ip_lookup::IpLookup,
 }
 
 type AttemptHistory = HashMap<(IpAddr, &'static str), VecDeque<Instant>>;
@@ -88,6 +90,8 @@ impl AuthService {
             password_workers: Arc::new(tokio::sync::Semaphore::new(4)),
             channel_control: None,
             notification_cache: None,
+            event_sink: None,
+            ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),
         }
     }
 
@@ -100,6 +104,14 @@ impl AuthService {
 
     pub fn with_notification_cache(mut self, cache: crate::NotificationCache) -> Self {
         self.notification_cache = Some(cache);
+        self
+    }
+
+    pub fn with_event_sink(
+        mut self,
+        sink: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
+    ) -> Self {
+        self.event_sink = Some(sink);
         self
     }
 
@@ -394,12 +406,23 @@ impl AuthService {
             .clone()
             .try_acquire_owned()
             .map_err(|_| StoreError::RateLimited(1))?;
-        let matched = tokio::task::spawn_blocking(move || {
+        let previous_hash = encoded.clone();
+        let (matched, upgraded_hash) = tokio::task::spawn_blocking(move || {
             let _worker = worker;
-            verify_password(&password, &encoded)
+            crate::passwords::verify_and_upgrade(&password, &encoded)
         })
         .await
         .map_err(|_| StoreError::Unsupported("password verification worker failed"))?;
+        if let (Some(user), Some(upgraded_hash)) = (user.as_ref(), upgraded_hash) {
+            // Avoid overwriting a password changed concurrently after lookup.
+            // No other user fields or timestamps are changed by Django's setter.
+            sqlx::query("UPDATE accounts_user SET password=$1 WHERE id=$2 AND password=$3")
+                .bind(upgraded_hash)
+                .bind(user.id)
+                .bind(previous_hash)
+                .execute(self.store.pool())
+                .await?;
+        }
         let user =
             user.filter(|user| user.is_active && matched)
                 .ok_or(StoreError::Unauthorized(
@@ -595,6 +618,22 @@ impl IntoResponse for StoreError {
             ),
             Self::NotFound => (StatusCode::NOT_FOUND, json!({"detail":"Not found."})),
             Self::Unsupported(detail) => (StatusCode::NOT_IMPLEMENTED, json!({"error":detail})),
+            Self::XcDenied {
+                status,
+                retry_after,
+            } => {
+                let mut response = (
+                    StatusCode::from_u16(status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+                    Json(crate::xc_auth::failure_body(status)),
+                )
+                    .into_response();
+                if let Some(wait) = retry_after {
+                    if let Ok(value) = wait.to_string().parse() {
+                        response.headers_mut().insert("retry-after", value);
+                    }
+                }
+                return response;
+            }
             Self::RateLimited(wait) => {
                 return (
                     StatusCode::TOO_MANY_REQUESTS,

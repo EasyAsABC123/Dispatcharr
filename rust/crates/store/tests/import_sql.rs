@@ -336,7 +336,33 @@ async fn original_batch_create_touch_change_dedup_and_transaction_rollback() {
             .get("account_id")
             .and_then(Value::as_i64)
             .unwrap_or(account);
-        let result = store.import_m3u_batch(step_account, rows).await;
+        let result = if let Some(playlist) = step["playlist"].as_str() {
+            use dispatcharr_ingest_core::{prepare_playlist, CacheReadLimits, PreparationLimits};
+            let path = Path::new(&fixture_path).with_extension("parsed-cache.json");
+            prepare_playlist(
+                std::io::Cursor::new(playlist.as_bytes()),
+                &path,
+                PreparationLimits::default(),
+            )
+            .unwrap();
+            let context = &step["projection_context"];
+            let request = dispatcharr_store::CacheBatchRequest {
+                account_id: step_account,
+                path: path.clone(),
+                groups: serde_json::from_value(context["groups"].clone()).unwrap(),
+                hash_keys: serde_json::from_value(context["hash_keys"].clone()).unwrap(),
+                max_name_characters: context["max_name_characters"].as_u64().unwrap() as usize,
+                limits: CacheReadLimits::default(),
+            };
+            let result = store.import_standard_cache_batches(request).await;
+            if let Some(expected) = step["expected_batches"].as_u64() {
+                assert_eq!(result.as_ref().unwrap().batches, expected as usize);
+            }
+            std::fs::remove_file(path).unwrap();
+            result.map(|counts| counts.streams)
+        } else {
+            store.import_m3u_batch(step_account, rows).await
+        };
         assert_eq!(
             result.is_err(),
             step["error"].as_bool().unwrap(),
@@ -354,6 +380,53 @@ async fn original_batch_create_touch_change_dedup_and_transaction_rollback() {
         let actual = normalized(snapshot(&store, prefix).await, &before);
         assert_eq!(actual, step["expected"], "{}", step["name"]);
     }
+    // A corrupt parsed-cache tail must not touch rows from any earlier batch.
+    // A configured filter must fail explicitly rather than importing unfiltered.
+    let parsed = fixture["steps"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|step| step["playlist"].is_string())
+        .unwrap();
+    let path = Path::new(&fixture_path).with_extension("rejected-cache.json");
+    let playlist = parsed["playlist"].as_str().unwrap();
+    let request = || dispatcharr_store::CacheBatchRequest {
+        account_id: account,
+        path: path.clone(),
+        groups: serde_json::from_value(parsed["projection_context"]["groups"].clone()).unwrap(),
+        hash_keys: serde_json::from_value(parsed["projection_context"]["hash_keys"].clone())
+            .unwrap(),
+        max_name_characters: 512,
+        limits: Default::default(),
+    };
+    dispatcharr_ingest_core::prepare_playlist(
+        std::io::Cursor::new(playlist),
+        &path,
+        Default::default(),
+    )
+    .unwrap();
+    let valid_cache = std::fs::read(&path).unwrap();
+    let before = snapshot(&store, prefix).await;
+    std::fs::write(&path, &valid_cache[..valid_cache.len() - 1]).unwrap();
+    assert!(store
+        .import_standard_cache_batches(request())
+        .await
+        .is_err());
+    assert_eq!(snapshot(&store, prefix).await, before);
+    std::fs::write(&path, valid_cache).unwrap();
+    let filter: i64 = sqlx::query_scalar("INSERT INTO m3u_m3ufilter (m3u_account_id,filter_type,regex_pattern,exclude,\"order\",custom_properties) VALUES ($1,'name','.',true,0,'{}') RETURNING id")
+        .bind(account).fetch_one(store.pool()).await.unwrap();
+    assert!(matches!(
+        store.import_standard_cache_batches(request()).await,
+        Err(dispatcharr_store::StoreError::Unsupported(_))
+    ));
+    assert_eq!(snapshot(&store, prefix).await, before);
+    sqlx::query("DELETE FROM m3u_m3ufilter WHERE id=$1")
+        .bind(filter)
+        .execute(store.pool())
+        .await
+        .unwrap();
+    std::fs::remove_file(path).unwrap();
     // Rejected input bounds must leave the already verified rows unchanged.
     let before = snapshot(&store, prefix).await;
     let template: ImportedStream =

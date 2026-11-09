@@ -1,7 +1,7 @@
 # Local Rust migration verification
 
-The React UI stays. The Rust workspace currently verifies streaming components;
-it is not a runnable replacement for the Dispatcharr backend. Follow the
+The React UI stays. The packaged Rust backend runs selected API and playback
+paths; it is not yet a complete replacement for the Dispatcharr backend. Follow the
 [milestone acceptance ledger](rust-milestones.md) and
 [architecture inventory](rust-migration.md) when assessing progress. M0 and M1
 remain **in progress**, even when the developer checks below pass.
@@ -269,3 +269,17 @@ Null tests/results and unresolved required entries block coverage acceptance.
 A source candidate count is not a passing-test count. Keep report artifacts and
 the tested source/image identity with each result; add compact sanitized
 summaries to the ledger only after inspection.
+
+## Ingestion job-lock component
+
+Run the original-helper/native Redis cancellation fixture independently:
+
+```sh
+python3 scripts/rust-ingest-parity/run_task_locks.py --output artifacts/rust/task-locks-local-1
+```
+
+Use a new output directory. The runner starts and removes a uniquely owned local
+Redis container from the pinned original image. The original helper peer checks
+mutual exclusion and reacquisition; Rust checks renewal, replacement ownership
+and cancellation while actual Redis write replies are delayed. The report does
+not accept mixed old/new long-running workers or a complete refresh job.

@@ -26,4 +26,4 @@ url = "2"
 sha2 = "0.10"
 redis = { version = "0.32", features = ["tokio-comp"] }
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
-tokio = { version = "1", features = ["rt-multi-thread", "net", "io-util"] }
+tokio = { version = "1", features = ["rt-multi-thread", "net", "io-util", "process"] }

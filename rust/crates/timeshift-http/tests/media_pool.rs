@@ -607,3 +607,111 @@ async fn user_preemption_precedes_full_provider_and_failed_setup_rolls_back_pend
         .await
         .unwrap();
 }
+
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn admin_stop_finalizer_retains_source_grace_only_hash_then_idle_fingerprint() {
+    let (pool, mut redis, profile) = setup().await;
+    let sid = uuid::Uuid::new_v4().to_string();
+    let ticket = pool.open(request(&sid, profile)).await.unwrap();
+    ticket
+        .start("http://fixture.invalid/archive.ts", Some(15_001_836), None)
+        .await
+        .unwrap();
+    tokio::time::sleep(Duration::from_millis(2050)).await;
+    let stop = format!("timeshift:channel:123_2026-11-09T11-00-00Z_fixture:client:{sid}:stop");
+    let grace = format!("timeshift:grace:123_{sid}:{sid}");
+    // The Source admin view deletes statistics/API before generator finally.
+    let _: () = redis
+        .del(&[
+            client_key(&sid),
+            metadata_key(&sid),
+            api_key(&sid),
+            format!("timeshift:channel:123_{sid}:clients"),
+        ])
+        .await
+        .unwrap();
+    let _: () = redis.set_ex(&stop, "admin", 60).await.unwrap();
+    drop(ticket);
+    wait(async || {
+        redis
+            .hget::<_, _, String>(pool_key(&sid), "busy")
+            .await
+            .ok()
+            .as_deref()
+            == Some("0")
+    })
+    .await;
+    assert!(redis
+        .hexists::<_, _, bool>(client_key(&sid), "stats_grace_deadline")
+        .await
+        .unwrap());
+    assert!(redis
+        .hexists::<_, _, bool>(client_key(&sid), "stats_grace_disconnected_at")
+        .await
+        .unwrap());
+    assert!(!redis
+        .hexists::<_, _, bool>(client_key(&sid), "programme_start")
+        .await
+        .unwrap());
+    assert_eq!(redis.ttl::<_, i64>(&grace).await.unwrap(), 2);
+    wait(async || pool.is_idle()).await;
+    assert!(!redis.exists::<_, bool>(client_key(&sid)).await.unwrap());
+    assert!(!redis.exists::<_, bool>(&grace).await.unwrap());
+    assert!(redis.exists::<_, bool>(pool_key(&sid)).await.unwrap());
+    assert!((1..=60).contains(&redis.ttl::<_, i64>(pool_key(&sid)).await.unwrap()));
+    assert_eq!(redis.get::<_, String>(&stop).await.unwrap(), "admin");
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 0);
+    assert!(pool.shutdown().await);
+    let _: () = redis
+        .del(&[pool_key(&sid), stop, profile_key(profile)])
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn established_reopen_cancels_grace_fields_and_old_cleanup_cannot_remove_successor() {
+    let (pool, mut redis, profile) = setup().await;
+    let sid = uuid::Uuid::new_v4().to_string();
+    let ticket = pool.open(request(&sid, profile)).await.unwrap();
+    ticket
+        .start("http://fixture.invalid/archive.ts", None, None)
+        .await
+        .unwrap();
+    tokio::time::sleep(Duration::from_millis(2050)).await;
+    drop(ticket);
+    wait(async || {
+        redis
+            .hget::<_, _, String>(pool_key(&sid), "busy")
+            .await
+            .ok()
+            .as_deref()
+            == Some("0")
+    })
+    .await;
+    let grace = format!("timeshift:grace:123_{sid}:{sid}");
+    assert!(redis.exists::<_, bool>(&grace).await.unwrap());
+    let successor = pool.open(request(&sid, profile)).await.unwrap();
+    successor
+        .start("http://fixture.invalid/archive.ts", None, None)
+        .await
+        .unwrap();
+    assert!(!redis.exists::<_, bool>(&grace).await.unwrap());
+    assert!(!redis
+        .hexists::<_, _, bool>(client_key(&sid), "stats_grace_deadline")
+        .await
+        .unwrap());
+    tokio::time::sleep(Duration::from_millis(250)).await;
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(pool_key(&sid), "busy")
+            .await
+            .unwrap(),
+        "1"
+    );
+    assert_eq!(redis.get::<_, i64>(profile_key(profile)).await.unwrap(), 1);
+    drop(successor);
+    assert!(pool.shutdown().await);
+    let _: () = redis.del(profile_key(profile)).await.unwrap();
+}

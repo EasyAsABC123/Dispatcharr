@@ -1,0 +1,23 @@
+{
+  "scope": "ordered-ingestion-filter-reference-and-rejected-engine-candidate",
+  "source_runtime": {
+    "python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "unicode_version": "15.1.0",
+    "source_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981"
+  },
+  "ordered_policy_cases": 500,
+  "ordered_policy_failures": 0,
+  "regex_candidate": "fancy-regex0.20.0, test-only with no variable-lookbehind feature",
+  "regex_cases": 154,
+  "regex_candidate_failures": 50,
+  "native_filter_parity_verified": false,
+  "raw_report_sha256": "2506c989fcd78321d3ac2fdf6d13318bd611941299e8f3de78f3a5acc675b96e",
+  "source_goldens_sha256": "538b4936560cd6ac5a328278d9d32618f8d4d3aa31d0e3de01da57844b79b905",
+  "raw_evidence_directory": "artifacts/rust/m6-filter-source-18",
+  "notes": [
+    "Ordered first-match policy passed500bounded source cases; the unmodified candidate fails50of154regex cases and is not used by any product refresh route.",
+    "Differences include anchors, Unicode categories/boundaries/case handling, ASCII modes, octal escapes and source-only syntax validation.",
+    "Builtin Pythonre and third-party preview/transform regex remain separate compatibility gates.",
+    "A Rust-written interpreter/standard-library compiler option is being evaluated in an isolated artifact prototype; it is not selected or shipped."
+  ]
+}

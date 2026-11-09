@@ -72,8 +72,33 @@ fn main() {
                 dispatcharr_ingest_core::PreparationLimits::default(),
             )
             .unwrap();
+            let mut reader = dispatcharr_ingest_core::ValidatedCache::open(
+                &path,
+                dispatcharr_ingest_core::CacheReadLimits::default(),
+            )
+            .unwrap();
+            assert_eq!(reader.entries, result.entries);
+            assert_eq!(
+                reader
+                    .groups
+                    .iter()
+                    .map(|group| &group.name)
+                    .collect::<Vec<_>>(),
+                result.groups.iter().collect::<Vec<_>>()
+            );
+            let mut streamed = Vec::new();
+            reader
+                .for_each(|entry| {
+                    streamed.push(entry);
+                    Ok(())
+                })
+                .unwrap();
             let cached: Value =
-                serde_json::from_reader(std::fs::File::open(path).unwrap()).unwrap();
+                serde_json::from_reader(std::fs::File::open(&path).unwrap()).unwrap();
+            assert_eq!(
+                serde_json::to_value(streamed).unwrap(),
+                cached["extinf_data"]
+            );
             std::fs::remove_dir_all(directory).unwrap();
             json!({"cache":cached,"groups":result.groups,"entries":result.entries})
         } else if request["kind"] == "upload" {

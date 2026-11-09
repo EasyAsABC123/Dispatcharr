@@ -1,0 +1,1124 @@
+{
+  "format_version": 1,
+  "scope": "Original Timeshift stats/programmes/admin-stop HTTP and synthetic Redis cleanup characterization",
+  "capture_complete": true,
+  "events": [
+    {
+      "case": "stats/missing-auth",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "www-authenticate": "Bearer realm=\"api\"",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stats/standard-user",
+      "method": "GET",
+      "status": 403,
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs/missing-auth",
+      "method": "POST",
+      "status": 401,
+      "body": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "www-authenticate": "Bearer realm=\"api\"",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs/standard-user",
+      "method": "POST",
+      "status": 403,
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stop_client/missing-auth",
+      "method": "POST",
+      "status": 401,
+      "body": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "www-authenticate": "Bearer realm=\"api\"",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stop_client/standard-user",
+      "method": "POST",
+      "status": 403,
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stats-empty",
+      "method": "GET",
+      "status": 200,
+      "body": {
+        "timeshift_sessions": [],
+        "total_connections": 0,
+        "timestamp": "<request-clock>"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      },
+      "timestamp_within_request": true
+    },
+    {
+      "case": "stats-post-method",
+      "method": "POST",
+      "status": 405,
+      "body": {
+        "detail": "Method \"POST\" not allowed."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stats-head",
+      "method": "HEAD",
+      "status": 405,
+      "body": null,
+      "headers": {
+        "content-type": "application/json",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stats-options",
+      "method": "OPTIONS",
+      "status": 200,
+      "body": {
+        "name": "Timeshift Stats",
+        "description": "Return active catch-up viewer sessions for the stats page.",
+        "renders": [
+          "application/json",
+          "text/html"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-missing",
+      "method": "POST",
+      "status": 400,
+      "body": {
+        "error": "sessions is required"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-null",
+      "method": "POST",
+      "status": 400,
+      "body": {
+        "error": "sessions is required"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-object",
+      "method": "POST",
+      "status": 400,
+      "body": {
+        "error": "sessions must be an array"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-empty",
+      "method": "POST",
+      "status": 200,
+      "body": {
+        "sessions": []
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-invalid-elements",
+      "method": "POST",
+      "status": 200,
+      "body": {
+        "sessions": []
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-invalid-json",
+      "method": "POST",
+      "status": 400,
+      "body": {
+        "detail": "JSON parse error - Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-get-method",
+      "method": "GET",
+      "status": 405,
+      "body": {
+        "detail": "Method \"GET\" not allowed."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stop-invalid-json",
+      "method": "POST",
+      "status": 400,
+      "body": {
+        "error": "Invalid JSON"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stop-missing",
+      "method": "POST",
+      "status": 400,
+      "body": {
+        "error": "No session_id provided"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stop-empty",
+      "method": "POST",
+      "status": 400,
+      "body": {
+        "error": "No session_id provided"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stop-unknown",
+      "method": "POST",
+      "status": 404,
+      "body": {
+        "error": "Connection not found"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "inactive-admin",
+      "method": "GET",
+      "status": 401,
+      "body": {
+        "detail": "User is inactive",
+        "code": "user_inactive"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "www-authenticate": "Bearer realm=\"api\"",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "ui-network-deny",
+      "method": "GET",
+      "status": 403,
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stats-populated",
+      "method": "GET",
+      "status": 200,
+      "body": {
+        "timeshift_sessions": [
+          {
+            "session_id": "management-fixture",
+            "stats_channel_id": "11_management-fixture",
+            "channel_id": 11,
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "channel_name": "Offline native catch-up",
+            "logo_id": null,
+            "programme_start": "2026-11-09T11:00:00Z",
+            "position_anchor_at": 100.0,
+            "playback_base_secs": 12.5,
+            "paused": true,
+            "resolution": "320x180",
+            "source_fps": null,
+            "video_codec": "h264",
+            "audio_codec": "aac",
+            "audio_channels": null,
+            "stream_type": null,
+            "connection_count": 1,
+            "connections": [
+              {
+                "client_id": "management-fixture",
+                "session_id": "management-fixture",
+                "ip_address": "192.0.2.123",
+                "user_agent": "management-fixture",
+                "user_id": "3",
+                "username": "rust-catchup-owner",
+                "connected_at": null,
+                "duration": 0,
+                "bytes_streamed": 1024,
+                "avg_bitrate_kbps": 0,
+                "m3u_profile": {},
+                "m3u_profile_id": null
+              }
+            ]
+          }
+        ],
+        "total_connections": 1,
+        "timestamp": "<request-clock>"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      },
+      "timestamp_within_request": true
+    },
+    {
+      "case": "programs-paused-redis-playhead",
+      "method": "POST",
+      "status": 200,
+      "body": {
+        "sessions": [
+          {
+            "session_id": "management-fixture",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          }
+        ]
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-next-guide",
+      "method": "POST",
+      "status": 200,
+      "body": {
+        "sessions": [
+          {
+            "session_id": "management-fixture",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline next programme",
+            "sub_title": "Next subtitle",
+            "description": "Next description",
+            "start_time": "2026-11-09T11:45:30+00:00",
+            "end_time": "2026-11-09T12:30:00+00:00",
+            "duration_secs": 2670
+          }
+        ]
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-invalid-guide",
+      "method": "POST",
+      "status": 200,
+      "body": {
+        "sessions": [
+          {
+            "session_id": "management-fixture",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "bad"
+          }
+        ]
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "programs-first50",
+      "method": "POST",
+      "status": 200,
+      "body": {
+        "sessions": [
+          {
+            "session_id": "fixture-0",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-1",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-2",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-3",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-4",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-5",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-6",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-7",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-8",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-9",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-10",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-11",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-12",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-13",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-14",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-15",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-16",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-17",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-18",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-19",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-20",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-21",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-22",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-23",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-24",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-25",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-26",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-27",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-28",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-29",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-30",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-31",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-32",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-33",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-34",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-35",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-36",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-37",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-38",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-39",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-40",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-41",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-42",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-43",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-44",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-45",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-46",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-47",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-48",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          },
+          {
+            "session_id": "fixture-49",
+            "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+            "programme_start": "2026-11-09T11:00:00Z",
+            "title": "Offline catch-up programme",
+            "sub_title": "",
+            "description": "",
+            "start_time": "2026-11-09T11:00:00+00:00",
+            "end_time": "2026-11-09T11:45:30+00:00",
+            "duration_secs": 2730
+          }
+        ]
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stop-existing",
+      "method": "POST",
+      "status": 200,
+      "body": {
+        "message": "Timeshift session stop signal sent",
+        "session_id": "management-fixture"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    },
+    {
+      "case": "stats-after-stop",
+      "method": "GET",
+      "status": 200,
+      "body": {
+        "timeshift_sessions": [],
+        "total_connections": 0,
+        "timestamp": "<request-clock>"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "OPTIONS, GET",
+        "x-content-type-options": "nosniff"
+      },
+      "timestamp_within_request": true
+    },
+    {
+      "case": "stop-again",
+      "method": "POST",
+      "status": 404,
+      "body": {
+        "error": "Connection not found"
+      },
+      "headers": {
+        "content-type": "application/json",
+        "allow": "POST, OPTIONS",
+        "x-content-type-options": "nosniff"
+      }
+    }
+  ],
+  "synthetic_stop_effects": {
+    "metadata": false,
+    "client_set": false,
+    "client": false,
+    "generations": 0,
+    "api_session": false,
+    "superseded": false,
+    "grace": false,
+    "unrelated": true,
+    "stop_reasons": [
+      "admin",
+      "admin"
+    ],
+    "stop_ttl_bounded": true
+  },
+  "active_and_idle_playback": [
+    {
+      "mode": "active",
+      "initial_media_correct": true,
+      "before_provider_owned": true,
+      "before_api_exists": true,
+      "before_stats_client_count": 1,
+      "closed_after_stop": true,
+      "stopped_before_complete_media": true,
+      "immediate_after_stop": {
+        "grace_only_client_count": 1,
+        "api_exists": false,
+        "stats_client_count": 1,
+        "profile_connections": 0,
+        "pool_exists": true,
+        "pool_busy": "0"
+      },
+      "after_grace": {
+        "grace_only_client_count": 0,
+        "api_exists": false,
+        "stats_client_count": 0,
+        "profile_connections": 0,
+        "pool_exists": true,
+        "pool_busy": "0"
+      }
+    },
+    {
+      "mode": "idle",
+      "initial_media_correct": true,
+      "before_provider_owned": true,
+      "before_api_exists": true,
+      "before_stats_client_count": 1,
+      "closed_after_stop": true,
+      "stopped_before_complete_media": true,
+      "immediate_after_stop": {
+        "grace_only_client_count": 0,
+        "api_exists": false,
+        "stats_client_count": 0,
+        "profile_connections": 0,
+        "pool_exists": true,
+        "pool_busy": "0"
+      },
+      "after_grace": {
+        "grace_only_client_count": 0,
+        "api_exists": false,
+        "stats_client_count": 0,
+        "profile_connections": 0,
+        "pool_exists": true,
+        "pool_busy": "0"
+      }
+    }
+  ],
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_evidence": "artifacts/rust/m4-timeshift-management-active-native-sql-3/timeshift-management-source.json",
+  "source_evidence_sha256": "4d362ebc5a91141e957584829fd08d3d2a73aed1697bdcc30fb825a8f4e761d9",
+  "rust_parity_verified": false,
+  "cleanup_passed": true
+}

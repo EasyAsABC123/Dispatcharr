@@ -5,9 +5,9 @@
   "passed": true,
   "cleanup_passed": true,
   "candidate_provenance": {
-    "image_id": "sha256:363679ce182bea55be97b873c1faffb3024e5abdae0886f655c6678b00943f33",
-    "source_tree_sha256": "d135d0f8e8b21bde6ee102ff77cf0e73f36b84079480590eb4aa08a7f0aed3e0",
-    "build_manifest_sha256": "4e16fc9946aafb9cef2c1e3d14140c2af187bd7b9de6a4d055761bcdcef91f8a"
+    "image_id": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
+    "source_tree_sha256": "3dee6610ccae2626a800e46dc8797170f25e919dde5cef07f4c501d1cbf833aa",
+    "build_manifest_sha256": "bc38dfedc61f381e755002b54c525d833e6f03077d959831f7045d644022292b"
   },
   "fixture_ports": {
     "host_range": [
@@ -114,8 +114,8 @@
       "strict_decoder_passed": true
     }
   ],
-  "scope": "Frozen API-capability native catch-up/media/lifecycle, same-session idle and busy seek/reconnect/tail controls, and Redirect positive-cap refusal/retry, plus native VOD/alias slice; not full M4 parity",
-  "evidence": "artifacts/rust/m4-timeshift-busy-frozen-compose-1/vod-contracts.json",
+  "scope": "Frozen IMAGE14 M4 native subset: management31+active/idle controls, XC23, direct15 and all prior VOD/Timeshift API/media/idle/busy/limit/alias scopes; not full M4",
+  "evidence": "artifacts/rust/m4-timeshift-management-all-frozen-compose-1/vod-contracts.json",
   "application_parity_verified": false,
   "performance_verified": false,
   "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
@@ -126,7 +126,11 @@
     "literal_vod_profile_react_aliases": 2,
     "positive_native_limit_refusal_and_same_capability_retry": 2,
     "same_session_idle_range_reopens": 3,
-    "same_session_busy_seek_reconnect_tail_controls": 3
+    "same_session_busy_seek_reconnect_tail_controls": 3,
+    "management_http": 31,
+    "management_real_active_idle_stop": 2,
+    "xc_path_query": 23,
+    "direct_auth": 15
   },
   "catchup_decoders": [
     {
@@ -165,12 +169,11 @@
     "stream_profile_context": "Redirect channel established capability; allowed profiles empty"
   },
   "remaining_gates": [
-    "native direct-auth/XC flows",
-    "cross-worker/fingerprint/programme/profile adoption and broader generation/stop faults",
-    "broader positive user policy and stop/preemption matrix",
-    "complete statistics/position/pubsub/WebSocket effects",
-    "provider transforms/server groups and failure corners",
-    "performance characterization"
+    "Additional malformed/Unicode/numeric/UUID/path/method/serializer negotiation contracts",
+    "Fingerprint/cross-worker/programme/profile adoption and broader controls/fault recovery",
+    "Provider transforms/server groups and broader failure recovery",
+    "Complete statistics/position/metadata behavior and all playback lifecycle pubsub/WebSocket events",
+    "Resource/performance acceptance"
   ],
   "timeshift_idle_reopen_comparison": {
     "captured_idle_reopen_matches": true,
@@ -192,6 +195,58 @@
       "busy statistics byte totals reflect differently buffered delivery and remain a separate contract"
     ],
     "continuous_quota_sampling_verified": false,
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "direct_auth_proof": {
+    "cases": 15,
+    "evidence": "artifacts/rust/m4-timeshift-management-all-frozen-compose-1/vod-contracts.json",
+    "evidence_sha256": "08367333cef4206ca2f89f14ea48f2a2715e9d8fa2ade09333b6544208158bbb",
+    "comparison": {
+      "captured_direct_auth_matches": true,
+      "differences": [],
+      "normalizations": [
+        "opaque redirect SID and query token values",
+        "Allow method order is a set; original DRF order varies by Python hash seed",
+        "JSON object content compared semantically; each Content-Length must match its actual body bytes"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    }
+  },
+  "evidence_sha256": "08367333cef4206ca2f89f14ea48f2a2715e9d8fa2ade09333b6544208158bbb",
+  "tool_manifest_sha256": "ffa1615b9f13e2cf4b0eed1786012b773bde4ff13886168eb4d36169b95ffb54",
+  "captured_tool_files": 249,
+  "source_bound_candidate_image": true,
+  "timeshift_management_comparison": {
+    "captured_management_matches": true,
+    "differences": [],
+    "normalizations": [
+      "Allow order as unordered original DRF method set",
+      "Only top-level timestamp replaced after verifying it lies within each actual request interval"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "timeshift_xc_comparison": {
+    "captured_direct_auth_matches": true,
+    "differences": [],
+    "normalizations": [
+      "opaque redirect SID and query token values",
+      "Allow method order is a set; original DRF order varies by Python hash seed",
+      "JSON object content compared semantically; each Content-Length must match its actual body bytes"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "timeshift_direct_auth_comparison": {
+    "captured_direct_auth_matches": true,
+    "differences": [],
+    "normalizations": [
+      "opaque redirect SID and query token values",
+      "Allow method order is a set; original DRF order varies by Python hash seed",
+      "JSON object content compared semantically; each Content-Length must match its actual body bytes"
+    ],
     "application_parity_verified": false,
     "performance_verified": false
   }

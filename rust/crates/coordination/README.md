@@ -87,3 +87,18 @@ counters and fenced expiry ledger. Real Redis scope tests verify no phantom
 live owners and bidirectional provider-capacity competition. The delayed-reply
 cancellation regression now covers all three scopes, both caller cancellation
 and caller deadline (six variants), including pending cleanup RELEASE replies.
+
+## Job-lock component
+
+`TaskLocks` separately provides bounded job leases on the original
+`task_lock_{name}_{id}` keys, with the original default 300-second TTL and
+120-second renewal interval. Native tokens and atomic compare-and-renew/delete
+prevent an expired native worker from touching a successor. Monitor
+`TaskLease::loss_signal()` and abort the job when ownership is lost. Cancelled
+acquisition/release waiters retain physical admission until their actual Redis
+work and cleanup finish. Abrupt process death recovers through the key TTL.
+
+The original-helper/native fixture verifies mutual exclusion, renewal,
+replacement fencing and delayed-write cancellation. No scheduler or refresh
+endpoint uses this component yet. Original workers use unconditional deletion;
+safe overlapping original/native long-running jobs remain a cutover gate.

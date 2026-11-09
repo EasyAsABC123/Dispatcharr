@@ -394,6 +394,10 @@ fn playback_error(error: StoreError) -> PlaybackError {
         },
         StoreError::Unsupported(detail) => PlaybackError::new(501, detail),
         StoreError::RateLimited(_) => PlaybackError::new(429, "Too many attempts"),
+        StoreError::XcDenied { status, .. } => PlaybackError {
+            status,
+            body: crate::xc_auth::failure_body(status),
+        },
         StoreError::InvalidInput(body) => PlaybackError { status: 400, body },
         StoreError::StatusBody(status, body) => PlaybackError { status, body },
     }

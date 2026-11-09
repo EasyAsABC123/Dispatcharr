@@ -210,22 +210,24 @@ async fn environment(
     headers: HeaderMap,
 ) -> Result<Json<Value>, StoreError> {
     auth.account_user(peer, headers, false).await?;
-    let system = auth.store.setting("system_settings").await?;
+    let system = auth.system_settings().await?;
     let disabled = !flag("DISPATCHARR_ENABLE_IP_LOOKUP", "true");
-    let enabled = !disabled
-        && system
+    let enabled = if disabled {
+        Value::Bool(false)
+    } else {
+        system
             .get("enable_ip_lookup")
-            .map(|value| crate::channels::truthy(Some(value)))
-            .unwrap_or(true);
-    if enabled {
-        return Err(StoreError::Unsupported(
-            "IP lookup cache and background refresh have not been ported.",
-        ));
-    }
+            .cloned()
+            .unwrap_or(Value::Bool(true))
+    };
+    let mut result = auth.ip_environment(enabled).await?;
     let (redis, postgres) = tls_status();
-    Ok(Json(
-        json!({"authenticated":true,"public_ip":null,"local_ip":null,"country_code":null,"country_name":null,"city":null,"ip_lookup_enabled":false,"ip_lookup_env_disabled":disabled,"ip_lookup_pending":false,"env_mode":env("DISPATCHARR_ENV","aio"),"redis_tls":redis,"postgres_tls":postgres}),
-    ))
+    result["authenticated"] = json!(true);
+    result["ip_lookup_env_disabled"] = json!(disabled);
+    result["env_mode"] = json!(env("DISPATCHARR_ENV", "aio"));
+    result["redis_tls"] = redis;
+    result["postgres_tls"] = postgres;
+    Ok(Json(result))
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()

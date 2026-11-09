@@ -1,0 +1,59 @@
+{
+  "format_version": 1,
+  "scope": "Frozen IMAGE14 XC Timeshift PATH/QUERY23 wire slice with actual original database/users; not full M4",
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "cases": 23,
+  "comparison": {
+    "captured_direct_auth_matches": true,
+    "differences": [],
+    "normalizations": [
+      "opaque redirect SID and query token values",
+      "Allow method order is a set; original DRF order varies by Python hash seed",
+      "JSON object content compared semantically; each Content-Length must match its actual body bytes"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "source_bound_candidate_image": true,
+  "runtime_regressions": 25,
+  "lib_tests": 4,
+  "strict_clippy_all_targets_passed": true,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
+  "remaining_gates": [
+    "Additional credential/path/method/throttle corners",
+    "Fingerprint and cross-worker/programme/profile adoption",
+    "Complete position/statistics/pubsub/WebSocket effects",
+    "Provider transforms/server groups/fault recovery",
+    "Resource/performance acceptance"
+  ],
+  "python_fixture_and_comparator_tests": 8,
+  "host_service_evidence": {
+    "evidence": "artifacts/rust/m4-timeshift-xc-native-sql-1/vod-contracts.json",
+    "sha256": "24b323511def213c887bb804e1754be84a6c09243a0dfdc819778270be648730",
+    "tested_working_bytes_sha256": {
+      "rust/crates/timeshift-http/src/xc.rs": "1f15d7de1bb174b102235a41d60f6d3ebea2d73b32660f5a5efa98830105fa2f",
+      "rust/crates/timeshift-http/src/media.rs": "a1e301b634a1d005d1b3ec8e9c74821ee3e272329f075937a4d90f319a4c0b06",
+      "rust/crates/timeshift-http/src/lib.rs": "cf52f42974689c20cd9dbac24f5f78a01134769abd58f6e5cd7a584bf7463a6b",
+      "rust/crates/timeshift-http/tests/direct_sql.rs": "31e1e302c32afdc1a3035718bc08bef7981890838322371e1cf8c69741a8b686",
+      "scripts/rust-timeshift-contracts/xc_probe.py": "b0406feba0dbc3f0d81e3248b29e422d491ecc201883c4876df4a14220bc8974",
+      "scripts/rust-timeshift-contracts/xc_control.py": "a969d060a742616972310940e3157bba5912bda398c450ebddbbafb0b5323c20",
+      "scripts/rust-timeshift-contracts/native_direct_driver.py": "e0596cc6b2e2aa487feeeaecb0f44159e92e848fcdc864f952739cb6fa39f536",
+      "scripts/rust-vod-contracts/run.py": "22f7c9d63307f58de822c15dd8ba031205054cc8e8b2a2217e732cd8a4554165"
+    },
+    "source_bound_candidate_image": false
+  },
+  "evidence": "artifacts/rust/m4-timeshift-management-all-frozen-compose-1/vod-contracts.json",
+  "evidence_sha256": "08367333cef4206ca2f89f14ea48f2a2715e9d8fa2ade09333b6544208158bbb",
+  "candidate_provenance": {
+    "image_id": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
+    "source_tree_sha256": "3dee6610ccae2626a800e46dc8797170f25e919dde5cef07f4c501d1cbf833aa",
+    "build_manifest_sha256": "bc38dfedc61f381e755002b54c525d833e6f03077d959831f7045d644022292b"
+  },
+  "tool_manifest_sha256": "ffa1615b9f13e2cf4b0eed1786012b773bde4ff13886168eb4d36169b95ffb54",
+  "captured_tool_files": 249
+}

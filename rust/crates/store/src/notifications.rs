@@ -41,7 +41,10 @@ impl NotificationCache {
             permits: Arc::new(Semaphore::new(16)),
         })
     }
-    async fn command<T: FromRedisValue>(&self, cmd: redis::Cmd) -> Result<T, StoreError> {
+    pub(crate) async fn command<T: FromRedisValue>(
+        &self,
+        cmd: redis::Cmd,
+    ) -> Result<T, StoreError> {
         let _permit = timeout(Duration::from_secs(2), self.permits.acquire())
             .await
             .map_err(|_| unavailable())?
@@ -52,24 +55,47 @@ impl NotificationCache {
             .map_err(|_| unavailable())?
             .map_err(|_| unavailable())
     }
-    async fn get(&self, key: &str) -> Result<Option<Vec<u8>>, StoreError> {
+    pub(crate) async fn get(&self, key: &str) -> Result<Option<Vec<u8>>, StoreError> {
         let mut cmd = redis::cmd("EVAL");
         cmd.arg("if redis.call('STRLEN',KEYS[1])>1048576 then return redis.error_reply('cache value exceeds limit') end return redis.call('GET',KEYS[1])").arg(1).arg(key);
         self.command(cmd).await
     }
     async fn set(&self, key: &str, value: &Value) -> Result<(), StoreError> {
+        self.set_for(key, value, 300).await
+    }
+    pub(crate) async fn set_for(
+        &self,
+        key: &str,
+        value: &Value,
+        seconds: u64,
+    ) -> Result<(), StoreError> {
         let encoded = django_pickle::encode(value).ok_or_else(failed)?;
         let mut cmd = redis::cmd("SET");
-        cmd.arg(key).arg(encoded).arg("EX").arg(300);
+        cmd.arg(key).arg(encoded).arg("EX").arg(seconds);
         self.command(cmd).await
     }
-    async fn network_settings(&self, auth: &AuthService) -> Result<Value, StoreError> {
-        const KEY: &str = ":1:coresettings:group:network_access";
-        const VERSION: &str = ":1:coresettings:groupver:network_access";
+    async fn network_settings<F, Fut>(&self, load: F) -> Result<Value, StoreError>
+    where
+        F: FnOnce() -> Fut,
+        Fut: std::future::Future<Output = Result<Value, StoreError>>,
+    {
+        self.settings_group("network_access", load).await
+    }
+    pub(crate) async fn settings_group<F, Fut>(
+        &self,
+        key: &str,
+        load: F,
+    ) -> Result<Value, StoreError>
+    where
+        F: FnOnce() -> Fut,
+        Fut: std::future::Future<Output = Result<Value, StoreError>>,
+    {
+        let group_key = format!(":1:coresettings:group:{key}");
+        let version_key = format!(":1:coresettings:groupver:{key}");
         // _get_group falls through to DB without filling on a backend outage.
-        let cached = match self.get(KEY).await {
+        let cached = match self.get(&group_key).await {
             Ok(value) => value,
-            Err(_) => return load_network(auth).await,
+            Err(_) => return load().await,
         };
         if let Some(raw) = cached {
             let value = decode_cache(&raw).ok_or_else(failed)?;
@@ -77,14 +103,14 @@ impl NotificationCache {
                 return Ok(value);
             }
         }
-        let before = match self.get(VERSION).await {
+        let before = match self.get(&version_key).await {
             Ok(raw) => raw
                 .map(|raw| decode_cache(&raw).ok_or_else(failed))
                 .transpose()?,
-            Err(_) => return load_network(auth).await,
+            Err(_) => return load().await,
         };
-        let value = load_network(auth).await?;
-        let after = match self.get(VERSION).await {
+        let value = load().await?;
+        let after = match self.get(&version_key).await {
             Ok(raw) => raw
                 .map(|raw| decode_cache(&raw).ok_or_else(failed))
                 .transpose()?,
@@ -94,7 +120,7 @@ impl NotificationCache {
             before.as_ref().unwrap_or(&Value::Null),
             after.as_ref().unwrap_or(&Value::Null),
         ) {
-            let _ = self.set(KEY, &value).await;
+            let _ = self.set(&group_key, &value).await;
         }
         Ok(value)
     }
@@ -120,7 +146,10 @@ impl NotificationCache {
             }
             if condition.as_str() == Some("m3u_epg_network_insecure") {
                 // Original check catches every exception and returns False.
-                let settings = self.network_settings(auth).await.unwrap_or(Value::Null);
+                let settings = self
+                    .network_settings(|| load_network(auth))
+                    .await
+                    .unwrap_or(Value::Null);
                 show = network_insecure(&settings);
                 if !show {
                     break;
@@ -131,7 +160,7 @@ impl NotificationCache {
         Ok(show)
     }
 }
-fn decode_cache(raw: &[u8]) -> Option<Value> {
+pub(crate) fn decode_cache(raw: &[u8]) -> Option<Value> {
     // django_redis stores integer values directly and pickles all bools/JSON.
     if let Ok(text) = std::str::from_utf8(raw) {
         if !text.is_empty()
@@ -319,7 +348,7 @@ fn action_string(value: &Value) -> Option<String> {
         } else {
             value.to_string()
         }),
-        _ => None,
+        Value::Array(_) | Value::Object(_) => crate::python_action::collection_text(value, 50),
     }
 }
 async fn dismiss(
@@ -354,12 +383,13 @@ async fn dismiss(
     };
     let body = body.as_object().ok_or_else(failed)?;
     let action = body.get("action_taken").unwrap_or(&Value::Null);
-    if action.is_array() || action.is_object() {
-        return Err(StoreError::Unsupported(
-            "Collection-valued dismissal actions require source Python string coercion.",
-        ));
-    }
     let text = action_string(action);
+    if !action.is_null() && text.is_none() {
+        return Err(failed());
+    }
+    if text.as_ref().is_some_and(|value| value.contains('\0')) {
+        return Err(failed());
+    }
     if text
         .as_ref()
         .is_some_and(|value| value.chars().count() > 50)
@@ -468,6 +498,45 @@ mod tests {
             let ttl: i64 = cache.command(cmd).await.unwrap();
             assert!((1..=300).contains(&ttl));
         }
+        // A real Redis version bump while the loader is held must prevent
+        // stale fill, then a stable version permits the original cache shape.
+        const GROUP: &str = ":1:coresettings:group:network_access";
+        const VERSION: &str = ":1:coresettings:groupver:network_access";
+        let mut cmd = redis::cmd("DEL");
+        cmd.arg(GROUP).arg(VERSION);
+        let _: i64 = cache.command(cmd).await.unwrap();
+        let mut cmd = redis::cmd("SET");
+        cmd.arg(VERSION).arg(1);
+        let _: () = cache.command(cmd).await.unwrap();
+        let started = tokio::sync::Notify::new();
+        let changed = tokio::sync::Notify::new();
+        let (settings, ()) = tokio::join!(
+            cache.network_settings(|| async {
+                started.notify_one();
+                changed.notified().await;
+                Ok(serde_json::json!({"M3U_EPG":"::/0"}))
+            }),
+            async {
+                started.notified().await;
+                let mut cmd = redis::cmd("SET");
+                cmd.arg(VERSION).arg(2);
+                let _: () = cache.command(cmd).await.unwrap();
+                changed.notify_one();
+            }
+        );
+        assert_eq!(settings.unwrap(), serde_json::json!({"M3U_EPG":"::/0"}));
+        assert!(cache.get(GROUP).await.unwrap().is_none());
+        cache
+            .network_settings(|| async { Ok(serde_json::json!({"M3U_EPG":"::/0"})) })
+            .await
+            .unwrap();
+        assert_eq!(
+            cache
+                .network_settings(|| async { panic!("cached group must avoid loader") })
+                .await
+                .unwrap(),
+            serde_json::json!({"M3U_EPG":"::/0"})
+        );
         let mut cmd = redis::cmd("SET");
         cmd.arg(key("oversized")).arg(vec![0u8; 1024 * 1024 + 1]);
         let _: () = cache.command(cmd).await.unwrap();

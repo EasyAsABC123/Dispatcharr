@@ -628,3 +628,125 @@ async fn retained_diagnostics_separate_nonzero_local_ring_and_shared_redis_copy(
     clients.shutdown().await;
     server.abort();
 }
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis: REDIS_TEST_URL"]
+async fn four_large_chunks_become_ready_with_one_local_chunk_and_full_shared_history() {
+    let url = std::env::var("REDIS_TEST_URL").unwrap();
+    let coordinator = dispatcharr_coordination::Coordinator::connect(&url, Default::default())
+        .await
+        .unwrap();
+    let clients = dispatcharr_clients::ClientStore::connect(&url, Default::default())
+        .await
+        .unwrap();
+    let inputs = dispatcharr_input_store::InputStore::connect(&url, Default::default())
+        .await
+        .unwrap();
+    let fourth = Arc::new(tokio::sync::Notify::new());
+    let release = fourth.clone();
+    let size = 188 * 16_384;
+    let app = Router::new().route(
+        "/large",
+        get(move || {
+            let release = release.clone();
+            async move {
+                Response::new(Body::from_stream(async_stream::stream! {
+                    for number in 1..=4 {
+                        if number == 4 {release.notified().await;}
+                        let mut packet = [number;188];
+                        packet[..4].copy_from_slice(&[0x47,0x1f,0xff,0x10]);
+                        yield Ok::<_,Infallible>(Bytes::from(packet.repeat(size/188)));
+                    }
+                    futures_util::future::pending::<()>().await;
+                }))
+            }
+        }),
+    );
+    let (base, server) = serve(app).await;
+    let mut limits = config();
+    limits.retained_bytes_per_channel = 16 * 1024 * 1024;
+    limits.shared_hot_cache_bytes = 4 * 1024 * 1024;
+    limits.chunk_bytes = size;
+    limits.retention = Duration::from_secs(60);
+    limits.initial_buffer_chunks = 4;
+    limits.flush_partial_chunks = false;
+    limits.source_initialization = true;
+    limits.read_timeout = Duration::from_secs(3);
+    limits.startup_timeout = Duration::from_secs(5);
+    let engine = StreamEngine::new_with_shared_inputs(
+        limits,
+        Some(coordinator),
+        Some(clients.clone()),
+        Some(inputs.clone()),
+    )
+    .unwrap();
+    let channel = format!("large-startup-{}", uuid::Uuid::new_v4());
+    let profile = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000) as i64 + 100;
+    let mut playback = source(format!("{base}/large"), &channel);
+    playback.provider_profile_id = Some(profile);
+    playback.provider_max_streams = 1;
+    playback.startup_behind = Duration::from_secs(60);
+    let running = engine.clone();
+    let task = tokio::spawn(async move { running.play(playback).await });
+    time::timeout(Duration::from_secs(3), async {
+        loop {
+            if inputs.snapshot(&channel).await.unwrap().index == 3 {
+                break;
+            }
+            time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert!(
+        !task.is_finished(),
+        "three canonical chunks cannot satisfy four-chunk readiness"
+    );
+    assert_eq!(engine.status()[0].retained_bytes, size);
+    fourth.notify_one();
+    let response = time::timeout(Duration::from_secs(3), task)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap();
+    let mut body = response.into_body();
+    let data = body.frame().await.unwrap().unwrap().into_data().unwrap();
+    assert_eq!(data.len(), size);
+    assert_eq!(
+        data[4], 1,
+        "oldest startup chunk must come from shared history"
+    );
+    assert!(data
+        .chunks_exact(188)
+        .all(|packet| packet[0] == 0x47 && packet[4] == 1));
+    let memory = engine.memory_diagnostics().await.unwrap();
+    assert_eq!(memory["local_retained_payload_bytes"], size);
+    assert_eq!(memory["redis_logical_payload_bytes"], size * 4);
+    assert_eq!(
+        memory["configured_local_limit_bytes_per_channel"],
+        4 * 1024 * 1024
+    );
+    let metadata = engine
+        .legacy_status(&channel, false)
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(metadata["state"], "active");
+    drop(data);
+    drop(body);
+    idle(&engine).await;
+    clients.shutdown().await;
+    assert!(inputs.snapshot(&channel).await.unwrap().owner.is_none());
+    let mut redis = redis::Client::open(url)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let count: Option<u64> = redis::cmd("GET")
+        .arg(format!("profile_connections:{profile}"))
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(count.unwrap_or(0), 0);
+    server.abort();
+}

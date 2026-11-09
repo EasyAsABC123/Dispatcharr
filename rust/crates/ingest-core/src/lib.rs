@@ -17,6 +17,13 @@ mod uploads;
 pub use uploads::{with_uploaded_playlist, UploadError, UploadLimits};
 mod prepared;
 pub use prepared::{prepare_playlist, PreparationError, PreparationLimits, PreparedPlaylist};
+mod cached;
+pub use cached::{CacheReadError, CacheReadLimits, ValidatedCache};
+#[derive(Clone, Debug, PartialEq)]
+pub struct ImportedCacheGroup {
+    pub name: String,
+    pub properties: serde_json::Map<String, serde_json::Value>,
+}
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Entry {

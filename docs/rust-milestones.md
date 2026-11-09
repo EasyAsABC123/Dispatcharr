@@ -22,7 +22,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M4 | VOD and timeshift parity | M2 | In progress (native VOD slice) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
 | M5 | Accounts, settings, and channel control APIs | M2 | In progress (independent account contracts) | API/permission/database/React workflow parity and API benchmarks |
 | M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (M3U components and database sinks) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
-| M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | Planned | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
+| M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (realtime transport components) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | Planned | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | Planned | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 
@@ -37,7 +37,11 @@ after stream management was added, then
 [751 default checks including provider read APIs](../scripts/rust-integration/verified-integration-m6-provider-reads-image6-1.json), then
 [818 default checks including provider group/filter writes](../scripts/rust-integration/verified-integration-m6-provider-crud-image8-1.json), then
 [894 checks including stream-profile settings and Core utilities](../scripts/rust-integration/verified-integration-m6-core-image10-1.json), then
-[994 checks including notification reads and personal actions](../scripts/rust-integration/verified-integration-m5-notifications-image11-1.json).
+[994 checks including notification reads and personal actions](../scripts/rust-integration/verified-integration-m5-notifications-image11-1.json), then
+[1,024 checks and 33 enabled-IP package checks on image13](../scripts/rust-integration/verified-integration-m5-ip-image13-1.json).
+[Image14](../scripts/rust-integration/verified-integration-m5-auth-image14-1.json) repeats all 1,024 checks and 33 enabled-IP checks with native catchup management and password-hash upgrades. Its [full catchup replay](../scripts/rust-timeshift-contracts/verified-management.json) passes ten comparison groups, including 31 management cases and actual active/idle admin-stop cleanup. The [tested checkpoint](../scripts/rust-integration/verified-checkpoint-image14-1.json) passes strict workspace Clippy and 188 tests; 147 fixture-dependent tests remain ignored in that default run and have separate explicit reports where executed.
+Frozen image13 also passes [23 XC catchup cases](../scripts/rust-timeshift-contracts/verified-xc-routes.json) and [15 direct catchup cases](../scripts/rust-timeshift-contracts/verified-direct.json). Shared settings-cache defaults have a separate [18-case source overlay proof](../scripts/rust-integration/verified-ip-default-map-overlay-3.json); this overlay is not part of image13's immutable bytes.
+The [bounded cache/database bridge](../scripts/rust-ingest-parity/verified-cache-batch-pipeline-20.json) and [fenced task locks](../scripts/rust-ingest-parity/verified-task-locks-23.json) add ingestion component evidence without enabling refresh jobs. [Original Python/two-Rust-process ChannelsRedis interoperability](../scripts/rust-realtime-contracts/verified-channels-interop-1.json) passes; the WebSocket gateway and browser lifecycle remain open.
 Two-replica TS probes
 passed shared demand, global stop and owner-crash cleanup with strict decoding.
 The earlier Rust image needed 87.1 seconds for owner-crash cleanup; the new image

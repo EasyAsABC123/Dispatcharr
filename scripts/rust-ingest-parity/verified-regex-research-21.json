@@ -1,0 +1,38 @@
+{
+  "scope": "isolated-regex-compatibility-research-not-selected",
+  "native_filter_parity_verified": false,
+  "product_dependency_added": false,
+  "prototype": "RustPython0.4 trusted CPython3.13 standard-library compiler with Rust SRE matcher and source-pinned Unicode15.1 tables",
+  "reference_cases": 154,
+  "generated_cases": 2098,
+  "mismatches": 0,
+  "external_supervisor_tests_passed": true,
+  "external_supervisor_cases": 9,
+  "evidence_directory": "artifacts/rust/regex-compiler-probe-1",
+  "evidence_sha256": {
+    "comparison-2.json": "2a056a9155aec78b346637ba7b0b3e3811f575c6d0e50958fd0cc9af3bea258a",
+    "comparison-broad-1.json": "26c5e9189a8d88e2a2386b5c6e614341427ad85433396ec7892cfb3ab5162d45",
+    "supervisor-diagnostic-1.json": "f8f543f69230e57dd9c83349e12edde387ff9580eb9d7d8c540f0246843fe84b",
+    "broad-goldens.json": "9877594cff8b4395c13efaab24097e46741f35e89c73cb0f669163ae5fdd9054",
+    "source-unicode.json": "b90f50bca3e7183d3359d9113b3ef20988afcf51dc05013f8e047a6a6a97a045",
+    "source-names.json": "959a79e4299da1fdec2921a1e9c5aa0fd24599bdfb58e68ca4db0f7fab804494",
+    "original-stdlib.json": "e036c7076d3720b1a7766813d28e5076e3c5e03a6d2aa588d3f29cf593cf658f",
+    "src/main.rs": "96957342bcceffbdaad427d25a126e04c62e8523326817fbf4bd5ec74f9042bf",
+    "probe_single.py": "fe37a46928a37e367640de44285f2906ed2a5d5da9e436443c886745a7bf94b4",
+    "probe_cases.py": "6bd49af7f959e806816eac09b316a647bc3827b2593dca33abb552a0ff90f83a",
+    "Cargo.lock": "047a32c03d27cd328f473bf7ecae81c8a8240156c17592383cccd08fa2348296"
+  },
+  "source_names_count": 144602,
+  "remaining_gates": [
+    "Prototype evaluates trusted CPython standard-library compiler source in a Rust interpreter; no CPython runtime is used, but this is not a pure-Rust compiler implementation and is not selected for the migration.",
+    "A production Rust supervisor and request protocol are absent; the external deadline/address-space tests use a Python test harness.",
+    "Exhaustive named-character algorithm variants, Unicode identifier handling and broader engine edge cases still need comparison.",
+    "Reproducible packaging, licenses/provenance, combined filter-policy tests and real refresh-job resource evidence are required before selection."
+  ],
+  "notes": [
+    "The original unmodified fancy-regex candidate remains rejected with50of154differences; this prototype does not replace that report.",
+    "Two hostile backtracking cases terminate as failed worker requests; timeout/kill is never treated as a negative regex match.",
+    "Input pattern/text/message caps are explicit; no public refresh endpoint uses this prototype.",
+    "Original Dispatcharr authors retain full application credit; compiler/engine/library copyrights belong to CPython, SecretLabs and RustPython contributors."
+  ]
+}

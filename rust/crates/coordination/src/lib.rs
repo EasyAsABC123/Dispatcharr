@@ -1,6 +1,8 @@
 //! Fenced Redis owner/provider reservations for the derivative Dispatcharr port.
 //! Original application credit: upstream Dispatcharr authors and contributors.
 mod scripts;
+mod task_locks;
+pub use task_locks::{TaskLease, TaskLockConfig, TaskLockError, TaskLocks};
 
 use redis::{aio::MultiplexedConnection, Script};
 use std::{

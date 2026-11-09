@@ -43,7 +43,7 @@ def main():
         with (output/'rust-tests.log').open('w') as log:result=subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=180)
         report['rust_exit_code']=result.returncode
         if result.returncode:raise RuntimeError('Rust cache gate failed')
-        verify=configure+"import json;prefix="+repr(prefix)+";assert cache.get(prefix+':rust-true') is True;assert cache.get(prefix+':rust-false') is False;assert cache.get(prefix+':rust-dict')=={'M3U_EPG':'::/0','nested':[True,None,1.5]};assert all(0<cache.ttl(prefix+':'+suffix)<=300 for suffix in ['rust-true','rust-false','rust-dict']);print(json.dumps({'decoded_rust_values':True,'ttl_bounded':True}))"
+        verify=configure+"import json;prefix="+repr(prefix)+";assert cache.get(prefix+':rust-true') is True;assert cache.get(prefix+':rust-false') is False;assert cache.get(prefix+':rust-dict')=={'M3U_EPG':'::/0','nested':[True,None,1.5]};assert cache.get('coresettings:group:network_access')=={'M3U_EPG':'::/0'};assert all(0<cache.ttl(prefix+':'+suffix)<=300 for suffix in ['rust-true','rust-false','rust-dict']);print(json.dumps({'decoded_rust_values':True,'ttl_bounded':True}))"
         report.update(json.loads(docker('exec',name,'/dispatcharrpy/bin/python','-c',verify)));report['passed']=True
     except (OSError,RuntimeError,ValueError,subprocess.SubprocessError) as error:report['error_type']=type(error).__name__
     finally:

@@ -4,6 +4,24 @@ use std::{future::Future, net::IpAddr, pin::Pin, time::Duration};
 
 pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
 
+/// Bounded transport failures for original Dispatcharr realtime envelopes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum UpdateEventError {
+    Capacity,
+    Unavailable,
+    InvalidMessage,
+}
+
+/// Publish a complete Channels event without changing its type/data envelope.
+/// Original application event contracts belong to Dispatcharr's authors.
+pub trait UpdateEventSink: Send + Sync {
+    fn send<'a>(
+        &'a self,
+        group: &'a str,
+        message: serde_json::Value,
+    ) -> BoxFuture<'a, Result<(), UpdateEventError>>;
+}
+
 #[derive(Clone, Debug)]
 pub struct PlaybackRequest {
     pub channel_id: String,

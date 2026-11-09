@@ -14,6 +14,25 @@ fn query_token(query: &[(String, String)]) -> Option<&str> {
 }
 
 impl AuthService {
+    /// Optional readonly initial IP replay payload; adapter adds its data/type
+    /// envelope, then merges this payload as the original consumer does.
+    /// Cache errors must be caught by the adapter without closing the socket.
+    pub async fn websocket_cached_ip(&self) -> Result<Option<Value>, StoreError> {
+        let Some(cache) = self.notification_cache.as_ref() else {
+            return Ok(None);
+        };
+        let Some(raw) = cache.get(":1:dispatcharr:ip_lookup_result").await? else {
+            return Ok(None);
+        };
+        let value = crate::notifications::decode_cache(&raw).ok_or_else(|| {
+            StoreError::StatusBody(503, json!({"detail":"IP cache unavailable."}))
+        })?;
+        let Some(mut payload) = value.as_object().filter(|value| !value.is_empty()).cloned() else {
+            return Ok(None);
+        };
+        payload.remove("verified_at");
+        Ok(Some(Value::Object(payload)))
+    }
     /// WebSocket middleware authentication. Deliberately separate from REST:
     /// query access JWT only, no API-key fallback and no added UI network gate.
     /// An adapter must reject the upgrade for None or an operational error.

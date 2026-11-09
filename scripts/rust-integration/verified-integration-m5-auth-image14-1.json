@@ -1,0 +1,57 @@
+{
+  "scope": "Immutable image14 default HTTP1024 and enabled-IP33 source comparisons. Native six-case legacy hash upgrade accepted separately as host SQL component, not an additional packaged hash-case claim.",
+  "passed": true,
+  "image_id": "sha256:1ecdec13810a0442f9721197f64c657cc780fb15775b89a19ce0c0247895454a",
+  "source_tree_sha256": "3dee6610ccae2626a800e46dc8797170f25e919dde5cef07f4c501d1cbf833aa",
+  "build_manifest_sha256": "bc38dfedc61f381e755002b54c525d833e6f03077d959831f7045d644022292b",
+  "runs": [
+    {
+      "report": "artifacts/rust/m5-auth-full-integration-image14-1/integration.json",
+      "sha256": "c5647e0e1860fe87d773d0149fdeb41a7388a9494cbcef6faa6814ca23a1045b",
+      "passed": true,
+      "checks": 1024,
+      "contract_suites": [
+        "accounts",
+        "account_crud",
+        "app_data",
+        "core",
+        "profiles",
+        "memberships",
+        "channel_reads",
+        "channel_crud",
+        "groups",
+        "channel_stops",
+        "group_cleanup",
+        "streams",
+        "provider_reads",
+        "server_group_crud",
+        "filter_crud",
+        "core_utilities",
+        "core_stream_crud",
+        "notifications"
+      ],
+      "cleanup": "project removed"
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-ip-image14-1/integration.json",
+      "sha256": "fa33a6711f206ec653e85ffcbeadca0daa554e1f01f084a2f00cdf0e62aa30e3",
+      "passed": true,
+      "checks": 33,
+      "contract_suites": [
+        "environment_ip"
+      ],
+      "cleanup": "project removed"
+    }
+  ],
+  "component_evidence": [
+    "verified-auth-hash-source-1.json",
+    "verified-ip-default-map-overlay-3.json"
+  ],
+  "performance_verified": false,
+  "remaining": [
+    "Post14 Redis login/API-key shared throttle and complete audit work is outside this immutable image.",
+    "M4 management packaged evidence is collected independently by the M4 agent.",
+    "M7 realtime app/browser wiring remains unaccepted.",
+    "Unsupported password algorithms, native refresh jobs, first-install migrations and broader milestone gates remain open."
+  ]
+}

@@ -198,9 +198,78 @@ fn keys(entry: &Entry) -> Vec<String> {
             "timeshift:channel:{}:client:{sid}:stop",
             entry.request.virtual_channel_id
         ),
+        format!("timeshift:grace:{stats}:{sid}"),
     ]
 }
 impl ArchivePool {
+    pub(crate) fn is_local(&self, sid: &str) -> bool {
+        self.inner.entries.lock().unwrap().contains_key(sid)
+    }
+    /// -1 means missing, 0 unclaimed/owned, 1 claimed by another user.
+    pub(crate) async fn owner_state(&self, sid: &str, user: i64) -> Result<i64, StoreError> {
+        if sid.len() > 128
+            || sid
+                .bytes()
+                .any(|b| !b.is_ascii_alphanumeric() && b != b'_' && b != b'-')
+        {
+            return Err(StoreError::Unsupported(
+                "archive client session ID exceeds supported key format",
+            ));
+        }
+        let (state,_):(i64,())=self.inner.transport.command(
+            "if redis.call('EXISTS',KEYS[1])==0 then return -1 end local profile=redis.call('HGET',KEYS[1],'profile_id');if not profile or profile=='' then return 0 end if redis.call('HGET',KEYS[1],'user_id')~=ARGV[1] then return 1 end return 0",
+            &[format!("timeshift:pool:{sid}")],&[user.to_string().as_bytes()],()
+        ).await.map_err(|_|unavailable())?;
+        Ok(state)
+    }
+    pub(crate) async fn matching_session(
+        &self,
+        user: i64,
+        channel: i64,
+        media: &str,
+        ip: &str,
+        agent: &str,
+        fresh: bool,
+    ) -> Result<Option<String>, StoreError> {
+        let (matched, _): (Option<String>, ()) = self
+            .inner
+            .transport
+            .command(
+                FIND_MATCH,
+                &[],
+                &[
+                    user.to_string().as_bytes(),
+                    format!("{channel}_").as_bytes(),
+                    media.as_bytes(),
+                    ip.as_bytes(),
+                    agent.as_bytes(),
+                    if fresh { b"1" } else { b"0" },
+                    self.inner
+                        .config
+                        .admission_scan_limit
+                        .to_string()
+                        .as_bytes(),
+                ],
+                (),
+            )
+            .await
+            .map_err(|_| unavailable())?;
+        Ok(matched)
+    }
+    pub(crate) async fn redirect_capacity(
+        &self,
+        profile: i64,
+        maximum: u32,
+    ) -> Result<bool, StoreError> {
+        if maximum == 0 {
+            return Ok(true);
+        }
+        let (available,_):(i64,())=self.inner.transport.command(
+            "local value=tonumber(redis.call('GET',KEYS[1]) or '0');if not value then return redis.error_reply('invalid profile counter') end return value<tonumber(ARGV[1]) and 1 or 0",
+            &[format!("profile_connections:{profile}")],&[maximum.to_string().as_bytes()],()
+        ).await.map_err(|_|unavailable())?;
+        Ok(available == 1)
+    }
     pub async fn busy_probe(
         &self,
         request: &ArchivePoolRequest,
@@ -699,6 +768,11 @@ impl ArchivePool {
             .map_err(|_| unavailable())?;
         Ok(())
     }
+    pub(crate) fn signal_management_stop(&self, sid: &str) {
+        if let Some(entry) = self.inner.entries.lock().unwrap().get(sid) {
+            entry.stop.send_replace(true);
+        }
+    }
     /// Snapshot only; stop new admissions before using this in shutdown logic.
     pub fn is_idle(&self) -> bool {
         self.inner.entries.lock().unwrap().is_empty()
@@ -991,7 +1065,9 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
     entry.active.store(false, Ordering::SeqCst);
     let streaming = entry.streaming.load(Ordering::SeqCst);
     let mut remove_api = false;
+    let grace_token = format!("{}-{epoch}", entry.token);
     if streaming {
+        remove_api = !handoff && entry.started.lock().unwrap().elapsed() >= Duration::from_secs(2);
         let bytes = entry.bytes.load(Ordering::Relaxed);
         let cleanup_generation = !handoff
             && (bytes >= 65536
@@ -1007,6 +1083,15 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
                     bytes.to_string().as_bytes(),
                     if handoff { b"1" } else { b"0" },
                     if cleanup_generation { b"1" } else { b"0" },
+                    if remove_api { b"1" } else { b"0" },
+                    grace_token.as_bytes(),
+                    (SystemTime::now()
+                        .duration_since(UNIX_EPOCH)
+                        .unwrap_or_default()
+                        .as_secs_f64()
+                        + inner.config.disconnect_grace.as_secs_f64())
+                    .to_string()
+                    .as_bytes(),
                 ],
                 (),
             )
@@ -1017,7 +1102,6 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
         }
         // Existing source pools suppress native grace for every transfer under
         // two seconds, including a large startup read. Preserve that branch.
-        remove_api = !handoff && entry.started.lock().unwrap().elapsed() >= Duration::from_secs(2);
         let delay = if handoff {
             inner.config.command_timeout
         } else if remove_api {
@@ -1059,6 +1143,7 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
                     .map(String::as_bytes)
                     .unwrap_or(b""),
                 entry.request.session_id.as_bytes(),
+                grace_token.as_bytes(),
             ],
             (),
         )
@@ -1092,6 +1177,7 @@ const START: &str = r#"
 local function kind(key) local value=redis.call('TYPE',key);if type(value)=='table' then return value.ok end return value end
 for i,expected in ipairs({'hash','hash','set','hash','hash','string','string'}) do local actual=kind(KEYS[i]);if actual~='none' and actual~=expected then return redis.error_reply('CORRUPT archive metadata') end end
 if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_preempted')=='1' then return 0 end
+redis.call('DEL',KEYS[8]);redis.call('HDEL',KEYS[2],'stats_grace_deadline','stats_grace_disconnected_at')
 local clients=cjson.decode(ARGV[2]);local metadata=cjson.decode(ARGV[3])
 local old_programme=redis.call('HGET',KEYS[2],'programme_start')
 local keep_anchor=ARGV[10]=='1' and (not old_programme or old_programme==clients['programme_start'])
@@ -1139,6 +1225,10 @@ if redis.call('EXISTS',KEYS[4])~=0 then
  if incoming>recorded then redis.call('HINCRBY',KEYS[4],'total_bytes',incoming-recorded);redis.call('HSET',KEYS[2],'rust_total_bytes',ARGV[3]) end
 end
 if ARGV[5]=='1' then redis.call('DEL',KEYS[6]) end
+if ARGV[6]=='1' then
+ redis.call('SET',KEYS[8],ARGV[7],'EX',math.max(1,math.floor(tonumber(ARGV[8])-tonumber(ARGV[2])+2)))
+ redis.call('HSET',KEYS[2],'stats_grace_deadline',ARGV[8],'stats_grace_disconnected_at',ARGV[2])
+end
 redis.call('HSET',KEYS[1],'busy',ARGV[4]=='1' and '1' or '0','last_activity',ARGV[2]);redis.call('EXPIRE',KEYS[1],ARGV[4]=='1' and 600 or 60)
 return 1
 "#;
@@ -1146,15 +1236,184 @@ const CLEANUP: &str = r#"
 local token=redis.call('HGET',KEYS[1],'rust_owner_token')
 if token and token~=ARGV[1] then return 0 end
 local client_token=redis.call('HGET',KEYS[2],'rust_owner_token')
-if not token and client_token~=ARGV[1] then return 0 end
-if token==ARGV[1] then redis.call('DEL',KEYS[1]) end
-if client_token==ARGV[1] then
+local own_grace=redis.call('GET',KEYS[8])==ARGV[5]
+if not token and client_token~=ARGV[1] and not own_grace then return 0 end
+local keep_idle_pool=ARGV[2]=='1' and redis.call('EXISTS',KEYS[5])==0 and redis.call('GET',KEYS[7])=='admin'
+if token==ARGV[1] then
+ if keep_idle_pool then redis.call('EXPIRE',KEYS[1],60) else redis.call('DEL',KEYS[1]) end
+end
+if client_token==ARGV[1] or (not client_token and own_grace) then
  redis.call('DEL',KEYS[2]);redis.call('SREM',KEYS[3],ARGV[4])
  if redis.call('SCARD',KEYS[3])==0 then redis.call('DEL',KEYS[3]) end
 end
 if redis.call('HGET',KEYS[4],'rust_owner_token')==ARGV[1] then redis.call('DEL',KEYS[4]) end
 redis.call('DEL',KEYS[6])
-redis.call('DEL',KEYS[7])
+if redis.call('GET',KEYS[7])~='admin' then redis.call('DEL',KEYS[7]) end
+if own_grace then redis.call('DEL',KEYS[8]) end
 if ARGV[2]=='1' and redis.call('HGET',KEYS[5],'user_id')==ARGV[3] then redis.call('DEL',KEYS[5]) end
 return 1
 "#;
+
+const FIND_MATCH: &str = r#"
+local cursor='0';local examined=0;local best=nil;local best_exact=-1;local best_time=0
+repeat
+ examined=examined+1;if examined>tonumber(ARGV[7]) then return redis.error_reply('archive pool scan exceeds limit') end
+ local result=redis.call('SCAN',cursor,'MATCH','timeshift:pool:*','COUNT',100);cursor=result[1]
+ for _,key in ipairs(result[2]) do
+  examined=examined+1;if examined>tonumber(ARGV[7]) then return redis.error_reply('archive pool scan exceeds limit') end
+  local kind=redis.call('TYPE',key);if type(kind)=='table' then kind=kind.ok end
+  if kind=='hash' then
+   local data=redis.call('HMGET',key,'user_id','media_id','busy','client_ip','client_user_agent','last_activity')
+   local exact=data[2]==ARGV[3] and 1 or 0
+   local channel=data[2] and string.sub(data[2],1,string.len(ARGV[2]))==ARGV[2]
+   local eligible=not (ARGV[6]=='1' and exact==1 and data[3]~='1')
+   local fingerprint=ARGV[4]~='' and ARGV[5]~='' and data[4]==ARGV[4] and data[5]==ARGV[5]
+   local activity=tonumber(data[6] or '0')
+   if data[1]==ARGV[1] and (exact==1 or channel) and eligible and fingerprint and activity then
+    if not best or exact>best_exact or (exact==best_exact and activity>best_time) then
+     best=string.match(key,':([^:]+)$');best_exact=exact;best_time=activity
+    end
+   end
+  end
+ end
+until cursor=='0'
+return best
+"#;
+
+#[cfg(test)]
+mod direct_tests {
+    use super::*;
+    use redis::AsyncCommands;
+    #[tokio::test]
+    #[ignore = "requires disposable REDIS_TEST_URL; source-derived readonly helper contracts"]
+    async fn fingerprint_exact_recency_fresh_probe_and_redirect_capacity_are_readonly() {
+        let url = std::env::var("REDIS_TEST_URL").unwrap();
+        let coordinator = Coordinator::connect(
+            &url,
+            dispatcharr_coordination::LeaseConfig {
+                namespace: format!("test:direct-lookup:{}", uuid::Uuid::new_v4()),
+                ..Default::default()
+            },
+        )
+        .await
+        .unwrap();
+        let pool = ArchivePool::connect(&url, coordinator, ArchivePoolConfig::default())
+            .await
+            .unwrap();
+        let mut redis = redis::Client::open(url)
+            .unwrap()
+            .get_multiplexed_async_connection()
+            .await
+            .unwrap();
+        let user = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000_000) as i64 + 1000;
+        let first = format!("fp_{}", uuid::Uuid::new_v4().simple());
+        let recent = format!("fp_{}", uuid::Uuid::new_v4().simple());
+        let exact = format!("fp_{}", uuid::Uuid::new_v4().simple());
+        let pairs = [
+            (&first, "123_programme", 10),
+            (&recent, "123_other", 40),
+            (&exact, "123_programme", 30),
+        ];
+        for (sid, media, time) in pairs {
+            let _: () = redis
+                .hset_multiple(
+                    format!("timeshift:pool:{sid}"),
+                    &[
+                        ("user_id", user.to_string()),
+                        ("media_id", media.into()),
+                        ("client_ip", "127.0.0.1".into()),
+                        ("client_user_agent", "source-fingerprint-agent".into()),
+                        ("busy", "0".into()),
+                        ("last_activity", time.to_string()),
+                        ("profile_id", user.to_string()),
+                    ],
+                )
+                .await
+                .unwrap();
+        }
+        assert_eq!(
+            pool.matching_session(
+                user,
+                123,
+                "123_programme",
+                "127.0.0.1",
+                "source-fingerprint-agent",
+                false
+            )
+            .await
+            .unwrap(),
+            Some(exact.clone())
+        );
+        assert_eq!(
+            pool.matching_session(
+                user,
+                123,
+                "123_programme",
+                "127.0.0.1",
+                "source-fingerprint-agent",
+                true
+            )
+            .await
+            .unwrap(),
+            Some(recent.clone())
+        );
+        let _: () = redis
+            .hset(format!("timeshift:pool:{exact}"), "busy", "1")
+            .await
+            .unwrap();
+        assert_eq!(
+            pool.matching_session(
+                user,
+                123,
+                "123_programme",
+                "127.0.0.1",
+                "source-fingerprint-agent",
+                true
+            )
+            .await
+            .unwrap(),
+            Some(exact.clone())
+        );
+        assert!(pool
+            .matching_session(
+                user,
+                123,
+                "123_programme",
+                "127.0.0.1",
+                "wrong-agent",
+                false
+            )
+            .await
+            .unwrap()
+            .is_none());
+        assert!(pool
+            .matching_session(
+                user + 1,
+                123,
+                "123_programme",
+                "127.0.0.1",
+                "source-fingerprint-agent",
+                false
+            )
+            .await
+            .unwrap()
+            .is_none());
+        assert_eq!(pool.owner_state(&exact, user).await.unwrap(), 0);
+        assert_eq!(pool.owner_state(&exact, user + 1).await.unwrap(), 1);
+        let counter = format!("profile_connections:{user}");
+        let _: () = redis.set(&counter, 1).await.unwrap();
+        assert!(!pool.redirect_capacity(user, 1).await.unwrap());
+        assert!(pool.redirect_capacity(user, 0).await.unwrap());
+        assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+        let _: () = redis
+            .del(&[
+                format!("timeshift:pool:{first}"),
+                format!("timeshift:pool:{recent}"),
+                format!("timeshift:pool:{exact}"),
+                counter,
+            ])
+            .await
+            .unwrap();
+        assert!(pool.shutdown().await);
+    }
+}

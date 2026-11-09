@@ -44,7 +44,8 @@ the original dismissal timestamp. Empty bodies are accepted. Dismiss-all affects
 only the authenticated user's visible, not-yet-dismissed rows. Collection-valued
 `action_taken` remains outside the image11 proof. The subsequent implementation
 uses pinned original Python/Unicode15.1 string coercion and source vectors; its
-new collection HTTP cases await another immutable image.
+new collection HTTP cases passed on immutable image12 (148 focused/1024 full).
+See integration `verified-integration-m5-collections-image12-1.json`.
 Unusual malformed-body HTML errors are outside the exact JSON claim.
 
 Admin notification creation/update/deletion, developer-notification scheduling,

@@ -5,6 +5,52 @@ use sha1::Sha1;
 use sha2::Sha256;
 use subtle::ConstantTimeEq;
 
+const PREFERRED_ITERATIONS: u32 = 1_200_000;
+
+/// Django's default PBKDF2 policy counts salt characters, not UTF-8 bytes.
+/// Its entropy calculation assumes the 62-character random-string alphabet.
+pub(crate) fn needs_upgrade(encoded: &str) -> bool {
+    let mut fields = encoded.split('$');
+    let algorithm = fields.next();
+    let iterations = fields.next().and_then(|value| value.parse::<u32>().ok());
+    let salt = fields.next().unwrap_or_default();
+    algorithm != Some("pbkdf2_sha256")
+        || iterations != Some(PREFERRED_ITERATIONS)
+        || salt.chars().count() < 22
+}
+
+/// Run only in the bounded password-worker pool. As in Django's ModelBackend,
+/// a matching legacy hash is upgraded even when the account is inactive.
+pub(crate) fn verify_and_upgrade(password: &str, encoded: &str) -> (bool, Option<String>) {
+    if password.len() > 4096 || encoded.len() > 4096 {
+        return (false, None);
+    }
+    let matched = verify_password(password, encoded);
+    let update = needs_upgrade(encoded);
+    if matched {
+        return (true, update.then(|| encode_password(password)).flatten());
+    }
+    let fields: Vec<_> = encoded.split('$').collect();
+    if fields.len() == 4 && fields[0] == "pbkdf2_sha256" && update {
+        if let Ok(iterations) = fields[1].parse::<u32>() {
+            if iterations > 0 && iterations < PREFERRED_ITERATIONS && fields[2].len() <= 1024 {
+                let mut output = [0u8; 32];
+                pbkdf2_hmac::<Sha256>(
+                    password.as_bytes(),
+                    fields[2].as_bytes(),
+                    PREFERRED_ITERATIONS - iterations,
+                    &mut output,
+                );
+            }
+        }
+    } else if encoded.starts_with('!') || !["pbkdf2_sha256", "pbkdf2_sha1"].contains(&fields[0]) {
+        // Django spends a default hash for unusable/unknown hashes. Unsupported
+        // installed algorithms still fail closed until their native port exists.
+        let _ = encode_password(password);
+    }
+    (false, None)
+}
+
 pub(crate) fn encode_password(password: &str) -> Option<String> {
     if password.len() > 4096 {
         return None;
@@ -15,7 +61,12 @@ pub(crate) fn encode_password(password: &str) -> Option<String> {
         .map(char::from)
         .collect();
     let mut hash = [0u8; 32];
-    pbkdf2_hmac::<Sha256>(password.as_bytes(), salt.as_bytes(), 1_200_000, &mut hash);
+    pbkdf2_hmac::<Sha256>(
+        password.as_bytes(),
+        salt.as_bytes(),
+        PREFERRED_ITERATIONS,
+        &mut hash,
+    );
     Some(format!(
         "pbkdf2_sha256$1200000${salt}${}",
         STANDARD.encode(hash)
@@ -70,6 +121,17 @@ pub fn verify_password(password: &str, encoded: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn pinned_original_upgrade_policy_counts_unicode_salt_characters() {
+        let source: serde_json::Value =
+            serde_json::from_str(include_str!("../datasets/password-upgrade-policy.json")).unwrap();
+        for case in source["cases"].as_array().unwrap() {
+            assert_eq!(
+                needs_upgrade(case["encoded"].as_str().unwrap()),
+                case["needs_upgrade"].as_bool().unwrap()
+            );
+        }
+    }
     #[test]
     fn django_pbkdf2_vectors_and_unusable_hashes() {
         // Python hashlib.pbkdf2_hmac('sha256', b'password', b'salt', 1).

@@ -31,6 +31,46 @@ use std::{
 use tokio::sync::mpsc;
 
 pub trait ArchiveResolver: Send + Sync {
+    fn xc_binding<'a>(
+        &'a self,
+        _request: &'a PlaybackRequest,
+        _intent: &'a crate::XcIntent,
+    ) -> BoxFuture<'a, Result<SessionBinding, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "XC archive authorization is not configured",
+            ))
+        })
+    }
+    fn direct_binding<'a>(
+        &'a self,
+        _user: User,
+        _channel: uuid::Uuid,
+        _start: Option<&'a str>,
+        _duration: Option<&'a str>,
+    ) -> BoxFuture<'a, Result<SessionBinding, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "direct-auth channel resolution is not configured",
+            ))
+        })
+    }
+    fn validate_direct<'a>(
+        &'a self,
+        _binding: &'a SessionBinding,
+    ) -> BoxFuture<'a, Result<bool, StoreError>> {
+        Box::pin(async { Ok(false) })
+    }
+    fn redirect_source(
+        &self,
+        _binding: SessionBinding,
+    ) -> BoxFuture<'_, Result<CatchupSource, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "direct-auth redirect resolution is not configured",
+            ))
+        })
+    }
     fn authenticate<'a>(
         &'a self,
         request: &'a PlaybackRequest,
@@ -59,6 +99,82 @@ impl SqlArchiveResolver {
     }
 }
 impl ArchiveResolver for SqlArchiveResolver {
+    fn xc_binding<'a>(
+        &'a self,
+        request: &'a PlaybackRequest,
+        intent: &'a crate::XcIntent,
+    ) -> BoxFuture<'a, Result<SessionBinding, StoreError>> {
+        Box::pin(async move {
+            let user = self
+                .auth
+                .authorize_xc(request, &intent.username, &intent.password, "XC_API")
+                .await?;
+            let pk = crate::xc::channel_pk(&intent.channel)
+                .ok_or_else(|| StoreError::StatusBody(404, json!(crate::xc::NOT_FOUND)))?;
+            let channel = self
+                .store
+                .channel_for_xc_user_by_id(&user, pk)
+                .await?
+                .ok_or_else(|| StoreError::StatusBody(404, json!(crate::xc::NOT_FOUND)))?;
+            Ok(SessionBinding {
+                user,
+                channel,
+                start: intent.timestamp.clone(),
+                duration: intent.duration.clone(),
+            })
+        })
+    }
+    fn direct_binding<'a>(
+        &'a self,
+        user: User,
+        channel: uuid::Uuid,
+        start: Option<&'a str>,
+        duration: Option<&'a str>,
+    ) -> BoxFuture<'a, Result<SessionBinding, StoreError>> {
+        Box::pin(async move {
+            let channel = self
+                .store
+                .channel_for_user(&user, channel)
+                .await?
+                .ok_or_else(|| {
+                    StoreError::StatusBody(404, json!({"detail":"Channel not found"}))
+                })?;
+            let start = start
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| StoreError::StatusBody(400, json!("Missing start parameter")))?;
+            Ok(SessionBinding {
+                user,
+                channel,
+                start: start.into(),
+                duration: duration.map(str::to_owned),
+            })
+        })
+    }
+    fn validate_direct<'a>(
+        &'a self,
+        binding: &'a SessionBinding,
+    ) -> BoxFuture<'a, Result<bool, StoreError>> {
+        Box::pin(async move {
+            self.source
+                .validate_direct(&binding.user, &binding.channel, &binding.start)
+                .await
+        })
+    }
+    fn redirect_source(
+        &self,
+        binding: SessionBinding,
+    ) -> BoxFuture<'_, Result<CatchupSource, StoreError>> {
+        Box::pin(async move {
+            self.source
+                .resolve_redirect(
+                    binding.user,
+                    binding.channel,
+                    binding.start,
+                    binding.duration.as_deref(),
+                )
+                .await
+        })
+    }
     fn authenticate<'a>(
         &'a self,
         request: &'a PlaybackRequest,
@@ -187,7 +303,15 @@ impl CatchupMedia {
     pub fn router(self) -> Router {
         Router::new()
             .route("/proxy/catchup/{channel}", get(play).head(head))
+            .route(
+                "/timeshift/{username}/{password}/{duration}/{timestamp}/{channel_id}",
+                get(crate::xc::path),
+            )
+            .route("/streaming/timeshift.php", get(crate::xc::query))
             .with_state(self)
+    }
+    pub(crate) fn signal_management_stop(&self, sid: &str) {
+        self.inner.pool.signal_management_stop(sid);
     }
     pub async fn shutdown(&self) -> bool {
         self.inner.pool.shutdown().await
@@ -205,33 +329,155 @@ impl CatchupMedia {
     ) -> Result<Response, StoreError> {
         let authenticated = self.inner.resolver.authenticate(&request).await?;
         if !self.inner.resolver.network(&request).await? {
-            return Err(StoreError::Forbidden);
+            return Err(StoreError::StatusBody(403, json!({"error":"Forbidden"})));
         }
-        let Some(sid) = request
+        let provided = request
             .parameter("session_id")
-            .filter(|value| !value.is_empty())
-        else {
-            return Err(if authenticated.is_none() {
+            .filter(|value| !value.is_empty());
+        let binding = if let Some(sid) = provided {
+            if let Some(binding) = self.inner.sessions.resolve(sid, channel).await? {
+                if authenticated
+                    .as_ref()
+                    .is_some_and(|user| user.id != binding.user.id)
+                {
+                    return Err(StoreError::StatusBody(403, json!("Access denied")));
+                }
+                binding
+            } else {
+                let user = authenticated.ok_or_else(|| {
+                    StoreError::StatusBody(
+                        401,
+                        json!({"error":"Invalid or expired playback session"}),
+                    )
+                })?;
+                self.inner
+                    .resolver
+                    .direct_binding(
+                        user,
+                        channel,
+                        request.parameter("start"),
+                        request.parameter("duration"),
+                    )
+                    .await?
+            }
+        } else {
+            let user = authenticated.ok_or_else(|| {
                 StoreError::StatusBody(401, json!({"error":"Authentication required"}))
-            } else {
-                StoreError::Unsupported("direct-auth archive mint/adoption is not yet implemented")
-            });
-        };
-        let Some(binding) = self.inner.sessions.resolve(sid, channel).await? else {
-            return Err(if authenticated.is_none() {
-                StoreError::StatusBody(401, json!({"error":"Invalid or expired playback session"}))
-            } else {
-                StoreError::Unsupported(
-                    "direct-auth archive pool restoration is not yet implemented",
+            })?;
+            self.inner
+                .resolver
+                .direct_binding(
+                    user,
+                    channel,
+                    request.parameter("start"),
+                    request.parameter("duration"),
                 )
-            });
+                .await?
         };
-        if authenticated
-            .as_ref()
-            .is_some_and(|user| user.id != binding.user.id)
-        {
-            return Err(StoreError::StatusBody(403, json!("Access denied")));
+        self.serve(
+            binding,
+            &request,
+            &format!("/proxy/catchup/{channel}"),
+            false,
+        )
+        .await
+    }
+    pub(crate) async fn respond_xc(
+        &self,
+        request: PlaybackRequest,
+        intent: crate::XcIntent,
+        path: String,
+        query_layout: bool,
+    ) -> Response {
+        let result = async {
+            let binding = self.inner.resolver.xc_binding(&request, &intent).await?;
+            self.serve(binding, &request, &path, query_layout).await
         }
+        .await;
+        let mut response = match result {
+            Ok(response) => response,
+            Err(error) => error_response(error),
+        };
+        response.headers_mut().remove("allow");
+        response
+    }
+    async fn serve(
+        &self,
+        binding: SessionBinding,
+        request: &PlaybackRequest,
+        path: &str,
+        query_layout: bool,
+    ) -> Result<Response, StoreError> {
+        let provided = request
+            .parameter("session_id")
+            .filter(|value| !value.is_empty());
+        let redirect = self.inner.resolver.validate_direct(&binding).await?;
+        let media_id = format!(
+            "{}_{}",
+            binding.channel.id,
+            binding.start.replace([':', '/'], "-")
+        );
+        let ip = self.inner.resolver.client_ip(request).to_string();
+        let agent = request.header("user-agent").unwrap_or("");
+        let mut effective = provided.map(str::to_owned);
+        let mut find = provided.is_none();
+        if let Some(sid) = provided {
+            match self.inner.pool.owner_state(sid, binding.user.id).await? {
+                1 => return crate::direct::mint_redirect_path(path, request),
+                -1 => find = true,
+                _ => {}
+            }
+        }
+        if find {
+            if let Some(matched) = self
+                .inner
+                .pool
+                .matching_session(
+                    binding.user.id,
+                    binding.channel.id,
+                    &media_id,
+                    &ip,
+                    agent,
+                    provided.is_some(),
+                )
+                .await?
+            {
+                if !self.inner.pool.is_local(&matched) {
+                    return Err(StoreError::Unsupported(
+                        "remote archive fingerprint adoption is not yet implemented",
+                    ));
+                }
+                effective = Some(matched);
+            }
+        }
+        let Some(sid) = effective.as_deref() else {
+            if redirect {
+                let source = self.inner.resolver.redirect_source(binding).await?;
+                for candidate in &source.candidates {
+                    if self
+                        .inner
+                        .pool
+                        .redirect_capacity(candidate.profile_id, candidate.max_streams)
+                        .await?
+                    {
+                        let build = if query_layout {
+                            dispatcharr_timeshift_core::query_url
+                        } else {
+                            dispatcharr_timeshift_core::path_url
+                        };
+                        let url = build(
+                            &candidate.credentials,
+                            &candidate.provider_stream_id,
+                            &candidate.provider_timestamp,
+                            source.duration_window,
+                        );
+                        return crate::direct::provider_redirect(&url);
+                    }
+                }
+                return Err(StoreError::StatusBody(503, json!("No available stream")));
+            }
+            return crate::direct::mint_redirect_path(path, request);
+        };
         let source = self.inner.resolver.source(binding).await?;
         let range = request.header("range").filter(|value| !value.is_empty());
         let mut last_failure = StoreError::StatusBody(503, json!("No available stream slot"));
@@ -244,8 +490,8 @@ impl CatchupMedia {
                 sid,
                 &source,
                 candidate,
-                &request,
-                self.inner.resolver.client_ip(&request),
+                request,
+                self.inner.resolver.client_ip(request),
             );
             if let Some(probe) = self.inner.pool.busy_probe(&pool_request, range).await? {
                 return self

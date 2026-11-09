@@ -115,3 +115,21 @@ image7 real H264 byte-prefix/decoder/quota cases pass. See
 `../../../docs/rust-http-input-parity.md`. The prior source reopen failure is
 preserved; Rust stays running across all encoded modes to check cookie isolation.
 No application performance gain is inferred from these transport fixtures.
+
+## Shared history and local cache
+
+With a shared input store, the process retains a recent4MiB cache per channel
+(at least one configured chunk), while Redis keeps the independent full input
+history. Without shared storage, the original full local ring remains. Local
+chunks use canonical Redis sequences and original receive ages. Startup uses
+the authoritative age cursor; an evicted local chunk is read from Redis rather
+than skipped. Historical HTTP frames retain one viewer delivery slot and their
+read-byte budget until the final frame owner drops. Source owner-era fencing,
+discontinuity and expired-history recovery apply to these reads too.
+
+The versioned admin-only `/internal/proxy/ts/v1/memory` reports local payload
+separately from Redis logical bytes and known-key allocations. It changes no
+source-compatible status fields. Exact scope, the preserved failed many-channel
+memory gate, component proof and pending frozen-image gates are documented in
+`../../../docs/rust-native-retention-investigation.md`. No cache performance
+gain has been accepted.

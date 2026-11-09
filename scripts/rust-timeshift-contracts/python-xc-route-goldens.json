@@ -1,0 +1,334 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "format_version": 1,
+  "scope": "original XC catch-up PATH/QUERY authentication, redirects, caller sessions and network precedence",
+  "capture_complete": true,
+  "events": [
+    {
+      "case": "query-missing-required",
+      "method": "GET",
+      "status": 400,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "27",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 27,
+      "sha256": "656b8ae6d6f55ed02f771da6a86b449ec984b6b3b4507a1f5d0a2f238297c558",
+      "body": "Missing required parameters"
+    },
+    {
+      "case": "path-wrong-password",
+      "method": "GET",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json",
+        "content-length": "25",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 25,
+      "sha256": "ee3cf315d0fbfe54d808ccee83b60082a3b45d66170e264840f2cc228dcbf630",
+      "body": "{\"error\": \"Unauthorized\"}"
+    },
+    {
+      "case": "query-wrong-password",
+      "method": "GET",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json",
+        "content-length": "25",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 25,
+      "sha256": "ee3cf315d0fbfe54d808ccee83b60082a3b45d66170e264840f2cc228dcbf630",
+      "body": "{\"error\": \"Unauthorized\"}"
+    },
+    {
+      "case": "path-bad-channel",
+      "method": "GET",
+      "status": 404,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "179",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 179,
+      "sha256": "5547992afdadb59737c5c0feb1a35dff294cd27145bf290c031737ecf8a2577d",
+      "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n</body>\n</html>\n"
+    },
+    {
+      "case": "path-missing-channel",
+      "method": "GET",
+      "status": 404,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "179",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 179,
+      "sha256": "5547992afdadb59737c5c0feb1a35dff294cd27145bf290c031737ecf8a2577d",
+      "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n</body>\n</html>\n"
+    },
+    {
+      "case": "path-hidden-channel",
+      "method": "GET",
+      "status": 404,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "179",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 179,
+      "sha256": "5547992afdadb59737c5c0feb1a35dff294cd27145bf290c031737ecf8a2577d",
+      "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n</body>\n</html>\n"
+    },
+    {
+      "case": "path-disabled-catchup",
+      "method": "GET",
+      "status": 403,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "20",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 20,
+      "sha256": "af8aedea5cade4d4334330aa48d64adf653a8089de239588c51da8c87ce83b72",
+      "body": "Catch-up is disabled"
+    },
+    {
+      "case": "path-invalid-timestamp",
+      "method": "GET",
+      "status": 400,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "17",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 17,
+      "sha256": "077477a51393f4d29226a1b54c20565edabdccb19d962a255d9d544ca80c2635",
+      "body": "Invalid timestamp"
+    },
+    {
+      "case": "path-mint-proxy",
+      "method": "GET",
+      "status": 301,
+      "headers": {
+        "location": "/timeshift/<provider-user>/<provider-password>/30/2026-11-09:11-00/11.ts?session_id=%3Csession%3E",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "query-mint-proxy",
+      "method": "GET",
+      "status": 301,
+      "headers": {
+        "location": "/streaming/timeshift.php?username=%3Cprovider-credential%3E&password=%3Cprovider-credential%3E&stream=11&start=2026-11-09T11%3A00%3A00Z&duration=30&session_id=%3Csession%3E",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "query-utc-fallback",
+      "method": "GET",
+      "status": 301,
+      "headers": {
+        "location": "/streaming/timeshift.php?username=%3Cprovider-credential%3E&password=%3Cprovider-credential%3E&stream=11&start=&duration=30&utc=1794222000&session_id=%3Csession%3E",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "path-ignores-bad-bearer",
+      "method": "GET",
+      "status": 301,
+      "headers": {
+        "location": "/timeshift/<provider-user>/<provider-password>/30/2026-11-09:11-00/11.ts?session_id=%3Csession%3E",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "path-client-session",
+      "method": "GET",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-255/15001836",
+        "content-length": "256",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 256,
+      "sha256": "222cc5871d7518afec470f6f067a46b5dd78b302f239ac7654f217b8876ecf38"
+    },
+    {
+      "case": "query-client-session",
+      "method": "GET",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-255/15001836",
+        "content-length": "256",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 256,
+      "sha256": "222cc5871d7518afec470f6f067a46b5dd78b302f239ac7654f217b8876ecf38"
+    },
+    {
+      "case": "inactive-xc-user-still-streams",
+      "method": "GET",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 0-255/15001836",
+        "content-length": "256",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 256,
+      "sha256": "222cc5871d7518afec470f6f067a46b5dd78b302f239ac7654f217b8876ecf38"
+    },
+    {
+      "case": "path-head-mint",
+      "method": "HEAD",
+      "status": 301,
+      "headers": {
+        "location": "/timeshift/<provider-user>/<provider-password>/30/2026-11-09:11-00/11.ts?session_id=%3Csession%3E",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "xc-does-not-use-streams-network",
+      "method": "GET",
+      "status": 301,
+      "headers": {
+        "location": "/timeshift/<provider-user>/<provider-password>/30/2026-11-09:11-00/11.ts?session_id=%3Csession%3E",
+        "cache-control": "private, max-age=21600",
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "user-network-before-password",
+      "method": "GET",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json",
+        "content-length": "22",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 22,
+      "sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+      "body": "{\"error\": \"Forbidden\"}"
+    },
+    {
+      "case": "path-bare-redirect",
+      "method": "GET",
+      "status": 302,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "location": "http://origin:8080/timeshift/<provider-user>/<provider-password>/35/2026-11-09:11-00/fixture.ts",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "query-bare-redirect",
+      "method": "GET",
+      "status": 302,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "location": "http://origin:8080/streaming/timeshift.php?username=%3Cprovider-credential%3E&password=%3Cprovider-credential%3E&stream=fixture&start=2026-11-09T11%3A00%3A00Z&duration=35",
+        "content-length": "0",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "case": "bare-redirect-no-allowed-profile",
+      "method": "GET",
+      "status": 503,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "19",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 19,
+      "sha256": "8a734e98fdf672183da1b087d70cb7893f95818aadc601af7921f8f18910d01c",
+      "body": "No available stream"
+    },
+    {
+      "case": "system-network-before-channel-password",
+      "method": "GET",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json",
+        "content-length": "22",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 22,
+      "sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+      "body": "{\"error\": \"Forbidden\"}"
+    },
+    {
+      "case": "query-required-before-system-network",
+      "method": "GET",
+      "status": 400,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-length": "27",
+        "x-content-type-options": "nosniff"
+      },
+      "bytes": 27,
+      "sha256": "656b8ae6d6f55ed02f771da6a86b449ec984b6b3b4507a1f5d0a2f238297c558",
+      "body": "Missing required parameters"
+    }
+  ],
+  "credentials_and_opaque_locations_normalized": true,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "evidence": "artifacts/rust/m4-timeshift-xc-source-1/vod-contracts.json",
+  "evidence_sha256": "0c7e1fa493e0d3e0abfc05af8232d3023c0ed1904ab991c1a0816b5be8ea4a95",
+  "implementation_verified": false,
+  "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md"
+}

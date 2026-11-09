@@ -403,3 +403,11 @@ def run_notifications(http,baseline,candidate,accounts,record,fixture):
     spec=importlib.util.spec_from_file_location('dispatcharr_notification_probes',Path(__file__).with_name('notification_probes.py'))
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
     module.run(http,baseline,candidate,accounts,record,fixture)
+
+
+def run_environment_ip(http,baseline,candidate,accounts,record,fixture):
+    """Optional frozen package enabled-IP proof; cache/lock prevents egress."""
+    validate_fixture(baseline,candidate,accounts)
+    spec=importlib.util.spec_from_file_location('dispatcharr_environment_ip_probes',Path(__file__).with_name('environment_ip_probes.py'))
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    module.run(http,baseline,candidate,accounts,record,fixture)

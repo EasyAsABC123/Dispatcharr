@@ -1,0 +1,26 @@
+{
+  "scope": "Actual pinned Django password upgrade policy versus native login on disposable original PostgreSQL schema. Not a packaged image or performance claim.",
+  "passed": true,
+  "source_cases": 6,
+  "raw_report_sha256": "88317ec664c6558de7d08e827e2c7473e4b26d3248677140e79ced3f35533c0b",
+  "rust_source_archive_sha256": "92dfd2db0ab8d7faca46bed2fdaba7aaee442bd4850d578752f406bc99c06df1",
+  "source_files": {
+    "rust/crates/store/src/passwords.rs": "aa61f848acea9b84d527539174c92f964de205d82ee2cfe9ceff7cfcba163aee",
+    "rust/crates/store/src/auth.rs": "49ec7d4f514c35c55075e3852bc5e14e9c1bcc79c83f5f98c0aed5ce22f18947",
+    "rust/crates/store/tests/auth_sql.rs": "8f8a587f3897497fe9c569c9c7176727e5bcc2b3786c904233bb98821ba8a351"
+  },
+  "cleanup": "project removed",
+  "verified": [
+    "Matched legacy SHA256 work factor upgrades to preferred 1200000 rounds.",
+    "Matched legacy PBKDF2 SHA1 upgrades to SHA256.",
+    "Short salt upgrades; current preferred hash remains unchanged.",
+    "Inactive user hash upgrades before authentication rejection.",
+    "Wrong password leaves stored credential unchanged; matching work-factor hardening executes in bounded worker."
+  ],
+  "limits": [
+    "Argon2, bcrypt_sha256 and scrypt verification remain fail closed.",
+    "Shared login/API-key throttles, audit events and frontend end-to-end login still separate gates.",
+    "Conditional password update avoids overwriting a concurrent password change; Django original setter is unconditional.",
+    "Original SimpleJWT configuration has no blacklist application and refresh rotation disabled; logout does not revoke JWTs."
+  ]
+}

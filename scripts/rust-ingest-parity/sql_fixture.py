@@ -217,6 +217,23 @@ def main():
                   'playlist':playlist,'projection_context':{'account_type':account.account_type,'groups':groups,'hash_keys':keys,'max_name_characters':512},
                   'rows':projected(batch),'counts':tasks._parse_batch_stream_counts(message),'error':False,
                   'expected':normalized(database_rows(),before)})
+    # Raw-entry slices precede projection; a fully disabled first batch still
+    # forms a batch even though it contributes no database writes.
+    playlist = '#EXTM3U\n' + ''.join(
+        f'#EXTINF:-1 tvg-id="{prefix} skipped-{index}" group-title="excluded",Skip\nhttp://origin:8080/live/0.ts\n'
+        for index in range(1500))
+    playlist += f'#EXTINF:-1 tvg-id="{prefix} boundary",Boundary\nhttp://origin:8080/live/0.ts\n'
+    batch = list(tasks.iter_m3u_entries(playlist.splitlines()))
+    before = database_rows()
+    counts = [0, 0, 0]
+    for offset in range(0, len(batch), 1500):
+        result = tasks._parse_batch_stream_counts(tasks.process_m3u_batch_direct(
+            account.id, batch[offset:offset+1500], groups, keys, []))
+        counts = [left+right for left, right in zip(counts, result)]
+    steps.append({'name':'parsed-cache-raw-boundaries-before-disabled-groups','account_id':account.id,
+                  'playlist':playlist,'projection_context':{'account_type':account.account_type,'groups':groups,'hash_keys':keys,'max_name_characters':512},
+                  'rows':projected(batch),'counts':counts,'error':False,'expected_batches':2,
+                  'expected':normalized(database_rows(),before)})
     # Restore the same initial logical dataset for the independent Rust writer.
     Stream.objects.filter(tvg_id__startswith=prefix).delete()
     restored=[]
