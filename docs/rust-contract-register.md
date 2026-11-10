@@ -29,3 +29,17 @@ cmp docs/rust-contract-register.json /tmp/dispatcharr-contract-register.json
 The builder validates unique IDs, complete route/operation accounting and the absence of invented passes. Input hashes identify the exact discovery files. The output is deterministic and contains no run timestamp. Do not hand-edit the generated JSON: extend the builder or add a reviewed binding input when mapping actual cases.
 
 The next mapping step is case-level: bind a source/native test and its frozen report hash, method/action, role, setup, assertions and observed result. Keep partial input/role coverage partial. Schema-only and Source-only observations must remain distinct from native and packaged comparisons. Milestones M0–M8 remain in progress; this register does not close M0 or full migration acceptance.
+
+
+## Runtime handler candidates
+
+[The pinned method inspection](rust-runtime-methods.json) adds static handler candidates for 166 of the 322 method-unresolved routes; 156 still have no such candidate. The 322 original unresolved method/action placeholders remain unchanged. A present handler or default permission class does not prove successful dispatch, authorization, CSRF or any response contract. Dynamic permission-method references are retained for later case mapping.
+
+The inspector walks the exact same 592 routes without instantiating/executing their views. A SQL execution wrapper rejects queries during inspection; the successful probe recorded zero inspection SQL statements and zero inspection view invocations. The owned setup separately performs its usual web readiness request. The fixture was removed, and the original source archive matched the pinned hash.
+
+```bash
+source artifacts/rust/tooling/environment.sh
+python3 scripts/rust-contracts/run_runtime_methods.py --output artifacts/rust/runtime-method-discovery-new
+```
+
+The generator uses the committed observation file as an additional hashed input when present. Raw runtime dispatch candidates remain separate from the original resolved ViewSet action maps. No role or method acceptance is inferred.

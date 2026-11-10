@@ -24,6 +24,11 @@ def related(view,action,method):
 def build():
     runtime_path=ROOT/'docs/rust-runtime-contracts.json';static_path=ROOT/'docs/rust-contract-inventory.json'
     runtime=json.loads(runtime_path.read_text());static=json.loads(static_path.read_text());rows=[];seen=collections.Counter()
+    methods_path=ROOT/'docs/rust-runtime-methods.json';dispatch=json.loads(methods_path.read_text())if methods_path.exists()else None
+    if dispatch is not None:
+        identity=lambda r:(r['pattern'],r.get('name'),r['view'])
+        assert [identity(r)for r in dispatch['routes']]==[identity(r)for r in runtime['routes']]
+        assert dispatch['actual_method_or_permission_acceptance']is False
     for ordinal,route in enumerate(runtime['routes']):
         identity={key:route.get(key)for key in ['name','pattern','view','methods']};base=digest(identity);occurrence=seen[base];seen[base]+=1
         root_id='route-'+base[:20]+('-'+str(occurrence)if occurrence else '')
@@ -35,12 +40,18 @@ def build():
                 'role_matrix':{'state':'unmapped','required_roles':[]},'setup_fixture':None,'assertions':[],
                 'coverage_state':'scoped_evidence_needs_case_mapping'if reports else 'not_yet_mapped',
                 'related_evidence':reports,'result':None,'fully_verified':False})
+        candidates=dispatch['routes'][ordinal]if dispatch is not None else None
         view=route['view'];parts=view.split('.');source_file='/'.join(parts[:-1])+'.py'if view.startswith(('apps.','core.','dispatcharr.'))else None
         prefix='/'.join(parts[:2])+'/'if view.startswith('apps.')else'core/'if view.startswith('core.')else None
         tests=[p for p in static['test_files']if prefix and p.startswith(prefix)]
         rows.append({'route_id':root_id,'resolver_ordinal':ordinal,'pattern_exact':route['pattern'],'name':route.get('name'),'source_handler':view,
             'source_module_candidate':source_file,'source_test_candidates':tests,'test_association':'module only; not evidence these tests cover this route',
-            'declared_methods_resolved':isinstance(methods,dict)and bool(methods),'operations':operations})
+            'declared_methods_resolved':isinstance(methods,dict)and bool(methods),
+            'runtime_handler_candidates':candidates['handler_method_candidates']if candidates else None,
+            'default_permission_candidates':candidates['default_permission_candidates']if candidates else None,
+            'dynamic_permission_method':candidates['dynamic_permission_method']if candidates else None,
+            'candidate_scope':'Static runtime attributes only; never executed HTTP or role acceptance',
+            'operations':operations})
     operations=[]
     for path,item in sorted(runtime['openapi']['paths'].items()):
         for method,op in sorted(item.items()):
@@ -61,13 +72,14 @@ def build():
     assert all(op['result']is None and not op['fully_verified']for r in rows for op in r['operations'])
     return {'format_version':1,'scope':'Contract work register linking runtime discovery and explicit mapping gaps; not executable parity acceptance',
         'credit':'All application/algorithm credit belongs to original Dispatcharr authors and contributors; AGPL retained.',
-        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path]},
+        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[])]},
         'runtime_discovery_metadata':runtime['metadata'],'limits':['Method/action is unresolved where original runtime discovery returned null; no GET/POST guesses.',
             'Schema authentication is not a role/permission proof; every role matrix still requires case mapping.',
             'Module-associated tests and related scoped reports never mark an entire route fully verified.',
             'Runtime resolver order and exact raw patterns, including format variants, are retained.',
             'Non-HTTP entries are static candidates, not exhaustive environment/command/task/plugin/admin coverage.'],
         'counts':{'runtime_routes':len(rows),'routes_with_unresolved_methods':sum(not r['declared_methods_resolved']for r in rows),
+            'methodless_routes_with_runtime_handler_candidates':sum(not r['declared_methods_resolved']and r['runtime_handler_candidates']is not None for r in rows),
             'runtime_operation_work_items':len(ids),'OpenAPI_operations':len(operations),'static_non_HTTP_candidates':len(non_http),
             'fully_verified_route_operations':0,'scoped_evidence_requiring_case_mapping':sum(bool(op['related_evidence'])for r in rows for op in r['operations'])},
         'unrepresented_contract_families':['Environment defaults and precedence','Periodic schedule trigger/crash semantics','Plugin context/capability APIs','Admin workflows and CSRF/session behavior','Signals and background startup/shutdown hooks'],

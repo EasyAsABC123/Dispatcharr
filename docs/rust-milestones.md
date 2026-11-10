@@ -526,3 +526,6 @@ Source restart observations [176](../scripts/rust-redis-restart-contracts/verifi
 
 
 [The generated contract work register](rust-contract-register.md) now preserves all 592 resolved route entries, 798 operation work items (including 322 unresolved-method placeholders), 362 separate OpenAPI operations and 250 static non-HTTP candidates. It supplies stable IDs and explicit role/fixture/assertion/result mapping gaps, with initial scoped evidence links. Module-associated tests and discovery do not mark entire routes passed; row-level case mapping remains incomplete. This improves M0 tracking without changing any milestone's acceptance status.
+
+
+[Read-only runtime method inspection](rust-contract-register.md#runtime-handler-candidates) adds handler candidates for 166 of the 322 method-unresolved route entries, preserving all 592 original resolver identities and their exact order. Inspection executed no views or SQL; the owned setup used its normal readiness request and was removed. Default permission attributes and dynamic policy references remain candidate evidence only, not authorization or parity acceptance. M0's explicit case/role mapping work remains open.
