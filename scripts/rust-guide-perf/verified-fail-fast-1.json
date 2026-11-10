@@ -1,0 +1,14 @@
+{
+  "scope": "Guide performance orchestrator first-failed-pair stop; deterministic fixture-free control test, not runtime or performance acceptance",
+  "passed": true,
+  "tests_passed": 23,
+  "command": "python3 -m unittest discover -s scripts/rust-guide-perf -p test_*.py",
+  "source_sha256": {
+    "scripts/rust-guide-perf/orchestrator.py": "1c5bc1afba63e40c26b56f9511a9099ec1e8d258761ce643ffffef4723b6799c",
+    "scripts/rust-guide-perf/test_orchestrator.py": "a9a76c2407ffd3e4b65140e3334b8c096d61baa587b1668515d18648046e7187"
+  },
+  "new_control": "After18Sourcequalification phases, a nativeCPU regression in pair1 saves two phases/onepair and stops before starting another backend; incomplete matrix stays failed. All started backends stop.",
+  "policy_changed": false,
+  "historical_runs_reinterpreted": false,
+  "performance_verified": false
+}

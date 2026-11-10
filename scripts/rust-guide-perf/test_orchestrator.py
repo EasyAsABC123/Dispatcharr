@@ -11,6 +11,12 @@ import plan
 
 class Engine(unittest.TestCase):
     def test_complete_qualification_seal_then_all_fifteen_pairs_and_stops(self):
+        self.exercise_matrix(False)
+
+    def test_failed_pair_is_saved_and_no_further_backend_starts(self):
+        self.exercise_matrix(True)
+
+    def exercise_matrix(self, fail_candidate_cpu):
         now = datetime.datetime.now(datetime.timezone.utc)
         seed = {'clock': now.isoformat(), 'channel_uuids': ['fixture-private']}
         manifest = dict(passed=True, image_id='sha256:fixture', source_tree_sha256=plan.TREE,
@@ -18,6 +24,7 @@ class Engine(unittest.TestCase):
         reference = {'current': {'kind': 'json', 'value': []},
                      'xml': {'kind': 'xml', 'bytes': 12, 'sha256': 'fixture'}}
         lifecycle = []
+        active_backend = [None]
         selected = {'baseline': {'id': 'a'*64}, 'origin': {'id': 'b'*64}, 'source': {'id': 'c'*64}}
 
         class Cache:
@@ -37,6 +44,7 @@ class Engine(unittest.TestCase):
                         current_until=(now+datetime.timedelta(hours=2)).isoformat(),
                         fixture_sha256='fixture', schema_sha256='schema')
         def start(backend):
+            active_backend[0] = backend
             lifecycle.append(('start', backend))
             return 'http://127.0.0.1:1'
         def stop():
@@ -68,7 +76,7 @@ class Engine(unittest.TestCase):
             def sample(self):
                 return copy.deepcopy(sample)
             def finish(self, before):
-                return dict(cpu_percent_mean=100, selected_services=selected,
+                return dict(cpu_percent_mean=125 if fail_candidate_cpu and active_backend[0] == 'candidate' else 100, selected_services=selected,
                             services={'source': {'cpu_percent_mean': 100, 'throttled_period_fraction': 0}})
         with tempfile.TemporaryDirectory() as folder, patch('orchestrator.observer.Observer', Observer), \
              patch('orchestrator.load.request', side_effect=request), \
@@ -90,6 +98,20 @@ class Engine(unittest.TestCase):
             self.assertIn('fixture_binding', frozen)
             measured = orchestrator.run(action='matrix', output=m, plan_path=q/'frozen-plan.json',
                                         qualification_path=q/'source-qualification.json', **shared)
+            if fail_candidate_cpu:
+                self.assertFalse(measured['passed'])
+                self.assertFalse(measured['performance_verified'])
+                self.assertTrue(measured['acceptance']['incomplete'])
+                self.assertEqual(measured['stopped_on_failed_pair']['failures'],
+                                 ['regression:cpu_percent_mean'])
+                self.assertEqual(len(measured['trials']), 2)
+                self.assertEqual(len(json.loads((m/'pairs.json').read_text())), 1)
+                starts = [backend for operation, backend in lifecycle if operation == 'start']
+                self.assertEqual(starts[-2:], ['source', 'candidate'])
+                self.assertEqual(len(starts), 20)  #18 Source rates, then one pair.
+                self.assertEqual(len(starts), sum(v[0] == 'stop' for v in lifecycle))
+                self.assertTrue(json.loads((m/'guide-run.json').read_text())['acceptance']['incomplete'])
+                return
             self.assertTrue(measured['passed'])
             self.assertEqual(len(measured['acceptance']['pairs']), 15)
             self.assertEqual(len(measured['trials']), 30)

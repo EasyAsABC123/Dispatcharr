@@ -259,6 +259,22 @@ def run(*, action, output, manifest, tools, seed, reference, current, xml,
                                                    work['name'] + '-trial-' + str(trial) + '-' + backend)
                     rows.append(pair)
                     save(output/'pairs.json', rows)
+                    comparison = acceptance.compare(pair['source'], pair['candidate'])
+                    if not comparison['passed']:
+                        # Retain every completed phase/pair before ending. An
+                        # incomplete matrix never becomes overall acceptance.
+                        report['acceptance'] = {
+                            'passed': False, 'incomplete': True,
+                            'scope': plan.POLICY['scope'],
+                            'pairs': [{'workload': row['workload'], 'trial': row['trial'],
+                                       **acceptance.compare(row['source'], row['candidate'])}
+                                      for row in rows],
+                        }
+                        report['stopped_on_failed_pair'] = {
+                            'workload': work['name'], 'trial': trial,
+                            'failures': comparison['failures'],
+                        }
+                        return report
             report['acceptance'] = acceptance.matrix(rows)
             report['passed'] = report['acceptance']['passed']
             report['performance_verified'] = report['passed']
