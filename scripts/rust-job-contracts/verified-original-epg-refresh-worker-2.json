@@ -1,0 +1,366 @@
+{
+  "passed": true,
+  "scope": "Actual Original EPG refresh producer/worker wrapper for inactive/dummy/missing/busy/deferral/exhaustion; no imported/local/remote/native acceptance",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "report": {
+    "path": "artifacts/rust/m6-original-epg-refresh-worker-2/integration.json",
+    "sha256": "842c5f24e5636102edc99ed9adb9602a7bbcea030172517b7e3739ae03daa441"
+  },
+  "observations": {
+    "path": "artifacts/rust/m6-original-epg-refresh-worker-2/source-epg-refresh-private.json",
+    "sha256": "96c3030994cee5e4e5087e2744bc4e436ce6af747fff2762ed06ef233d7bd686"
+  },
+  "cases": 7,
+  "checks": 50,
+  "checks_projection": [
+    {
+      "name": "bounded-result-inactive",
+      "passed": true
+    },
+    {
+      "name": "normal-success-inactive",
+      "passed": true
+    },
+    {
+      "name": "exact-return-inactive",
+      "passed": true
+    },
+    {
+      "name": "no-child-inactive",
+      "passed": true
+    },
+    {
+      "name": "retains-index-inactive",
+      "passed": true
+    },
+    {
+      "name": "refresh-lock-effect-inactive",
+      "passed": true
+    },
+    {
+      "name": "bounded-result-dummy",
+      "passed": true
+    },
+    {
+      "name": "normal-success-dummy",
+      "passed": true
+    },
+    {
+      "name": "exact-return-dummy",
+      "passed": true
+    },
+    {
+      "name": "no-child-dummy",
+      "passed": true
+    },
+    {
+      "name": "retains-index-dummy",
+      "passed": true
+    },
+    {
+      "name": "refresh-lock-effect-dummy",
+      "passed": true
+    },
+    {
+      "name": "bounded-result-missing",
+      "passed": true
+    },
+    {
+      "name": "normal-success-missing",
+      "passed": true
+    },
+    {
+      "name": "exact-return-missing",
+      "passed": true
+    },
+    {
+      "name": "no-child-missing",
+      "passed": true
+    },
+    {
+      "name": "orphan-task-and-private-interval-removed",
+      "passed": true
+    },
+    {
+      "name": "refresh-lock-effect-missing",
+      "passed": true
+    },
+    {
+      "name": "bounded-result-refresh_busy",
+      "passed": true
+    },
+    {
+      "name": "normal-success-refresh_busy",
+      "passed": true
+    },
+    {
+      "name": "exact-return-refresh_busy",
+      "passed": true
+    },
+    {
+      "name": "no-child-refresh_busy",
+      "passed": true
+    },
+    {
+      "name": "retains-index-refresh_busy",
+      "passed": true
+    },
+    {
+      "name": "refresh-lock-effect-refresh_busy",
+      "passed": true
+    },
+    {
+      "name": "bounded-result-file_busy",
+      "passed": true
+    },
+    {
+      "name": "normal-success-file_busy",
+      "passed": true
+    },
+    {
+      "name": "exact-return-file_busy",
+      "passed": true
+    },
+    {
+      "name": "one-new-child-file_busy",
+      "passed": true
+    },
+    {
+      "name": "child-args-file_busy",
+      "passed": true
+    },
+    {
+      "name": "child-lineage-file_busy",
+      "passed": true
+    },
+    {
+      "name": "actual-countdown-file_busy",
+      "passed": true
+    },
+    {
+      "name": "invalidates-index-before-deferral-file_busy",
+      "passed": true
+    },
+    {
+      "name": "refresh-lock-effect-file_busy",
+      "passed": true
+    },
+    {
+      "name": "bounded-result-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "normal-success-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "exact-return-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "one-new-child-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "child-args-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "child-lineage-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "actual-countdown-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "invalidates-index-before-deferral-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "refresh-lock-effect-parser_busy",
+      "passed": true
+    },
+    {
+      "name": "bounded-result-exhausted",
+      "passed": true
+    },
+    {
+      "name": "normal-success-exhausted",
+      "passed": true
+    },
+    {
+      "name": "exact-return-exhausted",
+      "passed": true
+    },
+    {
+      "name": "no-child-exhausted",
+      "passed": true
+    },
+    {
+      "name": "invalidates-index-before-deferral-exhausted",
+      "passed": true
+    },
+    {
+      "name": "exhausted-sets-source-error",
+      "passed": true
+    },
+    {
+      "name": "refresh-lock-effect-exhausted",
+      "passed": true
+    },
+    {
+      "name": "no-unexpected-executed-family",
+      "passed": true
+    }
+  ],
+  "dataset": {
+    "path": "scripts/rust-job-contracts/source-epg-refresh-worker-results-2.json",
+    "sha256": "42f918257c36ad76f54e97d36c2a1abf69e179292ecd2ad8e26aa32fa8c8f4f2",
+    "synthetic_only": true
+  },
+  "selected_tools_sha256": {
+    "scripts/rust-job-contracts/run_epg_refresh_worker.py": "03548f780dd9e1940542217925a1ff1e5b8640f1a347a96ff2e5607ed519e821",
+    "scripts/rust-job-contracts/source_epg_refresh_worker.py": "00917237eb9884f175029be9bcf4b7d0d51c2b36818f8513e90f900a90417fae",
+    "scripts/rust-job-contracts/epg_refresh_observer.py": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+  },
+  "case_projection": [
+    {
+      "name": "inactive",
+      "source_id": 1,
+      "status": "SUCCESS",
+      "result": null,
+      "child_count": 0,
+      "index": {
+        "owned": "before"
+      },
+      "refresh_lock": null,
+      "file_lock": null,
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "dummy",
+      "source_id": 2,
+      "status": "SUCCESS",
+      "result": null,
+      "child_count": 0,
+      "index": {
+        "owned": "before"
+      },
+      "refresh_lock": null,
+      "file_lock": null,
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "missing",
+      "source_id": 3,
+      "status": "SUCCESS",
+      "result": "EPG source 3 does not exist, task cleaned up",
+      "child_count": 0,
+      "index": null,
+      "refresh_lock": null,
+      "file_lock": null,
+      "source_state": []
+    },
+    {
+      "name": "refresh_busy",
+      "source_id": 4,
+      "status": "SUCCESS",
+      "result": null,
+      "child_count": 0,
+      "index": {
+        "owned": "before"
+      },
+      "refresh_lock": "owned-busy",
+      "file_lock": null,
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "file_busy",
+      "source_id": 5,
+      "status": "SUCCESS",
+      "result": null,
+      "child_count": 1,
+      "index": null,
+      "refresh_lock": null,
+      "file_lock": "owned-busy",
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "parser_busy",
+      "source_id": 6,
+      "status": "SUCCESS",
+      "result": null,
+      "child_count": 1,
+      "index": null,
+      "refresh_lock": null,
+      "file_lock": null,
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "exhausted",
+      "source_id": 7,
+      "status": "SUCCESS",
+      "result": null,
+      "child_count": 0,
+      "index": null,
+      "refresh_lock": null,
+      "file_lock": "owned-busy",
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later"
+        }
+      ]
+    }
+  ],
+  "declared_hard_time_limit_seconds": 14400,
+  "observed_defer_seconds": 15,
+  "maximum_defers": 480,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_worker_verified": false,
+  "successful_import_verified": false,
+  "remote_import_verified": false,
+  "elapsed_hard_time_limit_verified": false,
+  "performance_verified": false,
+  "failed_attempt": {
+    "path": "artifacts/rust/m6-original-epg-refresh-worker-1/integration.json",
+    "sha256": "76c6d08b4a9a71b3dee50cb71866c35f6c7b99b4608357236186f5cc3cee51c0",
+    "reason": "Observer requested nonexistent message field after first case. Corrected to actual last_message field; Original task unchanged. Failure retained/default database unchanged/project removed."
+  },
+  "remaining_gates": [
+    "Default/positional argument forms",
+    "Actual successful local import and index/SeriesRules child lineage",
+    "Task wrapper exceptions and cleanup precedence",
+    "Native refresh worker and immutable per-execution dispatch",
+    "Remote/compressed/provider ingestion, mixed-family intake, application and performance"
+  ],
+  "credit": "All application/algorithm credit belongs to original Dispatcharr authors and contributors; original framework credit/licenses retained."
+}

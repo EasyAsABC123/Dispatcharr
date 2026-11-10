@@ -1,0 +1,608 @@
+{
+  "scope": "Actual Original EPG refresh producer/worker wrapper for inactive/dummy/missing/busy/deferral/exhaustion; no imported/local/remote/native acceptance",
+  "cases": [
+    {
+      "name": "inactive",
+      "source_id": 1,
+      "envelope": {
+        "body": "W1sxXSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDB9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "a1d70271-e7cc-4bfe-8df8-3abd507636e9",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "a1d70271-e7cc-4bfe-8df8-3abd507636e9",
+          "parent_id": null,
+          "argsrepr": "[1]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 0}",
+          "origin": "gen360@6b702a64ddc2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "a1d70271-e7cc-4bfe-8df8-3abd507636e9",
+          "reply_to": "fa52f0fb-a344-3147-8459-e51886c44c84",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "bd8db8f6-a696-43d0-82ee-56cc9ce2cf85"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:05:48.035769+00:00",
+        "task_id": "a1d70271-e7cc-4bfe-8df8-3abd507636e9"
+      },
+      "postrun": {
+        "id": "a1d70271-e7cc-4bfe-8df8-3abd507636e9",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 401
+      },
+      "children": [],
+      "index": {
+        "owned": "before"
+      },
+      "refresh_lock": null,
+      "file_lock": null,
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "dummy",
+      "source_id": 2,
+      "envelope": {
+        "body": "W1syXSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDB9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "677cd994-0eee-4bfd-97f7-b103776305f9",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "677cd994-0eee-4bfd-97f7-b103776305f9",
+          "parent_id": null,
+          "argsrepr": "[2]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 0}",
+          "origin": "gen360@6b702a64ddc2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "677cd994-0eee-4bfd-97f7-b103776305f9",
+          "reply_to": "fa52f0fb-a344-3147-8459-e51886c44c84",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "fd582845-61b4-4735-938e-0f0d186445e1"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:05:50.973304+00:00",
+        "task_id": "677cd994-0eee-4bfd-97f7-b103776305f9"
+      },
+      "postrun": {
+        "id": "677cd994-0eee-4bfd-97f7-b103776305f9",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 445
+      },
+      "children": [],
+      "index": {
+        "owned": "before"
+      },
+      "refresh_lock": null,
+      "file_lock": null,
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "missing",
+      "source_id": 3,
+      "envelope": {
+        "body": "W1szXSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDB9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "3b6cd465-c466-4145-9c4b-5be81991a479",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "3b6cd465-c466-4145-9c4b-5be81991a479",
+          "parent_id": null,
+          "argsrepr": "[3]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 0}",
+          "origin": "gen360@6b702a64ddc2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "3b6cd465-c466-4145-9c4b-5be81991a479",
+          "reply_to": "fa52f0fb-a344-3147-8459-e51886c44c84",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "b8a30553-3872-49b8-a37b-27b32c5a149d"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 3 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:05:53.830041+00:00",
+        "task_id": "3b6cd465-c466-4145-9c4b-5be81991a479"
+      },
+      "postrun": {
+        "id": "3b6cd465-c466-4145-9c4b-5be81991a479",
+        "state": "SUCCESS",
+        "result": "EPG source 3 does not exist, task cleaned up",
+        "pid": 486
+      },
+      "children": [],
+      "index": null,
+      "refresh_lock": null,
+      "file_lock": null,
+      "source_state": []
+    },
+    {
+      "name": "refresh_busy",
+      "source_id": 4,
+      "envelope": {
+        "body": "W1s0XSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDB9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "4b488393-c0d5-432d-bd3f-3686e96f2743",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "4b488393-c0d5-432d-bd3f-3686e96f2743",
+          "parent_id": null,
+          "argsrepr": "[4]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 0}",
+          "origin": "gen360@6b702a64ddc2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "4b488393-c0d5-432d-bd3f-3686e96f2743",
+          "reply_to": "fa52f0fb-a344-3147-8459-e51886c44c84",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "6abc9460-1664-4e57-a777-66343142ab71"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:05:56.646800+00:00",
+        "task_id": "4b488393-c0d5-432d-bd3f-3686e96f2743"
+      },
+      "postrun": {
+        "id": "4b488393-c0d5-432d-bd3f-3686e96f2743",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 527
+      },
+      "children": [],
+      "index": {
+        "owned": "before"
+      },
+      "refresh_lock": "owned-busy",
+      "file_lock": null,
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "file_busy",
+      "source_id": 5,
+      "envelope": {
+        "body": "W1s1XSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDB9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "895217cb-b2a0-496b-9417-470d9d4a6378",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "895217cb-b2a0-496b-9417-470d9d4a6378",
+          "parent_id": null,
+          "argsrepr": "[5]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 0}",
+          "origin": "gen360@6b702a64ddc2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "895217cb-b2a0-496b-9417-470d9d4a6378",
+          "reply_to": "fa52f0fb-a344-3147-8459-e51886c44c84",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "a4db6ebf-6e70-4555-9c51-5b7b06961d77"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "e03296d9-cea6-4900-8c9f-0a2930f05a55",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:05:59.508443+00:00",
+        "task_id": "895217cb-b2a0-496b-9417-470d9d4a6378"
+      },
+      "postrun": {
+        "id": "895217cb-b2a0-496b-9417-470d9d4a6378",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 565
+      },
+      "children": [
+        {
+          "id": "e03296d9-cea6-4900-8c9f-0a2930f05a55",
+          "utc": "2026-11-10T15:05:59.444470+00:00",
+          "observed": {
+            "location": "reserved",
+            "envelope": {
+              "body": "W1s1XSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDF9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "apps.epg.tasks.refresh_epg_data",
+                "id": "e03296d9-cea6-4900-8c9f-0a2930f05a55",
+                "shadow": null,
+                "eta": "2026-11-10T15:06:14.441312+00:00",
+                "expires": null,
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  14400,
+                  null
+                ],
+                "root_id": "895217cb-b2a0-496b-9417-470d9d4a6378",
+                "parent_id": "895217cb-b2a0-496b-9417-470d9d4a6378",
+                "argsrepr": "[5]",
+                "kwargsrepr": "{'force': True, '_file_defer_retry': 1}",
+                "origin": "gen565@6b702a64ddc2",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "e03296d9-cea6-4900-8c9f-0a2930f05a55",
+                "reply_to": "24fb2c81-f734-34dd-9319-37b1f1ceaa10",
+                "delivery_mode": 2,
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "celery"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "6570b11d-f8eb-4e99-a66c-455de3ba2c5c"
+              }
+            }
+          }
+        }
+      ],
+      "index": null,
+      "refresh_lock": null,
+      "file_lock": "owned-busy",
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "parser_busy",
+      "source_id": 6,
+      "envelope": {
+        "body": "W1s2XSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDB9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "6e9e15e6-be70-4609-b11a-e90e71459782",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "6e9e15e6-be70-4609-b11a-e90e71459782",
+          "parent_id": null,
+          "argsrepr": "[6]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 0}",
+          "origin": "gen360@6b702a64ddc2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "6e9e15e6-be70-4609-b11a-e90e71459782",
+          "reply_to": "fa52f0fb-a344-3147-8459-e51886c44c84",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "1a80b352-33ca-4cbd-a1a1-ed0c58f3cf85"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "9ef9988a-01f1-406a-a7e5-6169343ad177",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:06:02.349938+00:00",
+        "task_id": "6e9e15e6-be70-4609-b11a-e90e71459782"
+      },
+      "postrun": {
+        "id": "6e9e15e6-be70-4609-b11a-e90e71459782",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 606
+      },
+      "children": [
+        {
+          "id": "9ef9988a-01f1-406a-a7e5-6169343ad177",
+          "utc": "2026-11-10T15:06:02.284660+00:00",
+          "observed": {
+            "location": "reserved",
+            "envelope": {
+              "body": "W1s2XSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDF9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "apps.epg.tasks.refresh_epg_data",
+                "id": "9ef9988a-01f1-406a-a7e5-6169343ad177",
+                "shadow": null,
+                "eta": "2026-11-10T15:06:17.281690+00:00",
+                "expires": null,
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  14400,
+                  null
+                ],
+                "root_id": "6e9e15e6-be70-4609-b11a-e90e71459782",
+                "parent_id": "6e9e15e6-be70-4609-b11a-e90e71459782",
+                "argsrepr": "[6]",
+                "kwargsrepr": "{'force': True, '_file_defer_retry': 1}",
+                "origin": "gen606@6b702a64ddc2",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "9ef9988a-01f1-406a-a7e5-6169343ad177",
+                "reply_to": "04979912-4086-3c53-a481-26d02c0b0e6b",
+                "delivery_mode": 2,
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "celery"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "6daf5d97-850d-40f0-9620-8402bff9d81e"
+              }
+            }
+          }
+        }
+      ],
+      "index": null,
+      "refresh_lock": null,
+      "file_lock": null,
+      "source_state": [
+        {
+          "status": "idle",
+          "last_message": null
+        }
+      ]
+    },
+    {
+      "name": "exhausted",
+      "source_id": 7,
+      "envelope": {
+        "body": "W1s3XSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDQ4MH0sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "46ddae66-d735-4512-8354-176395d4d840",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "46ddae66-d735-4512-8354-176395d4d840",
+          "parent_id": null,
+          "argsrepr": "[7]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 480}",
+          "origin": "gen360@6b702a64ddc2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "46ddae66-d735-4512-8354-176395d4d840",
+          "reply_to": "fa52f0fb-a344-3147-8459-e51886c44c84",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "0de0378c-f66d-4bad-ab49-4ef19c220cfe"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:06:05.262822+00:00",
+        "task_id": "46ddae66-d735-4512-8354-176395d4d840"
+      },
+      "postrun": {
+        "id": "46ddae66-d735-4512-8354-176395d4d840",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 647
+      },
+      "children": [],
+      "index": null,
+      "refresh_lock": null,
+      "file_lock": "owned-busy",
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later"
+        }
+      ]
+    }
+  ],
+  "task": "apps.epg.tasks.refresh_epg_data",
+  "hard_time_limit": 14400,
+  "defer_seconds": 15,
+  "max_defers": 480,
+  "synthetic_only": true
+}
