@@ -22,8 +22,10 @@ container memory.
 
 Categories, unified reads, nested provider actions, provider refresh, artwork and
 the complete React VOD workflow still need separate gates. Browsable HTML remains
-an explicit unsupported capability. This checkpoint establishes no VOD API
-performance gain or complete migration milestone. The separately measured
+an explicit unsupported capability. Functional checks alone establish no VOD API
+performance gain or complete migration milestone. A later independent
+[complete ordinary-list experiment](rust-vod-performance.md) now passes its
+six-pair performance gates on this exact image. The separately measured
 [image30 guide gains](rust-guide-performance.md) keep their original image and
 workload binding.
 

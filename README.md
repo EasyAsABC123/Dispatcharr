@@ -14,6 +14,8 @@ The Rust backend migration is in progress; the existing React UI stays.
 See the [milestones](docs/rust-milestones.md),
 [local Compose verification guide](docs/rust-local-verification.md), and
 [measured performance evidence](docs/rust-verification-evidence.json).
+Named results include [guide/grid](docs/rust-guide-performance.md) and
+[ordinary VOD list API](docs/rust-vod-performance.md) workloads.
 Current component results do not establish whole-application CPU or memory savings.
 
 <p align="center">

@@ -1,0 +1,143 @@
+{
+  "policy": {
+    "service_limits": {
+      "backend": {
+        "memory_bytes": 536870912,
+        "nano_cpus": 2000000000
+      },
+      "infrastructure": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 1000000000
+      },
+      "origin": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 2000000000
+      }
+    },
+    "selected_services": {
+      "source": [
+        "baseline",
+        "origin",
+        "source"
+      ],
+      "candidate": [
+        "baseline",
+        "origin",
+        "candidate"
+      ]
+    },
+    "qualification": {
+      "source_only": true,
+      "warmup_seconds": 5,
+      "duration_seconds": 15,
+      "max_errors": 0,
+      "min_pacing_fraction": 0.95,
+      "max_backend_cpu_percent_mean": 170,
+      "max_backend_memory_fraction": 0.9,
+      "max_throttled_period_fraction": 0.05,
+      "selection": "highest feasible fixed rate; cold chooses smallest feasible epoch period; no candidate values are consulted"
+    },
+    "budgets": {
+      "max_cpu_ratio": 1.0,
+      "max_memory_ratio": 1.0,
+      "max_ttfb_p95_ratio": 1.1,
+      "ttfb_floor_ms": 50,
+      "max_completion_p95_ratio": 1.1,
+      "min_throughput_ratio": 0.95,
+      "min_pacing_fraction": 0.95,
+      "max_errors": 0,
+      "minimum_samples": 60,
+      "max_oom_kills": 0,
+      "max_counter_resets": 0
+    },
+    "warmup_seconds": 15,
+    "measurement_seconds": 60,
+    "trials": 3,
+    "orders": [
+      [
+        "source",
+        "candidate"
+      ],
+      [
+        "candidate",
+        "source"
+      ],
+      [
+        "source",
+        "candidate"
+      ]
+    ],
+    "sample_seconds": 1,
+    "format_version": 1,
+    "scope": "Ordinary Movie/Series list JSON reads only; no browser, media, category/unified/action/artwork or wholeapp claim",
+    "candidate_image": "sha256:5d4a6f84842b960a9d1b39f35d099a598149fb2e189f3ba0d8dafd0b4e48b02a",
+    "candidate_source_tree": "9c8a48c474f0bdfa04b1172fd59a1657c7e9e5385c70e040a52dff645a3456e6",
+    "candidate_source_archive": "0645251fb7c85d8886482157577041aa5da6b198466327c6ea13f150e82eecc0",
+    "fixture": {
+      "movies": 5000,
+      "series": 5000,
+      "episodes_per_series": 10,
+      "episodes": 50000,
+      "active_movies": 4500,
+      "active_series": 4500,
+      "logos": 25,
+      "accounts": 3,
+      "active_provider_duplicate_stride": 10,
+      "logo_stride": 4,
+      "unique_names": true,
+      "page_size": 24,
+      "source_default_page_size": 20,
+      "source_page_cap": 100,
+      "remote_provider_requests": 0,
+      "shared_standard_account": true
+    },
+    "workloads": [
+      {
+        "name": "ordinary-lists-1",
+        "users": 1,
+        "paths": [
+          "/api/vod/movies/?ordering=name&page_size=24",
+          "/api/vod/series/?ordering=name&page_size=24"
+        ],
+        "period_candidates_seconds": [
+          10,
+          5,
+          2,
+          1
+        ]
+      },
+      {
+        "name": "ordinary-lists-10",
+        "users": 10,
+        "paths": [
+          "/api/vod/movies/?ordering=name&page_size=24",
+          "/api/vod/series/?ordering=name&page_size=24"
+        ],
+        "period_candidates_seconds": [
+          10,
+          5,
+          2,
+          1
+        ]
+      }
+    ],
+    "host_header": "vod-perf.invalid:8088",
+    "encoding": "identity",
+    "body_limit_bytes": 4194304,
+    "request_timeout_seconds": 10,
+    "pacing": "Existing API scheduler: closed-loop per-reader period, deterministic alternating endpoint; index offset and identical source/native staggering. No catch-up bursts. Separate functional10 barrier verifies admission.",
+    "correctness": "Every request matches exact original status/MIME/raw-byte SHA/length and parsed JSON order/types; count4500/results24 for each endpoint, unique names/explicit ordering=name. Fixed fixture across phases and fingerprint before/after.",
+    "reset": "Stop both backends, clear only owned disposable Redis, inspect finite cgroups, force-recreate one backend. Warm grouped auth/settings caches using the same exact endpoint checks before15s warmup. No metadata/content-cache reset inside measurement.",
+    "observer": "Unchanged rust-guide-perf observer/cgroup/docker_stats and rust-perf sampler; infrastructure+origin+one backend whole-group CPU and Docker working memory, plus components. Optional processRSS diagnostic is not summed as primary memory.",
+    "acceptance": "All3 alternating paired trials for each1/10 virtual-reader workload,6pairs/12phases, must pass every budget. Each measured phase also requires late_completed==0. Per-endpoint latency/throughput checks cannot be hidden by aggregate results.",
+    "authorization": "Source qualification needs fresh parent quiet cue bound to policy/manifest/boot. Freeze source-only pacing before any native resource values. Measurement needs separate fresh parent cue bound to frozen plan; no implicit launch from functional mode.",
+    "exclusions": [
+      "No WebSocket/frontend execution",
+      "No VOD video playback or provider refresh",
+      "No category/unified/actions/artwork",
+      "No accepted gains until whole predeclared matrix passes"
+    ]
+  },
+  "policy_sha256": "f8c3158b678f91f3b98fc79b8ac7b22d76f755ec9e460905ecaae3ba9b32ec4c",
+  "status": "DRAFT_UNEXECUTED_NO_RESOURCE_AUTHORIZATION"
+}

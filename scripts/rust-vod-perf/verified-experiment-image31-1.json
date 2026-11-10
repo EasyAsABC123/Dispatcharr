@@ -1,0 +1,113 @@
+{
+  "passed": true,
+  "scope": "Ordinary Movie/Series page24 reads on fixed large catalogue,1/10 virtual readers with one Standard account; not browser/media/category/unified/provider/fullapp acceptance",
+  "original_credit": "All original application/algorithm credit remains with Dispatcharr authors/contributors; AGPL retained.",
+  "evidence": "artifacts/rust/m5-vod-perf-experiment-image31-2",
+  "image_id": "sha256:5d4a6f84842b960a9d1b39f35d099a598149fb2e189f3ba0d8dafd0b4e48b02a",
+  "source_tree_sha256": "9c8a48c474f0bdfa04b1172fd59a1657c7e9e5385c70e040a52dff645a3456e6",
+  "source_archive_sha256": "0645251fb7c85d8886482157577041aa5da6b198466327c6ea13f150e82eecc0",
+  "policy_sha256": "f8c3158b678f91f3b98fc79b8ac7b22d76f755ec9e460905ecaae3ba9b32ec4c",
+  "plan_sha256": "d86aae87c6e91f196449cfeb0a48e5d34e94f6057882133172db4610a9ba2c17",
+  "selected_periods": {
+    "ordinary-lists-1": 1,
+    "ordinary-lists-10": 1
+  },
+  "checks": {
+    "source_observer_capability": {
+      "passed": true,
+      "samples": 10,
+      "services": [
+        "baseline",
+        "origin",
+        "source"
+      ],
+      "functional_cadence_seconds": 10.000067410997872,
+      "maximum_sample_observer_seconds": 0.0036237910026102327,
+      "cli_memory_comparisons": [
+        {
+          "service": "baseline",
+          "difference_bytes": 18841.600000023842,
+          "tolerance_bytes": 8806318.08,
+          "passed": true
+        },
+        {
+          "service": "origin",
+          "difference_bytes": 2785.2799999993294,
+          "tolerance_bytes": 2097152,
+          "passed": true
+        },
+        {
+          "service": "source",
+          "difference_bytes": 135987.19999998808,
+          "tolerance_bytes": 5296783.36,
+          "passed": true
+        }
+      ],
+      "limits_verified": true,
+      "monotonic_counters_verified": true,
+      "memory_metric": "Docker working-memory sum, infrastructure+origin+one backend",
+      "cpu_metric": "Sum of complete-window cgroup usage_usec/time per selected service",
+      "performance_verified": false
+    },
+    "source_only_qualification_workloads": {
+      "ordinary-lists-1": 4,
+      "ordinary-lists-10": 4
+    },
+    "all_source_qualification_observed_zero_errors_and_late": true,
+    "paired_trials": 6,
+    "measured_phases": 12,
+    "resource_samples": 720,
+    "verified_measurement_responses": 3960,
+    "every_pair_endpoint_and_aggregate_pass": true,
+    "every_phase_zero_error_sampleerror_late_oom_reset": true,
+    "fixture_and_column_schema_stable": true,
+    "configured_service_limits_verified": true
+  },
+  "fingerprint_scope": {
+    "row_tables": [
+      "vod_movie",
+      "vod_series",
+      "vod_episode",
+      "vod_vodlogo",
+      "m3u_m3uaccount",
+      "vod_m3umovierelation",
+      "vod_m3useriesrelation",
+      "vod_m3uepisoderelation",
+      "core_coresettings"
+    ],
+    "excluded_rows": [
+      "accounts_user",
+      "m3u_m3uaccountprofile",
+      "vod_vodcategory",
+      "vod_m3uvodcategoryrelation"
+    ],
+    "schema": "information_schema.columns public table/column/type/nullability/default snapshot; not complete constraints/index DDL"
+  },
+  "metric_scope": {
+    "cpu": "Sum of whole-window cgroup CPU usage/time for infrastructure+origin+onebackend",
+    "memory": "Docker container working-memory sum, not processRSS",
+    "endpoint_latency": "Client complete validated-body timing, exact rawbytes and JSON required"
+  },
+  "successful_tools": "artifacts/rust/m5-vod-perf-experiment-image31-2/tools",
+  "failed_attempts": [
+    {
+      "evidence": "artifacts/rust/m5-vod-perf-experiment-image31-1",
+      "reason": "Selected idle origin had exited because inherited media origin imports were unavailable; inspect(emptyID) failed before Observer/qualification. Functional JSON passed, no resource observations or measurements. Corrected fixture-only idle-origin overlay, same policy/data/budgets; cleanup complete."
+    }
+  ],
+  "controls": "artifacts/rust/vod-perf-final-controls-1/retry2-tests.log",
+  "parent_independent_review": "artifacts/rust/vod-quiet1-parent-final-review.json",
+  "numerical_publication_owner": "Parent root publishes ratios/plots separately from exact raw phase evidence",
+  "cleanup": "owned project removed",
+  "resources_retained": false,
+  "performance_verified": true,
+  "full_milestone_complete": false,
+  "evidence_sha256": {
+    "integration.json": "9d624c0f8374dd63778d9f407b14fe87c0ad731b1b63b1d911050a49d6c5fb62",
+    "experiment/matrix.json": "2624448cd53351cc86e34642659ad44b4481b6ee59fa1f4b1e1678629af42330",
+    "experiment/frozen-plan.json": "dcff100c6d7eb33f4ad387efcc60a0b8957f5cec6481a3b9cf7005b7c0c8f617",
+    "experiment/source-qualification.json": "7822a6a8d4ed0530139e8b9419cfaa5a6b3f39937b4f9d15481b6ad129f37ab1",
+    "experiment/observer-smoke.json": "57f993b72afaa6e88ac8fb878224821153bd0c48c6a04ae27985ef24cbd51208",
+    "experiment/measurement-started.json": "8d72d1d3236a44caae21deb2354c5bad88bd646ea0035d5c2d129ecf189ab3c5"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "scope": "Committed image31 ordinary VOD reads, shared cached authentication, packaged API and React regression checkpoint; no full milestone or new performance acceptance",
+  "scope": "Committed image31 ordinary VOD reads, shared cached authentication, packaged API and React regression checkpoint; separate complete ordinary-list performance result linked below",
   "git_revision": "db532d0295eeab33f5ba4e9160d1146272cb1d45",
   "image_id": "sha256:5d4a6f84842b960a9d1b39f35d099a598149fb2e189f3ba0d8dafd0b4e48b02a",
   "source_tree_sha256": "9c8a48c474f0bdfa04b1172fd59a1657c7e9e5385c70e040a52dff645a3456e6",
@@ -75,7 +75,7 @@
     "normalization": null
   },
   "ordinary_vod": "scripts/rust-vod-api-contracts/verified-vod-rest-packaged-image31-1.json",
-  "performance_verified": false,
+  "performance_verified": true,
   "whole_application_parity_verified": false,
   "full_milestones_completed": [],
   "remaining": [
@@ -111,5 +111,9 @@
     "cleanup_passed": true,
     "performance_verified": false,
     "full_m4_parity_verified": false
-  }
+  },
+  "performance_scope": "Ordinary Movie/Series page24 list API only, fixed large catalogue,1/10 virtualreaders at1request/second each",
+  "accepted_vod_api_performance": "scripts/rust-vod-perf/verified-resources-image31-1.json",
+  "accepted_vod_api_performance_sha256": "94c762c36e6ee9fd0731a14ae9fd56cf08f03676e68862c194d9f7d5aee72d9c",
+  "whole_application_performance_verified": false
 }

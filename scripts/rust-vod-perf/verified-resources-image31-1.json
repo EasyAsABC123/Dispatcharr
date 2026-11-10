@@ -1,0 +1,128 @@
+{
+  "passed": true,
+  "scope": "Ordinary Movie/Series list JSON reads only; no browser, media, category/unified/action/artwork or wholeapp claim",
+  "candidate_image": "sha256:5d4a6f84842b960a9d1b39f35d099a598149fb2e189f3ba0d8dafd0b4e48b02a",
+  "candidate_source_tree": "9c8a48c474f0bdfa04b1172fd59a1657c7e9e5385c70e040a52dff645a3456e6",
+  "candidate_source_archive": "0645251fb7c85d8886482157577041aa5da6b198466327c6ea13f150e82eecc0",
+  "git_revision": "db532d0295eeab33f5ba4e9160d1146272cb1d45",
+  "build_manifest_sha256": "b14728586689cf78bb6fd812a42d45785118afceb48bfa17685cd6c5a0a10da9",
+  "evidence": "artifacts/rust/m5-vod-perf-experiment-image31-2",
+  "integration_report_sha256": "9d624c0f8374dd63778d9f407b14fe87c0ad731b1b63b1d911050a49d6c5fb62",
+  "tool_manifest_sha256": "6b81a77d6bbdbfdbe1ff3b35c617b6dd7a985407f978cb4b891e6efdb16bdf37",
+  "policy_sha256": "f8c3158b678f91f3b98fc79b8ac7b22d76f755ec9e460905ecaae3ba9b32ec4c",
+  "plan_sha256": "d86aae87c6e91f196449cfeb0a48e5d34e94f6057882133172db4610a9ba2c17",
+  "pairs": 6,
+  "measurement_phases": 12,
+  "qualification_phases": 8,
+  "resource_samples": 840,
+  "measurement_samples": 720,
+  "request_traces": 4258,
+  "verified_measurement_requests": 3960,
+  "selected_periods_seconds": {
+    "ordinary-lists-1": 1,
+    "ordinary-lists-10": 1
+  },
+  "medians": {
+    "ordinary-lists-1": {
+      "readers": 1,
+      "paired_ratios": {
+        "cpu_percent_mean": 0.4202141911603192,
+        "peak_working_memory_bytes": 0.6470893275342924,
+        "completion_p95_ms": 0.4229392098107457,
+        "throughput_per_second": 1.0
+      },
+      "decrease_percent": {
+        "cpu_percent_mean": 57.97858088396808,
+        "peak_working_memory_bytes": 35.29106724657076,
+        "completion_p95_ms": 57.706079018925436
+      },
+      "backend_medians": {
+        "source": {
+          "cpu_percent_mean": 4.642222595027921,
+          "peak_working_memory_bytes": 726851584,
+          "completion_p95_ms": 49.90353799803415
+        },
+        "candidate": {
+          "cpu_percent_mean": 1.932097442338199,
+          "peak_working_memory_bytes": 470134784,
+          "completion_p95_ms": 21.066740002424922
+        }
+      }
+    },
+    "ordinary-lists-10": {
+      "readers": 10,
+      "paired_ratios": {
+        "cpu_percent_mean": 0.3827632705430227,
+        "peak_working_memory_bytes": 0.648022397613296,
+        "completion_p95_ms": 0.41346369285965423,
+        "throughput_per_second": 1.0
+      },
+      "decrease_percent": {
+        "cpu_percent_mean": 61.72367294569773,
+        "peak_working_memory_bytes": 35.1977602386704,
+        "completion_p95_ms": 58.65363071403458
+      },
+      "backend_medians": {
+        "source": {
+          "cpu_percent_mean": 43.007040462833565,
+          "peak_working_memory_bytes": 735457280,
+          "completion_p95_ms": 50.336559004790615
+        },
+        "candidate": {
+          "cpu_percent_mean": 16.488213279645162,
+          "peak_working_memory_bytes": 476770304,
+          "completion_p95_ms": 20.90533499722369
+        }
+      }
+    }
+  },
+  "numerical_evidence_sha256": "0942a83dc5d851d5400d64cf52faf4eec1d9505e460dbe6383c50e5f6784a612",
+  "publisher_source_sha256": "c7ffe29134456708fdae9a01abd8d727f895bfff13bca34a6501bc2881c18d6d",
+  "cleanup": "owned project removed",
+  "performance_verified": true,
+  "whole_application_performance_verified": false,
+  "full_milestone_complete": false,
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing.",
+  "numerical_evidence": "scripts/rust-vod-perf/evidence-experiment-image31-1.json",
+  "contract_and_scope_report": "scripts/rust-vod-perf/verified-experiment-image31-1.json",
+  "fingerprint_scope": {
+    "row_tables": [
+      "vod_movie",
+      "vod_series",
+      "vod_episode",
+      "vod_vodlogo",
+      "m3u_m3uaccount",
+      "vod_m3umovierelation",
+      "vod_m3useriesrelation",
+      "vod_m3uepisoderelation",
+      "core_coresettings"
+    ],
+    "excluded_rows": [
+      "accounts_user",
+      "m3u_m3uaccountprofile",
+      "vod_vodcategory",
+      "vod_m3uvodcategoryrelation"
+    ],
+    "schema": "information_schema.columns public table/column/type/nullability/default snapshot; not complete constraints/index DDL"
+  },
+  "publication_controls": {
+    "passed": true,
+    "scope": "Actual retained publication pipeline rejects incomplete and internally inconsistent numerical evidence; no application workload rerun",
+    "publisher_sha256": "c7ffe29134456708fdae9a01abd8d727f895bfff13bca34a6501bc2881c18d6d",
+    "checks": [
+      {
+        "case": "missing-pair",
+        "rejected": true
+      },
+      {
+        "case": "mismatched-endpoint",
+        "rejected": true
+      },
+      {
+        "case": "changed-cgroup-total",
+        "rejected": true
+      }
+    ],
+    "positive_run": "artifacts/rust/vod-perf-publication-image31-2/summary.json"
+  }
+}

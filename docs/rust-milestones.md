@@ -426,3 +426,6 @@ The bounded index intake/ETA worker supports retained physical command ownership
 
 
 [Image32](../scripts/rust-integration/verified-checkpoint-image32-1.json) is built from committed `d1329a65`; all 521 Rust source files match the exact workspace that passed strict Clippy and 325 default tests. Its unchanged default stored-Current path passes 64 actual original/native network comparisons. The optional file/index callback remains app-unwired. This is a packaged regression checkpoint, with no transferred image28/image30 gains and no full migration acceptance.
+
+
+[The complete ordinary VOD list API experiment](rust-vod-performance.md) now passes all six pairs on exact image31. Median paired CPU decreases are 58.0%/61.7%, sampled peak group working-memory decreases 35.3%/35.2%, and completion-p95 decreases 57.7%/58.7% for one/ten virtual readers, with unchanged throughput. Each reader alternates movie/series page24 requests once per second. All 12 measured phases have 60 samples and zero errors/late/OOM/resets; 3,960 measured responses match the original. Public evidence retains 840 samples and 4,258 timings across all 20 phases. This accepts that API workload only; provider actions, full browser/media workflows and complete M4/M5/M6/application acceptance remain open.
