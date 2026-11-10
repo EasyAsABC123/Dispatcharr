@@ -657,3 +657,45 @@ async fn local_physical_current_enter_stop_and_foreign_owner_fences() {
         f.empty().await;
     }
 }
+
+#[tokio::test]
+#[ignore = "actual paused Redis reply retains fresh-entry caller after observer cancellation"]
+async fn local_physical_fresh_entry_classification_keeps_request_through_actual_reply() {
+    let (mut f, scope, _) = scoped::initial().await;
+    let _: () = redis::cmd("CLIENT")
+        .arg("PAUSE")
+        .arg(4000)
+        .arg("ALL")
+        .query_async(&mut f.redis)
+        .await
+        .unwrap();
+    let caller = Arc::new(());
+    let weak = Arc::downgrade(&caller);
+    let worker_scope = scope.clone();
+    let task = tokio::spawn(async move { worker_scope.retire_missing_retained(caller).await });
+    wait(async || scope.control_slots() == 1).await;
+    tokio::time::sleep(Duration::from_millis(100)).await;
+    task.abort();
+    let _ = task.await;
+    tokio::time::sleep(Duration::from_millis(2200)).await;
+    assert!(
+        weak.upgrade().is_some(),
+        "request released before physical reply"
+    );
+    assert_eq!(scope.control_slots(), 1);
+    tokio::time::timeout(Duration::from_secs(5), scope.drain())
+        .await
+        .unwrap();
+    assert!(weak.upgrade().is_none());
+    assert_eq!(scope.control_slots(), 2);
+    assert!(!scope.activated());
+    assert!(scope.cleanup_succeeded());
+    // The initial fixture admitted a real public body; retire it explicitly.
+    let original = scope
+        .attach_reserved(Arc::new(()), true, None)
+        .await
+        .unwrap();
+    scope.close(&original).await.unwrap();
+    scope.drain().await;
+    f.empty().await;
+}

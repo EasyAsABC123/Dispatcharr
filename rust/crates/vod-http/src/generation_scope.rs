@@ -442,6 +442,13 @@ impl LocalScope {
     pub fn profile_id(&self) -> i64 {
         self.inner.profile
     }
+    pub fn entry_fence_keys(&self, lease: &Lease) -> (String, String, String) {
+        (
+            owner(&self.inner),
+            ledger(&self.inner, lease),
+            format!("vod_proxy:client:{}:stop", self.inner.id),
+        )
+    }
     pub async fn current_identity(&self) -> (Arc<Lease>, String) {
         let current = self.inner.state.lock().await.current.clone();
         (current.lease.clone(), current.token.clone())
@@ -528,8 +535,12 @@ impl LocalScope {
         !self.inner.failed.load(Ordering::Acquire) && self.inner.recovery.cleanup_succeeded()
     }
     pub async fn retire_missing(&self) -> Result<(), Error> {
+        self.retire_missing_retained(Arc::new(())).await
+    }
+    pub async fn retire_missing_retained(&self, caller: Arc<dyn Send + Sync>) -> Result<(), Error> {
         let inner = self.inner.clone();
         let task = tokio::spawn(async move {
+            let _caller = caller;
             let _control = control(&inner).await?;
             let gen = inner.state.lock().await.current.clone();
             if !*gen.lease.lost().borrow() {

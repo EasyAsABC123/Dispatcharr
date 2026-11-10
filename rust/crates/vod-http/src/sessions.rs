@@ -50,7 +50,17 @@ redis.call('EXPIRE',KEYS[1],3600)
 return 1
 "#;
 const ENTER: &str = r#"
+if #KEYS>1 then
+ if redis.call('EXISTS',KEYS[4])~=0 then return -3 end
+ if redis.call('GET',KEYS[2])~=ARGV[3] or redis.call('HGET',KEYS[3],'token')~=ARGV[3] then return -2 end
+end
 if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return 0 end
+if #KEYS>1 then
+ local active=tonumber(redis.call('HGET',KEYS[1],'active_streams')or'0')
+ local requests=tonumber(redis.call('HGET',KEYS[1],'request_count')or'0')
+ if not active or active<0 or active~=math.floor(active) or active>=9007199254740991
+  or not requests or requests<0 or requests~=math.floor(requests) or requests>=9007199254740991 then return -4 end
+end
 local count=redis.call('HINCRBY',KEYS[1],'active_streams',1)
 redis.call('HINCRBY',KEYS[1],'request_count',1)
 redis.call('HSET',KEYS[1],'last_activity',ARGV[2])
@@ -167,6 +177,7 @@ pub(crate) struct Ticket {
     is_new: bool,
     body_started: AtomicBool,
     scope_body: Option<ScopedBody>,
+    cleanup_needed: bool,
 }
 
 impl SessionPool {
@@ -440,7 +451,7 @@ impl SessionPool {
         let candidate = source.candidates.first().ok_or_else(unavailable)?.clone();
         // A fresh stable classification is safe; it never repeats an uncertain
         // allocation. Owned/partial cases remain explicit until separately gated.
-        match scope.retire_missing().await {
+        match scope.retire_missing_retained(request_permit.clone()).await {
             Ok(()) => {}
             Err(recovery::Error::Capacity) => {}
             Err(recovery::Error::StillOwned) => {
@@ -493,6 +504,7 @@ impl SessionPool {
                     is_new: false,
                     body_started: AtomicBool::new(false),
                     scope_body: Some(body),
+                    cleanup_needed: true,
                 });
             }
             Err(error) => return Err(scope_error(error)),
@@ -584,6 +596,7 @@ impl SessionPool {
             is_new: true,
             body_started: AtomicBool::new(false),
             scope_body: Some(body),
+            cleanup_needed: true,
         })
     }
     pub async fn enter(
@@ -634,18 +647,34 @@ impl SessionPool {
             {
                 return Err(dispatcharr_store::StoreError::Forbidden);
             }
-            if let Some(scope) = session
-                .scope
-                .get()
-                .filter(|scope| scope.activated())
-                .cloned()
-            {
-                drop(registry);
-                return self
-                    .enter_recovered(id, source, request, request_permit, session, scope)
-                    .await;
-            }
             drop(registry);
+            if let Some(scope) = session.scope.get().cloned() {
+                if !scope.activated() {
+                    // Do not wait for the periodic monitor to observe Redis
+                    // loss. This fresh read retains this request through its
+                    // physical reply, even if the observer goes away.
+                    match scope.retire_missing_retained(request_permit.clone()).await {
+                        Err(recovery::Error::StillOwned) => {}
+                        Ok(()) | Err(recovery::Error::Capacity) => {
+                            return self
+                                .enter_recovered(
+                                    id,
+                                    source,
+                                    request,
+                                    request_permit,
+                                    session,
+                                    scope,
+                                )
+                                .await;
+                        }
+                        Err(error) => return Err(scope_error(error)),
+                    }
+                } else {
+                    return self
+                        .enter_recovered(id, source, request, request_permit, session, scope)
+                        .await;
+                }
+            }
             let mut state = session.state.lock().await;
             if state.closed || *session.stop.borrow() {
                 return Err(unavailable());
@@ -676,7 +705,8 @@ impl SessionPool {
                     .map_err(|error| admission_error(error, user.stream_limit))?;
                 }
             }
-            if !state.reserved {
+            let reserved_here = !state.reserved;
+            if reserved_here {
                 session
                     .lease
                     .reserve_provider(ProviderReservation {
@@ -694,23 +724,58 @@ impl SessionPool {
             drop(state);
             // Own the request before sending ENTER: cancellation must still
             // undo the corresponding Redis increment on this connection.
-            let ticket = Ticket {
+            let mut ticket = Ticket {
                 session,
                 pool: Arc::downgrade(&self.inner),
                 _request: Some(request_permit),
                 is_new: false,
                 body_started: AtomicBool::new(false),
                 scope_body: None,
+                cleanup_needed: true,
             };
             let mut connection = self.inner.connection.clone();
-            let count: i64 = Script::new(ENTER)
-                .key(key(&ticket.session.id))
-                .arg(&ticket.session.metadata_token)
-                .arg(now())
+            let script = Script::new(ENTER);
+            let mut invocation = script.prepare_invoke();
+            invocation.key(key(&ticket.session.id));
+            if let Some(scope) = ticket.session.scope.get() {
+                let (owner, ledger, stop) = scope.entry_fence_keys(&ticket.session.lease);
+                invocation.key(owner).key(ledger).key(stop);
+            }
+            invocation.arg(&ticket.session.metadata_token).arg(now());
+            if ticket.session.scope.get().is_some() {
+                invocation.arg(ticket.session.lease.token());
+            }
+            let count: i64 = invocation
                 .invoke_async(&mut connection)
                 .await
                 .map_err(|_| redis_error())?;
             if count <= 0 {
+                if let Some(scope) = ticket.session.scope.get().cloned() {
+                    // A settled nonpositive reply guarantees ENTER wrote
+                    // nothing. Never LEAVE/decrement an unrelated body here.
+                    ticket.cleanup_needed = false;
+                    let request_permit = ticket._request.take().expect("owned entry request");
+                    let previous = ticket.session.clone();
+                    let release_reserved = {
+                        let mut state = previous.state.lock().await;
+                        state.active = state.active.saturating_sub(1);
+                        state.epoch += 1;
+                        let release = reserved_here && state.active == 0;
+                        if release {
+                            state.reserved = false;
+                        }
+                        release
+                    };
+                    drop(ticket);
+                    if release_reserved {
+                        let result = previous.lease.release_provider().await;
+                        previous.lease.settlement().wait().await;
+                        result.map_err(|_| unavailable())?;
+                    }
+                    return self
+                        .enter_recovered(id, source, request, request_permit, previous, scope)
+                        .await;
+                }
                 ticket.session.stop.send_replace(true);
                 return Err(unavailable());
             }
@@ -855,6 +920,7 @@ impl SessionPool {
             is_new: true,
             body_started: AtomicBool::new(false),
             scope_body,
+            cleanup_needed: true,
         })
     }
 
@@ -1146,6 +1212,9 @@ impl Drop for CleanupFinished {
 }
 impl Drop for Ticket {
     fn drop(&mut self) {
+        if !self.cleanup_needed {
+            return;
+        }
         let session = self.session.clone();
         let emit_stop = !self.is_new || self.body_started.load(Ordering::Acquire);
         let request_permit = self._request.take();

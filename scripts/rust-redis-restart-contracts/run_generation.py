@@ -69,7 +69,7 @@ def main():
     name='dispatcharr-generation-'+uuid.uuid4().hex[:12]
     try:
         targets=[('dispatcharr-coordination','redis',10),('dispatcharr-coordination','acquire_cancel',2),
-                 ('dispatcharr-clients','vod',2),('dispatcharr-vod-http','recovery_generation',11),('dispatcharr-vod-http','recovery_generation_physical',2),('dispatcharr-vod-http','generation_scope',12),('dispatcharr-vod-http','generation_scope_physical',7),('dispatcharr-vod-http','http_recovery',3),('dispatcharr-vod-http','session_diagnostic',1)]
+                 ('dispatcharr-clients','vod',2),('dispatcharr-vod-http','recovery_generation',11),('dispatcharr-vod-http','recovery_generation_physical',2),('dispatcharr-vod-http','generation_scope',12),('dispatcharr-vod-http','generation_scope_physical',8),('dispatcharr-vod-http','http_recovery',4),('dispatcharr-vod-http','session_diagnostic',1)]
         if a.only_target:targets=[item for item in targets if item[1]in a.only_target]
         report['selected_targets']=[item[1]for item in targets]
         for package,target,count in targets:

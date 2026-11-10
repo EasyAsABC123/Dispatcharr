@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "scope": "Opt-in library fast all-missing reopen before periodic monitor; actual loopback HTTP media plus retained physical ownership. No packaged SQL/auth/restart/default/resource acceptance.",
+  "original_authors": "Original Dispatcharr authors retain full application and algorithm credit.",
+  "proof": "artifacts/rust/vod-fast-entry-full-212/proof.json",
+  "proof_sha256": "efd78a817c1e6c931f5744b66974f15c76e656694826fca40214dfaf08978bb3",
+  "base_git_revision": "bce2b10632227a554d764e231e763003ed0773f4",
+  "source_archive_sha256": "82ca915eec2deb4046403fe85c785b353247c755253f8aea0944dea2eec90514",
+  "tests": [
+    {
+      "target": "redis",
+      "expected_count": 10,
+      "binary_sha256": "957fcfd588b08f03805b9700044131d78e5a4714cd2b74260797c0d33d0cf34b",
+      "passed": true
+    },
+    {
+      "target": "acquire_cancel",
+      "expected_count": 2,
+      "binary_sha256": "8eb558c01189f51ba38b8e47d98914f5a681024920f6daf9520e20a321b76dfa",
+      "passed": true
+    },
+    {
+      "target": "vod",
+      "expected_count": 2,
+      "binary_sha256": "0fca9bb620f11078b6d0a4b1a4b44519712b686bd480828e8d94e00f3a187e1b",
+      "passed": true
+    },
+    {
+      "target": "recovery_generation",
+      "expected_count": 11,
+      "binary_sha256": "211f9d585e0cd32c7fa60bc67af80cdcebd31e5dc563ad3d5fca40bac07b1efb",
+      "passed": true
+    },
+    {
+      "target": "recovery_generation_physical",
+      "expected_count": 2,
+      "binary_sha256": "7e7b02c256fb5d6efe8285bcfd2db4cb9a382339a902f94ce80976f350e3b372",
+      "passed": true
+    },
+    {
+      "target": "generation_scope",
+      "expected_count": 12,
+      "binary_sha256": "1ad4b82ed0c7c590aad821babbc28b6a6e0620a28efeaee939346c15711d973d",
+      "passed": true
+    },
+    {
+      "target": "generation_scope_physical",
+      "expected_count": 8,
+      "binary_sha256": "876ce2baea29b8dacdad6e618202a9224fd027a97bfef3f50aa36444b7d3842f",
+      "passed": true
+    },
+    {
+      "target": "http_recovery",
+      "expected_count": 4,
+      "binary_sha256": "1892efcf9a876f7a86627a85b0c9a91348dcc0d16e3d924b820112730ebe467d",
+      "passed": true
+    },
+    {
+      "target": "session_diagnostic",
+      "expected_count": 1,
+      "binary_sha256": "a7db85f6d72b651213497d83539320bfc9658d02d62921463cbed21a17c8ac28",
+      "passed": true
+    }
+  ],
+  "test_count": 52,
+  "prefix_decoders": [
+    {
+      "path": "old-prefix.mp4",
+      "passed": true,
+      "sha256": "5561b525a65fa93e286a3f2213f5958f9b76a944cd91c4691ab678fa05131d15",
+      "duration_seconds": 1
+    },
+    {
+      "path": "young-prefix.mp4",
+      "passed": true,
+      "sha256": "705623a07698128f4c498943e7fcabf11d56580bf04af0669ae70424343ff49b",
+      "duration_seconds": 1
+    }
+  ],
+  "cleanup_passed": true,
+  "strict_clippy_passed": true,
+  "preserved_failures": [
+    "artifacts/rust/m4-vod-fast-recovery-image36-208/vod-contracts.json",
+    "artifacts/rust/vod-fast-entry-baseline-http-210/proof.json",
+    "artifacts/rust/vod-fast-entry-full-211/proof.json"
+  ],
+  "failure_notes": {
+    "210": "Actual baseline4 cases: immediate503 fails, previous3pass; attempted single-test filter did not apply so declared count1 is wrong.",
+    "211": "All fresh caller retention assertions passed; initial fixture admitted body was never closed before empty-state assertion.212 corrects test-only teardown."
+  },
+  "known_capped_gap": "artifacts/rust/m4-vod-capped-characterization-image36-207/vod-contracts.json"
+}

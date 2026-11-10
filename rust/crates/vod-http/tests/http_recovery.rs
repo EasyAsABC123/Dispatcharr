@@ -93,19 +93,24 @@ async fn wait(mut condition: impl AsyncFnMut() -> bool) {
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "owned valid MP4 + actual HTTP/Redis opt-in generation recovery"]
 async fn actual_http_old_and_new_bodies_survive_state_loss_and_source_close_accounting() {
-    run_case(false, false).await;
+    run_case(false, false, false).await;
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "owned valid MP4 + actual HTTP current-generation additional entry"]
 async fn actual_http_recovered_current_additional_entry_reuses_provider() {
-    run_case(true, false).await;
+    run_case(true, false, false).await;
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "owned valid MP4 + actual HTTP public-retired generation reopen"]
 async fn actual_http_public_retired_reopen_preserves_younger_body() {
-    run_case(false, true).await;
+    run_case(false, true, false).await;
 }
-async fn run_case(extra_entry: bool, retired_reopen: bool) {
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "owned valid MP4 + actual HTTP immediate state-loss reopen before monitor"]
+async fn actual_http_immediate_reopen_does_not_wait_for_periodic_loss_monitor() {
+    run_case(true, true, true).await;
+}
+async fn run_case(extra_entry: bool, retired_reopen: bool, immediate: bool) {
     assert_eq!(
         std::env::var("REDIS_RESTART_DISPOSABLE_FIXTURE").as_deref(),
         Ok("playback-fixture-only")
@@ -228,10 +233,11 @@ async fn run_case(extra_entry: bool, retired_reopen: bool) {
         .del(&[owner.clone(), metadata.clone(), ledger, counter.clone()])
         .await
         .unwrap();
-    for _ in 1..34 {
+    let before_reopen = if immediate { 1 } else { 34 };
+    for _ in 1..before_reopen {
         old_bytes.extend(old.take(8192).await);
     }
-    assert_eq!(old_bytes, &media[..278528]);
+    assert_eq!(old_bytes, &media[..before_reopen * 8192]);
     assert!(!redis.exists::<_, bool>(&metadata).await.unwrap());
     let response = client
         .get(format!("{base}/proxy/vod/movie/{content}/{id}"))
@@ -293,7 +299,7 @@ async fn run_case(extra_entry: bool, retired_reopen: bool) {
             .unwrap(),
         1
     );
-    for _ in 34..101 {
+    for _ in before_reopen..101 {
         old_bytes.extend(old.take(8192).await);
     }
     assert_eq!(old_bytes, &media[..827392]);
@@ -357,7 +363,10 @@ async fn run_case(extra_entry: bool, retired_reopen: bool) {
             1
         );
         assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
-        assert_eq!(requests.load(Ordering::SeqCst), 3);
+        assert_eq!(
+            requests.load(Ordering::SeqCst),
+            if extra_entry { 4 } else { 3 }
+        );
         let next = young.take(8192).await;
         assert_eq!(next, &media[843776..851968]);
         young_bytes.extend(next);
