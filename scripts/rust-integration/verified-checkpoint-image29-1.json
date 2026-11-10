@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "scope": "Committed guide metadata snapshot fix packaged regression; not all application milestones or a new performance claim",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "git_revision": "2136b34894a080c5023c3cd705cf5805051497a5",
+  "image_id": "sha256:b3e4ffd48bc1b9cdbb50aef70d8731f5415076b9b91b159d1fb41105e7a3f4a3",
+  "source_tree_sha256": "9a212551c8ad3a2b874b7de54c3f42567aa4d29c8d5824d8f9b88d884f829032",
+  "source_archive_sha256": "17f0f6334db3fe853d812251ba84f26ba7c0a3a00f89a0e2ea3e6b9f0d13e079",
+  "build_manifest": "artifacts/rust/candidate-build-grid-snapshot-image29-1/build.json",
+  "build_manifest_sha256": "68893257cf4404a109dfaf641e0841518737708342b8336c20e530b28481100f",
+  "source_input_mode": "committed-revision-snapshot",
+  "all_archived_inputs_match_git_revision": true,
+  "frontend": "Preserved; every archived frontend byte matches the committed unchanged React source.",
+  "workspace_validation": {
+    "evidence": "artifacts/rust/checkpoint-image29-validation-1",
+    "strict_all_targets_clippy": true,
+    "default_passed": 311,
+    "external_ignored": 264,
+    "suites": 137,
+    "clippy_log_sha256": "1079902ec257e49323bfa08b52bc4e63cbe976179f7fd603c38cc7cbc7f605bf",
+    "test_log_sha256": "f200fa80922eb815d9a869e2eb04a733e095d5ddda89902b521a4d8edf90e026",
+    "extra_test_inputs_manifest_sha256": "b4a84a82ff9e0093b5e67f116c5a40fe3849479d2b6dcc66cf737cc74e8e511f",
+    "extra_test_inputs": "823 exact committed scripts/helper/dataset inputs from same revision; application Docker archive intentionally excludes scripts.",
+    "initial_validation_failure": "Application-only archive omitted external datasets used by integration test compilation; initial Clippy log retained, no Rust changes in corrected run."
+  },
+  "packaged_grid": {
+    "evidence": "artifacts/rust/m5-guide-grid-packaged-image29-1",
+    "report_sha256": "d5631c8850cbb3fd8d0fee33d9a8f62289b1c5fe6c0e82efc77ba94d685488c8",
+    "wire_report_sha256": "add977cd5df1718ac392eb2d0d908922498682162fc706eba6c8344f58c84385",
+    "original_native_network_cases": 43,
+    "status_mime_headers_complete_body_verified": true,
+    "clock_or_row_normalization": false,
+    "cleanup": "project removed",
+    "shutdown_exit_code": 0,
+    "oom_killed": false
+  },
+  "component_fix": "scripts/rust-epg-parity/verified-grid-concurrency-native-2.json",
+  "fixture_create_worker": "scripts/rust-job-contracts/verified-native-create-worker-2.json",
+  "fixture_create_physical_ownership": "scripts/rust-job-contracts/verified-native-create-worker-resources-1.json",
+  "build_tool_validation": {
+    "tests": 10,
+    "log_sha256": "ab0f75ea62c6f13de4c68c7aad5cba2b940c01d89a948adb7d73780c35527687"
+  },
+  "previous_full_regression_checkpoint": "scripts/rust-integration/verified-checkpoint-image28-1.json",
+  "performance_verified": false,
+  "prior_scoped_performance": "scripts/rust-guide-perf/verified-guide-experiment-image28-1.json",
+  "whole_application_verified": false,
+  "limitations": [
+    "No performance result is transferred from image28 to image29.",
+    "Only grid packaged replay is newly rerun; previous broader endpoint/media gates retain their original image binding.",
+    "Create worker remains fixture-only; path/index/VOD sibling work is not contained in this committed image.",
+    "Full migration/operational/soak and rollback gates remain open."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit, branding, license and history."
+}

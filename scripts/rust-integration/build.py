@@ -115,9 +115,12 @@ def main():
     parser.add_argument('--target',choices=['frontend-tests'],help='Validate unchanged React tests without building the app runtime')
     parser.add_argument('--source-archive', type=Path, help='Replay exact retained source.tar; requires source-manifest')
     parser.add_argument('--source-manifest', type=Path, help='Passing original build.json binding the retained archive')
+    parser.add_argument('--git-revision', help='Build only committed application inputs from this immutable Git revision')
     args = parser.parse_args()
     if (args.source_archive is None) != (args.source_manifest is None):
         parser.error('source-archive and source-manifest must be supplied together')
+    if args.git_revision and args.source_archive:
+        parser.error('git-revision and source-archive are mutually exclusive')
     destination = args.output.resolve()
     destination.mkdir(parents=True, exist_ok=True)
     if any(destination.iterdir()):
@@ -138,6 +141,24 @@ def main():
         inputs = None
         hashes = source_manifest['source_sha256']
         source_sha = source_manifest['source_tree_sha256']
+    elif args.git_revision:
+        revision = subprocess.check_output(
+            ['git', 'rev-parse', '--verify', args.git_revision+'^{commit}'], cwd=ROOT, text=True,
+        ).strip()
+        raw = subprocess.check_output(
+            ['git', 'archive', revision, '--', 'LICENSE', 'ATTRIBUTION.md', 'rust', 'frontend'], cwd=ROOT,
+        )
+        inputs = {}
+        with tarfile.open(fileobj=io.BytesIO(raw)) as committed:
+            for member in committed.getmembers():
+                if member.isdir():
+                    continue
+                if not member.isfile() or not _source_name(member.name):
+                    raise ValueError('Invalid committed application source member')
+                inputs[member.name] = committed.extractfile(member).read()
+        inputs = dict(sorted(inputs.items()))
+        hashes = {name: hashlib.sha256(content).hexdigest() for name, content in inputs.items()}
+        source_sha = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     else:
         paths = [ROOT / 'LICENSE', ROOT / 'ATTRIBUTION.md']
         # Preserve the original React source and lockfile; exclude untracked local
@@ -157,10 +178,10 @@ def main():
         source_sha = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     report = {'format_version': 1, 'passed': False, 'tag': args.tag,
               'source_tree_sha256': source_sha, 'source_sha256': hashes,
-              'git_revision': source_manifest.get('git_revision') if replay else subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-              'worktree_status': source_manifest.get('worktree_status') if replay else subprocess.check_output(['git', 'status', '--short'], cwd=ROOT, text=True),
+              'git_revision': source_manifest.get('git_revision') if replay else revision if args.git_revision else subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+              'worktree_status': source_manifest.get('worktree_status') if replay else '' if args.git_revision else subprocess.check_output(['git', 'status', '--short'], cwd=ROOT, text=True),
               'source_scope': 'immutable Rust tree, tracked unchanged React frontend, LICENSE and ATTRIBUTION.md; excludes local environment/dependency/build artifacts'}
-    report['source_input_mode'] = 'validated-archive-replay' if replay else 'workspace-snapshot'
+    report['source_input_mode'] = 'validated-archive-replay' if replay else 'committed-revision-snapshot' if args.git_revision else 'workspace-snapshot'
     report['candidate_overlay_scope'] = 'current workspace deployment template; not archived application source'
     if replay:
         report['replayed_source_manifest_sha256'] = hashlib.sha256(raw_manifest).hexdigest()

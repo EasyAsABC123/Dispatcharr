@@ -72,4 +72,25 @@ class Replay(unittest.TestCase):
   for flag,path in [('--source-archive',self.archive),('--source-manifest',self.root/'manifest')]:
    with patch.object(sys,'argv',['build.py','--output',str(self.root/'unused'),flag,str(path)]),patch.object(build.subprocess,'check_output',side_effect=AssertionError('Unexpected command')),self.assertRaises(SystemExit)as result:build.main()
    self.assertEqual(result.exception.code,2)
+ def test_committed_revision_avoids_mutable_workspace_and_uses_resolved_commit(self):
+  workspace=self.root/'committed-workspace';(workspace/'docker').mkdir(parents=True);(workspace/'docker/compose.rust-candidate.yml').write_text('services:\n  candidate:\n    image: dispatcharr-rust-candidate:milestone2\n')
+  state={};out=self.root/'committed-output';commit='a'*40;original=self.archive.read_bytes()
+  def output(args,**kwargs):
+   if args[:2]==['git','rev-parse']:
+    self.assertEqual(args,['git','rev-parse','--verify','fixture-branch^{commit}']);return commit+'\n'
+   if args[:2]==['git','archive']:
+    self.assertEqual(args,['git','archive',commit,'--','LICENSE','ATTRIBUTION.md','rust','frontend']);return original
+   if args[:3]==['docker','image','inspect']:return json.dumps([{'Config':{'Labels':{'org.opencontainers.image.source-tree-sha256':state['tree']}},'Id':'sha256:committed','Os':'linux','Architecture':'amd64'}])
+   if args[0]=='git':raise AssertionError('Mutable Git status/source enumeration attempted')
+   return 'ffmpeg pinned\n'if args[-1]=='-version'else'pinned notices\n'
+  def run(args,**kwargs):
+   state['tree']=args[args.index('--label')+1].split('=',1)[1]
+   with tarfile.open(fileobj=io.BytesIO(kwargs['stdin'].read()))as archive:
+    self.assertEqual({m.name:archive.extractfile(m).read()for m in archive.getmembers()},self.files)
+   return SimpleNamespace(returncode=0)
+  with patch.object(build,'ROOT',workspace),patch.object(sys,'argv',['build.py','--output',str(out),'--git-revision','fixture-branch']),patch.object(build.os,'walk',side_effect=AssertionError('Mutable Rust read')),patch.object(build.subprocess,'check_output',side_effect=output),patch.object(build.subprocess,'run',side_effect=run):self.assertEqual(build.main(),0)
+  report=json.loads((out/'build.json').read_text());self.assertEqual(report['source_input_mode'],'committed-revision-snapshot');self.assertEqual(report['git_revision'],commit);self.assertEqual(report['worktree_status'],'');self.assertEqual(report['source_sha256'],self.manifest['source_sha256'])
+ def test_cli_rejects_revision_with_archive_replay(self):
+  with patch.object(sys,'argv',['build.py','--output',str(self.root/'unused-revision'),'--git-revision','HEAD','--source-archive',str(self.archive),'--source-manifest',str(self.root/'manifest')]),patch.object(build.subprocess,'check_output',side_effect=AssertionError('Unexpected command')),self.assertRaises(SystemExit)as result:build.main()
+  self.assertEqual(result.exception.code,2)
 if __name__=='__main__':unittest.main()
