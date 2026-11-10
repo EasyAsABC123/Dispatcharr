@@ -26,6 +26,10 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (fresh schema component; browser gaps) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | Planned | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 
+Current packaged checkpoint: [image34](../scripts/rust-integration/verified-checkpoint-image34-1.json) passes its ten normal-operation regression groups, including the captured category query/error gaps. All M0–M8 milestones remain in progress; M9 has not started. The valid [active VOD restart comparison](../scripts/rust-redis-restart-contracts/verified-active-vod-image34-166.json) fails recovery, and category resource measurements remain pending complete acceptance. Historical performance reports retain their original image bindings.
+
+Necessary next recovery gates are documented in the unimplemented [active-session design](../scripts/rust-redis-restart-contracts/ACTIVE-VOD-RECOVERY-DESIGN.md), [output-profile cache plan](../scripts/rust-redis-restart-contracts/PROFILE-CACHE-RECOVERY-PLAN.md), and [refresh failure/orphan plan](../scripts/rust-job-contracts/EPG-REFRESH-FAILED-ORPHAN-PLAN.md). These plans describe prerequisites and adversarial tests; they are not implementation or acceptance evidence.
+
 The [native index terminal checkpoint](../scripts/rust-job-contracts/INDEX-TERMINAL-RESULTS.md)
 adds verified Directory/P0001 failures, tolerant file outcomes and retained Redis
 result ownership for both worker paths. Its classifier is test-only and native
