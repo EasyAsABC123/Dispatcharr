@@ -304,6 +304,189 @@ impl Jobs {
             Err(e) => Err(map(e)),
         }
     }
+    /// Test-only refresh authority. Index-only connections never gain another
+    /// family merely because the component helper was compiled into tests.
+    #[cfg(test)]
+    pub(crate) async fn publish_refresh_fixture(
+        &self,
+        message: &crate::refresh_protocol::RefreshMessage,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
+        if self.inner.index_only {
+            return Err(Error::UnsupportedTask);
+        }
+        let lease = self.lease(caller)?;
+        let bytes = crate::refresh_protocol::encode(
+            message,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "rust-probe@refresh-component",
+        )
+        .map_err(|_| Error::Protocol)?;
+        if crate::refresh_protocol::parse(&bytes).map_err(|_| Error::Protocol)? != *message {
+            return Err(Error::Protocol);
+        }
+        let id = message.task_id;
+        let limit = self.inner.config.max_queued_jobs.to_string();
+        let keys = vec!["celery".to_owned(), "_kombu.binding.celery".to_owned()];
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(PUBLISH, &keys, &[&bytes, limit.as_bytes()], lease)
+            .await
+        {
+            Ok((n, _held)) if n > 0 => Ok(Published {
+                task_id: id,
+                queue_length: n as u64,
+            }),
+            Ok((-2, _)) => Err(Error::Capacity),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(id)),
+            Err(error) => Err(map(error)),
+        }
+    }
+    #[cfg(test)]
+    pub(crate) async fn read_refresh_fixture(
+        &self,
+        id: Uuid,
+        source_id: i64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<crate::refresh_result::RefreshSuccess>, Error> {
+        if self.inner.index_only {
+            return Err(Error::UnsupportedTask);
+        }
+        let lease = self.lease(caller)?;
+        let keys = vec![format!("celery-tasks:celery-task-meta-{id}")];
+        let (reply, _held) = self
+            .inner
+            .result
+            .command_classified::<(i64, Vec<u8>), _>(READ, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => crate::refresh_result::parse_success(&reply.1, id, source_id)
+                .map(Some)
+                .map_err(|_| Error::Protocol),
+            _ => Err(Error::Corrupt),
+        }
+    }
+    #[cfg(test)]
+    pub(crate) async fn publish_refresh_child_fixture(
+        &self,
+        message: &crate::refresh_dispatch::ChildMessage,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
+        if self.inner.index_only {
+            return Err(Error::UnsupportedTask);
+        }
+        // Manual refresh deferral uses the independently tested refresh helper.
+        if matches!(
+            message.child,
+            crate::refresh_dispatch::ChildPublication::Refresh { .. }
+        ) {
+            return Err(Error::UnsupportedTask);
+        }
+        let lease = self.lease(caller)?;
+        let bytes = crate::refresh_dispatch::encode_child(
+            &message.child,
+            message.id,
+            message.root,
+            message.parent,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "rust-probe@refresh-child",
+        )
+        .map_err(|_| Error::Protocol)?;
+        crate::refresh_dispatch::parse_native_child(&bytes).map_err(|_| Error::Protocol)?;
+        let keys = vec!["celery".to_owned(), "_kombu.binding.celery".to_owned()];
+        let limit = self.inner.config.max_queued_jobs.to_string();
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(PUBLISH, &keys, &[&bytes, limit.as_bytes()], lease)
+            .await
+        {
+            Ok((n, _)) if n > 0 => Ok(Published {
+                task_id: message.id,
+                queue_length: n as u64,
+            }),
+            Ok((-2, _)) => Err(Error::Capacity),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(message.id)),
+            Err(error) => Err(map(error)),
+        }
+    }
+    #[cfg(test)]
+    pub(crate) async fn claim_refresh_fixture(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<crate::refresh_protocol::RefreshMessage>, Error> {
+        if self.inner.index_only {
+            return Err(Error::UnsupportedTask);
+        }
+        let lease = self.lease(caller.clone())?;
+        let keys = vec!["celery".to_owned()];
+        let (reply, held) = self
+            .inner
+            .broker
+            .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        if reply.0 == 0 {
+            return Ok(None);
+        }
+        if reply.0 != 1 {
+            return Err(Error::Corrupt);
+        }
+        let message =
+            crate::refresh_protocol::parse(&reply.1).map_err(|_| Error::UnsupportedTask)?;
+        if message.eta.is_some() || message.parent.is_some() {
+            return Err(Error::UnsupportedTask);
+        }
+        drop(held);
+        let lease = self.lease(caller)?;
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(CLAIM_CREATE, &keys, &[&reply.1], lease)
+            .await
+        {
+            Ok((1, _)) => Ok(Some(message)),
+            Ok((0, _)) => Err(Error::ClaimRace),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousClaim(message.task_id)),
+            Err(error) => Err(map(error)),
+        }
+    }
+    #[cfg(test)]
+    pub(crate) async fn write_refresh_success_fixture(
+        &self,
+        message: &crate::refresh_protocol::RefreshMessage,
+        result: crate::refresh_worker::NormalReturn,
+        children: Vec<Uuid>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if self.inner.index_only {
+            return Err(Error::UnsupportedTask);
+        }
+        if message.eta.is_some()
+            || message.parent.is_some()
+            || message.source_id <= 0
+            || children.len() > 64
+        {
+            return Err(Error::Protocol);
+        }
+        let value = match result {
+            crate::refresh_worker::NormalReturn::Null => serde_json::Value::Null,
+            crate::refresh_worker::NormalReturn::MissingSource => serde_json::json!(format!(
+                "EPG source {} does not exist, task cleaned up",
+                message.source_id
+            )),
+        };
+        self.write_result(message.task_id, value, None, children, caller)
+            .await
+    }
     pub async fn publish_index(
         &self,
         task: &crate::index_protocol::IndexTask,

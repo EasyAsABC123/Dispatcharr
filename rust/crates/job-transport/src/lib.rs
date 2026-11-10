@@ -41,3 +41,11 @@ pub mod refresh_dispatch;
 // Observed normal refresh results; no writer or application authority.
 #[cfg(test)]
 pub mod refresh_result;
+
+// Fixture-only refresh publication/result interoperability; no consumer.
+#[cfg(test)]
+pub mod refresh_publish;
+
+// Fixture-only immediate refresh execution; no production intake.
+#[cfg(test)]
+pub mod refresh_worker;

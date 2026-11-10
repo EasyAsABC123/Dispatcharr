@@ -1,0 +1,1064 @@
+{
+  "scope": "Fixture-only immediate native refresh consumer with real FileJob and Original producer/result decoding; known normal scope plus explicit operational/unsupported controls",
+  "fixture_control": {
+    "source_producer": "Unmodified Original task delay/apply_async",
+    "native_intake": "One explicitly invoked Rust peer, no default consumer",
+    "nonrefresh_children": "Remain in owned default celery queue; no worker consumes them",
+    "function_replacement": false
+  },
+  "normalization": "None; all task/source identifiers, paths and origins are owned synthetic fixture values. No credentials/tokens or production data.",
+  "cases": [
+    {
+      "name": "inactive",
+      "scope": "supported-normal",
+      "source_id": 1,
+      "envelope": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "3e77aa65-18c6-47ba-bb08-5390cb25f3c7",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "3e77aa65-18c6-47ba-bb08-5390cb25f3c7",
+          "parent_id": null,
+          "argsrepr": "[1]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "3e77aa65-18c6-47ba-bb08-5390cb25f3c7",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "cdf12832-a83f-4d41-88ef-8a16db9698c3"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(3e77aa65-18c6-47ba-bb08-5390cb25f3c7))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T16:52:09.299898+00:00",
+        "task_id": "3e77aa65-18c6-47ba-bb08-5390cb25f3c7"
+      },
+      "metadata_sha256": "462afb9049fe83c9991e53674bfec8a237db5ef9940607c1e579417e40d62bf1",
+      "children": [],
+      "repeat": null
+    },
+    {
+      "name": "dummy",
+      "scope": "supported-normal",
+      "source_id": 2,
+      "envelope": {
+        "body": "W1syXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "4373c284-8e50-4013-9139-00ff1c160351",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "4373c284-8e50-4013-9139-00ff1c160351",
+          "parent_id": null,
+          "argsrepr": "[2]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "4373c284-8e50-4013-9139-00ff1c160351",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "dfa0f82b-976b-4cc3-a551-5c22077eb8f1"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(4373c284-8e50-4013-9139-00ff1c160351))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T16:52:09.338749+00:00",
+        "task_id": "4373c284-8e50-4013-9139-00ff1c160351"
+      },
+      "metadata_sha256": "761f0fd4df09f41b0764481b8f4ff485ec83fa55bd3911053b365e3e594fe284",
+      "children": [],
+      "repeat": null
+    },
+    {
+      "name": "refresh_busy",
+      "scope": "supported-normal",
+      "source_id": 3,
+      "envelope": {
+        "body": "W1szXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "5c70f552-c8af-4476-9fa7-876a803de06b",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "5c70f552-c8af-4476-9fa7-876a803de06b",
+          "parent_id": null,
+          "argsrepr": "[3]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "5c70f552-c8af-4476-9fa7-876a803de06b",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "b2d5109f-78e6-40ac-b4a8-43a4eb14dec5"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(5c70f552-c8af-4476-9fa7-876a803de06b))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T16:52:09.376078+00:00",
+        "task_id": "5c70f552-c8af-4476-9fa7-876a803de06b"
+      },
+      "metadata_sha256": "cd703be164f266d74eaee7a5a26f5cacc42c8817009b2d52d72cb20c16c8fa62",
+      "children": [],
+      "repeat": null
+    },
+    {
+      "name": "file_busy",
+      "scope": "supported-normal",
+      "source_id": 4,
+      "envelope": {
+        "body": "W1s0XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "3f185573-450f-4d43-b199-a93efea1c597",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "3f185573-450f-4d43-b199-a93efea1c597",
+          "parent_id": null,
+          "argsrepr": "[4]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "3f185573-450f-4d43-b199-a93efea1c597",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "4fcc2502-e54b-40d3-b48a-f3f82e78c737"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(3f185573-450f-4d43-b199-a93efea1c597))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "f8d96420-6797-43d4-92b5-e73b43dd515a",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T16:52:09.415052+00:00",
+        "task_id": "3f185573-450f-4d43-b199-a93efea1c597"
+      },
+      "metadata_sha256": "2238dd32cff206d93c1c0dc96ce3516ae996e9cc1c7c4ab9431a86684d83c8e8",
+      "children": [
+        {
+          "body": "W1s0XSx7ImZvcmNlIjpmYWxzZSwiX2ZpbGVfZGVmZXJfcmV0cnkiOjF9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "id": "f8d96420-6797-43d4-92b5-e73b43dd515a",
+            "shadow": null,
+            "eta": "2026-11-10T16:52:24.412510+00:00",
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              14400,
+              null
+            ],
+            "root_id": "3f185573-450f-4d43-b199-a93efea1c597",
+            "parent_id": "3f185573-450f-4d43-b199-a93efea1c597",
+            "argsrepr": "[4]",
+            "kwargsrepr": "{'force': False, '_file_defer_retry': 1}",
+            "origin": "rust-probe@refresh-component",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "f8d96420-6797-43d4-92b5-e73b43dd515a",
+            "reply_to": "79540774-6a34-4882-8c37-1230beff6546",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "4395916d-34ee-4f6b-a9be-c111d1530e11"
+          }
+        }
+      ],
+      "repeat": null
+    },
+    {
+      "name": "parser_busy",
+      "scope": "supported-normal",
+      "source_id": 5,
+      "envelope": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "632d5e4b-1939-4b5c-b298-0f04c9d7dcad",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "632d5e4b-1939-4b5c-b298-0f04c9d7dcad",
+          "parent_id": null,
+          "argsrepr": "[5]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "632d5e4b-1939-4b5c-b298-0f04c9d7dcad",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "9332e27b-2004-4497-a53a-e3d1e1d44cb1"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(632d5e4b-1939-4b5c-b298-0f04c9d7dcad))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "e3fccd1a-71e7-4a20-9bfc-fd6a62384c42",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T16:52:09.453073+00:00",
+        "task_id": "632d5e4b-1939-4b5c-b298-0f04c9d7dcad"
+      },
+      "metadata_sha256": "6059109dc5ecaefc0726300d4d13b055597211c624a189705ad951858a7916f9",
+      "children": [
+        {
+          "body": "W1s1XSx7ImZvcmNlIjpmYWxzZSwiX2ZpbGVfZGVmZXJfcmV0cnkiOjF9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "id": "e3fccd1a-71e7-4a20-9bfc-fd6a62384c42",
+            "shadow": null,
+            "eta": "2026-11-10T16:52:24.451120+00:00",
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              14400,
+              null
+            ],
+            "root_id": "632d5e4b-1939-4b5c-b298-0f04c9d7dcad",
+            "parent_id": "632d5e4b-1939-4b5c-b298-0f04c9d7dcad",
+            "argsrepr": "[5]",
+            "kwargsrepr": "{'force': False, '_file_defer_retry': 1}",
+            "origin": "rust-probe@refresh-component",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "e3fccd1a-71e7-4a20-9bfc-fd6a62384c42",
+            "reply_to": "797d05af-7e0e-4905-951a-2894f0194d88",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "758a9583-4a6c-476b-9280-31d85798f47a"
+          }
+        }
+      ],
+      "repeat": null
+    },
+    {
+      "name": "missing_no_orphan",
+      "scope": "supported-normal",
+      "source_id": 6,
+      "envelope": {
+        "body": "W1s2XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "66193e00-71d3-48ab-aa69-d8ae1152bcde",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "66193e00-71d3-48ab-aa69-d8ae1152bcde",
+          "parent_id": null,
+          "argsrepr": "[6]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "66193e00-71d3-48ab-aa69-d8ae1152bcde",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "10107bee-cc59-4f33-bce0-77ba845a1ce1"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(66193e00-71d3-48ab-aa69-d8ae1152bcde))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 6 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T16:52:09.495599+00:00",
+        "task_id": "66193e00-71d3-48ab-aa69-d8ae1152bcde"
+      },
+      "metadata_sha256": "8ba42022cf4736e979c9b30d1a525ee018bafbbf0526a97f96f8d255fde10627",
+      "children": [],
+      "repeat": null
+    },
+    {
+      "name": "imported",
+      "scope": "supported-normal",
+      "source_id": 7,
+      "envelope": {
+        "body": "W1s3XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "abb737af-2948-413e-ae5a-26d04ae07da2",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "abb737af-2948-413e-ae5a-26d04ae07da2",
+          "parent_id": null,
+          "argsrepr": "[7]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "abb737af-2948-413e-ae5a-26d04ae07da2",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "57876396-90a7-461c-bcc9-6e3116eb97d8"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(abb737af-2948-413e-ae5a-26d04ae07da2))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "aa700cd5-c0ea-40fa-bca9-10a19d435fe5",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "dace82f9-c3a7-4cb3-89fd-dc7e10756429",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T16:52:09.609547+00:00",
+        "task_id": "abb737af-2948-413e-ae5a-26d04ae07da2"
+      },
+      "metadata_sha256": "8e2371affcd148bf4222da3544830a19037b12ef04aaf07c74d769b57a12e3a0",
+      "children": [
+        {
+          "body": "W1s3XSx7fSx7ImNhbGxiYWNrcyI6bnVsbCwiZXJyYmFja3MiOm51bGwsImNoYWluIjpudWxsLCJjaG9yZCI6bnVsbH1d",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.epg.tasks.build_programme_index_task",
+            "id": "aa700cd5-c0ea-40fa-bca9-10a19d435fe5",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "abb737af-2948-413e-ae5a-26d04ae07da2",
+            "parent_id": "abb737af-2948-413e-ae5a-26d04ae07da2",
+            "argsrepr": "(7,)",
+            "kwargsrepr": "{}",
+            "origin": "rust-probe@refresh-child",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "aa700cd5-c0ea-40fa-bca9-10a19d435fe5",
+            "reply_to": "4426f428-c1b1-43ad-afbd-b5d60a0a12d8",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "2eb2701a-e29b-444d-9b70-56eddc389d0d"
+          }
+        },
+        {
+          "body": "W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.channels.tasks.evaluate_series_rules",
+            "id": "dace82f9-c3a7-4cb3-89fd-dc7e10756429",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "abb737af-2948-413e-ae5a-26d04ae07da2",
+            "parent_id": "abb737af-2948-413e-ae5a-26d04ae07da2",
+            "argsrepr": "()",
+            "kwargsrepr": "{}",
+            "origin": "rust-probe@refresh-child",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "dace82f9-c3a7-4cb3-89fd-dc7e10756429",
+            "reply_to": "3f23c5b3-cf6b-4c9c-a939-b800619df789",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "053dee98-b9f0-4426-a918-e37ec8b03712"
+          }
+        }
+      ],
+      "repeat": null
+    },
+    {
+      "name": "unmapped",
+      "scope": "supported-normal",
+      "source_id": 8,
+      "envelope": {
+        "body": "W1s4XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "65c0b49e-69ef-4875-a019-92a25faf1504",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "65c0b49e-69ef-4875-a019-92a25faf1504",
+          "parent_id": null,
+          "argsrepr": "[8]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "65c0b49e-69ef-4875-a019-92a25faf1504",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "07222aed-c807-4ae0-a3ee-cc7fa28442b1"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(65c0b49e-69ef-4875-a019-92a25faf1504))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "68deeb5c-d5d1-4f1a-9bfe-688187806b16",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "f62928c4-3a10-4101-b5ff-c8f53de6bc57",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T16:52:09.714787+00:00",
+        "task_id": "65c0b49e-69ef-4875-a019-92a25faf1504"
+      },
+      "metadata_sha256": "b45732cc3e734957be29a9f57d8deb5cb931e9586a0fee3fd43fc70aef7cb498",
+      "children": [
+        {
+          "body": "W1s4XSx7fSx7ImNhbGxiYWNrcyI6bnVsbCwiZXJyYmFja3MiOm51bGwsImNoYWluIjpudWxsLCJjaG9yZCI6bnVsbH1d",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.epg.tasks.build_programme_index_task",
+            "id": "68deeb5c-d5d1-4f1a-9bfe-688187806b16",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "65c0b49e-69ef-4875-a019-92a25faf1504",
+            "parent_id": "65c0b49e-69ef-4875-a019-92a25faf1504",
+            "argsrepr": "(8,)",
+            "kwargsrepr": "{}",
+            "origin": "rust-probe@refresh-child",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "68deeb5c-d5d1-4f1a-9bfe-688187806b16",
+            "reply_to": "6ca6fe14-613e-4f07-aed8-881a36efaf8a",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "b22433b0-4030-468e-b6cb-2bfb175afa61"
+          }
+        },
+        {
+          "body": "W1tdLHt9LHsiY2FsbGJhY2tzIjpudWxsLCJlcnJiYWNrcyI6bnVsbCwiY2hhaW4iOm51bGwsImNob3JkIjpudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.channels.tasks.evaluate_series_rules",
+            "id": "f62928c4-3a10-4101-b5ff-c8f53de6bc57",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "65c0b49e-69ef-4875-a019-92a25faf1504",
+            "parent_id": "65c0b49e-69ef-4875-a019-92a25faf1504",
+            "argsrepr": "()",
+            "kwargsrepr": "{}",
+            "origin": "rust-probe@refresh-child",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "f62928c4-3a10-4101-b5ff-c8f53de6bc57",
+            "reply_to": "9d61630e-7987-48f9-ac3b-cfc6e26ff51e",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "3178f845-e444-4593-8785-281f419872a5"
+          }
+        }
+      ],
+      "repeat": null
+    },
+    {
+      "name": "repeat",
+      "scope": "supported-normal",
+      "source_id": 9,
+      "envelope": {
+        "body": "W1s5XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "0252a1f8-1cd2-4a4d-9827-4d402bcb1e2f",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "0252a1f8-1cd2-4a4d-9827-4d402bcb1e2f",
+          "parent_id": null,
+          "argsrepr": "[9]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "0252a1f8-1cd2-4a4d-9827-4d402bcb1e2f",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "35974023-cf2e-4b22-b639-0a91a2f7e56e"
+        }
+      },
+      "audit": {
+        "outcome": "Ok(Completed(0252a1f8-1cd2-4a4d-9827-4d402bcb1e2f))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T16:52:09.754847+00:00",
+        "task_id": "0252a1f8-1cd2-4a4d-9827-4d402bcb1e2f"
+      },
+      "metadata_sha256": "faf0f0cf6a25d9d605644b5d81ba3fbabb2c10dcea8bd4dd1f293052e43fb17a",
+      "children": [],
+      "repeat": {
+        "outcome": "Ok(ResultAlreadySucceeded(0252a1f8-1cd2-4a4d-9827-4d402bcb1e2f))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      }
+    },
+    {
+      "name": "coarse_failed_operational",
+      "scope": "operational-safety-gap",
+      "source_id": 10,
+      "envelope": {
+        "body": "W1sxMF0sIHsiZm9yY2UiOiB0cnVlLCAiX2ZpbGVfZGVmZXJfcmV0cnkiOiA0ODB9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "7a02ac9a-ffa6-40f2-88a6-563afcaf6417",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "7a02ac9a-ffa6-40f2-88a6-563afcaf6417",
+          "parent_id": null,
+          "argsrepr": "[10]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 480}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "7a02ac9a-ffa6-40f2-88a6-563afcaf6417",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "2a1dc93a-2184-4b43-b0d6-74a99598a127"
+        }
+      },
+      "audit": {
+        "outcome": "Err(Execution)",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": null,
+      "metadata_sha256": null,
+      "children": [],
+      "repeat": null
+    },
+    {
+      "name": "missing_orphan_operational",
+      "scope": "operational-safety-gap",
+      "source_id": 11,
+      "envelope": {
+        "body": "W1sxMV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "2e456051-66ab-4f2d-8fa5-1e49eed35ec2",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "2e456051-66ab-4f2d-8fa5-1e49eed35ec2",
+          "parent_id": null,
+          "argsrepr": "[11]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@91b8e7089830",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "2e456051-66ab-4f2d-8fa5-1e49eed35ec2",
+          "reply_to": "1f676fb8-77cd-3d3e-b493-75ec74c761c1",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "67490781-a9c7-4d27-be3d-10b274ac8b9e"
+        }
+      },
+      "audit": {
+        "outcome": "Err(Execution)",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false
+      },
+      "metadata": null,
+      "metadata_sha256": null,
+      "children": [],
+      "repeat": null
+    }
+  ]
+}

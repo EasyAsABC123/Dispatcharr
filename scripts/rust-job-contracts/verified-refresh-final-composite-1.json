@@ -1,0 +1,109 @@
+{
+  "passed": true,
+  "scope": "Final frozen refresh publication124 plus normal index-only production constructor, ETA and duplicate transport component regressions; not app worker/scheduler/complete ingestion or performance acceptance",
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "expected_frozen_root": "artifacts/rust/refresh-publication-worker-reviewed-workspace-1",
+  "expected_input_map": "artifacts/rust/refresh-publication-worker-parent-inputs-1.json",
+  "expected_input_map_sha256": "8d4b110de1c5b82364e7e0b445e0674aa39975f8b46b6a89e8a9b2bb04cf47d8",
+  "runtime_match_proof": "artifacts/rust/refresh-publication-final-replay-inputs-1.json",
+  "runtime_match_proof_sha256": "e9f496065296c8dabd5e930a7db74ae3e5bb628a57864e17bdefbfa76aeb2a12",
+  "expected_runtime_files": 557,
+  "runs": [
+    {
+      "name": "publication",
+      "passed": true,
+      "checks": 124,
+      "native_physical_reply_tests": 3,
+      "evidence": "artifacts/rust/refresh-publication-worker-final-publication-1/integration.json",
+      "evidence_sha256": "6fb89354163bd268f1339072deec9c173ac5d64cfac106c96b38cde8ce15ca5d",
+      "project": "dispatcharr-refresh-publish-3caa952b78",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": true,
+      "cleanup": "project removed",
+      "runtime_files": 557,
+      "runtime_archive_sha256": "0e70dd63daec71941ff8e53fda5943ae7b75a1b8eecf6f716057f25e702416ba",
+      "binary_sha256": "73cd405bd883d356807e8f056ee595f9dd9411ac17d3348f701f9dfa2e077e49",
+      "eta_binary_sha256": null,
+      "successful_tools": "artifacts/rust/refresh-publication-worker-final-publication-1/tool-source",
+      "tool_map_sha256": "6f5c28d6ffec4cbff055d69bd1f1d3a04751629943044a2b96ac3cd93be7d4a7"
+    },
+    {
+      "name": "constructor",
+      "passed": true,
+      "checks": 19,
+      "native_physical_reply_tests": 0,
+      "evidence": "artifacts/rust/refresh-publication-worker-final-constructor-1/integration.json",
+      "evidence_sha256": "a3aef69faff77fcc1e3aba86706e7400d74647095c680630721748632257f1a2",
+      "project": "dispatcharr-index-constructor-2fd51ea3cf",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": true,
+      "cleanup": "project removed",
+      "runtime_files": 557,
+      "runtime_archive_sha256": "0e70dd63daec71941ff8e53fda5943ae7b75a1b8eecf6f716057f25e702416ba",
+      "binary_sha256": "348c907700f3ea18c89469cc72b36e5cb6403ed0207785e3a1478ac1063983f7",
+      "eta_binary_sha256": null,
+      "successful_tools": "artifacts/rust/refresh-publication-worker-final-constructor-1/tool-source",
+      "tool_map_sha256": "2b2b167ecfb3b7a94fb525b75775ef93e6f5b92bcc5b7d30e824c742db322de3"
+    },
+    {
+      "name": "eta",
+      "passed": true,
+      "checks": 20,
+      "native_physical_reply_tests": 0,
+      "evidence": "artifacts/rust/refresh-publication-worker-final-eta-1/integration.json",
+      "evidence_sha256": "851deb69553352466f5439b358f149ee2a0d12b4f0ce02edf3a1c230db303134",
+      "project": "dispatcharr-native-eta-fd0eae23c7",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": true,
+      "cleanup": "project removed",
+      "runtime_files": 557,
+      "runtime_archive_sha256": "0e70dd63daec71941ff8e53fda5943ae7b75a1b8eecf6f716057f25e702416ba",
+      "binary_sha256": "de729d108729e74d4dff40311ad1ae63d17db66f90a0df5b1b00a8bb8b793ff0",
+      "eta_binary_sha256": null,
+      "successful_tools": "artifacts/rust/refresh-publication-worker-final-eta-1/tool-source",
+      "tool_map_sha256": "2b2b167ecfb3b7a94fb525b75775ef93e6f5b92bcc5b7d30e824c742db322de3"
+    },
+    {
+      "name": "duplicate",
+      "passed": true,
+      "checks": 24,
+      "native_physical_reply_tests": 0,
+      "evidence": "artifacts/rust/refresh-publication-worker-final-duplicate-1/integration.json",
+      "evidence_sha256": "ee809c4e6a0a75a4fcc24c8b1e2357abd519a7fdb6187a5f84b93911cbc9956d",
+      "project": "dispatcharr-index-constructor-45eb2e4afb",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": true,
+      "cleanup": "project removed",
+      "runtime_files": 557,
+      "runtime_archive_sha256": "0e70dd63daec71941ff8e53fda5943ae7b75a1b8eecf6f716057f25e702416ba",
+      "binary_sha256": "212fd616da862bac95e95212a0d64be1adb12c87edac8793e0abacb8ba5160ad",
+      "eta_binary_sha256": "763a0d00575e2a421aaf62e2d4f429391f0b636081bebb6779870824a615923a",
+      "successful_tools": "artifacts/rust/refresh-publication-worker-final-duplicate-1/tool-source",
+      "tool_map_sha256": "2b2b167ecfb3b7a94fb525b75775ef93e6f5b92bcc5b7d30e824c742db322de3"
+    }
+  ],
+  "total_component_checks": 187,
+  "native_physical_reply_tests_in_publication": 3,
+  "runtime_or_cargo_changes": false,
+  "runner_changes": false,
+  "archive_cwd": "All four launched from exact reviewed frozen rust directory; no mutable Rust source used",
+  "performance_verified": false,
+  "application_worker_verified": false,
+  "full_milestone_complete": false
+}

@@ -16,6 +16,7 @@ tokio = {version="1",features=["rt-multi-thread","sync","time","macros"]}
 uuid = {version="1",features=["v4"]}
 
 [dev-dependencies]
+dispatcharr-contracts = {path="../contracts"}
 dispatcharr-store = {path="../store"}
 dispatcharr-coordination = {path="../coordination"}
 zip = {version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs"]}

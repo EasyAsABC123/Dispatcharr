@@ -5,7 +5,7 @@ use crate::{
     worker,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Datelike, Timelike, Utc};
 use serde_json::{json, Map, Value};
 use uuid::Uuid;
 const NAME: &str = "apps.epg.tasks.refresh_epg_data";
@@ -119,6 +119,12 @@ pub fn encode(
     {
         return Err(invalid());
     }
+    if message
+        .eta
+        .is_some_and(|v| v.nanosecond() % 1000 != 0 || !(1..=9999).contains(&v.year()))
+    {
+        return Err(invalid());
+    }
     let mut e: Value = serde_json::from_slice(&protocol::encode(
         &Task::CreateBackup,
         message.task_id,
@@ -134,7 +140,11 @@ pub fn encode(
     h["root_id"] = json!(message.root.to_string());
     h["parent_id"] = message.parent.map_or(Value::Null, |v| json!(v.to_string()));
     h["eta"] = message.eta.map_or(Value::Null, |v| {
-        json!(v.format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string())
+        json!(if v.nanosecond() == 0 {
+            v.format("%Y-%m-%dT%H:%M:%S+00:00").to_string()
+        } else {
+            v.format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string()
+        })
     });
     h["timelimit"] = json!([14400, null]);
     h["argsrepr"] = json!(args);
@@ -170,7 +180,10 @@ pub fn parse(bytes: &[u8]) -> Result<RefreshMessage, ProtocolError> {
     } else {
         let d = DateTime::parse_from_rfc3339(h["eta"].as_str().ok_or_else(invalid)?)
             .map_err(|_| invalid())?;
-        if d.offset().local_minus_utc() != 0 {
+        if d.offset().local_minus_utc() != 0
+            || d.nanosecond() % 1000 != 0
+            || !(1..=9999).contains(&d.year())
+        {
             return Err(invalid());
         }
         Some(d.with_timezone(&Utc))
@@ -309,5 +322,23 @@ mod tests {
             n["headers"][field] = value;
             assert!(parse(&serde_json::to_vec(&n).unwrap()).is_err(), "{field}")
         }
+    }
+    #[test]
+    fn source_microsecond_precision_and_zero_fraction_are_explicit() {
+        let rows = corpus();
+        let e = rows["messages"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|v| !v["envelope"]["headers"]["eta"].is_null())
+            .unwrap();
+        let mut m = parse(&serde_json::to_vec(&e["envelope"]).unwrap()).unwrap();
+        m.eta = Some(DateTime::from_timestamp(1_800_000_000, 0).unwrap());
+        let encoded = encode(&m, Uuid::new_v4(), Uuid::new_v4(), "fixture").unwrap();
+        let value: Value = serde_json::from_slice(&encoded).unwrap();
+        assert!(!value["headers"]["eta"].as_str().unwrap().contains('.'));
+        assert_eq!(parse(&encoded).unwrap(), m);
+        m.eta = Some(DateTime::from_timestamp(1_800_000_000, 1).unwrap());
+        assert!(encode(&m, Uuid::new_v4(), Uuid::new_v4(), "fixture").is_err());
     }
 }

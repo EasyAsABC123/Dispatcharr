@@ -3,7 +3,7 @@
 use crate::protocol::{self, ProtocolError, Task};
 use crate::refresh_protocol::{self, RefreshCall, RefreshMessage};
 use base64::{engine::general_purpose::STANDARD, Engine};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Timelike, Utc};
 use dispatcharr_ingest_epg::{
     file_job::{ChildTask, GuideTaskDispatcher},
     ImportError, SwapPolicyContext,
@@ -35,6 +35,72 @@ pub enum ChildPublication {
         source_id: i64,
     },
     SeriesRules,
+}
+#[derive(Clone, Debug)]
+pub struct ChildMessage {
+    pub id: Uuid,
+    pub root: Uuid,
+    pub parent: Uuid,
+    pub child: ChildPublication,
+}
+/// Only canonical frames produced by the observed child encoder are accepted;
+/// no arbitrary task name, queue, callback or option reaches child publication.
+pub fn parse_native_child(bytes: &[u8]) -> Result<ChildMessage, ProtocolError> {
+    if bytes.len() > protocol::MAX_ENVELOPE {
+        return Err(ProtocolError::Capacity);
+    }
+    let e: Value = serde_json::from_slice(bytes).map_err(|_| ProtocolError::InvalidArgument)?;
+    let uuid = |v: &Value| {
+        Uuid::parse_str(v.as_str().ok_or(ProtocolError::InvalidArgument)?)
+            .map_err(|_| ProtocolError::InvalidArgument)
+    };
+    let h = &e["headers"];
+    let id = uuid(&h["id"])?;
+    let root = uuid(&h["root_id"])?;
+    let parent = uuid(&h["parent_id"])?;
+    let child = match h["task"].as_str() {
+        Some("apps.epg.tasks.refresh_epg_data") => {
+            let m = refresh_protocol::parse(bytes)?;
+            if m.retry == 0 || m.call != RefreshCall::deferred(m.source_id, m.force, m.retry) {
+                return Err(ProtocolError::InvalidArgument);
+            }
+            ChildPublication::Refresh {
+                source_id: m.source_id,
+                force: m.force,
+                retry: m.retry,
+                eta: m.eta.ok_or(ProtocolError::InvalidArgument)?,
+            }
+        }
+        Some("apps.epg.tasks.build_programme_index_task") => {
+            let m = crate::index_protocol::parse(bytes)?;
+            if m.eta.is_some() || m.explicit_retry || m.list_args_repr {
+                return Err(ProtocolError::InvalidArgument);
+            }
+            ChildPublication::ProgrammeIndex {
+                source_id: m.source_id,
+            }
+        }
+        Some("apps.channels.tasks.evaluate_series_rules") => ChildPublication::SeriesRules,
+        _ => return Err(ProtocolError::InvalidArgument),
+    };
+    let encoded = encode_child(
+        &child,
+        id,
+        root,
+        parent,
+        uuid(&e["properties"]["reply_to"])?,
+        uuid(&e["properties"]["delivery_tag"])?,
+        h["origin"].as_str().ok_or(ProtocolError::InvalidArgument)?,
+    )?;
+    if encoded != bytes {
+        return Err(ProtocolError::InvalidArgument);
+    }
+    Ok(ChildMessage {
+        id,
+        root,
+        parent,
+        child,
+    })
 }
 pub fn encode_child(
     child: &ChildPublication,
@@ -115,6 +181,14 @@ struct PublicationContext {
     _caller: Arc<dyn Send + Sync>,
     _budget: Arc<ChildBudget>,
 }
+fn source_eta(now: DateTime<Utc>, delay: u32) -> Result<DateTime<Utc>, ImportError> {
+    if delay != 15 {
+        return Err(ImportError::Capacity("refresh defer contract"));
+    }
+    now.with_nanosecond(now.nanosecond() / 1000 * 1000)
+        .and_then(|v| v.checked_add_signed(chrono::Duration::seconds(i64::from(delay))))
+        .ok_or(ImportError::Capacity("refresh ETA overflow"))
+}
 pub struct RefreshDispatcher {
     root: Uuid,
     parent: Uuid,
@@ -169,9 +243,7 @@ impl GuideTaskDispatcher for RefreshDispatcher {
                         source_id,
                         force,
                         retry,
-                        eta: (self.clock)()
-                            .checked_add_signed(chrono::Duration::seconds(i64::from(delay_seconds)))
-                            .ok_or(ImportError::Capacity("refresh ETA overflow"))?,
+                        eta: source_eta((self.clock)(), delay_seconds)?,
                     }
                 }
                 ChildTask::ProgrammeIndex { source_id } => {
@@ -288,5 +360,13 @@ mod tests {
             count += 1;
         }
         assert_eq!(count, 6)
+    }
+    #[test]
+    fn source_clock_precision_is_microseconds_before_eta_arithmetic() {
+        let eta = source_eta(DateTime::from_timestamp(42, 123456789).unwrap(), 15).unwrap();
+        assert_eq!(eta.timestamp(), 57);
+        assert_eq!(eta.nanosecond(), 123456000);
+        assert!(source_eta(DateTime::<Utc>::MAX_UTC, 15).is_err());
+        assert!(source_eta(eta, 5).is_err());
     }
 }
