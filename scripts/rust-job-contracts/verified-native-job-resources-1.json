@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "scope": "App-unwired native job physical-command/caller ownership on actualRedis through controlled TCP reply proxy; no nativeworker/HTTP202 or complete durable execution acceptance",
+  "report": "artifacts/rust/m8-native-job-resources-1/integration.json",
+  "report_sha256": "6fc8a9cb9b712e84023013d2dbea1dcea1300beb5ee016d8ce7f4f292d8284ce",
+  "rust_source_archive": "artifacts/rust/m8-native-job-resources-1/rust-source.tar",
+  "rust_source_archive_sha256": "07a3dfb1098f4479f29e73f8a7ab9659590be0d4582e9f83bca39677c1ccaa7f",
+  "binary_sha256": "0d2d29f0d35f74620b708c9a936ba2644aa253a3ed2bfd144f127466fc99a8bd",
+  "module_sha256": {
+    "rust/Cargo.toml": "29654811e31104d99146a16b6418d2990d089274a75b35f0c10c9240891b9800",
+    "rust/Cargo.lock": "4ae1635b1301d304d2d955abf901cd4d3622004ad38a405d25f579bd12e74b50",
+    "rust/crates/job-transport/Cargo.toml": "5c867b5f8202bf42d0ed7338bf949100329eed4159eba178b95a8c464a0c2e8f",
+    "rust/crates/job-transport/README.md": "a149f5573a29816eea3c714643e8af033b2d2abbf6729e98f0499173aa624957",
+    "rust/crates/job-transport/src/protocol.rs": "2d1b308a0bbbc2a2f2bfa75de68711682c96228a879255ee96977ae7d0899099",
+    "rust/crates/job-transport/src/decode.rs": "2e295cef12ef2b4cee4ef0058c1dc7afc0539a5c693e811484f2c2cdf456b785",
+    "rust/crates/job-transport/src/lib.rs": "d20edfea67541ab23a57ce9f66fe7a589c29d9d4fbe397139476b29852daa2a8",
+    "rust/crates/job-transport/src/transport.rs": "0956b3848f981a3e4500b0fd2781f68e7c37d63a8d20dac5e93a10efa47425f1",
+    "rust/crates/job-transport/datasets/source-results.json": "1deac8212c544d830de8d06560e7f6d70efe29c8235daa9ac780a4d95af0d0cb",
+    "rust/crates/job-transport/examples/job_fixture.rs": "60ccb006a5dfb19284125a9f78d6e5b202dafbc647ffc19ebed57ccdbce3a04f",
+    "rust/crates/job-transport/tests/resources.rs": "2ac9b839640fc2d7426c4e66f2233733d21951191f63ad7fa0394b469b54b7eb",
+    "rust/crates/output-store/src/transport.rs": "f896d4927d475c71616c6a43d07c9fdf83c78459737fae94330e4db64da5b316"
+  },
+  "tool_source": "artifacts/rust/m8-native-job-resources-1/tool-source",
+  "test_log": "artifacts/rust/m8-native-job-resources-1/resource-tests.log",
+  "test_log_sha256": "34758fb665d315ce6c161c1bd76152b39c99ff37da373f034b6babcfef33852e",
+  "tests": 2,
+  "actual_tests": [
+    "accepted_publication_timeout_retains_owner_admission_and_failed_drain",
+    "canceled_result_caller_keeps_physical_guard_until_reply_and_shutdown_waits"
+  ],
+  "verified_boundaries": [
+    "Warm Redis scripts before hold; independent directRedis query confirms acceptedLPUSH/taskID while native reply is withheld.",
+    "Native publish observationtimes outAmbiguousPublication(taskID), while ownoperationpermit andcallerArc remainretained byphysical command.",
+    "Excessadmissionrejects before anothercommand; shutdown closesadmission andfailed boundeddrain doesnotrelease owner.",
+    "Releasingactualreply restores physicalslot/dropscaller andsuccessfuldraincompletes.",
+    "Abortingresultreader caller leaves physicalowner/slotretained; concurrent shutdown stayspending untilheldreply isreleased."
+  ],
+  "default_database_unchanged": true,
+  "copied_nonempty_tables": 26,
+  "cleanup": "project removed",
+  "native_worker_verified": false,
+  "native_route202_verified": false,
+  "limitations": [
+    "Fixture-onlyauthority: explicitguard,copiedDB,loopbackpassword/RedisDB8/result9; no productionconstructor.",
+    "No proof of nativehandler/idempotentexecution/visibilityrecovery/scheduler/restorequiescence orbroker-servercrash persistence.",
+    "Resource tests establishtwo particular delayedreply/cancel/drain boundaries; TLS/Sentinel/allbackendfaultsandqueuecapacityfailurevectorsremain separate.",
+    "Sourceworkerinterop65 andSource67rawresult/26envelopecapture are independently bound; not a generic task-family compatibility pass."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

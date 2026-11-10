@@ -1,0 +1,43 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Original current-programme serialization timing/effect order plus prior ordering/clock/no-hook schedules; Source-only, no native or application acceptance.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit.",
+  "evidence": "artifacts/rust/m6-current-order-source-104",
+  "artifacts_sha256": {
+    "result.json": "a1e6a1bb0c07e3bff49019b0978c4923223d23ea2e6f79d3fe465035711cd87e",
+    "current-order-source.json": "492e7c361abe1577e60fd1f5857bc9b0a1c4de9973a0724f30b7aeb8176ddb3a"
+  },
+  "tool_source_snapshot": "artifacts/rust/m6-current-order-source-104/tool-source",
+  "ordering_cases": 9,
+  "controlled_statement_schedules": 15,
+  "no_hook_metadata_lock_witness": true,
+  "final_body_replays": 9,
+  "malformed_stored_deleted_before_metadata": {
+    "status": 200,
+    "body": [],
+    "failure": null
+  },
+  "malformed_stored_survives_metadata": {
+    "failure": "AttributeError",
+    "phase": "after metadata statement"
+  },
+  "lookup_before_malformed_stored": {
+    "observed_full_metadata_ids": [
+      80,
+      79
+    ],
+    "observed_narrow_values_ids": [
+      79,
+      80
+    ],
+    "dispatch_before_AttributeError": true,
+    "role_assignment": "First/second encountered full metadata rows; no result sorting or EPG-row mutation",
+    "narrow_values_scope": "Django values_list clears select_related; not the same as native id-plus-source_type projection."
+  },
+  "preserved_failed_attempt": "artifacts/rust/m6-current-order-source-103 (fixture assumed inserted PK order; fixed by assigning roles to observed full-query order without sorting results or updating EPG rows)",
+  "cleanup": "project removed",
+  "native_verified": false,
+  "application_wired": false,
+  "performance_verified": false
+}

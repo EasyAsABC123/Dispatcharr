@@ -24,8 +24,8 @@ use std::{
     time::Duration,
 };
 
-struct Publisher {
-    calls: Mutex<Vec<i64>>,
+pub(crate) struct Publisher {
+    pub(crate) calls: Mutex<Vec<i64>>,
 }
 impl MissingIndexDispatcher for Publisher {
     fn dispatch(
@@ -40,13 +40,13 @@ impl MissingIndexDispatcher for Publisher {
         })
     }
 }
-struct DropCount(Arc<AtomicUsize>);
+pub(crate) struct DropCount(pub(crate) Arc<AtomicUsize>);
 impl Drop for DropCount {
     fn drop(&mut self) {
         self.0.fetch_add(1, Ordering::SeqCst);
     }
 }
-fn fixture() -> Value {
+pub(crate) fn fixture() -> Value {
     assert_eq!(
         std::env::var("EPG_CURRENT_DISPOSABLE_FIXTURE").unwrap(),
         "playback-fixture-only"
@@ -54,14 +54,14 @@ fn fixture() -> Value {
     serde_json::from_slice(&std::fs::read(std::env::var("EPG_CURRENT_FIXTURE").unwrap()).unwrap())
         .unwrap()
 }
-fn guard_path(path: &Path) {
+pub(crate) fn guard_path(path: &Path) {
     assert!(
         path.is_absolute()
             && path.starts_with("/tmp")
             && path.to_str().unwrap().contains("owned-current-lookup-")
     );
 }
-fn request(case: &Value) -> CurrentFileRequest {
+pub(crate) fn request(case: &Value) -> CurrentFileRequest {
     CurrentFileRequest {
         epg_entry_id: case["epg_entry_id"].as_i64().unwrap(),
         source_id: case["source_id"].as_i64().unwrap(),
@@ -72,7 +72,7 @@ fn request(case: &Value) -> CurrentFileRequest {
         cache_file_path: case["cache_file_path"].as_str().unwrap().into(),
     }
 }
-async fn prepare(store: &Store, case: &Value) {
+pub(crate) async fn prepare(store: &Store, case: &Value) {
     let id = case["source_id"].as_i64().unwrap();
     let name: String = sqlx::query("SELECT name FROM epg_epgsource WHERE id=$1")
         .bind(id)
@@ -140,13 +140,16 @@ async fn prepare(store: &Store, case: &Value) {
         std::fs::write(path, data).unwrap();
     }
 }
-fn config() -> CurrentLookupConfig {
+pub(crate) fn config() -> CurrentLookupConfig {
     CurrentLookupConfig {
         max_jobs: 1,
         ..CurrentLookupConfig::default()
     }
 }
-fn clock(case: &Value, calls: Arc<AtomicUsize>) -> Arc<dyn Fn() -> DateTime<Utc> + Send + Sync> {
+pub(crate) fn clock(
+    case: &Value,
+    calls: Arc<AtomicUsize>,
+) -> Arc<dyn Fn() -> DateTime<Utc> + Send + Sync> {
     let now = case["now"]
         .as_str()
         .unwrap()
@@ -204,7 +207,7 @@ fn clock(case: &Value, calls: Arc<AtomicUsize>) -> Arc<dyn Fn() -> DateTime<Utc>
         }
     })
 }
-async fn until(mut check: impl FnMut() -> bool) {
+pub(crate) async fn until(mut check: impl FnMut() -> bool) {
     for _ in 0..300 {
         if check() {
             return;

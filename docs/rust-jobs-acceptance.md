@@ -14,6 +14,8 @@ Original defaults were measured as track_startedFalse, acks_lateFalse, prefetch4
 
 [Native status projection component1](../scripts/rust-job-contracts/verified-backup-status-component-1.json) passes11 Source entity/assertion vectors plus bounded-input and separately labeled code-derived controls in3 tests, with strict all-target Store Clippy. It is registered only under `cfg(test)`: typed snapshots are supplied directly, result bytes/nodes/depth/messages are bounded, and unobserved states remain unsupported. It supplies no Redis wire decoder, Celery exception deserializer, task authentication, physical operation ownership, executable handler, route or202 response. These narrow results do not close native durable jobs.
 
+[Native publisher/reader interoperability1](../scripts/rust-job-contracts/verified-native-source-interop-1.json) subsequently passed65 observations with the actual original worker on a copied database. Native publication survives its CLI process exit; Source executes the captured backup task and native reads the real result from its separate backend. [Physical resource gate1](../scripts/rust-job-contracts/verified-native-job-resources-1.json) passes2 realRedis reply-proxy tests: accepted publication with withheld reply/timeouts, canceled result readers, retained caller/operation leases, capacity rejection and shutdown drain ownership. These are fixture-authorized/app-unwired component gates, with no production constructor, native task worker or202 route. Other task families/options, generic tagged-value HTTP emulation, queue/retry/idempotency recovery, scheduler and restore quiescence remain open.
+
 ## Contracts visible in the original source
 
 | Surface | Original behavior | Source |

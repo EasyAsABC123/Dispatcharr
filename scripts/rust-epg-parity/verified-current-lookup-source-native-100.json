@@ -1,0 +1,45 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Current-file lookup SQL/file orchestration component using shared Store boundary; test-only missing-index publisher. No app route, durable publication, whole-service resource or performance acceptance.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit.",
+  "evidence": "artifacts/rust/m6-current-lookup-source-native-100",
+  "artifacts_sha256": {
+    "result.json": "9559ca942555670a9fd4d2568668f3c0c24db944dda60bfa4acc845fee968934",
+    "current-lookup-source.json": "295c51ddd8bc9762c24b31d846f9f1adbc83131ed3e0b0f8289ce1c9a8476193",
+    "native-file-job.log": "ba2cbdd88b85a03347eab652adf8be69e95dd40d07a0350f447990af34337eba",
+    "frozen-tests.log": "0d88f322be3e3c70f03a1f3c621c5c6ef27759b2321a11523d4920fab1f42a22",
+    "frozen-clippy.log": "a05312950e6dae4c34a1e298e06756543de7e2ac872f5e1ef75610b6b7ba1344",
+    "owned-file-cleanup.json": "a5357447a1454ab222dfc1b6f46a3999c2d8abc981bdcaa1c6b2d12ba8acb758"
+  },
+  "runtime_archive_sha256": "b38ec3ffe16660ce717a7fd2cfb8729db1d8530cad392f5ee58ca3c40d8bc962",
+  "tool_source_snapshot": "artifacts/rust/m6-current-lookup-source-native-100/tool-source",
+  "source_cases": 25,
+  "native_literal_outcome_cases": 17,
+  "native_explicit_unsupported_shape_cases": 6,
+  "source_metadata_only_skips": [
+    "missing-epg",
+    "no-source"
+  ],
+  "native_ignored_tests_executed": 3,
+  "physical_resource_scenarios": [
+    "Real metadata index table lock: canceled waiter retains caller/admission/memory until actual PostgreSQL reply and private connection close; shutdown reports incomplete while blocked.",
+    "Final Bytes clones retain actual Vec capacity after parser credits/caller return; configured64KiB response guard explicitly rejects valid160KiB description."
+  ],
+  "fresh_clock_index_mutations": "Actual SQL update/delete from separate connection occurs at injected clock before native fresh index read.",
+  "native_unit_tests": 24,
+  "strict_all_target_clippy": true,
+  "cleanup": "project removed",
+  "application_wired": false,
+  "durable_dispatch_verified": false,
+  "malformed_index_source_failure_parity_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Six malformed stored index cases explicitly return Unsupported; their original exception classes/order are not claimed.",
+    "Source missing-EPG/no-source preconditions belong to Store metadata selection outside callback.",
+    "The component publisher records original dispatch calls only; it cannot authorize production Parsing responses.",
+    "Client memory credits do not prove a bound on PostgreSQL server expression working memory for arbitrarily large preexisting indexes.",
+    "Native limits and source-path support remain bounded; no full current-programme application acceptance."
+  ],
+  "owned_native_file_cleanup": "One synthetic /tmp/owned-current-lookup-* fixture root removed after all tests/physical jobs completed."
+}

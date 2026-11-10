@@ -12,6 +12,9 @@ from core.models import SystemEvent
 state={}
 def command(request):
     op=request['op']
+    if op=='redis_commandstats':
+        client=get_redis_connection('default')
+        return {'scope':'owned fixture Redis total commandstats, includes control observers','commands':{key:{'calls':value['calls'],'usec':value['usec']}for key,value in client.info('commandstats').items()}}
     if op=='lock_xc_epg_metadata':
         from django.db import connection
         assert not state.get('epg_locked')

@@ -74,6 +74,7 @@ def main():
     parser.add_argument('--rust-resolver-test', action='store_true', help='Run the actual-schema Rust resolver test against this disposable database')
     parser.add_argument('--rust-ingest-test', action='store_true', help='Compare the native M3U batch sink to original Django writes in this disposable database')
     args = parser.parse_args()
+    output_peer=None
     if args.vod_rapid_reclose_ws:
         args.vod_playback_ws = True
     if args.vod_rapid_reclose_rust:
@@ -345,9 +346,12 @@ def main():
             spec=importlib.util.spec_from_file_location('frozen_m3u_probe',tool_root/'scripts/rust-output-contracts/m3u_probe.py')
             m3u=importlib.util.module_from_spec(spec)
             spec.loader.exec_module(m3u)
+            peer_spec=importlib.util.spec_from_file_location('frozen_output_peer',tool_root/'scripts/rust-realtime-contracts/interop.py')
+            peer_module=importlib.util.module_from_spec(peer_spec)
+            peer_spec.loader.exec_module(peer_module)
+            output_peer=peer_module.Peer(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/control.py','--persistent'],environment,output/'output-control-peer.log')
             def output_control(action,label):
-                result=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/control.py',action,label],timeout=30)
-                return json.loads(result.splitlines()[-1])
+                return output_peer.call({'action':action,'label':label})
             report['m3u_source']=(m3u.capture_large if args.m3u_large_output else m3u.capture)(base,output_control,'source',error_path=output/'source-csrf-failure.html')
             (output/'m3u-source.json').write_text(json.dumps(report['m3u_source'],indent=2)+'\n')
             report['m3u_third_party_license']=output_control('license','source')
@@ -783,6 +787,7 @@ def main():
         report['failure'] = type(error).__name__
         raise
     finally:
+        if output_peer:output_peer.close()
         try:
             command(compose+['logs','--no-color'],timeout=30)
             command(compose+['down','-v','--remove-orphans','--timeout','15'],timeout=60)

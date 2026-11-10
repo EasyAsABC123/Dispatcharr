@@ -1,0 +1,31 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Source-only actual CurrentPrograms request ordering, query plans and controlled statement schedules. Narrow SQL is diagnostic only; no native adapter/application/performance acceptance.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit.",
+  "evidence": "artifacts/rust/m6-current-order-source-97",
+  "artifacts_sha256": {
+    "result.json": "0a6d82a2aa7d7322092f58fb58ffa0f362f5d39b87e898e371b0ec4a2004a625",
+    "current-order-source.json": "82e32e7d1a1863a1deea35341c1e7c723a1cf2594931085aae6f8396673f18d6"
+  },
+  "tool_source_snapshot": "artifacts/rust/m6-current-order-source-97/tool-source",
+  "ordering_cases": 9,
+  "valid_body_full_projection_matches": 8,
+  "owned_sources": 64,
+  "owned_epg_entries": 64,
+  "narrow_shape_diagnostic_comparisons": 32,
+  "narrow_shape_differences_observed": 0,
+  "ordering_normalization": null,
+  "programmes_before_metadata_observed": true,
+  "controlled_mutation_schedules": 13,
+  "schedule_scope": "Completed autocommit writes interposed between actual original SELECT statements; unchanged original view/helper bodies. No independent-process overlap timing claim.",
+  "cleanup": "project removed",
+  "native_verified": false,
+  "application_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Matched diagnostic projections on this fixture do not establish equivalence under other datasets/statistics/plans.",
+    "Accepted stable current-programme gates do not establish concurrent-mutation statement schedules.",
+    "Native ordered snapshot/callback and durable index dispatch remain unimplemented."
+  ]
+}

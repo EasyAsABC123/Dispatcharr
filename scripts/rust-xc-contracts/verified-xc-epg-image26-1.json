@@ -1,0 +1,42 @@
+{
+  "scope": "xc-epg scoped packaged original/native regression",
+  "passed": true,
+  "candidate_image_id": "sha256:86f15c3ace8a29b3e86236fff232ddedf469be2f3f21e61ec5da70dfefe56886",
+  "candidate_source_tree_sha256": "f3fb8871d762756b5b9801f00e65094b9047376ab2d9a272b02c9867f0c46598",
+  "candidate_build_manifest": "artifacts/rust/candidate-build-cold-batch-image26-1/build.json",
+  "evidence": "artifacts/rust/m7-xc-epg-image26-1/xc-epg-image.json",
+  "evidence_sha256": "4bd07a2daa8dfea0b0a0fa55822ab3f690c7374d78b959636a48c540efe054a5",
+  "tool_source": "artifacts/rust/m7-xc-epg-image26-1/tools",
+  "cases": 88,
+  "cleanup": "owned Compose project removed",
+  "application_performance_verified": false,
+  "full_milestone_complete": false,
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "helper_cases": 750,
+  "http_differences": [],
+  "protected_admission": {
+    "status": 503,
+    "configured_requests": 2,
+    "physical_waiters_after_cancel": 2
+  },
+  "response_cap": {
+    "configured_bytes": 64,
+    "status": 503
+  },
+  "nonzero_hash_guard": {
+    "configured_seed": "1",
+    "status": 501
+  },
+  "shutdown": [
+    {
+      "service": "candidate",
+      "ExitCode": 0,
+      "OOMKilled": false
+    },
+    {
+      "service": "candidate-small",
+      "ExitCode": 0,
+      "OOMKilled": false
+    }
+  ]
+}

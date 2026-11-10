@@ -1,0 +1,54 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Post-image26 Store current-programme snapshot/deferred-serialization component correction. Source/native ordering and physical ownership gates only; no application hook or durable index dispatch.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit.",
+  "evidence": "artifacts/rust/m6-current-order-source-native-106",
+  "artifacts_sha256": {
+    "result.json": "bf2055f2d30c7493b384fb4052d58c8db380142abaecc5900f0e9dde3eff8e75",
+    "current-order-source.json": "c2d820f02e95859e23c0e00bfc9e02202b90278bcf21b791bb0ec04d36e2bc6c",
+    "native-file-job.log": "6193de5fc5ddf8a9e5c0322d360ef019c7120dd9e5cd50b09f4987e253b5b37d",
+    "frozen-tests.log": "cc1d742e59e5ba31d163593f484b27f09a292902dc1f80a0e0051e156007db57",
+    "frozen-clippy.log": "0f6543283d98a79e159cfcbfa00c225082d22ae93ce1502ce66768a6d0e6acda"
+  },
+  "runtime_archive_sha256": "c78c3a6f8a6efd2d3444f352aa44393511f848c77791d544ea46babe8fc1d103",
+  "tool_source_snapshot": "artifacts/rust/m6-current-order-source-native-106/tool-source",
+  "source_order_cases": 9,
+  "source_controlled_statement_schedules": 15,
+  "source_no_hook_metadata_lock_witness": true,
+  "source_final_body_replays": 9,
+  "source_serialization_effect_witness": "Actual full-metadata ordering yields lookup dispatch before later AttributeError; deleted EPG skips malformed stored serializer.",
+  "native_order_cases": 9,
+  "native_ignored_tests_executed": 6,
+  "native_physical_cases": [
+    "Metadata relation lock and stored-programme deletion preserve cached Stored result.",
+    "One-connection pool callback reuses released connection; explicit allocation cap.",
+    "Canceled waiter retains caller until actual SQL reply and rollback.",
+    "Deleted EPG under metadata relation lock omits cached malformed Stored row instead of serializing it."
+  ],
+  "native_deferred_serialization_cases": 2,
+  "native_default_store_tests": 97,
+  "native_default_store_ignored": 4,
+  "strict_all_target_clippy": true,
+  "snapshot_correction": "Utility SET LOCAL does not take an MVCC snapshot. Explicit phase relation ACCESS SHARE locks precede the first MVCC guard, then guard/full projection share one snapshot; stored PgRows serialize only in final metadata order.",
+  "preserved_failure": {
+    "path": "artifacts/rust/m6-current-order-source-native-105",
+    "classification": "Real component concurrency mismatch",
+    "cause": "SELECT set_config pinned repeatable-read metadata snapshot before its source relation-lock wait; deleted EPG remained visible and malformed stored serializer returned500 instead of Source[]."
+  },
+  "earlier_setup_failures": [
+    "101 statistics observer cached its actor-transaction snapshot",
+    "103 fixture assumed insert order instead of assigning roles to actual full-metadata order"
+  ],
+  "cleanup": "project removed",
+  "application_wired": false,
+  "durable_dispatch_verified": false,
+  "image26_contains_this_correction": false,
+  "performance_verified": false,
+  "limits": [
+    "Factory/SQL component outcomes do not accept original outer Django500 HTML or complete application behavior.",
+    "Fifteen Source hook schedules are preserved; the six native tests do not prove every concurrent schedule.",
+    "Future callback implementation still needs accepted durable task publication before production Parsing responses.",
+    "Fresh image performance remains separate; no resource gain follows from this gate."
+  ]
+}

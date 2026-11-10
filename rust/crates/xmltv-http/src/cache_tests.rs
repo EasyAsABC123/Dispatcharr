@@ -792,3 +792,117 @@ async fn cancelled_multi_put_holds_bytes_and_owner_until_physical_reply() {
     raw(&cache,"if redis.call('LLEN',KEYS[1]..':chunks')~=0 then return redis.error_reply('abandoned batch retained')end;return 1",std::slice::from_ref(&base),&[]).await;
     remove(&cache, &[base]).await;
 }
+
+#[tokio::test]
+#[ignore = "requires isolated actual Redis; same-data alternating Lua reply-copy diagnostic"]
+async fn bulk_parts_and_joined_lua_same_data_diagnostic() {
+    use sha2::{Digest, Sha256};
+    let cache = fixture(CacheConfig::default()).await;
+    let entry = cache
+        .open(&prefix("reply-copy"), "reply-copy-owner-aaaa", guard())
+        .await
+        .unwrap();
+    let member = "<programme channel=\"東京\">café</programme>\n".repeat(1200);
+    assert!(member.len() < cache.chunk_bytes());
+    let mut expected = Sha256::new();
+    for _ in 0..26 {
+        let parts = [&member[..]; 8];
+        assert_eq!(entry.put_batch(&parts, guard()).await.unwrap().accepted, 8);
+        for part in parts {
+            expected.update(part);
+        }
+    }
+    entry.finish(guard()).await.unwrap();
+    let expected = format!("{:x}", expected.finalize());
+    let joined = READ.replace("return{1,parts,index,offset}", "return{1,table.concat(parts),index,offset}")
+        .replace("if offset==0 and last==#data then parts[#parts+1]=data else parts[#parts+1]=string.sub(data,offset+1,last)end", "parts[#parts+1]=string.sub(data,offset+1,last)")
+        .replace("{},index,offset", "'',index,offset");
+    let stats = || async {
+        let (text, _): (String, _) = cache
+            .inner
+            .transport
+            .command("return redis.call('INFO','commandstats')", &[], &[], ())
+            .await
+            .unwrap();
+        let line = text
+            .lines()
+            .find(|line| line.starts_with("cmdstat_evalsha:"))
+            .unwrap();
+        line.split(',')
+            .find_map(|part| part.strip_prefix("usec="))
+            .unwrap()
+            .parse::<u64>()
+            .unwrap()
+    };
+    let mut observations = Vec::new();
+    // Alternating order controls warm-up/order effects. There is no speed pass
+    // threshold: this is a bounded Redis copy-path diagnostic, not acceptance.
+    for bulk in [false, true, true, false, false, true] {
+        let script = format!("{PRELUDE}\n{}", if bulk { READ } else { &joined });
+        let before = stats().await;
+        let mut calls = 0;
+        for _ in 0..10 {
+            let mut index = 0usize;
+            let mut offset = 0usize;
+            let mut hash = Sha256::new();
+            loop {
+                calls += 1;
+                let budget = cache
+                    .inner
+                    .io
+                    .clone()
+                    .acquire_many_owned((2 * cache.read_batch_bytes()) as u32)
+                    .await
+                    .unwrap();
+                let mut args = cache.args(&entry.base, "");
+                args.extend([
+                    index.to_string().into_bytes(),
+                    offset.to_string().into_bytes(),
+                    b"0".to_vec(),
+                    cache.read_batch_bytes().to_string().into_bytes(),
+                ]);
+                let values: Vec<_> = args.iter().map(Vec::as_slice).collect();
+                let ((status, parts, next, next_offset), _lease) = if bulk {
+                    let (reply, lease): ((i64, Vec<Vec<u8>>, usize, usize), _) = cache
+                        .inner
+                        .transport
+                        .command(&script, &[], &values, budget)
+                        .await
+                        .unwrap();
+                    (reply, lease)
+                } else {
+                    let ((status, part, next, offset), lease): ((i64, Vec<u8>, usize, usize), _) =
+                        cache
+                            .inner
+                            .transport
+                            .command(&script, &[], &values, budget)
+                            .await
+                            .unwrap();
+                    ((status, vec![part], next, offset), lease)
+                };
+                if status == 2 {
+                    break;
+                }
+                assert_eq!(status, 1);
+                assert!(parts.len() <= 32);
+                assert!(parts.iter().map(Vec::len).sum::<usize>() <= cache.read_batch_bytes());
+                for part in parts {
+                    hash.update(part);
+                }
+                index = next;
+                offset = next_offset;
+            }
+            assert_eq!(format!("{:x}", hash.finalize()), expected);
+        }
+        observations.push(serde_json::json!({"bulk_parts":bulk,"consumers":10,"read_calls":calls,"redis_evalsha_usec_including_observer":stats().await-before}));
+    }
+    assert_eq!(
+        cache.available_io_bytes(),
+        CacheConfig::default().max_read_bytes
+    );
+    remove(&cache, std::slice::from_ref(&entry.base)).await;
+    println!(
+        "XMLTV_REPLY_COPY_DIAGNOSTIC={}",
+        serde_json::json!({"same_body_sha256":expected,"same_members":208,"same_sweep_status_ttl_checks":true,"observations":observations,"scope":"Same-data component diagnostic only; not HTTP or performance acceptance"})
+    );
+}

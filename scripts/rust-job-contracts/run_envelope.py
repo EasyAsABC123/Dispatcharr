@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DRAFT UNEXECUTED: complete original protocol2 producer-envelope extension.
+"""Original-only complete protocol2 producer-envelope extension.
 Original Dispatcharr authors retain full application credit and AGPL licensing.
 """
 import argparse,hashlib,json,os,subprocess,sys,time,urllib.request,uuid

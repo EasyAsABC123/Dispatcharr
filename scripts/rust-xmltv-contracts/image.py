@@ -6,6 +6,7 @@ App images are built by the parent milestone runner, never by this probe.
 import argparse,hashlib,http.client,json,os,re,shutil,subprocess,sys,tarfile,time,uuid
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
+TARGET_DIR=Path(os.environ.get('XMLTV_CARGO_TARGET_DIR',str(ROOT/'rust/target')))
 sys.path[:0]=[str(Path(__file__).resolve().parent),str(ROOT/'scripts/rust-integration'),str(ROOT/'scripts/rust-realtime-contracts')]
 from shared_ts import BASELINE,IMAGE,fixture_source,http as ready_http,wait
 from fixture_ports import write_port_overlay
@@ -68,7 +69,7 @@ def main():
                 env_test=dict(env,REDIS_TEST_URL='redis://:playback-fixture-only@'+command(compose+['port','baseline','6379']).strip()+'/0',
                     DATABASE_TEST_URL='postgres://dispatch:playback-fixture-only@'+command(compose+['port','baseline','5432']).strip()+'/dispatcharr',
                     XMLTV_CONTENT_SOURCE=str(out/'content-source.json'))
-                cargo=['cargo','--manifest-path',str(frozen/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xmltv-http']
+                cargo=['cargo','--manifest-path',str(frozen/'rust/Cargo.toml'),'--target-dir',str(TARGET_DIR),'--locked','--offline','-p','dispatcharr-xmltv-http']
                 with (out/'image-source-physical-tests.log').open('w')as log:
                     tested=subprocess.run([cargo[0],'test',*cargo[1:],'--lib','--','--ignored','--nocapture','--test-threads=1'],env=env_test,stdout=log,stderr=subprocess.STDOUT,text=True,timeout=300)
                 tested.check_returncode();report['exact_image_source_physical_tests_passed']=True
@@ -104,7 +105,7 @@ def main():
                 def probe_cache(label):
                     before=guide_helper('cache_state')
                     cache_base='epg_content:all:anonymous:d=1:p=0:logos=True:tvgid=channel_number:origin=http://guide-perf.invalid:8088:g='+before['generation']
-                    result=subprocess.run([str(ROOT/'rust/target/debug/examples/cache_probe')],env=dict(env_test,XMLTV_CACHE_DISPOSABLE_FIXTURE='playback-fixture-only'),text=True,input=json.dumps({'base':cache_base}),capture_output=True,timeout=60)
+                    result=subprocess.run([str(TARGET_DIR/'debug/examples/cache_probe')],env=dict(env_test,XMLTV_CACHE_DISPOSABLE_FIXTURE='playback-fixture-only'),text=True,input=json.dumps({'base':cache_base}),capture_output=True,timeout=60)
                     (out/(label+'-cache-probe.log')).write_text(result.stdout+'\n'+result.stderr);result.check_returncode();data=json.loads(result.stdout.splitlines()[-1]);after=guide_helper('cache_state')
                     assert all(before[key]==after[key]for key in ['generation','chunks','bytes','ready','status','locked'])
                     assert all(row['bytes']==reference['bytes']and row['sha256']==reference['sha256']for row in data['policies'])

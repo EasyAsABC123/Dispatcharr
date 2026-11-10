@@ -366,7 +366,7 @@ impl Cache {
         self.inner.metrics.reads.fetch_add(1, Ordering::Relaxed);
         let values: Vec<_> = args.iter().map(Vec::as_slice).collect();
         let ((status, data, next, offset), (budget, frame, guard, _active)): (
-            (i64, Vec<u8>, usize, usize),
+            (i64, Vec<Vec<u8>>, usize, usize),
             _,
         ) = self
             .inner
@@ -382,6 +382,21 @@ impl Cache {
         match status {
             1 => {
                 self.inner.metrics.data.fetch_add(1, Ordering::Relaxed);
+                // Redis returns bounded bulk parts directly. Avoid copying every
+                // member through Lua substring + concatenation before RESP encoding.
+                // Keep both the decoded parts and final exact-sized allocation
+                // under the existing twice-reply-byte permit until parts drop.
+                let size = data.iter().try_fold(0usize, |size, part| {
+                    size.checked_add(part.len()).ok_or(CacheError::Capacity)
+                })?;
+                if data.len() > 32 || size > read_bytes {
+                    return Err(CacheError::Capacity);
+                }
+                let mut joined = Vec::with_capacity(size);
+                for part in data {
+                    joined.extend_from_slice(&part);
+                }
+                let data = joined;
                 let delivered = cursor
                     .delivered
                     .checked_add(data.len())
@@ -727,25 +742,25 @@ for index=1,#rows,2 do base=rows[index];local value=row(rows[index+1]);if value.
 end end;redis.call('SET',byteskey,total);return 1
 "#;
 const READ: &str = r#"
-sweep();check(base);local index=tonumber(ARGV[12]);local offset=tonumber(ARGV[13]);if index>maxchunks then return{-1,'',index,offset}end
+sweep();check(base);local index=tonumber(ARGV[12]);local offset=tonumber(ARGV[13]);if index>maxchunks then return{-1,{},index,offset}end
 local status=redis.call('GET',base..':status')or'';if #status>64 then error('CORRUPT XMLTV status')end
 if ARGV[14]=='1'then for _,tail in ipairs({':chunks',':status',':ready'})do redis.call('EXPIRE',base..tail,readyttl)end;local raw=redis.call('HGET',catalog,base);if raw and status=='ready'then local value=row(raw);if redis.call('GET',base..':rust_fence')==value.owner then redis.call('EXPIRE',base..':rust_fence',readyttl);save(base,value,readyttl)end end end
-local batchbytes=tonumber(ARGV[15]);if not batchbytes or batchbytes<1 or batchbytes>1048576 then return{-1,'',index,offset}end
+local batchbytes=tonumber(ARGV[15]);if not batchbytes or batchbytes<1 or batchbytes>1048576 then return{-1,{},index,offset}end
 local parts={};local size=0;local advanced=false
 -- Bounded by bytes AND visited members; legacy large members retain their
 -- offset instead of becoming oversized replies. Stored members are unchanged.
 for step=1,32 do
  local data=redis.call('LINDEX',base..':chunks',index);if not data then break end
  if index>=maxchunks or #data>legacybytes or offset>#data then
-  if advanced then break else return{-1,'',index,offset}end
+  if advanced then break else return{-1,{},index,offset}end
  end
  local last=math.min(#data,offset+batchbytes-size)
- parts[#parts+1]=string.sub(data,offset+1,last);size=size+last-offset;advanced=true
+ if offset==0 and last==#data then parts[#parts+1]=data else parts[#parts+1]=string.sub(data,offset+1,last)end;size=size+last-offset;advanced=true
  if last==#data then index=index+1;offset=0 else offset=last end
  if size>=batchbytes then break end
 end
-if advanced then return{1,table.concat(parts),index,offset}end
-if status=='ready'or(redis.call('GET',base..':ready')or'')~=''then return{2,'',index,offset}elseif status=='error'then return{3,'',index,offset}else return{0,'',index,offset}end
+if advanced then return{1,parts,index,offset}end
+if status=='ready'or(redis.call('GET',base..':ready')or'')~=''then return{2,{},index,offset}elseif status=='error'then return{3,{},index,offset}else return{0,{},index,offset}end
 "#;
 #[cfg(test)]
 #[path = "cache_tests.rs"]

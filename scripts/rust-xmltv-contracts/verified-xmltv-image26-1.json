@@ -1,0 +1,91 @@
+{
+  "scope": "xmltv scoped packaged original/native regression",
+  "passed": true,
+  "candidate_image_id": "sha256:86f15c3ace8a29b3e86236fff232ddedf469be2f3f21e61ec5da70dfefe56886",
+  "candidate_source_tree_sha256": "f3fb8871d762756b5b9801f00e65094b9047376ab2d9a272b02c9867f0c46598",
+  "candidate_build_manifest": "artifacts/rust/candidate-build-cold-batch-image26-1/build.json",
+  "evidence": "artifacts/rust/m7-xmltv-image26-1/xmltv-image.json",
+  "evidence_sha256": "4ce51128796b80d44667ecf4988aabdb5553bc88fc5b5d00754e9aa1f74bf9a1",
+  "tool_source": "artifacts/rust/m7-xmltv-image26-1/tools",
+  "cases": 47,
+  "cleanup": "owned Compose project removed",
+  "application_performance_verified": false,
+  "full_milestone_complete": false,
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "differences": [],
+  "python_cache_interop": {
+    "source_status": 200,
+    "native_status": 200,
+    "source_sha256": "e64342ff25f6e528fbb85a114a9adcd4eb5f9e854fcbdf27f42f93e4577b82d3",
+    "native_sha256": "e64342ff25f6e528fbb85a114a9adcd4eb5f9e854fcbdf27f42f93e4577b82d3",
+    "events_unchanged": true
+  },
+  "audit_checkpoints": 9,
+  "exact_image_source_physical_tests_passed": true,
+  "physical_tests": 18,
+  "shared_guide_fixture": {
+    "channels": 500,
+    "guides": 50,
+    "stored_programmes": 2250
+  },
+  "shared_guide_complete_xml": {
+    "bytes": 13015458,
+    "sha256": "225332db184e6a32deb6042ed49798f4f113ed495c61e38f278c6e8500871259"
+  },
+  "source_ready_cache": {
+    "scope": "Ready-cache functional diagnostic, not performance; same stored members under two read policies",
+    "passed": true,
+    "stored_members": 29,
+    "stored_bytes": 13015458,
+    "smallest_member_bytes": 6,
+    "largest_member_bytes": 574800,
+    "member_shape_unchanged": true,
+    "policies": [
+      {
+        "batch_bytes": 65536,
+        "read_script_invocations_including_eof": 200,
+        "bytes": 13015458,
+        "sha256": "225332db184e6a32deb6042ed49798f4f113ed495c61e38f278c6e8500871259",
+        "largest_reply_bytes": 65536
+      },
+      {
+        "batch_bytes": 524288,
+        "read_script_invocations_including_eof": 26,
+        "bytes": 13015458,
+        "sha256": "225332db184e6a32deb6042ed49798f4f113ed495c61e38f278c6e8500871259",
+        "largest_reply_bytes": 524288
+      }
+    ]
+  },
+  "native_ready_cache": {
+    "scope": "Ready-cache functional diagnostic, not performance; same stored members under two read policies",
+    "passed": true,
+    "stored_members": 203,
+    "stored_bytes": 13015458,
+    "smallest_member_bytes": 6,
+    "largest_member_bytes": 65536,
+    "member_shape_unchanged": true,
+    "policies": [
+      {
+        "batch_bytes": 65536,
+        "read_script_invocations_including_eof": 200,
+        "bytes": 13015458,
+        "sha256": "225332db184e6a32deb6042ed49798f4f113ed495c61e38f278c6e8500871259",
+        "largest_reply_bytes": 65536
+      },
+      {
+        "batch_bytes": 524288,
+        "read_script_invocations_including_eof": 26,
+        "bytes": 13015458,
+        "sha256": "225332db184e6a32deb6042ed49798f4f113ed495c61e38f278c6e8500871259",
+        "largest_reply_bytes": 524288
+      }
+    ]
+  },
+  "shutdown": {
+    "ExitCode": 0,
+    "OOMKilled": false
+  },
+  "cold_native_proof": "scripts/rust-xmltv-contracts/verified-xmltv-cold-native-1.json",
+  "performance_claim": null
+}

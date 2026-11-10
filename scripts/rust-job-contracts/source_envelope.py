@@ -1,4 +1,4 @@
-"""DRAFT, UNEXECUTED: original-only complete protocol2 envelope extension.
+"""Original-only bounded protocol2 envelope capture extension.
 Does not import/run the accepted Source55 controller. No worker/native publisher.
 Original Dispatcharr authors retain full application credit and AGPL licensing.
 """

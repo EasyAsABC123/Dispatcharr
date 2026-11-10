@@ -14,8 +14,7 @@ from apps.m3u.models import M3UAccount
 from core.models import CoreSettings,SystemEvent
 
 
-def main():
-    action,label=sys.argv[1:3]
+def execute(action,label):
     if action not in ('begin','deny-m3u','deny-xc','allow','catchup-off','catchup-on','admin-allow-none','admin-unrestricted','mutate-name','restore-name','events','cache-roundtrip','large-catalog','large-cache-read','license','restore') or label not in ('source','candidate'):raise ValueError('invalid export fixture control')
     path=Path('/evidence')/('export-control-'+label+'.json')
     profile_name='rust-export-profile'
@@ -100,7 +99,25 @@ def main():
         content=package.locate_file(candidates[0]).read_text()
         result.update(django_version=package.version,django_license=content,django_license_sha256=hashlib.sha256(content.encode()).hexdigest())
     if action=='events':result['counts']={kind:SystemEvent.objects.filter(event_type=kind).count()-saved['event_baseline'][kind] for kind in ['m3u_download','m3u_blocked']}
-    print(json.dumps(result))
+    return result
 
+
+def main():
+    if sys.argv[1:]==['--persistent']:
+        # Import Django once before any2s cache window; commands still execute
+        # the actual original ORM/cache APIs and preserve existing effects.
+        from django.db import close_old_connections
+        print(json.dumps({'ready':True}),flush=True)
+        for line in sys.stdin:
+            if len(line)>16384:raise RuntimeError('bounded output control message')
+            request=json.loads(line)
+            if request.get('op')=='close':
+                close_old_connections();print(json.dumps({'closed':True}),flush=True);break
+            try:
+                value=execute(request['action'],request['label'])
+            finally:close_old_connections()
+            print(json.dumps(value),flush=True)
+    else:
+        print(json.dumps(execute(*sys.argv[1:3])))
 
 if __name__=='__main__':main()

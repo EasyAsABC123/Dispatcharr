@@ -1,0 +1,137 @@
+{
+  "scope": "xmltv scoped packaged original/native regression",
+  "passed": true,
+  "candidate_image_id": "sha256:0d0a95bc32fa9bbfabf81ad9062a3f7e456de39229e1dfe1cc12b92a9a10b996",
+  "candidate_source_tree_sha256": "2ccd7e3ccb790fc34feef53fb359c631bf817974520c2730e5c38da4ba5ff979",
+  "candidate_build_manifest": "artifacts/rust/candidate-build-bulk-reply-image28-1/build.json",
+  "evidence": "artifacts/rust/m7-xmltv-image28-1/xmltv-image.json",
+  "evidence_sha256": "7628f3cfadf16b67421805e668ffd93849d0f8e933dbf5b2c3f7bf63941116d4",
+  "tool_source": "artifacts/rust/m7-xmltv-image28-1/tools",
+  "cases": 47,
+  "cleanup": "owned Compose project removed",
+  "application_performance_verified": false,
+  "full_milestone_complete": false,
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "differences": [],
+  "python_cache_interop": {
+    "source_status": 200,
+    "native_status": 200,
+    "source_sha256": "2214ce3165bb83f49cd103d895ce1366b210831979fce395db98dada324c97d3",
+    "native_sha256": "2214ce3165bb83f49cd103d895ce1366b210831979fce395db98dada324c97d3",
+    "events_unchanged": true
+  },
+  "audit_checkpoints": 9,
+  "exact_image_source_physical_tests_passed": true,
+  "physical_tests": 19,
+  "shared_guide_fixture": {
+    "channels": 500,
+    "guides": 50,
+    "stored_programmes": 2250
+  },
+  "shared_guide_complete_xml": {
+    "bytes": 13015458,
+    "sha256": "3bdf924095a3f43481ee0b56639c41dc9bcc967274c128d349edfc77dcd8804a"
+  },
+  "source_ready_cache": {
+    "scope": "Ready-cache functional diagnostic, not performance; same stored members under two read policies",
+    "passed": true,
+    "stored_members": 29,
+    "stored_bytes": 13015458,
+    "smallest_member_bytes": 6,
+    "largest_member_bytes": 574800,
+    "member_shape_unchanged": true,
+    "policies": [
+      {
+        "batch_bytes": 65536,
+        "read_script_invocations_including_eof": 200,
+        "bytes": 13015458,
+        "sha256": "3bdf924095a3f43481ee0b56639c41dc9bcc967274c128d349edfc77dcd8804a",
+        "largest_reply_bytes": 65536
+      },
+      {
+        "batch_bytes": 524288,
+        "read_script_invocations_including_eof": 26,
+        "bytes": 13015458,
+        "sha256": "3bdf924095a3f43481ee0b56639c41dc9bcc967274c128d349edfc77dcd8804a",
+        "largest_reply_bytes": 524288
+      }
+    ]
+  },
+  "native_ready_cache": {
+    "scope": "Ready-cache functional diagnostic, not performance; same stored members under two read policies",
+    "passed": true,
+    "stored_members": 203,
+    "stored_bytes": 13015458,
+    "smallest_member_bytes": 6,
+    "largest_member_bytes": 65536,
+    "member_shape_unchanged": true,
+    "policies": [
+      {
+        "batch_bytes": 65536,
+        "read_script_invocations_including_eof": 200,
+        "bytes": 13015458,
+        "sha256": "3bdf924095a3f43481ee0b56639c41dc9bcc967274c128d349edfc77dcd8804a",
+        "largest_reply_bytes": 65536
+      },
+      {
+        "batch_bytes": 524288,
+        "read_script_invocations_including_eof": 26,
+        "bytes": 13015458,
+        "sha256": "3bdf924095a3f43481ee0b56639c41dc9bcc967274c128d349edfc77dcd8804a",
+        "largest_reply_bytes": 524288
+      }
+    ]
+  },
+  "shutdown": {
+    "ExitCode": 0,
+    "OOMKilled": false
+  },
+  "cold_native_proof": "scripts/rust-xmltv-contracts/verified-xmltv-cold-native-1.json",
+  "performance_claim": null,
+  "bulk_reply_component_proof": "scripts/rust-xmltv-contracts/verified-xmltv-bulk-reply-native-1.json",
+  "exact_archive_reply_copy_diagnostic": {
+    "same_body_sha256": "f41580dc5e123d14e1fdec20de74308a6001f281c2594adf5375754a7076f0e6",
+    "same_members": 208,
+    "same_sweep_status_ttl_checks": true,
+    "observations": [
+      {
+        "bulk_parts": false,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 394310
+      },
+      {
+        "bulk_parts": true,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 160864
+      },
+      {
+        "bulk_parts": true,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 152584
+      },
+      {
+        "bulk_parts": false,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 377788
+      },
+      {
+        "bulk_parts": false,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 394747
+      },
+      {
+        "bulk_parts": true,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 155017
+      }
+    ],
+    "scope": "Same-data component diagnostic only; not HTTP or performance acceptance"
+  },
+  "next_gate": "Isolated cold10 preflight against this exact image; no endpoint performance acceptance claimed."
+}

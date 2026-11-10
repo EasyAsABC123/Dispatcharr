@@ -1,0 +1,40 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Store ordered current-programme snapshot/callback pipeline component. Original no-hook lock witness plus native body/order/physical checks; no app hook, durable broker or performance acceptance.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit.",
+  "evidence": "artifacts/rust/m6-current-order-source-native-102",
+  "artifacts_sha256": {
+    "result.json": "05eb715ee744b171f0bd15d46507b1f50ba923422cd7f9aff07a1e1726aceec7",
+    "current-order-source.json": "d57c01e35cf254093c1ecbeae3280fcc4ae359cb22a933c3f6564af5a79c9524",
+    "native-file-job.log": "98c67237efa66e92ab39238ae46a74af0f825286249a0a0370199ac164664abb",
+    "frozen-tests.log": "803c3e4934f6512dacba3d19b10b084d12365c9138136a0c1ca6b13765cdd894",
+    "frozen-clippy.log": "4795796264a18faa97e935534d5d5c5d8868ea343c5a046eb7a14dd4399346ba"
+  },
+  "runtime_archive_sha256": "3103848e6c19a9913554f0ee2fe656d1d04ebb05e6509cf6220af4ae1a9fe106",
+  "tool_source_snapshot": "artifacts/rust/m6-current-order-source-native-102/tool-source",
+  "source_order_cases": 9,
+  "source_controlled_statement_schedules": 13,
+  "source_no_hook_metadata_lock_witness": true,
+  "source_final_body_replays": 9,
+  "native_order_cases": 9,
+  "native_ignored_tests_executed": 4,
+  "native_physical_scenarios": [
+    "Actual metadata relation lock and programme deletion preserve cached Stored result; row restored.",
+    "Pool-one callback reuses released connection; explicit metadata allocation cap.",
+    "Canceled waiter retains caller until actual SQL reply and rollback."
+  ],
+  "native_default_store_tests": 97,
+  "native_default_store_ignored": 4,
+  "strict_all_target_clippy": true,
+  "cleanup": "project removed",
+  "preserved_failed_attempt": "artifacts/rust/m6-current-order-source-native-101 (Source statistics observer cached its transaction snapshot; corrected observer clears snapshot before polling)",
+  "application_wired": false,
+  "durable_dispatch_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Thirteen hook schedules are Source evidence; the native4test gate does not claim every concurrent schedule.",
+    "Early stored-row serialization discovered after102 is a separate post102 correction, pending malformed-row/effect-order Source/native gates.",
+    "Diagnostic narrowed/full projections matched this fixture only; no general plan-order equivalence claim."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Pure current-programme offset reader plus independent forward file-open factory; no native SQL/orchestration/application/performance acceptance.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit.",
+  "evidence": "artifacts/rust/m6-current-file-source-native-98",
+  "evidence_sha256": "42f1d835f93e32c431fe201bfe426a07fe3949f79ecb69d21513c31e39080ef4",
+  "runtime_archive_sha256": "e16be9b0159bfcb1fff0faf783decef325bb55e33c11cf88399e5c038a713e3f",
+  "source_cases": 65,
+  "native_cases": 65,
+  "two_open_controlled_cases": 6,
+  "tool_source_snapshot": "artifacts/rust/m6-current-file-source-native-98/tool-source",
+  "frozen_native_tests": 22,
+  "frozen_tests_log": "artifacts/rust/m6-current-file-source-native-98/frozen-tests.log",
+  "strict_all_target_clippy": true,
+  "frozen_clippy_log": "artifacts/rust/m6-current-file-source-native-98/frozen-clippy.log",
+  "original_54_cases_preserved": true,
+  "new_cases": [
+    "independent forward reopen on atomic replacement",
+    "other-channel then replacement",
+    "first-hit opens once",
+    "replacement retains missing result",
+    "forward reopen preserves last offset",
+    "deletion before forward propagates FileNotFoundError",
+    "upstream >2MiB description offset and forward",
+    "default-namespace fields remain invisible",
+    "quoted greater-than and invalid UTF8 channel quirks"
+  ],
+  "limits": "Default8MiB retained buffer,256MiB aggregate reads,10offsets,10s forward; strict fragment4MiB/nativeheap16MiB. Configurable explicit errors beyond supported limits.",
+  "application_wired": false,
+  "performance_verified": false,
+  "remaining": [
+    "Owned async lookup/service SQL/fresh-clock/cancellation and response-memory gates",
+    "Actual durable missing-index dispatch",
+    "Store callback/application HTTP and broader concurrent-refresh schedules"
+  ]
+}

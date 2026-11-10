@@ -1,0 +1,525 @@
+{
+  "scope": "Source-bound XMLTV bounded bulk-parts reply-copy component; no packaged/performance acceptance claim",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": "artifacts/rust/m7-xmltv-bulk-reply-native-1",
+  "frozen_rust_manifest_sha256": "8deb60f3d5e74e311efcf5d898a5479f3d58f7afe59136ace99901150712b38f",
+  "source_sha256": {
+    "rust/crates/xmltv-http/src/cache.rs": "bdbf871ad524a1ed6264486aa1f3a66e5f2376a47e97bdaaa6d553a64c6117d1",
+    "rust/crates/xmltv-http/src/cache_tests.rs": "0922721c74ae48332a1eceeda148cd93f879ab9a901e73b746d9a4488f0fa1c1",
+    "rust/crates/xmltv-http/src/delivery.rs": "933bab115550c3e0d936f66ef9060e830faad6ea774b75b6277f43b7f1fe6d5f",
+    "rust/crates/xmltv-http/src/content.rs": "54046c264ab1c76b67dcdd2e9ba3e33a1668904c6f73c90e69d701db07257ddd",
+    "scripts/rust-xmltv-contracts/source.py": "18effe21a8e1bd31009a260148434677744d549828fb4cefe1c5a0b5be252a31"
+  },
+  "checks": {
+    "original_http_cases": 47,
+    "native_http_cases": 47,
+    "differences": [],
+    "audit_checkpoints": 9,
+    "python_cache_interop": {
+      "status": 200,
+      "body_sha256": "862622f28ccec6e241a538d8102c3bb8ca11886aa6855965f9f69806f7b9e89e",
+      "expected_sha256": "862622f28ccec6e241a538d8102c3bb8ca11886aa6855965f9f69806f7b9e89e",
+      "actual_python_endpoint_primed_current_generation": true,
+      "events_unchanged": true
+    },
+    "actual_redis_sql_http_tests": 19,
+    "native_unit_tests": 5,
+    "strict_all_target_clippy": true,
+    "shared_guide_counts": {
+      "channels": 500,
+      "guides": 50,
+      "stored_programmes": 2250
+    },
+    "shared_guide_body": {
+      "bytes": 13015458,
+      "sha256": "1d57b802f8694b5a561fedb714b97f023ba51ae867152b20e69a81d99b4428a0"
+    },
+    "physical_admission_cancellation_final_clone_legacy_prefix_quota_and_fences": true
+  },
+  "same_data_diagnostic": {
+    "same_body_sha256": "f41580dc5e123d14e1fdec20de74308a6001f281c2594adf5375754a7076f0e6",
+    "same_members": 208,
+    "same_sweep_status_ttl_checks": true,
+    "observations": [
+      {
+        "bulk_parts": false,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 398922
+      },
+      {
+        "bulk_parts": true,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 167692
+      },
+      {
+        "bulk_parts": true,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 157141
+      },
+      {
+        "bulk_parts": false,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 388237
+      },
+      {
+        "bulk_parts": false,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 401865
+      },
+      {
+        "bulk_parts": true,
+        "consumers": 10,
+        "read_calls": 230,
+        "redis_evalsha_usec_including_observer": 169810
+      }
+    ],
+    "scope": "Same-data component diagnostic only; not HTTP or performance acceptance"
+  },
+  "same_data_medians": {
+    "joined_lua_evalsha_usec": 398922,
+    "bulk_parts_evalsha_usec": 167692,
+    "ratio": 0.4203628779560917,
+    "observer_scope": "Includes commandstats observer. Same-data component only; not endpoint latency/CPU performance acceptance."
+  },
+  "cold10": {
+    "source": {
+      "consumers": 10,
+      "body": {
+        "bytes": 13015458,
+        "sha256": "1d57b802f8694b5a561fedb714b97f023ba51ae867152b20e69a81d99b4428a0"
+      },
+      "cache_after": {
+        "generation": "5",
+        "chunks": 29,
+        "bytes": 13015458,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 299
+      },
+      "redis_command_deltas": {
+        "cmdstat_info": {
+          "calls": 1,
+          "usec": 68
+        },
+        "cmdstat_zrange": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_ttl": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_zrangebyscore": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_expire": {
+          "calls": 33,
+          "usec": 38
+        },
+        "cmdstat_hgetall": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_pttl": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_client|setinfo": {
+          "calls": 18,
+          "usec": 4
+        },
+        "cmdstat_exec": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_unsubscribe": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_strlen": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_incr": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_setex": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_ping": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_rpush": {
+          "calls": 29,
+          "usec": 840
+        },
+        "cmdstat_script|load": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_sadd": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_evalsha": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_eval": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_zadd": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_subscribe": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_type": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_hget": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_lpush": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_multi": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_zcard": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_auth": {
+          "calls": 9,
+          "usec": 18
+        },
+        "cmdstat_hdel": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_del": {
+          "calls": 3,
+          "usec": 5
+        },
+        "cmdstat_llen": {
+          "calls": 1,
+          "usec": 1
+        },
+        "cmdstat_hlen": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_lindex": {
+          "calls": 280,
+          "usec": 5975
+        },
+        "cmdstat_zrem": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_psubscribe": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_scan": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_incrby": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_keys": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_get": {
+          "calls": 72,
+          "usec": 35
+        },
+        "cmdstat_set": {
+          "calls": 14,
+          "usec": 31
+        },
+        "cmdstat_config|set": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_lrange": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_exists": {
+          "calls": 10,
+          "usec": 5
+        },
+        "cmdstat_time": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_hset": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_zremrangebyscore": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_client|pause": {
+          "calls": 0,
+          "usec": 0
+        }
+      }
+    },
+    "native": {
+      "consumers": 10,
+      "body": {
+        "bytes": 13015458,
+        "sha256": "1d57b802f8694b5a561fedb714b97f023ba51ae867152b20e69a81d99b4428a0"
+      },
+      "cache_after": {
+        "generation": "5",
+        "chunks": 203,
+        "bytes": 13015458,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 299
+      },
+      "redis_command_deltas": {
+        "cmdstat_info": {
+          "calls": 1,
+          "usec": 72
+        },
+        "cmdstat_zrange": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_ttl": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_zrangebyscore": {
+          "calls": 459,
+          "usec": 317
+        },
+        "cmdstat_expire": {
+          "calls": 179,
+          "usec": 89
+        },
+        "cmdstat_hgetall": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_pttl": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_client|setinfo": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_exec": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_unsubscribe": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_strlen": {
+          "calls": 32,
+          "usec": 8
+        },
+        "cmdstat_incr": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_setex": {
+          "calls": 1,
+          "usec": 3
+        },
+        "cmdstat_ping": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_rpush": {
+          "calls": 30,
+          "usec": 796
+        },
+        "cmdstat_script|load": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_sadd": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_evalsha": {
+          "calls": 461,
+          "usec": 189408
+        },
+        "cmdstat_eval": {
+          "calls": 21,
+          "usec": 278
+        },
+        "cmdstat_zadd": {
+          "calls": 32,
+          "usec": 69
+        },
+        "cmdstat_subscribe": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_type": {
+          "calls": 3682,
+          "usec": 625
+        },
+        "cmdstat_hget": {
+          "calls": 60,
+          "usec": 46
+        },
+        "cmdstat_lpush": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_multi": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_zcard": {
+          "calls": 459,
+          "usec": 80
+        },
+        "cmdstat_auth": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_hdel": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_del": {
+          "calls": 2,
+          "usec": 3
+        },
+        "cmdstat_llen": {
+          "calls": 30,
+          "usec": 6
+        },
+        "cmdstat_hlen": {
+          "calls": 918,
+          "usec": 126
+        },
+        "cmdstat_lindex": {
+          "calls": 2448,
+          "usec": 5033
+        },
+        "cmdstat_zrem": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_psubscribe": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_scan": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_incrby": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_keys": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_get": {
+          "calls": 1117,
+          "usec": 185
+        },
+        "cmdstat_set": {
+          "calls": 505,
+          "usec": 355
+        },
+        "cmdstat_config|set": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_lrange": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_exists": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_time": {
+          "calls": 459,
+          "usec": 94
+        },
+        "cmdstat_hset": {
+          "calls": 32,
+          "usec": 47
+        },
+        "cmdstat_zremrangebyscore": {
+          "calls": 0,
+          "usec": 0
+        },
+        "cmdstat_client|pause": {
+          "calls": 0,
+          "usec": 0
+        }
+      },
+      "local_counter_deltas": {
+        "leader_opens": 1,
+        "follower_opens": 9,
+        "ready_opens": 0,
+        "read_command_attempts": 418,
+        "data_replies": 272,
+        "wait_replies": 136,
+        "end_replies": 10,
+        "put_command_attempts": 30,
+        "put_members": 203,
+        "put_payload_bytes": 13015458
+      }
+    }
+  },
+  "changes": [
+    "Lua returns at most32 byte-bounded bulk parts instead of table.concat; whole members avoid string.sub",
+    "Rust assembles one exact-sized frame under unchanged2x reply-byte and per-cursor frame leases"
+  ],
+  "unchanged": [
+    "64KiB native member layout and legacy8MiB bounded partial cursor",
+    "global sweep, entry type checks, status/TTL/catalogue/fence/generation semantics",
+    "leader still reads acknowledged bytes through cache; no source-yield or renderer changes",
+    "physical Redis command supervision, deferred valid-prefix capacity errors and detached final-clone accounting"
+  ],
+  "limits": [
+    "Component timing observations do not establish a passing completion budget or full-app performance gain",
+    "The actualcold10 counters are scheduler-dependent and are not an isolated paired performance comparison",
+    "New canonical image and all packaged regressions plus unchanged-budget cold10 preflight remain required"
+  ],
+  "cleanup": "owned Compose project removed",
+  "attribution": "All application credit remains with the original Dispatcharr authors and contributors; existing AGPL licensing preserved."
+}

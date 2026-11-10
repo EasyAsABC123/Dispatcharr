@@ -143,6 +143,27 @@ async fn accepted_publication_timeout_retains_owner_admission_and_failed_drain()
         .await
         .unwrap()
         .unwrap();
+    // Observe the actual server-side LPUSH through an independent connection;
+    // a paused NOSCRIPT/auth response must never count as committed publication.
+    let direct = redis::Client::open(std::env::var("JOB_REDIS_TEST_URL").unwrap()).unwrap();
+    let mut info = direct.get_connection_info().clone();
+    info.redis.db = 8;
+    let mut connection = redis::Client::open(info)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let queued: Vec<Vec<u8>> = redis::cmd("LRANGE")
+        .arg("celery")
+        .arg(0)
+        .arg(100)
+        .query_async(&mut connection)
+        .await
+        .unwrap();
+    assert!(queued.iter().any(
+        |raw| serde_json::from_slice::<serde_json::Value>(raw).unwrap()["headers"]["id"]
+            == id.to_string()
+    ));
     assert_eq!(task.await.unwrap(), Err(Error::AmbiguousPublication(id)));
     still_held(&jobs, &weak).await;
     assert_eq!(

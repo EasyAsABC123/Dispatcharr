@@ -1,0 +1,28 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Original Source current-file lookup guards, fresh clock/index and dispatch-call behavior only; no native SQL/service/application/performance acceptance.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit.",
+  "evidence": "artifacts/rust/m6-current-lookup-source-99",
+  "artifacts_sha256": {
+    "result.json": "47a31bd5f371d6f7985973fd336fa2f90a51876f7f17f2b3e972ac4bf6335c3c",
+    "current-lookup-source.json": "dd85298129f1e55eb6618e20c38caa6680b6b7af5a813f0b45f283776fe8181a"
+  },
+  "tool_source_snapshot": "artifacts/rust/m6-current-lookup-source-99/tool-source",
+  "source_cases": 25,
+  "malformed_index_failures": {
+    "malformed-root": "AttributeError",
+    "malformed-channels": "TypeError",
+    "negative-offset": "OSError",
+    "float-offset": "TypeError",
+    "null-offsets": "TypeError",
+    "empty-interleaved": "IndexError"
+  },
+  "fresh_index_after_clock_observed": true,
+  "sql_null_and_json_null_dispatch_observed": true,
+  "source_flags_inactive_still_read": true,
+  "cleanup": "project removed",
+  "native_verified": false,
+  "application_wired": false,
+  "performance_verified": false
+}

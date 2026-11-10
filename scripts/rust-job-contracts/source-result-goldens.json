@@ -1,0 +1,2331 @@
+{
+  "passed": true,
+  "scope": "Original-only bounded raw result/exception contract; actual application handlers and explicitly neutral probes; no native transport",
+  "checks": [
+    {
+      "name": "create-unread-malformed-json-202",
+      "passed": true
+    },
+    {
+      "name": "task-token-hmac",
+      "passed": true
+    },
+    {
+      "name": "pending-publication-durable-in-broker",
+      "passed": true,
+      "http": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      },
+      "result_key_absent": true
+    },
+    {
+      "name": "status-auth-admin-none",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-admin-valid",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-admin-bad",
+      "passed": true,
+      "observed": {
+        "status": 403,
+        "mime": "application/json",
+        "body": {
+          "detail": "Invalid task token"
+        }
+      }
+    },
+    {
+      "name": "status-auth-admin-empty",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-admin-unicode",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "text/html",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+      }
+    },
+    {
+      "name": "status-auth-viewer-none",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Authentication required"
+        }
+      }
+    },
+    {
+      "name": "status-auth-viewer-valid",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-viewer-bad",
+      "passed": true,
+      "observed": {
+        "status": 403,
+        "mime": "application/json",
+        "body": {
+          "detail": "Invalid task token"
+        }
+      }
+    },
+    {
+      "name": "status-auth-viewer-empty",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Authentication required"
+        }
+      }
+    },
+    {
+      "name": "status-auth-viewer-unicode",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "text/html",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+      }
+    },
+    {
+      "name": "status-auth-inactive-none",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-inactive-valid",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-inactive-bad",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-inactive-empty",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-inactive-unicode",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-none",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-valid",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-bad",
+      "passed": true,
+      "observed": {
+        "status": 403,
+        "mime": "application/json",
+        "body": {
+          "detail": "Invalid task token"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-empty",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-unicode",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "text/html",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+      }
+    },
+    {
+      "name": "status-auth-None-none",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Authentication required"
+        }
+      }
+    },
+    {
+      "name": "status-auth-None-valid",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-None-bad",
+      "passed": true,
+      "observed": {
+        "status": 403,
+        "mime": "application/json",
+        "body": {
+          "detail": "Invalid task token"
+        }
+      }
+    },
+    {
+      "name": "status-auth-None-empty",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Authentication required"
+        }
+      }
+    },
+    {
+      "name": "status-auth-None-unicode",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "text/html",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+      }
+    },
+    {
+      "name": "status-auth-invalid-none",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "status-auth-invalid-valid",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "status-auth-invalid-bad",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "status-auth-invalid-empty",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "status-auth-invalid-unicode",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "producer-restart-queue-retained",
+      "passed": true
+    },
+    {
+      "name": "actual-backup-worker-success",
+      "passed": true,
+      "http_state": "completed",
+      "result_fields": [
+        "filename",
+        "size",
+        "status"
+      ],
+      "archive_exists": true,
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "943702dfef79ee576bcaa50db42361947db853fb0898636dbc97079633bc226b"
+      }
+    },
+    {
+      "name": "broker-result-databases-separated",
+      "passed": true,
+      "broker_db": 8,
+      "result_db": 9
+    },
+    {
+      "name": "restore-existing-invalid-archive-published",
+      "passed": true
+    },
+    {
+      "name": "returned-failure-dict-is-celery-success",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "failed",
+          "error": "File is not a zip file"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "e22775b4439cef9c9671b115b9ae4f738039a4189ab5adcdd38b08a126574029"
+      }
+    },
+    {
+      "name": "worker-result-failed-dict",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "failed",
+          "error": "fixture returned failure"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "a6755f3f4d5b0365b65c6851a98a0ac25481143011a37d63b1c02e860c9333d2"
+      }
+    },
+    {
+      "name": "worker-result-null-error",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "failed",
+          "error": null
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "f2f2e22703defd9b96389df8b35f6e6dc7cdbdda2a6db6339b68e846ef5fa3c5"
+      }
+    },
+    {
+      "name": "worker-result-empty",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "failed",
+          "error": "Unknown error"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "7638e8922179536dea5d175f31ddb93732c8aeb5bc0bf8affbaed9dc83c6212a"
+      }
+    },
+    {
+      "name": "worker-result-scalar",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'str' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "str",
+        "raw_sha256": "84cc5b2cf90f7727dbc2f674dbeb42e06c95630e22317f07e2a1658906480133"
+      }
+    },
+    {
+      "name": "worker-result-list",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'list' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "list",
+        "raw_sha256": "a004eb293498ae29bd5319bc5a81ca356e71421c23ae3ac72ba195a1738f6b50"
+      }
+    },
+    {
+      "name": "worker-result-null",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'NoneType' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "NoneType",
+        "raw_sha256": "f539921c3327d05126f426b8285ab94f2d1496260dc31df3bc0f52f9748e2d78"
+      }
+    },
+    {
+      "name": "worker-result-uncaught",
+      "passed": true,
+      "celery_state": "FAILURE",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: fixture uncaught"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "FAILURE",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "cb0992403b9fbd92cd6dcba9760f8506012ad2f6c6d230d5d709197581c06be8"
+      }
+    },
+    {
+      "name": "neutral-result-key-error",
+      "passed": true,
+      "celery_state": "FAILURE",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'fixture missing'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "FAILURE",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "2df631ec5cd1638a37b123b97e37c76e1e7182d83f15fec37dd56d85e036e205"
+      }
+    },
+    {
+      "name": "neutral-result-multi-error",
+      "passed": true,
+      "celery_state": "FAILURE",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: ('fixture first', 3)"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "FAILURE",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "e2578cb35fc5a2594c3586980378c5fa2252d005a29c4e0db1ee9631e9f20bbc"
+      }
+    },
+    {
+      "name": "neutral-result-empty-error",
+      "passed": true,
+      "celery_state": "FAILURE",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: "
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "FAILURE",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "3491f2d86ce004563c641f03954cb26402f9e2c486afb6a6594f858cf6065841"
+      }
+    },
+    {
+      "name": "neutral-result-boolean",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'bool' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "bool",
+        "raw_sha256": "758fe27f6a213832e77b2dd268628d1f97aee223c0907f36a5ad163f1c1331d7"
+      }
+    },
+    {
+      "name": "neutral-result-integer",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'int' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "int",
+        "raw_sha256": "ec1317fdd551347832b234ff16a539bdc639a7dc69b6ac886f460b1648f53e78"
+      }
+    },
+    {
+      "name": "neutral-result-float",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'float' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "float",
+        "raw_sha256": "41204345adcf0c4aeb0b6f8f973640891fc32c99ecafef3d31d804c7f3b4ad60"
+      }
+    },
+    {
+      "name": "neutral-result-date",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'datetime.date' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "617f7bdd1e3f776ddb50adb89d9c8486a12f3eab49acc59bb9a629265ef57651"
+      }
+    },
+    {
+      "name": "neutral-result-datetime",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'datetime.datetime' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "5364b25ba6f17c86206b489abef0dfe43bcf2165c119e8d69af84c0bbdf46124"
+      }
+    },
+    {
+      "name": "neutral-result-decimal",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'decimal.Decimal' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "4330580ff011dad5dda01912e5eb0bedd1c69d598038cb61da106ac1cf93a184"
+      }
+    },
+    {
+      "name": "neutral-result-bytes",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'bytes' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "2840a8ccbb89bdcfacd705a4b58a31ea7f510f09ac0140825a03328cfb16d5fd"
+      }
+    },
+    {
+      "name": "neutral-result-bytes-binary",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'bytes' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "476446a7e08b14dc80a9fc41fd416cb7e34f243e781ef07c32f466ccec67929b"
+      }
+    },
+    {
+      "name": "neutral-result-uuid",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'UUID' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "3d23c5f4829d8f1a642b2c5bc8e223a5eda6b9ab7b81a69f899aaf19208a2701"
+      }
+    },
+    {
+      "name": "tracked-fixture-started-visible",
+      "passed": true,
+      "fixture_override": "track_started=True",
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "STARTED",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "f2a77a33fc0137987697b6aaf8a82867f0d80214b3d2191a04eb16e0e3576a41"
+      }
+    },
+    {
+      "name": "actual-retry-visible-not-ready",
+      "passed": true,
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "RETRY",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "1cc4112665f3fc5c31030077d6bda3087f6dac8787e39cd280ee2110ab60f8af"
+      }
+    },
+    {
+      "name": "retry-worker-success",
+      "passed": true,
+      "retries": 1
+    },
+    {
+      "name": "default-running-early-ack-pending",
+      "passed": true
+    },
+    {
+      "name": "hard-restart-early-ack-task-not-replayed",
+      "passed": true,
+      "http": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "result-original-expiry3600",
+      "passed": true,
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "5808d3be70feaec039bfc7cc1ab7f956567c69da406ea8655dbe665a27175063"
+      }
+    },
+    {
+      "name": "expired-result-is-new-pending-query",
+      "passed": true,
+      "fixture_only_expiry_seconds": 1,
+      "original_expiry_seconds": 3600
+    },
+    {
+      "name": "corrupt-result-backend-500",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: Expecting value: line 1 column 1 (char 0)"
+        }
+      }
+    },
+    {
+      "name": "bad-token-before-corrupt-backend",
+      "passed": true
+    },
+    {
+      "name": "invalid-bearer-before-valid-token",
+      "passed": true
+    }
+  ],
+  "versions": {
+    "celery": "5.6.3",
+    "kombu": "5.6.2",
+    "redis": "6.4.0",
+    "Django": "6.0.9"
+  },
+  "configuration": {
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "task_serializer": "json",
+    "result_serializer": "json",
+    "accept_content": [
+      "json"
+    ],
+    "task_track_started": false,
+    "task_acks_late": false,
+    "task_acks_on_failure_or_timeout": true,
+    "task_reject_on_worker_lost": null,
+    "worker_prefetch_multiplier": 4,
+    "broker_pool_limit": 10,
+    "result_expires": 3600,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    }
+  },
+  "publication": {
+    "task_name": "apps.backups.tasks.create_backup_task",
+    "header_fields": [
+      "argsrepr",
+      "eta",
+      "expires",
+      "group",
+      "group_index",
+      "id",
+      "ignore_result",
+      "kwargsrepr",
+      "lang",
+      "origin",
+      "parent_id",
+      "replaced_task_nesting",
+      "retries",
+      "root_id",
+      "shadow",
+      "stamped_headers",
+      "stamps",
+      "task",
+      "timelimit"
+    ],
+    "property_fields": [
+      "body_encoding",
+      "correlation_id",
+      "delivery_info",
+      "delivery_mode",
+      "delivery_tag",
+      "priority",
+      "reply_to"
+    ],
+    "content_type": "application/json",
+    "content_encoding": "utf-8",
+    "delivery_mode": 2,
+    "priority": 0,
+    "delivery_info": {
+      "exchange": "",
+      "routing_key": "celery"
+    },
+    "body_shape": [
+      "list",
+      "dict",
+      "dict"
+    ],
+    "args": [],
+    "kwargs": {},
+    "embedded_fields": [
+      "callbacks",
+      "chain",
+      "chord",
+      "errbacks"
+    ],
+    "envelope_sha256": "ecb1c38692cda9b8f1a78fbe672b96bc2b792835032362dde875128f46018dd6"
+  },
+  "quarantined_startup_tasks": [
+    {
+      "task_name": "apps.plugins.tasks.refresh_plugin_repos",
+      "envelope_sha256": "066a78d0fd428d3f63160b332cfb649941ea038e17a8c46e9b85cbbca2fae4c9"
+    },
+    {
+      "task_name": "apps.plugins.tasks.refresh_plugin_repos",
+      "envelope_sha256": "2eb5b9973943a428a6622a4c24d6ce86dcbd55ef8317974dee04b39718714410"
+    }
+  ],
+  "result_captures": [
+    {
+      "raw_bytes": 264,
+      "raw_sha256": "943702dfef79ee576bcaa50db42361947db853fb0898636dbc97079633bc226b",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "status": {
+                "type": "str",
+                "value": "completed"
+              },
+              "filename": {
+                "type": "str",
+                "value": "dispatcharr-backup-2026.11.10.06.41.31.zip"
+              },
+              "size": {
+                "type": "int",
+                "value": 38293
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:31.697360+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "5b63edaf504714340c59dd5afcb8b9ac8753705f95414cd10dece5d2d964bcae",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "943702dfef79ee576bcaa50db42361947db853fb0898636dbc97079633bc226b.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 223,
+      "raw_sha256": "e22775b4439cef9c9671b115b9ae4f738039a4189ab5adcdd38b08a126574029",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "status": {
+                "type": "str",
+                "value": "failed"
+              },
+              "error": {
+                "type": "str",
+                "value": "File is not a zip file"
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.172548+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "bd0873b0724e3b9f5b653d89111cf210578af636de53c13b1baaef2b83776786",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "e22775b4439cef9c9671b115b9ae4f738039a4189ab5adcdd38b08a126574029.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 225,
+      "raw_sha256": "a6755f3f4d5b0365b65c6851a98a0ac25481143011a37d63b1c02e860c9333d2",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "status": {
+                "type": "str",
+                "value": "failed"
+              },
+              "error": {
+                "type": "str",
+                "value": "fixture returned failure"
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.229819+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "3f928916938907226aa33aa7ce6e44f69635f9442d47fe3e2c62e404d8563568",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "a6755f3f4d5b0365b65c6851a98a0ac25481143011a37d63b1c02e860c9333d2.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 203,
+      "raw_sha256": "f2f2e22703defd9b96389df8b35f6e6dc7cdbdda2a6db6339b68e846ef5fa3c5",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "status": {
+                "type": "str",
+                "value": "failed"
+              },
+              "error": {
+                "type": "NoneType",
+                "value": null
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.282968+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "76bc349e3d5c6ea67dfbbc621f7f83cd5e9a673ab1890b294ec32054ee66fdc8",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "f2f2e22703defd9b96389df8b35f6e6dc7cdbdda2a6db6339b68e846ef5fa3c5.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 170,
+      "raw_sha256": "7638e8922179536dea5d175f31ddb93732c8aeb5bc0bf8affbaed9dc83c6212a",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {}
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.336212+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "bf69f3b86d4b7f0482073b177fea48aac26286feb8d77c25b0437b95bd0e3602",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "7638e8922179536dea5d175f31ddb93732c8aeb5bc0bf8affbaed9dc83c6212a.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 184,
+      "raw_sha256": "84cc5b2cf90f7727dbc2f674dbeb42e06c95630e22317f07e2a1658906480133",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "str",
+            "value": "fixture scalar"
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.390060+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "beebc2d23a4d0e3610452ca7e654256a2d3584c2688d98bf9861b94289e6297b",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "84cc5b2cf90f7727dbc2f674dbeb42e06c95630e22317f07e2a1658906480133.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 174,
+      "raw_sha256": "a004eb293498ae29bd5319bc5a81ca356e71421c23ae3ac72ba195a1738f6b50",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "list",
+            "items": [
+              {
+                "type": "int",
+                "value": 1
+              },
+              {
+                "type": "int",
+                "value": 2
+              }
+            ]
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.444563+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "51720fab797af291b1ad07a6e312e7708f096743f224ff217721a2ce85520d71",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "a004eb293498ae29bd5319bc5a81ca356e71421c23ae3ac72ba195a1738f6b50.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 172,
+      "raw_sha256": "f539921c3327d05126f426b8285ab94f2d1496260dc31df3bc0f52f9748e2d78",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "NoneType",
+            "value": null
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.498090+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "1c5bfdea14a7f337f3f6b412e56ecc8a6e0fd2edc5f5126a0d09629f395098a7",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "f539921c3327d05126f426b8285ab94f2d1496260dc31df3bc0f52f9748e2d78.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 1065,
+      "raw_sha256": "cb0992403b9fbd92cd6dcba9760f8506012ad2f6c6d230d5d709197581c06be8",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "FAILURE"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "exc_type": {
+                "type": "str",
+                "value": "ValueError"
+              },
+              "exc_message": {
+                "type": "list",
+                "items": [
+                  {
+                    "type": "str",
+                    "value": "fixture uncaught"
+                  }
+                ]
+              },
+              "exc_module": {
+                "type": "str",
+                "value": "builtins"
+              }
+            }
+          },
+          "traceback": {
+            "type": "str",
+            "utf8_bytes": 788,
+            "sha256": "981bf64c5e4e9f167345c228a1e373aa94229404c363df683f16b11d4eca63e8"
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.552768+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "65cd20956dde34bf73aea06e9f4af7147a575c48752aeeb2ad07292b9c1a99f9",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "cb0992403b9fbd92cd6dcba9760f8506012ad2f6c6d230d5d709197581c06be8.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 866,
+      "raw_sha256": "2df631ec5cd1638a37b123b97e37c76e1e7182d83f15fec37dd56d85e036e205",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "FAILURE"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "exc_type": {
+                "type": "str",
+                "value": "KeyError"
+              },
+              "exc_message": {
+                "type": "list",
+                "items": [
+                  {
+                    "type": "str",
+                    "value": "fixture missing"
+                  }
+                ]
+              },
+              "exc_module": {
+                "type": "str",
+                "value": "builtins"
+              }
+            }
+          },
+          "traceback": {
+            "type": "str",
+            "utf8_bytes": 597,
+            "sha256": "4facee63d92424b1c136ef8240649540eb449150e9334cfd7d46754eb8549293"
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.605965+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "5040c0ef0b9b6e0700d9e3747d97b75b7e42a7f2092b88eed8d0443ee5ccdbbf",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "2df631ec5cd1638a37b123b97e37c76e1e7182d83f15fec37dd56d85e036e205.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 882,
+      "raw_sha256": "e2578cb35fc5a2594c3586980378c5fa2252d005a29c4e0db1ee9631e9f20bbc",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "FAILURE"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "exc_type": {
+                "type": "str",
+                "value": "ValueError"
+              },
+              "exc_message": {
+                "type": "list",
+                "items": [
+                  {
+                    "type": "str",
+                    "value": "fixture first"
+                  },
+                  {
+                    "type": "int",
+                    "value": 3
+                  }
+                ]
+              },
+              "exc_module": {
+                "type": "str",
+                "value": "builtins"
+              }
+            }
+          },
+          "traceback": {
+            "type": "str",
+            "utf8_bytes": 610,
+            "sha256": "c020fd2492ce6f81273298c2116285e47addaa1a31e4af3572c0a4d56787fc46"
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.659126+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "7f08f578e0126c4d8708ad744779d5e1e29e8e56f533cfa08f06b3f466e45060",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "e2578cb35fc5a2594c3586980378c5fa2252d005a29c4e0db1ee9631e9f20bbc.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 808,
+      "raw_sha256": "3491f2d86ce004563c641f03954cb26402f9e2c486afb6a6594f858cf6065841",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "FAILURE"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "exc_type": {
+                "type": "str",
+                "value": "ValueError"
+              },
+              "exc_message": {
+                "type": "list",
+                "items": []
+              },
+              "exc_module": {
+                "type": "str",
+                "value": "builtins"
+              }
+            }
+          },
+          "traceback": {
+            "type": "str",
+            "utf8_bytes": 554,
+            "sha256": "eeb6aa3b4f114d9528d99d4d146ec2c583944800c75817753b191f8a60471dfe"
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.712691+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "9b8bfa91691f431475bffb5b643d6e28d949cfe6e8a6b78fca45be4b2c6df008",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "3491f2d86ce004563c641f03954cb26402f9e2c486afb6a6594f858cf6065841.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 172,
+      "raw_sha256": "758fe27f6a213832e77b2dd268628d1f97aee223c0907f36a5ad163f1c1331d7",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "bool",
+            "value": true
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.765972+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "3fdecbc8abcaa9075504b550677941e63edf8fdc0a20886c2c3bf5893ee296d5",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "758fe27f6a213832e77b2dd268628d1f97aee223c0907f36a5ad163f1c1331d7.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 184,
+      "raw_sha256": "ec1317fdd551347832b234ff16a539bdc639a7dc69b6ac886f460b1648f53e78",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "int",
+            "value": 9007199254740993
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.819597+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "0abf15a4137ea07214fcd99c3b533bc277d61ea67346b32706a8518e788cd6ad",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "ec1317fdd551347832b234ff16a539bdc639a7dc69b6ac886f460b1648f53e78.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 171,
+      "raw_sha256": "41204345adcf0c4aeb0b6f8f973640891fc32c99ecafef3d31d804c7f3b4ad60",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "float",
+            "value": 1.5
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.872734+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "eff5f52c9008b6b10dde659564fc1f9df059846c525a393a28bda87f7cb47c0f",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "41204345adcf0c4aeb0b6f8f973640891fc32c99ecafef3d31d804c7f3b4ad60.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 215,
+      "raw_sha256": "617f7bdd1e3f776ddb50adb89d9c8486a12f3eab49acc59bb9a629265ef57651",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "__type__": {
+                "type": "str",
+                "value": "date"
+              },
+              "__value__": {
+                "type": "str",
+                "value": "2026-01-02"
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.925821+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "fed4bc0be3193b31401873bd46df42d76a26e1e23863b1ab735c82db6248db1b",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "617f7bdd1e3f776ddb50adb89d9c8486a12f3eab49acc59bb9a629265ef57651.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 234,
+      "raw_sha256": "5364b25ba6f17c86206b489abef0dfe43bcf2165c119e8d69af84c0bbdf46124",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "__type__": {
+                "type": "str",
+                "value": "datetime"
+              },
+              "__value__": {
+                "type": "str",
+                "value": "2026-01-02T03:04:05+00:00"
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:32.979051+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "022b76f5ad9e508f6c25e589856087d7497f16d9d065cfe00b159b1000d4ad63",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "5364b25ba6f17c86206b489abef0dfe43bcf2165c119e8d69af84c0bbdf46124.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 212,
+      "raw_sha256": "4330580ff011dad5dda01912e5eb0bedd1c69d598038cb61da106ac1cf93a184",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "__type__": {
+                "type": "str",
+                "value": "decimal"
+              },
+              "__value__": {
+                "type": "str",
+                "value": "1.20"
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:33.032492+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "fb6d2e73ee04b8e1ba97a2653d62d87a2e3bc84bc8c3502da70cd547eabddeec",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "4330580ff011dad5dda01912e5eb0bedd1c69d598038cb61da106ac1cf93a184.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 219,
+      "raw_sha256": "2840a8ccbb89bdcfacd705a4b58a31ea7f510f09ac0140825a03328cfb16d5fd",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "__type__": {
+                "type": "str",
+                "value": "bytes"
+              },
+              "__value__": {
+                "type": "str",
+                "value": "fixture bytes"
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:33.085709+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "95b2f763625cb39d7e481fa4a8313cd86e43dc0e54cf6b0dc1739e4ba13d50a1",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "2840a8ccbb89bdcfacd705a4b58a31ea7f510f09ac0140825a03328cfb16d5fd.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 211,
+      "raw_sha256": "476446a7e08b14dc80a9fc41fd416cb7e34f243e781ef07c32f466ccec67929b",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "__type__": {
+                "type": "str",
+                "value": "base64"
+              },
+              "__value__": {
+                "type": "str",
+                "value": "AP8="
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:33.139218+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "d626ffe75565fd99bcdb56672d3c752b9f7e6b25e479444b03ab889c00640586",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "476446a7e08b14dc80a9fc41fd416cb7e34f243e781ef07c32f466ccec67929b.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 246,
+      "raw_sha256": "3d23c5f4829d8f1a642b2c5bc8e223a5eda6b9ab7b81a69f899aaf19208a2701",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "__type__": {
+                "type": "str",
+                "value": "uuid"
+              },
+              "__value__": {
+                "type": "dict",
+                "fields": {
+                  "hex": {
+                    "type": "str",
+                    "value": "12345678123456781234567812345678"
+                  }
+                }
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:33.192475+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "8b85439904706592aeb0ba662c27b90c11dcb3e619d1ad2c863c8134796ff533",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "3d23c5f4829d8f1a642b2c5bc8e223a5eda6b9ab7b81a69f899aaf19208a2701.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 184,
+      "raw_sha256": "f2a77a33fc0137987697b6aaf8a82867f0d80214b3d2191a04eb16e0e3576a41",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "STARTED"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "pid": {
+                "type": "int",
+                "value": 483
+              },
+              "hostname": {
+                "type": "str",
+                "value": "rust-probe@fixture"
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "NoneType",
+            "value": null
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "888be1ba97fb715110a254bec0a3b945abe015e09fb206f0b79b823be27aa289",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "f2a77a33fc0137987697b6aaf8a82867f0d80214b3d2191a04eb16e0e3576a41.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 1357,
+      "raw_sha256": "1cc4112665f3fc5c31030077d6bda3087f6dac8787e39cd280ee2110ab60f8af",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "RETRY"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "exc_type": {
+                "type": "str",
+                "value": "ValueError"
+              },
+              "exc_message": {
+                "type": "list",
+                "items": [
+                  {
+                    "type": "str",
+                    "value": "fixture retry"
+                  }
+                ]
+              },
+              "exc_module": {
+                "type": "str",
+                "value": "builtins"
+              }
+            }
+          },
+          "traceback": {
+            "type": "str",
+            "utf8_bytes": 1057,
+            "sha256": "ae3682f90ac9c615c9b796d1637d707ec8ce6c9ee91a62c307ffafe230f269b7"
+          },
+          "children": {
+            "type": "list",
+            "items": [
+              {
+                "type": "list",
+                "items": [
+                  {
+                    "type": "list",
+                    "items": [
+                      {
+                        "type": "str",
+                        "value": "4ac3d9e5-f7c6-471c-869e-144618da5fae"
+                      },
+                      {
+                        "type": "NoneType",
+                        "value": null
+                      }
+                    ]
+                  },
+                  {
+                    "type": "NoneType",
+                    "value": null
+                  }
+                ]
+              }
+            ]
+          },
+          "date_done": {
+            "type": "NoneType",
+            "value": null
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "70983300e1a09f24b00e7f0c92fc9a23cd04e03ac8341bc206738ccbd0b59560",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "1cc4112665f3fc5c31030077d6bda3087f6dac8787e39cd280ee2110ab60f8af.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    },
+    {
+      "raw_bytes": 208,
+      "raw_sha256": "5808d3be70feaec039bfc7cc1ab7f956567c69da406ea8655dbe665a27175063",
+      "metadata": {
+        "type": "dict",
+        "fields": {
+          "status": {
+            "type": "str",
+            "value": "SUCCESS"
+          },
+          "result": {
+            "type": "dict",
+            "fields": {
+              "status": {
+                "type": "str",
+                "value": "completed"
+              },
+              "fixture": {
+                "type": "bool",
+                "value": true
+              }
+            }
+          },
+          "traceback": {
+            "type": "NoneType",
+            "value": null
+          },
+          "children": {
+            "type": "list",
+            "items": []
+          },
+          "date_done": {
+            "type": "str",
+            "value": "2026-11-10T06:41:39.345610+00:00"
+          },
+          "task_id": {
+            "type": "str",
+            "sha256": "b43f6da645f5e9eb67988d2fc05f68f33ef915f14621d89f5dd245a2ed9ae901",
+            "matches_requested_task": true
+          }
+        }
+      },
+      "private_raw_file": "5808d3be70feaec039bfc7cc1ab7f956567c69da406ea8655dbe665a27175063.json",
+      "key_prefix": "celery-tasks:celery-task-meta-",
+      "ttl_seconds": 3600
+    }
+  ],
+  "active_default_ack": {
+    "state": "PENDING",
+    "http": {
+      "status": 200,
+      "mime": "application/json",
+      "body": {
+        "state": "pending"
+      }
+    },
+    "unacked_hash": 0,
+    "unacked_sorted": 0,
+    "unacked_tasks": [],
+    "default_track_started": false,
+    "default_acks_late": false
+  },
+  "actual_backup_jobs": true,
+  "native_jobs_verified": false,
+  "restore_scope": "Invalid ZIP only, failure before schema destruction; no production restore authority",
+  "visibility_timeout_expiry_observed": false,
+  "visibility_timeout_seconds": 3600,
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

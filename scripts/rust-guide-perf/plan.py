@@ -5,9 +5,9 @@ Original Dispatcharr authors retain full application credit and AGPL licensing.
 import datetime,hashlib,json,math
 from pathlib import Path
 SOURCE='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
-IMAGE='sha256:0844627cf65913ddea6a3bc01fbf8bdd596055735765cac6bd593921b620f8e2'
-TREE='59d5db446ffc4eaa3c68c20ecc552c98d6725aa2beb788ffddba89762e5a1c82'
-ARCHIVE='5fa1034dd2407cca5e733338576f88f2bbf71b8663d06a0d7d66bc4ff5b51bb2'
+IMAGE='sha256:0d0a95bc32fa9bbfabf81ad9062a3f7e456de39229e1dfe1cc12b92a9a10b996'
+TREE='2ccd7e3ccb790fc34feef53fb359c631bf817974520c2730e5c38da4ba5ff979'
+ARCHIVE='0c3d0e589dd1db69c0a08e4fbce895d4a25f689726176c038ff58c263ed186c1'
 POLICY={
  'format_version':1,'scope':'Stored-guide Current channel branch and XMLTV export only; not browser or full migration acceptance',
  'historical_candidate_image':IMAGE,'candidate_source_tree':TREE,'original_revision':SOURCE,

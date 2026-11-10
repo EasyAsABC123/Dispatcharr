@@ -1,0 +1,189 @@
+{
+  "passed": true,
+  "scope": "Original-only bounded raw result/exception contract; actual application handlers and explicitly neutral probes; no native transport",
+  "report": "artifacts/rust/m8-original-job-results-2/integration.json",
+  "report_sha256": "02232a9da5b0d39a672d6dfcd717e97072b29d2510431fd0bfbcbddef10bc64b",
+  "source_report_sha256": "44b1d20e41c5e498897e84353a9ea7e2dd86a8ff4395e3c415b8b595a1728cdf",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "tool_source": "artifacts/rust/m8-original-job-results-2/tool-source",
+  "checks": 67,
+  "raw_result_captures": 24,
+  "source_goldens": "scripts/rust-job-contracts/source-result-goldens.json",
+  "source_goldens_sha256": "64f198dda6bd781f079718a704e33a28ed917b03d681602654bb6ba93ea6d90a",
+  "raw_result_byte_cap": 262144,
+  "projected_nodes": 8192,
+  "projected_depth": 32,
+  "projected_string_byte_cap": 65536,
+  "private_storage": "mode0600rawJSON under0700owned directory; top taskID/traceback hashed in public projection",
+  "versions": {
+    "celery": "5.6.3",
+    "kombu": "5.6.2",
+    "redis": "6.4.0",
+    "Django": "6.0.9"
+  },
+  "configuration": {
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "task_serializer": "json",
+    "result_serializer": "json",
+    "accept_content": [
+      "json"
+    ],
+    "task_track_started": false,
+    "task_acks_late": false,
+    "task_acks_on_failure_or_timeout": true,
+    "task_reject_on_worker_lost": null,
+    "worker_prefetch_multiplier": 4,
+    "broker_pool_limit": 10,
+    "result_expires": 3600,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    }
+  },
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "neutral_exception_type_http_entities": {
+    "neutral-result-key-error": {
+      "state": "FAILURE",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'fixture missing'"
+        }
+      }
+    },
+    "neutral-result-multi-error": {
+      "state": "FAILURE",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: ('fixture first', 3)"
+        }
+      }
+    },
+    "neutral-result-empty-error": {
+      "state": "FAILURE",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: "
+        }
+      }
+    },
+    "neutral-result-boolean": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'bool' object has no attribute 'get'"
+        }
+      }
+    },
+    "neutral-result-integer": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'int' object has no attribute 'get'"
+        }
+      }
+    },
+    "neutral-result-float": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'float' object has no attribute 'get'"
+        }
+      }
+    },
+    "neutral-result-date": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'datetime.date' object has no attribute 'get'"
+        }
+      }
+    },
+    "neutral-result-datetime": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'datetime.datetime' object has no attribute 'get'"
+        }
+      }
+    },
+    "neutral-result-decimal": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'decimal.Decimal' object has no attribute 'get'"
+        }
+      }
+    },
+    "neutral-result-bytes": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'bytes' object has no attribute 'get'"
+        }
+      }
+    },
+    "neutral-result-bytes-binary": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'bytes' object has no attribute 'get'"
+        }
+      }
+    },
+    "neutral-result-uuid": {
+      "state": "SUCCESS",
+      "http": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'UUID' object has no attribute 'get'"
+        }
+      }
+    }
+  },
+  "scope_distinctions": [
+    "Original createbackup and invalidZIP restore handlers executed on copiedDB through actualSourceworker; invalidZIP fails before schema destruction.",
+    "Neutral tagged/type/exception probes are additional transport/decoder inputs, not new application tasks or native worker support.",
+    "STARTED requires explicit neutral track_startedTrue; original backups retain defaultFalse.",
+    "Original result3600TTL observed separately from fixture-only1secondEXPIRE; broker8/result9 separation retained.",
+    "No native publisher/resultdecoder, router202 or nativeworker implemented by this Sourcecapture.",
+    "Actual3600visibility recovery and successful destructive restore job/quiescence remain unproved."
+  ],
+  "failed_attempts": [
+    {
+      "report": "artifacts/rust/m8-original-job-results-1/integration.json",
+      "reason": "Actual66 Sourcecases and23captures completed, but hostfinalization expected wrong basename; wholeattemptfalse/defaultDBunchanged/cleaned. Corrected filename then independent freshattempt2."
+    }
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

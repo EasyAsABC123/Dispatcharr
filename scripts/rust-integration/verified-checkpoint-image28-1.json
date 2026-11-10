@@ -1,0 +1,139 @@
+{
+  "format_version": 1,
+  "scope": "Bounded bulk-parts XMLTV replies; targeted shared-cache regression and unchanged source for other production modules",
+  "passed": true,
+  "build_manifest": "artifacts/rust/candidate-build-bulk-reply-image28-1/build.json",
+  "build_manifest_sha256": "68f8c3466c04221f1c24ff8dfb2f4af56f443e7e44adb87dac022dd52c90b729",
+  "image_id": "sha256:0d0a95bc32fa9bbfabf81ad9062a3f7e456de39229e1dfe1cc12b92a9a10b996",
+  "source_tree_sha256": "2ccd7e3ccb790fc34feef53fb359c631bf817974520c2730e5c38da4ba5ff979",
+  "source_archive_sha256": "0c3d0e589dd1db69c0a08e4fbce895d4a25f689726176c038ff58c263ed186c1",
+  "rust_source_files": 491,
+  "validation_directory": "artifacts/rust/checkpoint-image28-validation-1",
+  "strict_all_targets_clippy": true,
+  "rust_tests": {
+    "passed": 310,
+    "failed": 0,
+    "external_fixture_ignored": 261,
+    "suites": 136
+  },
+  "runtime_reports": [
+    {
+      "path": "scripts/rust-xmltv-contracts/verified-xmltv-image28-1.json",
+      "sha256": "0894b98128756d61befc320eb3ec8e57f47630ea2484e37ea3f26b02b68e0a8c"
+    },
+    {
+      "path": "scripts/rust-output-contracts/verified-m3u-image28-1.json",
+      "sha256": "346cf10aac7004409f71cc5af83efbcca2abb1c1f9c92adbbf3bd69fefb046a7"
+    }
+  ],
+  "full_milestones_accepted": [],
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "limits": [
+    "Current file lookup/index/parser remain components; the app current-programme fallback is not attached. Six malformed index shapes remain explicit unsupported cases; relative paths/media-volume migration remain open.",
+    "Job publication/plain-result interoperability and physical ownership are components. No native worker, scheduler, create/restore202 or generic status route is enabled.",
+    "Guide custom dummy rules, browsable HTML error parity, broad concurrency, plugin/admin/SQLite/upgrades, many-viewer workloads and soak/rollback remain open.",
+    "Backup112 retains five explicitly named original invalid204 Content-Length deltas;107 raw exact.",
+    "The diagnostic preflight does not supply all three pairs for every workload; a fresh complete matrix is required."
+  ],
+  "separate_diagnostic_preflight": {
+    "path": "scripts/rust-guide-perf/verified-cold-preflight-image28-1.json",
+    "sha256": "a286b71cbeb20193c4722b523b8a33abe26e843dc80780b038ccf6d03393c05b",
+    "passed": true,
+    "full_matrix_accepted": false
+  },
+  "prior_image27_regressions": [
+    {
+      "path": "scripts/rust-epg-contracts/verified-current-packaged-image27-1.json",
+      "sha256": "45d2dc821e244b2c36095770886d0182acfbf9f8d0a4771ebde2625deb39be92"
+    },
+    {
+      "path": "scripts/rust-epg-contracts/verified-program-packaged-image27-1.json",
+      "sha256": "a651663153376dedccb45a8d65419ea21eac8158394ddbf7661a41dda534fc77"
+    },
+    {
+      "path": "scripts/rust-output-contracts/verified-grid-packaged-image27-1.json",
+      "sha256": "f43752d986941956dbec47a98c8efcb5d646348a76adac1eed1a2d4235e96d83"
+    },
+    {
+      "path": "scripts/rust-integration/verified-integration-m5-auth-image27-1.json",
+      "sha256": "746bdeadde0aac7919d28b1f494080e02719a6f295960afb46b2ad4ed7590557"
+    },
+    {
+      "path": "scripts/rust-integration/verified-backup-api-packaged-image27-1.json",
+      "sha256": "a02bcf7a61ae02956c1c42183895620ce8454100fa452f12d3c9f898e83ff1aa"
+    },
+    {
+      "path": "scripts/rust-timeshift-contracts/verified-image27-regression.json",
+      "sha256": "69fd25799d4d5be60cfc811414b07d6f6dcdacee8dc19256098262e04870ceb7"
+    },
+    {
+      "path": "scripts/rust-hdhr-contracts/verified-hdhr-image27-1.json",
+      "sha256": "182c397aa39f5262697a98bb14f7a2950e1bfd7010526bda866c528e6281d1de"
+    },
+    {
+      "path": "scripts/rust-xc-contracts/verified-xc-image27-1.json",
+      "sha256": "b1d2fb7d58cda55df673351a949db5a12aa08c0650974650de7047ba0f399d90"
+    },
+    {
+      "path": "scripts/rust-xc-contracts/verified-xc-epg-image27-1.json",
+      "sha256": "4fb50c37ea8ed207e7215d1b1335b771f06be9bcd86f1b0a7ea0cee040e24dfb"
+    },
+    {
+      "path": "scripts/rust-xmltv-contracts/verified-xmltv-image27-1.json",
+      "sha256": "8d1f0120726ee0e50931ed3f46bfc98fa188670eb2c0e974a906044341530264"
+    },
+    {
+      "path": "scripts/rust-output-contracts/verified-m3u-image27-1.json",
+      "sha256": "82eb1001fdbc089a9b73d69dbfe3df2e7a8fc084a23220e4410514d0e18eb90e"
+    }
+  ],
+  "production_source_delta_from27": [
+    "rust/crates/xmltv-http/src/cache.rs"
+  ],
+  "source_delta_scope": "Other changed Rust inputs are tests/docs; prior27 reports retain their exact27 image binding and are not relabeled as executed28 cases.",
+  "python_review": [
+    {
+      "path": "scripts/rust-integration/verified-checkpoint-image28-python-review-1.json",
+      "sha256": "33772149baaf474526b42a05aeb1a6b650cc3640ca1cdcf09277bdb082db94eb"
+    }
+  ],
+  "component_reports": [
+    {
+      "path": "scripts/rust-epg-parity/verified-current-file-source-native-98.json",
+      "sha256": "c5ddbae2742efb7ccd6dfb3403b192ff8a1d7db95f34df40fe70d0029e8fefc6"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-current-lookup-source-native-100.json",
+      "sha256": "5d5f00e8f47a039bd96157e507c49ad0d8370485966ec9295d035cf127787f79"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-current-order-source-native-106.json",
+      "sha256": "39a9601abfb6e676b85ee0fa7a334bd2400ade1005a62d059d662dfce552b9bd"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-current-real-bridge-source-native-107.json",
+      "sha256": "d1ca106e191f0c588a6913fbd4f76dccee02491f0f70fa7407646895a4d293f0"
+    },
+    {
+      "path": "scripts/rust-job-contracts/verified-original-job-results-2.json",
+      "sha256": "d8c388c1431236adf590b133757f206f66beaaba537619013028421c3c28b650"
+    },
+    {
+      "path": "scripts/rust-job-contracts/verified-native-source-interop-1.json",
+      "sha256": "8d72d6f949fe6fb74fbaee7dad17966fe1500aba4d2185d6c4fd82f4393f40c7"
+    },
+    {
+      "path": "scripts/rust-job-contracts/verified-native-job-resources-1.json",
+      "sha256": "3f90de47feb6cc9199201b268c5eb9a3d93b9ffda5b2e44031e96c2c4113f798"
+    },
+    {
+      "path": "scripts/rust-xmltv-contracts/verified-xmltv-cold-native-1.json",
+      "sha256": "d583b0a1bcfbd97a15aad55f03e150aea0031615efea3589683913f514163c64"
+    },
+    {
+      "path": "scripts/rust-xmltv-contracts/verified-xmltv-bulk-reply-native-1.json",
+      "sha256": "62fae43496000a060ecc2f453e941ecbd94b990b530a2ec4b4542f6cce9a4df2"
+    }
+  ]
+}
