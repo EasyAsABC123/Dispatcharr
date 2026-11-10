@@ -1,0 +1,259 @@
+{
+  "passed": true,
+  "scope": "Independent test-only category HTTP adapter versus actual original network. SQL/default/null-FK/physical gates separate; no category app/React/completeVOD acceptance.",
+  "original_credit": "All original Dispatcharr authors/contributors retain application and algorithm credit; AGPL retained.",
+  "evidence": "artifacts/rust/m5-vod-category-native-http-4/http",
+  "successful_tools": "artifacts/rust/m5-vod-category-native-http-4/http/tools",
+  "frozen_rust_manifest_sha256": "a559a86aacfa9782996f5f3924f0a1e04e2b6854f36f1227e87315fb7aa6b0cc",
+  "checks": {
+    "source_network_cases": 535,
+    "exact_HTTP_responses": 159,
+    "HTTP_differences": [],
+    "explicit_HTTP_unsupported_not_parity_pass": [
+      {
+        "index": 483,
+        "path": "/api/vod/categories/?ordering=get_category_type_display",
+        "source_status": 500,
+        "parity_pass": false,
+        "reason": "{\"error\":\"Category callable/reverse-relation ordering needs separate SQL/fault gate\"}"
+      },
+      {
+        "index": 485,
+        "path": "/api/vod/categories/?ordering=m3u_relations",
+        "source_status": 200,
+        "parity_pass": false,
+        "reason": "{\"error\":\"Category callable/reverse-relation ordering needs separate SQL/fault gate\"}"
+      },
+      {
+        "index": 489,
+        "path": "/api/vod/categories/?search=Drama%5C%20News",
+        "source_status": 200,
+        "parity_pass": false,
+        "reason": "{\"error\":\"Category general quoted/control search grammar not captured\"}"
+      },
+      {
+        "index": 530,
+        "path": "/api/vod/categories/?format=api",
+        "source_status": 406,
+        "parity_pass": false,
+        "reason": "{\"error\":\"VOD browsable HTML is not implemented\"}"
+      }
+    ],
+    "compact_JSON_SQL_cases": 95,
+    "SQL_differences": [],
+    "successful_default_cases": 11,
+    "unsupported_default_exceptions_not_wire_parity": 7,
+    "Source_native_unstaggered10_burst": {
+      "passed": true,
+      "scope": "Actual original/native unstaggered ten CategoryList requests, default two active workers and bounded waiting; not performance",
+      "original": {
+        "scope": "Actual original simultaneous10 CategoryList requests; not performance, no staggering",
+        "passed": true,
+        "records": [
+          {
+            "index": 0,
+            "started_seconds": 0.0015742539981147274,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 1,
+            "started_seconds": 0.0012718849975499325,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 2,
+            "started_seconds": 0.001322377000178676,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 3,
+            "started_seconds": 0.0016384650007239543,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 4,
+            "started_seconds": 0.0014718809979967773,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 5,
+            "started_seconds": 0.0014260690004448406,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 6,
+            "started_seconds": 0.0013831979958922602,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 7,
+            "started_seconds": 0.001727477996610105,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 8,
+            "started_seconds": 0.0015259919964591973,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          },
+          {
+            "index": 9,
+            "started_seconds": 0.0011853929972858168,
+            "status": 200,
+            "body_bytes": 1607,
+            "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e"
+          }
+        ],
+        "start_spread_seconds": 0.0005420849993242882,
+        "native_verified": false
+      },
+      "native_records": [
+        {
+          "index": 0,
+          "started_seconds": 0.00212879,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 1,
+          "started_seconds": 0.002245453,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 2,
+          "started_seconds": 0.00139751,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 3,
+          "started_seconds": 0.001893964,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 4,
+          "started_seconds": 0.002361907,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 5,
+          "started_seconds": 0.001532363,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 6,
+          "started_seconds": 0.00177697,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 7,
+          "started_seconds": 0.001659967,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 8,
+          "started_seconds": 0.002011037,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        },
+        {
+          "index": 9,
+          "started_seconds": 0.001334688,
+          "status": 200,
+          "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+          "bytes": 1607
+        }
+      ]
+    },
+    "HTTP_physical": {
+      "passed": true,
+      "actual_owned_redis_pause_ms": 400,
+      "cancelled_handler_retained_HTTP_and_read_admission": true,
+      "physical_work_memory_bytes": 71303168,
+      "error_frame_final_clone_retains_slot": true,
+      "physical_replies_drained": true,
+      "scope": "Category adapter admission and cached auth cancellation; not allocatorwide or production acceptance"
+    },
+    "SQL_physical": {
+      "passed": true,
+      "scope": "Actual category SQL lock/caller abort/logical timeout/third capacity; detached frame capacity; no HTTP or allocatorwide acceptance",
+      "actual_blocked_writers": 2,
+      "physical_admission_held_after_logical_events": true,
+      "held_work_bytes": 142606336,
+      "detached_frame_capacity_bytes": 2784,
+      "worker_shutdown_with_frame_held": true,
+      "all_work_memory_returned": true
+    },
+    "frozen_store_alltarget_strict_clippy": true
+  },
+  "runtime_source_sha256": {
+    "vod_api_categories.rs": "5da1bbd1539c378a40a4a82eea5402dc62fd82f507ff8913c85b56113606fd62",
+    "vod_api_category_http.rs": "eb2ade613d940827508e6d06dc0d64875acc39f709363a16862525b10a8219d9",
+    "vod_api_category_seed.rs": "24ba16ac272990cbfbdbd6913c043246f0c61edb6d6c331de0269f76d96c97e5",
+    "vod_api_draft.rs": "b10c23f0b728af9945cecf04faf0fefdc8d75f881f14f6e99f6377d4dfbefba6"
+  },
+  "evidence_sha256": {
+    "source-run.json": "81ed8e238493deb52abc1b796c9ae6fc5371918131484c1b821f9a8197871795",
+    "source-corpus.json": "ea1079b9c81b9ac0c02de7b4d1de040ea01b0ed72ed8f68addd83f1ee6fdb3ec",
+    "source-category-burst.json": "e4245d5ff85d00dce41fbfbc24ec96894cd91ff0bdd382bd9ddbd572e0cb5e68",
+    "category-sql.json": "6aef950373b355082ef338268db80269de3518a7910e86a1a74cc413bfd7fc52",
+    "category-http.json": "cf934df11ccbe356e250fb2e9a495d7a6f18b93e5183dad0f497ea2c496eeb6d",
+    "category-http-burst.json": "2ba45a0852d3d930c31ae7018076199a93e08090f80e0e17be6dc2a29605321b",
+    "category-http-ownership.json": "4d4c1818f569e8207d9cb0caeecf9e4f79521eea88d20f9ec777a6ae587c99e6",
+    "category-ownership.json": "1073133c466b6d5373a3e7aa62f0222f531633c580f83f131ce82f3296cc4ac1",
+    "category-schedule-source.json": "122e986cc3e2a8cea49dd2d5c973f0387e45d469aa88d1f72c55340c4eaab5f7",
+    "category-schedule-native.json": "08fe6e961dd28ea36e94a94739db258f665b329bdff0f5730387f80a7862eae6",
+    "category-defaults-source.json": "6d25913ca1109811c773916b697043d9d12dda2b6c07ab84c5a5fa9c9f616d4d",
+    "category-defaults-native.json": "e02ffd88aa38de6d59e009c5c8523b942b641b4a4e0e122ca9d73aeb10c76c5a",
+    "native-sql-tests.log": "eb32941e4b28ac7603732f9563745fe1346bbf106ee05396aaf6901ac404d681",
+    "clippy.log": "3912837e3465e011dc9f005a2ff365feb4c32293837cb911be19ab052e3d0ee4"
+  },
+  "retained_failures": [
+    {
+      "evidence": "artifacts/rust/m5-vod-category-native-http-3",
+      "scope": "IndependentHTTP159 and physical/burst passed; overallFAIL because SQL-only selector compared renderer/negotiation cases. Frozen4 corrects test domain; no HTTP behavior change."
+    }
+  ],
+  "remaining": [
+    "Initial lazy-creation/fault-prefix HTTP and races",
+    "Explicit unsupported callable/reverse-relation ordering, escaped search and format=api behavior",
+    "General Decimal/Unicode/header/URL grammar outside captures",
+    "Production/package/unchangedReact workflow"
+  ],
+  "cleanup": "owned Compose project removed",
+  "production_registered": false,
+  "performance_verified": false,
+  "full_milestone_complete": false
+}

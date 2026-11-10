@@ -65,3 +65,11 @@ binds the build, strict workspace checks, API/authentication regressions, browse
 workflow, guide replay and media preflight to their retained evidence hashes.
 Future application changes require fresh verification; these commands rebuild
 the named historical application source while using the checked-out test tools.
+
+The later [category source extension](../scripts/rust-vod-api-contracts/CATEGORY-ROUTE-PLAN.md)
+adds list/detail routes through the same VOD admission, memory and shutdown
+resources. Its [source checkpoint](../scripts/rust-integration/verified-vod-category-source-1.json)
+records component comparisons, ordinary-read regressions and the compiled main
+merge. Canonical packaging, category browser workflows, performance, four query/
+format differences and seven default-error branches remain open. Image31's
+ordinary VOD measurements do not establish category performance gains.

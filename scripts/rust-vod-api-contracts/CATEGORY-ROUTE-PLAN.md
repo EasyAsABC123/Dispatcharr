@@ -1,0 +1,28 @@
+# Category read extension: production source, packaged validation pending
+
+All application credit remains with the original Dispatcharr authors and contributors; original AGPL attribution is retained. The category modules now compile in production. The app source explicitly merges `vod_reads.category_router()`. Canonical packaged, unchanged React and category performance gates remain pending; this is not a complete VOD/category migration claim.
+
+`VodReads::category_router()` shares the existing ordinary reader's ReadRuntime, HttpGate, two active workers, 192 MiB configured memory budget, bounded input queue and shutdown. It creates no second memory budget or shutdown service. The default ordinary router and constructor behavior are unchanged. Actual original/native mixed ten-request comparisons and held-category-frame backpressure against an ordinary Movie request passed. The final category clone releases the shared queue slot and shared response memory; the existing shutdown drains both families.
+
+The original network corpus contains 535 cases, including 27 additional category queries and 45 additional category wire cases. Separate original Factory probes capture lazy defaults and the selected-relation/fresh-parent schedule. Those observation types remain distinct. The independent native HTTP adapter matches 159 category responses exactly in status, body hash, MIME, Content-Length, Allow, Vary and challenge headers. Four explicit unsupported cases are excluded from that count. The SQL-only compact JSON entry point separately matches 95 cases. A fresh ordinary regression matches 393 responses from 592 original network observations, with zero ordinary representation exclusions.
+
+The HTTP adapter authenticates before permissions, preserves captured Standard/UI read and Admin unsafe/OPTIONS rules, and applies negotiation before authentication as in the original. HEAD performs original list preparation/read behavior and returns original headers without a body. Captured detail HEAD/OPTIONS, errors and bounded JSON indentation match. The parent isolated full workspace passed strict Clippy and 338 default tests before the canonical source commit; external fixtures are separately recorded, not counted as default test passes.
+
+List preparation intentionally precedes visibility and form validation: create missing global defaults, then missing links for active XC accounts whose source properties enable VOD. Existing links bypass validation of an invalid default. Operations retain the original committed prefix instead of wrapping the entire request in a transaction. Detail does not perform initialization. Eleven captured successful default cases match. Seven original default exception branches remain explicitly unsupported internally and are not wire-parity passes.
+
+An actual original/native TCP PostgreSQL trigger-fault comparison now proves the uncaught 500 representation: 145 HTML bytes, Vary origin, no Allow header. The earlier global movie category remains committed after the later series insert fails, even with both user visibility flags disabled. Both original and native fixture category/relationship rows and timestamps are exactly restored afterward. This one database fault proof does not imply arbitrary error parity.
+
+Original nested relation serialization materializes selected properties and later reads the parent account. A parent deleted between those operations becomes a null account while old selected properties remain. Preserve that tested schedule and same-database ordering witnesses; do not add a primary-key tie breaker.
+
+Category and per-category relation counts have explicit 4,096-row guards; properties have 4 MiB total/128 KiB per-row guards, with the existing 16 MiB response limit. Capacity errors never return truncated success. These limits do not prove arbitrary PostgreSQL executor or whole-process allocator bounds. Cancellation, logical timeout after a consumed 503 body, SQL lock retention, detached error clones and shutdown have actual database/Redis ownership proofs.
+
+Remaining gates:
+
+- Canonical parent-owned image: replay ordinary/category wire, global app security headers, initial database fault, unstaggered category/mixed requests, metadata effects and shutdown; then unchanged React workflows.
+- Close the four captured HTTP exclusions: callable ordering originally 500, reverse-relation ordering multiplicity, escaped search, and format=api originally 406 versus native 501. Keep all four open until actual comparisons pass.
+- Close the seven captured BooleanField/default exception wire branches. Current effects checks are not response-parity passes.
+- Exercise initial successful creation races and broader fault prefixes, unsupported URL/Unicode/Decimal/quoted grammar and catalogue admission boundaries.
+- Declare and qualify a separate category performance policy after the functional gaps close. Existing ordinary VOD measurements do not establish category gains.
+- Unified content, nested provider/episode capabilities and provider refresh remain separate Source-gated work.
+
+Historical summaries retain their original component/app-registration scope. Failed SQL4/5, HTTP3 and first timestamp-restoration artifacts remain preserved. No category performance gain or full migration is claimed.

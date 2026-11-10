@@ -34,7 +34,7 @@ pub(crate) async fn prepare(work:&ReadWork,connection:&mut OwnedConnection)->Res
     // values without sending huge unrelated properties/values to the client.
     // Bad nonmapping/default types are explicit unsupported fault branches;
     // they are not silently treated as disabled/default-false accounts.
-    let accounts=sqlx::query("SELECT id::bigint AS id, COALESCE(custom_properties IN ('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb,'{}'::jsonb),true) AS properties_falsy, jsonb_typeof(custom_properties) AS properties_type, COALESCE((custom_properties->'enable_vod') NOT IN ('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb,'{}'::jsonb),false) AS vod_enabled, COALESCE(custom_properties ? 'auto_enable_new_groups_vod',false) AS auto_present, jsonb_typeof(custom_properties->'auto_enable_new_groups_vod') AS auto_type, CASE WHEN jsonb_typeof(custom_properties->'auto_enable_new_groups_vod')='boolean' THEN (custom_properties->>'auto_enable_new_groups_vod')::boolean END AS auto_value FROM m3u_m3uaccount WHERE is_active=true AND account_type='XC' LIMIT 4097")
+    let accounts=sqlx::query("SELECT id::bigint AS id, COALESCE(custom_properties IN ('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb,'{}'::jsonb),true) AS properties_falsy, jsonb_typeof(custom_properties) AS properties_type, COALESCE((custom_properties->'enable_vod') NOT IN ('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb,'{}'::jsonb),false) AS vod_enabled, COALESCE(custom_properties ? 'auto_enable_new_groups_vod',false) AS auto_present, jsonb_typeof(custom_properties->'auto_enable_new_groups_vod') AS auto_type, CASE WHEN (custom_properties->'auto_enable_new_groups_vod') IN ('true'::jsonb,'1'::jsonb,'\"1\"'::jsonb,'\"t\"'::jsonb,'\"True\"'::jsonb) THEN true WHEN (custom_properties->'auto_enable_new_groups_vod') IN ('false'::jsonb,'0'::jsonb,'\"0\"'::jsonb,'\"f\"'::jsonb,'\"False\"'::jsonb) THEN false END AS auto_value FROM m3u_m3uaccount WHERE is_active=true AND account_type='XC' LIMIT 4097")
         .fetch_all(connection.raw()).await?;
     // Explicit draft resource guard, never truncate to the first4096. Source's
     // unbounded account iteration requires a separate large-catalogue design
@@ -58,9 +58,8 @@ pub(crate) async fn prepare(work:&ReadWork,connection:&mut OwnedConnection)->Res
             // does. Only missing rows need BooleanField conversion. Source1
             // exercised boolean/default values; other conversions stay gated.
             let enabled=if !account.try_get::<bool,_>("auto_present")? {true}
-                else if account.try_get::<Option<String>,_>("auto_type")?.as_deref()==Some("boolean") {
-                    account.try_get::<bool,_>("auto_value")?
-                }else{return Err(ReadError::Unsupported("Uncaptured category BooleanField coercion"));};
+                else if let Some(value)=account.try_get::<Option<bool>,_>("auto_value")? {value}
+                else{return Err(ReadError::Unsupported("Category default validation/NULL exception wire branch remains gated"));};
             work.check()?;connection.configure(work).await?;
             let now=Utc::now();
             let created=sqlx::query("INSERT INTO vod_m3uvodcategoryrelation(m3u_account_id,category_id,enabled,custom_properties,created_at,updated_at) VALUES($1,$2,$3,'{}'::jsonb,$4,$4) ON CONFLICT(m3u_account_id,category_id) DO NOTHING")

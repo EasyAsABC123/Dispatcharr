@@ -19,3 +19,7 @@
 
 pub use vod_api_http::VodReads;
 pub use vod_api_owned_read::ReadLimits as VodReadLimits;
+
+#[path = "vod_api_categories.rs"] mod vod_api_categories;
+
+#[path = "vod_api_category_http.rs"] mod vod_api_category_http;

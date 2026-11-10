@@ -582,6 +582,7 @@ async fn run() -> Result<(), String> {
         .merge(epg_programs.clone().router())
         .merge(epg_programs.clone().current_router())
         .merge(vod_reads.router())
+        .merge(vod_reads.category_router())
         .merge(grid.clone().router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))

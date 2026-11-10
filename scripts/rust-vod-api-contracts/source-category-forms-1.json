@@ -1,0 +1,322 @@
+{
+  "passed": true,
+  "scope": "27 additional original network category filter/search/order observations; no native or category route acceptance",
+  "original_credit": "Original Dispatcharr authors/contributors retain all application credit; AGPL retained.",
+  "evidence": "artifacts/rust/m5-vod-category-forms-source-1/http",
+  "successful_tools": "artifacts/rust/m5-vod-category-forms-source-1/http/tools",
+  "source_http_cases": 490,
+  "additional_cases": [
+    {
+      "path": "/api/vod/categories/?name=%20rust-probe-vod-rest-Drama%20",
+      "status": 200,
+      "body_sha256": "a42ed1977628752579cc3b4a7f123ac01a06c85e62a88529b422e89eeede52a7",
+      "ids": [
+        1,
+        2
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?name=%1Frust-probe-vod-rest-Drama%1F",
+      "status": 200,
+      "body_sha256": "a42ed1977628752579cc3b4a7f123ac01a06c85e62a88529b422e89eeede52a7",
+      "ids": [
+        1,
+        2
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?category_type=%20movie%20",
+      "status": 400,
+      "body_sha256": "76bce4541e9ae251cf6baaa8407ee3a56577d43744c6e4cbbf92cda9e52119a8",
+      "ids": null,
+      "form_error": {
+        "category_type": [
+          "Select a valid choice.  movie  is not one of the available choices."
+        ]
+      }
+    },
+    {
+      "path": "/api/vod/categories/?category_type=Movie",
+      "status": 400,
+      "body_sha256": "11e20224bdb926ee8839c564eaed69f05f7f8400d20e092b614112403d0d3f71",
+      "ids": null,
+      "form_error": {
+        "category_type": [
+          "Select a valid choice. Movie is not one of the available choices."
+        ]
+      }
+    },
+    {
+      "path": "/api/vod/categories/?category_type=movie&category_type=series",
+      "status": 200,
+      "body_sha256": "31298431460f766ba59183ed610ae4b90e0ceb5d76484a7ad20a22a8430bf5b4",
+      "ids": [
+        5,
+        2
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?category_type=&category_type=movie",
+      "status": 200,
+      "body_sha256": "b5e115e5565891786cb1b47a3f31822b658be9d6dfd8428b51d4b88d3f60efc0",
+      "ids": [
+        4,
+        1,
+        3
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=2.0",
+      "status": 200,
+      "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+      "ids": [
+        4,
+        5,
+        1,
+        2,
+        3
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=2.9",
+      "status": 200,
+      "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+      "ids": [
+        4,
+        5,
+        1,
+        2,
+        3
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=2e0",
+      "status": 200,
+      "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+      "ids": [
+        4,
+        5,
+        1,
+        2,
+        3
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=2_0",
+      "status": 200,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "ids": [],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=NaN",
+      "status": 400,
+      "body_sha256": "7aeeda9bfc3ae6bef392039ce6cf3cf233b393377f339989b6a785e84e193781",
+      "ids": null,
+      "form_error": {
+        "m3u_account": [
+          "Enter a number."
+        ]
+      }
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=Infinity",
+      "status": 400,
+      "body_sha256": "7aeeda9bfc3ae6bef392039ce6cf3cf233b393377f339989b6a785e84e193781",
+      "ids": null,
+      "form_error": {
+        "m3u_account": [
+          "Enter a number."
+        ]
+      }
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=0x2",
+      "status": 400,
+      "body_sha256": "7aeeda9bfc3ae6bef392039ce6cf3cf233b393377f339989b6a785e84e193781",
+      "ids": null,
+      "form_error": {
+        "m3u_account": [
+          "Enter a number."
+        ]
+      }
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=-1",
+      "status": 200,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "ids": [],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=%2B2",
+      "status": 200,
+      "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+      "ids": [
+        4,
+        5,
+        1,
+        2,
+        3
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?m3u_account=1e51",
+      "status": 400,
+      "body_sha256": "7ea49c992320d61112e13d198691fbdfd64afecb1366c4d2fd8cdd48e556d3ec",
+      "ids": null,
+      "form_error": {
+        "m3u_account": [
+          "Ensure this value is less than or equal to 1e+50."
+        ]
+      }
+    },
+    {
+      "path": "/api/vod/categories/?ordering=id",
+      "status": 200,
+      "body_sha256": "ddf555a436fa2fd2bd470d34698896b39256099c46b3e12a0a844f2776bd4195",
+      "ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?ordering=-id",
+      "status": 200,
+      "body_sha256": "3a31e3b08248d9ca0a3e07110a8675bd6bd5ce34c863fbbe0672b62e84f9b0fb",
+      "ids": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?ordering=category_type",
+      "status": 200,
+      "body_sha256": "ef44e35f715c0089f2d778c481258e84eeb87b2d0b77e7c062ec2f4aef819f9d",
+      "ids": [
+        1,
+        3,
+        4,
+        2,
+        5
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?ordering=category_type_display",
+      "status": 200,
+      "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+      "ids": [
+        4,
+        5,
+        1,
+        2,
+        3
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?ordering=get_category_type_display",
+      "status": 500,
+      "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+      "ids": null,
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?ordering=m3u_accounts",
+      "status": 200,
+      "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+      "ids": [
+        4,
+        5,
+        1,
+        2,
+        3
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?ordering=m3u_relations",
+      "status": 200,
+      "body_sha256": "8ec43ebb7bfefc42d796231ce74bf9fc10206fe28dad1e4a1b8c349954ec3581",
+      "ids": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        5,
+        4,
+        5
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?ordering=--name",
+      "status": 200,
+      "body_sha256": "450c71861d88ecec15a78e9c5b52c3b13637232d10251ec0b05511da6ee9855e",
+      "ids": [
+        4,
+        5,
+        1,
+        2,
+        3
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?search=%22Drama%22",
+      "status": 200,
+      "body_sha256": "a42ed1977628752579cc3b4a7f123ac01a06c85e62a88529b422e89eeede52a7",
+      "ids": [
+        1,
+        2
+      ],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?search=Drama,News",
+      "status": 200,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "ids": [],
+      "form_error": null
+    },
+    {
+      "path": "/api/vod/categories/?search=Drama%5C%20News",
+      "status": 200,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "ids": [],
+      "form_error": null
+    }
+  ],
+  "evidence_sha256": {
+    "source-run.json": "895a4e7d0ab4d9576591cdd66475f584053be4a05fe680dceda8573094eb158c",
+    "source-corpus.json": "5dbea228a40f4bc71584db3f6309f46832bcf7ff30dc1a3d41d340375f5adcc5"
+  },
+  "provider_trap_attempts": 0,
+  "provider_refresh_rows_unchanged": true,
+  "cleanup": "owned Compose project removed",
+  "native_verified": false,
+  "performance_verified": false
+}

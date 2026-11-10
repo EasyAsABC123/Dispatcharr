@@ -44,6 +44,14 @@ impl VodReads {
         Ok(Self {reader,auth,gate:HttpGate::new(limits)?})
     }
     pub fn router(&self)->Router {router_with_gate(self.reader.clone(),self.auth.clone(),self.gate.clone())}
+    #[cfg(test)]
+    pub(super) fn shared_gate(&self)->HttpGate {self.gate.clone()}
+    /// Explicit category extension sharing this reader's active workers,
+    /// byte budget, bounded waiting and shutdown. No second runtime is created.
+    /// Advanced providers/unified/refresh endpoints are separate capabilities.
+    pub fn category_router(&self)->Router {
+        super::vod_api_category_http::CategoryHttp::shared(self.auth.clone(),self.reader.shared_runtime(),self.gate.clone()).router()
+    }
     /// Stops admission immediately; held body frames retain their own leases.
     pub async fn shutdown(&self,budget:std::time::Duration)->bool {self.gate.slots.close();self.reader.shutdown(budget).await}
 }

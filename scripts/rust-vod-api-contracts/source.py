@@ -250,6 +250,29 @@ for role in ['admin','standard','adult_hidden','movies_off']:
     case(f'/api/vod/movies/{movies[3].pk}/',role=role)
 case(f'/api/vod/episodes/{episodes[2].pk}/')  # Providerless top-level detail.
 case('/api/vod/episodes/?series='+str(series[0].pk))
+if os.environ.get('VOD_CATEGORY_FORMS')=='1':
+    if MODE!='http':raise RuntimeError('Category forms require original network observation')
+    for query in ['name= '+PREFIX+'Drama ','name=\x1f'+PREFIX+'Drama\x1f','category_type= movie ','category_type=Movie','category_type=movie&category_type=series','category_type=&category_type=movie','m3u_account=2.0','m3u_account=2.9','m3u_account=2e0','m3u_account=2_0','m3u_account=NaN','m3u_account=Infinity','m3u_account=0x2','m3u_account=-1','m3u_account=+2','m3u_account=1e51','ordering=id','ordering=-id','ordering=category_type','ordering=category_type_display','ordering=get_category_type_display','ordering=m3u_accounts','ordering=m3u_relations','ordering=--name','search="Drama"','search=Drama,News','search=Drama\\ News']:
+        case('/api/vod/categories/?'+query)
+if os.environ.get('VOD_CATEGORY_WIRE')=='1':
+    if MODE!='http':raise RuntimeError('Category wire requires actual network mode')
+    base='/api/vod/categories/'
+    for role in ['admin','standard','basic',None]:
+        for pk in [str(categories[0].pk),'999999999']:
+            for method in ['HEAD','OPTIONS']:case(base+pk+'/',role=role,method=method)
+    for accept in ['*/*','application/*','application/json;q=0','application/json;q=0.1,text/html;q=1','application/xml','application/json;indent=4']:
+        case(base,extra_headers={'HTTP_ACCEPT':accept})
+    for role in ['standard',None]:
+        case(base+'?format=bad',role=role)
+        case(base,role=role,extra_headers={'HTTP_ACCEPT':'application/xml'})
+    for role,method,tail in [(None,'GET',''),('basic','GET',''),('standard','OPTIONS',''),('admin','POST',''),('standard','GET','?category_type=bad'),('standard','HEAD',''),('standard','GET','999999999/')]:
+        case(base+tail,role=role,method=method,body={},extra_headers={'HTTP_ACCEPT':'application/json;indent=4'})
+    for indent in ['0','-1','8','99','bad','"4"']:
+        case(base,extra_headers={'HTTP_ACCEPT':'application/json;indent='+indent})
+    for suffix in ['?format=json','?format=api']:
+        case(base+suffix)
+    for pk_text in ['bad','0','-1','9999999999999999999999999999999999']:
+        case(base+pk_text+'/')
 if os.environ.get('VOD_API_HTTP_WIRE')=='1':
     if MODE!='http':raise RuntimeError('Additional route/negotiation evidence requires actual HTTP')
     for endpoint,pk in [('movies',movies[0].pk),('series',series[0].pk),('episodes',episodes[0].pk)]:

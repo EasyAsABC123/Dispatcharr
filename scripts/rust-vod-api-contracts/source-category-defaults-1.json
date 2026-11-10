@@ -1,0 +1,303 @@
+{
+  "passed": true,
+  "scope": "Actual original APIRequestFactory plus DB committed effects; not SourceNetwork exception rendering or native acceptance",
+  "records": [
+    {
+      "default": true,
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": true,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": true,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": false,
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": false,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": false,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": 0,
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": false,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": false,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": 1,
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": true,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": true,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": "0",
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": false,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": false,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": "1",
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": true,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": true,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": "true",
+      "missing": true,
+      "outcome": {
+        "exception": "ValidationError",
+        "message": "['\u201ctrue\u201d value must be either True or False.']",
+        "sqlstate": null
+      },
+      "committed_links": []
+    },
+    {
+      "default": "True",
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": true,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": true,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": "false",
+      "missing": true,
+      "outcome": {
+        "exception": "ValidationError",
+        "message": "['\u201cfalse\u201d value must be either True or False.']",
+        "sqlstate": null
+      },
+      "committed_links": []
+    },
+    {
+      "default": "False",
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": false,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": false,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": "t",
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": true,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": true,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": "f",
+      "missing": true,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": false,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": false,
+          "custom_properties": {}
+        }
+      ]
+    },
+    {
+      "default": null,
+      "missing": true,
+      "outcome": {
+        "exception": "IntegrityError",
+        "message": "null value in column \"enabled\" of relation \"vod_m3uvodcategoryrelation\" violates not-null constraint\nDETAIL:  Failing row contains (34, null, {}, 2026-11-10 13:44:48.240143+00, 2026-11-10 13:44:48.240148+00, 3, 4).",
+        "sqlstate": "23502"
+      },
+      "committed_links": []
+    },
+    {
+      "default": "",
+      "missing": true,
+      "outcome": {
+        "exception": "ValidationError",
+        "message": "['\u201c\u201d value must be either True or False.']",
+        "sqlstate": null
+      },
+      "committed_links": []
+    },
+    {
+      "default": 2,
+      "missing": true,
+      "outcome": {
+        "exception": "ValidationError",
+        "message": "['\u201c2\u201d value must be either True or False.']",
+        "sqlstate": null
+      },
+      "committed_links": []
+    },
+    {
+      "default": [],
+      "missing": true,
+      "outcome": {
+        "exception": "ValidationError",
+        "message": "['\u201c[]\u201d value must be either True or False.']",
+        "sqlstate": null
+      },
+      "committed_links": []
+    },
+    {
+      "default": {},
+      "missing": true,
+      "outcome": {
+        "exception": "ValidationError",
+        "message": "['\u201c{}\u201d value must be either True or False.']",
+        "sqlstate": null
+      },
+      "committed_links": []
+    },
+    {
+      "default": 2,
+      "missing": false,
+      "outcome": {
+        "status": 200,
+        "json": []
+      },
+      "committed_links": [
+        {
+          "category__category_type": "movie",
+          "enabled": false,
+          "custom_properties": {}
+        },
+        {
+          "category__category_type": "series",
+          "enabled": false,
+          "custom_properties": {}
+        }
+      ]
+    }
+  ],
+  "normal_fixture_props_and_semantic_links_restored": true,
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "evidence": "artifacts/rust/m5-vod-category-defaults-source-1/http",
+  "evidence_sha256": "2bab5b154e4b5e60e64dd653f6dbc6df89fc418aa96f9c92d657f7cea4173959",
+  "cleanup": "owned Compose project removed",
+  "native_verified": false,
+  "performance_verified": false
+}

@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "scope": "Actual original network category initialization failure using owned PG trigger; earlier global movie row remains committed even with both user visibility flags disabled. No native/full fault acceptance.",
+  "original_credit": "Original Dispatcharr authors/contributors retain all application credit; AGPL retained.",
+  "evidence": "artifacts/rust/m5-vod-category-initial-source-2/http",
+  "successful_tools": "artifacts/rust/m5-vod-category-initial-source-2/http/tools",
+  "response": {
+    "status": 500,
+    "body_bytes": 145,
+    "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+    "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+    "content_type": "text/html; charset=utf-8",
+    "selected_headers": {
+      "Content-Length": "145",
+      "Allow": null,
+      "Vary": "origin",
+      "WWW-Authenticate": null
+    }
+  },
+  "committed_category_type_prefix": [
+    "movie"
+  ],
+  "original_category_and_relationship_rows_exactly_restored": true,
+  "evidence_sha256": {
+    "source-run.json": "b424ae484b9287df50cf8c24d422d9a2c016401d2ffc2a47f4a1610daa05f9bd",
+    "source-corpus.json": "8f48f567e9d030ee4205d4ec9f1a40a134f356561e2957e847f7aaf1af832cd9",
+    "category-initial-source.json": "c6c2e6fe62e7f6d3e7793c75e98ca4502d1330b62926ecc5de0596c4f50037f6"
+  },
+  "retained_failure": {
+    "evidence": "artifacts/rust/m5-vod-category-initial-source-1",
+    "scope": "Fixture restoration assertion failed because Django bulk_create applies auto timestamps. Disposable project removed. Explicit timestamp restoration inSource2 fixed fixture, no original/native runtime change."
+  },
+  "cleanup": "owned Compose project removed",
+  "native_verified": false,
+  "performance_verified": false
+}

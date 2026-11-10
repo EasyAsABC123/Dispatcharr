@@ -171,6 +171,7 @@ impl SqlReads {
         Err(ReadError::Unsupported("VOD provider-info refresh/actions not implemented by ordinary SQL component"))
     }
     pub async fn shutdown(&self,budget:Duration)->bool {self.runtime.shutdown(budget).await}
+    pub(super) fn shared_runtime(&self)->ReadRuntime {self.runtime.clone()}
     pub fn physical_workers(&self)->usize {self.runtime.physical_workers()}
     pub fn retained_memory_bytes(&self)->usize {self.runtime.retained_memory_bytes()}
 }

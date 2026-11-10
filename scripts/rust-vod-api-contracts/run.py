@@ -28,6 +28,12 @@ def main():
     parser.add_argument('--mode',choices=['factory','http','both'],default='both')
     parser.add_argument('--native-sql',action='store_true',help='Compare ordinary read component on actual Source database; not native HTTP/app acceptance')
     parser.add_argument('--frozen-rust-source',type=Path,help='Reuse an already captured coherent Rust tree for a harness-only correction')
+    parser.add_argument('--category-initial-source',action='store_true',help='Actual original network category initialization fault/committed-prefix capture')
+    parser.add_argument('--category-wire-source',action='store_true',help='Actual original category HEAD/OPTIONS/negotiation/JSON indentation capture')
+    parser.add_argument('--category-forms-source',action='store_true',help='Original network extra category form/order/search grammar')
+    parser.add_argument('--category-defaults-source',action='store_true',help='Original Factory categoryBoolean default/effect corpus')
+    parser.add_argument('--category-schedule-source',action='store_true',help='Capture actual original category SQL/freshFK schedule only')
+    parser.add_argument('--native-categories',action='store_true',help='New test-only category SQL component; no app routes')
     parser.add_argument('--native-http',action='store_true',help='Run independent native TCP HTTP peer against original network corpus')
     parser.add_argument('--http-wire',action='store_true',help='Add original network method/detail/negotiation/routing characterization')
     parser.add_argument('--build-manifest','--candidate-build-manifest',dest='build_manifest',type=Path,help='Successful immutable app manifest for packaged replay; skips native peer compilation')
@@ -37,9 +43,10 @@ def main():
     if args.candidate_image and manifest is None:parser.error('--candidate-image requires --build-manifest')
     if manifest is not None:
         if not manifest.get('passed')or(args.candidate_image and args.candidate_image!=manifest['tag']):parser.error('Successful matching candidate manifest required')
-        if args.native_sql or args.native_http:parser.error('Packaged replay must not compile a host native peer')
+        if args.native_sql or args.native_http or args.native_categories:parser.error('Packaged replay must not compile a host native peer')
         if args.mode!='http':parser.error('Packaged replay requires --mode http')
         args.http_wire=True
+    if args.native_categories:args.native_sql=True;args.category_schedule_source=True;args.category_defaults_source=True;args.category_initial_source=True
     if args.native_http:args.native_sql=True;args.http_wire=True
     if args.http_wire and args.mode!='http':parser.error('--http-wire requires --mode http')
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
@@ -50,7 +57,7 @@ def main():
     try:
         for mode in modes:
             evidence=out/mode;evidence.mkdir()
-            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
+            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('category_initial_source.py')]if args.category_initial_source else[]),*([Path(__file__).with_name('category_burst_source.py')]if args.native_categories else[]),*([Path(__file__).with_name('category_defaults_source.py')]if args.category_defaults_source else[]),*([Path(__file__).with_name('category_schedule_source.py')]if args.category_schedule_source else[]),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
                 ROOT/'docker/compose.rust-playback.yml',ROOT/'scripts/rust-integration/shared_ts.py',
                 ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'scripts/rust-baseline/dependencies.py',
                 *([ROOT/'scripts/rust-vod-api-contracts/source-vod-rest-1.json',ROOT/'scripts/rust-vod-api-contracts/source-default-queries-1.json',ROOT/'scripts/rust-vod-api-contracts/schedule_source.py',ROOT/'scripts/rust-vod-api-contracts/category_fault_source.py']if args.native_sql else []),
@@ -112,7 +119,7 @@ def main():
                         if time.monotonic()>=deadline:raise RuntimeError('Original fixture readiness deadline')
                         time.sleep(.2)
                     captured=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only',
-                        '-e','VOD_API_OBSERVATION='+mode,*(['-e','VOD_API_HTTP_WIRE=1']if args.http_wire else[]),'baseline','/dispatcharrpy/bin/python','/vod-api-probe/source.py'],timeout=300)
+                        '-e','VOD_API_OBSERVATION='+mode,*(['-e','VOD_CATEGORY_WIRE=1']if args.category_wire_source else[]),*(['-e','VOD_CATEGORY_FORMS=1']if args.category_forms_source else[]),*(['-e','VOD_API_HTTP_WIRE=1']if args.http_wire else[]),'baseline','/dispatcharrpy/bin/python','/vod-api-probe/source.py'],timeout=300)
                     (evidence/'source-worker.log').write_text(captured.stderr)
                     corpus=json.loads(captured.stdout.splitlines()[-1]);data=json.dumps(corpus,indent=2,ensure_ascii=False)+'\n'
                     (evidence/'source-corpus.json').write_text(data)
@@ -123,6 +130,11 @@ def main():
                     if args.http_wire:
                         burst=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/burst_source.py'],timeout=30)
                         observed=json.loads(burst.stdout.splitlines()[-1]);assert observed['passed'];(evidence/'source-burst.json').write_text(json.dumps(observed,indent=2)+'\n')
+                    if args.native_categories:
+                        burst=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_burst_source.py'],timeout=30)
+                        observed_categories=json.loads(burst.stdout.splitlines()[-1]);assert observed_categories['passed'];(evidence/'source-category-burst.json').write_text(json.dumps(observed_categories,indent=2)+'\n')
+                        mixed=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','-e','VOD_CATEGORY_BURST_MIXED=1','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_burst_source.py'],timeout=30)
+                        observed_mixed=json.loads(mixed.stdout.splitlines()[-1]);assert observed_mixed['passed'];(evidence/'source-vod-mixed-burst.json').write_text(json.dumps(observed_mixed,indent=2)+'\n')
                     if manifest is not None:
                         command(compose+['up','-d','--no-build','candidate'])
                         identifier=command(compose+['ps','-q','candidate']).stdout.strip()
@@ -151,27 +163,41 @@ def main():
                         result['candidate_shutdown']={'elapsed_seconds':time.monotonic()-shutdown_at,'exit_code':stopped['ExitCode'],'running':stopped['Running']}
                         assert not stopped['Running']and stopped['ExitCode']==0,'Packaged candidate did not stop gracefully'
                         result['application_image_verified']=True
-                    if args.native_sql:
+                    if args.category_initial_source:
+                        initial=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_initial_source.py'],timeout=30)
+                        result['original_category_initial']=json.loads(initial.stdout.splitlines()[-1]);(evidence/'category-initial-source.json').write_text(json.dumps(result['original_category_initial'],indent=2)+'\n');assert result['original_category_initial']['passed']
+                    if args.category_defaults_source:
+                        defaults=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_defaults_source.py'],timeout=30)
+                        result['original_category_defaults']=json.loads(defaults.stdout.splitlines()[-1]);(evidence/'category-defaults-source.json').write_text(json.dumps(result['original_category_defaults'],indent=2)+'\n')
+                        assert result['original_category_defaults']['passed']
+                    if args.category_schedule_source:
+                        category_schedule=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only',*(['-e','VOD_CATEGORY_NATIVE_PREPARE=1']if args.native_categories else[]),'baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_schedule_source.py'],timeout=30)
+                        result['original_category_schedule']=json.loads(category_schedule.stdout.splitlines()[-1]);(evidence/'category-schedule-source.json').write_text(json.dumps(result['original_category_schedule'],indent=2)+'\n')
+                        assert result['original_category_schedule']['passed']
+                    if args.native_sql and not args.native_categories:
                         scheduled=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/schedule_source.py'],timeout=30)
                         (evidence/'source-schedule.json').write_text(json.dumps(json.loads(scheduled.stdout.splitlines()[-1]),indent=2)+'\n')
                         faulted=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_fault_source.py'],timeout=30)
                         (evidence/'source-category-fault.json').write_text(json.dumps(json.loads(faulted.stdout.splitlines()[-1]),indent=2)+'\n')
+                    if args.native_sql:
                         pgport=command(compose+['port','baseline','5432']).stdout.strip().rsplit(':',1)[1]
                         redisport=command(compose+['port','baseline','6379']).stdout.strip().rsplit(':',1)[1]
-                        native_environment=dict(environment,VOD_TEST_NATIVE_HTTP='1'if args.native_http else'0',VOD_SOURCE_BURST=str(evidence/'source-burst.json'),REDIS_TEST_URL='redis://:playback-fixture-only@127.0.0.1:'+redisport,VOD_TEST_CACHED_AUTH='1',DATABASE_URL='postgresql://dispatch:playback-fixture-only@127.0.0.1:'+pgport+'/dispatcharr',
+                        native_environment=dict(environment,VOD_MIXED_BURST=str(evidence/'source-vod-mixed-burst.json'),VOD_CATEGORY_INITIAL_REFERENCE=str(evidence/'category-initial-source.json'),VOD_CATEGORY_BURST=str(evidence/'source-category-burst.json'),VOD_CATEGORY_DEFAULTS_REFERENCE=str(evidence/'category-defaults-source.json'),VOD_CATEGORY_SCHEDULE_REFERENCE=str(evidence/'category-schedule-source.json'),VOD_CATEGORY_NATIVE='playback-fixture-only',VOD_TEST_NATIVE_HTTP='1'if args.native_http else'0',VOD_SOURCE_BURST=str(evidence/'source-burst.json'),REDIS_TEST_URL='redis://:playback-fixture-only@127.0.0.1:'+redisport,VOD_TEST_CACHED_AUTH='1',DATABASE_URL='postgresql://dispatch:playback-fixture-only@127.0.0.1:'+pgport+'/dispatcharr',
                             VOD_API_NATIVE_FIXTURE='playback-fixture-only',VOD_SOURCE_CORPUS=str(evidence/'source-corpus.json'),VOD_NATIVE_EVIDENCE=str(evidence),VOD_SOURCE_DEFAULT_SQL=str(tools/'scripts/rust-vod-api-contracts/source-default-queries-1.json'),VOD_SOURCE_SCHEDULE=str(evidence/'source-schedule.json'),VOD_SOURCE_CATEGORY_FAULT=str(evidence/'source-category-fault.json'))
                         target=Path(os.environ.get('VOD_CARGO_TARGET_DIR',str(ROOT/'artifacts/rust/vod-rest-cargo-target')))
                         argv=['cargo','test','--manifest-path',str(tools/'rust/Cargo.toml'),'--target-dir',str(target),'--locked','--offline','-p','dispatcharr-store','--lib',
-                            'vod_api_draft::vod_api_native_tests','--',*(['--skip','http_']if not args.native_http else[]),'--ignored','--nocapture','--test-threads=1']
+                            'vod_api_draft::vod_api_categories::tests'if args.native_categories else'vod_api_draft::vod_api_native_tests','--',*(['--skip','http_']if not args.native_http else[]),'--ignored','--nocapture','--test-threads=1']
                         result['native_command']=argv
                         with(evidence/'native-sql-tests.log').open('w')as log:
                             native=subprocess.run(argv,cwd=ROOT,env=native_environment,text=True,stdout=log,stderr=subprocess.STDOUT,timeout=240)
                         native.check_returncode()
-                        result['native_ordinary_component']=json.loads((evidence/'ordinary-sql.json').read_text())
-                        assert result['native_ordinary_component']['passed'],'Native ordinary component mismatch'
+                        if args.native_categories:
+                            result['native_category_component']=json.loads((evidence/'category-sql.json').read_text());assert result['native_category_component']['passed']
+                        else:
+                            result['native_ordinary_component']=json.loads((evidence/'ordinary-sql.json').read_text());assert result['native_ordinary_component']['passed'],'Native ordinary component mismatch'
                         if args.native_http:
                             result['native_http_component']=json.loads((evidence/'ordinary-http.json').read_text());assert result['native_http_component']['passed']
-                        result['native_scope']='Only original ordinary read cases vs nativeSQL component; outside/unsupported families not counted as passes'
+                        result['native_scope']='Only captured original category GET vs new test-only SQL component; no categoryHTTP/app/fault claims'if args.native_categories else'Only original ordinary read cases vs nativeSQL component; outside/unsupported families not counted as passes'
 
                 except Exception as error:
                     result.update(failure=type(error).__name__,failure_message=str(error));result['passed']=False
