@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "scope": "Nonconcurrent observed orphan graph/P0001 source-native component; no app/worker integration",
+  "checks": 125,
+  "direct_source_native_cases": 11,
+  "actual_source_worker_cases": 9,
+  "native_sql_ownership_cases": 2,
+  "pure_unit_tests": 2,
+  "strict_ingest_all_targets_clippy": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "dataset": "scripts/rust-job-contracts/source-native-epg-orphan-cleanup-1.json",
+  "dataset_sha256": "80473dec0977ef9493a0cc29e0580bfb83621c2447cbda6b0e1ac9112a25b7f7",
+  "source_evidence": "scripts/rust-job-contracts/verified-original-epg-orphan-cleanup-1.json",
+  "raw_report": "artifacts/rust/m6-source-native-epg-orphan-1/source-native-epg-orphan-private.json",
+  "raw_report_sha256": "acbc62a2c7bc3d09a8b4c05ee006872bed05d530645cff9982d012ae6e58af90",
+  "integration_sha256": "42ef7f81aca589637df5bcf15569735e90f231a8e4eff79c77ab7276005ac8ea",
+  "rust_source_archive": "artifacts/rust/m6-source-native-epg-orphan-1/rust-source.tar",
+  "rust_source_archive_sha256": "40fa0f7e4e15b9959da330b51e264d1dce5bd6184d3ca24271acd41fdbf7529c",
+  "selected_runtime": {
+    "rust/crates/ingest-epg/src/orphan_cleanup.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-1/frozen/rust/crates/ingest-epg/src/orphan_cleanup.rs",
+      "sha256": "a13ea2d9c8417cd05d35d70874e4faca17e79ec19cbc21c656d8d0837e43b5de"
+    }
+  },
+  "lib_registration": {
+    "path": "artifacts/rust/m6-source-native-epg-orphan-1/frozen/rust/crates/ingest-epg/src/lib.rs",
+    "sha256": "825703a3371b728928b64e81274915f1ca3eb6d001583b7991b107d2f2d8ee96",
+    "append_exact": "\n// Source orphan79 component; application/job integration remains gated.\n#[cfg(test)]\nmod orphan_cleanup;\n",
+    "copy_entire_lib": false
+  },
+  "cargo_graph_changes": false,
+  "selected_tools": {
+    "scripts/rust-job-contracts/run_native_epg_orphan.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-1/tool-source/scripts/rust-job-contracts/run_native_epg_orphan.py",
+      "sha256": "6dc8435a50c62d1cda4958f92a9565828ffdba3332daf76b7ecd0019df031708"
+    },
+    "scripts/rust-job-contracts/source_native_epg_orphan.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-1/tool-source/scripts/rust-job-contracts/source_native_epg_orphan.py",
+      "sha256": "8e2cf0742e67736939f9a2273ab6a8c8f32b43396eacb02ecd43bcb130b08166"
+    },
+    "scripts/rust-job-contracts/orphan_native_compare.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-1/tool-source/scripts/rust-job-contracts/orphan_native_compare.py",
+      "sha256": "7a79505abc1e0433b31dfe86f3e55ded0998387fe4cbbbc2d4dbe8c33bd79f6f"
+    },
+    "scripts/rust-job-contracts/epg_orphan_worker_observer.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-1/tool-source/scripts/rust-job-contracts/epg_orphan_worker_observer.py",
+      "sha256": "5bd54146fedc180d1f10a3da49859dad4896d55f9c46a92e70af52273fdb476f"
+    }
+  },
+  "validation_logs": {
+    "clippy.log": "1be030cc5fa0f650dba58de5a792b6d6b3ec9245b39409c86aaae159b64ebee1",
+    "unit.log": "cab977001f296d7d98f0345a9b652e8c79af75b846def37d5212c020a61d4503",
+    "build.log": "40ee24a8aa95b12cbdd0f378fda05a916d241189bf154a42b9ab1c4e6b05efaa",
+    "native-orphan-private.log": "4d1f6a829214f765529da38da00bb0446f11eb950b4ae7a061242b3939a4e070"
+  },
+  "worker76_file_job_unchanged": true,
+  "coupled_worker76_sha256": {
+    "rust/crates/ingest-epg/src/file_job.rs": "9176a62cba78812060f40f70b552e6a01a2bea1812f70c7671bf8cff51ad1203",
+    "rust/crates/job-transport/src/refresh_worker.rs": "c8e31fb5275f9347417cbf1f73d76ae405d7f42b4060961718537f8088429fe4"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "worker_or_app_integration_verified": false,
+  "generic_collector_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Unrelated Root ProfileCache and sibling bytes in full source capture are not accepted by this component gate.",
+    "No concurrent graph/marker writer acceptance; newly referenced intervals are rejected instead of cascading an unproved graph.",
+    "Only observed P0001 with settled rollback maps helper false; other SQL/transport or ambiguous rollback/commit faults remain operational.",
+    "Cancellation held an actual marker-lock reply and pool acquisition; no deliberately paused physical ROLLBACK reply proof.",
+    "Worker76 and FileJobRunner missing-source behavior remain unchanged; this helper is cfg(test) only."
+  ],
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL; Django and django-celery-beat authors retain framework credit/licenses."
+}

@@ -698,3 +698,6 @@ async fn import_owned(
 
 #[cfg(test)]
 mod tests;
+
+// Source orphan79/native125 helper; no application/default consumer authority.
+pub mod orphan_cleanup;

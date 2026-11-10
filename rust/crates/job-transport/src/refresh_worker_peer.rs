@@ -177,11 +177,80 @@ async fn native_refresh_worker_peer() {
     .unwrap();
     let caller = Arc::new(());
     let weak = Arc::downgrade(&caller);
-    let outcome = worker.run_once(caller).await;
+    let held_orphan_marker = input["hold_orphan_marker"] == true;
+    let outcome = if held_orphan_marker {
+        let control = sqlx::postgres::PgPoolOptions::new()
+            .max_connections(1)
+            .connect(db)
+            .await
+            .unwrap();
+        let mut lock = control.begin().await.unwrap();
+        sqlx::query("SELECT ident FROM django_celery_beat_periodictasks WHERE ident=1 FOR UPDATE")
+            .execute(&mut *lock)
+            .await
+            .unwrap();
+        let owned = worker.clone();
+        let waiter = tokio::spawn(async move { owned.run_once(caller).await });
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(3);
+        loop {
+            sqlx::query("SELECT pg_stat_clear_snapshot()")
+                .execute(&mut *lock)
+                .await
+                .unwrap();
+            let count:i64 = sqlx::query_scalar("SELECT COUNT(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT ident FROM django_celery_beat_periodictasks%'")
+                .fetch_one(&mut *lock).await.unwrap();
+            if count == 1 {
+                break;
+            }
+            assert!(
+                tokio::time::Instant::now() < deadline,
+                "real helper marker wait required"
+            );
+            tokio::time::sleep(Duration::from_millis(10)).await;
+        }
+        waiter.abort();
+        let _ = waiter.await;
+        assert!(weak.upgrade().is_some());
+        assert_eq!(worker.available_slots(), 0);
+        assert_eq!(runner.physical_jobs(), 1);
+        let mut lock_connection = redis::Client::open(cache)
+            .unwrap()
+            .get_multiplexed_async_connection()
+            .await
+            .unwrap();
+        let key = format!("task_lock_refresh_epg_data_{source}");
+        let refresh: Option<String> = redis::cmd("GET")
+            .arg(&key)
+            .query_async(&mut lock_connection)
+            .await
+            .unwrap();
+        assert!(refresh.is_some());
+        assert_eq!(
+            worker.shutdown(Duration::from_millis(20)).await,
+            Err(Error::DrainTimeout)
+        );
+        lock.commit().await.unwrap();
+        worker.shutdown(Duration::from_secs(5)).await.unwrap();
+        assert!(jobs
+            .read_refresh_fixture(id, source, Arc::new(()))
+            .await
+            .unwrap()
+            .is_some());
+        let refresh: Option<String> = redis::cmd("GET")
+            .arg(&key)
+            .query_async(&mut lock_connection)
+            .await
+            .unwrap();
+        assert!(refresh.is_none());
+        control.close().await;
+        None
+    } else {
+        Some(worker.run_once(caller).await)
+    };
     if input["action"] == "reject_head" {
         assert_eq!(
             outcome,
-            Err(Error::Transport(TransportError::UnsupportedTask))
+            Some(Err(Error::Transport(TransportError::UnsupportedTask)))
         );
         let after: Vec<u8> = redis::cmd("LINDEX")
             .arg("celery")
@@ -192,10 +261,18 @@ async fn native_refresh_worker_peer() {
         assert_eq!(head, after);
         assert_eq!(calls.load(Ordering::SeqCst), 0)
     } else if input["expect_operational"] == true {
-        assert_eq!(outcome, Err(Error::Execution));
+        assert_eq!(outcome, Some(Err(Error::Execution)));
         assert_eq!(calls.load(Ordering::SeqCst), 1)
+    } else if held_orphan_marker {
+        // The logical waiter was aborted, so its return value is unobserved.
+        // The actual normal result was independently read above; never invent
+        // a Completed return for the abandoned JoinHandle.
+        assert!(outcome.is_none());
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
     } else {
-        assert!(matches!(outcome,Ok(Run::Completed(v)|Run::ResultAlreadySucceeded(v))if v==id));
+        assert!(
+            matches!(outcome,Some(Ok(Run::Completed(v)|Run::ResultAlreadySucceeded(v)))if v==id)
+        );
         assert_eq!(calls.load(Ordering::SeqCst), 1)
     }
     assert!(weak.upgrade().is_none());
@@ -211,6 +288,6 @@ async fn native_refresh_worker_peer() {
     store.pool().close().await;
     println!(
         "NATIVE_REFRESH_WORKER_JSON={}",
-        json!({"outcome":format!("{outcome:?}"),"calls":calls.load(Ordering::SeqCst),"default_dispatch_calls":default_calls.load(Ordering::SeqCst),"caller_released":weak.upgrade().is_none(),"worker_drained":true,"service_drained":true,"transport_drained":true,"physical_jobs":runner.physical_jobs(),"head_unchanged":input["action"]=="reject_head","native_eta_consumer":false})
+        json!({"outcome":format!("{outcome:?}"),"calls":calls.load(Ordering::SeqCst),"default_dispatch_calls":default_calls.load(Ordering::SeqCst),"caller_released":weak.upgrade().is_none(),"worker_drained":true,"service_drained":true,"transport_drained":true,"physical_jobs":runner.physical_jobs(),"head_unchanged":input["action"]=="reject_head","native_eta_consumer":false,"held_orphan_marker":held_orphan_marker,"logical_waiter_aborted":held_orphan_marker})
     );
 }

@@ -1,0 +1,2897 @@
+{
+  "format_version": 1,
+  "scope": "Nonconcurrent observed orphan graph/P0001 source-native component; no app/worker integration",
+  "checks": [
+    {
+      "name": "none_returns_false_without_rows",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_none",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_none",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_none",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_none",
+      "passed": true
+    },
+    {
+      "name": "helper_true_sole",
+      "passed": true
+    },
+    {
+      "name": "target_deleted_sole",
+      "passed": true
+    },
+    {
+      "name": "sole_interval_deleted_sole",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_sole",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_sole",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_sole",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_sole",
+      "passed": true
+    },
+    {
+      "name": "helper_true_shared",
+      "passed": true
+    },
+    {
+      "name": "target_deleted_shared",
+      "passed": true
+    },
+    {
+      "name": "shared_interval_and_other_task_retained",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_shared",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_shared",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_shared",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_shared",
+      "passed": true
+    },
+    {
+      "name": "helper_true_crontab_only",
+      "passed": true
+    },
+    {
+      "name": "target_deleted_crontab_only",
+      "passed": true
+    },
+    {
+      "name": "crontab_is_not_garbage_collected",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_crontab_only",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_crontab_only",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_crontab_only",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_crontab_only",
+      "passed": true
+    },
+    {
+      "name": "helper_true_cross_refs",
+      "passed": true
+    },
+    {
+      "name": "target_deleted_cross_refs",
+      "passed": true
+    },
+    {
+      "name": "sole_interval_deleted_cross_refs",
+      "passed": true
+    },
+    {
+      "name": "collector_set_null_epg_m3u",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_cross_refs",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_cross_refs",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_cross_refs",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_cross_refs",
+      "passed": true
+    },
+    {
+      "name": "helper_true_marker_absent",
+      "passed": true
+    },
+    {
+      "name": "target_deleted_marker_absent",
+      "passed": true
+    },
+    {
+      "name": "sole_interval_deleted_marker_absent",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_marker_absent",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_marker_absent",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_marker_absent",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_marker_absent",
+      "passed": true
+    },
+    {
+      "name": "task_fault_is_caught",
+      "passed": true
+    },
+    {
+      "name": "task_fault_preserves_task_interval",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_task_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_task_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_task_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_task_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "interval_fault_is_caught",
+      "passed": true
+    },
+    {
+      "name": "task_commit_precedes_interval_failure",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_interval_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_interval_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_interval_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_interval_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "marker_phase_fault_caught_marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "marker1_rolls_back_task_and_marker",
+      "passed": true
+    },
+    {
+      "name": "exact_marker_attempt_marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "marker_phase_fault_caught_marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "later_marker_fault_keeps_task_committed_marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "exact_marker_attempt_marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "marker_phase_fault_caught_marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "later_marker_fault_keeps_task_committed_marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "exact_marker_attempt_marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "native_helper_return_marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_rows_refs_marker_marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "native_exact_marker_attempts_marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "native_physical_drain_marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "native_cancelled_sql_and_pool_waiters_retain_physical_ownership",
+      "passed": true
+    },
+    {
+      "name": "native_aborted_p0001_jobs_rollback_before_drain",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-none",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-none",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-none",
+      "passed": true
+    },
+    {
+      "name": "worker-no-task-no-marker-change",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-none",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-sole",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-sole",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-sole",
+      "passed": true
+    },
+    {
+      "name": "worker-sole-removed",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-sole",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-shared",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-shared",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-shared",
+      "passed": true
+    },
+    {
+      "name": "worker-shared-retained",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-shared",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-cross_refs",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-cross_refs",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-cross_refs",
+      "passed": true
+    },
+    {
+      "name": "worker-collector-clears-fks",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-cross_refs",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-task_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-task_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-task_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-task-fault-rollback",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-task_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-interval_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-interval_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-interval_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-interval-fault-partial-commit",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-interval_delete_fault",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-marker1-rollback",
+      "passed": true
+    },
+    {
+      "name": "worker-exact-marker-attempt-marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-marker1_fault",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-later-marker-partial-marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-exact-marker-attempt-marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-marker2_fault",
+      "passed": true
+    },
+    {
+      "name": "bounded-worker-metadata-marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-success-string-even-cleanup-fault-marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-result-geometry-marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-later-marker-partial-marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-exact-marker-attempt-marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "worker-owned-queue-and-refresh-lock-clean-marker3_fault",
+      "passed": true
+    },
+    {
+      "name": "no-unrelated-worker-family-executed",
+      "passed": true
+    }
+  ],
+  "versions": {
+    "Django": "6.0.9",
+    "django-celery-beat": "2.9.0",
+    "psycopg": "3.3.6"
+  },
+  "direct_source_cases": [
+    {
+      "name": "none",
+      "source_id": 9000000,
+      "before": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "helper_return": false,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "c735a0b49fee1e1578f765bac0571089c79a350f683750f99fc9b9c0903e2a14"
+        }
+      ]
+    },
+    {
+      "name": "sole",
+      "source_id": 9000001,
+      "before": {
+        "tasks": [
+          {
+            "id": 2,
+            "name": "epg_source-refresh-9000001",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 2,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 2,
+            "every": 7950,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:00.242966+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "helper_return": true,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "9da70c40ce3ffbc0bb649e960930b220e07cd41f292b4658fb95c202bd526e88"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "7e5fae0f2898c779baa687d6d2cc66a3464de38a229bc0b2959d154283ebe69c"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "93eba9daa8516d3067b0e437c003eceb293dc7b08248ea554641a54d709dc3ca"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "9dc1bd084765d8cff2e9725f8d7d8a922b142d00875fe5666e4c96fa7a261c57"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "b4049ea42208fd6eb386b548499c79b0916139fceb075d0c2d85836829c1487f"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "0cb685e8695970beb6848d2b4e3b8b16299ef47d675d15fbfa481314beed0115"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "353341ca37c4a9e33023c7b9be9f8873f4a57ec8ad45bb4b2f930ceccd4a5a79"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "7f8138aa0590756362f77c035d98c36ce749b1cd47ac871de1428972433f64d3"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "6b712581f58c6a1a6bbe7237e7b6ef92c7bacc1bb76cf52795413eec2b42b68d"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "ec745b3ae02629ee838c1d04f78bfb00575373407d206f08861dc707d5097ca5"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "7e5fae0f2898c779baa687d6d2cc66a3464de38a229bc0b2959d154283ebe69c"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "2bb385392b39544e584972b14e2dca56f6ec168a17830aedfada5fd2af9c3d15"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "baef34830e42063f058844ed1949a586d678a0573ae1075be2ca6f96e21f4b68"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "7ba2fa6d42dcc726881ab0c492833a494e409a47661a46e0033e5eed436c5ff2"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "d1c242fe8ea637c7787569a32194c61dab62972a1f49ab6d22bfe9a83c5044cb"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "26c6c2cec1635ee618eca280ff248c9de49e65b811d57986f4dabad0aaa994ea"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ]
+    },
+    {
+      "name": "shared",
+      "source_id": 9000002,
+      "before": {
+        "tasks": [
+          {
+            "id": 3,
+            "name": "epg_source-refresh-9000002",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 3,
+            "crontab_id": null
+          },
+          {
+            "id": 4,
+            "name": "rust-orphan-510759c9b0-shared",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 3,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 3,
+            "every": 7951,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 4,
+            "name": "rust-orphan-510759c9b0-shared",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 3,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 3,
+            "every": 7951,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:00.288996+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "helper_return": true,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "071b66d79037f3d81f6caa5889d64bd39aacb4204ed5c1b05843cac4eda99842"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "cd9ded0b5930b7b289d29e655a5cd780072fe02b9cfeaa1ffc3aa7af8cbeea08"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "9f40b245aff0969a8301d0403bfa2ed1d4fdbeead0ab81bcc5bd22da792f4c4c"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "6a9d174bb488b1a853140d607a698740762d7cfcdbc09317570ce39034fb1ee6"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "43c4594f4a73400c6a84072d02f7414fb4c897b484451d6067827086fead2372"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "d1b61fef52066a824af4ec18dcaa42f86c598cee4db9fda85d8be23281311f9b"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "5e6e31c71c446e19eb5a35b2bc951140cdc6144f9c795839bc28371bffdd9619"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "febfbe83317920374243a5d336e73e6ebe508069e9aafef24392f83218d11380"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "278fbd0bedc5abf61c8792bee2bd9ff4b924f77961943c64e462c2283d2bd95c"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "c1f571fb0445a2e4046b5859bef6096708f0605588678c76fa34a7bac092e414"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ]
+    },
+    {
+      "name": "crontab_only",
+      "source_id": 9000003,
+      "before": {
+        "tasks": [
+          {
+            "id": 5,
+            "name": "epg_source-refresh-9000003",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": null,
+            "crontab_id": 1
+          }
+        ],
+        "intervals": [],
+        "crons": [
+          {
+            "id": 1,
+            "minute": "17",
+            "hour": "3"
+          }
+        ],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [
+          {
+            "id": 1,
+            "minute": "17",
+            "hour": "3"
+          }
+        ],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:00.335656+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "helper_return": true,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "29525ef6a57413e1bb68efd4db8ffc7a951636a45b992ab4cac285d0cc26e386"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "5a151ae203ec902e88a4b07cf330172dda42a0e82c07ee7f335c545fd7038ce3"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "cc385371fad1cc88c0e588c8fd291bcb9b719292b7bee2f730f90bd79e67f332"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "d56039e4f1c5f96f1b4ea051ad6617397bb05709c344aacefb27911494c10bca"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "9d734100b4f7b6cf7bcdceb97dd95cb5ce1654f0c41048fe58f4f42854a3daf3"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "77082316d8fc7d4215a08e049b704b6abf29b22e116bd14017bea8a9273044d3"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "abdc228fec442d335c628fce25c492e33ffb3c6d0bb964eaec6043ac6bc3b546"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "e04859d21fe7d00f554c487c7826ff60ca19f32d76b06ea16459452185a6982a"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ]
+    },
+    {
+      "name": "cross_refs",
+      "source_id": 9000004,
+      "before": {
+        "tasks": [
+          {
+            "id": 6,
+            "name": "epg_source-refresh-9000004",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 4,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 4,
+            "every": 7953,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [
+          {
+            "id": 1,
+            "refresh_task_id": 6
+          }
+        ],
+        "m3u_refs": [
+          {
+            "id": 3,
+            "refresh_task_id": 6
+          }
+        ],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [
+          {
+            "id": 1,
+            "refresh_task_id": null
+          }
+        ],
+        "m3u_refs": [
+          {
+            "id": 3,
+            "refresh_task_id": null
+          }
+        ],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:00.388062+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "helper_return": true,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "58b3fc8580208b17210fee2f05f8b121203eeae891fc42bc5e55c615fec0596a"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "bad2dc27ef1677c82b2b2e53567385853d15f6bf36b2c891169e5fa68ce4a417"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "f5c440f291ee591d3515fddaef6a690d7df2da797d37d2599e6e665c3a7a8462"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "5516944a3e7c8882a0ed1c18b105f74747efc4fb0052685f540868c1ba295360"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "7154c34413c5b48639d44d06fe8df6bb5e7977ba0c13fbe0a2f72d691c36bed2"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "5ddcf7ecd827b4f0dc1f586cb3b906c591b17aeb900947a6f7762e67732db4b1"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "0a9ca6e5d19458bcb33a519d8ef4bf51d958fda19a7cecc61dd54f2c440a83d0"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "09541c89c4769598c14e97716db507b822dbf4ae5c7a38ab72b4da2ea45bf4b7"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "a0e1e2c5a5336183488b4b9862043976ae0f265b456b79edc8e7ffd3476158a5"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "5c431a9b5582cba3e66f398f79ebc0663dd01a8e2919ebc869ae4324fa76a503"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "bad2dc27ef1677c82b2b2e53567385853d15f6bf36b2c891169e5fa68ce4a417"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "ec67c5ca67897cd53059153409863b9cfe08159852585d49ce64267abaa5970d"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "9b62d0ad1863326714003dc574fde1ae094b6a8c751e14026b6ff91c6a7f1d5f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "a27a9b050a348156cff287c5e7920438f32f52f592282ffe6d1e0f62e5eac705"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "a1376a06f1256082e27a7898168837f601f061f3dfeaf4e562d6c100a01d83d7"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "c23e666779921d48c121b8a69be8095607e6a532b9cc186d0afb5e23f2a4db74"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ]
+    },
+    {
+      "name": "marker_absent",
+      "source_id": 9000005,
+      "before": {
+        "tasks": [
+          {
+            "id": 7,
+            "name": "epg_source-refresh-9000005",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 5,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 5,
+            "every": 7954,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": []
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:00.435718+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "helper_return": true,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "fcbd70ee1835d5e5b127b0d81b699d03fc303daed51ee6d3e608c4a1a4e7482f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "540e97ce8c835bd5cdf3b126766b4eea94244620f662dc7b3c02d6383ac31e41"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "8ef01f49a7519ade6e175e99908afdbe59900c4218a2494593732d857557a72d"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "56be35d218fd51a4518b64e341d8df88995463c0aa205443ea0de2e2f02bb521"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "eeaa9b93c753b3b43cbc1e1573078246a699e9101cbab4fb72c8a8914c3f1d6c"
+        },
+        {
+          "verb": "INSERT",
+          "sha256": "b1c5bf54d4ee2b643b255d8353de017a819df0fbeb908ec273535718c5a3cf8c"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "772cb834ed5974ad472e5db01f6fbe8086d1eba4bf48ddd087903f074b56e764"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "ac7411d65c022f45c2685a414f81088d6052b4a03ff0392402009f84a206d167"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "b08861cc230e0d84e95f95944eaff40fabf4b6cedf2c90afd3f5d538fac9d9ce"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "14fe39bbe3a57a106d9b9799edabd7b50811c246c4164fbd134d6039b9d8bcba"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "995ae3c8196c09eb3b22978557b5243c486862cbc8a780f7673c2afcb904577a"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "0c20d4a2d74e67a2f3d88fa20afdead46263080dfb50ccf0533b543c1c698abf"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "540e97ce8c835bd5cdf3b126766b4eea94244620f662dc7b3c02d6383ac31e41"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "404af1aa44f96bc77de24dcaee56dcd935033f80d8d177a9049a12d1c9e61ebc"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "2a444b4fe00723d60cc50e603414d72e31c9a5357a21d95a84187096cccb5dba"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "a0117e109cd8ad16889a3e02ccb81134d13e59dc902e0a0996b9b6bd6f1aaf1a"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "f6f8fd987162f64c250fd15bad6c5dbed38c8c077f40aabf4159b4e02cd407b3"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "5c5d1cb0589c0ed51be6d94505cc06007333196ae5dda1ed3986629cb6ce8333"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        }
+      ]
+    },
+    {
+      "name": "task_delete_fault",
+      "source_id": 9000006,
+      "before": {
+        "tasks": [
+          {
+            "id": 8,
+            "name": "epg_source-refresh-9000006",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 6,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 6,
+            "every": 7955,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 8,
+            "name": "epg_source-refresh-9000006",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 6,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 6,
+            "every": 7955,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "helper_return": false,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "c12b80fb1f310b8641942712e6b9ecd4fea38bdfd6a848ce1d0faee94d0bd45b"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "bd5099a2aec554a3b748d076b2bea4a0bdbb4bae3f5f8428a388554e6c557e2f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "4a6158d4391dbb0118ff032a70b4f26c40f4fcaf999232adfc510ec9641dc681"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "1f2f5430fc5ab714bb4a6077d20449351ed5d7f1ec41bf7c196f86d13fa2596f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "9f0dfded8caa9dde0f74038a73b15b904313b392e6cdc66c8c1020f7bdafa7e5"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "f2e42368ebc271eab55d94395529dc60fb65fafa6841d9183e7021512d024a2e"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "15fff5ba8e2535fad3b74eb1f1e4b261be4ed48dfa51b9d8b998eec2e19c73d8"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "9cf4b4f4bafeb2dbd86dab73d6adfe0854328840ccf0eee9fd6b123d164bcd7f"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "6e587718bbe8cddbb629f0533cb03246fb40496a2ae94dac87d8a82f23418e22"
+        },
+        {
+          "verb": "ROLLBACK",
+          "sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710"
+        }
+      ]
+    },
+    {
+      "name": "interval_delete_fault",
+      "source_id": 9000007,
+      "before": {
+        "tasks": [
+          {
+            "id": 9,
+            "name": "epg_source-refresh-9000007",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 7,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 7,
+            "every": 7956,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 7,
+            "every": 7956,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:00.559875+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "helper_return": false,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "5a5d8a7ac56e01706ee036a5db0274c492db303bb2414bec04e4abaf280483a0"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "d072bd3c0f1b651ae93389cad389daa3de2f4a8933855e27a1db32842e299c53"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "caef386b3b2bd98a9f6a065f5cb1c17b926ee15d90f5e2d93ac82d32b169c459"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "22059af230956f30d8530295106310362b0d0fa4d15f33ab318ff452f6262fd4"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "07ef7393e36c80d57e2062ab64329a7a00223295f7dc2ac978e2ca905f816545"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "0192ec10216c6bd56a765396d97800313efd98b2ced07c6ef98742ab7385e8b1"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "cc8981cba98b87f1d05cd7e500f4c08084ca862d79d219e71ce9797ac346d11d"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "2516b85f87949be666c6d5ded50866ddae8283de3134777fc4dfb605b8f87d02"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "01e74d708016794b91e544c4e982cfb2f653cd9c26c187f924aec5b4b16a306b"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "4647f28d994c58b8b3262e2e9051a1705f58ede0b656fb6b9d573fb5c65ba857"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "d072bd3c0f1b651ae93389cad389daa3de2f4a8933855e27a1db32842e299c53"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "83fac8d0ba1d9c286b9162b67126db777d12068b7d0e8aaf17eedcd11f363835"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "53cf49b7c067cca6cec75f7ae86e1b5956bd0cc5588b764aafa6d43b4ffdc91b"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "6fa92d7cc6f6f6f01a54b2140c85427386692db7c2b5a37b674db9274398c3f8"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "dd622f8812059a6372e30e1fcb46e244194bd5fadf2e96d71ee7fb218f9c13d5"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "68e171c43751b930836907518760d4b222e908108e17e754e670ff9df1feb55b"
+        },
+        {
+          "verb": "ROLLBACK",
+          "sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710"
+        }
+      ]
+    },
+    {
+      "name": "marker1_fault",
+      "source_id": 9000008,
+      "before": {
+        "tasks": [
+          {
+            "id": 10,
+            "name": "epg_source-refresh-9000008",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 8,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 8,
+            "every": 7957,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 10,
+            "name": "epg_source-refresh-9000008",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 8,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 8,
+            "every": 7957,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_b5225cb9a5ef_seq": 1
+      },
+      "helper_return": false,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "e12a62c83855c74d626942b34b3fdaba043b64bf7d22ea8d89e59b48958eb0fe"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "3fd6dad398c1bbef425770e488cb6847d4ca4ae2859ee8ee00f316ca35ad167b"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "cc16e9fe6617ad56aa1cc0a57e18b707a3e5ce20fe24422665d87bd3b1688abe"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "8261ff8e7a72a72d72f6b85a1fb610eb7d6b39f86c803eb72dfa0cd24cf9c130"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "9b35420ed433c0a8cbb9901b5fbac561a5bfb50b7b1b44d03ae6399cb99604b7"
+        },
+        {
+          "verb": "ROLLBACK",
+          "sha256": "76bbe9e44a0b56cb56b4c548dcc0102f92f1a52a1f97db3ba02a98572ab2b1d5"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "c2811631931de71913de15c81ffc32235d50850c9dea81e30369659fcf5aff1c"
+        },
+        {
+          "verb": "ROLLBACK",
+          "sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710"
+        }
+      ]
+    },
+    {
+      "name": "marker2_fault",
+      "source_id": 9000009,
+      "before": {
+        "tasks": [
+          {
+            "id": 11,
+            "name": "epg_source-refresh-9000009",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 9,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 9,
+            "every": 7958,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 9,
+            "every": 7958,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:00.658805+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_11103cb59b3b_seq": 2
+      },
+      "helper_return": false,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "61f32d617c9a1c92ca509d7e71e6ffbd12bb0d40beca090f44347983a3db88c7"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "024d101db24a2f5c089635de778323f765154012219cbbbd3f4387c04809f55f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "0042e712918d78da3e754244f3538f9e2a7bbda1d427b37ac4c344be252bd4ad"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "42250f1fcf478593f19c1017cc331c95691db641ff8742e3693f2e76c7554081"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "b3bb9d9e54ab0c20bda3a27d9e4d12a6d54739e1b8e43a113fba1db11c1668b0"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "542388b16d27356cf7706c746526450d7958e584e708506cb1785e885392a5a9"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "903924931b084c6eedf51df17e2d4533893b2f6dd5f7ec252577238111ff8c8c"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "fd6b3f99ce62941550d5eda98618824d1c24a758c3b6da59670f364a441a6ed4"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "3a16cd25aa48e4cea4197da110fd3d906219df65a0c2ff54f6b399076f3fcf34"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "67f43cbbc120bc45298d4e0ca59a18bd73049c497425c0ee0dcc49f74f04dfd0"
+        },
+        {
+          "verb": "ROLLBACK",
+          "sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710"
+        }
+      ]
+    },
+    {
+      "name": "marker3_fault",
+      "source_id": 9000010,
+      "before": {
+        "tasks": [
+          {
+            "id": 12,
+            "name": "epg_source-refresh-9000010",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 10,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 10,
+            "every": 7959,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 10,
+            "every": 7959,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:00.712008+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_8a647cd6c559_seq": 3
+      },
+      "helper_return": false,
+      "sql": [
+        {
+          "verb": "SELECT",
+          "sha256": "fe05ddd118fa6d61034a2a9729b9b346ea88ce7ba5495bf210ad3dca51c2dbf7"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "d4ed62a03fd8aa044c0df8891f9369b63beec7bb9cad95ec10552bd65bf2ab55"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "3fbc1834f9eecc08ed54bb7b9e89eaade602f479cab36a0aed632af3d1937667"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "fda9b9417acd27b171ef758befadc39f6e63aa4c1895697163946d150dc5ae60"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "8704e3ddbdf52207ee38274663da55c9d1ddd0281cf0ba4baaeb2dbda98e71ce"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "7da776847c2f6945861cb52897ae6ca168bfb978e29e2748d6b7ab7120819f2f"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "1f3dac5b6e8438e0df262b78dcb5bd4f8732ec1eb869160e4280e2e00e9fd452"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "976f4abc16f956d248f847df6bb0700a58cb981be3141ae4911c3e2633d56452"
+        },
+        {
+          "verb": "DELETE",
+          "sha256": "ea6e6965a4577371acb828915c14afd6ab87bfa412b82f9a2a8227f9b72a3b62"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "6be9585a28abfe8da6799f03388b21633b6206069a555500d81bf36c27c63638"
+        },
+        {
+          "verb": "COMMIT",
+          "sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "d4ed62a03fd8aa044c0df8891f9369b63beec7bb9cad95ec10552bd65bf2ab55"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "e93a7cc677a63e22d98f20b91ec3134e84f90976c6b5f5fb8ce90a38655e4063"
+        },
+        {
+          "verb": "BEGIN",
+          "sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032"
+        },
+        {
+          "verb": "SAVEPOINT",
+          "sha256": "5505cc5e9bc597a928abbd9e880b69be7d09d3a48f0b167ecbdf0724c12e5817"
+        },
+        {
+          "verb": "SELECT",
+          "sha256": "1315dd8ea0194e2d8964754d497d164b91fd717f9dc5383a649d268a5c61c480"
+        },
+        {
+          "verb": "UPDATE",
+          "sha256": "faf098dcf2967e595cb1ae34053a2f0c3b94ec2550ec472ef99ef24f1249d839"
+        },
+        {
+          "verb": "ROLLBACK",
+          "sha256": "3ea6c0c68354a54b931d8ff2cdd233086ad7c3e675df804c7f3ad92651db3447"
+        },
+        {
+          "verb": "RELEASE",
+          "sha256": "87693246d1a549ba9846c969d240c0aa26bdb032e1dc3abbb11a3c6ae0f04b25"
+        },
+        {
+          "verb": "ROLLBACK",
+          "sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710"
+        }
+      ]
+    }
+  ],
+  "native_cases": [
+    {
+      "name": "none",
+      "source_id": 9000000,
+      "outcome": {
+        "helper_return": false,
+        "found": false,
+        "task_committed": false,
+        "model_marker_committed": false,
+        "interval_committed": false,
+        "failure": null,
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {}
+    },
+    {
+      "name": "sole",
+      "source_id": 9000001,
+      "outcome": {
+        "helper_return": true,
+        "found": true,
+        "task_committed": true,
+        "model_marker_committed": true,
+        "interval_committed": true,
+        "failure": null,
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2021-01-01 00:00:00+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {}
+    },
+    {
+      "name": "shared",
+      "source_id": 9000002,
+      "outcome": {
+        "helper_return": true,
+        "found": true,
+        "task_committed": true,
+        "model_marker_committed": true,
+        "interval_committed": false,
+        "failure": null,
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 4,
+            "name": "rust-orphan-510759c9b0-shared",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 3,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 3,
+            "every": 7951,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2021-01-01 00:00:00+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {}
+    },
+    {
+      "name": "crontab_only",
+      "source_id": 9000003,
+      "outcome": {
+        "helper_return": true,
+        "found": true,
+        "task_committed": true,
+        "model_marker_committed": true,
+        "interval_committed": false,
+        "failure": null,
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [
+          {
+            "id": 1,
+            "minute": "17",
+            "hour": "3"
+          }
+        ],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2021-01-01 00:00:00+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {}
+    },
+    {
+      "name": "cross_refs",
+      "source_id": 9000004,
+      "outcome": {
+        "helper_return": true,
+        "found": true,
+        "task_committed": true,
+        "model_marker_committed": true,
+        "interval_committed": true,
+        "failure": null,
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [
+          {
+            "id": 1,
+            "refresh_task_id": null
+          }
+        ],
+        "m3u_refs": [
+          {
+            "id": 3,
+            "refresh_task_id": null
+          }
+        ],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2021-01-01 00:00:00+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {}
+    },
+    {
+      "name": "marker_absent",
+      "source_id": 9000005,
+      "outcome": {
+        "helper_return": true,
+        "found": true,
+        "task_committed": true,
+        "model_marker_committed": true,
+        "interval_committed": true,
+        "failure": null,
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2021-01-01 00:00:00+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {}
+    },
+    {
+      "name": "task_delete_fault",
+      "source_id": 9000006,
+      "outcome": {
+        "helper_return": false,
+        "found": true,
+        "task_committed": false,
+        "model_marker_committed": false,
+        "interval_committed": false,
+        "failure": {
+          "phase": "TaskCollector",
+          "code": "P0001"
+        },
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 8,
+            "name": "epg_source-refresh-9000006",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 6,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 6,
+            "every": 7955,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {}
+    },
+    {
+      "name": "interval_delete_fault",
+      "source_id": 9000007,
+      "outcome": {
+        "helper_return": false,
+        "found": true,
+        "task_committed": true,
+        "model_marker_committed": true,
+        "interval_committed": false,
+        "failure": {
+          "phase": "IntervalCollector",
+          "code": "P0001"
+        },
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 7,
+            "every": 7956,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2021-01-01 00:00:00+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {}
+    },
+    {
+      "name": "marker1_fault",
+      "source_id": 9000008,
+      "outcome": {
+        "helper_return": false,
+        "found": true,
+        "task_committed": false,
+        "model_marker_committed": false,
+        "interval_committed": false,
+        "failure": {
+          "phase": "TaskCollector",
+          "code": "P0001"
+        },
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 10,
+            "name": "epg_source-refresh-9000008",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 8,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 8,
+            "every": 7957,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_b5225cb9a5ef_seq": 1
+      }
+    },
+    {
+      "name": "marker2_fault",
+      "source_id": 9000009,
+      "outcome": {
+        "helper_return": false,
+        "found": true,
+        "task_committed": true,
+        "model_marker_committed": false,
+        "interval_committed": false,
+        "failure": {
+          "phase": "TaskModelMarker",
+          "code": "P0001"
+        },
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 9,
+            "every": 7958,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2021-01-01 00:00:00+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_11103cb59b3b_seq": 2
+      }
+    },
+    {
+      "name": "marker3_fault",
+      "source_id": 9000010,
+      "outcome": {
+        "helper_return": false,
+        "found": true,
+        "task_committed": true,
+        "model_marker_committed": true,
+        "interval_committed": false,
+        "failure": {
+          "phase": "IntervalCollector",
+          "code": "P0001"
+        },
+        "physical_jobs": 0
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 10,
+            "every": 7959,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2021-01-01 00:00:00+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_8a647cd6c559_seq": 3
+      }
+    }
+  ],
+  "actual_source_worker_cases": [
+    {
+      "name": "none",
+      "source_id": 9001000,
+      "before": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001000 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:02.189784+00:00",
+        "task_id": "541a0684-3ec0-4ff4-8bf4-947945260dea"
+      },
+      "result_ttl": 3596,
+      "raw_metadata_sha256": "569c043bc477e6a882653dbadc5b3cd291042e3ad3e7ba52ecc496a2f17648ef",
+      "postrun_sql_count": 0
+    },
+    {
+      "name": "sole",
+      "source_id": 9001001,
+      "before": {
+        "tasks": [
+          {
+            "id": 14,
+            "name": "epg_source-refresh-9001001",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 12,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 12,
+            "every": 7982,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:07.998603+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001001 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:08.098759+00:00",
+        "task_id": "a39503f4-84b7-443c-94e8-90a81a363192"
+      },
+      "result_ttl": 3597,
+      "raw_metadata_sha256": "124f2cdffe36cea2f09adb8d9d61f3dbbd9939170e50520f794f85e906e07989",
+      "postrun_sql_count": 0
+    },
+    {
+      "name": "shared",
+      "source_id": 9001002,
+      "before": {
+        "tasks": [
+          {
+            "id": 15,
+            "name": "epg_source-refresh-9001002",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 13,
+            "crontab_id": null
+          },
+          {
+            "id": 16,
+            "name": "rust-orphan-510759c9b0-worker-shared",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 13,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 13,
+            "every": 7983,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 16,
+            "name": "rust-orphan-510759c9b0-worker-shared",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 13,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 13,
+            "every": 7983,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:12.644679+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001002 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:12.721612+00:00",
+        "task_id": "b3aa0cb4-88d0-4e61-91b6-ad2399e84ab8"
+      },
+      "result_ttl": 3597,
+      "raw_metadata_sha256": "49d7ec507dcab207c99bc60b7eb70f47e6771ff376159901d6031437cd35d622",
+      "postrun_sql_count": 0
+    },
+    {
+      "name": "cross_refs",
+      "source_id": 9001003,
+      "before": {
+        "tasks": [
+          {
+            "id": 17,
+            "name": "epg_source-refresh-9001003",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 14,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 14,
+            "every": 7984,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [
+          {
+            "id": 2,
+            "refresh_task_id": 17
+          }
+        ],
+        "m3u_refs": [
+          {
+            "id": 4,
+            "refresh_task_id": 17
+          }
+        ],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [],
+        "crons": [],
+        "epg_refs": [
+          {
+            "id": 2,
+            "refresh_task_id": null
+          }
+        ],
+        "m3u_refs": [
+          {
+            "id": 4,
+            "refresh_task_id": null
+          }
+        ],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:17.687834+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001003 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:17.781429+00:00",
+        "task_id": "62ea51eb-8814-467b-90ae-7c95574885aa"
+      },
+      "result_ttl": 3597,
+      "raw_metadata_sha256": "b9e17695b565f2be61e2693a369df71445ab2924e489748bd850e7aaf8c4d5b0",
+      "postrun_sql_count": 0
+    },
+    {
+      "name": "task_delete_fault",
+      "source_id": 9001004,
+      "before": {
+        "tasks": [
+          {
+            "id": 18,
+            "name": "epg_source-refresh-9001004",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 15,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 15,
+            "every": 7985,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 18,
+            "name": "epg_source-refresh-9001004",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 15,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 15,
+            "every": 7985,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001004 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:22.559818+00:00",
+        "task_id": "90534d51-fde0-4f1d-b729-e35e61fd699b"
+      },
+      "result_ttl": 3597,
+      "raw_metadata_sha256": "fa6b55a13215aab8c302a0f728d53633f7590829474f1a297265a752f53a5ea2",
+      "postrun_sql_count": 0
+    },
+    {
+      "name": "interval_delete_fault",
+      "source_id": 9001005,
+      "before": {
+        "tasks": [
+          {
+            "id": 19,
+            "name": "epg_source-refresh-9001005",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 16,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 16,
+            "every": 7986,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 16,
+            "every": 7986,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:26.988059+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {},
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001005 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:27.060845+00:00",
+        "task_id": "a410c670-b988-4ccd-8638-11bc700f71aa"
+      },
+      "result_ttl": 3597,
+      "raw_metadata_sha256": "2d18545f5a13d492bcb24d2a8c8f569d0d144d11677bccd0e91a3a38c4a0f999",
+      "postrun_sql_count": 0
+    },
+    {
+      "name": "marker1_fault",
+      "source_id": 9001006,
+      "before": {
+        "tasks": [
+          {
+            "id": 20,
+            "name": "epg_source-refresh-9001006",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 17,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 17,
+            "every": 7987,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [
+          {
+            "id": 20,
+            "name": "epg_source-refresh-9001006",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 17,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 17,
+            "every": 7987,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_91728431d7d9_seq": 1
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001006 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:31.436244+00:00",
+        "task_id": "48a5b7f9-cf50-4ed4-8772-5f297c07aead"
+      },
+      "result_ttl": 3597,
+      "raw_metadata_sha256": "be44055b3bd3550b32ba783ea1163207648bdf100ff961ddffa6d9f18f7f4a74",
+      "postrun_sql_count": 0
+    },
+    {
+      "name": "marker2_fault",
+      "source_id": 9001007,
+      "before": {
+        "tasks": [
+          {
+            "id": 21,
+            "name": "epg_source-refresh-9001007",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 18,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 18,
+            "every": 7988,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 18,
+            "every": 7988,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:35.801733+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_ee008eab8837_seq": 2
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001007 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:35.876783+00:00",
+        "task_id": "3b3b05fa-7a08-4ef5-8d08-6dc489abe1a9"
+      },
+      "result_ttl": 3597,
+      "raw_metadata_sha256": "ebe47a8485506b575f00405d6c4a20e0117a616810aaac3f0e62bafeaf489a6a",
+      "postrun_sql_count": 0
+    },
+    {
+      "name": "marker3_fault",
+      "source_id": 9001008,
+      "before": {
+        "tasks": [
+          {
+            "id": 22,
+            "name": "epg_source-refresh-9001008",
+            "task": "apps.epg.tasks.refresh_epg_data",
+            "interval_id": 19,
+            "crontab_id": null
+          }
+        ],
+        "intervals": [
+          {
+            "id": 19,
+            "every": 7989,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2020-01-02 03:04:05+00:00"
+          }
+        ]
+      },
+      "after": {
+        "tasks": [],
+        "intervals": [
+          {
+            "id": 19,
+            "every": 7989,
+            "period": "seconds"
+          }
+        ],
+        "crons": [],
+        "epg_refs": [],
+        "m3u_refs": [],
+        "beat_marker": [
+          {
+            "ident": 1,
+            "last_update": "2026-11-10 17:44:40.185288+00:00"
+          }
+        ]
+      },
+      "marker_attempts": {
+        "rust_orphan_marker_35da6bc5a931_seq": 3
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 9001008 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T17:44:40.265627+00:00",
+        "task_id": "688ddbca-d37b-470f-8058-c57a6bc1e904"
+      },
+      "result_ttl": 3597,
+      "raw_metadata_sha256": "b6296fe83a9105b7c4aa0de0d1a344af4fcccb5a2dd0f3a81112da79a5765a20",
+      "postrun_sql_count": 0
+    }
+  ],
+  "native_resources": {
+    "resource_cases": 2,
+    "row_lock_abort_retained": true,
+    "pool_acquire_abort_retained": true,
+    "p0001_rollback_settled": true,
+    "physical_jobs": 0,
+    "caller_drops": 2
+  },
+  "normalization": [
+    "Beat marker wall time: compare ident and changed-versus-original; native clock fixed 2021, Source wall clock. No other row/value differences allowed."
+  ]
+}

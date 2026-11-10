@@ -297,15 +297,13 @@ impl RefreshExecutor for ServiceExecutor {
                 | FileJobOutcome::Deferred
                 | FileJobOutcome::AlreadyRunning => Ok(NormalReturn::Null),
                 FileJobOutcome::MissingSource(value) => {
-                    // Real Source also deletes orphan schedules. Until that exact helper is
-                    // ported, the fixture supports only absence with no orphan to clean up.
-                    let orphan:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE name=$1)").bind(format!("epg_source-refresh-{}",message.source_id)).fetch_one(self.store.pool()).await.map_err(|_|Error::Execution)?;
-                    if orphan
-                        || value
-                            != format!(
-                                "EPG source {} does not exist, task cleaned up",
-                                message.source_id
-                            )
+                    // FileJobRunner now performs the proven retained orphan
+                    // helper, including Source's caught P0001 partial commits.
+                    if value
+                        != format!(
+                            "EPG source {} does not exist, task cleaned up",
+                            message.source_id
+                        )
                     {
                         Err(Error::Execution)
                     } else {

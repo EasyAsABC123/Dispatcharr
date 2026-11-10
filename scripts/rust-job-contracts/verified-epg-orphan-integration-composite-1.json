@@ -1,0 +1,155 @@
+{
+  "passed": true,
+  "scope": "Exact owner559 base plus selected orphanintegration3 FileJob/helper/writer extension; production-compiled component with actual Original/native checks, not app/default consumer/genericDjangoCollector/fullmigration/performance acceptance",
+  "original_credit": "All application/algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "base": "artifacts/rust/profile-lease-composite-workspace-1",
+  "input_manifest": "artifacts/rust/epg-orphan-integration-composite-inputs-1.json",
+  "input_manifest_sha256": "9818da3e5a9d5046c44b1887e5f11407aa90dbc89b3181447882d281be740aab",
+  "runtime_files": 560,
+  "only_changed_rust_paths": [
+    "rust/crates/ingest-epg/src/file_job.rs",
+    "rust/crates/ingest-epg/src/lib.rs",
+    "rust/crates/ingest-epg/src/orphan_cleanup.rs",
+    "rust/crates/job-transport/src/refresh_worker.rs",
+    "rust/crates/job-transport/src/refresh_worker_peer.rs"
+  ],
+  "ProfileCache_and_coordination_bytes_unchanged": true,
+  "Cargo_graph_unchanged": true,
+  "lib_registration": "Exact regular orphan_cleanup module append tobase; no existing cfgtestregistration, entireLibnotcopied",
+  "workspace_validation": "artifacts/rust/epg-orphan-integration-workspace-validation-1.json",
+  "workspace_validation_sha256": "dfe8bfcb625f2e298ac82a53ab88eb8732d5d0e0272dd8a21c938c755e582a12",
+  "strict_wholeworkspace_clippy": true,
+  "default_passed": 351,
+  "external_ignored": 360,
+  "suites": 151,
+  "actual_runs": [
+    {
+      "name": "native",
+      "passed": true,
+      "counts": {
+        "checks": 161,
+        "helper_cases": 11,
+        "real_producer_native_worker_cases": 9,
+        "held_SQL_resource_controls": 2,
+        "refresh_regression_checks": 80,
+        "refresh_regression_cases": 11,
+        "helper_case_names": [
+          "none",
+          "sole",
+          "shared",
+          "crontab_only",
+          "cross_refs",
+          "marker_absent",
+          "task_delete_fault",
+          "interval_delete_fault",
+          "marker1_fault",
+          "marker2_fault",
+          "marker3_fault"
+        ],
+        "worker_case_names": [
+          "none",
+          "sole",
+          "shared",
+          "cross_refs",
+          "task_delete_fault",
+          "interval_delete_fault",
+          "marker1_fault",
+          "marker2_fault",
+          "marker3_fault"
+        ]
+      },
+      "evidence": "artifacts/rust/epg-orphan-integration-composite-native-1/integration.json",
+      "evidence_sha256": "5381cd110433737de3f72fb028d1ccb38bec35ce98cf849742ebeccd04969d05",
+      "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "rust_archive_sha256": "2c7b4a703125574951dc2a8b869ee73d7d04bd2a36c65be6939ee5e3654a6c67",
+      "runtime_files": 560,
+      "runtime_exactly_matches_composite": true,
+      "default_database_unchanged": true,
+      "cleanup_project": "dispatcharr-orphan-worker-ffcd9f3a7d",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tool_root": "artifacts/rust/epg-orphan-integration-composite-native-1/tool-source",
+      "tool_map_sha256": "045877a49dd6e6abd12e9d0917863134a6ed589b29f31a14a95c22a1b8b31e01"
+    },
+    {
+      "name": "constructor",
+      "passed": true,
+      "counts": {
+        "checks": 19
+      },
+      "evidence": "artifacts/rust/epg-orphan-integration-composite-constructor-1/integration.json",
+      "evidence_sha256": "c774ed364d6085edd130e6281aac2708cc2a69f1bcedc3a52452adf8a49bad6b",
+      "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "rust_archive_sha256": "2c7b4a703125574951dc2a8b869ee73d7d04bd2a36c65be6939ee5e3654a6c67",
+      "runtime_files": 560,
+      "runtime_exactly_matches_composite": true,
+      "default_database_unchanged": true,
+      "cleanup_project": "dispatcharr-index-constructor-44a2703cbe",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tool_root": "artifacts/rust/epg-orphan-integration-composite-constructor-1/tool-source",
+      "tool_map_sha256": "b0c88b96f148abafc5227b7496f45df420bd03587b908e68f6dce9e8d828eb1a"
+    },
+    {
+      "name": "eta",
+      "passed": true,
+      "counts": {
+        "checks": 20
+      },
+      "evidence": "artifacts/rust/epg-orphan-integration-composite-eta-1/integration.json",
+      "evidence_sha256": "0ae32ad462c2d5a79fc83e88fff80922ac9b35782dc7e8b0b4200624fe1445f8",
+      "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "rust_archive_sha256": "2c7b4a703125574951dc2a8b869ee73d7d04bd2a36c65be6939ee5e3654a6c67",
+      "runtime_files": 560,
+      "runtime_exactly_matches_composite": true,
+      "default_database_unchanged": true,
+      "cleanup_project": "dispatcharr-native-eta-9cdcc762c0",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tool_root": "artifacts/rust/epg-orphan-integration-composite-eta-1/tool-source",
+      "tool_map_sha256": "b0c88b96f148abafc5227b7496f45df420bd03587b908e68f6dce9e8d828eb1a"
+    },
+    {
+      "name": "duplicate",
+      "passed": true,
+      "counts": {
+        "checks": 24
+      },
+      "evidence": "artifacts/rust/epg-orphan-integration-composite-duplicate-1/integration.json",
+      "evidence_sha256": "e2662d3d36c01fc1e814580bd12ea58521b06214e0db2f4b630c4213c441f446",
+      "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "rust_archive_sha256": "2c7b4a703125574951dc2a8b869ee73d7d04bd2a36c65be6939ee5e3654a6c67",
+      "runtime_files": 560,
+      "runtime_exactly_matches_composite": true,
+      "default_database_unchanged": true,
+      "cleanup_project": "dispatcharr-index-constructor-29a1ca718b",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tool_root": "artifacts/rust/epg-orphan-integration-composite-duplicate-1/tool-source",
+      "tool_map_sha256": "b0c88b96f148abafc5227b7496f45df420bd03587b908e68f6dce9e8d828eb1a"
+    }
+  ],
+  "archive_environment_proof": "artifacts/rust/epg-orphan-integration-archive-binding-1.json",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "new_setup_or_runtime_failures": [],
+  "private_report_metadata_caveat": "Inner orphan report source_only:true is preserved from Source template; compared native_cases11, native_worker_cases9 and actual native_resources plus161 assertions establish component execution. No rawreport rewritten.",
+  "runtime_mutated_after_freeze": false,
+  "live_mutable_runtime_used": false,
+  "Cargo_modified": false,
+  "performance_verified": false,
+  "packaged_application_verified": false,
+  "full_milestone_complete": false,
+  "commit_handoff": "Selected evidence/runtime ready for parent scoped review; child did not stage, commit or push per explicit assignment."
+}

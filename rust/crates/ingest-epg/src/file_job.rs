@@ -6,6 +6,7 @@ use crate::{
     cache_policy::{CachedSwapPolicy, PolicyClock},
     channels::{ChannelImporter, ChannelRequest},
     file_lease::RetainedLease,
+    orphan_cleanup::{CleanupConfig, OrphanCleanup},
     reporter::{FailedImport, GuideReporter, ReportAction},
     EpgImporter, ImportError, ImportReporting, ImportRequest, SwapPolicyContext,
     SwapPolicyProvider,
@@ -98,6 +99,7 @@ struct Inner {
     services: FileJobServices,
     config: FileJobConfig,
     transport: RedisTransport,
+    orphans: OrphanCleanup,
     admission: Arc<Semaphore>,
     stopping: AtomicBool,
     jobs: Mutex<HashMap<u64, Weak<Job>>>,
@@ -192,12 +194,22 @@ impl FileJobRunner {
         )
         .await
         .map_err(|_| ImportError::Worker)?;
+        let orphans = OrphanCleanup::new(
+            services.store.pool().clone(),
+            services.clock.clone(),
+            CleanupConfig {
+                max_jobs: config.max_jobs,
+                ..CleanupConfig::default()
+            },
+        )
+        .map_err(|_| ImportError::Worker)?;
         Ok(Self {
             inner: Arc::new(Inner {
                 admission: Arc::new(Semaphore::new(config.max_jobs)),
                 services,
                 config,
                 transport,
+                orphans,
                 stopping: AtomicBool::new(false),
                 jobs: Mutex::new(HashMap::new()),
                 next: AtomicU64::new(1),
@@ -282,10 +294,15 @@ impl FileJobRunner {
             tokio::pin!(changed);
             changed.as_mut().enable();
             if self.physical_jobs() == 0 {
-                return true;
+                return self
+                    .inner
+                    .orphans
+                    .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+                    .await;
             }
             if tokio::time::timeout_at(deadline, changed).await.is_err() {
-                return self.physical_jobs() == 0;
+                return self.physical_jobs() == 0
+                    && self.inner.orphans.shutdown(Duration::ZERO).await;
             }
         }
     }
@@ -364,6 +381,14 @@ impl Inner {
     ) -> Result<FileJobOutcome, ImportError> {
         context.ensure_active()?;
         let Some(source) = self.source(request.source_id).await? else {
+            // Source ignores the helper's caught failure boolean and returns
+            // its cleanup string, including definite partial commits. Unknown
+            // or ambiguous native SQL remains operational, never fake success.
+            let _report = self
+                .orphans
+                .cleanup(request.source_id, context.retained.clone())
+                .await
+                .map_err(|_| ImportError::Worker)?;
             return Ok(FileJobOutcome::MissingSource(format!(
                 "EPG source {} does not exist, task cleaned up",
                 request.source_id

@@ -1,0 +1,113 @@
+{
+  "passed": true,
+  "scope": "Actual Original producer/native FileJob orphan helper+normal writer/Original AsyncResult; no app or default consumer",
+  "orphan_checks": 161,
+  "targeted_regression_checks": 80,
+  "actual_source_native_worker_cases": 9,
+  "held_sql_worker_cases": 2,
+  "direct_helper_resource_cases": 2,
+  "controlled_worker_redis_resource_tests": 3,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "frozen_default_units": {
+    "ingest-unit.log": {
+      "passed": 28,
+      "external_ignored": 1
+    },
+    "job-unit.log": {
+      "passed": 33,
+      "external_ignored": 17
+    }
+  },
+  "selected_runtime": {
+    "rust/crates/ingest-epg/src/orphan_cleanup.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/frozen/rust/crates/ingest-epg/src/orphan_cleanup.rs",
+      "sha256": "a13ea2d9c8417cd05d35d70874e4faca17e79ec19cbc21c656d8d0837e43b5de"
+    },
+    "rust/crates/ingest-epg/src/file_job.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/frozen/rust/crates/ingest-epg/src/file_job.rs",
+      "sha256": "e4604edb16d683cb7869b38246236fdf58f4c24d93a047440ab8a599704a4a31"
+    },
+    "rust/crates/job-transport/src/refresh_worker.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/frozen/rust/crates/job-transport/src/refresh_worker.rs",
+      "sha256": "ae343ee257ab83f29b8083f32663e286747da52409ec242a0ca45ceca3320972"
+    },
+    "rust/crates/job-transport/src/refresh_worker_peer.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/frozen/rust/crates/job-transport/src/refresh_worker_peer.rs",
+      "sha256": "7ef8c99433c297be8987b88d8862c92e57245115b12d193695da608eec0df346"
+    }
+  },
+  "lib_registration": {
+    "source": "artifacts/rust/m6-source-native-epg-orphan-worker-3/frozen/rust/crates/ingest-epg/src/lib.rs",
+    "sha256": "946d88161e93cf581f470e4f14e0ad83e8d2e92ecc7b4d8b1148a734bf8d1e59",
+    "append_exact": "\n// Source orphan79/native125 helper; no application/default consumer authority.\npub mod orphan_cleanup;\n",
+    "copy_entire_lib": false
+  },
+  "cargo_graph_changes": false,
+  "selected_tools": {
+    "scripts/rust-job-contracts/run_native_epg_orphan_worker.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/tool-source/scripts/rust-job-contracts/run_native_epg_orphan_worker.py",
+      "sha256": "688a726968957e6b304920924f8838a7d58f84f62df52cb32595400ad124c82d"
+    },
+    "scripts/rust-job-contracts/source_native_epg_orphan_worker.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/tool-source/scripts/rust-job-contracts/source_native_epg_orphan_worker.py",
+      "sha256": "778f9ff94ee4e8060581d76bfae2538eaf4882f35aa1d0909a6ff1d0aeffa717"
+    },
+    "scripts/rust-job-contracts/orphan_native_compare.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/tool-source/scripts/rust-job-contracts/orphan_native_compare.py",
+      "sha256": "7a79505abc1e0433b31dfe86f3e55ded0998387fe4cbbbc2d4dbe8c33bd79f6f"
+    },
+    "scripts/rust-job-contracts/orphan_worker_compare.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/tool-source/scripts/rust-job-contracts/orphan_worker_compare.py",
+      "sha256": "9adc8c68980f28342a79b54ece8e79a149f23148a508a0d951763e407753567f"
+    },
+    "scripts/rust-job-contracts/source_native_refresh_worker_orphans.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/tool-source/scripts/rust-job-contracts/source_native_refresh_worker_orphans.py",
+      "sha256": "7891b5b6f6fa91f311ba0450aeb6c2ce0fc8a072ebbe9acc2719311c9a55707e"
+    },
+    "scripts/rust-job-contracts/epg_orphan_worker_observer.py": {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-3/tool-source/scripts/rust-job-contracts/epg_orphan_worker_observer.py",
+      "sha256": "5bd54146fedc180d1f10a3da49859dad4896d55f9c46a92e70af52273fdb476f"
+    }
+  },
+  "dataset": "scripts/rust-job-contracts/source-native-epg-orphan-worker-1.json",
+  "dataset_sha256": "25b8e0a802f33cd38deba44142a8d24cc6ac70bed7d56a41bdcffa0477c36de4",
+  "rust_source_archive": "artifacts/rust/m6-source-native-epg-orphan-worker-3/rust-source.tar",
+  "rust_source_archive_sha256": "6fe6005a9ea6262ba9c2bc22cc8432b56310af5a3d9acff4d3f0665b77fa1e4c",
+  "raw_evidence_sha256": {
+    "integration.json": "c30034195af077ab3b124dd6dad06dc49a2b4a6edf74a381d93b89719e49ca8f",
+    "source-native-epg-orphan-worker-private.json": "52cc686b16928174a8352568c59ebc4a109d839f80dba73a5bc6d08a6f7df063",
+    "source-native-refresh-worker-orphans-private.json": "733ea619d6c51fd7096aedb9ff113235602aa7d2fc6a473a30ededa5d4411566",
+    "native-orphan-worker-private.log": "792b38e6f5dbf785d57c92b9674ff31749d582984b167495494607b2a775eeff",
+    "native-refresh-worker-physical.log": "ff5ad6fcc873fd6d0342c4ecf3d9e3287bed09eb8d7f3691a34462f5e88104c2",
+    "clippy.log": "9d32fe6f05e0c187b36ff4ec7a1b0726863cad1b88b7fa9641c6ac2ea3b448fd",
+    "ingest-unit.log": "ce7f5c3ad78c140502c0bebfd4ccf7211ffa46f91e82675c353647e803c7c62e",
+    "job-unit.log": "93e53313b499494d5e6267b2d19142b3e82d2999391ed64024d1a212eceac4e4"
+  },
+  "strict_ingest_job_all_targets_clippy": true,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "wholeworkspace_acceptance": false,
+  "app_default_consumer_or_202_verified": false,
+  "refresh_eta_consumer_verified": false,
+  "performance_verified": false,
+  "prior_attempts": [
+    {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-1",
+      "aggregate_passed": false,
+      "cause": "Report filename mismatch, after actual161+80 checks passed; preserved/cleaned."
+    },
+    {
+      "path": "artifacts/rust/m6-source-native-epg-orphan-worker-2",
+      "aggregate_passed": true,
+      "limitation": "Held-waiter audit synthesized a Completed label despite logical waiter abort; actual result independently read. Reviewed final peer records unobserved None. Runtime unchanged."
+    }
+  ],
+  "limitations": [
+    "Unknown SQL/transport and ambiguous outcomes remain operational; only observed settled P0001 maps helper false.",
+    "No generic collector/concurrent graph or marker writer parity.",
+    "No deliberately paused physical ROLLBACK reply.",
+    "Unclassified FileJobOutcome::Failed remains operational; no broad success promotion.",
+    "Unrelated full-source sibling inputs receive no acceptance; selected closure is narrow."
+  ],
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL; framework authors retain all framework credit/licenses."
+}
