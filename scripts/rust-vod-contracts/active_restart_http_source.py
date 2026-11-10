@@ -2,7 +2,7 @@
 Original Dispatcharr authors retain full application/algorithm credit.
 No replacement metadata is seeded; only the owned local MP4 origin is used.
 """
-import hashlib,json,os,subprocess,sys,tempfile,time,urllib.request,urllib.error
+import hashlib,json,os,socket,subprocess,sys,tempfile,time,urllib.request,urllib.error
 from pathlib import Path
 assert os.environ.get('POSTGRES_PASSWORD')=='playback-fixture-only'
 assert os.environ.get('REDIS_PASSWORD')=='playback-fixture-only'
@@ -46,6 +46,7 @@ def state(name):
   with urllib.request.urlopen('http://origin:8080/stats',timeout=2)as response:
    value['origin_vod']=json.load(response)['vod']
  except Exception as error:value['origin_error']=error_info(error)
+ value['event_order_so_far']=list(SystemEvent.objects.filter(id__gt=event_start).order_by('id').values_list('event_type',flat=True)[:64])
  report['observations'].append(value);return value
 base='http://127.0.0.1:5656'
 class WireResponse:
@@ -103,7 +104,44 @@ try:
   report['old_body_after_reopen']={'offset':len(payload),'bytes':len(following),'sha256':hashlib.sha256(following).hexdigest()}
  except StopIteration:report['old_body_after_reopen']={'ended':True}
  except Exception as error:report['old_body_after_reopen']={'error':error_info(error)}
- state('both-bodies-held-after-extra-old-read');sibling.close();sibling.close();state('sibling-closed-old-body-held');response.close();response.close();time.sleep(1.5);state('all-bodies-closed-after-grace')
+ state('both-bodies-held-after-extra-old-read')
+ if os.environ.get('ACTIVE_OBSERVE_OLD_PROGRESS')=='1':
+  # Read beyond the old producer's100th8192-byte yield. The younger sibling
+  # remains held at its first client block; record actual metadata, not a claim
+  # that request counts are generation-fenced in Original.
+  old_chunks=len(chunks)+(1 if report.get('old_body_after_reopen',{}).get('bytes')else 0)
+  old_total=len(payload)+report.get('old_body_after_reopen',{}).get('bytes',0)
+  rolling=hashlib.sha256();deadline=time.monotonic()+40
+  while old_chunks<101:
+   if time.monotonic()>deadline:raise TimeoutError('Bounded old100th-yield sampling')
+   following=next(iterator);assert len(following)<=8192
+   rolling.update(following);old_total+=len(following);old_chunks+=1
+  report['old_progress_after_reopen']={'chunks_read':old_chunks,'bytes_read':old_total,'tail_sha256':rolling.hexdigest()}
+  state('old-body-beyond100th-yield-with-younger-sibling-held')
+ if os.environ.get('ACTIVE_CLOSE_OLD_FIRST')=='1':
+  # A real owned client socket shutdown avoids confusing buffered Python file
+  # closure with an observed server-side generator teardown. No worker is killed.
+  sock=response.response.fp.raw._sock
+  sock.shutdown(socket.SHUT_RDWR);response.close();response.close()
+  report['old_close_mode']='owned HTTP client socket shutdown then response.close twice'
+  deadline=time.monotonic()+10;closed_state=state('old-client-closed-younger-body-held')
+  while time.monotonic()<deadline:
+   if not closed_state.get('metadata')or closed_state.get('provider_count')in(None,'0'):break
+   time.sleep(.5);closed_state=state('old-close-poll-younger-body-held')
+  report['old_close_public_effect_observed']=not closed_state.get('metadata')or closed_state.get('provider_count')in(None,'0')
+  younger=iter(sibling.streaming_content);young_chunks=1;young_bytes=report['same_id_reopen'].get('first_bytes',0)
+  ended=False;error=None;deadline=time.monotonic()+45
+  while young_chunks<103:
+   if time.monotonic()>deadline:raise TimeoutError('Bounded younger body after old close')
+   try:following=next(younger)
+   except StopIteration:ended=True;break
+   except Exception as failure:error=error_info(failure);break
+   young_chunks+=1;young_bytes+=len(following)
+  report['younger_after_old_close']={'chunks_read':young_chunks,'bytes_read':young_bytes,'ended':ended,'error':error}
+  state('younger-beyond100th-yield-after-old-client-closed')
+  sibling.close();sibling.close();time.sleep(1.5);state('all-bodies-closed-after-grace')
+ else:
+  sibling.close();sibling.close();state('sibling-closed-old-body-held');response.close();response.close();time.sleep(1.5);state('all-bodies-closed-after-grace')
  # Reference only the sampled prefix; this is not a full-file/EOF gate.
  request=urllib.request.Request('http://origin:8080/vod.mp4',headers={'Range':'bytes=0-'+str(len(payload)-1)})
  with urllib.request.urlopen(request,timeout=10)as reference:

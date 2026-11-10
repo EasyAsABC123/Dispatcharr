@@ -1,0 +1,110 @@
+{
+  "passed": true,
+  "scope": "Actual Original same-ID cross-generation old-progress characterization; no native adapter acceptance",
+  "evidence": "artifacts/rust/m4-active-vod-source-old-progress-176",
+  "source_report_sha256": "e412e0e3c4799826091a749c6d5522278ecd5da768e4303332922c39a6ebc018",
+  "observations": [
+    {
+      "name": "active-before-loss",
+      "active_streams": "1",
+      "request_count": "1",
+      "bytes_sent": "0",
+      "provider_count": "1",
+      "event_order": null,
+      "origin_gets": 1
+    },
+    {
+      "name": "server-down-body-held",
+      "active_streams": null,
+      "request_count": null,
+      "bytes_sent": null,
+      "provider_count": null,
+      "event_order": null,
+      "origin_gets": 1
+    },
+    {
+      "name": "server-restarted-no-reseed",
+      "active_streams": null,
+      "request_count": null,
+      "bytes_sent": null,
+      "provider_count": null,
+      "event_order": null,
+      "origin_gets": 1
+    },
+    {
+      "name": "old-body-after-loss-sampling",
+      "active_streams": null,
+      "request_count": null,
+      "bytes_sent": null,
+      "provider_count": null,
+      "event_order": null,
+      "origin_gets": 1
+    },
+    {
+      "name": "same-id-reopen-before-close",
+      "active_streams": "1",
+      "request_count": "1",
+      "bytes_sent": "0",
+      "provider_count": "1",
+      "event_order": null,
+      "origin_gets": 2
+    },
+    {
+      "name": "both-bodies-held-after-extra-old-read",
+      "active_streams": "1",
+      "request_count": "1",
+      "bytes_sent": "0",
+      "provider_count": "1",
+      "event_order": null,
+      "origin_gets": 2
+    },
+    {
+      "name": "old-body-beyond100th-yield-with-younger-sibling-held",
+      "active_streams": "1",
+      "request_count": "1",
+      "bytes_sent": "819200",
+      "provider_count": "1",
+      "event_order": null,
+      "origin_gets": 2
+    },
+    {
+      "name": "sibling-closed-old-body-held",
+      "active_streams": "1",
+      "request_count": "1",
+      "bytes_sent": "819200",
+      "provider_count": "1",
+      "event_order": null,
+      "origin_gets": 2
+    },
+    {
+      "name": "all-bodies-closed-after-grace",
+      "active_streams": null,
+      "request_count": null,
+      "bytes_sent": null,
+      "provider_count": "0",
+      "event_order": null,
+      "origin_gets": 2
+    }
+  ],
+  "old_progress_after_reopen": {
+    "chunks_read": 101,
+    "bytes_read": 827392,
+    "tail_sha256": "efcb6b65076ef1cd51ce432e1fd0d6d9cdf5fe3bb48576a68c872b8caeb89634"
+  },
+  "old_close_mode": null,
+  "old_close_public_effect_observed": null,
+  "younger_after_old_close": null,
+  "event_order": [
+    "vod_start",
+    "vod_start",
+    "vod_stop"
+  ],
+  "cleanup_passed": true,
+  "native_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application and algorithm credit.",
+  "interpretation": [
+    "After 101 old 8,192-byte reads, the younger hash reports bytes_sent=819200 while active_streams/request_count/provider_count remain 1.",
+    "Original old-body progress reads current same-ID metadata instead of retaining a generation-fenced counter."
+  ]
+}

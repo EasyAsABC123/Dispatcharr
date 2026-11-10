@@ -39,6 +39,8 @@ def main():
     parser.add_argument('--timeshift-redirect-session', action='store_true', help='Use Redirect channel with empty allowed profiles to verify established capability still proxies')
     parser.add_argument('--m3u-rust-http', action='store_true', help='Compare actual native M3U HTTP/auth/cache with original source')
     parser.add_argument('--m3u-rust-renderer', action='store_true', help='Compare native SQL/renderer positive export bytes with original source')
+    parser.add_argument('--vod-active-old-close-source', action='store_true', help='Source-only old-body close effects while a younger same-ID body stays open')
+    parser.add_argument('--vod-active-old-progress-source', action='store_true', help='Source-only old body100th-yield telemetry after same-ID reopen')
     parser.add_argument('--vod-active-restart-http-source', action='store_true', help='Source-only actual HTTP active VOD Redis state-loss characterization')
     parser.add_argument('--vod-active-restart-native', action='store_true', help='Capture Original active state loss then frozen native actual HTTP behavior; no automatic parity acceptance')
     parser.add_argument('--vod-active-restart-source', action='store_true', help='Characterize actual active Original VOD iterator over owned Redis-only state loss; isolated source-only mode')
@@ -124,6 +126,10 @@ def main():
         args.timeshift_media = True
     if args.timeshift_rust_test or args.timeshift_media or args.timeshift_admission_source or args.timeshift_native_limit or args.timeshift_idle_reopen or args.timeshift_busy_seek or args.timeshift_direct_auth or args.timeshift_xc or args.timeshift_management:
         args.timeshift_sessions = True
+    if args.vod_active_old_close_source:args.vod_active_old_progress_source=True
+    if args.vod_active_old_progress_source:
+        if args.candidate_overlay:parser.error('old-generation telemetry probe is Source-only')
+        args.vod_active_restart_http_source=True
     if args.vod_active_restart_native:
         if not args.candidate_overlay or not args.candidate_build_manifest:parser.error('native active restart capture requires immutable candidate overlay/manifest')
         args.vod_active_restart_http_source=True
@@ -253,7 +259,7 @@ def main():
         seed = json.loads((output/'vod-seed.json').read_text())
         if args.vod_active_restart_source:
             active_controller='active_restart_http_source.py'if args.vod_active_restart_http_source else'active_restart_source.py'
-            command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/vod-verification/'+active_controller],timeout=150)
+            command(compose+['exec','-T']+(['-e','ACTIVE_OBSERVE_OLD_PROGRESS=1']if args.vod_active_old_progress_source else[])+(['-e','ACTIVE_CLOSE_OLD_FIRST=1']if args.vod_active_old_close_source else[])+['baseline','/dispatcharrpy/bin/python','/vod-verification/'+active_controller],timeout=150)
             active=json.loads((output/'vod-active-restart-source.json').read_text())
             report['active_vod_restart_source']=active
             report['active_source_transport']='actual HTTP'if args.vod_active_restart_http_source else'full manager responseiterator'
