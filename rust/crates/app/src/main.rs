@@ -464,6 +464,7 @@ async fn run() -> Result<(), String> {
                         max_export_bytes: positive("RUST_XMLTV_EXPORT_BYTES", 256 * 1024 * 1024)?,
                         max_chunks: positive("RUST_XMLTV_CACHE_CHUNKS", 65536)?,
                         chunk_bytes: positive("RUST_XMLTV_CHUNK_BYTES", 64 * 1024)?,
+                        read_batch_bytes: positive("RUST_XMLTV_READ_BATCH_BYTES", 512 * 1024)?,
                         max_read_bytes: positive("RUST_XMLTV_IO_BYTES", 64 * 1024 * 1024)?,
                         max_legacy_chunk_bytes: positive(
                             "RUST_XMLTV_LEGACY_CHUNK_BYTES",
@@ -549,6 +550,16 @@ async fn run() -> Result<(), String> {
         },
     )
     .map_err(|_| "Invalid EPG programme read configuration")?;
+    let grid = dispatcharr_output_http::GridGateway::new(
+        store.clone(),
+        auth.clone(),
+        dispatcharr_output_http::GridReadLimits {
+            concurrent_responses: positive("RUST_MAX_GRID_RESPONSES", 2)?,
+            memory_bytes: positive("RUST_GRID_MEMORY_BYTES", 192 * 1024 * 1024)?,
+            deadline: Duration::from_millis(positive("RUST_GRID_TIMEOUT_MS", 5000)? as u64),
+        },
+    )
+    .map_err(|_| "Invalid EPG grid read configuration")?;
     let xc = xc
         .map(|gateway| {
             gateway.with_live(playback::dispatcher(
@@ -567,6 +578,7 @@ async fn run() -> Result<(), String> {
         .merge(backup_files.clone().router())
         .merge(epg_programs.clone().router())
         .merge(epg_programs.clone().current_router())
+        .merge(grid.clone().router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))
         .merge(playback::router(
@@ -662,6 +674,7 @@ async fn run() -> Result<(), String> {
         output_profiles,
         backup_files,
         epg_programs,
+        grid,
         hdhr,
         live_statistics,
     };
@@ -732,6 +745,7 @@ struct ShutdownServices {
     output_profiles: dispatcharr_store::OutputProfileWrites,
     backup_files: dispatcharr_store::BackupFiles,
     epg_programs: dispatcharr_store::EpgProgramReads,
+    grid: dispatcharr_output_http::GridGateway,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
     live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
 }
@@ -751,6 +765,7 @@ async fn shutdown_components(services: ShutdownServices) {
         output_profiles,
         backup_files,
         epg_programs,
+        grid,
         hdhr,
         live_statistics,
     } = services;
@@ -769,6 +784,7 @@ async fn shutdown_components(services: ShutdownServices) {
         profiles,
         backups,
         programs,
+        grid,
         hdhr,
     ) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
@@ -834,6 +850,7 @@ async fn shutdown_components(services: ShutdownServices) {
         output_profiles.shutdown(Duration::from_secs(8)),
         backup_files.shutdown(Duration::from_secs(8)),
         epg_programs.shutdown(Duration::from_secs(8)),
+        grid.shutdown(Duration::from_secs(8)),
         hdhr.shutdown(),
     );
     if !live
@@ -847,6 +864,7 @@ async fn shutdown_components(services: ShutdownServices) {
         || !profiles
         || !backups
         || !programs
+        || !grid
         || !hdhr
     {
         eprintln!("Media drain deadline reached; pending reservations require recovery");

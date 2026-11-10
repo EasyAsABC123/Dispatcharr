@@ -72,6 +72,7 @@ fn main() {
     println!("cargo:rustc-link-lib=m");
     for name in [
         "native/shim.c",
+        "native/strict.inc",
         "native/memory.h",
         "vendor/libxml2-2.14.6.tar.xz",
     ] {

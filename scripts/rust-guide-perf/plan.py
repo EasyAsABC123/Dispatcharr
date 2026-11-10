@@ -5,9 +5,9 @@ Original Dispatcharr authors retain full application credit and AGPL licensing.
 import datetime,hashlib,json,math
 from pathlib import Path
 SOURCE='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
-IMAGE='sha256:fa6b9b0c920f961a77dd069227b871a2fbb7e92486e9296d2c4cda738c54ab56'
-TREE='5a58751e7d2e1df2d3db0f04c80dd00406cd71da813a5402e0227d8083a8fb9f'
-ARCHIVE='1234f5bdff9c2381c6a2ee6624b02f6ca87b7756da1d8b94b5c60a6bdface8d7'
+IMAGE='sha256:2c197d053675ee81800ecd39f7cb9b6620c1887a705cd02974d9c3751531df39'
+TREE='565083061ffb764ac4c4c3ef2a6455cdd0e7a5a7eba1403e068f5bddfbf8ba46'
+ARCHIVE='ace6ee12836e4498ed49c38c704da10ea27ad7ae44c23eaba697aed6a2022d72'
 POLICY={
  'format_version':1,'scope':'Stored-guide Current channel branch and XMLTV export only; not browser or full migration acceptance',
  'historical_candidate_image':IMAGE,'candidate_source_tree':TREE,'original_revision':SOURCE,
@@ -49,7 +49,7 @@ def freeze(path,qualification,manifest,fixture_binding=None):
 def validate_frozen(record,qualification,manifest):
  value=dict(record);claimed=value.pop('plan_sha256',None)
  if claimed!=digest(value)or value.get('policy')!=POLICY or value.get('policy_sha256')!=digest(POLICY)or value.get('measurements_started')is not False:raise ValueError('Frozen policy changed')
- if value.get('candidate_image')!=manifest.get('image_id')or value.get('candidate_manifest_canonical_sha256')!=digest(manifest)or manifest.get('passed')is not True or manifest.get('source_tree_sha256')!=TREE or manifest.get('source_archive_sha256')!=ARCHIVE:raise ValueError('Candidate recovery identity changed')
+ if value.get('candidate_image')!=manifest.get('image_id')or value.get('candidate_manifest_canonical_sha256')!=digest(manifest)or manifest.get('passed')is not True or manifest.get('source_tree_sha256')!=TREE or manifest.get('source_archive_sha256')!=ARCHIVE:raise ValueError('Candidate image/source identity changed')
  if value.get('source_qualification_sha256')!=digest(qualification):raise ValueError('Source qualification changed')
  for work in POLICY['workloads']:
   if value['selected_periods_seconds'].get(work['name'])!=select_period(work,qualification[work['name']]):raise ValueError('Pacing changed after qualification')

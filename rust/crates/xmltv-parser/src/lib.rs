@@ -271,3 +271,8 @@ where
     }
     Ok(state.stats)
 }
+
+mod strict;
+pub use strict::{
+    parse_xmltv_element, parse_xmltv_element_with_limits, StrictElementError, StrictElementLimits,
+};

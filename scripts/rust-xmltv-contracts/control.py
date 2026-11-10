@@ -22,6 +22,9 @@ def command(request):
     if op=='xc_epg_waiting':
         from django.db import connection
         with connection.cursor()as cursor:
+            # This connection intentionally holds the fixture table lock in an
+            # explicit transaction; refresh its cached statistics each poll.
+            cursor.execute('SELECT pg_stat_clear_snapshot()')
             cursor.execute("SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND wait_event_type='Lock' AND query LIKE 'SELECT c.id::bigint AS id,COALESCE(o.channel_number%'")
             return {'waiting':cursor.fetchone()[0]}
     if op=='unlock_xc_epg_metadata':
@@ -58,6 +61,9 @@ def command(request):
     if op=='content_vectors':
         from content_source import capture
         return capture(xc.state['users'])
+    if op=='grid_datetime_fuzz':
+        from grid_datetime_fuzz import capture
+        return capture(request.get('start',0),request.get('count',64))
     if op=='xc_epg_vectors':
         from epg_source import capture
         return capture(xc.state['users'],xc.state['channels'],state['public']['clock'],request.get('start',0),request.get('count',32))
@@ -75,7 +81,10 @@ def command(request):
         for key in sorted(redis.scan_iter(match='epg_content:*',count=100)):
             if len(rows)>=500:raise RuntimeError('fixture cache bound')
             name=key.decode();kind=redis.type(key).decode();entry={'key':name,'kind':kind,'ttl':redis.ttl(key)}
-            if kind=='string':entry['value']=redis.get(key).decode()
+            if kind=='string':
+                raw=redis.get(key)
+                if raw is None:continue  # TTL can expire between TYPE and GET.
+                entry['value']=raw.decode()
             elif kind=='list':
                 length=redis.llen(key);assert length<=65536;chunks=redis.lrange(key,0,-1);assert sum(map(len,chunks))<=8*1024*1024;entry.update(chunks=length,body_bytes=sum(map(len,chunks)),body_sha256=hashlib.sha256(b''.join(chunks)).hexdigest())
             rows.append(entry)

@@ -79,11 +79,17 @@ def capture(base,control,label,error_path=None):
         cache_staleness={'warm_probe_inside_two_seconds':warm_inside_ttl,'cached_body_unchanged':cold['sha256']==warm['sha256'],'expired_body_changed':cold['sha256']!=expired['sha256']}
         control('restore-name',label)
         control('deny-m3u',label);record('m3u-network-before-missing-profile','/output/m3u/missing');record('xc-not-m3u-network',xc());control('allow',label)
-        control('deny-xc',label);record('xc-network-before-password',xc(secret='wrong-fixture-only'));record('anonymous-not-xc-network');control('allow',label)
+        control('deny-xc',label);record('xc-network-before-password',xc(secret='wrong-fixture-only'));record('anonymous-not-xc-network')
+        # Observe the2s cache immediately. Restoring policy first starts a
+        # second Django control process and can consume the entire TTL.
+        cache_probe_began=time.monotonic()
         cache=control('cache-roundtrip',label)['cache']
-        cache_interop=cache['python_type']=='str' and cache['sha256']==events[-1]['sha256']
+        cache_probe_elapsed=time.monotonic()-cache_probe_began
+        cache_probe_inside_ttl=cache_probe_elapsed<2
+        cache_interop=cache_probe_inside_ttl and cache['python_type']=='str' and cache['sha256']==events[-1]['sha256']
+        control('allow',label)
         system_events=control('events',label)['counts']
-        return {'format_version':1,'scope':'Original anonymous and XC M3U HTTP/export-byte contracts','capture_complete':len(events)==50 and cache_interop and all(cache_staleness.values()),'events':events,'django_cache_string_interop':cache_interop,'two_second_cache':cache_staleness,'system_event_counts':system_events,'sensitive_request_urls_and_export_bodies_not_persisted':True,'application_parity_verified':False,'performance_verified':False}
+        return {'format_version':1,'scope':'Original anonymous and XC M3U HTTP/export-byte contracts','capture_complete':len(events)==50 and cache_interop and all(cache_staleness.values()),'events':events,'django_cache_string_interop':cache_interop,'django_cache_observer_elapsed_seconds':cache_probe_elapsed,'django_cache_observer_inside_two_seconds':cache_probe_inside_ttl,'two_second_cache':cache_staleness,'system_event_counts':system_events,'sensitive_request_urls_and_export_bodies_not_persisted':True,'application_parity_verified':False,'performance_verified':False}
     finally:control('restore',label)
 
 

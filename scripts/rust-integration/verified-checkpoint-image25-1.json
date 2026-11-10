@@ -1,0 +1,114 @@
+{
+  "format_version": 1,
+  "scope": "Immutable image25 checkpoint: bounded guide grid route and XMLTV cache read batching, with scoped prior API/output/playback regressions",
+  "passed": true,
+  "build_manifest": "artifacts/rust/candidate-build-grid-cache-image25-1/build.json",
+  "build_manifest_sha256": "babca91c68eece374f595108348288dacf43d67645907129fdcea0ab0d785cab",
+  "image_id": "sha256:2c197d053675ee81800ecd39f7cb9b6620c1887a705cd02974d9c3751531df39",
+  "source_tree_sha256": "565083061ffb764ac4c4c3ef2a6455cdd0e7a5a7eba1403e068f5bddfbf8ba46",
+  "source_archive_sha256": "ace6ee12836e4498ed49c38c704da10ea27ad7ae44c23eaba697aed6a2022d72",
+  "rust_source_files": 470,
+  "validation_directory": "artifacts/rust/checkpoint-image25-validation-1",
+  "rust_tests": {
+    "passed": 296,
+    "failed": 0,
+    "external_fixture_ignored": 241,
+    "suites": 130
+  },
+  "strict_all_targets_clippy": true,
+  "runtime_reports": [
+    {
+      "path": "scripts/rust-epg-contracts/verified-current-packaged-image25-1.json",
+      "sha256": "2c1a15292404fcb221114cae40d19158d94744d68319893267336b4b1c0b452c"
+    },
+    {
+      "path": "scripts/rust-epg-contracts/verified-program-packaged-image25-1.json",
+      "sha256": "094930dca180d6a485504cf593d5704a7d1c986660e6bf1de2a0f1c82f909600"
+    },
+    {
+      "path": "scripts/rust-hdhr-contracts/verified-hdhr-image25-1.json",
+      "sha256": "27dcd7d0faae19ba69fbbb9bf982c728fdc8902392e41c5b00be912c198ddcc4"
+    },
+    {
+      "path": "scripts/rust-integration/verified-backup-api-packaged-image25-1.json",
+      "sha256": "0fe536f2d95c4262df245181404f3b0c418edcaf4f773309bc3fb155371944a1"
+    },
+    {
+      "path": "scripts/rust-integration/verified-integration-m5-auth-image25-1.json",
+      "sha256": "9b96e91cce0a06059a3603180aa216ea353034bbf83f2d4f7d600e5762358fbc"
+    },
+    {
+      "path": "scripts/rust-output-contracts/verified-grid-packaged-image25-1.json",
+      "sha256": "1252968211cf5a4ec8563478c22211267abec7e2e4a2a6838cb6405c372629f2"
+    },
+    {
+      "path": "scripts/rust-output-contracts/verified-m3u-image25-2.json",
+      "sha256": "ac5588d84ef38aba1ef1b0502d55a27cbae35f84d95b890681c00958aca806d3"
+    },
+    {
+      "path": "scripts/rust-timeshift-contracts/verified-image25-regression.json",
+      "sha256": "3d94f8a86049153fa0e89023ee33075d5812842fa75581b1d3429f29a6e5fc0a"
+    },
+    {
+      "path": "scripts/rust-xc-contracts/verified-xc-epg-image25-1.json",
+      "sha256": "192a36df9df636e736beb876444131b99237f71b4e89100f01d75358b0396a32"
+    },
+    {
+      "path": "scripts/rust-xc-contracts/verified-xc-image25-1.json",
+      "sha256": "e446915dffd8dd10ed1fb106dba84588d108a2043c3b398c095a15f89e07370d"
+    },
+    {
+      "path": "scripts/rust-xmltv-contracts/verified-xmltv-image25-1.json",
+      "sha256": "a48828d1388f2262e56edc52c6e69fa421b12ee2455c143f480ee4001fc85828"
+    }
+  ],
+  "separate_component_reports": [
+    {
+      "path": "scripts/rust-epg-parity/verified-programme-index-task-source-native-90.json",
+      "sha256": "b25a57dc18d7c1cbb42763612f71b06b4a4648549395dfbbed42ba3537f31822"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-strict-element-source-native-92.json",
+      "sha256": "d28b67d3dbbf188ce2026050e7fc44a6e39a6babd26838cb052a6023880b70e7"
+    },
+    {
+      "path": "scripts/rust-xmltv-contracts/verified-xmltv-batch-native-5.json",
+      "sha256": "471c92350595073a6d5a3950d834d138b450471b315e5ceb32256ca6713e5384"
+    },
+    {
+      "path": "scripts/rust-epg-contracts/verified-grid-datetime-components-25.json",
+      "sha256": "32968a3a39f67c9b3117db008823210babc94e3176e15165dbac20bbf7759bd1"
+    },
+    {
+      "path": "scripts/rust-output-contracts/verified-grid-network-native-28.json",
+      "sha256": "400048d7bc2dccaca225a7dc94f54c832deea907273eeb51ae1a7afbc728e21c"
+    }
+  ],
+  "full_milestones_accepted": [],
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "limits": [
+    "Guide43 actual real-clock network cases pass; six browsable HTML error cases, custom dummy rules, offset-sensitive/extreme windows and concurrent-refresh consistency remain open.",
+    "Backup112 retains five named original invalid204 Content-Length deltas;107 raw exact. Create/restore/status jobs are not enabled.",
+    "Index/strict parser are components, not production refresh/index dispatch. Unregistered VOD REST policy draft in source archive is uncompiled and unaccepted.",
+    "Post25 current-file lookup and test-only backup-status work are excluded from this checkpoint.",
+    "Recovered23 guide resource experiment failed hot1 completion p95; retained separately. The separate fresh25 matrix failed its first cold10 pair (CPU, completion and TTFB) after six passing Current/cold1 pairs; functional checks do not pass the resource matrix.",
+    "Earlier performance results remain bound to their historical images/workloads. No full migration, operational, soak or rollback acceptance."
+  ],
+  "frozen_source_review": {
+    "path": "artifacts/rust/checkpoint-image25-review-1/output-source-review.json",
+    "sha256": "861f8c890b770e462e22bfca96e0abbc102e766cf3a383dd74a0261d135388dd",
+    "canonical_rust_files_verified": 470,
+    "successful_output_python_paths_verified": 226,
+    "source_review_only": true
+  },
+  "python_review_directory": "artifacts/rust/checkpoint-image25-review-1",
+  "python_source_files": 332,
+  "python_tool_tests_passed": 202,
+  "python_tests_report_sha256": "0df4fe2e963280e05dc1b6b3f6b09d56eb97442e04422f3333c49d7728990a7d",
+  "separate_failed_performance_report": {
+    "path": "scripts/rust-guide-perf/verified-guide-experiment-image25-1.json",
+    "sha256": "b5cdbfbf89cdb91ede3b4a3058d53cb94613d9baab780ab0941a88b6c72a5d9f",
+    "passed": false
+  }
+}

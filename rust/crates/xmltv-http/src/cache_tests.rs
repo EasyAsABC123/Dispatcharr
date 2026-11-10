@@ -126,6 +126,7 @@ async fn byte_entry_caps_expiry_and_retained_frame_accounting() {
         max_cache_bytes: 8,
         max_export_bytes: 8,
         chunk_bytes: 8,
+        read_batch_bytes: 8,
         max_read_bytes: 64,
         cache_ttl: Duration::from_secs(1),
         lock_ttl: Duration::from_secs(1),
@@ -296,6 +297,7 @@ async fn cancelled_open_and_reads_keep_physical_admission_and_cleanup() {
 async fn final_frame_clone_blocks_next_read_until_released() {
     let cache = fixture(CacheConfig {
         chunk_bytes: 8,
+        read_batch_bytes: 8,
         ..CacheConfig::default()
     })
     .await;
@@ -315,6 +317,7 @@ async fn final_frame_clone_blocks_next_read_until_released() {
         Read::Data(data) => bytes::Bytes::from_owner(data),
         _ => panic!("data expected"),
     };
+    assert_eq!(frame.as_ref(), b"firstsec");
     let held = frame.clone();
     drop(frame);
     let available = cache.available_io_bytes();
@@ -333,7 +336,7 @@ async fn final_frame_clone_blocks_next_read_until_released() {
         .unwrap()
         .unwrap();
     match data {
-        Read::Data(data) => assert_eq!(data.as_ref(), b"second"),
+        Read::Data(data) => assert_eq!(data.as_ref(), b"ond"),
         _ => panic!("second frame expected"),
     };
     remove(&cache, &[entry.base]).await;
@@ -427,4 +430,191 @@ async fn bounded_pull_delivery_singleflight_utf8_and_one_source() {
         assert_eq!(task.await.unwrap(), expected);
     }
     remove(&cache, &[base]).await;
+}
+
+#[tokio::test]
+#[ignore = "requires isolated actual Redis; compares same stored members under two bounded read policies"]
+async fn bounded_batch_reduces_reads_without_mutating_members_or_legacy_bytes() {
+    use sha2::{Digest, Sha256};
+    let batched = fixture(CacheConfig::default()).await;
+    let single = fixture(CacheConfig {
+        read_batch_bytes: 64 * 1024,
+        ..CacheConfig::default()
+    })
+    .await;
+    let entry = batched
+        .open(&prefix("batch-shape"), "batch-owner-aaaaaaaa", guard())
+        .await
+        .unwrap();
+    let expected = vec![b'x'; 13_015_448];
+    for member in expected.chunks(64 * 1024) {
+        entry
+            .put(std::str::from_utf8(member).unwrap(), guard())
+            .await
+            .unwrap();
+    }
+    entry.finish(guard()).await.unwrap();
+    async fn shape(cache: &Cache, base: &str) -> Vec<i64> {
+        cache.inner.transport.command::<Vec<i64>,_>(
+            "local n=redis.call('LLEN',KEYS[1]);local total=0;local lo=2147483647;local hi=0;for i=0,n-1 do local size=string.len(redis.call('LINDEX',KEYS[1],i));total=total+size;lo=math.min(lo,size);hi=math.max(hi,size)end;return{n,total,lo,hi}",
+            &[format!("{base}:chunks")],&[],guard()).await.unwrap().0
+    }
+    async fn digest(cache: &Cache, base: &str) -> (String, usize) {
+        let mut cursor = Cursor::default();
+        let mut hash = Sha256::new();
+        let mut calls = 0;
+        loop {
+            calls += 1;
+            match cache.read(base, &mut cursor, false, guard()).await.unwrap() {
+                Read::Data(data) => {
+                    assert!(data.as_ref().len() <= cache.read_batch_bytes());
+                    hash.update(data.as_ref());
+                }
+                Read::End => return (format!("{:x}", hash.finalize()), calls),
+                _ => panic!("ready data expected"),
+            }
+        }
+    }
+    let before = shape(&batched, &entry.base).await;
+    let (old_hash, old_reads) = digest(&single, &entry.base).await;
+    let (new_hash, new_reads) = digest(&batched, &entry.base).await;
+    assert_eq!(old_hash, format!("{:x}", Sha256::digest(&expected)));
+    assert_eq!(old_hash, new_hash);
+    assert_eq!(before, shape(&batched, &entry.base).await);
+    assert_eq!(before[0], 199);
+    assert_eq!(old_reads, 200);
+    assert_eq!(new_reads, 26);
+    assert_eq!(
+        batched.available_io_bytes(),
+        CacheConfig::default().max_read_bytes
+    );
+    // Source-written members exceed the new batch bound: slice, never reject
+    // merely for exceeding batch size, and do not mutate the legacy member.
+    let legacy_base = format!("{}:g=0", prefix("batch-legacy"));
+    let legacy = "東京😀".repeat(60_000);
+    raw(&batched,"redis.call('RPUSH',KEYS[1]..':chunks',ARGV[1]);redis.call('SET',KEYS[1]..':ready','1','EX',300);redis.call('SET',KEYS[1]..':status','ready','EX',300);return 1",std::slice::from_ref(&legacy_base),&[legacy.as_bytes()]).await;
+    let legacy_shape = shape(&batched, &legacy_base).await;
+    let (legacy_hash, legacy_reads) = digest(&batched, &legacy_base).await;
+    assert_eq!(
+        legacy_hash,
+        format!("{:x}", Sha256::digest(legacy.as_bytes()))
+    );
+    assert_eq!(legacy_reads, 3);
+    assert_eq!(legacy_shape, shape(&batched, &legacy_base).await);
+    // A bounded walk also handles empty members without spinning forever.
+    let empty_base = format!("{}:g=0", prefix("batch-empty"));
+    raw(&batched,"for i=1,40 do redis.call('RPUSH',KEYS[1]..':chunks','')end;redis.call('RPUSH',KEYS[1]..':chunks','tail');redis.call('SET',KEYS[1]..':ready','1','EX',300);redis.call('SET',KEYS[1]..':status','ready','EX',300);return 1",std::slice::from_ref(&empty_base),&[]).await;
+    let (empty_hash, empty_reads) = digest(&batched, &empty_base).await;
+    assert_eq!(empty_hash, format!("{:x}", Sha256::digest(b"tail")));
+    assert_eq!(empty_reads, 3);
+    println!("XMLTV_BATCH_DIAGNOSTIC={{\"body_bytes\":{},\"stored_members\":{},\"single64k_physical_reads\":{old_reads},\"batch512k_physical_reads\":{new_reads},\"legacy_member_bytes\":{},\"legacy_physical_reads\":{legacy_reads},\"unchanged_member_shape\":true}}",expected.len(),before[0],legacy.len());
+    remove(&batched, &[entry.base, legacy_base, empty_base]).await;
+}
+
+#[tokio::test]
+#[ignore = "requires isolated actual Redis; oversized later member preserves valid prefix"]
+async fn bounded_batch_reports_bad_member_after_valid_prefix() {
+    let cache = fixture(CacheConfig {
+        max_legacy_chunk_bytes: 64 * 1024,
+        ..CacheConfig::default()
+    })
+    .await;
+    let base = format!("{}:g=0", prefix("batch-invalid"));
+    let bad = vec![b'x'; 64 * 1024 + 1];
+    raw(&cache,"redis.call('RPUSH',KEYS[1]..':chunks','valid',ARGV[1],'tail');redis.call('SET',KEYS[1]..':ready','1','EX',300);redis.call('SET',KEYS[1]..':status','ready','EX',300);return 1",std::slice::from_ref(&base),&[&bad]).await;
+    let mut cursor = Cursor::default();
+    match cache
+        .read(&base, &mut cursor, false, guard())
+        .await
+        .unwrap()
+    {
+        Read::Data(data) => assert_eq!(data.as_ref(), b"valid"),
+        _ => panic!("valid prefix expected"),
+    }
+    assert_eq!(cursor.chunk, 1);
+    assert_eq!(
+        cache.read(&base, &mut cursor, false, guard()).await.err(),
+        Some(CacheError::Capacity)
+    );
+    assert_eq!(cursor.chunk, 1);
+    remove(&cache, &[base]).await;
+}
+
+#[tokio::test]
+#[ignore = "requires isolated actual Redis;100 bounded ready readers and one held slow frame"]
+async fn bounded_batch_fanout100_progresses_with_detached_slow_frame() {
+    use crate::delivery::Delivery;
+    use sha2::{Digest, Sha256};
+    let cache = fixture(CacheConfig::default()).await;
+    let key = prefix("batch-fanout");
+    let entry = cache
+        .open(&key, "batch-fanout-owner-aaaa", guard())
+        .await
+        .unwrap();
+    let base = entry.base.clone();
+    let expected = "bounded UTF8 body &amp; channel data\n".repeat(32_000);
+    let expected_hash = format!("{:x}", Sha256::digest(expected.as_bytes()));
+    for bytes in expected.as_bytes().chunks(64 * 1024) {
+        entry
+            .put(std::str::from_utf8(bytes).unwrap(), guard())
+            .await
+            .unwrap();
+    }
+    entry.finish(guard()).await.unwrap();
+    drop(entry); // Completed leader handle retains an acquisition guard.
+    let mut cursor = Cursor::default();
+    let held = match cache
+        .read(&base, &mut cursor, false, guard())
+        .await
+        .unwrap()
+    {
+        Read::Data(data) => bytes::Bytes::from_owner(data),
+        _ => panic!("data expected"),
+    };
+    let last = held.clone();
+    drop(held);
+    let barrier = Arc::new(tokio::sync::Barrier::new(101));
+    let mut readers = Vec::new();
+    for id in 0..100 {
+        let cache = cache.clone();
+        let key = key.clone();
+        let barrier = barrier.clone();
+        let expected_hash = expected_hash.clone();
+        readers.push(tokio::spawn(async move {
+            let entry = cache
+                .open(&key, &format!("batch-ready-reader-{id:04}"), guard())
+                .await
+                .unwrap();
+            assert_eq!(entry.state, EntryState::Ready);
+            let mut delivery = Delivery::new(cache, entry, None, Duration::from_secs(10)).unwrap();
+            barrier.wait().await;
+            let mut hash = Sha256::new();
+            while let Some(frame) = delivery.next(guard()).await.unwrap() {
+                hash.update(frame.as_ref());
+            }
+            assert_eq!(format!("{:x}", hash.finalize()), expected_hash);
+        }));
+    }
+    barrier.wait().await;
+    tokio::time::timeout(Duration::from_secs(10), async {
+        for reader in readers {
+            reader.await.unwrap();
+        }
+    })
+    .await
+    .unwrap();
+    assert_eq!(
+        cache.available_io_bytes(),
+        CacheConfig::default().max_read_bytes - 2 * cache.read_batch_bytes()
+    );
+    drop(last);
+    assert_eq!(
+        cache.available_io_bytes(),
+        CacheConfig::default().max_read_bytes
+    );
+    assert!(cache.drain_cleanup(Duration::from_secs(1)).await);
+    remove(&cache, &[base]).await;
+    println!(
+        "XMLTV_BATCH_FANOUT=100;HELD_SLOW_FRAME_INDEPENDENT=true;FINAL_CLONE_BYTES_RETURNED=true"
+    );
 }

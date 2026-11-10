@@ -1,0 +1,56 @@
+{
+  "scope": "Post-image24 independent guide HTTP component. Original APIRequestFactory GET/error captures versus native network responses; actual original network HEAD separately captured. No app route enabled.",
+  "passed": true,
+  "artifact": "artifacts/rust/m7-grid-http-native-1",
+  "original_credit": "All original application credit belongs to Dispatcharr authors and contributors; original AGPL license applies.",
+  "cases": {
+    "original_factory_vs_native_http": 40,
+    "original_network_head": 1,
+    "factory_unhandled_exceptions_inferred": 0,
+    "physical_postgresql_tests": 1,
+    "native_tests": 2
+  },
+  "checks": [
+    "Exact status/body SHA-256/content-type across captured40",
+    "Allow and WWW-Authenticate headers where Source supplies them",
+    "Actual Source HEAD body suppression and Content-Length",
+    "Actual PostgreSQL lock wait observed before caller abort",
+    "Logical timeout retains physical request admission until rollback",
+    "Excess request rejected while physical work blocked",
+    "Shutdown false while physically blocked and true after rollback",
+    "Detached final Bytes clone retains bounded actual-capacity memory after operation/shutdown",
+    "Final clone drop returns full memory budget"
+  ],
+  "limits": {
+    "concurrent_responses_default": 2,
+    "physical_workspace_bytes": 100663296,
+    "memory_bytes_default": 201326592,
+    "logical_deadline_seconds_default": 5,
+    "query_and_header_budget_bytes": 65536,
+    "max_frames": 2048
+  },
+  "runtime_source_sha256": {
+    "rust/crates/output-http/src/epg_grid_http.rs": "b2682dd5a6c8435b26f8e84c7ed175ff375808c208bb23f467c7465d7b42cd91",
+    "rust/crates/output-http/tests/epg_grid_http.rs": "483b752904cdd9946620cc5775f56966b83118f58b95d400a2e75a4973a39a0a"
+  },
+  "tool_source_sha256": {
+    "scripts/rust-epg-contracts/control_reads.py": "9eac8732fa84512bbf9a44f1de48cfd2b3e143d7cd27966e29a30269992151a7",
+    "scripts/rust-epg-contracts/guide_source.py": "654d0b09e4e75ea16162d006d3295852b869c6d7226d737a8e126d2e3064bd64"
+  },
+  "evidence_sha256": {
+    "artifacts/rust/m7-grid-http-native-1/result.json": "fa2346efc7a2a9b92b17f0db144931f37a2e001fb1d3a8a4250fbdddb91831c3",
+    "artifacts/rust/m7-grid-http-native-1/guide-source.json": "1d1b27e5a5675003cbed05753787844af1f4744c940c2cbfd9cf3e45f74ed711",
+    "artifacts/rust/m7-grid-http-native-1/native-grid-http.log": "0d941550990f63cf8f7857727307df47d92d5ba35c1cad101f52e537956a035b"
+  },
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "not_verified": [
+    "Packaged application route and middleware",
+    "Actual Source-network GET clock stability",
+    "OPTIONS schema metadata (explicit501)",
+    "Full DRF Accept/format negotiation grammar beyond baseline captures",
+    "Custom dummy regex (explicit501)",
+    "Whole application parity",
+    "Performance"
+  ]
+}

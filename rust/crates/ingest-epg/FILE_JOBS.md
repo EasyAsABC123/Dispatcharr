@@ -12,6 +12,8 @@ Evidence 72 adds three physical scenarios. Blocked PostgreSQL retains the refres
 
 Limits are explicit: one to four admitted jobs, existing bounded channel/programme/report/cache adapters, bounded source metadata/counter decoding, and a bounded release wait. A timed-out waiter does not release physical work. The dispatcher interface must retain the supplied context through its actual queue reply. The test dispatcher observes index/series/defer boundaries and checks that no late mappings appeared; it does not execute those child tasks.
 
+Evidence 82 adds enabled automatic logos and the original property-type failure after channel completion, comparing all 17 local-file task cases and all three physical guards. This is still observed child dispatch, not child execution.
+
 Evidence 75 reruns all 15 cases and all three physical guards in an immutable component-only Docker image, as UID 65532 with a read-only root, 512 MiB memory, two CPUs and 128 PIDs. This image preserves accepted73 runtime bytes and adds only its test packaging and credit/license files.
 
-Remote download, invalid/oversized compressed input, old-cache replacement/error behavior, enabled automatic logos, transient database retries and general exception text, orphan periodic-task cleanup, newly mapped child execution, index generation, series evaluation, durable task queues, the HTTP import API and app wiring remain open gates. The component must not be advertised as full refresh-job parity or a performance result.
+Remote download, invalid/oversized compressed input, old-cache replacement/error behavior, transient database retries and general exception text, orphan periodic-task cleanup, newly mapped child execution, index generation, series evaluation, durable task queues, the HTTP import API and app wiring remain open gates. The component must not be advertised as full refresh-job parity or a performance result.

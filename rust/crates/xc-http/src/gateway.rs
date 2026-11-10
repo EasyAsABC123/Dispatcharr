@@ -330,7 +330,7 @@ impl XcGateway {
                 Err(crate::epg::Error::Unsupported) => {
                     return Err(StoreError::StatusBody(
                         501,
-                        json!({"detail":"Custom XC EPG source properties require a verified regex adapter."}),
+                        json!({"detail":"This XC EPG source or hash-seed configuration is not yet supported."}),
                     ))
                 }
                 Err(crate::epg::Error::Capacity) => return Err(reader::capacity()),

@@ -1,0 +1,13 @@
+# Automatic EPG logos
+
+All application and algorithm credit belongs to the original Dispatcharr authors and contributors.
+
+The helper follows `maybe_auto_apply_epg_logos` and the channel bulk helpers. Truthy flag values enable it; empty root values disable it. Nonempty lists, strings and numbers at the root raise the original attribute error before the nonfatal SQL boundary. The channel caller preserves the resulting error/progress/audit sequence, including its earlier 100% success publication. SQL failures inside the helper return no statistics and leave the channel pass successful.
+
+A private holdable cursor preserves one ordered channel-ID snapshot. Batches of 500 read current base-channel, EPG and logo fields, excluding override-only mappings. The per-batch query has no invented ordering. Existing matching URLs stay unchanged; missing URLs use the first encountered EPG name or TVG fallback. The original LogoQuerySet truncates new names to 255 codepoints, including bulk creates. Creates and channel updates preserve separate autocommit boundaries and conflict behavior. Statistics count attempted missing-logo creates as the original does.
+
+At most four supervised operations hold physical SQL admission globally. Each operation retains the caller guard through SQL replies and cursor cleanup even if its waiter is canceled. It streams driver rows rather than collecting a batch of arbitrarily large existing logo URLs. Retained source properties, catalogue count and working batches have explicit limits. The configurable existing-row URL limit defaults to 1 MiB and is checked in SQL before decoding; the catalogue cap is 100,000 and batch accounting cap is 8 MiB. The original does not impose these resource limits; oversized valid inputs remain an explicit supported-capacity boundary, never silently successful work.
+
+Evidence 81 compares 18 original helper cases, including a valid 160 KiB existing URL under the default configuration. It proves four blocked operations retain their caller guards and admission after waiter cancellation. An explicitly lower 128 KiB configuration rejects a valid 160 KiB row before driver decoding. Earlier fixture attempts 79 and 80 were rejected by the original PostgreSQL unique B-tree before reaching the intended guard; both failures remain preserved. No production default was lowered to pass the test.
+
+Evidence 78 composes the helper with the channel pass. Evidence 82 composes it with local-file refresh. Application dispatch, actual child-task execution, arbitrary concurrent row reassignment/deletion and performance acceptance remain separate gates.

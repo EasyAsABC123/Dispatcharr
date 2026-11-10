@@ -14,7 +14,7 @@ def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--candidate-build-manifest',required=True,type=Path);p.add_argument('--action',choices=['functional','observer-smoke','instrumentation-smoke','experiment'],default='functional');p.add_argument('--quiet-authorization',type=Path);p.add_argument('--measurement-authorization',type=Path);a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
  if any(out.iterdir()):p.error('Output must be empty')
  manifest=json.loads(a.candidate_build_manifest.read_text())
- if manifest.get('passed')is not True or manifest.get('source_tree_sha256')!=TREE:p.error('Passing exact23 source/recovery manifest required')
+ if manifest.get('passed')is not True or manifest.get('source_tree_sha256')!=TREE:p.error('Passing exact configured candidate source/archive manifest required')
  if a.action=='experiment':
   if not a.quiet_authorization or not a.measurement_authorization:p.error('Experiment needs parent qualification and subsequent measurement quiet-cue paths')
   from qualification import authorize

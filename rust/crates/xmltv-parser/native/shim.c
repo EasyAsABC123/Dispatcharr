@@ -103,3 +103,6 @@ char *dxml_text(xmlNode *n){
  char *out=seen?(char*)xmlStrdup(xmlBufferContent(b)):NULL;xmlBufferFree(b);return out;
 }
 void dxml_free(void *p){xmlFree(p);}
+
+/* Additive strict helper shares this translation unit's existing TLS arena. */
+#include "strict.inc"

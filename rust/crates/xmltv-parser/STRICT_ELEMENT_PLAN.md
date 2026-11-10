@@ -1,0 +1,15 @@
+# Strict single-element parser: post24 draft
+
+Original Dispatcharr authors and contributors retain all application and algorithm credit. This document describes unimplemented, unverified work for the byte-offset current-programme reader. Existing recover-mode parsing remains unchanged.
+
+The original `_parse_programme_element` always prepends its HTML4 entity DOCTYPE and calls strict `etree.fromstring` with entity resolution, DTD loading and no network. It returns the document root, preserves text whitespace, and rejects malformed XML. This differs from the streaming parser's recover mode, blank-text handling and nested programme end-event emission. The new lookup must not substitute the recover parser for this function.
+
+Add a separate strict API returning one owned `XmltvElement` or a typed syntax, capacity, cancellation or allocation failure. Build the injected prefix and fragment as a bounded chained reader. Do not publish an element before successful end-of-document validation. Extract the root once; nested `<programme>` elements remain children. Existing namespace and text extraction can be reused, including direct leading text rather than flattened descendant text.
+
+The native implementation must share the existing private static-libxml2 thread-local arena and one-time allocator setup. An independently compiled file including `memory.h` would create a second static TLS/once pair and is unsuitable. Use an included implementation in the existing translation unit with new symbols, fresh parser options and the same opaque common context layout. Keep the existing constructor/feed/drop ABI and recover behavior intact. Do not change any whole-library external resource loader.
+
+A fresh strict context omits RECOVER and NOBLANKS. It retains no-network protections and existing capacity guards. Its end callback preserves the complete bounded root tree. Its final feed checks syntax/well-formedness before extracting and emitting the root inside the active TLS allocation arena. This avoids unaccounted foreign-string allocations during extraction. The existing native destructor can then free the document in the same arena.
+
+Source goldens must cover DTD/entity handling, leading/direct text, CDATA, comments/PIs, nested programmes, namespaces/attributes, duplicates, invalid UTF-8/characters, malformed/truncated XML, trailing documents, declarations/BOM placement and empty input. Local external entity/file behavior stays explicitly unaccepted until tested against uniquely owned sentinel fixtures. A no-network test must use an owned fixture endpoint, never foreign resources. Native adversarial tests must cover input, token/node, expansion, depth, heap and extraction limits, mid-work cancellation, repeated failure cleanup and concurrency. Existing streaming differential tests and native sanitizer checks must also pass before any integration claim.
+
+No parser code, application route, stored index lookup or performance acceptance follows from this plan alone. Source execution and compilation are queued until the coordinated guide-performance quiet window ends.

@@ -38,9 +38,14 @@ def main():
     parser.add_argument('--native',action='store_true',help='Frozen native ordinary-local-file job effects; compressed/remote and child execution remain open')
 
     parser.add_argument('--native-test-manifest',type=Path)
-    parser.add_argument('--source-helper',choices=['file_job_source.py','auto_logos_source.py'],default='file_job_source.py')
+    parser.add_argument('--index-service',action='store_true',help='Native retained index SQL/task/file-lease component; separate from pure scanner')
+    parser.add_argument('--source-helper',choices=['file_job_source.py','auto_logos_source.py','programme_index_source.py'],default='file_job_source.py')
     args = parser.parse_args()
     if args.native_test_manifest:args.native=True
+    if args.index_service:
+        if args.source_helper!='programme_index_source.py':parser.error('Index service requires programme_index_source.py')
+        args.native=True
+    if args.native_test_manifest and args.source_helper=='programme_index_source.py':parser.error('Index component Docker packaging is not implemented yet')
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     tools = output/'tool-source'
@@ -48,6 +53,7 @@ def main():
     for relative in ['scripts/rust-epg-parity/run_file_job.py',
                      'scripts/rust-epg-parity/file_job_source.py',
                      'scripts/rust-epg-parity/auto_logos_source.py',
+                     'scripts/rust-epg-parity/programme_index_source.py',
                      'scripts/rust-epg-parity/component_container.py',
                      'scripts/rust-epg-contracts/source_reads.py',
                      'scripts/rust-epg-contracts/window_source.py',
@@ -59,7 +65,7 @@ def main():
         target.write_bytes(source_tool.read_bytes())
         hashes[relative] = hashlib.sha256(target.read_bytes()).hexdigest()
     project = 'dispatcharr-epg-file-job-'+uuid.uuid4().hex[:10]
-    report = {'scope':('original-automatic-EPG-logo-helper' if args.source_helper=='auto_logos_source.py' else 'original-file-refresh-task-ordering'), 'passed':False,
+    report = {'scope':('original-automatic-EPG-logo-helper' if args.source_helper=='auto_logos_source.py' else 'original-programme-index' if args.source_helper=='programme_index_source.py' else 'original-file-refresh-task-ordering'), 'passed':False,
               'native_verified':False, 'performance_verified':False,
               'project':project, 'tool_source_sha256':hashes,'source_helper':args.source_helper}
     status = 1
@@ -108,7 +114,7 @@ def main():
                              timeout=120, body=(tools/'scripts/rust-epg-parity'/args.source_helper).read_text())
             (output/'source-worker.log').write_text(result.stderr)
             fixture = json.loads(result.stdout.splitlines()[-1])
-            fixture_path = output/('auto-logos-source.json' if args.source_helper=='auto_logos_source.py' else 'file-job-source.json')
+            fixture_path = output/('auto-logos-source.json' if args.source_helper=='auto_logos_source.py' else 'programme-index-source.json' if args.source_helper=='programme_index_source.py' else 'file-job-source.json')
             fixture_path.write_text(json.dumps(fixture, indent=2)+'\n')
             report.update(passed=True, source_cases=len(fixture['cases']),
                           fixture_sha256=hashlib.sha256(fixture_path.read_bytes()).hexdigest())
@@ -116,7 +122,7 @@ def main():
                 if args.native_test_manifest:
                     spec=importlib.util.spec_from_file_location('file_job_component',tools/'scripts/rust-epg-parity/component_container.py')
                     component=importlib.util.module_from_spec(spec);spec.loader.exec_module(component)
-                    code,provenance=component.execute(compose,env,output,args.native_test_manifest.resolve(),('auto_logos_sql' if args.source_helper=='auto_logos_source.py' else 'file_job_sql'),fixture_path.name)
+                    code,provenance=component.execute(compose,env,output,args.native_test_manifest.resolve(),('auto_logos_sql' if args.source_helper=='auto_logos_source.py' else ('index_service_sql' if args.index_service else 'programme_index_sql') if args.source_helper=='programme_index_source.py' else 'file_job_sql'),fixture_path.name)
                     report['native_container']=provenance
                     report['rust_source_sha256']=provenance['source_sha256']
                     report['rust_source_archive_sha256']=provenance['source_archive_sha256']
@@ -127,11 +133,13 @@ def main():
                         target=frozen/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data_bytes)
                     pg=command(compose+['port','baseline','5432']).stdout.strip()
                     redis=command(compose+['port','baseline','6379']).stdout.strip()
-                    native_env=dict(env,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+pg+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis+'/0',EPG_FILE_JOB_DISPOSABLE_FIXTURE='playback-fixture-only',EPG_FILE_JOB_FIXTURE=str(fixture_path),EPG_LOGO_DISPOSABLE_FIXTURE='playback-fixture-only',EPG_LOGO_FIXTURE=str(fixture_path),CARGO_TARGET_DIR=str(output/'cargo-target'))
-                    result=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-ingest-epg','--test',('auto_logos_sql' if args.source_helper=='auto_logos_source.py' else 'file_job_sql'),'--locked','--offline','--','--ignored','--nocapture','--test-threads=1'],env=native_env,text=True,capture_output=True,timeout=600)
+                    native_env=dict(env,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+pg+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis+'/0',EPG_FILE_JOB_DISPOSABLE_FIXTURE='playback-fixture-only',EPG_FILE_JOB_FIXTURE=str(fixture_path),EPG_LOGO_DISPOSABLE_FIXTURE='playback-fixture-only',EPG_LOGO_FIXTURE=str(fixture_path),EPG_INDEX_DISPOSABLE_FIXTURE='playback-fixture-only',EPG_INDEX_FIXTURE=str(fixture_path),CARGO_TARGET_DIR=str(output/'cargo-target'))
+                    result=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-ingest-epg','--test',('auto_logos_sql' if args.source_helper=='auto_logos_source.py' else ('index_service_sql' if args.index_service else 'programme_index_sql') if args.source_helper=='programme_index_source.py' else 'file_job_sql'),'--locked','--offline','--','--ignored','--nocapture','--test-threads=1'],env=native_env,text=True,capture_output=True,timeout=600)
                     (output/'native-file-job.log').write_text(result.stdout+'\n'+result.stderr)
                     result.check_returncode()
                 report.update(native_verified=True,native_source_cases=len(fixture['cases']),native_physical_scenarios=2 if args.source_helper=='auto_logos_source.py' else 3,source_only_cases=[],application_dispatch_verified=False,child_task_execution_verified=False,websocket_transport_verified=False)
+                if args.source_helper=='programme_index_source.py':report.update(native_source_cases=21,native_physical_scenarios=0,native_pure_guards=4,source_only_cases=['missing-file','file-held','defer-exhausted'],index_task_sql_lease_verified=False)
+                if args.index_service:report.update(native_source_cases=24,native_physical_scenarios=3,native_pure_guards=0,source_only_cases=[],index_task_sql_lease_verified=True,lookup_verified=False)
             status = 0
         except subprocess.CalledProcessError as error:
             (output/'failed-command.log').write_text((error.stdout or '')+'\n'+(error.stderr or ''))

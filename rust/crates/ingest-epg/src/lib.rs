@@ -8,6 +8,8 @@ mod channel_sql;
 pub mod channels;
 pub mod file_job;
 mod file_lease;
+pub mod index_service;
+pub mod programme_index;
 pub mod reporter;
 use chrono::{DateTime, Utc};
 use dispatcharr_ingest_core::{

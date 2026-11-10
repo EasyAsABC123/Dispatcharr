@@ -1,0 +1,34 @@
+{
+  "scope": "Independent guide JSON HTTP and original real-clock network component",
+  "passed": true,
+  "evidence_directory": "artifacts/rust/m5-grid-network-native-28",
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "artifact_sha256": {
+    "result.json": "67805bfd84ae9f85dc7bf83fcda64b468fe8a0cee235872f3e04fee9f29d17f6",
+    "guide-source.json": "c042c8a32c92e0589bf7f1d2a3438ffaf7679ff5f796b60c07f02138edaa93b9",
+    "guide-wire-source.json": "683c8c27cf9a5e5c45931e7dc6452181bd1843b32e9ef38d9b09707f0197a494",
+    "native-grid-http.log": "84300675f0c4e2028ebcb391322194bfaf441134d22a1b6666c4d630ec7da80e",
+    "native-grid-wire.log": "fd6c38287a56b60c09fd671e7b7df4d4209cc3926b95ee96a239c068a5e2dd7d",
+    "grid-rust-source.tar": "03ec866a9aeb9764e6bfe5664a9da80ec22707ae91f70a153bac830e9d068cc0"
+  },
+  "limitations": [
+    "Custom dummy rules, offset-sensitive dummy generation, full browsable error HTML and broader provider/guide variants remain separate gates."
+  ],
+  "json_factory_native_http_cases": 146,
+  "explicit_unsupported_browsable_error_html_cases": 6,
+  "original_exploratory_cases": 112,
+  "original_baseline_cases": 40,
+  "actual_network_cases": 43,
+  "actual_source_head_cases": 1,
+  "physical_guard_tests": 1,
+  "native_tests_passed": 3,
+  "input_time_or_row_normalization": null,
+  "full_browsable_html_parity_verified": false,
+  "retained_failures": {
+    "native26": "All18 mismatches were original CommonMiddleware error Content-Length headers; exact bodies already matched.",
+    "native27": "Expanded JSON indentation on error responses exposed missing renderer formatting; captured HTML errors now explicit501, not parity passes."
+  }
+}

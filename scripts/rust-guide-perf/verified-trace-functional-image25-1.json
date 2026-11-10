@@ -1,0 +1,121 @@
+{
+  "scope": "Immutable image25 bounded request trace/cache witnesses functional smoke only",
+  "passed": true,
+  "performance_verified": false,
+  "report": "artifacts/rust/guide-trace-functional-image25-1/guide-run.json",
+  "report_sha256": "c1ccfa557f7258fbe0129407950837899d2ffb79404723570bbe288915d9d34c",
+  "observers": [
+    {
+      "backend": "source",
+      "cache_reset_rebuild_verified": true,
+      "cache_witness_before": {
+        "generation": "0",
+        "chunks": 29,
+        "bytes": 13015448,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 300,
+        "smallest_chunk_bytes": 6,
+        "largest_chunk_bytes": 574800,
+        "key_types": {
+          "chunks": "list",
+          "ready": "string",
+          "status": "string",
+          "lock": "none"
+        },
+        "key_ttl_seconds": {
+          "chunks": 300,
+          "ready": 300,
+          "status": 300,
+          "lock": -2
+        }
+      },
+      "cache_witness_after": {
+        "generation": "0",
+        "chunks": 29,
+        "bytes": 13015448,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 300,
+        "smallest_chunk_bytes": 6,
+        "largest_chunk_bytes": 574800,
+        "key_types": {
+          "chunks": "list",
+          "ready": "string",
+          "status": "string",
+          "lock": "none"
+        },
+        "key_ttl_seconds": {
+          "chunks": 300,
+          "ready": 300,
+          "status": 300,
+          "lock": -2
+        }
+      },
+      "passed": true,
+      "performance_verified": false,
+      "trace_report": "trace-functional-source.json",
+      "trace_report_sha256": "0997a6937843b9d71fdf07e0a75dcfa000d0294eb4cd561b154f73a44536c4b1",
+      "paced_traces": 2,
+      "cold_traces": 1
+    },
+    {
+      "backend": "candidate",
+      "cache_reset_rebuild_verified": true,
+      "cache_witness_before": {
+        "generation": "0",
+        "chunks": 204,
+        "bytes": 13015448,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 300,
+        "smallest_chunk_bytes": 6,
+        "largest_chunk_bytes": 65536,
+        "key_types": {
+          "chunks": "list",
+          "ready": "string",
+          "status": "string",
+          "lock": "none"
+        },
+        "key_ttl_seconds": {
+          "chunks": 300,
+          "ready": 300,
+          "status": 300,
+          "lock": -2
+        }
+      },
+      "cache_witness_after": {
+        "generation": "0",
+        "chunks": 204,
+        "bytes": 13015448,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 300,
+        "smallest_chunk_bytes": 6,
+        "largest_chunk_bytes": 65536,
+        "key_types": {
+          "chunks": "list",
+          "ready": "string",
+          "status": "string",
+          "lock": "none"
+        },
+        "key_ttl_seconds": {
+          "chunks": 300,
+          "ready": 300,
+          "status": 300,
+          "lock": -2
+        }
+      },
+      "passed": true,
+      "performance_verified": false,
+      "trace_report": "trace-functional-candidate.json",
+      "trace_report_sha256": "80188e17c740d2a5a6fe9da05e6de878d97124cb60beb486c95c0eaaf6731143",
+      "paced_traces": 2,
+      "cold_traces": 1
+    }
+  ]
+}

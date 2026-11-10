@@ -1,0 +1,726 @@
+{
+  "passed": false,
+  "performance_verified": false,
+  "scope": "Stopped immutable image25 stored-guide Current/XMLTV experiment; partial passing groups retained but full15-pair matrix not accepted",
+  "stop_reason": "ColdXMLTV10 trial1 failed fixed CPUratio1.0 and completionp95ratio1.10 budgets: actual1.032091/1.596647. Parent detected the pair; exact owned process manually SIGINT-stopped. No rerun or budget change.",
+  "stop_was_automatic": false,
+  "captured_loop_limitation": "Captured runner evaluated fullmatrix acceptance only at end, so it continued into cold10trial2-native setup/measurement before manualinterrupt. Partial next-phase setup is preserved; it is not a completed/accepted phase. Root owns future fail-fast correction.",
+  "build_manifest": "artifacts/rust/candidate-build-grid-cache-image25-1/build.json",
+  "build_manifest_sha256": "babca91c68eece374f595108348288dacf43d67645907129fdcea0ab0d785cab",
+  "candidate_image_binding": {
+    "image_id": "sha256:2c197d053675ee81800ecd39f7cb9b6620c1887a705cd02974d9c3751531df39",
+    "source_tree_sha256": "565083061ffb764ac4c4c3ef2a6455cdd0e7a5a7eba1403e068f5bddfbf8ba46",
+    "manifest_verified": true
+  },
+  "source_archive_sha256": "ace6ee12836e4498ed49c38c704da10ea27ad7ae44c23eaba697aed6a2022d72",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "plan_seal": "1dccf9e5d18a25bf441a21c35ae70e00da24aefc10053b303916a4f450059336",
+  "policy_sha256": "043f243618dfa17bfc2bc7c8747d94dafd919cfb8f2cbac02d050c1f6abb0afc",
+  "frozen_plan": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/frozen-plan.json",
+  "frozen_plan_file_sha256": "31c101437a926f38702143dd6f9973b6108e0fa1dcdeacdbdb2f0daa164a0f39",
+  "fixture_binding": {
+    "snapshot": {
+      "channels": 500,
+      "stored_programmes": 2250,
+      "first": "2026-11-10T03:48:52+00:00",
+      "last": "2026-11-11T05:48:52+00:00",
+      "current_until": "2026-11-10T07:48:52+00:00",
+      "fixture_sha256": "e539ccde669c7aa7eaeec32c4801187b7b793935397d351c3d0333d4e5b7612a",
+      "schema_sha256": "7d14f257d439eb858b4609c5aca6bac6d1ad187c7a455f393712256e457e4606"
+    },
+    "fixture_clock": "2026-11-10T05:48:52+00:00",
+    "reference_sha256": "3f63fe0610e97f759ad38caac884d719db6a5103b20dc9db46fbc916d079b75b",
+    "channel_uuids_sha256": "82ec6a9480f16abb14543df74a364fa8087a6030a18af406ea3be0e91a4da92f"
+  },
+  "selected_periods_seconds": {
+    "current-500-shared50": 5,
+    "xmltv-cold-1": 10,
+    "xmltv-cold-10": 10,
+    "xmltv-hot-1": 1,
+    "xmltv-hot-10": 1
+  },
+  "qualification_phases": 18,
+  "completed_measurement_phases": 14,
+  "completed_pairs": 7,
+  "passed_pairs": 6,
+  "failed_pairs": 1,
+  "planned_pairs": 15,
+  "comparisons": [
+    {
+      "workload": "current-500-shared50",
+      "trial": 1,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.011915895818321776,
+        "peak_working_memory_bytes": 0.353758331683495,
+        "completion_p95_ms": 0.0113101662124161,
+        "throughput_per_second": 1.0084033613445378
+      },
+      "ttfb_p95_ceiling_ms": 1056.0982916000285
+    },
+    {
+      "workload": "current-500-shared50",
+      "trial": 2,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.011944573243893364,
+        "peak_working_memory_bytes": 0.3471540202399761,
+        "completion_p95_ms": 0.011131555514398697,
+        "throughput_per_second": 1.0084033613445378
+      },
+      "ttfb_p95_ceiling_ms": 1019.6459669003162
+    },
+    {
+      "workload": "current-500-shared50",
+      "trial": 3,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.012198966191529406,
+        "peak_working_memory_bytes": 0.3478212548409435,
+        "completion_p95_ms": 0.011040118910512278,
+        "throughput_per_second": 1.0084033613445378
+      },
+      "ttfb_p95_ceiling_ms": 1073.5117095999158
+    },
+    {
+      "workload": "xmltv-cold-1",
+      "trial": 1,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.8772414028826058,
+        "peak_working_memory_bytes": 0.4793624669756161,
+        "completion_p95_ms": 1.0363485624627764,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 55.00000000000001
+    },
+    {
+      "workload": "xmltv-cold-1",
+      "trial": 2,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.9019200676508166,
+        "peak_working_memory_bytes": 0.45701750612929587,
+        "completion_p95_ms": 1.0385723462873941,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 55.00000000000001
+    },
+    {
+      "workload": "xmltv-cold-1",
+      "trial": 3,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.8600600748109672,
+        "peak_working_memory_bytes": 0.4798923720850773,
+        "completion_p95_ms": 0.9728182649468867,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 55.00000000000001
+    },
+    {
+      "workload": "xmltv-cold-10",
+      "trial": 1,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": false,
+      "failures": [
+        "regression:cpu_percent_mean",
+        "regression:completion_p95_ms",
+        "regression:ttfb_p95_ms"
+      ],
+      "ratios": {
+        "cpu_percent_mean": 1.0320911011915075,
+        "peak_working_memory_bytes": 0.4320291462062411,
+        "completion_p95_ms": 1.596647200971712,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 83.06395900035568
+    }
+  ],
+  "workload_medians": {
+    "current-500-shared50": {
+      "complete_pairs": 3,
+      "three_pair_workload_gate_passed": true,
+      "median_native_source_ratios": {
+        "cpu_percent_mean": 0.011944573243893364,
+        "peak_working_memory_bytes": 0.3478212548409435,
+        "completion_p95_ms": 0.011131555514398697,
+        "throughput_per_second": 1.0084033613445378
+      }
+    },
+    "xmltv-cold-1": {
+      "complete_pairs": 3,
+      "three_pair_workload_gate_passed": true,
+      "median_native_source_ratios": {
+        "cpu_percent_mean": 0.8772414028826058,
+        "peak_working_memory_bytes": 0.4793624669756161,
+        "completion_p95_ms": 1.0363485624627764,
+        "throughput_per_second": 1.0
+      }
+    },
+    "xmltv-cold-10": {
+      "complete_pairs": 1,
+      "three_pair_workload_gate_passed": false,
+      "median_native_source_ratios": {
+        "cpu_percent_mean": 1.0320911011915075,
+        "peak_working_memory_bytes": 0.4320291462062411,
+        "completion_p95_ms": 1.596647200971712,
+        "throughput_per_second": 1.0
+      }
+    }
+  },
+  "failed_cold10_details": {
+    "source": {
+      "normalized": {
+        "cpu_percent_mean": 7.350405765903237,
+        "peak_working_memory_bytes": 517160960,
+        "ttfb_p95_ms": 75.51269000032335,
+        "completion_p95_ms": 452.6777139999467,
+        "throughput_per_second": 1.0,
+        "pacing_fraction": 1,
+        "samples": 60,
+        "errors": 0,
+        "sample_errors": 0,
+        "late_completed": 0,
+        "oom_kills": 0,
+        "counter_resets": 0,
+        "correct_responses": true,
+        "cache_state_verified": true,
+        "fixture_unchanged": true,
+        "limits_verified": true
+      },
+      "cache_witness": {
+        "scope": "Before/after numeric cache states outside measured window",
+        "requested_state": "cold",
+        "before": {
+          "generation": "0",
+          "chunks": 29,
+          "bytes": 13015448,
+          "ready": "1",
+          "status": "ready",
+          "locked": false,
+          "ready_ttl_seconds": 295,
+          "smallest_chunk_bytes": 6,
+          "largest_chunk_bytes": 574800,
+          "key_types": {
+            "chunks": "list",
+            "ready": "string",
+            "status": "string",
+            "lock": "none"
+          },
+          "key_ttl_seconds": {
+            "chunks": 295,
+            "ready": 295,
+            "status": 295,
+            "lock": -2
+          }
+        },
+        "after": {
+          "generation": "0",
+          "chunks": 29,
+          "bytes": 13015448,
+          "ready": "1",
+          "status": "ready",
+          "locked": false,
+          "ready_ttl_seconds": 290,
+          "smallest_chunk_bytes": 6,
+          "largest_chunk_bytes": 574800,
+          "key_types": {
+            "chunks": "list",
+            "ready": "string",
+            "status": "string",
+            "lock": "none"
+          },
+          "key_ttl_seconds": {
+            "chunks": 290,
+            "ready": 290,
+            "status": 290,
+            "lock": -2
+          }
+        }
+      },
+      "counter_deltas": {
+        "baseline": {
+          "cpu_percent_mean": 0.8074331088095505,
+          "cpu_usage_usec": 485747,
+          "elapsed_seconds": 60.15941069300061,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "origin": {
+          "cpu_percent_mean": 0.049871242483670676,
+          "cpu_usage_usec": 30002,
+          "elapsed_seconds": 60.158918257999176,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "source": {
+          "cpu_percent_mean": 6.493101414610016,
+          "cpu_usage_usec": 3906131,
+          "elapsed_seconds": 60.158170196000356,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        }
+      },
+      "counter_before_interservice_skew_seconds": 0.08900383100080944,
+      "counter_after_interservice_skew_seconds": 0.08776333400055591,
+      "maximum_sample_observer_seconds": 0.00515558500046609,
+      "request_traces": 60,
+      "waves": [
+        {
+          "epoch": 0,
+          "ttfb_min_ms": 11.972156999036088,
+          "ttfb_max_ms": 74.9452639993251,
+          "completion_min_ms": 394.7298340008274,
+          "completion_max_ms": 446.3923719995364,
+          "start_skew_seconds": 0.0018676829986361554
+        },
+        {
+          "epoch": 1,
+          "ttfb_min_ms": 11.944816998948227,
+          "ttfb_max_ms": 75.59336199847166,
+          "completion_min_ms": 441.11945199983893,
+          "completion_max_ms": 475.8793119999609,
+          "start_skew_seconds": 0.00033617999906709883
+        },
+        {
+          "epoch": 2,
+          "ttfb_min_ms": 13.574883001638227,
+          "ttfb_max_ms": 75.06136699885246,
+          "completion_min_ms": 387.2436399997241,
+          "completion_max_ms": 447.4599980003404,
+          "start_skew_seconds": 0.0003913809996447526
+        },
+        {
+          "epoch": 3,
+          "ttfb_min_ms": 11.653027999273036,
+          "ttfb_max_ms": 73.84717199965962,
+          "completion_min_ms": 445.3621079992445,
+          "completion_max_ms": 452.6777139999467,
+          "start_skew_seconds": 0.0003391089994693175
+        },
+        {
+          "epoch": 4,
+          "ttfb_min_ms": 12.517073000708479,
+          "ttfb_max_ms": 81.12905699999828,
+          "completion_min_ms": 435.82113800039224,
+          "completion_max_ms": 444.8266720009997,
+          "start_skew_seconds": 0.00048622299982525874
+        },
+        {
+          "epoch": 5,
+          "ttfb_min_ms": 12.954994999745395,
+          "ttfb_max_ms": 75.05957600005786,
+          "completion_min_ms": 444.0392169999541,
+          "completion_max_ms": 455.37834700007807,
+          "start_skew_seconds": 0.00033220899968000595
+        }
+      ],
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-10-trial-1-source.json",
+      "sha256": "5406dd5c40993def6e8a225376d54553bf1b149afb7e2d3605d2566f0d55db53"
+    },
+    "candidate": {
+      "normalized": {
+        "cpu_percent_mean": 7.5862883811354775,
+        "peak_working_memory_bytes": 223428608,
+        "ttfb_p95_ms": 87.92242699928465,
+        "completion_p95_ms": 722.7666050002881,
+        "throughput_per_second": 1.0,
+        "pacing_fraction": 1,
+        "samples": 60,
+        "errors": 0,
+        "sample_errors": 0,
+        "late_completed": 0,
+        "oom_kills": 0,
+        "counter_resets": 0,
+        "correct_responses": true,
+        "cache_state_verified": true,
+        "fixture_unchanged": true,
+        "limits_verified": true
+      },
+      "cache_witness": {
+        "scope": "Before/after numeric cache states outside measured window",
+        "requested_state": "cold",
+        "before": {
+          "generation": "0",
+          "chunks": 204,
+          "bytes": 13015448,
+          "ready": "1",
+          "status": "ready",
+          "locked": false,
+          "ready_ttl_seconds": 296,
+          "smallest_chunk_bytes": 6,
+          "largest_chunk_bytes": 65536,
+          "key_types": {
+            "chunks": "list",
+            "ready": "string",
+            "status": "string",
+            "lock": "none"
+          },
+          "key_ttl_seconds": {
+            "chunks": 296,
+            "ready": 296,
+            "status": 296,
+            "lock": -2
+          }
+        },
+        "after": {
+          "generation": "0",
+          "chunks": 204,
+          "bytes": 13015448,
+          "ready": "1",
+          "status": "ready",
+          "locked": false,
+          "ready_ttl_seconds": 290,
+          "smallest_chunk_bytes": 6,
+          "largest_chunk_bytes": 65536,
+          "key_types": {
+            "chunks": "list",
+            "ready": "string",
+            "status": "string",
+            "lock": "none"
+          },
+          "key_ttl_seconds": {
+            "chunks": 290,
+            "ready": 290,
+            "status": 290,
+            "lock": -2
+          }
+        }
+      },
+      "counter_deltas": {
+        "baseline": {
+          "cpu_percent_mean": 5.996060114029057,
+          "cpu_usage_usec": 3606879,
+          "elapsed_seconds": 60.15415008200034,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "origin": {
+          "cpu_percent_mean": 0.0503987324602651,
+          "cpu_usage_usec": 30317,
+          "elapsed_seconds": 60.15429063400006,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "candidate": {
+          "cpu_percent_mean": 1.539829534646155,
+          "cpu_usage_usec": 926270,
+          "elapsed_seconds": 60.15406115800033,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        }
+      },
+      "counter_before_interservice_skew_seconds": 0.0838514330007456,
+      "counter_after_interservice_skew_seconds": 0.08376250900073501,
+      "maximum_sample_observer_seconds": 0.004056813999341102,
+      "request_traces": 60,
+      "waves": [
+        {
+          "epoch": 0,
+          "ttfb_min_ms": 1.324977998592658,
+          "ttfb_max_ms": 77.16173500011791,
+          "completion_min_ms": 633.2251340008952,
+          "completion_max_ms": 717.7833069999906,
+          "start_skew_seconds": 0.002287113999045687
+        },
+        {
+          "epoch": 1,
+          "ttfb_min_ms": 2.858000001651817,
+          "ttfb_max_ms": 86.74986400001217,
+          "completion_min_ms": 640.2364690002287,
+          "completion_max_ms": 722.9909819998284,
+          "start_skew_seconds": 0.0003461500000412343
+        },
+        {
+          "epoch": 2,
+          "ttfb_min_ms": 3.0388249997486128,
+          "ttfb_max_ms": 88.1065129997296,
+          "completion_min_ms": 619.7875210000348,
+          "completion_max_ms": 676.9096209991403,
+          "start_skew_seconds": 0.0003717399995366577
+        },
+        {
+          "epoch": 3,
+          "ttfb_min_ms": 2.8190089997224277,
+          "ttfb_max_ms": 89.09764000054565,
+          "completion_min_ms": 628.5745069999393,
+          "completion_max_ms": 694.0460019995953,
+          "start_skew_seconds": 0.0003599110004870454
+        },
+        {
+          "epoch": 4,
+          "ttfb_min_ms": 3.2511320005141897,
+          "ttfb_max_ms": 88.06732000084594,
+          "completion_min_ms": 640.8839319992694,
+          "completion_max_ms": 702.5506490008411,
+          "start_skew_seconds": 0.00032719000046199653
+        },
+        {
+          "epoch": 5,
+          "ttfb_min_ms": 2.940952999779256,
+          "ttfb_max_ms": 87.92242699928465,
+          "completion_min_ms": 658.1767770003353,
+          "completion_max_ms": 717.6817729996401,
+          "start_skew_seconds": 0.000334550000843592
+        }
+      ],
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-10-trial-1-candidate.json",
+      "sha256": "7dd18acf8056ea839c701d0d36493452585823311d5b2b31b5a87172622b4b07"
+    }
+  },
+  "unmeasured_or_incomplete": [
+    "coldXMLTV10 trial2 interrupted and trial3 notstarted",
+    "hotXMLTV1/10 allpairs unmeasured"
+  ],
+  "data_quality": {
+    "delivery_errors": 0,
+    "sample_errors": 0,
+    "minimum_samples": 60,
+    "required_minimum_samples": 50,
+    "complete_body_validation": "Every delivered JSON typed canonical equality or full XML bytes/hash, fixedHost and identityencoding",
+    "xml_bytes": 13015448,
+    "xml_channels": 500,
+    "xml_programme_mappings": 22500
+  },
+  "published_phase_projection": {
+    "path": "scripts/rust-guide-perf/evidence-guide-experiment-image25-1.json",
+    "sha256": "1c89183d4dee58030ed98de363b73d7ebaf42b32b5ec3cb05e250dca574640b0",
+    "phases": 32,
+    "resource_samples": 1110,
+    "request_timing_traces": 1334,
+    "scope": "Whitelisted numerical phase/counter/trace/cache witnesses; containerIDs become known services and monotonic clock rebased. No credentials, bodies or exception text."
+  },
+  "phase_reports": [
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/current-500-shared50-qualification-0.json",
+      "sha256": "8aa7393badca4f59a34fd1fbb384c6f8bddbc7973dc58079d4c77daba5502cde"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/current-500-shared50-qualification-1.json",
+      "sha256": "a92bebd82d0df680351e887eaceac8db0fca9231922fe0901ada50355254ea1a"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/current-500-shared50-qualification-2.json",
+      "sha256": "6a3a2f63fe6d12cae5a3867933dfa6e51eac90409d1f52d64408de887e27c588"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/current-500-shared50-qualification-3.json",
+      "sha256": "dc1cca2942af81c1d7a13ceca87ef60d544a7ca04c821b6e409f7cdec89985be"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-cold-1-qualification-0.json",
+      "sha256": "391d4395d55ba4f0f6ff50f9f0da52ce234cebf05bbeacb80b218969733ca2f8"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-cold-1-qualification-1.json",
+      "sha256": "c59b8bf15eb112420ed7846b7b77df456cc62f566d47bca334f73a7d0cd5d51a"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-cold-1-qualification-2.json",
+      "sha256": "8530db5f16d7bc447dd55a6e4dbb60f4884e283e5c0ecd27143c02ce7c421fa2"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-cold-10-qualification-0.json",
+      "sha256": "8184690cf85a3002a1e3a5a798eb1d0fa82851eec2ee1bb2a4c7fb5111055c78"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-cold-10-qualification-1.json",
+      "sha256": "f5465c5891bab77daae821515f1d4954d274ef1bac02421431ddf1b3502bac85"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-cold-10-qualification-2.json",
+      "sha256": "adb22e297531709864bcc907d0e7e4a30b61d8af6d4278fb7f1f1093f6bffa30"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-hot-1-qualification-0.json",
+      "sha256": "96144bcd7bad7e0b7fff752558339426184fb11c86219c476cc11d16db6e3e91"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-hot-1-qualification-1.json",
+      "sha256": "9b6087ddb43a8b9ca10def0f9b94f2975690e2599f846d9a8df5a85882af75c5"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-hot-1-qualification-2.json",
+      "sha256": "1c919d693ca760c3794e6ef6806f2696222ac32cb34e76d6fcb4594d49df1615"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-hot-1-qualification-3.json",
+      "sha256": "c63686de2fccfbc14a78120026683bcf7110e3c043251bdf8f335f688495c31e"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-hot-10-qualification-0.json",
+      "sha256": "a4f145b45b354112751111f3369999abdadcfce9f2f435d6950dd4d3bc379d63"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-hot-10-qualification-1.json",
+      "sha256": "e619f85a77726740d02181181e93201751bb4542192a7183cf3f18677de5fdef"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-hot-10-qualification-2.json",
+      "sha256": "ffaf85a2552f05020ec020dd378868a3ba885b6c36db97395124c97ea729e6f3"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/xmltv-hot-10-qualification-3.json",
+      "sha256": "9f8a07f9463a020af924f0c4b93011dd82ef66c830da673cdec06286f2d4d5a4"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/current-500-shared50-trial-1-source.json",
+      "sha256": "b2e6f2eaab19198ad7460377a8e3a73196f8d8fba3ba28bd155c3b23e0e9ac63"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/current-500-shared50-trial-1-candidate.json",
+      "sha256": "cf35105bc72d4cb523d1ef5044cefb243d6ce9d84ed10fc37d4f64e45379fdd5"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/current-500-shared50-trial-2-candidate.json",
+      "sha256": "704fc2fcd40cd3daa42908048370a515192922b24385d0bf235ba0c60dc3fafc"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/current-500-shared50-trial-2-source.json",
+      "sha256": "c7a8857781f34c03fd458649d728921f5133e7e847fa4d918a1a962cc132291c"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/current-500-shared50-trial-3-source.json",
+      "sha256": "b8b0bb7d35dadb85ffaa15cde30ef13511f524a9f6aefda30f0a05ffc34d0073"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/current-500-shared50-trial-3-candidate.json",
+      "sha256": "121d6222805db0b77365699ae1b5b0145d4d1661ee32c57c6ad718ec2c5d68f5"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-1-trial-1-source.json",
+      "sha256": "78dce6f05178f572a8fd8d3c961cd7fbc2624cb4f65f4400f82456be9300f203"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-1-trial-1-candidate.json",
+      "sha256": "abc895d1c42fd484eb24f5dd5a07f4ec7bcbd37bcef9895cf1790d08333c4400"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-1-trial-2-candidate.json",
+      "sha256": "9002b3247adfecbbe00ae3bd9065dc366c7a7694a0750377054d502e1f4d4e68"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-1-trial-2-source.json",
+      "sha256": "81c3365cc2f55194816813f474130ae8dc29340e78f8d8cab568b45bed9fd66a"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-1-trial-3-source.json",
+      "sha256": "3695e45b053696d14dd800e3b672e337c0db57a3daaea36946f85afe49197e0b"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-1-trial-3-candidate.json",
+      "sha256": "a9b352c296ec7a84155c6b6ec26752eb81b30cb3bb1f2d6df4257bb2d3dbfc27"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-10-trial-1-source.json",
+      "sha256": "5406dd5c40993def6e8a225376d54553bf1b149afb7e2d3605d2566f0d55db53"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/xmltv-cold-10-trial-1-candidate.json",
+      "sha256": "7dd18acf8056ea839c701d0d36493452585823311d5b2b31b5a87172622b4b07"
+    }
+  ],
+  "reports": {
+    "integration": {
+      "path": "artifacts/rust/m5-m7-guide-experiment-image25-1/integration.json",
+      "sha256": "31459805ea84ba1e61046ead367a8262467a37626c7c1df398a956c81ac4302f"
+    },
+    "matrix": {
+      "path": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/guide-run.json",
+      "sha256": "db248cc867f26081fcdc6c8fe2a5380d40dccb8d85c4d64a532eed0ce17fa241"
+    },
+    "pairs": {
+      "path": "artifacts/rust/m5-m7-guide-experiment-image25-1/matrix/pairs.json",
+      "sha256": "946bfcfbc2694536f3eeaf6510b7568d2427b6fc4ff7df06ac26905329e17866"
+    },
+    "qualification": {
+      "path": "artifacts/rust/m5-m7-guide-experiment-image25-1/qualification/source-qualification.json",
+      "sha256": "f94e9885b05cff336b8e60e650a29cd042dc54ff35faf8fc00bf27a515e7a0f1"
+    }
+  },
+  "tool_source": "artifacts/rust/m5-m7-guide-experiment-image25-1/tool-source",
+  "tool_source_map_canonical_sha256": "d4254d7138d2a71e81a7a44c4da5e03e36d3923cbfc45413d36f67dc0e2cf9cf",
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "independent_docker_ps_after_cleanup": "empty",
+  "limits": [
+    "Wholebackend/PG/Redis/origin CPU and Docker working-memory are included; PG-specificPSS/session diagnostics remain unimplemented.",
+    "Request timings/cache states are available for this run and bound separately; do not retrofit them to earlier failed23experiment.",
+    "No hot-cache performance result exists for image25 in this stopped run.",
+    "Six passing pairs/Current3pair+cold1 3pair observations do not establish fullmatrix or wholeapplication performance acceptance."
+  ],
+  "next_steps": [
+    "Root investigates the cold10 Redis/read-write/producer path; SourcebaselineCPU.8074% vsnative5.9961% while webCPU6.4931%\u21921.5398% isolates a cost shift but does not alone prove cause.",
+    "Review complete wave request timing distributions and saved29-vs204member cache witnesses before changing runtime.",
+    "Root fixes runner pairwise fail-fast while preserving captured historical loop/evidence.",
+    "Any runtime change requires fresh immutable image, compatibility gates and new Source-qualified policy/quiet cues; budgets/workload unchanged."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

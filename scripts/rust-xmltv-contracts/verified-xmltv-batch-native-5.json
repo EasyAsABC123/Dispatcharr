@@ -1,0 +1,143 @@
+{
+  "scope": "Post-image24 bounded XMLTV ready-cache read batches; frozen Source/native host component and actual500channel/50shared-guide functional diagnostics. Not a new app image or performance acceptance.",
+  "passed": true,
+  "artifact": "artifacts/rust/m7-xmltv-batch-native-5",
+  "original_credit": "All application credit belongs to original Dispatcharr authors and contributors; AGPL licensing preserved.",
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_sha256": {
+    "rust/crates/xmltv-http/src/cache.rs": "e6adad4d489b2e7b51e87899b2752fcc9cbcec72a69c0d8b5ce741114ae54b9a",
+    "rust/crates/xmltv-http/src/cache_tests.rs": "b75e2b67b08ea2803739e900268034622a19db02000b474edc3f6df744094143",
+    "rust/crates/xmltv-http/examples/cache_probe.rs": "1b4f2076a3d07b2c9d9cbae06d79b459be8caa373033ac45b331e7d493242532",
+    "scripts/rust-xmltv-contracts/source.py": "7c52108e1bbf14ead80401e8d3e9c898627d25272b95ce65f1ad84eaef48aef4",
+    "scripts/rust-xmltv-contracts/control.py": "f70d9222bcd7021c62d92ae11e307fe03324ac1ead0a714f76aba9194a5cd185",
+    "scripts/rust-guide-perf/fixture.py": "06c4590066959a36da75b41da5a637736c238370c531f1cd68e8267102a1833c"
+  },
+  "body": {
+    "bytes": 13015458,
+    "sha256": "09e0f0721e5c8f85d104997f5431f56c48997accb6b0796a9276bea1db602a38"
+  },
+  "fixture": {
+    "channels": 500,
+    "guides": 50,
+    "stored_programmes": 2250
+  },
+  "source_ready_cache": {
+    "scope": "Ready-cache functional diagnostic, not performance; same stored members under two read policies",
+    "passed": true,
+    "stored_members": 29,
+    "stored_bytes": 13015458,
+    "smallest_member_bytes": 6,
+    "largest_member_bytes": 574800,
+    "member_shape_unchanged": true,
+    "policies": [
+      {
+        "batch_bytes": 65536,
+        "read_script_invocations_including_eof": 200,
+        "bytes": 13015458,
+        "sha256": "09e0f0721e5c8f85d104997f5431f56c48997accb6b0796a9276bea1db602a38",
+        "largest_reply_bytes": 65536
+      },
+      {
+        "batch_bytes": 524288,
+        "read_script_invocations_including_eof": 26,
+        "bytes": 13015458,
+        "sha256": "09e0f0721e5c8f85d104997f5431f56c48997accb6b0796a9276bea1db602a38",
+        "largest_reply_bytes": 524288
+      }
+    ]
+  },
+  "native_ready_cache": {
+    "scope": "Ready-cache functional diagnostic, not performance; same stored members under two read policies",
+    "passed": true,
+    "stored_members": 204,
+    "stored_bytes": 13015458,
+    "smallest_member_bytes": 6,
+    "largest_member_bytes": 65536,
+    "member_shape_unchanged": true,
+    "policies": [
+      {
+        "batch_bytes": 65536,
+        "read_script_invocations_including_eof": 200,
+        "bytes": 13015458,
+        "sha256": "09e0f0721e5c8f85d104997f5431f56c48997accb6b0796a9276bea1db602a38",
+        "largest_reply_bytes": 65536
+      },
+      {
+        "batch_bytes": 524288,
+        "read_script_invocations_including_eof": 26,
+        "bytes": 13015458,
+        "sha256": "09e0f0721e5c8f85d104997f5431f56c48997accb6b0796a9276bea1db602a38",
+        "largest_reply_bytes": 524288
+      }
+    ]
+  },
+  "checks": {
+    "original_http_cases": 47,
+    "native_http_cases": 47,
+    "differences": [],
+    "python_cache_interop": {
+      "status": 200,
+      "body_sha256": "09d8f3d3fa120334bd4f7514fd8e5c7f0461f8f3fc7e01234b48cb9698b3f810",
+      "expected_sha256": "09d8f3d3fa120334bd4f7514fd8e5c7f0461f8f3fc7e01234b48cb9698b3f810",
+      "actual_python_endpoint_primed_current_generation": true,
+      "events_unchanged": true
+    },
+    "audit_checkpoints": 9,
+    "real_redis_sql_http_tests": 15,
+    "complete_generator_cases": 36,
+    "native_unit_tests": 5,
+    "fanout_readers": 100,
+    "retained_slow_frame_bytes": 524288,
+    "delayed_redis_cancellation": true,
+    "final_clone_budget_return": true,
+    "legacy_large_member_bytes": 600000,
+    "valid_prefix_preserved_before_oversized_member_error": true,
+    "source_native_exact_xml": true,
+    "strict_all_target_clippy": true
+  },
+  "limits": {
+    "read_batch_bytes_default": 524288,
+    "read_batch_bytes_hard_maximum": 1048576,
+    "maximum_members_visited_per_read": 32,
+    "physical_io_lease_bytes_per_batch": "2 * effective batch bound",
+    "global_read_io_bytes_default": 67108864,
+    "stored_member_bytes_default_unchanged": 65536,
+    "legacy_member_bytes_maximum_default_unchanged": 8388608,
+    "http_or_cache_cursor_retained_frames": 1,
+    "total_export_and_catalogue_limits": "unchanged"
+  },
+  "shutdown": {
+    "closed": true,
+    "drained": true,
+    "active_requests": 0,
+    "available_bytes": 536870912
+  },
+  "cleanup": "owned Compose project removed",
+  "preserved_failures": [
+    {
+      "artifact": "artifacts/rust/m7-xmltv-batch-native-1",
+      "reason": "Old internal frame test assumed one member per frame; updated for explicit batched cursor boundary, wire unchanged."
+    },
+    {
+      "artifact": "artifacts/rust/m7-xmltv-batch-native-3",
+      "reason": "Test held completed leader acquisition while asserting drain; resulting skipped fixture cleanup caused next tiny-cap test failure. Test drops owned leader before drain; production unchanged."
+    },
+    {
+      "artifact": "artifacts/rust/m7-xmltv-batch-native-4",
+      "reason": "Existing observer TYPE/GET TTL race;0cases, project cleaned. Later observer handles a key expiring between calls."
+    }
+  ],
+  "not_verified": [
+    "Packaged new app image",
+    "Improved completion/CPU/memory ratios",
+    "Whole application parity"
+  ],
+  "evidence_sha256": {
+    "artifacts/rust/m7-xmltv-batch-native-5/xmltv-source.json": "010db03486dc5c37b32bf4fccc17069609741edeb7ac131c4ca7aeaf922f1b5a",
+    "artifacts/rust/m7-xmltv-batch-native-5/native-cache-tests.log": "0b670bdb4260c8179105c9361a06fb1ac533a7c8cf28ad2891b830696420dabc",
+    "artifacts/rust/m7-xmltv-batch-native-5/native-unit-tests.log": "3ccb46775fc3d1f550f5e1fec87d5950021c40fd747e15966a6872f1c61c752f",
+    "artifacts/rust/m7-xmltv-batch-native-5/source-shared-guide-cache-probe.log": "29668e4b039e002220f050dd3ffe64c034ef6567da9823ce09bfa5a7a247dbd0",
+    "artifacts/rust/m7-xmltv-batch-native-5/native-shared-guide-cache-probe.log": "ecdda31e5a2e4797e2a7a971965cbafb6aa03a84bacb50bca93cf39c95b3d327"
+  }
+}

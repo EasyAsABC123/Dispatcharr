@@ -1,0 +1,30 @@
+{
+  "scope": "m3u scoped packaged original/native regression",
+  "passed": true,
+  "candidate_image_id": "sha256:2c197d053675ee81800ecd39f7cb9b6620c1887a705cd02974d9c3751531df39",
+  "candidate_source_tree_sha256": "565083061ffb764ac4c4c3ef2a6455cdd0e7a5a7eba1403e068f5bddfbf8ba46",
+  "candidate_build_manifest": "artifacts/rust/candidate-build-grid-cache-image25-1/build.json",
+  "evidence": "artifacts/rust/m7-m3u-image25-2/vod-contracts.json",
+  "evidence_sha256": "bb8133c02c391d0b0f4a1e12646ccdf7f8e3179302a1832352cc32b6a0183912",
+  "tool_source": "artifacts/rust/m7-m3u-image25-2/tool-source",
+  "cases": 50,
+  "cleanup": true,
+  "application_performance_verified": false,
+  "full_milestone_complete": false,
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "comparison": {
+    "captured_m3u_http_matches": true,
+    "differences": [],
+    "normalizations": [
+      "JSON error objects compared semantically; their own Content-Length remains validated"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "django_cache_string_interop": true,
+  "source_cache_observer_seconds": 0.909512968000854,
+  "candidate_cache_observer_seconds": 0.8360171900003479,
+  "cache_observers_inside_two_seconds": true,
+  "preserved_failure": "artifacts/rust/m7-m3u-image25-1/vod-contracts.json",
+  "observer_fix": "Read2s cache immediately after response before separate policy-reset control; no request/TTL/runtime change."
+}

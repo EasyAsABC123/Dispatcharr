@@ -72,10 +72,10 @@ def exercise(base,control,out):
     return rows,snapshots
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--native-cache',action='store_true');parser.add_argument('--native-content',action='store_true');parser.add_argument('--native-http',action='store_true');parser.add_argument('--xc-epg-source',action='store_true');parser.add_argument('--native-xc-epg',action='store_true');parser.add_argument('--xc-epg-http-source',action='store_true');parser.add_argument('--native-xc-epg-http',action='store_true');args=parser.parse_args();args.native_xc_epg=args.native_xc_epg or args.native_xc_epg_http;args.xc_epg_http_source=args.xc_epg_http_source or args.native_xc_epg_http;docker=shutil.which('docker');assert docker
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--native-cache',action='store_true');parser.add_argument('--native-content',action='store_true');parser.add_argument('--native-http',action='store_true');parser.add_argument('--xc-epg-source',action='store_true');parser.add_argument('--native-xc-epg',action='store_true');parser.add_argument('--xc-epg-http-source',action='store_true');parser.add_argument('--native-xc-epg-http',action='store_true');parser.add_argument('--grid-datetime-fuzz',action='store_true');parser.add_argument('--shared-guide-cache',action='store_true');args=parser.parse_args();args.native_http=args.native_http or args.shared_guide_cache;args.native_xc_epg=args.native_xc_epg or args.native_xc_epg_http;args.xc_epg_http_source=args.xc_epg_http_source or args.native_xc_epg_http;docker=shutil.which('docker');assert docker
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=True);assert not any(out.iterdir())
     report={'scope':'actual original XMLTV HTTP/cache/real+defaultdummy characterization only','passed':False,'native_verified':False,'baseline_commit':BASELINE,'baseline_image':IMAGE,'commands':[]}
-    tools=[Path(__file__).resolve(),Path(__file__).with_name('control.py'),Path(__file__).with_name('render_source.py'),Path(__file__).with_name('cache_source.py'),Path(__file__).with_name('window_source.py'),Path(__file__).with_name('content_source.py'),ROOT/'scripts/rust-xc-contracts/control.py',ROOT/'scripts/rust-xc-contracts/epg_source.py',ROOT/'scripts/rust-xc-contracts/epg_http.py',ROOT/'scripts/rust-realtime-contracts/interop.py',ROOT/'scripts/rust-integration/shared_ts.py',ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'docker/compose.rust-playback.yml',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
+    tools=[Path(__file__).resolve(),Path(__file__).with_name('control.py'),Path(__file__).with_name('render_source.py'),Path(__file__).with_name('cache_source.py'),Path(__file__).with_name('window_source.py'),Path(__file__).with_name('content_source.py'),Path(__file__).with_name('grid_datetime_fuzz.py'),ROOT/'scripts/rust-xc-contracts/control.py',ROOT/'scripts/rust-xc-contracts/epg_source.py',ROOT/'scripts/rust-xc-contracts/epg_http.py',ROOT/'scripts/rust-realtime-contracts/interop.py',ROOT/'scripts/rust-integration/shared_ts.py',ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'docker/compose.rust-playback.yml',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py',ROOT/'scripts/rust-guide-perf/fixture.py']
     copies=out/'tools'
     for path in tools:target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
     if args.native_cache or args.native_content or args.native_http or args.native_xc_epg:
@@ -85,7 +85,7 @@ def main():
         report['native_source_manifest_sha256']=hashlib.sha256(json.dumps({str(path.relative_to(copies/'rust')):hashlib.sha256(path.read_bytes()).hexdigest() for path in (copies/'rust').rglob('*') if path.is_file()},sort_keys=True,separators=(',',':')).encode()).hexdigest()
     report['tool_sha256']={str(path.relative_to(ROOT)):hashlib.sha256((copies/path.relative_to(ROOT)).read_bytes()).hexdigest() for path in tools}
     project='dispatcharr-xmltv-'+uuid.uuid4().hex[:12];report['project']=project;control=None;native=None
-    overlay=out/'overlay.json';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[str(copies/'scripts/rust-xmltv-contracts')+':/xmltv-probe:ro',str(copies/'scripts/rust-xc-contracts')+':/xc-probe:ro']}}}));ports=out/'ports.yml';report['ports']=write_port_overlay(ports,{'baseline':[5656,6379,5432],'origin':[8080]})
+    overlay=out/'overlay.json';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[str(copies/'scripts/rust-xmltv-contracts')+':/xmltv-probe:ro',str(copies/'scripts/rust-xc-contracts')+':/xc-probe:ro',str(copies/'scripts/rust-guide-perf')+':/guide-probe:ro']}}}));ports=out/'ports.yml';report['ports']=write_port_overlay(ports,{'baseline':[5656,6379,5432],'origin':[8080]})
     with fixture_source(report,out,'xmltv-source.json') as temporary:
         source=Path(temporary)/'source';source.mkdir();archive=Path(temporary)/'source.tar'
         with archive.open('wb') as file:subprocess.run(['git','archive',BASELINE],cwd=ROOT,stdout=file,check=True,timeout=30)
@@ -96,6 +96,10 @@ def main():
         try:
             command(compose+['up','-d','baseline','origin'],180);base='http://'+command(compose+['port','baseline','5656']).strip();wait(lambda:(out/'seed.json').exists() and ready_http(base+'/proxy/ts/stream/missing')[0]==404,300,'original ready')
             control=Peer(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/xmltv-probe/control.py'],env,out/'control.log');report['cases'],report['cache_snapshots']=exercise(base,control,out);report['render_vectors']=control.call({'op':'render_vectors'});report['cache_vectors']=control.call({'op':'cache_vectors'});report['window_vectors']=control.call({'op':'window_vectors'});report['content_vectors']=control.call({'op':'content_vectors'});(out/'content-source.json').write_text(json.dumps(report['content_vectors'],ensure_ascii=False));report['passed']=True
+            if args.grid_datetime_fuzz:
+                fuzz=control.call({'op':'grid_datetime_fuzz','start':0,'count':64})
+                for start in range(64,fuzz['total'],64):fuzz['cases'].extend(control.call({'op':'grid_datetime_fuzz','start':start,'count':64})['cases'])
+                (out/'grid-datetime-source.json').write_text(json.dumps(fuzz,ensure_ascii=False));report['grid_datetime_source']={'cases':len(fuzz['cases']),'source_sha256':fuzz['source_sha256'],'django_dateparse_sha256':fuzz['django_dateparse_sha256']}
             if args.xc_epg_http_source:
                 sys.path.insert(0,str(copies/'scripts/rust-xc-contracts'))
                 from epg_http import exercise as epg_http_exercise
@@ -107,7 +111,7 @@ def main():
             if args.native_cache or args.native_content or args.native_http or args.native_xc_epg:
                 env_test=dict(env,CARGO_HOME=os.environ.get('CARGO_HOME','/tmp/dispatcharr-cargo'),RUSTUP_HOME=os.environ.get('RUSTUP_HOME','/tmp/dispatcharr-rustup'),RUSTUP_TOOLCHAIN='1.90.0',REDIS_TEST_URL='redis://:playback-fixture-only@'+command(compose+['port','baseline','6379']).strip()+'/0')
                 env_test.update(DATABASE_TEST_URL='postgres://dispatch:playback-fixture-only@'+command(compose+['port','baseline','5432']).strip()+'/dispatcharr',XMLTV_CONTENT_SOURCE=str(out/'content-source.json'))
-                cmd=['/tmp/dispatcharr-cargo/bin/cargo','test','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xmltv-http','--lib','--','--ignored','--test-threads=1'];report['native_command']=cmd
+                cmd=['/tmp/dispatcharr-cargo/bin/cargo','test','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xmltv-http','--lib','--','--ignored','--nocapture','--test-threads=1'];report['native_command']=cmd
                 with (out/'native-cache-tests.log').open('w') as native_log:tested=subprocess.run(cmd,env=env_test,text=True,stdout=native_log,stderr=subprocess.STDOUT,timeout=180)
                 report['native_cache_component_verified']=tested.returncode==0;assert tested.returncode==0,'native cache component tests failed'
                 if args.native_xc_epg:
@@ -157,6 +161,42 @@ def main():
                     assert report['native_shutdown']['drained'] and report['native_shutdown']['active_requests']==0,'native shutdown'
                     assert not differences,'native HTTP contract mismatch'
                     report['native_http_component_verified']=True
+                    if args.shared_guide_cache:
+                        probe_build=['/tmp/dispatcharr-cargo/bin/cargo','build','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xmltv-http','--example','cache_probe']
+                        with (out/'cache-probe-build.log').open('w')as log:
+                            built=subprocess.run(probe_build,env=env_test,stdout=log,stderr=subprocess.STDOUT,text=True,timeout=180)
+                        built.check_returncode()
+                        def guide_helper(op):
+                            result=subprocess.run(compose+['exec','-T','-e','GUIDE_PERF_DISPOSABLE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/guide-probe/fixture.py'],env=env,text=True,input=json.dumps({'op':op}),capture_output=True,timeout=120,check=True)
+                            return json.loads(result.stdout.splitlines()[-1])
+                        report['shared_guide_fixture_counts']={key:value for key,value in guide_helper('seed').items()if key in ['channels','guides','stored_programmes']}
+                        guide_helper('clear_cache')
+                        def guide_request(target_base):
+                            conn=http.client.HTTPConnection(target_base.removeprefix('http://'),timeout=30)
+                            conn.request('GET','/output/epg?days=1&prev_days=0',headers={'Host':'guide-perf.invalid:8088','Accept-Encoding':'identity'})
+                            response=conn.getresponse();data=response.read(32*1024*1024+1);conn.close()
+                            assert response.status==200 and len(data)<=32*1024*1024
+                            tree=ET.fromstring(data);assert len(tree.findall('channel'))==500 and len(tree.findall('programme'))==22500
+                            return {'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+                        expected_guide=guide_request(base)
+                        def probe_cache(label):
+                            before=guide_helper('cache_state')
+                            cache_base='epg_content:all:anonymous:d=1:p=0:logos=True:tvgid=channel_number:origin=http://guide-perf.invalid:8088:g='+before['generation']
+                            result=subprocess.run([str(ROOT/'rust/target/debug/examples/cache_probe')],env=dict(env_test,XMLTV_CACHE_DISPOSABLE_FIXTURE='playback-fixture-only'),text=True,input=json.dumps({'base':cache_base}),capture_output=True,timeout=60)
+                            (out/(label+'-cache-probe.log')).write_text(result.stdout+'\n'+result.stderr);result.check_returncode()
+                            data=json.loads(result.stdout.splitlines()[-1]);after=guide_helper('cache_state')
+                            assert all(before[key]==after[key]for key in ['generation','chunks','bytes','ready','status','locked'])
+                            assert all(row['bytes']==expected_guide['bytes'] and row['sha256']==expected_guide['sha256']for row in data['policies'])
+                            return data
+                        report['source_shared_guide_ready_cache']=probe_cache('source-shared-guide')
+                        guide_helper('clear_cache')
+                        native=Peer([str(ROOT/'rust/target/debug/examples/peer')],dict(env_test,SECRET_KEY='playback-fixture-only'),out/'native-shared-guide-peer.log')
+                        actual_guide=guide_request('http://127.0.0.1:'+str(native.ready['port']));assert actual_guide==expected_guide
+                        report['native_shared_guide_ready_cache']=probe_cache('native-shared-guide')
+                        report['shared_guide_complete_xml']=actual_guide
+                        report['native_shared_guide_shutdown']=native.call({'op':'close'});native.close();native=None
+                        assert report['native_shared_guide_shutdown']['drained']
+                        report['shared_guide_ready_diagnostics_verified']=True
 
         except Exception as error:report.update(passed=False,failure=type(error).__name__,failure_message=str(error))
         finally:

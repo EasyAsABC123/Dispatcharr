@@ -87,9 +87,10 @@ factory = APIRequestFactory()
 cases = []
 
 
-def case(path, body=None, role='admin', method='GET', raw=None, content_type='application/json'):
+def case(path, body=None, role='admin', method='GET', raw=None, content_type='application/json', extra_headers=None):
     path = quote(path, safe='/?=&')
     headers = {'HTTP_HOST': 'localhost'}
+    headers.update(extra_headers or {})
     if role is not None:
         headers['HTTP_AUTHORIZATION'] = 'Bearer '+users[role]['token']
     data = raw if raw is not None else json.dumps(body, ensure_ascii=False)
@@ -116,7 +117,10 @@ def case(path, body=None, role='admin', method='GET', raw=None, content_type='ap
                         'body_sha256': hashlib.sha256(content).hexdigest(),
                         'content_type': response.get('Content-Type'),
                         'streaming': bool(getattr(response,'streaming',False)),
-                        'chunk_lengths': chunks, 'stream_error': stream_error}
+                        'chunk_lengths': chunks, 'stream_error': stream_error,
+                        'selected_headers': {key: response.get(key) for key in
+                            ['Allow', 'Vary', 'WWW-Authenticate', 'Content-Length']},
+                        'observation': 'Source APIRequestFactory; manually consumed response'}
             try:expected['json']=json.loads(content)
             except ValueError:pass
             result['executed_sql_before_close'] = [query['sql'] for query in queries.captured_queries]
@@ -158,6 +162,20 @@ def case(path, body=None, role='admin', method='GET', raw=None, content_type='ap
             source_type=c.effective_epg_data_obj.epg_source.source_type if c.effective_epg_data_obj and c.effective_epg_data_obj.epg_source else None,
             source_properties=c.effective_epg_data_obj.epg_source.custom_properties if c.effective_epg_data_obj and c.effective_epg_data_obj.epg_source else None)
             for c in channels_for_grid]
+    if path.startswith('/api/epg/grid/') and method == 'HEAD':
+        # HEAD body suppression belongs to the actual server, not Factory.
+        wire_headers={key.removeprefix('HTTP_').replace('_','-'):value
+                      for key,value in headers.items()}
+        wire=Request('http://127.0.0.1:5656'+path,headers=wire_headers,method='HEAD')
+        try: wire_response=urlopen(wire,timeout=15)
+        except HTTPError as error: wire_response=error
+        with wire_response:
+            wire_body=wire_response.read(1)
+            expected['actual_http_head']={'status':wire_response.status,
+                'body_bytes':len(wire_body),'content_type':wire_response.getheader('Content-Type'),
+                'selected_headers':{key:wire_response.getheader(key) for key in
+                    ['Allow','Vary','WWW-Authenticate','Content-Length']},
+                'observation':'Actual original HTTP HEAD; real clock; body suppressed by server'}
     result['expected']=expected;cases.append(result)
 
 current='/api/epg/current-programs/'
@@ -198,7 +216,26 @@ for query in ['?days=0','?days=1','?days=-1','?prev_days=1','?days=bad',
               '?start=bad','?days=1&days=bad','?days=bad&days=1']:
     case(grid+query)
 case(grid,method='HEAD')
+baseline_cases=list(cases)
+if os.environ.get('GUIDE_NEGOTIATION_CAPTURE') == '1':
+    # Additional exploratory Source grammar, deliberately outside the accepted
+    #40-case corpus and22 complete-entity component gate. No native acceptance
+    #is inferred from this capture, especially BrowsableAPI HTML/CSRF content.
+    for role in ['admin', 'standard', 'basic', None]:
+        for accept in ['application/json','application/json;q=0','Application/JSON',
+                       'application/json;indent=4','application/json;version=2',
+                       'text/html','text/*','application/*','*/*','text/plain',
+                       'application/xml','application/json,text/html;q=1',
+                       'text/plain,application/json;q=0','',',','*']:
+            case(grid,role=role,extra_headers={'HTTP_ACCEPT':accept})
+        for query in ['?format=json','?format=api','?format=xml','?format=',
+                      '?format=JSON','?format=json&format=xml','?format=xml&format=json']:
+            case(grid+query,role=role)
+        for method in ['OPTIONS','POST','PUT','PATCH','DELETE']:
+            case(grid,role=role,method=method)
+negotiation_cases=cases[len(baseline_cases):]
 print(json.dumps({'scope':'Actual original current-programme and streamed guide-grid view/DB corpus; pinned clock; unhandled exceptions characterized separately',
-                  'clock':NOW.isoformat(),'history_max_days':CoreSettings.get_epg_history_policy().max_days,'cases':cases,'fixtures':{'channel_uuids':[str(c.uuid) for c in channels],
+                  'clock':NOW.isoformat(),'history_max_days':CoreSettings.get_epg_history_policy().max_days,'cases':baseline_cases,
+                  'negotiation_cases':negotiation_cases,'fixtures':{'channel_uuids':[str(c.uuid) for c in channels],
                   'epg_data_ids':[entry.pk for entry in entries],'profile_ids':[p.pk for p in profiles]},
                   'native_verified':False,'application_parity_verified':False,'performance_verified':False},ensure_ascii=False))

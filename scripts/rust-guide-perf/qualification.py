@@ -13,7 +13,7 @@ def authorize(path, manifest):
     """Qualification precedes plan sealing, so bind policy rather than plan SHA."""
     if (manifest.get('passed') is not True or manifest.get('source_tree_sha256') != TREE
             or manifest.get('source_archive_sha256') != ARCHIVE):
-        raise ValueError('Passing exact archived-image23 recovery manifest required')
+        raise ValueError('Passing exact configured source/archive manifest required')
     raw = Path(path).read_bytes()
     if len(raw) > 16384:
         raise ValueError('Quiet authorization exceeds16KiB')

@@ -19,6 +19,8 @@ pub struct CacheConfig {
     pub max_export_bytes: usize,
     pub max_chunks: usize,
     pub chunk_bytes: usize,
+    /// Maximum physical reply batch; legacy members may span multiple reads.
+    pub read_batch_bytes: usize,
     pub max_read_bytes: usize,
     pub max_legacy_chunk_bytes: usize,
     pub cache_ttl: Duration,
@@ -33,6 +35,7 @@ impl Default for CacheConfig {
             max_export_bytes: 256 * 1024 * 1024,
             max_chunks: 65536,
             chunk_bytes: 64 * 1024,
+            read_batch_bytes: 512 * 1024,
             max_read_bytes: 64 * 1024 * 1024,
             max_legacy_chunk_bytes: 8 * 1024 * 1024,
             cache_ttl: Duration::from_secs(300),
@@ -181,6 +184,8 @@ impl Cache {
             || config.max_chunks > 1_000_000
             || config.chunk_bytes == 0
             || config.chunk_bytes > 1024 * 1024
+            || config.read_batch_bytes == 0
+            || config.read_batch_bytes > 1024 * 1024
             || config.max_read_bytes < config.chunk_bytes * 4
             || config.max_read_bytes > 512 * 1024 * 1024
             || config.max_legacy_chunk_bytes < config.chunk_bytes
@@ -322,17 +327,19 @@ impl Cache {
             .acquire_owned()
             .await
             .map_err(|_| CacheError::Unavailable)?;
+        let read_bytes = self.read_batch_bytes();
         let budget = self
             .inner
             .io
             .clone()
-            .try_acquire_many_owned((self.inner.config.chunk_bytes * 2) as u32)
+            .try_acquire_many_owned((read_bytes * 2) as u32)
             .map_err(|_| CacheError::Capacity)?;
         let mut args = self.args(base, "");
         args.extend([
             cursor.chunk.to_string().into_bytes(),
             cursor.offset.to_string().into_bytes(),
             if renew { b"1".to_vec() } else { b"0".to_vec() },
+            read_bytes.to_string().into_bytes(),
         ]);
         let source = format!("{PRELUDE}\n{READ}");
         let values: Vec<_> = args.iter().map(Vec::as_slice).collect();
@@ -356,9 +363,7 @@ impl Cache {
                     .delivered
                     .checked_add(data.len())
                     .ok_or(CacheError::Capacity)?;
-                if delivered > self.inner.config.max_export_bytes
-                    || data.len() > self.inner.config.chunk_bytes
-                {
+                if delivered > self.inner.config.max_export_bytes || data.len() > read_bytes {
                     return Err(CacheError::Capacity);
                 }
                 *cursor = Cursor {
@@ -380,6 +385,12 @@ impl Cache {
             -1 => Err(CacheError::Capacity),
             _ => Err(CacheError::Corrupt),
         }
+    }
+    pub fn read_batch_bytes(&self) -> usize {
+        self.inner
+            .config
+            .read_batch_bytes
+            .min(self.inner.config.max_read_bytes / 4)
     }
     pub fn available_io_bytes(&self) -> usize {
         self.inner.io.available_permits()
@@ -570,7 +581,21 @@ const READ: &str = r#"
 sweep();check(base);local index=tonumber(ARGV[12]);local offset=tonumber(ARGV[13]);if index>maxchunks then return{-1,'',index,offset}end
 local status=redis.call('GET',base..':status')or'';if #status>64 then error('CORRUPT XMLTV status')end
 if ARGV[14]=='1'then for _,tail in ipairs({':chunks',':status',':ready'})do redis.call('EXPIRE',base..tail,readyttl)end;local raw=redis.call('HGET',catalog,base);if raw and status=='ready'then local value=row(raw);if redis.call('GET',base..':rust_fence')==value.owner then redis.call('EXPIRE',base..':rust_fence',readyttl);save(base,value,readyttl)end end end
-local data=redis.call('LINDEX',base..':chunks',index);if data then if #data>legacybytes or offset>#data then return{-1,'',index,offset}end;local last=math.min(#data,offset+chunkbytes);local part=string.sub(data,offset+1,last);if last==#data then return{1,part,index+1,0}else return{1,part,index,last}end end
+local batchbytes=tonumber(ARGV[15]);if not batchbytes or batchbytes<1 or batchbytes>1048576 then return{-1,'',index,offset}end
+local parts={};local size=0;local advanced=false
+-- Bounded by bytes AND visited members; legacy large members retain their
+-- offset instead of becoming oversized replies. Stored members are unchanged.
+for step=1,32 do
+ local data=redis.call('LINDEX',base..':chunks',index);if not data then break end
+ if index>=maxchunks or #data>legacybytes or offset>#data then
+  if advanced then break else return{-1,'',index,offset}end
+ end
+ local last=math.min(#data,offset+batchbytes-size)
+ parts[#parts+1]=string.sub(data,offset+1,last);size=size+last-offset;advanced=true
+ if last==#data then index=index+1;offset=0 else offset=last end
+ if size>=batchbytes then break end
+end
+if advanced then return{1,table.concat(parts),index,offset}end
 if status=='ready'or(redis.call('GET',base..':ready')or'')~=''then return{2,'',index,offset}elseif status=='error'then return{3,'',index,offset}else return{0,'',index,offset}end
 "#;
 #[cfg(test)]

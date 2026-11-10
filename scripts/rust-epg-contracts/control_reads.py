@@ -62,7 +62,20 @@ def main():
     parser.add_argument('--native-current', action='store_true', help='Run frozen current-programme parser/DB selection against original guide capture')
     parser.add_argument('--candidate-current', action='store_true', help='Compare actual Source/native real-clock current-programme wire instead of programme list reads')
     parser.add_argument('--native-grid', action='store_true', help='Run original/native grid metadata and stored-row component comparisons')
+    parser.add_argument('--native-grid-http', action='store_true', help='Compare original Factory grid captures to independent native HTTP, plus physical resource gates')
+    parser.add_argument('--grid-negotiation-source', action='store_true', help='Capture additional original-only guide Accept/format/method grammar separately from accepted40cases')
+    parser.add_argument('--native-grid-wire', action='store_true', help='Draft actual original/native-network guide replay with real clocks and strict expiry/hour guards')
+    parser.add_argument('--candidate-grid-wire', action='store_true', help='Compare actual unpatched original/native packaged grid network replies')
     args = parser.parse_args()
+    if args.candidate_grid_wire:
+        if not args.candidate_image:parser.error('candidate-grid-wire requires candidate-image and build-manifest')
+        args.guide_source=True
+    if args.native_grid_wire:
+        args.guide_source = True
+    if args.grid_negotiation_source:
+        args.guide_source = True
+    if args.native_grid_http:
+        args.guide_source = True
     if args.native_grid:
         args.guide_source = True
     if args.native_current:
@@ -83,6 +96,8 @@ def main():
                      'scripts/rust-epg-contracts/window_source.py',
                      'scripts/rust-epg-contracts/probe_programs.py',
                      'scripts/rust-epg-contracts/guide_source.py',
+                     'scripts/rust-epg-contracts/grid_wire_source.py',
+                     'scripts/rust-epg-contracts/probe_grid.py',
                      'scripts/rust-epg-contracts/current_wire_source.py',
                      'scripts/rust-epg-contracts/probe_current.py',
                      'scripts/rust-epg-parity/extract_source.py']:
@@ -95,7 +110,7 @@ def main():
     report = {'scope':'original-stored-EPG-read-oracle', 'passed':False,
               'native_verified':False, 'performance_verified':False,
               'project':project, 'tool_source_sha256':hashes}
-    grid_snapshot = freeze_current_rust(output, 'grid') if args.native_grid else None
+    grid_snapshot = freeze_current_rust(output, 'grid') if args.native_grid or args.native_grid_http or args.native_grid_wire else None
     status = 1
     with integration.fixture_source(report, False, output) as directory:
         source = Path(directory)/'source'
@@ -157,12 +172,14 @@ def main():
             report.update(passed=True, source_cases=len(fixture['cases']),
                           fixture_sha256=hashlib.sha256(fixture_path.read_bytes()).hexdigest())
             if args.guide_source:
-                guide = command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-'],
+                guide_options = ['-e','GUIDE_NEGOTIATION_CAPTURE=1'] if args.grid_negotiation_source else []
+                guide = command(compose+['exec','-T']+guide_options+['baseline','/dispatcharrpy/bin/python','-'],
                                 timeout=180,body=(tools/'scripts/rust-epg-contracts/guide_source.py').read_text())
                 (output/'guide-source-worker.log').write_text(guide.stderr)
                 guide_data=json.loads(guide.stdout.splitlines()[-1])
                 (output/'guide-source.json').write_text(json.dumps(guide_data,indent=2)+'\n')
                 report['original_guide_http_cases']=len(guide_data['cases'])
+                report['original_grid_exploratory_negotiation_cases']=len(guide_data.get('negotiation_cases', []))
                 report['native_guide_http_verified']=False
                 if args.native_grid:
                     frozen, grid_hashes = grid_snapshot
@@ -170,7 +187,7 @@ def main():
                     postgres = command(compose+['port','baseline','5432']).stdout.strip()
                     grid_env = dict(env, DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+postgres+'/dispatcharr',
                         EPG_READ_DISPOSABLE_FIXTURE='playback-fixture-only', GUIDE_READ_FIXTURE=str(output/'guide-source.json'),
-                        CARGO_TARGET_DIR=str(output/'grid-cargo-target'))
+                        CARGO_TARGET_DIR=os.environ.get('EPG_GRID_TARGET_DIR',str(output/'grid-cargo-target')))
                     native = subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),
                         '-p','dispatcharr-store','--test','epg_grid_sql','--locked','--offline',
                         '--','--ignored','--nocapture','--test-threads=1'],env=grid_env,capture_output=True,text=True,timeout=600)
@@ -184,6 +201,53 @@ def main():
                     report['native_grid_complete_entity_verified'] = True
                     report['native_grid_metadata_stored_verified'] = True
                     report['native_grid_http_verified'] = False
+                if args.native_grid_http:
+                    frozen, grid_hashes = grid_snapshot
+                    report['grid_rust_source_sha256'] = grid_hashes
+                    postgres = command(compose+['port','baseline','5432']).stdout.strip()
+                    redis = command(compose+['port','baseline','6379']).stdout.strip()
+                    grid_env = dict(env, DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+postgres+'/dispatcharr',
+                        REDIS_TEST_URL='redis://:playback-fixture-only@'+redis+'/0',
+                        EPG_READ_DISPOSABLE_FIXTURE='playback-fixture-only', GUIDE_READ_FIXTURE=str(output/'guide-source.json'),
+                        CARGO_TARGET_DIR=os.environ.get('EPG_GRID_TARGET_DIR',str(output/'grid-cargo-target')))
+                    with (output/'native-grid-http.log').open('w') as log:
+                        native = subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),
+                            '-p','dispatcharr-output-http','--test','epg_grid_http','--locked','--offline',
+                            '--','--ignored','--nocapture','--test-threads=1'],env=grid_env,
+                            stdout=log,stderr=subprocess.STDOUT,text=True,timeout=900)
+                    native.check_returncode()
+                    report['native_grid_http_verified'] = True
+                    report['grid_http_scope'] = 'Pinned original APIRequestFactory GET entities/errors compared with independent native HTTP; actual original HTTP HEAD separately observed; not packaged app acceptance'
+                if args.native_grid_wire:
+                    frozen, grid_hashes = grid_snapshot
+                    report['grid_rust_source_sha256'] = grid_hashes
+                    postgres = command(compose+['port','baseline','5432']).stdout.strip()
+                    redis = command(compose+['port','baseline','6379']).stdout.strip()
+                    grid_env = dict(env, DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+postgres+'/dispatcharr',
+                        REDIS_TEST_URL='redis://:playback-fixture-only@'+redis+'/0',
+                        EPG_READ_DISPOSABLE_FIXTURE='playback-fixture-only',
+                        GUIDE_WIRE_FIXTURE=str(output/'guide-wire-source.json'),
+                        GRID_WIRE_DRIVER=str(tools/'scripts/rust-epg-contracts/probe_grid.py'),
+                        CARGO_TARGET_DIR=os.environ.get('EPG_GRID_TARGET_DIR',str(output/'grid-cargo-target')))
+                    test_command=['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),
+                        '-p','dispatcharr-output-http','--test','epg_grid_wire','--locked','--offline']
+                    # Compile BEFORE capturing the real-clock five-minute fixture.
+                    with (output/'native-grid-wire-build.log').open('w') as log:
+                        compiled=subprocess.run(test_command+['--no-run'],env=grid_env,
+                            stdout=log,stderr=subprocess.STDOUT,text=True,timeout=900)
+                    compiled.check_returncode()
+                    wire=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-'],
+                        timeout=120,body=(tools/'scripts/rust-epg-contracts/grid_wire_source.py').read_text())
+                    (output/'guide-wire-source-worker.log').write_text(wire.stderr)
+                    wire_data=json.loads(wire.stdout.splitlines()[-1])
+                    (output/'guide-wire-source.json').write_text(json.dumps(wire_data,indent=2)+'\n')
+                    with (output/'native-grid-wire.log').open('w') as log:
+                        native=subprocess.run(test_command+['--','--ignored','--nocapture','--test-threads=1'],
+                            env=grid_env,stdout=log,stderr=subprocess.STDOUT,text=True,timeout=180)
+                    native.check_returncode()
+                    report['native_grid_real_clock_network_verified']=True
+                    report['grid_real_clock_network_cases']=len(wire_data['cases'])
+                    report['grid_network_scope']='Actual original and independent native HTTP; real clocks; exact bodies; no programme/order/time normalization; app middleware excluded'
                 if args.native_current:
                     frozen, hashes = freeze_current_rust(output)
                     report['current_rust_source_sha256']=hashes
@@ -266,6 +330,12 @@ def main():
                     raise RuntimeError('Native XMLTV format component mismatches')
                 report['native_format_verified'] = True
             if args.candidate_image:
+                if args.candidate_grid_wire:
+                    wire=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-'],timeout=180,
+                        body=(tools/'scripts/rust-epg-contracts/grid_wire_source.py').read_text())
+                    (output/'guide-wire-source-worker.log').write_text(wire.stderr)
+                    grid_fixture=json.loads(wire.stdout.splitlines()[-1])
+                    (output/'guide-wire-source.json').write_text(json.dumps(grid_fixture,indent=2)+'\n')
                 if args.candidate_current:
                     wire=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-'],timeout=180,
                                  body=(tools/'scripts/rust-epg-contracts/current_wire_source.py').read_text())
@@ -290,11 +360,11 @@ def main():
                     except OSError:
                         if time.monotonic()>deadline:raise RuntimeError('Packaged guide API readiness deadline')
                         time.sleep(.1)
-                probe=load(tools/'scripts/rust-epg-contracts'/('probe_current.py' if args.candidate_current else 'probe_programs.py'),'packaged_programme_probe')
-                packaged=probe.capture(candidate,current_fixture if args.candidate_current else fixture)
-                (output/('packaged-current.json' if args.candidate_current else 'packaged-programmes.json')).write_text(json.dumps(packaged,indent=2)+'\n')
+                probe=load(tools/'scripts/rust-epg-contracts'/('probe_grid.py' if args.candidate_grid_wire else 'probe_current.py' if args.candidate_current else 'probe_programs.py'),'packaged_programme_probe')
+                packaged=probe.capture(candidate,grid_fixture,packaged=True) if args.candidate_grid_wire else probe.capture(candidate,current_fixture if args.candidate_current else fixture)
+                (output/('packaged-grid.json' if args.candidate_grid_wire else 'packaged-current.json' if args.candidate_current else 'packaged-programmes.json')).write_text(json.dumps(packaged,indent=2)+'\n')
                 if not packaged['passed']:raise RuntimeError('Packaged programme response differences')
-                report['native_current_packaged_image_verified' if args.candidate_current else 'native_program_packaged_image_verified']=True
+                report['native_grid_packaged_image_verified' if args.candidate_grid_wire else 'native_current_packaged_image_verified' if args.candidate_current else 'native_program_packaged_image_verified']=True
                 command(compose+['stop','--timeout','12','candidate'])
                 stopped=json.loads(command(['docker','inspect',candidate_id]).stdout)[0]
                 report['candidate_shutdown']={k:stopped['State'][k] for k in ['ExitCode','OOMKilled']}

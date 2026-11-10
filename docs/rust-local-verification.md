@@ -19,25 +19,18 @@ network access; the core verification container itself runs without networking.
 Docker requires daemon/socket permission, and the harness selftest opens only a
 local loopback fixture port (19292 by default).
 
-The development session installed disposable tools under `/tmp`, without changing
-system package configuration. To use those tools while they remain present:
+The development toolchain and Docker data now persist under the ignored `artifacts/rust/tooling` directory after the earlier temporary tools were lost during a host reboot. The environment file selects Rust1.90.0, the local Cargo cache and the owned rootless Docker socket. Load it before local commands:
 
 ```sh
-export CARGO_HOME=/tmp/dispatcharr-cargo
-export RUSTUP_HOME=/tmp/dispatcharr-rustup
-export RUSTUP_TOOLCHAIN=1.90.0
-export DOCKER_CONFIG=/tmp/dispatcharr-docker-config
-export DOCKER_HOST=unix:///tmp/dispatcharr-docker.sock
-export PATH="/tmp/dispatcharr-cargo/bin:/tmp/dispatcharr-docker:$PATH"
+. artifacts/rust/tooling/environment.sh
+cargo --version
 docker version
 docker compose version
 ```
 
-These paths and the isolated Docker daemon are session-local, not a permanent
-installation or daemon startup procedure. After `/tmp` cleanup/reboot, install
-and start Docker/Compose through the host's supported tooling and install the
-pinned Rust toolchain, or use the container validation path with normal Docker.
-Do not export the session socket path when using a different Docker daemon.
+The environment file does not start the Docker daemon. Its socket must belong to the active owned rootless daemon; historical image IDs remain historical evidence unless rebuilt from their exact archived source. This setup leaves system package configuration unchanged.
+
+The isolated daemon needs to be restarted after a host reboot; its stored image data and toolchain cache persist in the workspace. A normal supported Docker installation and the pinned Rust toolchain can also run these checks. Do not export the session socket path when using a different Docker daemon.
 
 ## Repeatable developer verification
 
