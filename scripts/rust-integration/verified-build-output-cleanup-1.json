@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "scope": "User-requested completed Cargo-output cleanup and smaller routine validation builds; no backend performance acceptance",
+  "original_credit": "Original Dispatcharr authors/contributors retain full application and algorithm credit; existing AGPL licensing retained.",
+  "cleanup": {
+    "deleted_targets": 253,
+    "deleted_apparent_bytes": 961419623827,
+    "deleted_apparent_GiB": 895.3917993484065,
+    "filesystem_free_increase_bytes": 356708818944,
+    "filesystem_free_increase_GiB": 332.21097564697266,
+    "filesystem_before": {
+      "total_bytes": 995907784704,
+      "used_bytes": 768958062592,
+      "free_bytes": 222806581248
+    },
+    "filesystem_after": {
+      "total_bytes": 995907784704,
+      "used_bytes": 405490909184,
+      "free_bytes": 579515400192
+    },
+    "outside_evidence_binaries_preserved": 331,
+    "outside_evidence_binary_bytes": 47064479064,
+    "recorded_target_local_evidence_copies_needed": 0,
+    "uncommitted_source_hash_changes_during_cleanup": [],
+    "main_rust_target_removed": true,
+    "manifest": "artifacts/rust/build-output-cleanup-1/manifest.json",
+    "manifest_sha256": "2a6c8bc0294262e1c7616eec5fc8d6a8df1cf3c9cc7809280a6bea5fa96b2490",
+    "deletion_journal_sha256": "7939e02c57fde88d39627c8173ff078799761f5282bd1c7df6f15d17f8acbde1",
+    "execution_tool_version": "9c2b76426f11f9dbccc8991fa7795e33f25a1026be46b3581ffe99cbc31f3710",
+    "execution_controls": "Recorded Docker inventory and announced live target protection; two isolated filesystem controls. Initial slow pre-delete scan retained, optimized and rerun before deletion."
+  },
+  "published_tool_followup": {
+    "filesystem_controls_passed": 6,
+    "tests_log_sha256": "d1a3bdcaa925bbf92cc120237c5ab1078f911832e5f3bbdd16fd82aab85d59fa",
+    "automatic_live_Docker_bind_inventory": true,
+    "inventory_unavailable_aborts_before_deletion": true,
+    "late_bind_mount_protection": true,
+    "output_inside_target_rejected": true,
+    "evidence_paths_canonicalized": true,
+    "explicit_Cargo_target_argument_and_unknown_target_protection": true,
+    "actual_mass_cleanup_repeated": false
+  },
+  "smaller_profiles": {
+    "runtime_inputs": 565,
+    "base_revision": "058c1de98daf33eb7459c9cd8b6908a805740f10",
+    "only_changed_runtime_path": "rust/Cargo.toml",
+    "dev_and_test_debug": 0,
+    "dev_and_test_incremental": false,
+    "local_compiler_profile_observations": 153,
+    "debug_assertions_and_overflow_checks_enabled": true,
+    "observed_incremental_cache_files": 0,
+    "strict_workspace_alltargets_Clippy": true,
+    "default_tests_passed": 356,
+    "failed": 0,
+    "external_fixture_tests_ignored": 361,
+    "suites": 164,
+    "same_source_validation_old_target_apparent_bytes": 24410853855,
+    "new_target_apparent_bytes": 3113185466,
+    "apparent_target_reduction_percent": 87.2467162169244,
+    "tests_log_sha256": "226fdb9755eb4ed0a78aa0245c5c24f5c95ffdade8886f824bef6d8ed9613e70",
+    "clippy_log_sha256": "f594b1ea24f61763c64aed2278a5b687213e5a33ec286b74fb53c742e3c814aa",
+    "input_manifest_sha256": "7fc3e66edf45a4aa1dc2d14df7b024c9330e10c073588ccd10577d732a5ad119"
+  },
+  "limitations": [
+    "Apparent output and filesystem free delta are distinct; shared extents and concurrent work affect physical accounting.",
+    "Outside-target binary hashes were recorded by the executed cleanup; parent independently checked every preserved path and byte size, not a second47GB rehash.",
+    "New builds can consume space after the measured cleanup endpoint; active targets remain protected.",
+    "Routine debug/test output savings do not establish backend CPU/memory gains or full milestone acceptance."
+  ],
+  "backend_performance_run": false,
+  "new_packaged_image": false,
+  "full_milestone_complete": false
+}

@@ -6,3 +6,13 @@ resolver = "2"
 version = "0.1.0"
 edition = "2021"
 license = "AGPL-3.0-only"
+
+# Disposable validation builds retain evidence separately from Cargo outputs.
+# Avoid repeating large debug sections and incremental caches per frozen run.
+[profile.dev]
+debug = 0
+incremental = false
+
+[profile.test]
+debug = 0
+incremental = false

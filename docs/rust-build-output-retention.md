@@ -1,0 +1,15 @@
+# Generated Rust build output retention
+
+Dispatcharr and its original authors retain full application credit. Cleanup only removes generated Cargo output; it does not change application code or claim authorship.
+
+`python3 scripts/rust-integration/clean_build_outputs.py --output artifacts/rust/cleanup-NEW` inventories identifiable Cargo output beneath `artifacts/rust` and `rust/target`. Add `--execute` to remove completed output. Announce active/new build targets to the cleanup owner and pass each as `--protect PATH`; the tool also checks current Cargo/rustc/test process paths and fresh live Docker bind mounts before deletion. Load the Docker/toolchain environment first. If Docker cannot be inventoried, execution stops before deletion. Cargo runs with an unknown target protect all candidate roots until they finish. Do not start unannounced builds during cleanup.
+
+The tool preserves source snapshots, archives, logs, datasets, reports, uncommitted source, Docker storage, registry caches and toolchains. Recorded target-local evidence binaries are copied and hash-checked or matched to an existing outside-target copy. Generic executable listings in compiler JSONL/build logs do not require preserving completed target trees. Age alone is not a reason to retain a completed target.
+
+Put `--output` outside every Cargo target. Evidence paths are resolved before matching; a late Docker bind mount also blocks deletion.
+
+Each run writes `manifest.json` with candidate/protection details and before/after filesystem metrics, plus an exact append-only `deletions.jsonl`. Allocated-byte estimates deduplicate hard links within each target; the filesystem free-space delta is authoritative across shared extents/hard links and concurrent work. Existing reports can reference removed generated target paths: consult the preservation map for specifically recorded evidence binaries and rebuild other outputs from retained frozen sources.
+
+The isolated filesystem controls in `test_clean_build_outputs.py` verify active-target protection, evidence-copy integrity, source preservation, deletion journaling and rejection of source or symlink roots. Additional controls cover late Docker mounts, unavailable Docker inventory, output inside a target, explicit Cargo target arguments and unknown default targets. Cleanup is not `git clean`, Docker pruning, or toolchain removal. Concurrent source edits are reported separately by hashes; they are never deletion candidates.
+
+The completed cleanup removed 253 Cargo roots (895.4 GiB apparent output), increasing measured filesystem free space by 332.2 GiB. The exact private manifest/journal remain in `artifacts/rust/build-output-cleanup-1`; the [published summary](../scripts/rust-integration/verified-build-output-cleanup-1.json) records their hashes and retained-evidence counts. The executed tool version used an explicit recorded Docker inventory and announced target protection; the published follow-up obtains that inventory automatically. [Smaller dev/test profiles](rust-build-profiles.md) reduce new validation output.
