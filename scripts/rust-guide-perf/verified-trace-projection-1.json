@@ -1,0 +1,12 @@
+{
+  "scope": "Bounded public timing/cache projection; no new runtime performance acceptance",
+  "passed": true,
+  "tests_passed": 24,
+  "command": "python3 -m unittest discover -s scripts/rust-guide-perf -p test_*.py",
+  "source_sha256": {
+    "scripts/rust-guide-perf/publish.py": "12680147f6244721af1a722fb9d49da2758dffa9a6bbe5a388f296944e5205a2",
+    "scripts/rust-guide-perf/test_publish.py": "e764a28621378e7ec01eaedafc8f3da75157320e537810b634ecd144e4b9598b"
+  },
+  "new_control": "Self-contained traces/cache fixture preserves numeric rows and negative TTLs, omits unselected body/auth/path/ID text, rejects excessive trace count and unsafe diagnostic/cache fields.",
+  "performance_verified": false
+}

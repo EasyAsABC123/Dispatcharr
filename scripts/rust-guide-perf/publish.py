@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 
 
@@ -81,6 +82,47 @@ def project(value):
         output['cold_waves'] = [{'epoch': row['epoch'], 'consumers': [
             numeric(consumer, ['passed', 'late', 'ttfb_ms', 'completion_ms']) for consumer in row['consumers']]}
             for row in measurement['waves']]
+    if 'request_traces' in measurement:
+        traces = measurement['request_traces']
+        if len(traces) > 10000:
+            raise ValueError('Trace publication ceiling')
+        output['request_traces'] = []
+        for trace in traces:
+            row = numeric(trace, ['user_index','attempt_index','path_index','wave_index',
+                'started_seconds','ttfb_ms','completion_ms','verified_complete_seconds',
+                'in_window','passed','late'])
+            disposition = trace['disposition']
+            if disposition not in ['success','late','error']:
+                raise ValueError('Unknown trace disposition')
+            error = trace.get('error_type')
+            if error is not None and (not isinstance(error,str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,63}',error)):
+                raise ValueError('Unsafe error class')
+            row.update(disposition=disposition,error_type=error)
+            output['request_traces'].append(row)
+    if 'cache_witness' in value:
+        witness = value['cache_witness']
+        output['cache_witness'] = {}
+        for when in ['before','after']:
+            state = witness[when]
+            if state is None:
+                output['cache_witness'][when] = None
+                continue
+            row = numeric(state,['chunks','bytes','locked','ready_ttl_seconds',
+                                 'smallest_chunk_bytes','largest_chunk_bytes'])
+            generation = state['generation']
+            if not isinstance(generation,str) or not generation.isdigit() or len(generation)>32:
+                raise ValueError('Unknown cache generation')
+            if state['ready'] not in ['','1'] or state['status'] not in ['','ready','building','error']:
+                raise ValueError('Unknown cache state')
+            row.update(generation=generation,ready=state['ready'],status=state['status'])
+            types = state['key_types'];ttls=state['key_ttl_seconds']
+            if set(types)!=set(['chunks','ready','status','lock']) or set(ttls)!=set(types):
+                raise ValueError('Incomplete public cache keys')
+            if any(t not in ['none','list','string'] for t in types.values()):
+                raise ValueError('Unknown public cache key type')
+            row['key_types']=dict(types)
+            row['key_ttl_seconds']=numeric(ttls,['chunks','ready','status','lock'])
+            output['cache_witness'][when]=row
     output['individual_current_hot_request_timings_available'] = 'request_traces' in measurement
     output['cache_numeric_witness_available'] = 'cache_witness' in value
     return output
