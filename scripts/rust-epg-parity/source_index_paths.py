@@ -23,6 +23,12 @@ def run_case(name,path,extracted=None,mode='normal',mutation=None):
  index={'channels':{'one':[0]},'interleaved_channels':[]}
  if mode=='two-open':index['interleaved_channels']=['one']
  EPGSourceIndex.objects.create(source=source,data=index)
+ files=[]
+ for item in sorted(root.rglob('*')):
+  if item.is_symlink():files.append({'path':str(item),'kind':'symlink','target':os.readlink(item)})
+  elif item.is_file():files.append({'path':str(item),'kind':'file','bytes':base64.b64encode(item.read_bytes()).decode(),'mode':item.stat().st_mode&0o777})
+  elif item.is_dir():files.append({'path':str(item),'kind':'directory'})
+ if cache:files.append({'path':cache,'kind':'file','bytes':base64.b64encode(content).decode(),'mode':0o600})
  calls=[];opens=[];real_open=builtins.open;original_index=EPGSource.programme_index.fget;original_offsets=tasks._read_programs_at_offsets
  def clock():
   calls.append('clock')
@@ -43,7 +49,7 @@ def run_case(name,path,extracted=None,mode='normal',mutation=None):
   try:result=tasks.find_current_program_for_tvg_id(epg)
   except Exception as error:failure={'type':type(error).__name__,'message':str(error)}
  selected=tasks._resolve_source_file(source)
- row={'name':name,'source_id':source.pk,'epg_entry_id':epg.pk,'file_path':path,'extracted_file_path':extracted,'cache_file_path':cache,'selected':selected,'cwd':os.getcwd(),'calls':calls,'opens':opens,'result':result,'failure':failure,'mode':mode,'mutation':mutation}
+ row={'name':name,'source_id':source.pk,'epg_entry_id':epg.pk,'file_path':path,'extracted_file_path':extracted,'cache_file_path':cache,'selected':selected,'cwd':os.getcwd(),'calls':calls,'opens':opens,'result':result,'failure':failure,'mode':mode,'mutation':mutation,'files_before':files,'initial_index':index,'now':NOW.isoformat()}
  cases.append(row)
  if cache:Path(cache).unlink(missing_ok=True)
  return row

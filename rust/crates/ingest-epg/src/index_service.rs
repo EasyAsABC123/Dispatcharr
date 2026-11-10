@@ -183,6 +183,19 @@ impl IndexService {
         request: IndexRequest,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<IndexOutcome, ImportError> {
+        self.build_with_dispatcher(request, caller, self.inner.services.dispatcher.clone())
+            .await
+    }
+    /// Select an immutable per-execution publication context without changing
+    /// the service default. The dispatcher remains owned through the physical
+    /// build/defer task; implementations retain SwapPolicyContext through real
+    /// broker replies, including replies that outlive a logical timeout.
+    pub async fn build_with_dispatcher(
+        &self,
+        request: IndexRequest,
+        caller: Arc<dyn Send + Sync>,
+        dispatcher: Arc<dyn IndexDispatcher>,
+    ) -> Result<IndexOutcome, ImportError> {
         if self.inner.stopping.load(Ordering::Acquire) {
             return Err(ImportError::Stopping);
         }
@@ -213,7 +226,7 @@ impl IndexService {
             armed: true,
         };
         let inner = self.inner.clone();
-        let result = tokio::spawn(async move { inner.build_owned(request, job).await })
+        let result = tokio::spawn(async move { inner.build_owned(request, job, dispatcher).await })
             .await
             .map_err(|_| ImportError::Worker)?;
         cancel.armed = false;
@@ -252,6 +265,7 @@ impl Inner {
         &self,
         request: IndexRequest,
         job: Arc<Job>,
+        dispatcher: Arc<dyn IndexDispatcher>,
     ) -> Result<IndexOutcome, ImportError> {
         let lease = match self
             .services
@@ -264,8 +278,7 @@ impl Inner {
                 if request.retry >= 480 {
                     return Ok(IndexOutcome::Exhausted);
                 }
-                self.services
-                    .dispatcher
+                dispatcher
                     .defer(
                         request.source_id,
                         request.retry + 1,

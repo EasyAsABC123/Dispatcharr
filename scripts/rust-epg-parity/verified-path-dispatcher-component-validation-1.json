@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "scope": "Frozen114/115 path and per-execution dispatcher code, default-context116 bridge regression; no app wiring or performance acceptance",
+  "evidence": "artifacts/rust/m6-path-component-validation-1",
+  "strict_ingest_all_targets_clippy": true,
+  "ingest_unit_tests": 26,
+  "unit_log_sha256": "76045b5201998db82ea09897ca73a1340f4c917971a68a18f8649e7ae47b1bf9",
+  "clippy_log_sha256": "71ff48e2428e0c4f3e7b1084bb5a01661d985f388c6cb4fe970e68ebc8040851",
+  "runtime_and_tests_sha256": {
+    "rust/crates/ingest-epg/src/current_lookup.rs": "22b4f62dcc41094528338fdac963f79ff05221e7edbec90ebf47ef4116587f6f",
+    "rust/crates/ingest-epg/tests/current_paths_sql.rs": "6757db7ecbab180f5a0f74bfd02a69a4283a0c75ba7a82a34663cac5758075cc",
+    "rust/crates/ingest-epg/src/index_service.rs": "dda1e6d717c0d2719bdfa8caae4533adf500224459502d91b7815766bd64420e",
+    "rust/crates/ingest-epg/tests/index_dispatcher_sql.rs": "2d8b34c8232afc8c2d268f20062853e0e9c1907f4c1668d5c76c013fd9af5528"
+  },
+  "evidence_bindings": {
+    "artifacts/rust/m6-index-paths-source-native-114": {
+      "report_sha256": "4d47e2adb84b16f1315853bd2b8e6cbe86f5ece5215247392efcb7c461cabb86"
+    },
+    "artifacts/rust/m6-index-paths-dispatcher-source-native-115": {
+      "report_sha256": "ab156882a8a4285543973dd8417b4eacbc43174e77b8b2e6b2eb34422f0fb2b5"
+    },
+    "artifacts/rust/m6-current-bridge-path-default-regression-116": {
+      "report_sha256": "d6d2c8652a532440d875a5bff19b4bed96772e32ae4f41d5a883e6092eab0e98"
+    }
+  },
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}

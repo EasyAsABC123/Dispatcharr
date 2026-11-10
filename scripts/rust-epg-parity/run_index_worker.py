@@ -2,7 +2,7 @@
 """Original-only real programme-index worker contract.
 Original Dispatcharr authors retain full application credit and AGPL licensing.
 """
-import argparse,hashlib,json,os,subprocess,sys,time,urllib.request,uuid
+import argparse,hashlib,io,json,os,shutil,subprocess,sys,tarfile,time,urllib.parse,urllib.request,uuid
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'scripts/rust-integration'))
 from run import BASELINE,fixture_source
@@ -10,14 +10,28 @@ from fixture_ports import write_port_overlay
 from tool_snapshot import snapshot_sources
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--controller',choices=['source_index_worker.py','source_index_paths.py'],default='source_index_worker.py');a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--controller',choices=['source_index_worker.py','source_index_paths.py'],default='source_index_worker.py');p.add_argument('--native-paths',action='store_true');a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
  if any(out.iterdir()):p.error('Empty output required')
  tools=out/'tool-source';hashes=snapshot_sources(ROOT,tools)
  for path in(ROOT/'scripts/rust-epg-parity').glob('*'):
   if path.is_file():
    data=path.read_bytes();target=tools/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);hashes[str(path.relative_to(ROOT))]=hashlib.sha256(data).hexdigest()
- nonce=uuid.uuid4().hex[:10];name='rust_probe_backup_jobs_'+nonce;project='dispatcharr-index-worker-'+nonce
- report={'passed':False,'scope':'Original-only real index producer/worker; no native worker','project':project,'copied_database':name,'original_revision':BASELINE,'tool_source_sha256':hashes,'native_jobs_verified':False,'performance_verified':False};status=1
+ nonce=uuid.uuid4().hex[:10];database_name='rust_probe_backup_jobs_'+nonce;project='dispatcharr-index-worker-'+nonce
+ report={'passed':False,'scope':'Original-only real index producer/worker; no native worker','project':project,'copied_database':database_name,'original_revision':BASELINE,'tool_source_sha256':hashes,'native_jobs_verified':False,'performance_verified':False};status=1
+ if a.native_paths:
+  if a.controller!='source_index_paths.py':p.error('Native path gate requires owned path controller')
+  captured={}
+  for base,directories,names in os.walk(ROOT/'rust'):
+   directories[:]=sorted(name for name in directories if name not in {'target','.git','__pycache__'})
+   for name in sorted(names):
+    path=Path(base)/name
+    if path.is_symlink()or not path.is_file():raise ValueError('Regular snapshot files required')
+    captured[str(path.relative_to(ROOT))]=path.read_bytes()
+  report['rust_source_sha256']={name:hashlib.sha256(data).hexdigest()for name,data in captured.items()}
+  with tarfile.open(out/'rust-source.tar','w')as archive:
+   for name,data in sorted(captured.items()):
+    info=tarfile.TarInfo(name);info.size=len(data);info.mode=0o644;info.mtime=0;archive.addfile(info,io.BytesIO(data))
+  report['rust_source_archive_sha256']=hashlib.sha256((out/'rust-source.tar').read_bytes()).hexdigest()
  with fixture_source(report,False,out)as temp:
   source=Path(temp)/'source';source.mkdir();source.chmod(0o755);archive=subprocess.check_output(['git','archive',BASELINE],cwd=ROOT);subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(source)],input=archive,check=True);report['original_archive_sha256']=hashlib.sha256(archive).hexdigest();(source/'media').mkdir(exist_ok=True)
   env=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(out),DISPATCHARR_ENV='aio')
@@ -38,11 +52,27 @@ def main():
      if time.monotonic()>deadline:raise RuntimeError('Internal original readiness failed')
      time.sleep(.2)
    before=helper('dispatcharr','baseline_manifest')
-   command(compose+['exec','-T','-e','PGPASSWORD=playback-fixture-only','baseline','psql','-h','127.0.0.1','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c','CREATE DATABASE '+name])
-   seed=helper(name,'seed');report['copied_nonempty_tables']=sum(v['count']>0 for v in seed['manifest']['tables'].values())
-   args=compose+['exec','-T','-e','POSTGRES_DB='+name,'-e','BACKUP_ROOT=/evidence/jobs-backups','-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','-e','CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8','-e','CELERY_RESULT_BACKEND=redis://:playback-fixture-only@localhost:6379/9','baseline','/dispatcharrpy/bin/python','/index-tools/'+a.controller]
+   command(compose+['exec','-T','-e','PGPASSWORD=playback-fixture-only','baseline','psql','-h','127.0.0.1','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c','CREATE DATABASE '+database_name])
+   seed=helper(database_name,'seed');report['copied_nonempty_tables']=sum(v['count']>0 for v in seed['manifest']['tables'].values())
+   args=compose+['exec','-T','-e','POSTGRES_DB='+database_name,'-e','BACKUP_ROOT=/evidence/jobs-backups','-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','-e','CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8','-e','CELERY_RESULT_BACKEND=redis://:playback-fixture-only@localhost:6379/9','baseline','/dispatcharrpy/bin/python','/index-tools/'+a.controller]
    result=subprocess.run(args,env=env,text=True,capture_output=True,timeout=480);(out/'source-controller-private.log').write_text(result.stdout+result.stderr);result.check_returncode()
    actual=json.loads((out/'source-index-worker-private.json').read_text());after=helper('dispatcharr','baseline_manifest');assert before==after,'Default fixtureDB changed'
+   if a.native_paths:
+    frozen=out/'native-source';frozen.mkdir()
+    with tarfile.open(out/'rust-source.tar')as archive:archive.extractall(frozen,filter='data')
+    native_env=dict(env,CARGO_TARGET_DIR=str(out/'cargo-target'))
+    built=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-ingest-epg','--test','current_paths_sql','--test','index_dispatcher_sql','--no-run','--message-format=json','--locked','--offline'],env=native_env,text=True,capture_output=True,timeout=600)
+    (out/'native-path-build.jsonl').write_text(built.stdout);(out/'native-path-build.log').write_text(built.stderr);built.check_returncode()
+    executables={json.loads(line)['target']['name']:json.loads(line)['executable']for line in built.stdout.splitlines()if line.startswith('{')and json.loads(line).get('reason')=='compiler-artifact'and json.loads(line).get('executable')}
+    if set(executables)!={'current_paths_sql','index_dispatcher_sql'}:raise ValueError('Expected exact frozen native test executables')
+    report['native_test_binary_sha256']={}
+    for target,filename in executables.items():
+     executable=Path(filename).resolve()
+     if not executable.is_relative_to(out/'cargo-target'):raise ValueError('Test executable outside unique build target')
+     binary=out/('native-'+target);shutil.copyfile(executable,binary);binary.chmod(0o755);report['native_test_binary_sha256'][target]=hashlib.sha256(binary.read_bytes()).hexdigest()
+     native=subprocess.run(compose+['exec','-T','-e','DATABASE_TEST_URL=postgresql://dispatch:playback-fixture-only@127.0.0.1:5432/'+database_name,'-e','REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0','-e','EPG_PATH_DISPOSABLE_FIXTURE=playback-fixture-only','-e','EPG_PATH_FIXTURE=/evidence/source-index-worker-private.json','baseline','/evidence/native-'+target,'--ignored','--nocapture','--test-threads=1'],env=env,text=True,capture_output=True,timeout=180)
+     (out/(target+'-tests.log')).write_text(native.stdout+native.stderr);native.check_returncode()
+    report['native_path_component_verified']=True;report['native_dispatcher_override_verified']=True
    report.update(passed=actual['passed'],checks=len(actual['checks']),default_database_unchanged=True,source_report_sha256=hashlib.sha256((out/'source-index-worker-private.json').read_bytes()).hexdigest(),captures=len(actual['captures']),worker_started=actual['worker_started']);status=0 if report['passed']else 1
   except(OSError,ValueError,RuntimeError,AssertionError,subprocess.SubprocessError)as error:
    report['error_type']=type(error).__name__

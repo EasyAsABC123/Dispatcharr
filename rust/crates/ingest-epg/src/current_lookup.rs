@@ -36,8 +36,53 @@ pub struct CurrentLookupServices {
     pub dispatcher: Arc<dyn MissingIndexDispatcher>,
     pub clock: Arc<dyn Fn() -> DateTime<Utc> + Send + Sync>,
 }
+/// Explicit original-process path context. Stored strings remain unchanged;
+/// joins preserve OS symlink/dot traversal and neither expand nor canonicalize.
+/// Application/volume migration must supply a separately verified context.
+#[derive(Clone, Debug)]
+pub struct SourcePathContext {
+    source_cwd: std::path::PathBuf,
+    media_root: std::path::PathBuf,
+}
+impl SourcePathContext {
+    pub fn new(
+        source_cwd: std::path::PathBuf,
+        media_root: std::path::PathBuf,
+    ) -> Result<Self, ImportError> {
+        if [&source_cwd, &media_root]
+            .iter()
+            .any(|path| !path.is_absolute() || path.as_os_str().len() > 4096)
+        {
+            return Err(ImportError::Capacity("source path context"));
+        }
+        Ok(Self {
+            source_cwd,
+            media_root,
+        })
+    }
+    pub fn source_cwd(&self) -> &std::path::Path {
+        &self.source_cwd
+    }
+    pub fn media_root(&self) -> &std::path::Path {
+        &self.media_root
+    }
+    fn resolve(&self, path: std::path::PathBuf) -> std::path::PathBuf {
+        if path.is_absolute() {
+            path
+        } else {
+            self.source_cwd.join(path)
+        }
+    }
+    fn cache_file(&self, source_id: i64) -> std::path::PathBuf {
+        self.media_root
+            .join("cached_epg")
+            .join(format!("{source_id}.tmp"))
+    }
+}
 #[derive(Clone, Debug)]
 pub struct CurrentLookupConfig {
+    /// None preserves the existing absolute-only component API.
+    pub path_context: Option<SourcePathContext>,
     pub max_jobs: usize,
     pub memory_bytes: usize,
     pub response_bytes: usize,
@@ -46,6 +91,7 @@ pub struct CurrentLookupConfig {
 impl Default for CurrentLookupConfig {
     fn default() -> Self {
         Self {
+            path_context: None,
             max_jobs: 2,
             memory_bytes: 192 * 1024 * 1024,
             response_bytes: 4 * 1024 * 1024,
@@ -302,7 +348,17 @@ impl Inner {
                     .filter(|p| !p.as_os_str().is_empty())
             })
             .cloned()
-            .unwrap_or_else(|| request.cache_file_path.clone());
+            .unwrap_or_else(|| {
+                self.config.path_context.as_ref().map_or_else(
+                    || request.cache_file_path.clone(),
+                    |context| context.cache_file(request.source_id),
+                )
+            });
+        let path = self
+            .config
+            .path_context
+            .as_ref()
+            .map_or_else(|| path.clone(), |context| context.resolve(path.clone()));
         if !path.is_absolute() || path.as_os_str().len() > 4096 {
             return Err(ImportError::Capacity("current file path").into());
         }
@@ -490,5 +546,53 @@ mod draft_tests {
         assert_eq!(&clone[..], b"ok");
         drop(clone);
         assert_eq!(semaphore.available_permits(), 1024);
+    }
+}
+
+#[cfg(test)]
+mod source_path_tests {
+    use super::SourcePathContext;
+    use std::{
+        path::PathBuf,
+        sync::atomic::{AtomicU64, Ordering},
+    };
+
+    #[test]
+    fn context_keeps_literal_source_paths_and_default_cache_layout() {
+        let context = SourcePathContext::new("/app".into(), "/app/media".into()).unwrap();
+        assert_eq!(
+            context.resolve("media/$HOME/~literal +%.xml".into()),
+            PathBuf::from("/app/media/$HOME/~literal +%.xml")
+        );
+        assert_eq!(
+            context.resolve("/data/../guide.xml".into()),
+            PathBuf::from("/data/../guide.xml")
+        );
+        assert_eq!(
+            context.cache_file(17),
+            PathBuf::from("/app/media/cached_epg/17.tmp")
+        );
+        assert!(SourcePathContext::new("relative".into(), "/app/media".into()).is_err());
+        assert!(SourcePathContext::new("/app".into(), "media".into()).is_err());
+    }
+
+    #[test]
+    fn symlink_parent_is_resolved_by_filesystem_not_lexical_normalization() {
+        static NEXT: AtomicU64 = AtomicU64::new(0);
+        let directory = std::env::temp_dir().join(format!(
+            "owned-current-path-{}-{}",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::Relaxed)
+        ));
+        std::fs::create_dir_all(directory.join("target/sub")).unwrap();
+        std::fs::write(directory.join("guide.xml"), "lexical-parent").unwrap();
+        std::fs::write(directory.join("target/guide.xml"), "real-parent").unwrap();
+        std::os::unix::fs::symlink(directory.join("target/sub"), directory.join("link")).unwrap();
+        let context = SourcePathContext::new(directory.clone(), directory.join("media")).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(context.resolve("link/../guide.xml".into())).unwrap(),
+            "real-parent"
+        );
+        std::fs::remove_dir_all(directory).unwrap();
     }
 }

@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "scope": "App-unwired explicit SourcePathContext component; literal fresh-index SQL/file results and controlled relative two-open helper semantics",
+  "evidence": "artifacts/rust/m6-index-paths-source-native-114",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_path_cases": 20,
+  "native_sql_literal_cases": 18,
+  "native_two_open_helper_cases": 2,
+  "native_test_functions": 2,
+  "native_test_binary_sha256": "f0e1d8ba5d6f9184da6fa671ad4bed060a6b4c84a132d1beed12d68bbb0d7a8c",
+  "source_report_sha256": "d3e320a7e65b400fdb66d35c8cfcdaea11824b59f7213c173dfdefa9fbcf8767",
+  "rust_source_archive_sha256": "329673973758c9d1705a81eee75fa76676cbced52b7c2163d4c12f1c4a96224b",
+  "runtime_sources": {
+    "rust/crates/ingest-epg/src/current_lookup.rs": "22b4f62dcc41094528338fdac963f79ff05221e7edbec90ebf47ef4116587f6f",
+    "rust/crates/ingest-epg/tests/current_paths_sql.rs": "6757db7ecbab180f5a0f74bfd02a69a4283a0c75ba7a82a34663cac5758075cc"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_runtime_uid": 0,
+  "network": "Internal Docker network retained; frozen host-built test binary executes in original baseline container via loopback copied PostgreSQL.",
+  "failed_attempts": {
+    "112": "Fixture database-name variable shadowing; PostgreSQL rejected malformed CREATE DATABASE before component execution.",
+    "113": "Internal network did not publish PostgreSQL to host; native setup failed EmptyHost before database connection."
+  },
+  "limitations": [
+    "No application/Store builder attachment, image WORKDIR/volume change, existing-data cutover or packaged migration acceptance.",
+    "SourcePathContext is opt-in; defaultNone retains existing absolute-only component API.",
+    "Native and original task fixture run UID0; Source separately proves uid65534 PermissionError, but native deployment permission/error HTTP parity remains open.",
+    "Two-open replacement/deletion run through the same public physical file helper; no claimed outer HTTP error-body equivalence.",
+    "build_with_dispatcher appears in the snapshot but has no actual runtime acceptance from this path gate."
+  ],
+  "performance_verified": false,
+  "application_verified": false,
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing.",
+  "default_context_regression": "verified-current-bridge-path-default-116.json"
+}

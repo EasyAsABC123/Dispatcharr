@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "scope": "App-unwired additive per-execution index dispatcher selection and real Redis reply retention; no native Celery producer/worker acceptance",
+  "evidence": "artifacts/rust/m6-index-paths-dispatcher-source-native-115",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "native_test_binary_sha256": {
+    "current_paths_sql": "630cf75a0b756cfa47b5ae3e7136cf6f81b12e226eaa24a3789da074f6a1d6b8",
+    "index_dispatcher_sql": "b40c943c7481758400da7f84c926f6661fc9cd78a46a6e46e4b7be3ba32925a6"
+  },
+  "rust_source_archive_sha256": "effd1f1a942efdf38c5ef36a533ad0465cf343989b2655ed9e28a24d29843a23",
+  "runtime_sources": {
+    "rust/crates/ingest-epg/src/index_service.rs": "dda1e6d717c0d2719bdfa8caae4533adf500224459502d91b7815766bd64420e",
+    "rust/crates/ingest-epg/tests/index_dispatcher_sql.rs": "2d8b34c8232afc8c2d268f20062853e0e9c1907f4c1668d5c76c013fd9af5528"
+  },
+  "checks": [
+    "Existing build uses configured default dispatcher.",
+    "Two concurrent build_with_dispatcher executions retain distinct immutable trace labels, source IDs and retry values; each requests five-second child deferral.",
+    "Aborted caller retains caller guard and physical job while its dispatcher awaits real Redis BLPOP reply.",
+    "Shutdown reports incomplete during that actual reply; caller and physical job release after reply.",
+    "Native file-path gate replays eighteen literal SQL/file outcomes and two controlled relative reopen schedules."
+  ],
+  "native_test_functions": 3,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_protocol_encoding_verified": false,
+  "native_worker_verified": false,
+  "production_dispatch_verified": false,
+  "application_wired": false,
+  "performance_verified": false,
+  "limitations": [
+    "The dispatcher test uses controlled immutable trace labels and actual Redis reply ownership; it does not emit a Celery child envelope or verify result children.",
+    "Source109 is the independent authoritative original index wire/ACK/lineage corpus; native worker/producer interoperability remains separate.",
+    "SourcePathContext remains opt-in and app-unwired, with volume/cutover/UID migration still open."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}
