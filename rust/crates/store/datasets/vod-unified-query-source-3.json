@@ -1,0 +1,734 @@
+{
+  "Source_public_dataset_sha256": "d5b3e89e79204bb53c6b883ae3669255eaa8651b62b4600fa69db2c55150c2b0",
+  "derivation": "SourceFactory actual emitted LIMIT/OFFSET and viewerror only; no native mirrored implementation",
+  "records": [
+    {
+      "path": "/api/vod/all/",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/",
+      "role": "adult_hidden",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/",
+      "role": "movies_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 3
+    },
+    {
+      "path": "/api/vod/all/",
+      "role": "series_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 26
+    },
+    {
+      "path": "/api/vod/all/",
+      "role": "both_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/",
+      "role": "zero_flags",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/",
+      "role": "admin_movies_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 3
+    },
+    {
+      "path": "/api/vod/all/?page=1",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=2",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "24",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=last",
+      "role": "standard",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: 'last'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=",
+      "role": "standard",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: ''",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=0",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "-24",
+      "source_view_error": "OFFSET must not be negative",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=-1",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "-48",
+      "source_view_error": "OFFSET must not be negative",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=bad",
+      "role": "standard",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: 'bad'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=99999",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "2399952",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=+2",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "24",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=%2B2",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "24",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=1_0",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "216",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=%D9%A1",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=1.0",
+      "role": "standard",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: '1.0'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=1e0",
+      "role": "standard",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: '1e0'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=2&page=1",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=1&page=2",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "24",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page_size=1",
+      "role": "standard",
+      "source_integer_limit": "1",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page_size=24",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page_size=25",
+      "role": "standard",
+      "source_integer_limit": "25",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page_size=101",
+      "role": "standard",
+      "source_integer_limit": "101",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page_size=0",
+      "role": "standard",
+      "source_integer_limit": "0",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page_size=-1",
+      "role": "standard",
+      "source_integer_limit": "-1",
+      "source_integer_offset": "0",
+      "source_view_error": "LIMIT must not be negative",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=bad",
+      "role": "standard",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: 'bad'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=",
+      "role": "standard",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: ''",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=0&page_size=0",
+      "role": "standard",
+      "source_integer_limit": "0",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page=-1&page_size=-1",
+      "role": "standard",
+      "source_integer_limit": "-1",
+      "source_integer_offset": "2",
+      "source_view_error": "LIMIT must not be negative",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=1&page_size=2",
+      "role": "standard",
+      "source_integer_limit": "2",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?page_size=999999999999999999999999999999999",
+      "role": "standard",
+      "source_integer_limit": "999999999999999999999999999999999",
+      "source_integer_offset": "0",
+      "source_view_error": "bigint out of range",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page=999999999999999999999999999999999",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "23999999999999999999999999999999952",
+      "source_view_error": "bigint out of range",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?search=space",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?search=Space,drama",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?search=%25",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?search=_",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?search=",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?search=SPACE&ordering=-name",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?search=Drama%5C%20News",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?search=%C4%B0",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?search=%CE%A3%CE%9F%CE%A3",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?search=%00",
+      "role": "standard",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "PostgreSQL text fields cannot contain NUL (0x00) bytes",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?search=a&search=SPACE",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?search=SPACE&search=a",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 2
+    },
+    {
+      "path": "/api/vod/all/?page_size=1&z=&z=2&a=%2B%20~",
+      "role": "standard",
+      "source_integer_limit": "1",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?ordering=-year,name",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?ordering=bad",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?year=bad",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?m3u_account=bad",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?is_adult=false",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?category_type=movie",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?name=Alpha",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 21
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama%7Cmovie",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 18
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama%7Cseries",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 3
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama%7Cinvalid",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-News%7CLive%7Cmovie",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 8
+    },
+    {
+      "path": "/api/vod/all/?category=%7Cmovie",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?category=+movie+",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?category=",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?category=Uncategorized",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?page=bad",
+      "role": "both_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?page_size=-1",
+      "role": "both_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?page_size=1",
+      "role": "both_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+      "role": "both_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+      "role": "both_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?page=bad",
+      "role": "movies_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: 'bad'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=-1",
+      "role": "movies_off",
+      "source_integer_limit": "-1",
+      "source_integer_offset": "0",
+      "source_view_error": "LIMIT must not be negative",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=1",
+      "role": "movies_off",
+      "source_integer_limit": "1",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 3
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+      "role": "movies_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+      "role": "movies_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 3
+    },
+    {
+      "path": "/api/vod/all/?page=bad",
+      "role": "series_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: 'bad'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=-1",
+      "role": "series_off",
+      "source_integer_limit": "-1",
+      "source_integer_offset": "0",
+      "source_view_error": "LIMIT must not be negative",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=1",
+      "role": "series_off",
+      "source_integer_limit": "1",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 26
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+      "role": "series_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 18
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+      "role": "series_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?page=bad",
+      "role": "adult_hidden",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: 'bad'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=-1",
+      "role": "adult_hidden",
+      "source_integer_limit": "-1",
+      "source_integer_offset": "0",
+      "source_view_error": "LIMIT must not be negative",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=1",
+      "role": "adult_hidden",
+      "source_integer_limit": "1",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+      "role": "adult_hidden",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 18
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+      "role": "adult_hidden",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 3
+    },
+    {
+      "path": "/api/vod/all/?page=bad",
+      "role": "admin_movies_off",
+      "source_integer_limit": null,
+      "source_integer_offset": null,
+      "source_view_error": "invalid literal for int() with base 10: 'bad'",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=-1",
+      "role": "admin_movies_off",
+      "source_integer_limit": "-1",
+      "source_integer_offset": "0",
+      "source_view_error": "LIMIT must not be negative",
+      "source_count": null
+    },
+    {
+      "path": "/api/vod/all/?page_size=1",
+      "role": "admin_movies_off",
+      "source_integer_limit": "1",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 3
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+      "role": "admin_movies_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 0
+    },
+    {
+      "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+      "role": "admin_movies_off",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 3
+    },
+    {
+      "path": "/api/vod/all/?format=json",
+      "role": "standard",
+      "source_integer_limit": "24",
+      "source_integer_offset": "0",
+      "source_view_error": null,
+      "source_count": 29
+    }
+  ]
+}

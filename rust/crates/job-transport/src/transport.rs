@@ -71,7 +71,7 @@ struct Inner {
     closed: AtomicBool,
     config: Config,
     database: String,
-    index_only: bool,
+    authority: Authority,
     eta: std::sync::Mutex<Option<Arc<crate::eta::Pool>>>,
 }
 #[derive(Clone)]
@@ -93,6 +93,13 @@ fn endpoint(raw: &str, db: i64) -> Result<(), Error> {
         }
         _ => Err(Error::Configuration),
     }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Authority {
+    Fixture,
+    Index,
+    Refresh,
+    Series,
 }
 impl Jobs {
     /// Test-only authority: copied DB + isolated loopback RedisDB8/9. There is
@@ -130,7 +137,14 @@ impl Jobs {
         if b.get_connection_info().addr != r.get_connection_info().addr {
             return Err(Error::Configuration);
         }
-        Self::connect_owned(broker, result, config, database.to_owned(), false).await
+        Self::connect_owned(
+            broker,
+            result,
+            config,
+            database.to_owned(),
+            Authority::Fixture,
+        )
+        .await
     }
     /// Production connection authority for programme-index tasks only. This
     /// neither starts a consumer nor grants backup/restore publication/execution.
@@ -140,14 +154,38 @@ impl Jobs {
         self.inner.config.operations
     }
     pub async fn connect_index(broker: &str, result: &str, config: Config) -> Result<Self, Error> {
-        Self::connect_owned(broker, result, config, String::new(), true).await
+        Self::connect_owned(broker, result, config, String::new(), Authority::Index).await
+    }
+    /// Explicit refresh-family authority. This grants no backup/restore publication
+    /// or consumption and starts no worker by itself. Unported queue heads remain
+    /// untouched and are reported as UnsupportedTask.
+    pub async fn connect_refresh(
+        broker: &str,
+        result: &str,
+        config: Config,
+    ) -> Result<Self, Error> {
+        Self::connect_owned(broker, result, config, String::new(), Authority::Refresh).await
+    }
+    pub(crate) fn allows_refresh(&self) -> bool {
+        matches!(
+            self.inner.authority,
+            Authority::Fixture | Authority::Refresh
+        )
+    }
+    /// Narrow no-recording Series authority; no backup/refresh/index publisher
+    /// or default consumer is enabled by opening this connection.
+    pub async fn connect_series(broker: &str, result: &str, config: Config) -> Result<Self, Error> {
+        Self::connect_owned(broker, result, config, String::new(), Authority::Series).await
+    }
+    pub(crate) fn allows_series(&self) -> bool {
+        matches!(self.inner.authority, Authority::Fixture | Authority::Series)
     }
     async fn connect_owned(
         broker: &str,
         result: &str,
         config: Config,
         database: String,
-        index_only: bool,
+        authority: Authority,
     ) -> Result<Self, Error> {
         if broker.len() > 4096
             || result.len() > 4096
@@ -181,7 +219,7 @@ impl Jobs {
                 closed: AtomicBool::new(false),
                 config,
                 database,
-                index_only,
+                authority,
                 eta: std::sync::Mutex::new(None),
             }),
         })
@@ -208,6 +246,9 @@ impl Jobs {
         &self,
         limits: crate::eta::Limits,
     ) -> Result<Arc<crate::eta::Pool>, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -266,7 +307,7 @@ impl Jobs {
         self.inner.slots.available_permits()
     }
     pub fn copied_database(&self) -> Option<&str> {
-        (!self.inner.index_only).then_some(self.inner.database.as_str())
+        (self.inner.authority == Authority::Fixture).then_some(self.inner.database.as_str())
     }
     pub async fn publish(
         &self,
@@ -274,7 +315,7 @@ impl Jobs {
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        if self.inner.index_only {
+        if self.inner.authority != Authority::Fixture {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
@@ -304,15 +345,14 @@ impl Jobs {
             Err(e) => Err(map(e)),
         }
     }
-    /// Test-only refresh authority. Index-only connections never gain another
-    /// family merely because the component helper was compiled into tests.
-    #[cfg(test)]
-    pub(crate) async fn publish_refresh_fixture(
+    /// Typed refresh publication. Index-only connections never gain another
+    /// family merely because refresh support is compiled.
+    pub async fn publish_refresh(
         &self,
         message: &crate::refresh_protocol::RefreshMessage,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        if self.inner.index_only {
+        if !self.allows_refresh() {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
@@ -345,14 +385,13 @@ impl Jobs {
             Err(error) => Err(map(error)),
         }
     }
-    #[cfg(test)]
-    pub(crate) async fn read_refresh_fixture(
+    pub async fn read_refresh(
         &self,
         id: Uuid,
         source_id: i64,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::refresh_result::RefreshSuccess>, Error> {
-        if self.inner.index_only {
+        if !self.allows_refresh() {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
@@ -371,13 +410,12 @@ impl Jobs {
             _ => Err(Error::Corrupt),
         }
     }
-    #[cfg(test)]
     pub(crate) async fn publish_refresh_child_fixture(
         &self,
         message: &crate::refresh_dispatch::ChildMessage,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        if self.inner.index_only {
+        if !self.allows_refresh() {
             return Err(Error::UnsupportedTask);
         }
         // Manual refresh deferral uses the independently tested refresh helper.
@@ -417,12 +455,11 @@ impl Jobs {
             Err(error) => Err(map(error)),
         }
     }
-    #[cfg(test)]
     pub(crate) async fn claim_refresh_fixture(
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::refresh_protocol::RefreshMessage>, Error> {
-        if self.inner.index_only {
+        if !self.allows_refresh() {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller.clone())?;
@@ -459,7 +496,6 @@ impl Jobs {
             Err(error) => Err(map(error)),
         }
     }
-    #[cfg(test)]
     pub(crate) async fn write_refresh_success_fixture(
         &self,
         message: &crate::refresh_protocol::RefreshMessage,
@@ -467,7 +503,7 @@ impl Jobs {
         children: Vec<Uuid>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if self.inner.index_only {
+        if !self.allows_refresh() {
             return Err(Error::UnsupportedTask);
         }
         if message.eta.is_some()
@@ -487,12 +523,85 @@ impl Jobs {
         self.write_result(message.task_id, value, None, children, caller)
             .await
     }
+    /// Fixture-scoped Series preflight: no pop or unrelated-family transfer.
+    pub(crate) async fn peek_series(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<(Vec<u8>, crate::series_protocol::SeriesMessage)>, Error> {
+        if !self.allows_series() {
+            return Err(Error::UnsupportedTask);
+        }
+        let lease = self.lease(caller)?;
+        let keys = vec!["celery".to_owned()];
+        let (reply, _held) = self
+            .inner
+            .broker
+            .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => {
+                let message =
+                    crate::series_protocol::parse(&reply.1).map_err(|_| Error::UnsupportedTask)?;
+                Ok(Some((reply.1, message)))
+            }
+            _ => Err(Error::Corrupt),
+        }
+    }
+    pub(crate) async fn claim_series(
+        &self,
+        bytes: &[u8],
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<(), Error> {
+        if !self.allows_series() {
+            return Err(Error::UnsupportedTask);
+        }
+        let message = crate::series_protocol::parse(bytes).map_err(|_| Error::UnsupportedTask)?;
+        let lease = self.lease(caller)?;
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(CLAIM_CREATE, &["celery".to_owned()], &[bytes], lease)
+            .await
+        {
+            Ok((1, _)) => Ok(()),
+            Ok((0, _)) => Err(Error::ClaimRace),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousClaim(message.task_id)),
+            Err(error) => Err(map(error)),
+        }
+    }
+    pub(crate) async fn write_series_success(
+        &self,
+        message: &crate::series_protocol::SeriesMessage,
+        result: crate::series_protocol::KnownReturn,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !self.allows_series() {
+            return Err(Error::UnsupportedTask);
+        }
+        if message.parent.is_none() && message.root != message.task_id {
+            return Err(Error::Protocol);
+        }
+        self.write_result(
+            message.task_id,
+            result.value(),
+            message.parent,
+            Vec::new(),
+            caller,
+        )
+        .await
+    }
     pub async fn publish_index(
         &self,
         task: &crate::index_protocol::IndexTask,
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         let lease = self.lease(caller)?;
         let bytes = crate::index_protocol::encode(
             task,
@@ -525,6 +634,9 @@ impl Jobs {
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::index_protocol::IndexResult>, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         let lease = self.lease(caller)?;
         let keys = vec![format!("celery-tasks:celery-task-meta-{id}")];
         let (reply, _held) = self
@@ -569,6 +681,9 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Candidate>, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         let pool = self.eta_pool(limits)?;
         let budget = Arc::new(pool.acquire()?);
         let guard = Arc::new((caller, budget.clone()));
@@ -600,6 +715,9 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<crate::eta::Reservation, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         let pool = self.eta_pool(limits)?;
         if !Arc::ptr_eq(&pool, &candidate.pool) {
             return Err(Error::Configuration);
@@ -618,6 +736,9 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<crate::eta::Reservation, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         let expected = crate::eta::Reservation::new_shared(
             candidate.receipt.clone(),
             candidate.budget.clone(),
@@ -795,6 +916,9 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Reservation>, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         let Some(candidate) = self.peek_index_candidate(caller.clone(), limits).await? else {
             return Ok(None);
         };
@@ -811,6 +935,9 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Reservation>, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         let pool = self.eta_pool(limits)?;
         let budget = Arc::new(pool.acquire()?);
         let guard = Arc::new((caller, budget.clone()));
@@ -838,6 +965,9 @@ impl Jobs {
         reservation: &crate::eta::Reservation,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(), Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         self.owns_reservation(reservation)?;
         let lease = self.cleanup_lease(Arc::new((caller, reservation.clone())))?;
         let tag = reservation.delivery_tag().to_string();
@@ -871,6 +1001,9 @@ impl Jobs {
         reservation: &crate::eta::Reservation,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(), Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         self.owns_reservation(reservation)?;
         let lease = self.cleanup_lease(Arc::new((caller, reservation.clone())))?;
         let tag = reservation.delivery_tag().to_string();
@@ -907,7 +1040,7 @@ impl Jobs {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<Uuid>, Error> {
-        if self.inner.index_only {
+        if self.inner.authority != Authority::Fixture {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller.clone())?;
@@ -944,6 +1077,9 @@ impl Jobs {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::index_protocol::IndexMessage>, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         let lease = self.lease(caller.clone())?;
         let keys = vec!["celery".to_owned()];
         let (reply, held) = self
@@ -984,6 +1120,9 @@ impl Jobs {
         children: Vec<Uuid>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         if children.len() > 1 {
             return Err(Error::Protocol);
         }
@@ -1007,6 +1146,9 @@ impl Jobs {
         terminal: crate::index_terminal::Terminal,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
+        if self.inner.authority == Authority::Series {
+            return Err(Error::UnsupportedTask);
+        }
         match terminal {
             crate::index_terminal::Terminal::NullSuccess => {
                 self.write_index_success(id, parent, children, caller).await
@@ -1180,3 +1322,6 @@ local raw=redis.call('HGET',KEYS[1],ARGV[1]);if not raw then return{0,''}end
 if not redis.call('ZSCORE',KEYS[2],ARGV[1])then return{-1,''}end
 return{1,raw}
 "#;
+
+#[path="refresh_eta_transport.rs"]
+mod refresh_eta_transport;

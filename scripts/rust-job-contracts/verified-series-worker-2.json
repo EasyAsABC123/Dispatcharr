@@ -1,0 +1,170 @@
+{
+  "passed": true,
+  "scope": "Actual Original no-recording worker79 plus Sourceproducer\u2192nativezero-ruleSeries\u2192OriginalAsyncResult; configured dictionary rules/foreign families remain byte-identical in FIFO. No native preflight earlyACK parity, configured rule execution, main/default intake or scheduler acceptance.",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "checks": 147,
+  "source_worker_checks": 79,
+  "native_cases": [
+    {
+      "name": "absent",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "empty-map",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "empty-list",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "nonlist",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "nonmaps",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "busy",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": [
+          {
+            "status": "skipped",
+            "reason": "concurrent evaluation in progress"
+          }
+        ]
+      },
+      "parented": false
+    },
+    {
+      "name": "parented",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": true
+    },
+    {
+      "name": "held-sql",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": true,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "configured-unsupported",
+      "expected": "unsupported-rules",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "result_fabricated": false
+    },
+    {
+      "name": "foreign",
+      "expected": "foreign",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "aborted_waiter_return_observed": false,
+      "result_fabricated": false
+    }
+  ],
+  "archive_sha256": "63a21d868f47152c21c38e1b6c57c278dd7eb848b2d23f1bb89fc3593d78b2c8",
+  "integration_sha256": "c56465090601edd2438c87ff65852e045f6ddfcb460cc824d508ff6636740e82",
+  "source_private_sha256": "f667c469456119e65fceb654489fb1f415f1be3b142826b31a89fdc1d77ac137",
+  "earlyACK_parity_claimed": false,
+  "native_app_or_default_intake": false,
+  "configured_recording_rules_executed": false,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "queue_and_results_after_cleanup": [
+    0,
+    0
+  ],
+  "strict_log": "artifacts/rust/series-worker-input-2/clippy.log",
+  "prior_successful_scope": "artifacts/rust/m6-source-native-series-worker-1 (139 checks; same runtime, before heldSQL test-only extension)"
+}

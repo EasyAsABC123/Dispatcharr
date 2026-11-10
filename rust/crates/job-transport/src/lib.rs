@@ -1,6 +1,7 @@
 //! App-unwired Source Celery transport component under development.
 //! Original Dispatcharr authors retain full application credit and AGPL licensing.
-//! No production router or HTTP202 authority is provided. The worker is fixture-only.
+//! No HTTP202 router or scheduler authority is provided by this crate.
+//! Explicit index/refresh constructors restrict consumer and publication families.
 pub mod decode;
 pub mod eta;
 pub mod index_dispatch;
@@ -30,25 +31,43 @@ pub mod pg_failure_format;
 #[cfg(test)]
 pub mod index_classifier;
 
-// Observed refresh wire component; no worker or application authority.
-#[cfg(test)]
+// Observed bounded refresh wire shapes; raw Source API shapes beyond this model remain unsupported.
 pub mod refresh_protocol;
 
-// Immutable refresh child-lineage adapter component; no broker dispatch authority.
-#[cfg(test)]
+// Immutable refresh child-lineage adapter; broker authority is explicit in Jobs.
 pub mod refresh_dispatch;
 
-// Observed normal refresh results; no writer or application authority.
-#[cfg(test)]
+// Observed bounded normal refresh result decoder.
 pub mod refresh_result;
 
 // Fixture-only refresh publication/result interoperability; no consumer.
 #[cfg(test)]
 pub mod refresh_publish;
 
-// Fixture-only immediate refresh execution; no production intake.
-#[cfg(test)]
+// Explicit immediate refresh execution; unrelated/ETA heads are not consumed.
 pub mod refresh_worker;
 
 // Controlled-clock interval decision component; no scheduler/application hook.
 pub mod interval_schedule;
+
+// Bounded supervised immediate-refresh polling; unsupported families stay queued.
+pub mod refresh_driver;
+
+// Bounded positive-ID refresh HTTP assembly with explicit application configuration.
+pub mod refresh_application;
+
+pub mod index_application;
+
+pub mod series_protocol;
+
+pub mod series_worker;
+
+pub mod series_driver;
+
+pub mod series_application;
+
+pub mod refresh_eta;
+
+pub mod scheduled_refresh;
+
+pub mod scheduled_refresh_driver;

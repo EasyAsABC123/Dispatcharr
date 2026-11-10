@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "scope": "Original15s refresh reference/native ETA/Original warmrestore execution; no general family/main intake",
+  "checks": 60,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_reference_checks": 33,
+  "native_cases": [
+    {
+      "name": "scheduled",
+      "native_executor_calls": 1,
+      "result": null,
+      "status": "SUCCESS",
+      "parented": true,
+      "children": 2,
+      "scheduled_return_observed": false,
+      "physical_jobs": 0,
+      "caller_released": true,
+      "all_owned_services_drained": true
+    },
+    {
+      "name": "warm_restore",
+      "native_executor_calls": 0,
+      "result": null,
+      "status": "SUCCESS",
+      "parented": true,
+      "children": 2,
+      "scheduled_return_observed": false,
+      "physical_jobs": 0,
+      "caller_released": true,
+      "all_owned_services_drained": true
+    }
+  ],
+  "actual_redis_resource_tests": 3,
+  "native_refresh_eta_component_verified": true,
+  "whole_application_or_default_intake_verified": false,
+  "automatic_visibility_recovery_verified": false,
+  "raw_tuple_normalization": "Only public dataset UUID/origin substitution; private raw bytes remain hash-bound.",
+  "archive_sha256": "f31f279b7ab2f6b0739a207e3b3b3d11a741a75d60c82f80c272aa3cc0fa6c0b",
+  "integration_sha256": "49a569c3fcaf486dc2bcdd636ffb7f02363d552433a11e9317631c5d84273774",
+  "private_sha256": "03271bccaeee4807a19764a1663264def52c48d4b2097b74970bbc6394a3e432",
+  "binary_sha256": "d5de53b72aac5694ae6ef27a2760633e467e470e02e4ddf8577f91a77c8c72a0",
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "queue_and_results_after_cleanup": [
+    0,
+    0
+  ],
+  "credit": "Original Dispatcharr authors retain application/algorithm credit and AGPL licensing.",
+  "retained_failures": [
+    {
+      "paths": [
+        "artifacts/rust/m6-source-native-refresh-eta-1",
+        "artifacts/rust/m6-source-native-refresh-eta-2"
+      ],
+      "boundary": "Source reference cleanup deleted reused fixture XML. Fresh owned XML per native case corrected fixture only; native deadlines unchanged."
+    },
+    {
+      "path": "artifacts/rust/m6-source-native-refresh-eta-4",
+      "boundary": "Resource helper generated nanosecond ETA rejected by existing microsecond protocol guard; helper corrected only."
+    }
+  ]
+}

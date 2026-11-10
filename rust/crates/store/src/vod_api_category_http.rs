@@ -56,7 +56,7 @@ impl CategoryHttp {
 }
 // Original uncaught Django500 response observed on the actual category route.
 // This is an error representation, independent of DRF JSON negotiation/indent.
-fn source_server_error(slot:Arc<OwnedSemaphorePermit>,head:bool)->Response {
+pub(super) fn source_server_error(slot:Arc<OwnedSemaphorePermit>,head:bool)->Response {
     let data=bytes::Bytes::from_static(b"\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n");
     let length=data.len();let body=if head{Body::empty()}else{Body::from(bytes::Bytes::from_owner(Frame{data,_slot:slot}))};let mut response=Response::new(body);*response.status_mut()=axum::http::StatusCode::INTERNAL_SERVER_ERROR;
     response.headers_mut().insert("content-type",HeaderValue::from_static("text/html; charset=utf-8"));response.headers_mut().insert("content-length",length.into());response.headers_mut().insert("vary",HeaderValue::from_static("origin"));response

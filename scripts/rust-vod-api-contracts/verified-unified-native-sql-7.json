@@ -1,0 +1,150 @@
+{
+  "passed": true,
+  "scope": "Test-only unified query/raw SQL/projection/error ordering/resources; no native HTTP authentication/headers/React/production/app/performance acceptance",
+  "base_revision": "7bf71af289ab24e9c3b2a135cf39d27a57882c36",
+  "frozen_source": "artifacts/rust/vod-unified-native-source-8",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "frozen_Rust_inputs": 566,
+  "all_frozen_inputs_match": true,
+  "source_factory_cases": 186,
+  "SQL_body_cases": 126,
+  "historical_exact_cases": 120,
+  "fresh_predeclared_tie_cases": 6,
+  "outside_SQL_component_exclusions": 60,
+  "Source_schedule_cases": 6,
+  "native_phase_schedules": 4,
+  "raw_order_EXPLAIN_cases": 7,
+  "fresh_actual_Source_HTTP_authority_observations": 12,
+  "full_catalogue_HTTP_samefixture_sentinels": 12,
+  "tie_policy_sha256": "66ca5c73b74eaf0086229f2805da9d6d75e1485804d258982c532a1ead64c712",
+  "all_historical_non_order_fields_preserved": true,
+  "Source_bodies_retained_private": true,
+  "Source_SQL_database_HTTP_random_UUID_binding": true,
+  "Source_and_native_no_intervening13table_writes": true,
+  "large_and_capacity": {
+    "passed": true,
+    "Source_body_sha256": "1056efebee5616b8cb0535e36a04789b97c9895abf06d1c8fbf998a618395e2f",
+    "native_body_sha256": "1056efebee5616b8cb0535e36a04789b97c9895abf06d1c8fbf998a618395e2f",
+    "rows": 229,
+    "source_uncapped_page_exact": true,
+    "final_clone_retained_bytes": 136448,
+    "shutdown_drained_with_frame": true,
+    "response_capacity_no_partial200": true,
+    "row_capacity_no_partial200": true,
+    "aggregate_raw_capacity_no_partial200": true,
+    "owned_rows_restored": true,
+    "capacity_scope": "Explicit bounded native rejection, not Source fault/status parity or allocator-wide measurement",
+    "sequence_scope": "Source fixture sequences may advance; no claim of sequence restoration"
+  },
+  "physical_sql": {
+    "passed": true,
+    "caller_abort_and_logical_deadline": true,
+    "physical_workers_after_logical": 2,
+    "physical_workers_while_locked": 2,
+    "actual_locked_SQL_queries": 2,
+    "third_rejected_without_SQL": true,
+    "retained_memory_while_SQL_pending": 142606336,
+    "configured_memory_limit": 201326592,
+    "shutdown_early_false": true,
+    "shutdown_after_reply_and_rollback": true,
+    "final_memory": 0,
+    "scope": "Real SQL locks, actual canceled callers and physical worker/memory accounting; HTTP input/frame-slot queue remains separate"
+  },
+  "owned_rows_restored": true,
+  "retained_memory_after": 0,
+  "workers_drained": true,
+  "cleanup": [
+    {
+      "attempt": 1,
+      "project": "dispatcharr-vod-api-factory-848b643e53",
+      "reported": "owned Compose project removed",
+      "independent_remaining": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "attempt": 2,
+      "project": "dispatcharr-vod-api-factory-ad70ea8550",
+      "reported": "owned Compose project removed",
+      "independent_remaining": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "attempt": 3,
+      "project": "dispatcharr-vod-api-factory-594ee48dd3",
+      "reported": "owned Compose project removed",
+      "independent_remaining": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "attempt": 4,
+      "project": "dispatcharr-vod-api-factory-08fe0988aa",
+      "reported": "owned Compose project removed",
+      "independent_remaining": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "attempt": 5,
+      "project": "dispatcharr-vod-api-factory-b844316847",
+      "reported": "owned Compose project removed",
+      "independent_remaining": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "attempt": 6,
+      "project": "dispatcharr-vod-api-factory-e930f65b2d",
+      "reported": "owned Compose project removed",
+      "independent_remaining": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "attempt": 7,
+      "project": "dispatcharr-vod-api-factory-bf21cc8d15",
+      "reported": "owned Compose project removed",
+      "independent_remaining": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    }
+  ],
+  "historical_failures": {
+    "native1": "Whole mutable snapshot rejected without final peer ACK; interrupted during compile, no native observations",
+    "native2": "126 selected actual cases/74differences: PostgreSQL raw JSONB text was incorrectly decoded as object",
+    "native3": "Test helper rejected digit in m3u table name before reader execution",
+    "native5": "4/6gates passed; historical equal-sort-key order changed after fixture heap mutations. Current exact SourceSQL==native inner==guarded order; retained2EXPLAIN and1body mismatch. No sorting/tiebreaker fix; fixed6cases use fresh actual SourceHTTP under parent approval."
+  },
+  "raw_metadata_caveat": "Source-centric runner envelope retains native_verified:false; actual named native_unified_component and additional gates provide component evidence only. Capacity booleans denote Err/no successful partial document, not an independently observed nativeHTTP503.",
+  "compile_profile_overlay": "Root-owned debug0/incrementalfalse; no release/runtime graph change",
+  "logs": {
+    "artifacts/rust/vod-unified-schedule-controls-3-clippy.log": "bf2e948f458190cac94eb0d4f5ecce69550a4445a4b67cebc2e8600c3fe889b6"
+  },
+  "output_sha256": {
+    "unified-sql.json": "3a1a87003e7c69f477c224775a538ffe7fb292e0b4576f3dc866f5ca799f4bce",
+    "unified-schedule-native.json": "d4d6a2dbee6d6c11724828dffc8ff60551d930406b89f38f8126df54be7498c0",
+    "unified-large-resources.json": "4145574d7748b2af2aa2210f4ab20be4e754b7b33e5f6f781d3e0f3427959497",
+    "unified-physical-sql.json": "8a196ac7ddf68b8a61710d52a0847ad98a989fa7a97a33a498bc2984cea47a5f",
+    "unified-ordering-plans.json": "9fd014f90fef1bcff13a869414f2411ca80af1a773810a260f00106aab5c176f",
+    "unified-zero-logo.json": "d91780c5b9814020df27d1525a959e8fa1d28440061a25b5098caeb3c009f06c"
+  },
+  "performance_verified": false,
+  "private_review_sha256": "7036caf2a32949948a525b6d810fa4e9c57c4eaefef86baf67e8af6c7ef4f9c3",
+  "private_review_path": "artifacts/rust/vod-unified-native7-review-1.json"
+}

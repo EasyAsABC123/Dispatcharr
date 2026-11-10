@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "scope": "Actual Original unified pureSQL endpoint characterization only; no native/app/performance or provider-refresh acceptance",
+  "original_credit": "All application/algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "evidence": "artifacts/rust/m5-vod-unified-source-3",
+  "observation_counts": {
+    "factory": 186,
+    "http": 186
+  },
+  "Source_network_requests": 186,
+  "Source_Factory_SQL_requests": 186,
+  "source_base_reference_counts": {
+    "factory": 465,
+    "http": 463
+  },
+  "Source_base_exclusions": "Two priorforcedproviderrefresh Factory operations blockedbyoldmetadataoracle; not unified/providerparity passes.",
+  "public_dataset": "scripts/rust-vod-api-contracts/unified-source-3.json",
+  "public_dataset_sha256": "d5b3e89e79204bb53c6b883ae3669255eaa8651b62b4600fa69db2c55150c2b0",
+  "checks": {
+    "owned_full_model_fingerprints_and_restoration": true,
+    "provider_trap_attempts": 0,
+    "querydict_rawint_lastvalue": true,
+    "page_before_count_SQL_observed": true,
+    "invalidrating_view_JSON500": true,
+    "nonfinite_view200_then_renderer_failure_and_HTTP_HTML500": true,
+    "HEAD_actualwire_error_body0_preserves52_or145length": true,
+    "NUL_text_adapter_JSON500_and_nullable_debugSQL_recorded": true,
+    "both_disabled_returns_before_badpagination": true,
+    "zero_size_count_and_next_quirk": true,
+    "cross_kind_nonunique_LOWernamE_id_ties_captured": true
+  },
+  "independent_cleanup": [
+    {
+      "mode": "factory",
+      "project": "dispatcharr-vod-api-factory-f3e6fe80fd",
+      "passed": true,
+      "remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "source_run_sha256": "743c07ff0c448a03fc0a2b335a98e7b3ce740cccea3695530b502c4add12ea80",
+      "unified_raw_sha256": "87b613e685989e635e3dc8e47de687424b1e2c87569ef10ec0548f4880a9bcdc",
+      "successful_tools": "artifacts/rust/m5-vod-unified-source-3/factory/tools",
+      "tools_sha256": {
+        "scripts/rust-vod-api-contracts/run.py": "be211e276fc44c61fb321d57e1ee5d2b84158bb6adb9f5499d2222fad5324f81",
+        "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+        "scripts/rust-vod-api-contracts/unified_source.py": "ec8f812daf133f7c2c73160f607d2516ca60382c2791f996ee3cc3f66ab746ab",
+        "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+        "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+        "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+        "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+        "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+        "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+        "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+        "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+        "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+        "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+      }
+    },
+    {
+      "mode": "http",
+      "project": "dispatcharr-vod-api-http-5258ebc24a",
+      "passed": true,
+      "remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "source_run_sha256": "b3d42a7bec9c6ff9e5ed41918105057fbe711efddd91245a0f94ba645fd94fc1",
+      "unified_raw_sha256": "38bb57baf9f7252b94fd3f1e706c0b6c165737e0865833bb4fc74c9a4ba42908",
+      "successful_tools": "artifacts/rust/m5-vod-unified-source-3/http/tools",
+      "tools_sha256": {
+        "scripts/rust-vod-api-contracts/run.py": "be211e276fc44c61fb321d57e1ee5d2b84158bb6adb9f5499d2222fad5324f81",
+        "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+        "scripts/rust-vod-api-contracts/unified_source.py": "ec8f812daf133f7c2c73160f607d2516ca60382c2791f996ee3cc3f66ab746ab",
+        "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+        "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+        "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+        "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+        "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+        "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+        "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+        "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+        "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+        "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+      }
+    }
+  ],
+  "retained_failure": {
+    "evidence": "artifacts/rust/m5-vod-unified-source-2/factory",
+    "scope": "Observerassumed captured SQL alwaysstring; SourceNULadapter produced sqlNone. ToolTypeError/cleanup, no native or parity inference. Source3 recordsnullabledebugSQL safely."
+  },
+  "earlier_pass": "artifacts/rust/m5-vod-unified-source-1",
+  "uncaptured_or_unimplemented": [
+    "NativeSQL/pageplanner/EXPLAIN andfreshercount schedule",
+    "nativeauth/negotiation/errorwire",
+    "boundedrows/SQLcancel/finalbodyclones/sharedburst/shutdown",
+    "realReactbothflags/nativeappattachment",
+    "general HTMLtemplate/uncapturedquerygrammar"
+  ],
+  "native_verified": false,
+  "performance_verified": false
+}

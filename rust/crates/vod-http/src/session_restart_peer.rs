@@ -225,3 +225,105 @@ mod admit_reply;
 
 #[path = "session_recovery_causes.rs"]
 mod recovery_causes;
+
+#[tokio::test]
+#[ignore = "actual private actor Redis failure must remain visible after registry eviction"]
+async fn receipt_actor_failure_is_not_lost_when_session_registry_drains() {
+    use redis::AsyncCommands;
+    use std::sync::Arc;
+    let (url, base) = config();
+    let id = format!("{base}-actor-diagnostic");
+    let username = format!("owned_diagnostic_{}", uuid::Uuid::new_v4().simple());
+    let mut control = redis::Client::open(url.clone())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let _: () = redis::cmd("ACL")
+        .arg("SETUSER")
+        .arg(&username)
+        .arg("reset")
+        .arg("on")
+        .arg(">playback-fixture-only")
+        .arg("~*")
+        .arg("+@all")
+        .arg("-hdel")
+        .query_async(&mut control)
+        .await
+        .unwrap();
+    let restricted = format!("redis://{username}:playback-fixture-only@127.0.0.1:6379/0");
+    let coordinator = dispatcharr_coordination::Coordinator::connect(
+        &url,
+        dispatcharr_coordination::LeaseConfig {
+            namespace: id.clone(),
+            heartbeat_interval: None,
+            reap_interval: None,
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let pool =
+        super::SessionPool::connect(&restricted, coordinator, 1, 3, Duration::from_millis(10))
+            .await
+            .unwrap();
+    pool.enable_recovery(&id).unwrap();
+    let (_, _, source, request, _) = physical_fixture("unused-source-description").await;
+    let ticket = pool.enter(&id, source.clone(), &request).await.unwrap();
+    let scope = ticket.session.scope.get().unwrap().clone();
+    let candidate = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let fields = super::metadata_fields(
+        &id,
+        &source,
+        &request,
+        &source.candidates[0],
+        &ticket.session.metadata_token,
+    );
+    scope
+        .enter_current(
+            &candidate,
+            super::recovery::NewAdmission {
+                fields,
+                limit: 0,
+                policy: Default::default(),
+            },
+        )
+        .await
+        .unwrap();
+    assert!(
+        scope.close(&candidate).await.is_err(),
+        "owned ACL denies only private HDEL after public close"
+    );
+    assert!(!scope.cleanup_succeeded(), "actual actor failure observed");
+    assert_eq!(
+        control
+            .hget::<_, _, i64>(super::key(&id), "active_streams")
+            .await
+            .unwrap(),
+        1
+    );
+    drop(candidate);
+    drop(scope);
+    drop(ticket);
+    tokio::time::timeout(Duration::from_secs(5), pool.drain())
+        .await
+        .unwrap();
+    let result = pool.cleanup_succeeded();
+    let _: usize = redis::cmd("ACL")
+        .arg("DELUSER")
+        .arg(&username)
+        .query_async(&mut control)
+        .await
+        .unwrap();
+    let keys: Vec<String> = control.keys(format!("{id}:vod:entries:*")).await.unwrap();
+    if !keys.is_empty() {
+        let _: usize = control.del(keys).await.unwrap();
+    }
+    assert!(
+        !result,
+        "registry eviction must not turn an actual local actor cleanup failure into success"
+    );
+}

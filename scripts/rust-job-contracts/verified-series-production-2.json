@@ -1,0 +1,202 @@
+{
+  "passed": true,
+  "scope": "Actual Original no-recording worker79 plus Sourceproducer\u2192nativezero-ruleSeries\u2192OriginalAsyncResult; configured dictionary rules/foreign families remain byte-identical in FIFO. No native preflight earlyACK parity, configured rule execution, main/default intake or scheduler acceptance.",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "checks": 155,
+  "source_worker_checks": 79,
+  "native_cases": [
+    {
+      "name": "absent",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "empty-map",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "empty-list",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "nonlist",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "nonmaps",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "busy",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": [
+          {
+            "status": "skipped",
+            "reason": "concurrent evaluation in progress"
+          }
+        ]
+      },
+      "parented": false
+    },
+    {
+      "name": "parented",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": true
+    },
+    {
+      "name": "prepared",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": true,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "held-sql",
+      "expected": "completed",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": true,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "return": {
+        "scheduled": 0,
+        "details": []
+      },
+      "parented": false
+    },
+    {
+      "name": "configured-unsupported",
+      "expected": "unsupported-rules",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "result_fabricated": false
+    },
+    {
+      "name": "foreign",
+      "expected": "foreign",
+      "caller_released": true,
+      "physical_operations": 0,
+      "family_drained": true,
+      "transport_drained": true,
+      "held_actual_SQL": false,
+      "prepared_no_intake_then_started": false,
+      "aborted_waiter_return_observed": false,
+      "result_fabricated": false
+    }
+  ],
+  "archive_sha256": "2d8a7d40c0581cd6d5d5a4afa3aeca428f13d096cbd932ad66e7c0ceba770ffc",
+  "integration_sha256": "61fecc1008b749357c97c64f3b498a50ce6e8ed19afe4b792106122714b68597",
+  "source_private_sha256": "17f12e988b658ba3cff8b09fdb02e2fc90a94283cd2e9cbf52536fa4c16aa96b",
+  "earlyACK_parity_claimed": false,
+  "native_app_or_default_intake": false,
+  "production_explicit_series_authority": true,
+  "prepared_start_drains_own_transport": true,
+  "configured_recording_rules_executed": false,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "queue_and_results_after_cleanup": [
+    0,
+    0
+  ],
+  "strict_log": "artifacts/rust/series-worker-production-input-2/clippy.log",
+  "prior_successful_scope": "artifacts/rust/m6-source-native-series-worker-1 (139 checks; same runtime, before heldSQL test-only extension)",
+  "failed_attempt_retained": {
+    "path": "artifacts/rust/m6-source-native-series-production-1",
+    "boundary": "Copied driver used wrong Panic variant; compile failed before Compose/runtime. Corrected input2 then strictClippy/actual155 passed."
+  }
+}

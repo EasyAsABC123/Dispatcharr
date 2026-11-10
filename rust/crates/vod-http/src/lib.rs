@@ -3,6 +3,9 @@
 mod engine;
 mod events;
 mod resolver;
+// Private opt-in surface; component-only methods remain outside default routes.
+#[allow(dead_code)]
+mod recovery_generation;
 mod sessions;
 mod statistics;
 

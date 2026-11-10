@@ -1,0 +1,210 @@
+{
+  "passed": true,
+  "scope": "Bounded positive-ID refresh production constructor/poller and real HTTP local import/result/drain component. Explicit app attachment defaults OFF; no packaged/second-import/Index/Series/ETA/fullM6 acceptance.",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "production": {
+    "checks": 80,
+    "physical_tests": 5,
+    "archive_sha256": "e314ad9f31f581d155a693c9879443e716da5ce50265668b9d0518666a24a3a9",
+    "integration_sha256": "f989ff37934da427e184f732b383055caee2b7a8a0c1821bd68f56b343795a0c"
+  },
+  "http": {
+    "checks": 127,
+    "requests": 20,
+    "archive_sha256": "59a00ca11daf3d1709c6572b3da1fb5fe49f8d28aa8806e69c11803fc2e65ff7",
+    "integration_sha256": "cba3304e5190796e9cde6b9332b8f1db88315e7a5ad8b520d5bfa5050fd08356",
+    "source_private_sha256": "46b397db8dc9e549d8aeebedbc90687b45dc6f20564ba63dae6043807bbf50ec",
+    "rows": [
+      {
+        "name": "role-anonymous",
+        "status": 401,
+        "mime": "application/json",
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "role": "anonymous"
+      },
+      {
+        "name": "role-invalid",
+        "status": 401,
+        "mime": "application/json",
+        "body_bytes": 172,
+        "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+        "role": "invalid"
+      },
+      {
+        "name": "role-basic",
+        "status": 403,
+        "mime": "application/json",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "role": "basic"
+      },
+      {
+        "name": "role-standard",
+        "status": 403,
+        "mime": "application/json",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "role": "standard"
+      },
+      {
+        "name": "role-inactive",
+        "status": 401,
+        "mime": "application/json",
+        "body_bytes": 52,
+        "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "role": "inactive"
+      },
+      {
+        "name": "dummy",
+        "status": 400,
+        "mime": "application/json",
+        "body_bytes": 74,
+        "body_sha256": "2cb8cad6d6b17f52cafed9661edec47547e9f8446a6e51dc2f9e7aeb7e2b65c7",
+        "role": "admin"
+      },
+      {
+        "name": "malformed",
+        "status": 400,
+        "mime": "application/json",
+        "body_bytes": 107,
+        "body_sha256": "c80851c8ba52b294853884d11a7435e2d5034b17fcabbe8782f5b08b973716cf",
+        "role": "admin"
+      },
+      {
+        "name": "null-document",
+        "status": 500,
+        "mime": "text/html; charset=utf-8",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "role": "admin"
+      },
+      {
+        "name": "list-document",
+        "status": 500,
+        "mime": "text/html; charset=utf-8",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "role": "admin"
+      },
+      {
+        "name": "admin-get",
+        "status": 405,
+        "mime": "application/json",
+        "body_bytes": 40,
+        "body_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+        "role": "admin"
+      },
+      {
+        "name": "standard-get",
+        "status": 405,
+        "mime": "application/json",
+        "body_bytes": 40,
+        "body_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+        "role": "standard"
+      },
+      {
+        "name": "standard-head",
+        "status": 405,
+        "mime": "application/json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "role": "standard"
+      },
+      {
+        "name": "admin-head",
+        "status": 405,
+        "mime": "application/json",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "role": "admin"
+      },
+      {
+        "name": "admin-options",
+        "status": 200,
+        "mime": "application/json",
+        "body_bytes": 201,
+        "body_sha256": "daea9431a1f4f25c715d08924e54e178951431269a30d8d5361366ee27538b60",
+        "role": "admin"
+      },
+      {
+        "name": "standard-options",
+        "status": 403,
+        "mime": "application/json",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "role": "standard"
+      },
+      {
+        "name": "admin-put",
+        "status": 405,
+        "mime": "application/json",
+        "body_bytes": 40,
+        "body_sha256": "a817fdc1bd7d8752c161e454c16ef0e7670cc29193d55f88ec5c80bb58bc7bd8",
+        "role": "admin"
+      },
+      {
+        "name": "inactive-source",
+        "status": 202,
+        "mime": "application/json",
+        "body_bytes": 56,
+        "body_sha256": "037e009ff920c299e8fc75031e0897f1a1375b18c92e3eeb3deb81a8597a1830",
+        "role": "admin"
+      },
+      {
+        "name": "missing-source",
+        "status": 202,
+        "mime": "application/json",
+        "body_bytes": 56,
+        "body_sha256": "037e009ff920c299e8fc75031e0897f1a1375b18c92e3eeb3deb81a8597a1830",
+        "role": "admin"
+      },
+      {
+        "name": "imported",
+        "status": 202,
+        "mime": "application/json",
+        "body_bytes": 56,
+        "body_sha256": "037e009ff920c299e8fc75031e0897f1a1375b18c92e3eeb3deb81a8597a1830",
+        "role": "admin"
+      },
+      {
+        "name": "broker-lpush-denied",
+        "status": 500,
+        "mime": "text/html; charset=utf-8",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "role": "admin"
+      }
+    ]
+  },
+  "results": {
+    "normal_records": 3,
+    "actual_original_AsyncResult": true,
+    "local_programme_committed": true,
+    "source_status_success": true,
+    "backend_expiry_seconds": 3600,
+    "held_actual_SQL_client_abort": true,
+    "incomplete_shutdown_before_reply": true,
+    "aborted_response_observed": false,
+    "Index_Series_and_aborted_refresh_preserved_in_FIFO": true,
+    "result_for_unconsumed_request_fabricated": false
+  },
+  "strict_clippy": "artifacts/rust/epg-refresh-app-attached-input-1/clippy.log",
+  "default_units": {
+    "passed": 34,
+    "external_ignored": 20
+  },
+  "default_database_unchanged": true,
+  "cleanup": "both projects removed",
+  "queue_and_results_after_cleanup": [
+    0,
+    0
+  ],
+  "limitations": [
+    "Raw null/nonpositive/bool/string/float ID shapes501 pending Source-worker interpretation.",
+    "Only positive-ID JSON browser path; no form/multipart/browsableHTML/full-header parity.",
+    "Refresh-only polling cannot consume Index/Series/ETA heads; default app enablement remainsOFF.",
+    "Typed sink callbacks observed; packaged real bus/React/guide/second-import workflow not yet accepted.",
+    "Four staged HTTP runs are successive scope extensions; earlier successful artifacts remain unchanged."
+  ]
+}

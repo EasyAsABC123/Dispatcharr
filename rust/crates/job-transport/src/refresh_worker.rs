@@ -1,6 +1,6 @@
-//! Fixture-only immediate refresh consumer and observed normal return writer.
+//! Bounded immediate refresh consumer and observed normal return writer.
 //! Original Dispatcharr authors retain application/algorithm credit and AGPL.
-//! No ETA consumer, application startup, scheduler or public202 authority.
+//! No ETA consumer or scheduler authority; unrelated/parented heads are retained.
 use crate::{
     refresh_dispatch::{
         parse_native_child, ChildPublication, PublishFuture, RefreshDispatcher, RefreshPublisher,
@@ -60,13 +60,28 @@ pub struct ChildPublisher {
     jobs: Jobs,
     root: Uuid,
     parent: Uuid,
-    owner: Arc<Owner>,
+    owner: Arc<dyn Send + Sync>,
     children: ChildRecords,
     child_slots: Arc<Semaphore>,
     failed: Arc<AtomicBool>,
 }
 impl ChildPublisher {
-    fn completed_children(&self) -> Result<Vec<Uuid>, Error> {
+    pub(crate) fn context(
+        jobs: Jobs,
+        message: RefreshMessage,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Self {
+        Self {
+            jobs,
+            root: message.root,
+            parent: message.task_id,
+            owner,
+            children: Arc::new(Mutex::new(Vec::new())),
+            child_slots: Arc::new(Semaphore::new(64)),
+            failed: Arc::new(AtomicBool::new(false)),
+        }
+    }
+    pub(crate) fn completed_children(&self) -> Result<Vec<Uuid>, Error> {
         if self.failed.load(Ordering::Acquire) {
             return Err(Error::Execution);
         }
@@ -118,7 +133,7 @@ impl RefreshPublisher for ChildPublisher {
                         let message = crate::refresh_protocol::parse(&bytes)
                             .map_err(|_| ImportError::Worker)?;
                         self.jobs
-                            .publish_refresh_fixture(&message, retained)
+                            .publish_refresh(&message, retained)
                             .await
                             .map_err(|_| ImportError::Worker)?;
                     }
@@ -175,6 +190,21 @@ impl RefreshWorker {
             }),
         })
     }
+    /// Explicit immediate-refresh consumer. The typed Jobs constructor keeps
+    /// backup/restore authority separate; no polling begins until run_once.
+    pub fn new(jobs: Jobs, executor: Arc<dyn RefreshExecutor>) -> Result<Self, Error> {
+        if !jobs.allows_refresh() {
+            return Err(Error::Configuration);
+        }
+        Ok(Self {
+            inner: Arc::new(Inner {
+                jobs,
+                executor,
+                slots: Arc::new(Semaphore::new(1)),
+                closed: AtomicBool::new(false),
+            }),
+        })
+    }
     pub fn available_slots(&self) -> usize {
         self.inner.slots.available_permits()
     }
@@ -205,15 +235,8 @@ impl RefreshWorker {
             else {
                 return Ok(Run::Empty);
             };
-            let publisher = ChildPublisher {
-                jobs: inner.jobs.clone(),
-                root: message.root,
-                parent: message.task_id,
-                owner: owner.clone(),
-                children: Arc::new(Mutex::new(Vec::new())),
-                child_slots: Arc::new(Semaphore::new(64)),
-                failed: Arc::new(AtomicBool::new(false)),
-            };
+            let publisher =
+                ChildPublisher::context(inner.jobs.clone(), message.clone(), owner.clone());
             let result = inner
                 .executor
                 .execute(message.clone(), publisher.clone(), owner.clone())

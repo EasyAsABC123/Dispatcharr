@@ -242,8 +242,9 @@ async fn run() -> Result<(), String> {
         chunk_ttl: config.retention,
         ..Default::default()
     };
+    let lease_config = LeaseConfig::default();
     let (coordinator, clients, outputs, inputs) = if let Ok(url) = env::var("REDIS_URL") {
-        let coordinator = Coordinator::connect(&url, LeaseConfig::default())
+        let coordinator = Coordinator::connect(&url, lease_config.clone())
             .await
             .map_err(|_| "Redis coordination unavailable (credentials omitted)")?;
         let client_config = ClientConfig {
@@ -317,6 +318,18 @@ async fn run() -> Result<(), String> {
             .map_err(|_| "Invalid fMP4 configuration".to_string())
         })
         .transpose()?;
+    // Recovery remains an explicit verification lane until its packaged
+    // SQL/authentication/restart and remaining entry semantics are accepted.
+    let vod_recovery_enabled = match env::var("RUST_VOD_REDIS_RECOVERY_ENABLED").as_deref() {
+        Ok("0") | Err(_) => false,
+        Ok("1") => true,
+        _ => return Err("RUST_VOD_REDIS_RECOVERY_ENABLED must be 0 or 1".into()),
+    };
+    if vod_recovery_enabled && (coordinator.is_none() || realtime_bus.is_none()) {
+        return Err(
+            "Enabled VOD recovery requires Redis coordination and realtime publisher".into(),
+        );
+    }
     let vod = if let Some(coordinator) = coordinator.clone() {
         let redis_url = env::var("REDIS_URL").map_err(|_| "Redis VOD configuration missing")?;
         let engine = dispatcharr_vod_http::VodEngine::new(
@@ -343,6 +356,13 @@ async fn run() -> Result<(), String> {
                 )
                 .await
                 .map_err(|_| "VOD event initialization failed (credentials omitted)")?
+        } else {
+            engine
+        };
+        let engine = if vod_recovery_enabled {
+            engine
+                .with_redis_recovery(&lease_config.namespace)
+                .map_err(|_| "VOD recovery configuration failed")?
         } else {
             engine
         };
@@ -540,7 +560,7 @@ async fn run() -> Result<(), String> {
         secret,
     )
     .map_err(|_| "Invalid backup file API configuration")?;
-    let epg_programs = dispatcharr_store::EpgProgramReads::new(
+    let mut epg_programs = dispatcharr_store::EpgProgramReads::new(
         auth.clone(),
         dispatcharr_store::EpgProgramReadLimits {
             concurrent_responses: positive("RUST_MAX_EPG_READ_RESPONSES", 4)?,
@@ -550,6 +570,99 @@ async fn run() -> Result<(), String> {
         },
     )
     .map_err(|_| "Invalid EPG programme read configuration")?;
+    // Incomplete queue integration stays explicitly disabled by default until
+    // Index/Series/ETA children and second-import workflow are proven. Broker
+    // and backend overrides otherwise follow the Source configuration.
+    let refresh_enabled = match env::var("RUST_EPG_REFRESH_ENABLED").as_deref() {
+        Ok("0") | Err(_) => false,
+        Ok("1") => true,
+        _ => return Err("RUST_EPG_REFRESH_ENABLED must be 0 or 1".into()),
+    };
+    let mut epg_index = None;
+    let mut epg_series = None;
+    let epg_refresh = if refresh_enabled {
+        let cache = env::var("REDIS_URL").map_err(|_| "Enabled EPG jobs require REDIS_URL")?;
+        let bus = realtime_bus
+            .as_ref()
+            .ok_or("Enabled EPG jobs require the realtime publisher")?;
+        let broker = env::var("CELERY_BROKER_URL").unwrap_or_else(|_| cache.clone());
+        let backend = env::var("CELERY_RESULT_BACKEND").unwrap_or_else(|_| broker.clone());
+        let source_cwd = std::path::PathBuf::from(
+            env::var("RUST_EPG_SOURCE_CWD").unwrap_or_else(|_| "/app".into()),
+        );
+        let media_root = std::path::PathBuf::from(
+            env::var("RUST_EPG_MEDIA_ROOT").unwrap_or_else(|_| "/app/media".into()),
+        );
+        if !source_cwd.is_dir() || !media_root.is_dir() {
+            return Err("Enabled EPG jobs require the original source/media path mounts".into());
+        }
+        let cache_root = media_root.join("cached_epg");
+        let cache_dir = env::var("RUST_EPG_CACHE_DIR")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|_| cache_root.clone());
+        let series = dispatcharr_job_transport::series_application::SeriesApplication::prepare(
+            store.clone(),
+            dispatcharr_job_transport::series_application::Options {
+                broker: broker.clone(),
+                backend: backend.clone(),
+                cache: cache.clone(),
+                poll_interval: Duration::from_millis(100),
+            },
+        )
+        .await
+        .map_err(|_| "Series worker initialization failed (credentials omitted)")?;
+        // Prepare without intake, so a later constructor failure cannot consume
+        // an existing index task before all application dependencies are ready.
+        let index = dispatcharr_job_transport::index_application::IndexApplication::connect(
+            store.clone(),
+            dispatcharr_job_transport::index_application::Options {
+                broker: broker.clone(),
+                backend: backend.clone(),
+                cache: cache.clone(),
+                source_cwd,
+                media_root,
+                cache_dir: cache_dir.clone(),
+            },
+        )
+        .await
+        .map_err(|_| "EPG index initialization failed (credentials omitted)")?;
+        epg_programs = epg_programs
+            .with_current_file_lookup(index.lookup(), cache_root)
+            .map_err(|_| "Invalid EPG current-file path configuration")?;
+        let refresh =
+            match dispatcharr_job_transport::refresh_application::RefreshApplication::prepare(
+                store.clone(),
+                auth.clone(),
+                Arc::new(bus.clone()),
+                dispatcharr_job_transport::refresh_application::RefreshApplicationOptions {
+                    broker,
+                    backend,
+                    cache,
+                    cache_dir,
+                },
+            )
+            .await
+            {
+                Ok(service) => service,
+                Err(_) => {
+                    let _ = series.shutdown(Duration::from_secs(4)).await;
+                    let _ = index.shutdown(Duration::from_secs(4)).await;
+                    return Err("EPG refresh initialization failed (credentials omitted)".into());
+                }
+            };
+        if index.start(Arc::new(())).is_err() || series.start().is_err() || refresh.start().is_err()
+        {
+            let _ = refresh.shutdown(Duration::from_secs(4)).await;
+            let _ = series.shutdown(Duration::from_secs(4)).await;
+            let _ = index.shutdown(Duration::from_secs(4)).await;
+            return Err("EPG index intake initialization failed".into());
+        }
+        epg_index = Some(index);
+        epg_series = Some(series);
+        Some(refresh)
+    } else {
+        None
+    };
     let vod_reads =
         dispatcharr_store::VodReads::new(auth.clone(), dispatcharr_store::VodReadLimits::default())
             .map_err(|_| "Invalid ordinary VOD read configuration (credentials omitted)")?;
@@ -583,6 +696,7 @@ async fn run() -> Result<(), String> {
         .merge(epg_programs.clone().current_router())
         .merge(vod_reads.router())
         .merge(vod_reads.category_router())
+        .merge(vod_reads.unified_router())
         .merge(grid.clone().router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))
@@ -592,6 +706,9 @@ async fn run() -> Result<(), String> {
             hls.clone(),
             fmp4.clone(),
         ));
+    if let Some(refresh) = &epg_refresh {
+        app = app.merge(refresh.clone().router());
+    }
     if let Some(gateway) = &realtime {
         app = app.merge(gateway.router());
     }
@@ -679,6 +796,9 @@ async fn run() -> Result<(), String> {
         output_profiles,
         backup_files,
         epg_programs,
+        epg_refresh,
+        epg_index,
+        epg_series,
         vod_reads,
         grid,
         hdhr,
@@ -751,6 +871,9 @@ struct ShutdownServices {
     output_profiles: dispatcharr_store::OutputProfileWrites,
     backup_files: dispatcharr_store::BackupFiles,
     epg_programs: dispatcharr_store::EpgProgramReads,
+    epg_refresh: Option<dispatcharr_job_transport::refresh_application::RefreshApplication>,
+    epg_index: Option<dispatcharr_job_transport::index_application::IndexApplication>,
+    epg_series: Option<dispatcharr_job_transport::series_application::SeriesApplication>,
     vod_reads: dispatcharr_store::VodReads,
     grid: dispatcharr_output_http::GridGateway,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
@@ -772,12 +895,37 @@ async fn shutdown_components(services: ShutdownServices) {
         output_profiles,
         backup_files,
         epg_programs,
+        epg_refresh,
+        epg_index,
+        epg_series,
         vod_reads,
         grid,
         hdhr,
         live_statistics,
     } = services;
     engine.shutdown();
+    // Refresh reporter work retains the realtime publisher until actual drain.
+    // A bounded incomplete drain is reported honestly before other shutdowns.
+    let (refresh_drained, index_intake_drained, series_drained) = tokio::join!(
+        async {
+            match epg_refresh {
+                Some(refresh) => refresh.shutdown(Duration::from_secs(4)).await,
+                None => true,
+            }
+        },
+        async {
+            match &epg_index {
+                Some(index) => index.drain_intake(Duration::from_secs(4)).await,
+                None => true,
+            }
+        },
+        async {
+            match epg_series {
+                Some(series) => series.shutdown(Duration::from_secs(4)).await.is_ok(),
+                None => true,
+            }
+        },
+    );
     let (
         live,
         _,
@@ -863,7 +1011,18 @@ async fn shutdown_components(services: ShutdownServices) {
         hdhr.shutdown(),
         vod_reads.shutdown(Duration::from_secs(8)),
     );
-    if !live
+    // Accepted HTTP reads have now drained or explicitly timed out. Close the
+    // file/publication services last; late missing-index publications remain
+    // durable for the next startup rather than losing their transport owner.
+    let index_drained = match epg_index {
+        Some(index) => index.shutdown(Duration::from_secs(4)).await,
+        None => true,
+    };
+    if !refresh_drained
+        || !index_intake_drained
+        || !series_drained
+        || !index_drained
+        || !live
         || !vod
         || !catchup
         || !management
@@ -878,7 +1037,7 @@ async fn shutdown_components(services: ShutdownServices) {
         || !hdhr
         || !vod_read_drained
     {
-        eprintln!("Media drain deadline reached; pending reservations require recovery");
+        eprintln!("Service drain deadline reached; pending reservations require recovery");
     }
     if let Some(clients) = clients {
         clients.shutdown().await;

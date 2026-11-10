@@ -92,10 +92,9 @@ async fn proxy() -> Proxy {
     }
 }
 async fn jobs(proxy: &Proxy, timeout: Duration) -> Jobs {
-    Jobs::connect_fixture(
+    Jobs::connect_refresh(
         &format!("{}/8", proxy.base),
         &format!("{}/9", proxy.base),
-        &std::env::var("POSTGRES_DB").expect("Owned copied DB required"),
         Config {
             operations: 1,
             command_timeout: timeout,
@@ -208,17 +207,17 @@ async fn queue_len() -> i64 {
 async fn result_reply_timeout_retains_worker_caller_and_both_admissions() {
     let proxy = proxy().await;
     let jobs = jobs(&proxy, Duration::from_millis(200)).await;
-    let warm = RefreshWorker::new_fixture(jobs.clone(), Held::new(true)).unwrap();
+    let warm = RefreshWorker::new(jobs.clone(), Held::new(true)).unwrap();
     let warmid = Uuid::new_v4();
-    jobs.publish_refresh_fixture(&packet(warmid), Arc::new(()))
+    jobs.publish_refresh(&packet(warmid), Arc::new(()))
         .await
         .unwrap();
     warm.run_once(Arc::new(())).await.unwrap();
     warm.shutdown(Duration::from_secs(1)).await.unwrap();
     let held = Held::new(false);
-    let worker = RefreshWorker::new_fixture(jobs.clone(), held.clone()).unwrap();
+    let worker = RefreshWorker::new(jobs.clone(), held.clone()).unwrap();
     let id = Uuid::new_v4();
-    jobs.publish_refresh_fixture(&packet(id), Arc::new(()))
+    jobs.publish_refresh(&packet(id), Arc::new(()))
         .await
         .unwrap();
     let caller = Arc::new(Caller);
@@ -264,9 +263,9 @@ async fn aborted_waiter_keeps_earlyacked_execution_owned_until_result_and_drain(
     let proxy = proxy().await;
     let jobs = jobs(&proxy, Duration::from_secs(2)).await;
     let held = Held::new(false);
-    let worker = RefreshWorker::new_fixture(jobs.clone(), held.clone()).unwrap();
+    let worker = RefreshWorker::new(jobs.clone(), held.clone()).unwrap();
     let id = Uuid::new_v4();
-    jobs.publish_refresh_fixture(&packet(id), Arc::new(()))
+    jobs.publish_refresh(&packet(id), Arc::new(()))
         .await
         .unwrap();
     let caller = Arc::new(Caller);
@@ -298,10 +297,10 @@ async fn idle_refresh_worker_shutdown_preserves_active_shared_transport() {
     let proxy = proxy().await;
     let jobs = jobs(&proxy, Duration::from_secs(2)).await;
     let held = Held::new(false);
-    let active = RefreshWorker::new_fixture(jobs.clone(), held.clone()).unwrap();
-    let idle = RefreshWorker::new_fixture(jobs.clone(), Held::new(true)).unwrap();
+    let active = RefreshWorker::new(jobs.clone(), held.clone()).unwrap();
+    let idle = RefreshWorker::new(jobs.clone(), Held::new(true)).unwrap();
     let id = Uuid::new_v4();
-    jobs.publish_refresh_fixture(&packet(id), Arc::new(()))
+    jobs.publish_refresh(&packet(id), Arc::new(()))
         .await
         .unwrap();
     let copy = active.clone();
@@ -313,4 +312,94 @@ async fn idle_refresh_worker_shutdown_preserves_active_shared_transport() {
     assert!(direct(id).await.is_some());
     active.shutdown(Duration::from_secs(1)).await.unwrap();
     jobs.shutdown(Duration::from_secs(1)).await.unwrap();
+}
+
+#[tokio::test]
+#[ignore = "Owned copiedDB production refresh authority and unsupported FIFO retention"]
+async fn production_refresh_driver_preserves_foreign_head_and_denies_backups() {
+    use crate::refresh_driver::{RefreshDriver, State};
+    let proxy = proxy().await;
+    let jobs = jobs(&proxy, Duration::from_secs(2)).await;
+    assert!(jobs.copied_database().is_none());
+    assert_eq!(
+        jobs.publish(
+            &crate::protocol::Task::CreateBackup,
+            Uuid::new_v4(),
+            Arc::new(())
+        )
+        .await,
+        Err(TransportError::UnsupportedTask)
+    );
+    let fixture = Jobs::connect_fixture(
+        &format!("{}/8", proxy.base),
+        &format!("{}/9", proxy.base),
+        &std::env::var("POSTGRES_DB").unwrap(),
+        Config {
+            operations: 1,
+            command_timeout: Duration::from_secs(2),
+            max_queued_jobs: 100,
+        },
+    )
+    .await
+    .unwrap();
+    let id = Uuid::new_v4();
+    fixture
+        .publish(&crate::protocol::Task::CreateBackup, id, Arc::new(()))
+        .await
+        .unwrap();
+    let held = Held::new(true);
+    let worker = RefreshWorker::new(jobs.clone(), held.clone()).unwrap();
+    let driver = RefreshDriver::start(worker, Duration::from_millis(25)).unwrap();
+    tokio::time::timeout(Duration::from_secs(3), async {
+        while driver.state() != State::UnsupportedHead {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert!(!held.entered.load(std::sync::atomic::Ordering::Acquire));
+    assert_eq!(queue_len().await, 1);
+    assert!(direct(id).await.is_none());
+    driver.shutdown(Duration::from_secs(2)).await.unwrap();
+    assert_eq!(driver.state(), State::Stopped);
+    assert_eq!(queue_len().await, 1);
+    // Only the explicit fixture Create consumer removes its owned sentinel.
+    let claimed = fixture.claim_create(Arc::new(())).await.unwrap();
+    assert_eq!(claimed, Some(id));
+    jobs.shutdown(Duration::from_secs(2)).await.unwrap();
+    fixture.shutdown(Duration::from_secs(2)).await.unwrap();
+}
+
+#[tokio::test]
+#[ignore = "Owned copiedDB production poller execution retention and bounded shutdown"]
+async fn production_refresh_driver_shutdown_retains_active_execution() {
+    use crate::refresh_driver::RefreshDriver;
+    let proxy = proxy().await;
+    let jobs = jobs(&proxy, Duration::from_secs(2)).await;
+    let id = Uuid::new_v4();
+    jobs.publish_refresh(&packet(id), Arc::new(()))
+        .await
+        .unwrap();
+    let held = Held::new(false);
+    let worker = RefreshWorker::new(jobs.clone(), held.clone()).unwrap();
+    let driver = RefreshDriver::start(worker.clone(), Duration::from_millis(25)).unwrap();
+    entered(&held).await;
+    assert_eq!(queue_len().await, 0);
+    assert_eq!(worker.available_slots(), 0);
+    assert!(direct(id).await.is_none());
+    assert_eq!(
+        driver.shutdown(Duration::from_millis(25)).await,
+        Err(Error::DrainTimeout)
+    );
+    assert_eq!(worker.available_slots(), 0);
+    held.open.send_replace(true);
+    driver.shutdown(Duration::from_secs(3)).await.unwrap();
+    let value = jobs
+        .read_refresh(id, 1, Arc::new(()))
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(value.task_id, id);
+    assert_eq!(worker.available_slots(), 1);
+    jobs.shutdown(Duration::from_secs(2)).await.unwrap();
 }

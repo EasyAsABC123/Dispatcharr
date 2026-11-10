@@ -40,7 +40,7 @@ COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Djan
 COPY rust/crates/store/third-party/PYTHON-COPYRIGHT /usr/share/doc/dispatcharr/Python-COPYRIGHT
 COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
 COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
-RUN mkdir -p /data/logos && chown 65532:65532 /data /data/logos
+RUN mkdir -p /app /data/logos && ln -s /data /app/media && chown 65532:65532 /data /data/logos
 USER 65532:65532
 ENV RUST_BIND=0.0.0.0:9192 RUST_FRONTEND_DIR=/opt/dispatcharr-frontend
 EXPOSE 9192

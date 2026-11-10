@@ -1,0 +1,223 @@
+{
+  "passed": true,
+  "scope": "Original SeriesRules no-recording workers and bounded native DVR-cache/global-lock prerequisites; no native task consumer/configured DVR rule execution or wholeM6 claim",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source": {
+    "checks": 79,
+    "actual_workers": 7,
+    "private_sha256": "6ccd7d94aff8911bf595010527a77376e7e71afb9c6f4d5c1edc2c1682ee8a77",
+    "integration_sha256": "f6aa80e07ebca3951ff09d651350d72192cb7d5b088b68213ce344eca77f9689",
+    "attributes": {
+      "acks_late": false,
+      "ignore_result": false,
+      "track_started": false,
+      "reject_on_worker_lost": null,
+      "max_retries": 3
+    },
+    "fixture_control": "Only absent case: bounded observer task_prerun timing gate precedes real blocked settings SQL; no application function replaced",
+    "cases": [
+      {
+        "name": "absent",
+        "group": null,
+        "cached_group": {
+          "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+          "movie_template": "Movies/{title} ({year}).mkv",
+          "tv_fallback_dir": "TV_Shows",
+          "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+          "movie_fallback_template": "Movies/{start}.mkv",
+          "comskip_enabled": false,
+          "comskip_custom_path": "",
+          "comskip_mode": "cut",
+          "comskip_hw_accel": "none",
+          "pre_offset_minutes": 0,
+          "post_offset_minutes": 0,
+          "series_rules": [],
+          "output_profile_id": null
+        },
+        "return": {
+          "scheduled": 0,
+          "details": []
+        },
+        "parented": false,
+        "argsrepr": "()",
+        "timelimit": [
+          null,
+          null
+        ],
+        "early": {
+          "result_absent": true,
+          "unacked": 0,
+          "queue": 0,
+          "lock": "locked"
+        }
+      },
+      {
+        "name": "empty-map",
+        "group": {},
+        "cached_group": {
+          "tv_template": "TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+          "movie_template": "Movies/{title} ({year}).mkv",
+          "tv_fallback_dir": "TV_Shows",
+          "tv_fallback_template": "TV_Shows/{show}/{start}.mkv",
+          "movie_fallback_template": "Movies/{start}.mkv",
+          "comskip_enabled": false,
+          "comskip_custom_path": "",
+          "comskip_mode": "cut",
+          "comskip_hw_accel": "none",
+          "pre_offset_minutes": 0,
+          "post_offset_minutes": 0,
+          "series_rules": [],
+          "output_profile_id": null
+        },
+        "return": {
+          "scheduled": 0,
+          "details": []
+        },
+        "parented": false,
+        "argsrepr": "()",
+        "timelimit": [
+          null,
+          null
+        ],
+        "early": null
+      },
+      {
+        "name": "empty-list",
+        "group": {
+          "series_rules": []
+        },
+        "cached_group": {
+          "series_rules": []
+        },
+        "return": {
+          "scheduled": 0,
+          "details": []
+        },
+        "parented": false,
+        "argsrepr": "()",
+        "timelimit": [
+          null,
+          null
+        ],
+        "early": null
+      },
+      {
+        "name": "nonlist",
+        "group": {
+          "series_rules": "not-list"
+        },
+        "cached_group": {
+          "series_rules": "not-list"
+        },
+        "return": {
+          "scheduled": 0,
+          "details": []
+        },
+        "parented": false,
+        "argsrepr": "()",
+        "timelimit": [
+          null,
+          null
+        ],
+        "early": null
+      },
+      {
+        "name": "nonmap-elements",
+        "group": {
+          "series_rules": [
+            0,
+            null,
+            "owned",
+            []
+          ]
+        },
+        "cached_group": {
+          "series_rules": [
+            0,
+            null,
+            "owned",
+            []
+          ]
+        },
+        "return": {
+          "scheduled": 0,
+          "details": []
+        },
+        "parented": false,
+        "argsrepr": "()",
+        "timelimit": [
+          null,
+          null
+        ],
+        "early": null
+      },
+      {
+        "name": "busy",
+        "group": {
+          "series_rules": [
+            {
+              "title": "Never execute this rule"
+            }
+          ]
+        },
+        "cached_group": null,
+        "return": {
+          "scheduled": 0,
+          "details": [
+            {
+              "status": "skipped",
+              "reason": "concurrent evaluation in progress"
+            }
+          ]
+        },
+        "parented": false,
+        "argsrepr": "()",
+        "timelimit": [
+          null,
+          null
+        ],
+        "early": null
+      },
+      {
+        "name": "parented-empty",
+        "group": {
+          "series_rules": []
+        },
+        "cached_group": {
+          "series_rules": []
+        },
+        "return": {
+          "scheduled": 0,
+          "details": []
+        },
+        "parented": true,
+        "argsrepr": "()",
+        "timelimit": [
+          null,
+          null
+        ],
+        "early": null
+      }
+    ]
+  },
+  "native": {
+    "checks": 110,
+    "source_checks_repeated": 79,
+    "policy_interop_cases": 10,
+    "global_lock_tests": 1,
+    "archive_sha256": "b17c89b92105b0bfbdb041ee04f2303f34e65091059e84334c476687671f5575",
+    "integration_sha256": "cd006b90d6cc255688dd451988289c690583f06be2177448f50fee02658dec1a",
+    "global_literal_key": "task_lock_evaluate_series_rules_all",
+    "no_renewal_observed": true,
+    "foreign_owner_preserved": true,
+    "Django_loads_native_cache": true
+  },
+  "default_database_unchanged": true,
+  "cleanup": "both projects removed",
+  "limitations": [
+    "No nonempty dictionary rule scheduling/recording/artwork tasks executed.",
+    "Parented options are a labeled fixture control; actual refresh-child publication was characterized separately.",
+    "Native owner-fenced release preserves foreign tokens, unlike Original unconditional DEL.",
+    "No native Series task intake/result/ACK/restart acceptance from these prerequisite tests."
+  ]
+}

@@ -15,18 +15,21 @@ use tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
 enum Group {
     Epg,
     System,
+    Dvr,
 }
 impl Group {
     fn name(self) -> &'static str {
         match self {
             Self::Epg => "epg_settings",
             Self::System => "system_settings",
+            Self::Dvr => "dvr_settings",
         }
     }
     fn defaults(self) -> Value {
         match self {
             Self::Epg => defaults(),
             Self::System => source_system_settings_defaults(),
+            Self::Dvr => dvr_defaults(),
         }
     }
     fn key(self) -> String {
@@ -131,6 +134,28 @@ impl CachedSwapPolicy {
             }),
         };
         self.group(Group::System, &context).await
+    }
+    /// Exact Source DVR settings for the narrowly supported SeriesRules branch.
+    /// Cached dictionaries are returned unchanged; only missing/empty/nonmap DB
+    /// values use all thirteen defaults. The caller remains physically retained.
+    pub async fn retained_dvr_settings(
+        &self,
+        context: SwapPolicyContext,
+    ) -> Result<Value, ImportError> {
+        context.ensure_active()?;
+        let permit = self
+            .admission
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| ImportError::Capacity("policy physical work"))?;
+        let context = SwapPolicyContext {
+            cancelled: context.cancelled,
+            retained: Arc::new(PolicyWork {
+                _caller: context.retained,
+                _permit: permit,
+            }),
+        };
+        self.group(Group::Dvr, &context).await
     }
     async fn transport(
         &self,
@@ -303,6 +328,18 @@ impl SwapPolicyProvider for CachedSwapPolicy {
             Ok(SwapPolicy { now, history })
         })
     }
+}
+fn dvr_defaults() -> Value {
+    json!({
+        "tv_template":"TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv",
+        "movie_template":"Movies/{title} ({year}).mkv",
+        "tv_fallback_dir":"TV_Shows",
+        "tv_fallback_template":"TV_Shows/{show}/{start}.mkv",
+        "movie_fallback_template":"Movies/{start}.mkv",
+        "comskip_enabled":false,"comskip_custom_path":"","comskip_mode":"cut",
+        "comskip_hw_accel":"none","pre_offset_minutes":0,"post_offset_minutes":0,
+        "series_rules":[],"output_profile_id":null
+    })
 }
 fn defaults() -> Value {
     json!({"epg_match_mode":"default","epg_match_ignore_prefixes":[],"epg_match_ignore_suffixes":[],"epg_match_ignore_custom":[],"epg_history_min_days":1,"epg_history_max_days":30,"epg_default_prev_days":0,"epg_default_days":0})

@@ -196,12 +196,34 @@ impl TaskLocks {
     ) -> Result<TaskLease, TaskLockDetailedError> {
         self.acquire_impl(task, id, Some(caller), true).await
     }
+    /// Source SeriesRules uses the fixed literal `all` suffix and has no
+    /// renewer. Keep that authority typed; callers cannot supply arbitrary keys.
+    /// SET/cleanup/release retain the caller through actual physical replies.
+    pub async fn acquire_series_rules_retained(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_suffix_impl("evaluate_series_rules", "all", Some(caller), true, false)
+            .await
+    }
     async fn acquire_impl(
         &self,
         task: &str,
         id: i64,
         caller: Option<Arc<dyn Send + Sync>>,
         settle_failure: bool,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
+        let id = id.to_string();
+        self.acquire_suffix_impl(task, &id, caller, settle_failure, true)
+            .await
+    }
+    async fn acquire_suffix_impl(
+        &self,
+        task: &str,
+        suffix: &str,
+        caller: Option<Arc<dyn Send + Sync>>,
+        settle_failure: bool,
+        renewing: bool,
     ) -> Result<TaskLease, TaskLockDetailedError> {
         if task.is_empty()
             || task.len() > 128
@@ -225,7 +247,7 @@ impl TaskLocks {
         let (lost, _) = watch::channel(false);
         let held = Arc::new(Held {
             locks: self.inner.clone(),
-            key: format!("task_lock_{task}_{id}"),
+            key: format!("task_lock_{task}_{suffix}"),
             token: format!("rust:{}", uuid::Uuid::new_v4()),
             stop,
             lost,
@@ -248,7 +270,9 @@ impl TaskLocks {
             let lease = TaskLease { inner: held };
             match result {
                 Ok(Some(_)) => {
-                    tokio::spawn(renew(Arc::downgrade(&lease.inner)));
+                    if renewing {
+                        tokio::spawn(renew(Arc::downgrade(&lease.inner)));
+                    }
                     // A dropped receiver drops the returned lease, which
                     // queues owner-checked cleanup after the SET response.
                     let _ = sender.send(Ok(lease));

@@ -23,3 +23,12 @@ pub use vod_api_owned_read::ReadLimits as VodReadLimits;
 #[path = "vod_api_categories.rs"] mod vod_api_categories;
 
 #[path = "vod_api_category_http.rs"] mod vod_api_category_http;
+
+// Source-validated unified JSON extension; canonical app/React and open HTML contracts remain separate.
+#[path = "vod_api_unified_query.rs"] mod vod_api_unified_query;
+#[path = "vod_api_unified_sql.rs"] mod vod_api_unified_sql;
+#[path = "vod_api_unified_read.rs"] mod vod_api_unified_read;
+
+// Explicit unified JSON router extension, sharing the ordinary/category runtime and gate.
+#[path = "vod_api_unified_dispatch.rs"] mod vod_api_unified_dispatch;
+#[path = "vod_api_unified_http.rs"] mod vod_api_unified_http;

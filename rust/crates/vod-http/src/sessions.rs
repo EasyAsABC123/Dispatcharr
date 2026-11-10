@@ -1,7 +1,17 @@
 use crate::events::{Producer, Transition};
+use crate::recovery_generation::{
+    self as recovery,
+    local::{
+        Body as ScopedBody, Identity as ScopeIdentity, Initial as ScopeInitial,
+        Limits as ScopeLimits, LocalScope, StopHook,
+    },
+};
 use crate::resolver::{VodCandidate, VodRequest, VodSource};
 use dispatcharr_coordination::{AcquireRequest, Coordinator, Lease, ProviderReservation};
-use redis::{aio::{ConnectionManager, ConnectionManagerConfig}, AsyncCommands, Script};
+use redis::{
+    aio::{ConnectionManager, ConnectionManagerConfig},
+    AsyncCommands, Script,
+};
 use serde_json::json;
 use std::{
     collections::{BTreeMap, HashMap},
@@ -76,7 +86,8 @@ pub(crate) struct Session {
     last_request: AtomicU64,
     client_ip: String,
     user_agent: String,
-    lease: Lease,
+    lease: Arc<Lease>,
+    scope: std::sync::OnceLock<LocalScope>,
     metadata_token: String,
     state: Mutex<State>,
     _slot: Arc<OwnedSemaphorePermit>,
@@ -90,6 +101,8 @@ struct Inner {
     idle_grace: Duration,
     stopped: watch::Sender<bool>,
     max_requests: usize,
+    max_sessions: usize,
+    recovery: std::sync::Mutex<Option<recovery::Recovery>>,
     pending_cleanups: AtomicUsize,
     cleanup_failed: AtomicBool,
     events: std::sync::Mutex<Option<Producer>>,
@@ -103,6 +116,7 @@ pub(crate) struct Progress {
     pool: Weak<Inner>,
     acknowledged: u64,
     reported: u64,
+    body: Option<ScopedBody>,
 }
 impl Progress {
     pub async fn acknowledge(&mut self, bytes: usize) {
@@ -128,6 +142,13 @@ impl Progress {
             return;
         };
         session.bytes.store(milestone, Ordering::Relaxed);
+        if let (Some(scope), Some(body)) = (
+            session.scope.get().filter(|scope| scope.activated()),
+            self.body.as_ref(),
+        ) {
+            let _ = scope.progress(body, milestone).await;
+            return;
+        }
         let _ = update(
             &pool,
             &session,
@@ -145,6 +166,7 @@ pub(crate) struct Ticket {
     _request: Option<Arc<OwnedSemaphorePermit>>,
     is_new: bool,
     body_started: AtomicBool,
+    scope_body: Option<ScopedBody>,
 }
 
 impl SessionPool {
@@ -178,6 +200,8 @@ impl SessionPool {
                 idle_grace,
                 stopped: watch::channel(false).0,
                 max_requests,
+                max_sessions,
+                recovery: std::sync::Mutex::new(None),
                 pending_cleanups: AtomicUsize::new(0),
                 cleanup_failed: AtomicBool::new(false),
                 events: std::sync::Mutex::new(None),
@@ -185,6 +209,85 @@ impl SessionPool {
         })
     }
 
+    pub fn enable_recovery(&self, namespace: &str) -> Result<(), dispatcharr_store::StoreError> {
+        let registry = self.inner.sessions.try_lock().map_err(|_| unavailable())?;
+        if !registry.is_empty()
+            || self.inner.requests.available_permits() != self.inner.max_requests
+            || self.inner.slots.available_permits() != self.inner.max_sessions
+            || self.inner.max_requests > 4096
+        {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "VOD recovery must be configured before playback",
+            ));
+        }
+        let mut mode = self.inner.recovery.lock().unwrap();
+        if mode.is_some() {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "VOD recovery already configured",
+            ));
+        }
+        *mode = Some(
+            recovery::Recovery::new(
+                self.inner.coordinator.clone(),
+                self.inner.connection.clone(),
+                namespace.to_owned(),
+                self.inner.max_sessions.min(1024),
+                Duration::from_secs(3),
+            )
+            .map_err(|_| unavailable())?,
+        );
+        Ok(())
+    }
+    async fn scoped_body(
+        &self,
+        session: &Arc<Session>,
+        request: Arc<OwnedSemaphorePermit>,
+        is_new: bool,
+    ) -> Result<Option<ScopedBody>, dispatcharr_store::StoreError> {
+        let mode = self.inner.recovery.lock().unwrap().clone();
+        let Some(mode) = mode else {
+            return Ok(None);
+        };
+        if session.scope.get().is_none() {
+            let scope = LocalScope::adopt(
+                mode,
+                ScopeInitial {
+                    id: session.id.clone(),
+                    lease: session.lease.clone(),
+                    metadata_token: session.metadata_token.clone(),
+                    profile_id: session.candidate.profile_id,
+                    identity: ScopeIdentity {
+                        user_id: session
+                            .source
+                            .user
+                            .as_ref()
+                            .map_or("unknown".into(), |user| user.id.to_string()),
+                        content_uuid: session.source.content_uuid.clone(),
+                        content_kind: session.source.kind.storage_name().into(),
+                    },
+                    lifetime: session._slot.clone(),
+                    stop: session.stop.clone(),
+                },
+                ScopeLimits {
+                    bodies: self.inner.max_requests,
+                    controls: self.inner.max_requests,
+                    idle_grace: self.inner.idle_grace,
+                },
+            )
+            .await
+            .map_err(scope_error)?;
+            session.scope.set(scope).map_err(|_| unavailable())?;
+        }
+        let hook = scope_hook(&self.inner, transition(session, false));
+        session
+            .scope
+            .get()
+            .expect("installed scope")
+            .attach_reserved(request, is_new, hook)
+            .await
+            .map(Some)
+            .map_err(scope_error)
+    }
     pub fn install_events(&self, producer: Producer) -> Result<(), dispatcharr_store::StoreError> {
         let sessions = self.inner.sessions.try_lock().map_err(|_| unavailable())?;
         let mut events = self.inner.events.lock().unwrap();
@@ -222,6 +325,13 @@ impl SessionPool {
     }
     pub fn cleanup_succeeded(&self) -> bool {
         !self.inner.cleanup_failed.load(Ordering::Acquire)
+            && self
+                .inner
+                .recovery
+                .lock()
+                .unwrap()
+                .as_ref()
+                .is_none_or(recovery::Recovery::cleanup_succeeded)
     }
     pub fn stop_admission(&self) {
         self.inner.stopped.send_replace(true);
@@ -238,6 +348,8 @@ impl SessionPool {
                 && self.inner.requests.available_permits() == self.inner.max_requests
                 && self.inner.pending_cleanups.load(Ordering::Acquire) == 0
                 && self.inner.coordinator.is_idle()
+                && (self.inner.recovery.lock().unwrap().is_none()
+                    || self.inner.slots.available_permits() == self.inner.max_sessions)
             {
                 return;
             }
@@ -311,6 +423,169 @@ impl SessionPool {
             .map_err(|_| redis_error())
     }
 
+    async fn enter_recovered(
+        &self,
+        id: &str,
+        source: VodSource,
+        request: &VodRequest,
+        request_permit: Arc<OwnedSemaphorePermit>,
+        previous: Arc<Session>,
+        scope: LocalScope,
+    ) -> Result<Ticket, dispatcharr_store::StoreError> {
+        if id != previous.id {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "Recovery idle adoption is not yet implemented",
+            ));
+        }
+        let candidate = source.candidates.first().ok_or_else(unavailable)?.clone();
+        // A fresh stable classification is safe; it never repeats an uncertain
+        // allocation. Owned/partial cases remain explicit until separately gated.
+        match scope.retire_missing().await {
+            Ok(()) => {}
+            Err(recovery::Error::Capacity) => {}
+            Err(recovery::Error::StillOwned) => {
+                let hook = scope_hook(
+                    &self.inner,
+                    transition_data(&previous.source, &previous.client_ip, false),
+                );
+                let body = scope
+                    .attach_entry_pending(request_permit.clone(), hook)
+                    .await
+                    .map_err(scope_error)?;
+                let fields = metadata_fields(
+                    id,
+                    &source,
+                    request,
+                    &previous.candidate,
+                    &previous.metadata_token,
+                );
+                let limit = source
+                    .user
+                    .as_ref()
+                    .map_or(0, |user| user.stream_limit.max(0));
+                scope
+                    .enter_current(
+                        &body,
+                        recovery::NewAdmission {
+                            fields,
+                            limit: limit as u32,
+                            policy: source.limit_policy.clone(),
+                        },
+                    )
+                    .await
+                    .map_err(|error| {
+                        if let recovery::Error::Admission(error) = error {
+                            admission_error(error, limit)
+                        } else {
+                            scope_error(error)
+                        }
+                    })?;
+                {
+                    let mut state = previous.state.lock().await;
+                    state.active += 1;
+                    state.epoch += 1;
+                }
+                previous.last_request.store(millis(), Ordering::Relaxed);
+                return Ok(Ticket {
+                    session: previous,
+                    pool: Arc::downgrade(&self.inner),
+                    _request: Some(request_permit),
+                    is_new: false,
+                    body_started: AtomicBool::new(false),
+                    scope_body: Some(body),
+                });
+            }
+            Err(error) => return Err(scope_error(error)),
+        }
+        if candidate.profile_id != scope.profile_id() {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "Cross-profile recovery is not yet implemented",
+            ));
+        }
+        let hook = scope_hook(
+            &self.inner,
+            transition_data(&source, &request.client_ip_text(), false),
+        );
+        let body = scope
+            .attach_pending(request_permit.clone(), hook)
+            .await
+            .map_err(scope_error)?;
+        let fields = metadata_fields(id, &source, request, &candidate, "recovery-pending");
+        let limit = source
+            .user
+            .as_ref()
+            .map_or(0, |user| user.stream_limit.max(0));
+        scope
+            .reopen(
+                &body,
+                AcquireRequest {
+                    channel_id: id.into(),
+                    provider_profile_id: Some(candidate.profile_id),
+                    provider_max_streams: candidate.max_streams,
+                    credential_pool: None,
+                },
+                recovery::NewAdmission {
+                    fields,
+                    limit: limit as u32,
+                    policy: source.limit_policy.clone(),
+                },
+            )
+            .await
+            .map_err(|error| {
+                if let recovery::Error::Admission(error) = error {
+                    admission_error(error, limit)
+                } else {
+                    scope_error(error)
+                }
+            })?;
+        let (lease, metadata_token) = scope.current_identity().await;
+        let session = Arc::new(Session {
+            id: id.into(),
+            source,
+            candidate,
+            stop: previous.stop.clone(),
+            bytes: AtomicU64::new(0),
+            content_length: AtomicU64::new(0),
+            last_request: AtomicU64::new(millis()),
+            client_ip: request.client_ip_text(),
+            user_agent: request.playback.header("user-agent").unwrap_or("").into(),
+            lease,
+            metadata_token,
+            scope: std::sync::OnceLock::new(),
+            state: Mutex::new(State {
+                active: 1,
+                reserved: true,
+                closed: false,
+                epoch: 0,
+            }),
+            _slot: previous._slot.clone(),
+        });
+        session
+            .scope
+            .set(scope.clone())
+            .map_err(|_| unavailable())?;
+        let mut registry = self.inner.sessions.lock().await;
+        if registry.get(id).is_none_or(|current| {
+            current
+                .scope
+                .get()
+                .is_none_or(|value| !value.same_scope(&scope))
+        }) {
+            return Err(dispatcharr_store::StoreError::Unsupported(
+                "Recovery registry generation changed",
+            ));
+        }
+        registry.insert(id.into(), session.clone());
+        drop(registry);
+        Ok(Ticket {
+            session,
+            pool: Arc::downgrade(&self.inner),
+            _request: Some(request_permit),
+            is_new: true,
+            body_started: AtomicBool::new(false),
+            scope_body: Some(body),
+        })
+    }
     pub async fn enter(
         &self,
         id: &str,
@@ -320,12 +595,22 @@ impl SessionPool {
         // Bound work before spawning. Dropping the caller only abandons its
         // observer; setup keeps admission through actual Redis replies and any
         // token-fenced cleanup, including before PendingCreate is installed.
-        let request_permit = Arc::new(self.inner.requests.clone().try_acquire_owned().map_err(|_| unavailable())?);
+        let request_permit = Arc::new(
+            self.inner
+                .requests
+                .clone()
+                .try_acquire_owned()
+                .map_err(|_| unavailable())?,
+        );
         let pool = self.clone();
         let id = id.to_owned();
         let request = request.clone();
-        tokio::spawn(async move { pool.enter_owned(&id, source, &request, request_permit).await })
-            .await.map_err(|_| unavailable())?
+        tokio::spawn(async move {
+            pool.enter_owned(&id, source, &request, request_permit)
+                .await
+        })
+        .await
+        .map_err(|_| unavailable())?
     }
     async fn enter_owned(
         &self,
@@ -348,6 +633,17 @@ impl SessionPool {
                 || session.source.kind != source.kind
             {
                 return Err(dispatcharr_store::StoreError::Forbidden);
+            }
+            if let Some(scope) = session
+                .scope
+                .get()
+                .filter(|scope| scope.activated())
+                .cloned()
+            {
+                drop(registry);
+                return self
+                    .enter_recovered(id, source, request, request_permit, session, scope)
+                    .await;
             }
             drop(registry);
             let mut state = session.state.lock().await;
@@ -404,6 +700,7 @@ impl SessionPool {
                 _request: Some(request_permit),
                 is_new: false,
                 body_started: AtomicBool::new(false),
+                scope_body: None,
             };
             let mut connection = self.inner.connection.clone();
             let count: i64 = Script::new(ENTER)
@@ -417,9 +714,23 @@ impl SessionPool {
                 ticket.session.stop.send_replace(true);
                 return Err(unavailable());
             }
+            let mut ticket = ticket;
+            ticket.scope_body = self
+                .scoped_body(
+                    &ticket.session,
+                    ticket._request.as_ref().expect("request scope").clone(),
+                    false,
+                )
+                .await?;
             return Ok(ticket);
         }
-        let slot = Arc::new(self.inner.slots.clone().try_acquire_owned().map_err(|_| unavailable())?);
+        let slot = Arc::new(
+            self.inner
+                .slots
+                .clone()
+                .try_acquire_owned()
+                .map_err(|_| unavailable())?,
+        );
         let mut connection = self.inner.connection.clone();
         let existing: bool = connection
             .exists(key(id))
@@ -432,46 +743,7 @@ impl SessionPool {
         }
         let initial = source.candidates.first().ok_or_else(unavailable)?;
         let metadata_token = format!("rust-vod-metadata:{}", uuid::Uuid::new_v4());
-        let timestamp = now();
-        let user_id = source
-            .user
-            .as_ref()
-            .map_or("unknown".into(), |user| user.id.to_string());
-        let worker_id = format!("rust-vod:{}", std::process::id());
-        let fields = vec![
-            ("session_id", id.to_string()),
-            ("stream_url", initial.url.clone()),
-            ("headers", "{}".into()),
-            ("content_length", "".into()),
-            ("content_type", "".into()),
-            ("final_url", "".into()),
-            ("m3u_profile_id", initial.profile_id.to_string()),
-            ("last_activity", timestamp.clone()),
-            ("request_count", "1".into()),
-            ("active_streams", "1".into()),
-            ("content_obj_type", source.kind.storage_name().into()),
-            ("content_uuid", source.content_uuid.clone()),
-            ("content_name", source.name.clone()),
-            ("client_ip", request.client_ip_text()),
-            (
-                "client_user_agent",
-                request.playback.header("user-agent").unwrap_or("").into(),
-            ),
-            ("utc_start", "".into()),
-            ("utc_end", "".into()),
-            ("offset", "".into()),
-            ("worker_id", worker_id),
-            ("connection_type", "redis_backed".into()),
-            ("created_at", timestamp),
-            ("bytes_sent", "0".into()),
-            ("position_seconds", "0".into()),
-            ("last_seek_byte", "0".into()),
-            ("last_seek_percentage", "0".into()),
-            ("total_content_size", "0".into()),
-            ("last_seek_timestamp", "0".into()),
-            ("user_id", user_id),
-            ("rust_owner_token", metadata_token.clone()),
-        ];
+        let fields = metadata_fields(id, &source, request, initial, &metadata_token);
         let mut pending = PendingCreate {
             connection: connection.clone(),
             id: id.into(),
@@ -481,10 +753,6 @@ impl SessionPool {
             retained_request: Some(request_permit.clone()),
             retained_slot: Some(slot.clone()),
         };
-        let fields: BTreeMap<String, String> = fields
-            .into_iter()
-            .map(|(key, value)| (key.into(), value))
-            .collect();
         let limit = source
             .user
             .as_ref()
@@ -562,7 +830,8 @@ impl SessionPool {
             last_request: AtomicU64::new(millis()),
             client_ip: request.client_ip_text(),
             user_agent: request.playback.header("user-agent").unwrap_or("").into(),
-            lease,
+            lease: Arc::new(lease),
+            scope: std::sync::OnceLock::new(),
             metadata_token,
             state: Mutex::new(State {
                 active: 1,
@@ -572,6 +841,9 @@ impl SessionPool {
             }),
             _slot: slot,
         });
+        let scope_body = self
+            .scoped_body(&session, request_permit.clone(), true)
+            .await?;
         registry.insert(id.into(), session.clone());
         pending.armed = false;
         drop(registry);
@@ -582,6 +854,7 @@ impl SessionPool {
             _request: Some(request_permit),
             is_new: true,
             body_started: AtomicBool::new(false),
+            scope_body,
         })
     }
 
@@ -609,8 +882,65 @@ impl SessionPool {
         session: &Session,
         fields: &[(&str, String)],
     ) -> Result<(), dispatcharr_store::StoreError> {
+        if let Some(scope) = session.scope.get().filter(|scope| scope.activated()) {
+            return scope.update_headers(fields).await.map_err(scope_error);
+        }
         update(&self.inner, session, fields).await
     }
+}
+
+fn metadata_fields(
+    id: &str,
+    source: &VodSource,
+    request: &VodRequest,
+    initial: &VodCandidate,
+    metadata_token: &str,
+) -> BTreeMap<String, String> {
+    let timestamp = now();
+    let user_id = source
+        .user
+        .as_ref()
+        .map_or("unknown".into(), |user| user.id.to_string());
+    let worker_id = format!("rust-vod:{}", std::process::id());
+    let fields = vec![
+        ("session_id", id.to_string()),
+        ("stream_url", initial.url.clone()),
+        ("headers", "{}".into()),
+        ("content_length", "".into()),
+        ("content_type", "".into()),
+        ("final_url", "".into()),
+        ("m3u_profile_id", initial.profile_id.to_string()),
+        ("last_activity", timestamp.clone()),
+        ("request_count", "1".into()),
+        ("active_streams", "1".into()),
+        ("content_obj_type", source.kind.storage_name().into()),
+        ("content_uuid", source.content_uuid.clone()),
+        ("content_name", source.name.clone()),
+        ("client_ip", request.client_ip_text()),
+        (
+            "client_user_agent",
+            request.playback.header("user-agent").unwrap_or("").into(),
+        ),
+        ("utc_start", "".into()),
+        ("utc_end", "".into()),
+        ("offset", "".into()),
+        ("worker_id", worker_id),
+        ("connection_type", "redis_backed".into()),
+        ("created_at", timestamp),
+        ("bytes_sent", "0".into()),
+        ("position_seconds", "0".into()),
+        ("last_seek_byte", "0".into()),
+        ("last_seek_percentage", "0".into()),
+        ("total_content_size", "0".into()),
+        ("last_seek_timestamp", "0".into()),
+        ("user_id", user_id),
+        ("rust_owner_token", metadata_token.to_owned()),
+    ];
+
+    fields
+        .into_iter()
+        .map(|(key, value)| (key.to_owned(), value))
+        .collect()
 }
 
 fn key(id: &str) -> String {
@@ -653,6 +983,16 @@ async fn update(
     Ok(())
 }
 fn monitor(session: Weak<Session>, pool: Weak<Inner>) {
+    if let Some(scope) = session
+        .upgrade()
+        .and_then(|session| session.scope.get().cloned())
+    {
+        let Some(id) = session.upgrade().map(|session| session.id.clone()) else {
+            return;
+        };
+        monitor_scope(id, scope, pool);
+        return;
+    }
     tokio::spawn(async move {
         let mut timer = tokio::time::interval(Duration::from_secs(1));
         loop {
@@ -683,6 +1023,79 @@ fn monitor(session: Weak<Session>, pool: Weak<Inner>) {
     });
 }
 
+fn monitor_scope(id: String, scope: LocalScope, pool: Weak<Inner>) {
+    tokio::spawn(async move {
+        loop {
+            tokio::time::sleep(Duration::from_secs(1)).await;
+            let Some(pool) = pool.upgrade() else {
+                scope.stop();
+                return;
+            };
+            // Unpublished setup has no Ticket to publish its later physical
+            // cleanup failure. Preserve that diagnostic before eviction drops
+            // the last actor/slot and allows global drain to report completion.
+            if !scope.cleanup_succeeded() {
+                pool.cleanup_failed.store(true, Ordering::Release);
+            }
+            if *pool.stopped.borrow() {
+                scope.stop();
+            }
+            let same = pool
+                .sessions
+                .lock()
+                .await
+                .get(&id)
+                .and_then(|session| session.scope.get())
+                .is_some_and(|value| value.same_scope(&scope));
+            if !same {
+                return;
+            }
+            if scope.can_evict().await {
+                let mut registry = pool.sessions.lock().await;
+                if registry
+                    .get(&id)
+                    .and_then(|session| session.scope.get())
+                    .is_some_and(|value| value.same_scope(&scope))
+                {
+                    registry.remove(&id);
+                }
+                return;
+            }
+            // Read-only classification/physical heartbeat may be retried as a
+            // future operation. Never replay an uncertain allocation/mutation.
+            let _ = scope.retire_missing().await;
+        }
+    });
+}
+fn scope_error(error: recovery::Error) -> dispatcharr_store::StoreError {
+    match error {
+        recovery::Error::StillOwned | recovery::Error::PartialState => {
+            dispatcharr_store::StoreError::Unsupported(
+                "VOD recovery state requires a separately verified transition",
+            )
+        }
+        _ => redis_error(),
+    }
+}
+struct ScopeEvent {
+    producer: Producer,
+    event: Transition,
+}
+impl StopHook for ScopeEvent {
+    fn emit(&self) -> dispatcharr_contracts::BoxFuture<'_, ()> {
+        Box::pin(async move {
+            let _ = self.producer.emit(self.event.clone()).await;
+        })
+    }
+}
+fn scope_hook(pool: &Inner, event: Transition) -> Option<Arc<dyn StopHook>> {
+    pool.events
+        .lock()
+        .unwrap()
+        .clone()
+        .map(|producer| Arc::new(ScopeEvent { producer, event }) as Arc<dyn StopHook>)
+}
+
 impl Ticket {
     pub fn progress(&self) -> Progress {
         Progress {
@@ -690,9 +1103,13 @@ impl Ticket {
             pool: self.pool.clone(),
             acknowledged: 0,
             reported: 0,
+            body: self.scope_body.clone(),
         }
     }
     pub async fn begin_body(&self) {
+        if let Some(body) = &self.scope_body {
+            body.started();
+        }
         if self.body_started.swap(true, Ordering::AcqRel) || !self.is_new {
             return;
         }
@@ -705,23 +1122,22 @@ impl Ticket {
     }
 }
 fn transition(session: &Session, started: bool) -> Transition {
+    transition_data(&session.source, &session.client_ip, started)
+}
+fn transition_data(source: &VodSource, client_ip: &str, started: bool) -> Transition {
     Transition {
         started,
-        content_name: session.source.name.clone(),
-        content_uuid: session.source.content_uuid.clone(),
-        client_ip: session.client_ip.clone(),
-        user_id: session
-            .source
+        content_name: source.name.clone(),
+        content_uuid: source.content_uuid.clone(),
+        client_ip: client_ip.into(),
+        user_id: source
             .user
             .as_ref()
             .map_or_else(|| "0".into(), |user| user.id.to_string()),
-        username: session
-            .source
-            .user
-            .as_ref()
-            .map(|user| user.username.clone()),
+        username: source.user.as_ref().map(|user| user.username.clone()),
     }
 }
+
 struct CleanupFinished(Arc<Inner>);
 impl Drop for CleanupFinished {
     fn drop(&mut self) {
@@ -736,12 +1152,58 @@ impl Drop for Ticket {
         let Some(pool) = self.pool.upgrade() else {
             return;
         };
+        let scoped = self.scope_body.take();
+        if let (Some(scope), Some(body)) = (
+            session
+                .scope
+                .get()
+                .filter(|scope| scope.activated())
+                .cloned(),
+            scoped.as_ref(),
+        ) {
+            let body = body.clone();
+            pool.pending_cleanups.fetch_add(1, Ordering::AcqRel);
+            tokio::spawn(async move {
+                let _request = request_permit;
+                let _finished = CleanupFinished(pool.clone());
+                {
+                    let mut state = session.state.lock().await;
+                    if state.active > 0 {
+                        state.active -= 1;
+                    }
+                    state.epoch += 1;
+                }
+                let result = scope.close(&body).await;
+                if result
+                    .as_ref()
+                    .is_err_and(|error| !matches!(error, recovery::Error::ObserverTimeout))
+                {
+                    pool.cleanup_failed.store(true, Ordering::Release);
+                }
+                if scope.can_evict().await {
+                    let mut registry = pool.sessions.lock().await;
+                    if registry
+                        .get(&session.id)
+                        .and_then(|current| current.scope.get())
+                        .is_some_and(|value| value.same_scope(&scope))
+                    {
+                        registry.remove(&session.id);
+                    }
+                }
+            });
+            return;
+        }
+        let legacy_scope = match (session.scope.get(), scoped.as_ref()) {
+            (Some(scope), Some(body)) => scope.detach_legacy(body),
+            _ => None,
+        };
         if let Ok(runtime) = tokio::runtime::Handle::try_current() {
             pool.pending_cleanups.fetch_add(1, Ordering::AcqRel);
             runtime.spawn(async move {
                 // Bound delayed timers and retain physical admission through
                 // their Redis reply and event queue work after body drop.
                 let _request_permit = request_permit;
+                let _legacy_scope = legacy_scope;
                 let _finished=CleanupFinished(pool.clone());
                 let mut state = session.state.lock().await;
                 if state.active == 0 {
@@ -793,6 +1255,7 @@ impl Drop for Ticket {
                 state.closed = true;
                 session.stop.send_replace(true);
                 if session.lease.release().await.is_err(){pool.cleanup_failed.store(true,Ordering::Release);}
+                if _legacy_scope.is_some(){session.lease.settlement().wait().await;}
                 let mut sessions = pool.sessions.lock().await;
                 if sessions
                     .get(&session.id)

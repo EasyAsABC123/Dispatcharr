@@ -58,13 +58,18 @@ pub(crate) fn unified(pairs: &[(String,String)]) -> Result<UnifiedPage,UnifiedPa
 /// Caller supplies an already validated Source absolute origin/path; this does
 /// not authorize forwarding headers or derive an origin from arbitrary input.
 pub(crate) fn page_url(origin: &str, path: &str, query: &[(String,String)], page: Option<u64>) -> String {
+    let page = page.map(|value|value.to_string());
+    page_url_text(origin,path,query,page.as_deref())
+}
+/// Shared URL grammar also accepts Source unified's arbitrary-size integer.
+/// The caller, rather than this serializer, validates its integer spelling.
+pub(super) fn page_url_text(origin: &str, path: &str, query: &[(String,String)], page: Option<&str>) -> String {
     use std::collections::BTreeMap;
     let mut groups: BTreeMap<&str, Vec<&str>> = BTreeMap::new();
     for (key,value) in query {
         if key != "page" { groups.entry(key).or_default().push(value); }
     }
-    let page = page.map(|value|value.to_string());
-    if let Some(value) = &page { groups.insert("page",vec![value.as_str()]); }
+    if let Some(value) = page { groups.insert("page",vec![value]); }
     let mut result = format!("{origin}{path}");
     let mut first = true;
     for (key,values) in groups {

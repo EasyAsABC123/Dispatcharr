@@ -98,7 +98,7 @@ async fn native_refresh_worker_peer() {
     let input: Value = serde_json::from_str(&bytes).unwrap();
     assert!(matches!(
         input["action"].as_str(),
-        Some("run" | "reject_head")
+        Some("run" | "reject_head" | "scheduled" | "warm_restore")
     ));
     let id = Uuid::parse_str(input["task_id"].as_str().unwrap()).unwrap();
     let source = input["source_id"].as_i64().filter(|v| *v > 0).unwrap();
@@ -115,10 +115,9 @@ async fn native_refresh_worker_peer() {
     assert_eq!(cache, "redis://:playback-fixture-only@127.0.0.1:6379/0");
     let broker = input["broker_url"].as_str().unwrap();
     let result = input["result_url"].as_str().unwrap();
-    let jobs = Jobs::connect_fixture(
+    let jobs = Jobs::connect_refresh(
         broker,
         result,
-        &database,
         crate::transport::Config {
             operations: 4,
             command_timeout: Duration::from_secs(2),
@@ -221,16 +220,13 @@ async fn native_refresh_worker_peer() {
     .await
     .unwrap();
     let calls = Arc::new(AtomicUsize::new(0));
-    let worker = RefreshWorker::new_fixture(
-        jobs.clone(),
-        Arc::new(Expected {
-            service: ServiceExecutor::new(runner.clone(), store.clone(), clock),
-            id,
-            source,
-            calls: calls.clone(),
-        }),
-    )
-    .unwrap();
+    let executor = Arc::new(Expected {
+        service: ServiceExecutor::new(runner.clone(), store.clone(), clock),
+        id,
+        source,
+        calls: calls.clone(),
+    });
+    let worker = RefreshWorker::new(jobs.clone(), executor.clone()).unwrap();
     if input["close_reporter_before_run"] == true {
         assert!(reporter.shutdown(Duration::from_secs(1)).await);
     }
@@ -239,7 +235,61 @@ async fn native_refresh_worker_peer() {
     let held_orphan_marker = input["hold_orphan_marker"] == true;
     let abort_on_release = input["abort_on_release"] == true;
     assert!(!(abort_on_release && held_orphan_marker));
-    let outcome = if abort_on_release {
+    let scheduled = matches!(input["action"].as_str(), Some("scheduled" | "warm_restore"));
+    let warm_restore = input["action"] == "warm_restore";
+    let outcome = if scheduled {
+        let driver = crate::scheduled_refresh_driver::ScheduledRefreshDriver::start(
+            jobs.clone(),
+            executor,
+            crate::scheduled_refresh_driver::Config::default(),
+            caller,
+        )
+        .unwrap();
+        tokio::time::timeout(Duration::from_secs(3), async {
+            loop {
+                let count: i64 = redis::cmd("HLEN")
+                    .arg("unacked")
+                    .query_async(&mut connection)
+                    .await
+                    .unwrap();
+                if count == 1 {
+                    break;
+                }
+                tokio::time::sleep(Duration::from_millis(5)).await;
+            }
+        })
+        .await
+        .unwrap();
+        assert!(weak.upgrade().is_some());
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+        if !warm_restore {
+            let completed = tokio::time::timeout(Duration::from_secs(30), async {
+                loop {
+                    if jobs
+                        .read_refresh(id, source, Arc::new(()))
+                        .await
+                        .unwrap()
+                        .is_some()
+                    {
+                        break;
+                    }
+                    tokio::time::sleep(Duration::from_millis(10)).await;
+                }
+            })
+            .await;
+            if completed.is_err() {
+                let state:Option<Value>=sqlx::query_scalar("SELECT jsonb_build_object('status',status,'last_message',last_message,'properties',custom_properties) FROM epg_epgsource WHERE id=$1").bind(source).fetch_optional(store.pool()).await.unwrap();
+                println!(
+                    "NATIVE_REFRESH_ETA_DIAGNOSTIC={}",
+                    json!({"calls":calls.load(Ordering::SeqCst),"execution_error":format!("{:?}",driver.last_execution_error()),"intake_error":format!("{:?}",driver.last_intake_error()),"physical_jobs":runner.physical_jobs(),"source":state})
+                );
+            }
+            completed.unwrap();
+        }
+        driver.shutdown(Duration::from_secs(5)).await.unwrap();
+        drop(driver);
+        None
+    } else if abort_on_release {
         let proxy = release_proxy.as_mut().unwrap();
         let owned = worker.clone();
         let waiter = tokio::spawn(async move { owned.run_once(caller).await });
@@ -263,7 +313,7 @@ async fn native_refresh_worker_peer() {
         proxy.open.send_replace(true);
         worker.shutdown(Duration::from_secs(5)).await.unwrap();
         assert!(jobs
-            .read_refresh_fixture(id, source, Arc::new(()))
+            .read_refresh(id, source, Arc::new(()))
             .await
             .unwrap()
             .is_some());
@@ -322,7 +372,7 @@ async fn native_refresh_worker_peer() {
         lock.commit().await.unwrap();
         worker.shutdown(Duration::from_secs(5)).await.unwrap();
         assert!(jobs
-            .read_refresh_fixture(id, source, Arc::new(()))
+            .read_refresh(id, source, Arc::new(()))
             .await
             .unwrap()
             .is_some());
@@ -350,6 +400,18 @@ async fn native_refresh_worker_peer() {
             .unwrap();
         assert_eq!(head, after);
         assert_eq!(calls.load(Ordering::SeqCst), 0)
+    } else if scheduled {
+        assert!(outcome.is_none());
+        assert_eq!(
+            calls.load(Ordering::SeqCst),
+            if warm_restore { 0 } else { 1 }
+        );
+        let reserved: i64 = redis::cmd("HLEN")
+            .arg("unacked")
+            .query_async(&mut connection)
+            .await
+            .unwrap();
+        assert_eq!(reserved, 0);
     } else if input["expect_operational"] == true {
         assert_eq!(outcome, Some(Err(Error::Execution)));
         assert_eq!(calls.load(Ordering::SeqCst), 1)
@@ -405,6 +467,6 @@ async fn native_refresh_worker_peer() {
     store.pool().close().await;
     println!(
         "NATIVE_REFRESH_WORKER_JSON={}",
-        json!({"outcome":format!("{outcome:?}"),"calls":calls.load(Ordering::SeqCst),"default_dispatch_calls":default_calls.load(Ordering::SeqCst),"caller_released":weak.upgrade().is_none(),"worker_drained":true,"service_drained":true,"transport_drained":true,"physical_jobs":runner.physical_jobs(),"head_unchanged":input["action"]=="reject_head","native_eta_consumer":false,"held_orphan_marker":held_orphan_marker,"logical_waiter_aborted":held_orphan_marker||abort_on_release,"release_intervention":input["release_intervention"],"domain_writes_after_intervention":domain_writes_after_intervention,"publications":publications.lock().unwrap().clone()})
+        json!({"outcome":format!("{outcome:?}"),"calls":calls.load(Ordering::SeqCst),"default_dispatch_calls":default_calls.load(Ordering::SeqCst),"caller_released":weak.upgrade().is_none(),"worker_drained":true,"service_drained":true,"transport_drained":true,"physical_jobs":runner.physical_jobs(),"head_unchanged":input["action"]=="reject_head","native_eta_consumer":scheduled,"warm_restore":warm_restore,"scheduled_return_observed":false,"held_orphan_marker":held_orphan_marker,"logical_waiter_aborted":held_orphan_marker||abort_on_release,"release_intervention":input["release_intervention"],"domain_writes_after_intervention":domain_writes_after_intervention,"publications":publications.lock().unwrap().clone()})
     );
 }

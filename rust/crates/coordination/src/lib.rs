@@ -179,6 +179,7 @@ struct AcquireDelivery {
     permit: Option<tokio::sync::OwnedSemaphorePermit>,
     lease: Option<Lease>,
     armed: bool,
+    retained: Option<Arc<dyn Send + Sync>>,
 }
 impl AcquireDelivery {
     fn finish(mut self) -> Lease {
@@ -199,12 +200,14 @@ impl Drop for AcquireDelivery {
         let Some(permit) = self.permit.take() else {
             return;
         };
+        let retained = self.retained.take();
         let coordinator = self.coordinator.clone();
         let keys = self.keys.clone();
         let token = self.token.clone();
         if let Ok(runtime) = tokio::runtime::Handle::try_current() {
             runtime.spawn(async move {
                 let _admission = permit;
+                let _retained = retained;
                 let mut connection = coordinator.inner.connection.clone();
                 // No caller deadline around this future: the actual Redis
                 // response/disconnect releases its bounded operation budget.
@@ -304,10 +307,30 @@ impl Coordinator {
         self.acquire_scoped(request, OwnerScope::Timeshift).await
     }
 
+    /// Keep a caller-owned physical scope through acquisition and any ambiguous
+    /// result cleanup. This changes no ownership/provider script semantics.
+    pub async fn acquire_vod_retained(
+        &self,
+        request: AcquireRequest,
+        retained: Arc<dyn Send + Sync>,
+    ) -> Result<Lease, Error> {
+        self.acquire_scoped_retained(request, OwnerScope::Vod, Some(retained))
+            .await
+    }
+
     async fn acquire_scoped(
         &self,
         request: AcquireRequest,
         scope: OwnerScope,
+    ) -> Result<Lease, Error> {
+        self.acquire_scoped_retained(request, scope, None).await
+    }
+
+    async fn acquire_scoped_retained(
+        &self,
+        request: AcquireRequest,
+        scope: OwnerScope,
+        retained: Option<Arc<dyn Send + Sync>>,
     ) -> Result<Lease, Error> {
         if request.channel_id.is_empty()
             || request.channel_id.len() > 256
@@ -330,7 +353,9 @@ impl Coordinator {
         let coordinator = self.clone();
         let (sender, receiver) = tokio::sync::oneshot::channel();
         tokio::spawn(async move {
-            let result = coordinator.acquire_admitted(request, scope, permit).await;
+            let result = coordinator
+                .acquire_admitted(request, scope, permit, retained)
+                .await;
             let _ = sender.send(result); // Undelivered guard performs fenced cleanup.
         });
         let delivery = time::timeout(self.inner.config.command_timeout, receiver)
@@ -345,6 +370,7 @@ impl Coordinator {
         request: AcquireRequest,
         scope: OwnerScope,
         permit: tokio::sync::OwnedSemaphorePermit,
+        retained: Option<Arc<dyn Send + Sync>>,
     ) -> Result<AcquireDelivery, Error> {
         let token = format!("rust:{}", uuid::Uuid::new_v4());
         let keys = Keys {
@@ -381,6 +407,7 @@ impl Coordinator {
             permit: Some(permit),
             lease: None,
             armed: true,
+            retained,
         };
         let result: (i64, u64) = self
             .inner

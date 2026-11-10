@@ -1,0 +1,156 @@
+{
+  "passed": true,
+  "scope": "Explicit selected app/Index/Series/ETA assembly, JSON unified router and opt-in VOD recovery; component checkpoint before canonical image packaging",
+  "original_credit": "All original application/algorithm credit belongs to Dispatcharr authors/contributors; Celery/Django/redis-rs/framework attribution and AGPL retained. React source unchanged.",
+  "runtime_files": 600,
+  "input_manifest": "artifacts/rust/combined-app-components-inputs-4.json",
+  "input_manifest_sha256": "e90703440417141e86365892198eedf0c05ed2258a4c8e01cdbbabe3268e3db1",
+  "workspace": {
+    "strict_alltargets_Clippy": true,
+    "default_passed": 362,
+    "failed": 0,
+    "external_fixture_tests_ignored": 461,
+    "suites": 172,
+    "test_log_sha256": "88d46dcb44253ef5cd67bf745ad9c1b0c895f5024fbe5c1b21c0530a2333872c",
+    "clippy_log_sha256": "ad93759136de5fd563525c3442fc9c9bb3038f9067d652fcfd48a8a6773cc184"
+  },
+  "actual_replays": [
+    {
+      "name": "VOD",
+      "passed": true,
+      "counts": 50,
+      "runtime_exact_match": true,
+      "runtime_files": 600,
+      "evidence": "artifacts/rust/combined-final-VOD-4/proof.json",
+      "evidence_sha256": "2d615b4af67c9a8c2a47c38e9652bf3518486e5d1a51f6ec5fbf1756a8967a60",
+      "independent_remaining_resources": {
+        "generation_containers": []
+      },
+      "default_database_unchanged": null,
+      "rust_archive_sha256": "136e457091f2e0dd972595d4b381de29a6810345d9a348093d85008732b11ee0"
+    },
+    {
+      "name": "ETA",
+      "passed": true,
+      "counts": 60,
+      "runtime_exact_match": true,
+      "runtime_files": 600,
+      "evidence": "artifacts/rust/combined-final-ETA60-4/integration.json",
+      "evidence_sha256": "a2fc4da39ee92904b643c78c0deec5f5658e4d4ef98fe285f33e37286d9e2b3d",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": true,
+      "rust_archive_sha256": "136e457091f2e0dd972595d4b381de29a6810345d9a348093d85008732b11ee0"
+    },
+    {
+      "name": "Series",
+      "passed": true,
+      "counts": 155,
+      "runtime_exact_match": true,
+      "runtime_files": 600,
+      "evidence": "artifacts/rust/combined-final-Series155-4/integration.json",
+      "evidence_sha256": "d25ce9d4b2745e97c3e367e1bcd3d0906d9c2f882e665e768891ee2d49c0608a",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": true,
+      "rust_archive_sha256": "136e457091f2e0dd972595d4b381de29a6810345d9a348093d85008732b11ee0"
+    },
+    {
+      "name": "RefreshHTTP",
+      "passed": true,
+      "counts": 127,
+      "runtime_exact_match": true,
+      "runtime_files": 600,
+      "evidence": "artifacts/rust/combined-final-RefreshHTTP127-4/integration.json",
+      "evidence_sha256": "250722d3c52ac5dfab91303f8a1343333c565245efda9a98532f8fa70c3e2aa4",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": true,
+      "rust_archive_sha256": "136e457091f2e0dd972595d4b381de29a6810345d9a348093d85008732b11ee0"
+    },
+    {
+      "name": "IndexHTTP",
+      "passed": true,
+      "counts": 20,
+      "runtime_exact_match": true,
+      "runtime_files": 600,
+      "evidence": "artifacts/rust/combined-final-IndexHTTP-4/integration.json",
+      "evidence_sha256": "62e8a66bd20db92f2e8f084a3d40142983adad9eca9693eaa0fa33cc23a48862",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": true,
+      "rust_archive_sha256": "136e457091f2e0dd972595d4b381de29a6810345d9a348093d85008732b11ee0"
+    },
+    {
+      "name": "Unified",
+      "passed": true,
+      "counts": {
+        "HTTP_exact": 188,
+        "Source_observations": 189,
+        "HTML_exclusions": 1,
+        "shared_resource_gate": true
+      },
+      "runtime_exact_match": true,
+      "runtime_files": 600,
+      "evidence": "artifacts/rust/combined-final-Unified-4/http/source-run.json",
+      "evidence_sha256": "9e695ebff5f2ea3fa13caef2ef4bf54181f7e5f48b650304c5e0e7e2b98510ef",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "default_database_unchanged": null,
+      "rust_archive_sha256": null
+    }
+  ],
+  "expected_actual_replays": {
+    "VOD": 50,
+    "ETA": 60,
+    "Series": 155,
+    "RefreshHTTP": 127,
+    "IndexOriginal": 20,
+    "Index_native_HTTP": 1,
+    "Unified_exact_HTTP": 188,
+    "Unified_Source_observations": 189,
+    "Unified_HTML_exclusions": 1
+  },
+  "default_flags": {
+    "RUST_EPG_REFRESH_ENABLED": 0,
+    "RUST_VOD_REDIS_RECOVERY_ENABLED": 0
+  },
+  "assembly": [
+    "Prepare all Index/Series/refresh resources before intake; existing production authorities remain separate",
+    "Current-file lookup uses real retained index publication; explicit original source/media path context",
+    "Docker /app/media aliases /data; default refresh cache strings use original /app/media/cached_epg",
+    "Stop/drain worker families before realtime closure; file lookup/publication closes after guide reads",
+    "Unified JSON route shares ordinary/category auth, worker and memory budgets"
+  ],
+  "remaining": [
+    "Canonical image build and all packaged baseline regressions not yet accepted",
+    "Actual candidate React All workflow and paired SQL/auth/realRedisrestart recovery pending",
+    "Complete two-import/child/index/guide packaged workflow pending",
+    "Browsable HTML template, expanded malformed-user-properties/long-integer cases remain open",
+    "Configured recording Series rules and unsupported raw refresh IDs remain explicit gaps",
+    "Partial/cross-profile/idle/event-race recovery not generally accepted; no default recovery enable",
+    "Receipt MEMORY USAGE is an existing-size threshold plus bounded field/count growth, not a universal hard allocator cap; additional Redis ACL capability required"
+  ],
+  "performance_verified": false,
+  "new_image_built": false,
+  "full_milestone_complete": false,
+  "runtime_mutated_after_freeze": false,
+  "no_live_sibling_Rust_used": true,
+  "preserved_setup_failures": "Initial two594 replay launches failed a Cargo-target ownership assertion before Docker startup; corrected only target paths, retained logs, same runtime passed. Prior owners retain their documented failures.",
+  "build_retention": "Small dev/test profiles active; source/results/recorded binaries remain outside disposable Cargo targets."
+}

@@ -23,6 +23,39 @@ pub async fn admit<C: redis::aio::ConnectionLike + Send + Unpin>(
     connection: &mut C,
     request: Admission<'_>,
 ) -> Result<bool, Error> {
+    admit_inner(connection, request, None).await
+}
+
+/// Additional current-owner/stop fence for a supervised recovery transition.
+/// The caller must retain bounded ownership until this physical future finishes;
+/// unlike ordinary admission this variant has no inner logical timeout.
+pub struct AdmissionFence<'a> {
+    pub owner_key: &'a str,
+    pub owner_token: &'a str,
+    pub stop_key: &'a str,
+}
+pub async fn admit_fenced_physical<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
+    request: Admission<'_>,
+    fence: AdmissionFence<'_>,
+) -> Result<bool, Error> {
+    if fence.owner_key.is_empty()
+        || fence.owner_key.len() > 512
+        || fence.owner_token.is_empty()
+        || fence.owner_token.len() > 128
+        || fence.stop_key.is_empty()
+        || fence.stop_key.len() > 512
+    {
+        return Err(Error::InvalidClient);
+    }
+    admit_inner(connection, request, Some(fence)).await
+}
+
+async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
+    request: Admission<'_>,
+    fence: Option<AdmissionFence<'_>>,
+) -> Result<bool, Error> {
     let Admission {
         session_id,
         fields,
@@ -44,28 +77,45 @@ pub async fn admit<C: redis::aio::ConnectionLike + Send + Unpin>(
         return Err(Error::InvalidClient);
     }
     let policy = json!({"terminate_on_limit_exceeded":policy.terminate_on_limit_exceeded,"prioritize_single_client_channels":policy.prioritize_single_client_channels,"ignore_same_channel_connections":policy.ignore_same_channel_connections,"terminate_oldest":policy.terminate_oldest});
-    let result: Vec<String> = tokio::time::timeout(
-        timeout,
-        Script::new(ADMIT)
-            .key(format!("vod_persistent_connection:{session_id}"))
-            .arg(serde_json::to_string(fields).map_err(|_| Error::InvalidClient)?)
-            .arg(policy.to_string())
-            .arg(limit)
-            .arg(ttl.as_millis().min(u64::MAX as u128) as u64)
-            .arg(scan_limit)
-            .arg(if create { "create" } else { "check" })
-            .arg(token)
-            .invoke_async(connection),
-    )
-    .await
-    .map_err(|_| Error::RedisUnavailable)?
-    .map_err(|_| Error::RedisUnavailable)?;
+    const FENCE: &str = "if redis.call('EXISTS',KEYS[3])~=0 or redis.call('GET',KEYS[2])~=ARGV[8] then return {'STOPPED'} end\n";
+    let script = if fence.is_some() {
+        format!("{FENCE}{ADMIT}")
+    } else {
+        ADMIT.to_owned()
+    };
+    let script = Script::new(&script);
+    let mut invocation = script.prepare_invoke();
+    invocation.key(format!("vod_persistent_connection:{session_id}"));
+    if let Some(fence) = &fence {
+        invocation.key(fence.owner_key).key(fence.stop_key);
+    }
+    invocation
+        .arg(serde_json::to_string(fields).map_err(|_| Error::InvalidClient)?)
+        .arg(policy.to_string())
+        .arg(limit)
+        .arg(ttl.as_millis().min(u64::MAX as u128) as u64)
+        .arg(scan_limit)
+        .arg(if create { "create" } else { "check" })
+        .arg(token);
+    if let Some(fence) = &fence {
+        invocation.arg(fence.owner_token);
+    }
+    let command = invocation.invoke_async::<Vec<String>>(connection);
+    let result = if fence.is_some() {
+        command.await.map_err(|_| Error::RedisUnavailable)?
+    } else {
+        tokio::time::timeout(timeout, command)
+            .await
+            .map_err(|_| Error::RedisUnavailable)?
+            .map_err(|_| Error::RedisUnavailable)?
+    };
     match result.first().map(String::as_str) {
         Some("OK") => Ok(true),
         Some("EXISTS") => Ok(false),
         Some("LIMIT") => Err(Error::UserLimit),
         Some("SCAN_LIMIT") => Err(Error::ScanLimit),
         Some("CORRUPT") => Err(Error::CorruptMetadata),
+        Some("STOPPED") => Err(Error::Stopped),
         _ => Err(Error::RedisUnavailable),
     }
 }

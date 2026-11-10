@@ -122,7 +122,10 @@ impl AuthService {
         sink: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
     ) -> Self {
         self.event_sink = Some(match self.retained_scope.as_ref() {
-            Some(scope) => Arc::new(RetainedAuthSink { inner: sink, guard: scope.clone() }),
+            Some(scope) => Arc::new(RetainedAuthSink {
+                inner: sink,
+                guard: scope.clone(),
+            }),
             None => sink,
         });
         self
@@ -142,7 +145,10 @@ impl AuthService {
             self.notification_cache = Some(cache.with_retained_scope(combined.clone()));
         }
         if let Some(sink) = self.event_sink.take() {
-            self.event_sink = Some(Arc::new(RetainedAuthSink { inner: sink, guard: combined.clone() }));
+            self.event_sink = Some(Arc::new(RetainedAuthSink {
+                inner: sink,
+                guard: combined.clone(),
+            }));
         }
         self.retained_scope = Some(combined);
         self
@@ -352,9 +358,10 @@ impl AuthService {
             .collect();
         if auth.first().is_some_and(|scheme| *scheme == "Bearer") {
             if auth.len() != 2 {
-                return Err(StoreError::Unauthorized(
-                    "Authorization header must contain two space-delimited values",
-                ));
+                return Err(StoreError::AuthenticationBody(json!({
+                    "detail":"Authorization header must contain two space-delimited values",
+                    "code":"bad_authorization_header"
+                })));
             }
             let claims = self.decode_token(auth[1], "access")?;
             return match self.store.user_by_id(claims.id().unwrap()).await? {
@@ -818,13 +825,23 @@ struct RetainedAuthSink {
     guard: Arc<dyn Send + Sync>,
 }
 impl dispatcharr_contracts::UpdateEventSink for RetainedAuthSink {
-    fn send<'a>(&'a self, group: &'a str, message: Value)
-        -> dispatcharr_contracts::BoxFuture<'a, Result<(), dispatcharr_contracts::UpdateEventError>> {
+    fn send<'a>(
+        &'a self,
+        group: &'a str,
+        message: Value,
+    ) -> dispatcharr_contracts::BoxFuture<'a, Result<(), dispatcharr_contracts::UpdateEventError>>
+    {
         self.inner.send_retained(group, message, self.guard.clone())
     }
-    fn send_retained<'a>(&'a self, group: &'a str, message: Value, guard: Arc<dyn Send + Sync>)
-        -> dispatcharr_contracts::BoxFuture<'a, Result<(), dispatcharr_contracts::UpdateEventError>> {
-        self.inner.send_retained(group, message, Arc::new((self.guard.clone(), guard)))
+    fn send_retained<'a>(
+        &'a self,
+        group: &'a str,
+        message: Value,
+        guard: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'a, Result<(), dispatcharr_contracts::UpdateEventError>>
+    {
+        self.inner
+            .send_retained(group, message, Arc::new((self.guard.clone(), guard)))
     }
 }
 
@@ -957,6 +974,29 @@ mod tests {
             service.throttle(ip, "api-key", false),
             Err(StoreError::RateLimited(_))
         ));
+    }
+
+    #[tokio::test]
+    async fn malformed_bearer_matches_actual_simplejwt_code_before_database_work() {
+        let service = service();
+        for raw in ["Bearer", "Bearer a b"] {
+            let error = service
+                .authenticate(&request_for("127.0.0.1", vec![("authorization", raw)]))
+                .await
+                .err()
+                .expect("Malformed Bearer must fail before database work");
+            let response = error.into_response();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+            assert_eq!(
+                response.headers()["www-authenticate"],
+                "Bearer realm=\"api\""
+            );
+            let body = axum::body::to_bytes(response.into_body(), 4096)
+                .await
+                .unwrap();
+            // Actual Original unified-source HTTP cases12/13,107 exact bytes.
+            assert_eq!(body.as_ref(), br#"{"detail":"Authorization header must contain two space-delimited values","code":"bad_authorization_header"}"#);
+        }
     }
 
     #[tokio::test]

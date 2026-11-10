@@ -116,6 +116,12 @@ impl VodEngine {
             }),
         })
     }
+    /// Opt-in recovery bridge. Defaults remain unchanged until the paired
+    /// active HTTP/fault/shutdown contract gates accept this behavior.
+    pub fn with_redis_recovery(self, namespace: &str) -> Result<Self, StoreError> {
+        self.inner.sessions.enable_recovery(namespace)?;
+        Ok(self)
+    }
     /// Attach the bounded original lifecycle publisher before any playback.
     pub async fn with_events(
         self,

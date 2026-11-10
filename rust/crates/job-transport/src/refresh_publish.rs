@@ -86,7 +86,7 @@ async fn native_refresh_publication_peer() {
     let weak = Arc::downgrade(&caller);
     let audit = if input["action"] == "read" {
         let record = jobs
-            .read_refresh_fixture(id, source_id, caller)
+            .read_refresh(id, source_id, caller)
             .await
             .unwrap();
         match record {
@@ -115,7 +115,7 @@ async fn native_refresh_publication_peer() {
             msg.eta = Some(eta.with_timezone(&chrono::Utc));
         }
         assert_eq!(msg.source_id, source_id);
-        let published = jobs.publish_refresh_fixture(&msg, caller).await;
+        let published = jobs.publish_refresh(&msg, caller).await;
         if index_only {
             assert_eq!(published, Err(Error::UnsupportedTask));
             json!({"index_authority_rejected":true})

@@ -222,3 +222,69 @@ async fn cancelled_and_timed_out_all_scopes_keep_budget_until_reply_and_fenced_c
         }
     }
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires disposable actual Redis retained acquisition reply"]
+async fn retained_vod_acquire_context_survives_observer_and_actual_cleanup_reply() {
+    let mut redis = redis::Client::open(std::env::var("REDIS_TEST_URL").unwrap())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    for cancel in [false, true] {
+        let proxy = proxy().await;
+        let namespace = format!("retained-acquire:{}", uuid::Uuid::new_v4());
+        let coordinator = Coordinator::connect(
+            &proxy.url,
+            LeaseConfig {
+                namespace: namespace.clone(),
+                ttl: Duration::from_secs(30),
+                heartbeat_interval: None,
+                reap_interval: None,
+                command_timeout: Duration::from_millis(100),
+                max_inflight_commands: 1,
+                ..Default::default()
+            },
+        )
+        .await
+        .unwrap();
+        let profile = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000) as i64 + 1000;
+        let warm = coordinator.acquire_vod(request(profile)).await.unwrap();
+        warm.release().await.unwrap();
+        warm.settlement().wait().await;
+        let acquired = request(profile);
+        let owner = format!("{namespace}:vod:session:{}:owner", acquired.channel_id);
+        let context = Arc::new(());
+        let weak = Arc::downgrade(&context);
+        proxy.hold.send_replace(true);
+        let c = coordinator.clone();
+        let call = tokio::spawn(async move { c.acquire_vod_retained(acquired, context).await });
+        wait(async || redis.exists::<_, bool>(&owner).await.unwrap()).await;
+        if cancel {
+            call.abort();
+            assert!(call.await.is_err());
+        } else {
+            assert!(matches!(call.await.unwrap(), Err(Error::RedisUnavailable)));
+        }
+        assert!(weak.upgrade().is_some());
+        assert!(!coordinator.is_idle());
+        proxy.pause_after_reply.store(true, Ordering::SeqCst);
+        proxy.hold.send_replace(false);
+        wait(async || !redis.exists::<_, bool>(&owner).await.unwrap()).await;
+        tokio::time::sleep(Duration::from_millis(2200)).await;
+        assert!(
+            weak.upgrade().is_some(),
+            "caller scope must survive actual cleanup reply"
+        );
+        assert!(!coordinator.is_idle());
+        assert_eq!(
+            redis
+                .get::<_, i64>(format!("profile_connections:{profile}"))
+                .await
+                .unwrap(),
+            0
+        );
+        proxy.hold.send_replace(false);
+        wait(async || weak.upgrade().is_none() && coordinator.is_idle()).await;
+    }
+}

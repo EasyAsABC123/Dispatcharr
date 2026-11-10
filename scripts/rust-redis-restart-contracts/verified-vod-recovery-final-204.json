@@ -1,0 +1,94 @@
+{
+  "passed": true,
+  "scope": "Opt-in VOD library recovery and ownership/cleanup diagnostics. No default/nativepackagedSQL/auth/restart/resourceacceptance.",
+  "original_authors": "Original Dispatcharr authors retain full application and algorithm credit.",
+  "proof": "artifacts/rust/m4-vod-partial-guard-fixed-204/proof.json",
+  "proof_sha256": "157a47389483700f3f4cfcf9f27b0e5d85299cc44ead41674f837cd8c0753109",
+  "source_archive_sha256": "a884518dddbc96b559e8b7ead3f977180b7a2d4f18d1f25f3f117349a1d6f707",
+  "tests": [
+    {
+      "target": "redis",
+      "expected_count": 10,
+      "binary_sha256": "04c291a60cefe87cef9c56b24d7d07541b370226be1306fbcdd2c53a06ead14a",
+      "passed": true
+    },
+    {
+      "target": "acquire_cancel",
+      "expected_count": 2,
+      "binary_sha256": "32724cbe01f95f9bd604fd291dd3ec63497833d6cec94ef8c29c4725a5e0ae7c",
+      "passed": true
+    },
+    {
+      "target": "vod",
+      "expected_count": 2,
+      "binary_sha256": "f58b50b4caef0f685556cb14d6ee7376775067a08c55a16508847ac24ca3b4d1",
+      "passed": true
+    },
+    {
+      "target": "recovery_generation",
+      "expected_count": 11,
+      "binary_sha256": "d952e67a9ac053799b6bca8ea8dd9b18ff9a87e6e443be5aaec00f6123c1f42b",
+      "passed": true
+    },
+    {
+      "target": "recovery_generation_physical",
+      "expected_count": 2,
+      "binary_sha256": "a9b94e4401651dcb2a8863ec830c0f16dc08ce377959a4b62c14a21b3b9fc861",
+      "passed": true
+    },
+    {
+      "target": "generation_scope",
+      "expected_count": 12,
+      "binary_sha256": "329c2489065550015d5f9bf781a8127aba5642508b09670c0c080d636ea00a82",
+      "passed": true
+    },
+    {
+      "target": "generation_scope_physical",
+      "expected_count": 7,
+      "binary_sha256": "5cad894507f9fdd321333fbd05a5c130203038ce01cace0c5b0c8ac926bf2a90",
+      "passed": true
+    },
+    {
+      "target": "http_recovery",
+      "expected_count": 3,
+      "binary_sha256": "494a2e17e53a6e1587fe7dcba59f1239c6ab875fbfb9109e4d1f9a62fd6ff34e",
+      "passed": true
+    },
+    {
+      "target": "session_diagnostic",
+      "expected_count": 1,
+      "binary_sha256": "47ed85a9b71a9078f238e85e024d894aa67af8f1df42782d9374f01549c63900",
+      "passed": true
+    }
+  ],
+  "strict_clippy_passed": true,
+  "cleanup_passed": true,
+  "prefix_decoders": [
+    {
+      "path": "old-prefix.mp4",
+      "passed": true,
+      "sha256": "5561b525a65fa93e286a3f2213f5958f9b76a944cd91c4691ab678fa05131d15",
+      "duration_seconds": 1
+    },
+    {
+      "path": "young-prefix.mp4",
+      "passed": true,
+      "sha256": "705623a07698128f4c498943e7fcabf11d56580bf04af0669ae70424343ff49b",
+      "duration_seconds": 1
+    }
+  ],
+  "delta_from_201": "OneAtomicStore activatespartialguard afteruniqueledgerlost/fencedheartbeatfalse; test202near-boundarypadding+203partialinvariant. Idlelookupdraftexcluded.",
+  "retained_actual_negatives": [
+    "191successfulENTERreplylossactivecount",
+    "199actorfailurelostaftereviction",
+    "203ledgerlosslefthealthyshadowpath"
+  ],
+  "receipt_memory_scope": "ExistinghashMEMORYthreshold plusboundednewUUID/tokenfield, countandTTL. 202128paddinglengths/valid120byteSIDacceptedwrites remained<=3072bytes; not universalhardcap proof.",
+  "remaining": [
+    "packagedSQL/auth/nativeactualRedisrestart",
+    "RedirectpublicidleadoptionSource200",
+    "post-recoverytimerrace/WS",
+    "partialrecovery/crossprofile transitions",
+    "defaultshutdown/resourcecomparison"
+  ]
+}

@@ -155,7 +155,7 @@ async fn server_has(id: Uuid) {
 async fn refresh_publication_timeout_keeps_owner_capacity_and_incomplete_shutdown() {
     let mut proxy = proxy().await;
     let jobs = jobs(&proxy, Duration::from_millis(200)).await;
-    jobs.publish_refresh_fixture(&packet(Uuid::new_v4()), Arc::new(()))
+    jobs.publish_refresh(&packet(Uuid::new_v4()), Arc::new(()))
         .await
         .unwrap();
     proxy.hold.send_replace(true);
@@ -163,7 +163,7 @@ async fn refresh_publication_timeout_keeps_owner_capacity_and_incomplete_shutdow
     let weak = Arc::downgrade(&caller);
     let id = Uuid::new_v4();
     let copy = jobs.clone();
-    let task = tokio::spawn(async move { copy.publish_refresh_fixture(&packet(id), caller).await });
+    let task = tokio::spawn(async move { copy.publish_refresh(&packet(id), caller).await });
     tokio::time::timeout(Duration::from_secs(3), proxy.blocked.wait_for(|v| *v))
         .await
         .unwrap()
@@ -185,7 +185,7 @@ async fn refresh_publication_timeout_keeps_owner_capacity_and_incomplete_shutdow
 async fn refresh_publication_caller_abort_keeps_physical_owner_and_shutdown_drain() {
     let mut proxy = proxy().await;
     let jobs = jobs(&proxy, Duration::from_secs(2)).await;
-    jobs.publish_refresh_fixture(&packet(Uuid::new_v4()), Arc::new(()))
+    jobs.publish_refresh(&packet(Uuid::new_v4()), Arc::new(()))
         .await
         .unwrap();
     proxy.hold.send_replace(true);
@@ -193,7 +193,7 @@ async fn refresh_publication_caller_abort_keeps_physical_owner_and_shutdown_drai
     let weak = Arc::downgrade(&caller);
     let id = Uuid::new_v4();
     let copy = jobs.clone();
-    let task = tokio::spawn(async move { copy.publish_refresh_fixture(&packet(id), caller).await });
+    let task = tokio::spawn(async move { copy.publish_refresh(&packet(id), caller).await });
     tokio::time::timeout(Duration::from_secs(3), proxy.blocked.wait_for(|v| *v))
         .await
         .unwrap()
@@ -216,7 +216,7 @@ async fn refresh_result_read_abort_retains_owner_until_real_reply() {
     let mut proxy = proxy().await;
     let jobs = jobs(&proxy, Duration::from_secs(2)).await;
     assert!(jobs
-        .read_refresh_fixture(Uuid::new_v4(), 1, Arc::new(()))
+        .read_refresh(Uuid::new_v4(), 1, Arc::new(()))
         .await
         .unwrap()
         .is_none());
@@ -225,7 +225,7 @@ async fn refresh_result_read_abort_retains_owner_until_real_reply() {
     let weak = Arc::downgrade(&caller);
     let copy = jobs.clone();
     let task =
-        tokio::spawn(async move { copy.read_refresh_fixture(Uuid::new_v4(), 1, caller).await });
+        tokio::spawn(async move { copy.read_refresh(Uuid::new_v4(), 1, caller).await });
     tokio::time::timeout(Duration::from_secs(3), proxy.blocked.wait_for(|v| *v))
         .await
         .unwrap()

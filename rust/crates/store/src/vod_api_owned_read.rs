@@ -113,6 +113,10 @@ impl ReadWork {
         Ok(())
     }
     pub fn row_bytes(&self)->usize {self.inner.limits.row_bytes}
+    /// Independent unified reader partitions this existing work reservation;
+    /// it does not acquire a second budget or impose a fixed page-row limit.
+    pub(super) fn work_bytes(&self)->usize {self.inner.limits.work_bytes}
+    pub(super) fn response_bytes(&self)->usize {self.inner.limits.response_bytes}
     /// The authentication adapter must retain this through its own physical
     /// SQL/Redis/cache tasks, including operations surviving logical timeout.
     pub fn physical_guard(&self)->Arc<dyn Send+Sync> {self.lease.clone()}

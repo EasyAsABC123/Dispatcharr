@@ -52,6 +52,12 @@ impl VodReads {
     pub fn category_router(&self)->Router {
         super::vod_api_category_http::CategoryHttp::shared(self.auth.clone(),self.reader.shared_runtime(),self.gate.clone()).router()
     }
+    /// Explicit unified JSON list/detail extension. Shares this SAME runtime,
+    /// byte reservations, queued input, physical auth/SQL and shutdown; there
+    /// is no second reader budget. Browsable HTML remains explicit501.
+    pub fn unified_router(&self)->Router {
+        super::vod_api_unified_http::UnifiedHttp::shared(self.auth.clone(),self.reader.shared_runtime(),self.gate.clone()).router()
+    }
     /// Stops admission immediately; held body frames retain their own leases.
     pub async fn shutdown(&self,budget:std::time::Duration)->bool {self.gate.slots.close();self.reader.shutdown(budget).await}
 }
@@ -63,7 +69,15 @@ pub(crate) fn options(resource:Resource,detail:bool)->Value {
 pub(crate) fn negotiate(headers:&HeaderMap,uri:&Uri)->Result<(),StoreError> {
     let format=url::form_urlencoded::parse(uri.query().unwrap_or("").as_bytes()).filter(|(key,_)|key=="format").last().map(|(_,value)|value.into_owned());
     if format.as_deref().is_some_and(|format|!["json","api"].contains(&format)){return Err(StoreError::NotFound);}
-    if format.as_deref()==Some("api"){return Err(StoreError::Unsupported("VOD browsable HTML is not implemented"));}
+    if format.as_deref()==Some("api") {
+        // Source filters renderers by format BEFORE matching Accept. The
+        // existing category adapter already gates this JSON406 distinction.
+        let accept=headers.get("accept").map(|value|dispatcharr_contracts::source_header_value(value.as_bytes())).unwrap_or_else(||"*/*".into());
+        if !accept.split(',').any(|value|matches!(value.trim().split(';').next(),Some("*/*"|"text/*"|"text/html"))) {
+            return Err(StoreError::StatusBody(406,json!({"detail":"Could not satisfy the request Accept header."})));
+        }
+        return Err(StoreError::Unsupported("VOD browsable HTML is not implemented"));
+    }
     let accept=headers.get("accept").map(|v|dispatcharr_contracts::source_header_value(v.as_bytes())).unwrap_or_else(||"*/*".into());
     if !accept.split(',').any(|part|matches!(part.trim().split(';').next(),Some("*/*"|"application/*"|"application/json"))) {
         if accept.split(',').any(|part|part.trim().split(';').next()==Some("text/html")){return Err(StoreError::Unsupported("VOD browsable HTML is not implemented"));}
