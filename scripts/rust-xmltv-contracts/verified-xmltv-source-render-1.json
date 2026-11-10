@@ -1,0 +1,81 @@
+{
+  "scope": "XMLTV Source HTTP/cache characterization and pure native renderer only",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_artifact": "artifacts/rust/m7-xmltv-source-3/xmltv-source.json",
+  "source_http_cases": 47,
+  "real_programme_vectors": 378,
+  "source_error_vectors": 117,
+  "standard_dummy_vectors": 144,
+  "source_digit_codepoints": 808,
+  "renderer_file_sha256": "e2df77cf0e84acd51ad9e8e6ea31793a7337e90c008ca7f5d01d43cf503254b3",
+  "renderer_ast_sha256": "1cd9c7113dee4c30d874fb8077d004c26cdb1f7e4ba24e87dfcf75b9df534312",
+  "native_dataset_sha256": "74e8067e99cadb3446a1fd2cec756de1a35d15713fb1ae4304c7639d65ba95a8",
+  "native_tests": [
+    "render::tests::actual_source_programme_xml_and_rejected_metadata",
+    "dummy::tests::actual_source_standard_dummy_times_descriptions_and_boundaries",
+    "render::tests::metadata_budget_checks_precede_recursive_render_scratch"
+  ],
+  "strict_all_target_clippy_passed": true,
+  "source_singleflight_invocations": 1,
+  "source_singleflight_readers": 8,
+  "source_stale_same_generation_final_chunks": [
+    "new-only",
+    "old-last"
+  ],
+  "source_cancelled_leader_state": {
+    "chunks": [
+      "first"
+    ],
+    "status": "building",
+    "ready": false,
+    "lock": false,
+    "ttls": {
+      "chunks": 120,
+      "status": 120,
+      "ready": -2,
+      "lock": -2
+    }
+  },
+  "source_generation_isolation": {
+    "new_body": "new-only",
+    "old_remaining": "old-last",
+    "old": {
+      "chunks": [
+        "old-first",
+        "old-last"
+      ],
+      "status": "ready",
+      "ready": true,
+      "lock": false,
+      "ttls": {
+        "chunks": 300,
+        "status": 300,
+        "ready": 300,
+        "lock": -2
+      }
+    },
+    "new": {
+      "chunks": [
+        "new-only"
+      ],
+      "status": "ready",
+      "ready": true,
+      "lock": false,
+      "ttls": {
+        "chunks": 300,
+        "status": 300,
+        "ready": 300,
+        "lock": -2
+      }
+    }
+  },
+  "cleanup": "owned Compose project removed",
+  "native_http_verified": false,
+  "native_cache_verified": false,
+  "custom_regex_dummy_verified": false,
+  "application_wired": false,
+  "performance_verified": false,
+  "milestone_complete": false
+}

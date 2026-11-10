@@ -16,6 +16,27 @@ pub struct Channels {
     pub rows: Vec<Channel>,
     pub restricted_direct: bool,
 }
+/// Original output channel visibility. Callers apply hidden_from_output and
+/// resolve a named profile beforehand; admins still retain the output level cap.
+pub fn append_output_visibility(
+    query: &mut QueryBuilder<'_, Postgres>,
+    user: Option<&User>,
+    profile: Option<i64>,
+) {
+    if let Some(profile) = profile.filter(|_| user.is_none()) {
+        query.push(" AND EXISTS(SELECT 1 FROM dispatcharr_channels_channelprofilemembership m WHERE m.channel_id=c.id AND m.enabled AND m.channel_profile_id=").push_bind(profile).push(")");
+    }
+    if let Some(user) = user {
+        query.push(" AND c.user_level<=").push_bind(user.user_level);
+        if user.user_level < 10 {
+            if truthy(user.custom_properties.get("hide_adult_content")) {
+                query.push(" AND NOT c.is_adult");
+            }
+            query.push(" AND (NOT EXISTS(SELECT 1 FROM accounts_user_channel_profiles up WHERE up.user_id=").push_bind(user.id).push(") OR EXISTS(SELECT 1 FROM accounts_user_channel_profiles up JOIN dispatcharr_channels_channelprofilemembership m ON m.channel_profile_id=up.channelprofile_id WHERE up.user_id=").push_bind(user.id).push(" AND m.channel_id=c.id AND m.enabled))");
+        }
+    }
+}
+
 pub async fn read(store: &Store, request: Read<'_>) -> Result<Channels, StoreError> {
     let profile = if request.user.is_none() {
         if let Some(profile) = request.profile {
@@ -57,18 +78,7 @@ pub async fn read(store: &Store, request: Read<'_>) -> Result<Channels, StoreErr
         query.push(" LEFT JOIN LATERAL(SELECT s.url,s.is_catchup,s.catchup_days,a.account_type FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id LEFT JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id WHERE cs.channel_id=c.id ORDER BY cs.\"order\" LIMIT 1)s ON TRUE");
     }
     query.push(" WHERE NOT c.hidden_from_output");
-    if let Some(profile) = profile {
-        query.push(" AND EXISTS(SELECT 1 FROM dispatcharr_channels_channelprofilemembership m WHERE m.channel_id=c.id AND m.enabled AND m.channel_profile_id=").push_bind(profile).push(")");
-    }
-    if let Some(user) = request.user {
-        query.push(" AND c.user_level<=").push_bind(user.user_level);
-        if user.user_level < 10 {
-            if truthy(user.custom_properties.get("hide_adult_content")) {
-                query.push(" AND NOT c.is_adult");
-            }
-            query.push(" AND (NOT EXISTS(SELECT 1 FROM accounts_user_channel_profiles up WHERE up.user_id=").push_bind(user.id).push(") OR EXISTS(SELECT 1 FROM accounts_user_channel_profiles up JOIN dispatcharr_channels_channelprofilemembership m ON m.channel_profile_id=up.channelprofile_id WHERE up.user_id=").push_bind(user.id).push(" AND m.channel_id=c.id AND m.enabled))");
-        }
-    }
+    append_output_visibility(&mut query, request.user, profile);
     query
         .push(" ORDER BY COALESCE(o.channel_number,c.channel_number) LIMIT ")
         .push_bind((request.max_channels.saturating_add(1)) as i64);

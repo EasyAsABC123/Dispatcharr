@@ -78,3 +78,15 @@ unimplemented pending its separate third-party Python `regex` compatibility
 proof. Live/media lifecycle producers, all event families, ingress boundary
 faults and native handshake edge cases remain separate gates. No live-event
 resource gains or complete M7 parity are claimed.
+
+The post-image21 additive `UpdateEventSink::send_retained` API allows a producer
+to retain its job admission while publication is physically pending. Its default
+implementation keeps the guard through logical send; RealtimeBus additionally
+transfers it through each supervised membership lookup and publication command.
+Caller cancellation or a logical timeout cannot release it before Redis replies.
+The publication byte reservation remains attached to the same physical command.
+Two tests against isolated actual Redis passed for cancelled membership lookup
+and timed-out publication, including eventual message receipt/ack and permit
+recovery. See `../../../scripts/rust-realtime-contracts/verified-retained-publication-1.json`.
+This changes no message payload or ordinary send contract and does not establish
+ingestion-job app wiring, image21 behavior, or resource-performance gains.

@@ -14,9 +14,10 @@ stop. Image21 separates event publication from fenced physical cleanup and
 passes the [paired frozen-runtime replay](verified-rapid-reclose-image21-1.json):
 one start, two stops, three statistics events and start/stop/stop audit rows.
 Two native tests also check retained request admission. Ordinary six-case
-lifecycle and packaged HTTP/WebSocket regressions pass separately. The rapid
-replay uses an in-memory native event sink; packaged rapid WebSocket transport
-and the expanded malformed/delayed Redis reply family remain open.
+lifecycle and packaged HTTP/WebSocket regressions pass separately. The image21 rapid
+replay uses an in-memory native event sink. The image22 gate below adds actual
+packaged rapid WebSocket transport; expanded malformed/delayed Redis replies
+remain a separate followup.
 
 The implementation separates the event decision from physical cleanup:
 
@@ -41,3 +42,5 @@ Test Unicode/oversized/malformed Redis integer fields and paused replies,
 bounded timer admission and shutdown. Repeat packaged HTTP/WebSocket regressions
 on the next immutable image. Image20's ongoing resource matrix must remain tied
 to image20; this later change cannot inherit its measurements automatically.
+
+The [canonical image22 HTTP/WebSocket gate](verified-rapid-reclose-ws-image22-2.json) now passes the actual transport case as well: each server acknowledges a zero active count before reopen/reclose, within the original one-second grace. Both implementations deliver one start, two stops and three full-statistics events, exact transition/audit payloads, zero final provider connections and no remaining session metadata. Original timer-thread interleaving and stopping-snapshot cleanup races are explicitly validated/normalized as documented in the report. This closes the captured packaged rapid-reclose transport followup; malformed/delayed Redis expansions, larger workloads and full M4/application acceptance remain open.

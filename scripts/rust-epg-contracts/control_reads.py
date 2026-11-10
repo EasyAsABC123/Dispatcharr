@@ -36,7 +36,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--native', action='store_true', help='Also run frozen native SQL row-projection test')
+    parser.add_argument('--native-http', action='store_true', help='Also run original programme JSON/HEAD HTTP and capacity ownership comparisons')
+    parser.add_argument('--candidate-image', help='Optional immutable packaged app programme read gate')
+    parser.add_argument('--build-manifest', type=Path)
     args = parser.parse_args()
+    if bool(args.candidate_image) != bool(args.build_manifest):
+        parser.error('candidate-image and build-manifest must be supplied together')
+    if args.native_http:
+        args.native = True
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     tools = output/'tool-source'
@@ -44,6 +51,7 @@ def main():
     for relative in ['scripts/rust-epg-contracts/control_reads.py',
                      'scripts/rust-epg-contracts/source_reads.py',
                      'scripts/rust-epg-contracts/window_source.py',
+                     'scripts/rust-epg-contracts/probe_programs.py',
                      'scripts/rust-epg-parity/extract_source.py']:
         source_tool = ROOT/relative
         target = tools/relative
@@ -68,6 +76,13 @@ def main():
         report['fixture_ports'] = write_port_overlay(ports, {'baseline':[5656,5432,6379]})
         compose = ['docker','compose','-p',project,'-f',str(tools/'docker/compose.rust-playback.yml'),
                    '-f',str(ports)]
+        if args.candidate_image:
+            candidate_overlay = output/'candidate.yml'
+            candidate_overlay.write_text(json.dumps({'services':{'candidate':{
+                'image':args.candidate_image,
+                'environment':{'DISPATCHARR_TRUSTED_PROXIES':'127.0.0.0/8,172.16.0.0/12,10.0.0.0/8'},
+                'cpus':2,'mem_limit':'512m','pids_limit':128}}}))
+            compose += ['-f',str(tools/'docker/compose.rust-candidate.yml'),'-f',str(candidate_overlay)]
 
         def command(arguments, timeout=180, body=None):
             return subprocess.run(arguments, env=env, input=body, text=True,
@@ -142,6 +157,16 @@ def main():
                 report['native_collection_order_verified'] = True
                 report['native_order_differences'] = [json.loads(line.split(' ',1)[1]) for line in result.stdout.splitlines() if line.startswith('EPG_ROW_ORDER_DIFFERENCE ')]
                 report['native_scope'] = 'Actual-schema row fields and collection order compared without normalization. HTTP/UI transport, permissions, routes, renderers and body admission remain separate gates.'
+                if args.native_http:
+                    http = subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),
+                                           '-p','dispatcharr-store','--test','epg_program_http_sql','--locked','--offline',
+                                           '--','--ignored','--nocapture','--test-threads=1'],env=native_env,
+                                          capture_output=True,text=True,timeout=600)
+                    (output/'native-program-http.log').write_text(http.stdout+'\n'+http.stderr)
+                    http.check_returncode()
+                    report['native_program_json_head_http_verified'] = True
+                    report['native_program_browsable_html_verified'] = False
+                    report['native_program_packaged_image_verified'] = False
                 build = subprocess.run(['cargo','build','--manifest-path',str(frozen/'rust/Cargo.toml'),
                                         '-p','dispatcharr-ingest-core','--example','xmltv_format_parity',
                                         '--locked','--offline'],env=native_env,capture_output=True,
@@ -164,6 +189,35 @@ def main():
                 if not format_report['passed']:
                     raise RuntimeError('Native XMLTV format component mismatches')
                 report['native_format_verified'] = True
+            if args.candidate_image:
+                command(compose+['up','-d','--no-build','candidate'])
+                candidate_id=command(compose+['ps','-q','candidate']).stdout.strip()
+                inspected=json.loads(command(['docker','inspect',candidate_id]).stdout)[0]
+                adapter=load(tools/'scripts/rust-playback-baseline/run.py','epg_candidate_provenance')
+                manifest_bytes=args.build_manifest.read_bytes()
+                source_hash=adapter.validate_build_manifest(json.loads(manifest_bytes),inspected['Image'],
+                    inspected['Config']['Labels'].get('org.opencontainers.image.source-tree-sha256'))
+                report['candidate_provenance']={'image_id':inspected['Image'],'source_tree_sha256':source_hash,
+                    'build_manifest_sha256':hashlib.sha256(manifest_bytes).hexdigest()}
+                candidate='http://'+command(compose+['port','candidate','9192']).stdout.strip()
+                deadline=time.monotonic()+30
+                while True:
+                    try:
+                        with urllib.request.urlopen(candidate+'/health/ready',timeout=2) as ready:
+                            if ready.status==200:break
+                    except OSError:
+                        if time.monotonic()>deadline:raise RuntimeError('Packaged guide API readiness deadline')
+                        time.sleep(.1)
+                probe=load(tools/'scripts/rust-epg-contracts/probe_programs.py','packaged_programme_probe')
+                packaged=probe.capture(candidate,fixture)
+                (output/'packaged-programmes.json').write_text(json.dumps(packaged,indent=2)+'\n')
+                if not packaged['passed']:raise RuntimeError('Packaged programme response differences')
+                report['native_program_packaged_image_verified']=True
+                command(compose+['stop','--timeout','12','candidate'])
+                stopped=json.loads(command(['docker','inspect',candidate_id]).stdout)[0]
+                report['candidate_shutdown']={k:stopped['State'][k] for k in ['ExitCode','OOMKilled']}
+                if report['candidate_shutdown']!={'ExitCode':0,'OOMKilled':False}:
+                    raise RuntimeError('Packaged candidate did not shut down cleanly')
             status = 0
         except subprocess.CalledProcessError as error:
             (output/'failed-command.log').write_text((error.stdout or '')+'\n'+(error.stderr or ''))

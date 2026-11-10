@@ -5,6 +5,11 @@ use serde_json::{json, Value};
 fn default_system() -> Value {
     json!({"time_zone":"UTC","max_system_events":100,"preferred_region":null,"auto_import_mapped_files":true,"enable_ip_lookup":true,"catchup_enabled":true,"log_max_mb":5,"log_keep":5,"log_persist":true})
 }
+/// Exact pinned Source UTC system-settings defaults for retained cache loaders.
+/// This is the same builder used by the existing shared settings reader.
+pub fn source_system_settings_defaults() -> Value {
+    default_system()
+}
 fn default_stream() -> Value {
     json!({"default_user_agent":null,"default_stream_profile":null,"m3u_hash_key":"","default_output_format":"mpegts","hdhr_output_profile_id":null})
 }

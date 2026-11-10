@@ -148,3 +148,13 @@ does not contain live engine services: positive playback is still unverified.
 `image.py` is prepared to compare both HTTP families, construct a TS URL from
 the actual catalog, decode H264/audio, check nested-static routing, and verify
 packaged shutdown against the next Root-built immutable app image.
+
+Exact image21 passed `m7-xc-image21-4`: 112 Source/native HTTP families, catalog
+stream1's generated credential URL returning actual H264/AAC TS, 74 decoded
+video frames with zero decoder stderr, zero packet sync errors, nested static404
+without XC interception, and shutdown0.207s/exit0/noOOM/no drain warning. Cleanup
+passed. Image/source digests and proof links are in `verified-xc-image21-1.json`.
+Runs -1/-2/-3 remain preserved as probe import-priority, empty-static404 JSON
+decoding, and local import-shadow failures. None required runtime changes.
+Positive HLS/fMP4 suffix/user-policy variants and the remaining action families
+are still excluded; this functional result establishes no resource gain.

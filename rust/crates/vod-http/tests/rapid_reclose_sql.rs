@@ -302,3 +302,125 @@ async fn closing_timers_retain_request_admission_until_physical_drain() {
         json!({"pending":0,"failed":0})
     );
 }
+
+#[tokio::test]
+#[ignore = "requires disposable actual PG/Redis/HTTP"]
+async fn duplicate_stop_timers_preserve_another_active_provider_allocation() {
+    let mut fixture = Fixture::new(VodConfig::default()).await;
+    let sibling_id = "fixture-rapid-active-sibling";
+    let response = fixture.engine.respond(request(sibling_id)).await;
+    assert_eq!(response.status(), 200);
+    let mut sibling = response.into_body();
+    first(&mut sibling).await;
+    let id = "fixture-rapid-shared-provider";
+    let response = fixture.engine.respond(request(id)).await;
+    assert_eq!(response.status(), 200);
+    let mut body = response.into_body();
+    first(&mut body).await;
+    assert_eq!(fixture.counter().await, 2);
+    drop(body);
+    fixture.inactive(id).await;
+    let response = fixture.engine.respond(request(id)).await;
+    assert_eq!(response.status(), 200);
+    let mut body = response.into_body();
+    first(&mut body).await;
+    drop(body);
+    fixture.inactive(id).await;
+    wait(|| {
+        fixture
+            .sink
+            .0
+            .lock()
+            .unwrap()
+            .iter()
+            .filter(|event| event["data"]["type"] == "vod_stopped")
+            .count()
+            == 2
+    })
+    .await;
+    tokio::time::sleep(Duration::from_millis(100)).await;
+    assert_eq!(
+        fixture.counter().await,
+        1,
+        "old timers released the active sibling's provider"
+    );
+    assert_eq!(
+        fixture
+            .redis
+            .hget::<_, _, Option<i64>>(
+                format!("vod_persistent_connection:{sibling_id}"),
+                "active_streams"
+            )
+            .await
+            .unwrap(),
+        Some(1)
+    );
+    drop(sibling);
+    fixture.inactive(sibling_id).await;
+    assert!(fixture.engine.shutdown().await);
+    assert_eq!(fixture.counter().await, 0);
+}
+
+#[tokio::test]
+#[ignore = "requires disposable actual PG/Redis/HTTP"]
+async fn old_timer_checks_current_owner_and_preserves_replacement_metadata() {
+    let mut fixture = Fixture::new(VodConfig::default()).await;
+    let sibling_id = "fixture-rapid-replacement-sibling";
+    let response = fixture.engine.respond(request(sibling_id)).await;
+    assert_eq!(response.status(), 200);
+    let mut sibling = response.into_body();
+    first(&mut sibling).await;
+    let id = "fixture-rapid-replaced-owner";
+    let response = fixture.engine.respond(request(id)).await;
+    assert_eq!(response.status(), 200);
+    let mut body = response.into_body();
+    first(&mut body).await;
+    drop(body);
+    fixture.inactive(id).await;
+    let key = format!("vod_persistent_connection:{id}");
+    // Inject a new owner only in the explicitly disposable fixture. The active
+    // sibling provides a real independent provider allocation to protect.
+    let _: () = fixture
+        .redis
+        .hset_multiple(
+            &key,
+            &[
+                ("rust_owner_token", "fixture-replacement-owner"),
+                ("active_streams", "1"),
+            ],
+        )
+        .await
+        .unwrap();
+    tokio::time::sleep(Duration::from_millis(1250)).await;
+    assert_eq!(
+        fixture
+            .redis
+            .hget::<_, _, String>(&key, "rust_owner_token")
+            .await
+            .unwrap(),
+        "fixture-replacement-owner"
+    );
+    assert_eq!(
+        fixture
+            .redis
+            .hget::<_, _, i64>(&key, "active_streams")
+            .await
+            .unwrap(),
+        1
+    );
+    assert_eq!(fixture.counter().await, 1);
+    assert!(!fixture
+        .sink
+        .0
+        .lock()
+        .unwrap()
+        .iter()
+        .any(|event| event["data"]["type"] == "vod_stopped"));
+    // Test-owned fault metadata is removed by the fixture, never by old runtime
+    // cleanup. Ordinary media teardown still owns the sibling's real lease.
+    let _: usize = fixture.redis.del(&key).await.unwrap();
+    drop(sibling);
+    fixture.inactive(sibling_id).await;
+    assert!(fixture.engine.shutdown().await);
+    assert_eq!(fixture.counter().await, 0);
+}

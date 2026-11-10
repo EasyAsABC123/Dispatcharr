@@ -1,0 +1,73 @@
+{
+  "scope": "Post21 frozen low-level owned-output XMLTV extraction; no fetch/job acceptance",
+  "passed": true,
+  "source_cases": 292,
+  "native_cases": 292,
+  "differences": [],
+  "source_fixture": "artifacts/rust/m5-epg-read-components-6/extraction-source.json",
+  "source_fixture_sha256": "38a53c732a0d84301c48fe989916ebc9709c5b0074a58d54c32ded9e01f714e8",
+  "binary_sha256": "9ed42e1c2213a9c9169cf6749c765686f7a66e70a1072ecf836a216d0d5164ed",
+  "workspace_unit_integration_results": {
+    "passed": 38,
+    "failed": 0,
+    "ignored": 0
+  },
+  "performance_verified": false,
+  "evidence_directory": "artifacts/rust/m6-xmltv-extract-frozen-55",
+  "strict_all_target_clippy": true,
+  "source_manifest_sha256": "171988aa80d24b20752b94fd0bf9eb9e77a62d5b6ba1133c5b6782e278ae2ca9",
+  "tested_core_source_sha256": {
+    "rust/crates/ingest-core/Cargo.toml": "aae8a8442a5a22329751246cb996d536d3b376cc9126cfdd1559a21184ac25dd",
+    "rust/crates/ingest-core/README.md": "4b3265c18be567d2c1f5186dda3ebe7d11f702c2e612dc9b1a4575afed36d0b5",
+    "rust/crates/ingest-core/datasets/html4-doctype.xml": "f1eaf76fc838188e93a1465946c6dccc867af6c6cef7c00d07ab78517813962b",
+    "rust/crates/ingest-core/datasets/source-xc-float.json": "f35379995d641c54fbfb5cd52ecbb1bb4298f1343ea18e1d150c3dacc202f319",
+    "rust/crates/ingest-core/examples/filter_probe.rs": "86c2146c919aa0a18027d51f5ff81c6651bd0d1e4e0aebecfbde622c5f4b5819",
+    "rust/crates/ingest-core/examples/ingest_parity.rs": "1871597dc60151271e991455f5c1ac8f58e5ece64df8edd1c0fbaa1ef2a2abb1",
+    "rust/crates/ingest-core/examples/xmltv_format_parity.rs": "cbf9a3dafff44ccff1e09e788ae1033e0a1a47979f577e5207e28caa216f94a2",
+    "rust/crates/ingest-core/examples/xmltv_metadata_parity.rs": "2cc3c7958ce0fb5cce485af1478e1238dfac9196c912f9f7462ebfde923fc389",
+    "rust/crates/ingest-core/examples/xmltv_parity.rs": "505aa00a47d1c07a3471a9592426053f52314a3ad42b0c9e3a35f6c2505cc785",
+    "rust/crates/ingest-core/examples/xmltv_programme_parity.rs": "27b7fcc048d770f1afe5eb987f5b7b82a7a402eeff68f6f920a7559dff684b96",
+    "rust/crates/ingest-core/examples/xmltv_extract_parity.rs": "6cfd58ca65081f1392dd85f1e1c225f6e9018417d6db65b55fe8eac66bee7bd0",
+    "rust/crates/ingest-core/src/cache.rs": "b3ce35bef58ffb391a9e2114187de7c6c5104aa4578c58cb0a3ca71e6721daed",
+    "rust/crates/ingest-core/src/cached.rs": "6302c83c6c4f4b3c12a89964d97f57e698c0cc8b8948a93e4ed3cd72e490bba6",
+    "rust/crates/ingest-core/src/identity.rs": "a26a428d346c2fcce8e1fdafcd6baf7ca8beafc5bbf7d84b55c70206a4159776",
+    "rust/crates/ingest-core/src/lib.rs": "1be87edfd7e1f33d937e3acee4795009b5b4bede32e97a9ccd644b5dcc1d4dbc",
+    "rust/crates/ingest-core/src/prepared.rs": "502070f5f5b16a3ec851ca88d9334a7e9f9779dfbfd769b2fae15a6855590c12",
+    "rust/crates/ingest-core/src/projection.rs": "8c17b9bba5218aa8720af9ac68114e2f2bbdf9c963c42feebd116405757d5acf",
+    "rust/crates/ingest-core/src/reader.rs": "90ebdde2c67f0fdc307a353f9d3c12245b77782f6fb4bc614627cf49eed480b4",
+    "rust/crates/ingest-core/src/source_numeric_tests.rs": "faae928e9b322adf9525c003dbfad35e122a0cb23c48f4b017667fa99b21e29f",
+    "rust/crates/ingest-core/src/uploads.rs": "d3afcd870618701bc3817e6c01d26e89a1a588ff258cccdb26dc28b771b4d82f",
+    "rust/crates/ingest-core/src/validation.rs": "4ed0b686973afec42ac63053c5d8bbf51f7357324fd4e094b770c9f000d1adf4",
+    "rust/crates/ingest-core/src/xmltv.rs": "56705fff5c7abdc8ce1e24f687aa06153a34dee1e2c5959b9e35b1283b6bbf9e",
+    "rust/crates/ingest-core/src/xmltv_extract.rs": "3e027436a58bd43c1c51b6cc0cc3028de1ae8ba948a87fe370537593c9507079",
+    "rust/crates/ingest-core/src/xmltv_metadata.rs": "4be5113745c2f53d6f3a37c0e9df39ae5f6afb6f931ff3444c73db41b6049e0b",
+    "rust/crates/ingest-core/src/xmltv_programme.rs": "445e5cfe4653094364ae5c40aeb12768472a0acbaaf18ca026d8c0852143d440",
+    "rust/crates/ingest-core/tests/cache.rs": "a4f38ad61e7b175446ec223ad9fe59e7f38603726cf271dc3544b646b19adfb8",
+    "rust/crates/ingest-core/tests/cached.rs": "965b8e85049cf8dce9c3b394c2fa01700a2efeabed0179b46f7bbffbdd07ed0f",
+    "rust/crates/ingest-core/tests/parser.rs": "adf6bc98921f25dfb759cbdef7b9711f41abe41e29f09b6b4fa202e095565107",
+    "rust/crates/ingest-core/tests/prepared.rs": "b2c7e4d8e77ebd058d8cf9e09728f62d508efb85bee1e9b0022b3a7d67bc8fbf",
+    "rust/crates/ingest-core/tests/reader.rs": "2cef72ce7db3aeeeffecc482d4756c56699ad3b3732cadbf3aa8236f41b8df40",
+    "rust/crates/ingest-core/tests/uploads.rs": "3a5b2e86d0e873f3d8fc7820c399f05606caf14a82f67eb3c6bc069bac8ea21a",
+    "rust/crates/ingest-core/tests/xmltv_file.rs": "37b8cf48b6bdaedfa0c8b2342913abb874e0163dafdc370fd7d5df8e88818ec2",
+    "rust/crates/ingest-core/tests/xmltv_metadata.rs": "9a4b7894d44e3577b2018b4eeab1bcac2ce94465b69158c8176d0b7aa6097f08",
+    "rust/crates/ingest-core/tests/xmltv_programme.rs": "ec4932f6933c54b1562ca21fab7c090404476441872db576c0fb63d1f5749bb0"
+  },
+  "resource_guards": [
+    "Input, decoded output, XZ dictionary and ZIP directory caps",
+    "Aggregate decoded work across all failed ZIP candidates and replay",
+    "Cancellation before mutation and between reads",
+    "Caller-owned explicit input/output paths; archive names never extracted"
+  ],
+  "resource_tests_passed": 4,
+  "limitations": [
+    "Requires a retained bounded blocking-worker lease from its caller",
+    "No HTTP fetch, MIME database, cache/promotion or app refresh dispatch accepted",
+    "Original removes existing owned output and may leave complete64KiB blocks on error; never pass previous good guide"
+  ],
+  "application_parity_verified": false,
+  "log_sha256": {
+    "clippy.log": "379f7cb6059e2a040b20cddb72681f292a2d4c1f2e5dfdeaf0243386ebdbee51",
+    "tests.log": "f98374513033f0039819a1047fcc05bb25331ee4fc7bda1da3a14e5476f18e9b",
+    "build.log": "59639588a6f1826f129cbcd121edc07279dab94786f5fa5bde6b3439b2e845cc"
+  }
+}

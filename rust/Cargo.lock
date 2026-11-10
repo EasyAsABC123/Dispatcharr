@@ -478,6 +478,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "dispatcharr-backups"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "libc",
+ "serde",
+ "serde_json",
+ "sha2 0.10.9",
+ "uuid",
+ "zip",
+]
+
+[[package]]
 name = "dispatcharr-clients"
 version = "0.1.0"
 dependencies = [
@@ -603,6 +616,7 @@ version = "0.1.0"
 dependencies = [
  "base64 0.22.1",
  "chrono",
+ "dispatcharr-contracts",
  "dispatcharr-ingest-core",
  "dispatcharr-output-store",
  "dispatcharr-store",
@@ -877,6 +891,29 @@ dependencies = [
  "futures-util",
  "http-body-util",
  "serde_json",
+ "sqlx",
+ "tokio",
+ "url",
+]
+
+[[package]]
+name = "dispatcharr-xmltv-http"
+version = "0.1.0"
+dependencies = [
+ "async-stream",
+ "axum",
+ "bytes",
+ "chrono",
+ "dispatcharr-contracts",
+ "dispatcharr-ingest-core",
+ "dispatcharr-output-http",
+ "dispatcharr-output-store",
+ "dispatcharr-store",
+ "dispatcharr-xc-http",
+ "futures-util",
+ "num-bigint",
+ "serde_json",
+ "sha2 0.10.9",
  "sqlx",
  "tokio",
  "url",

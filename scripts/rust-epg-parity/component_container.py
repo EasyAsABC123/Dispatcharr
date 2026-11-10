@@ -8,7 +8,7 @@ import subprocess
 
 
 def execute(compose, environment, output, manifest_path, suite, fixture_name):
-    if suite not in ('source_sql', 'policy_cache_sql'):
+    if suite not in ('source_sql', 'policy_cache_sql', 'reporter_sql'):
         raise ValueError('Unknown EPG component suite')
     output = Path(output)
     manifest = json.loads(Path(manifest_path).read_bytes())
@@ -31,6 +31,8 @@ def execute(compose, environment, output, manifest_path, suite, fixture_name):
         'REDIS_TEST_URL': 'redis://:playback-fixture-only@baseline:6379/0', 'EPG_TEST_SUITE': suite,
         'EPG_IMPORT_DISPOSABLE_FIXTURE': 'playback-fixture-only',
         'EPG_POLICY_DISPOSABLE_FIXTURE': 'playback-fixture-only',
+        'EPG_REPORTER_DISPOSABLE_FIXTURE': 'playback-fixture-only',
+        'EPG_REPORTER_FIXTURE': '/evidence/' + fixture_name,
         'EPG_IMPORT_FIXTURE': '/evidence/' + fixture_name,
         'EPG_POLICY_FIXTURE': '/evidence/' + fixture_name,
         'EPG_POLICY_NATIVE_CACHE': '/test-output/epg-policy-native-cache.json'}

@@ -1,0 +1,16 @@
+[package]
+name = "dispatcharr-backups"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = {version="1",features=["derive"]}
+serde_json = {version="1",features=["arbitrary_precision","preserve_order"]}
+zip = {version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs"]}
+uuid = {version="1",features=["v4"]}
+libc = "0.2"
+chrono = {version="0.4",features=["serde"]}
+
+[dev-dependencies]
+sha2 = "0.10"

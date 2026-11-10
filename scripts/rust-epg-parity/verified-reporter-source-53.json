@@ -1,0 +1,197 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "original parse_programs_for_source producer/status ordering",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application credit.",
+  "evidence": "artifacts/rust/m6-guide-reporter-source-53",
+  "source_cases": 9,
+  "cases": [
+    {
+      "name": "valid",
+      "result": true,
+      "status": "success",
+      "publication_progress": [
+        0,
+        10,
+        90,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication",
+        "staged",
+        "publication",
+        "swapped_inside_transaction",
+        "invalidation_before",
+        "invalidation_after",
+        "audit_returned",
+        "publication",
+        "late_mapping_dispatch_boundary"
+      ]
+    },
+    {
+      "name": "empty-complete",
+      "result": true,
+      "status": "success",
+      "publication_progress": [
+        0,
+        10,
+        90,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication",
+        "publication",
+        "swapped_inside_transaction",
+        "invalidation_before",
+        "invalidation_after",
+        "audit_returned",
+        "publication",
+        "late_mapping_dispatch_boundary"
+      ]
+    },
+    {
+      "name": "no-mappings-no-file",
+      "result": true,
+      "status": "success",
+      "publication_progress": [
+        0,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication"
+      ]
+    },
+    {
+      "name": "mapped-null-empty",
+      "result": true,
+      "status": "success",
+      "publication_progress": [
+        0,
+        10,
+        90,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication",
+        "publication",
+        "swapped_inside_transaction",
+        "invalidation_before",
+        "invalidation_after",
+        "audit_returned",
+        "publication",
+        "late_mapping_dispatch_boundary"
+      ]
+    },
+    {
+      "name": "missing-file",
+      "result": false,
+      "status": "error",
+      "publication_progress": [
+        0,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication",
+        "audit_returned"
+      ]
+    },
+    {
+      "name": "incomplete",
+      "result": false,
+      "status": "error",
+      "publication_progress": [
+        0,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication",
+        "audit_returned"
+      ]
+    },
+    {
+      "name": "progress-5000",
+      "result": true,
+      "status": "success",
+      "publication_progress": [
+        0,
+        10,
+        35,
+        90,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication",
+        "staged",
+        "staged",
+        "publication",
+        "staged",
+        "publication",
+        "swapped_inside_transaction",
+        "invalidation_before",
+        "invalidation_after",
+        "audit_returned",
+        "publication",
+        "late_mapping_dispatch_boundary"
+      ]
+    },
+    {
+      "name": "invalidate-wrongtype",
+      "result": true,
+      "status": "success",
+      "publication_progress": [
+        0,
+        10,
+        90,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication",
+        "staged",
+        "publication",
+        "swapped_inside_transaction",
+        "invalidation_before",
+        "invalidation_after",
+        "audit_returned",
+        "publication",
+        "late_mapping_dispatch_boundary"
+      ]
+    },
+    {
+      "name": "swap-error",
+      "result": false,
+      "status": "error",
+      "publication_progress": [
+        0,
+        10,
+        90,
+        100
+      ],
+      "effects": [
+        "publication",
+        "publication",
+        "staged",
+        "publication",
+        "publication",
+        "audit_returned"
+      ]
+    }
+  ],
+  "cleanup": "project removed",
+  "native_verified": false,
+  "application_jobs_verified": false,
+  "websocket_transport_verified": false,
+  "external_integrations_verified": false,
+  "performance_verified": false,
+  "evidence_sha256": {
+    "integration.json": "d030e17339200b841855cd998a5ee2c1c1e840371b1d223fef7c1cf1c2a78a31",
+    "reporter-source.json": "50fd4270052220476b85d5db9b44f6613a6cc95e51e8e637e39a4b94dee8928d"
+  }
+}

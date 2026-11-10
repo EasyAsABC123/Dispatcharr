@@ -103,6 +103,21 @@ impl GuideStaging {
             Ok((this,mapping))
         }).await
     }
+    /// Original import status uses the source's total entry count sampled after
+    /// mapping lookup. Retain the same private session/job through its SQL reply.
+    pub async fn source_entry_count(self) -> Result<(Self, i64), StoreError> {
+        owned(async move {
+            let mut this = self;
+            let count = sqlx::query_scalar::<_, i64>(
+                "SELECT count(*) FROM epg_epgdata WHERE epg_source_id=$1",
+            )
+            .bind(this.source_id)
+            .fetch_one(&mut this.connection)
+            .await?;
+            Ok((this, count))
+        })
+        .await
+    }
     /// Ownership moves into the worker. Dropping its waiter cannot free the
     /// connection, admission or retained job guard while SQL is still running.
     pub async fn push(self, rows: Vec<XmltvProgramme>) -> Result<Self, StoreError> {

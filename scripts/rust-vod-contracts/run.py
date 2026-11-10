@@ -38,6 +38,7 @@ def main():
     parser.add_argument('--m3u-rust-renderer', action='store_true', help='Compare native SQL/renderer positive export bytes with original source')
     parser.add_argument('--vod-rapid-reclose-source', action='store_true', help='Characterize actual original rapid-reclose duplicate-stop timer race separately')
     parser.add_argument('--vod-rapid-reclose-rust', action='store_true', help='Compare original rapid-reclose event multiplicity, native fenced cleanup and retained timer admission')
+    parser.add_argument('--vod-rapid-reclose-ws', action='store_true', help='Compare actual rapid-reclose HTTP, packaged WebSocket multiplicity, full DTOs, audits and Redis cleanup')
     parser.add_argument('--vod-progress-source', action='store_true', help='Capture original finalpartial/full100thchunk consumed-byte telemetry boundaries')
     parser.add_argument('--vod-progress-rust', action='store_true', help='Compare native finalpartial100thchunk telemetry with actual original provider/Redis')
     parser.add_argument('--timeshift-playback-ws', action='store_true', help='Capture actual original/native WebSocket fullstats during six decoded archive media/lifecycle cases')
@@ -73,6 +74,8 @@ def main():
     parser.add_argument('--rust-resolver-test', action='store_true', help='Run the actual-schema Rust resolver test against this disposable database')
     parser.add_argument('--rust-ingest-test', action='store_true', help='Compare the native M3U batch sink to original Django writes in this disposable database')
     args = parser.parse_args()
+    if args.vod_rapid_reclose_ws:
+        args.vod_playback_ws = True
     if args.vod_rapid_reclose_rust:
         args.vod_rapid_reclose_source = True
     if args.vod_progress_rust:
@@ -253,6 +256,11 @@ def main():
                 (output/'rust-vod-progress.log').write_text(result.stdout+result.stderr);report['vod_progress_rust']={'passed':result.returncode==0,'source_bound_candidate_image':False};result.check_returncode()
         if args.vod_playback_ws or args.timeshift_playback_ws:
             def ws_control(action,sid=None):
+                if action=='rapid-inspect':
+                    if not sid or not sid.startswith('fixture-packaged-vod-') or len(sid)>128:raise RuntimeError('Invalid owned rapid fixture ID')
+                    script="local k='vod_persistent_connection:'..ARGV[1];return {redis.call('EXISTS',k),redis.call('HGET',k,'active_streams') or ''}"
+                    values=json.loads(command(compose+['exec','-T','baseline','redis-cli','--json','EVAL',script,'0',sid],timeout=5))
+                    return {'exists':bool(values[0]),'active_streams':int(values[1] or 0)}
                 arguments=compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_ws_control.py',action]+([sid] if sid else [])
                 # Token output remains memory-only and never reaches command logs.
                 result=subprocess.run(arguments,env=environment,capture_output=True,text=True,timeout=30)
@@ -274,7 +282,13 @@ def main():
             spec=importlib.util.spec_from_file_location('frozen_vod_ws_probe',tool_root/'scripts/rust-output-contracts/vod_ws_probe.py')
             vod_ws=importlib.util.module_from_spec(spec);spec.loader.exec_module(vod_ws)
             ws_base,access=source_ws()
-            try:report['vod_ws_source']=vod_ws.capture(base,ws_base,access,ws_control,error_path=output/'vod-ws-source-partial.json')
+            try:
+                report['vod_ws_source']=vod_ws.capture(base,ws_base,access,ws_control,error_path=output/'vod-ws-source-partial.json')
+                if args.vod_rapid_reclose_ws:
+                    spec=importlib.util.spec_from_file_location('frozen_rapid_vod_ws',tool_root/'scripts/rust-output-contracts/vod_rapid_ws_probe.py')
+                    rapid_ws=importlib.util.module_from_spec(spec);spec.loader.exec_module(rapid_ws)
+                    report['vod_rapid_ws_source']=rapid_ws.capture(base,ws_base,access,ws_control,error_path=output/'vod-rapid-ws-source-partial.json')
+                    (output/'vod-rapid-ws-source.json').write_text(json.dumps(report['vod_rapid_ws_source'],indent=2)+'\n')
             finally:ws_control('stop-daphne')
             del access
             (output/'vod-ws-source.json').write_text(json.dumps(report['vod_ws_source'],indent=2)+'\n')
@@ -627,7 +641,12 @@ def main():
                 (output/'vod-progress-candidate.json').write_text(json.dumps(report['vod_progress_candidate'],indent=2)+'\n')
             if args.vod_playback_ws:
                 access=ws_control('token')['access']
-                try:report['vod_ws_candidate']=vod_ws.capture(candidate,candidate,access,ws_control,error_path=output/'vod-ws-candidate-partial.json')
+                try:
+                    report['vod_ws_candidate']=vod_ws.capture(candidate,candidate,access,ws_control,error_path=output/'vod-ws-candidate-partial.json')
+                    if args.vod_rapid_reclose_ws:
+                        report['vod_rapid_ws_candidate']=rapid_ws.capture(candidate,candidate,access,ws_control,error_path=output/'vod-rapid-ws-candidate-partial.json')
+                        report['vod_rapid_ws_comparison']=rapid_ws.compare(report['vod_rapid_ws_source'],report['vod_rapid_ws_candidate'])
+                        (output/'vod-rapid-ws-candidate.json').write_text(json.dumps(report['vod_rapid_ws_candidate'],indent=2)+'\n')
                 finally:del access
                 report['vod_ws_comparison']=vod_ws.compare(report['vod_ws_source'],report['vod_ws_candidate'])
                 (output/'vod-ws-candidate.json').write_text(json.dumps(report['vod_ws_candidate'],indent=2)+'\n')
@@ -730,6 +749,8 @@ def main():
             report['passed']=report['passed'] and report['timeshift_ws_source']['capture_complete'] and (not candidate_manifest or report['timeshift_ws_comparison']['captured_packaged_timeshift_events_match'])
         if args.vod_playback_ws:
             report['passed']=report['passed'] and report['vod_ws_source']['capture_complete'] and (not candidate_manifest or report['vod_ws_comparison']['captured_packaged_vod_events_match'])
+        if args.vod_rapid_reclose_ws:
+            report['passed']=report['passed'] and report['vod_rapid_ws_source']['capture_complete'] and (not candidate_manifest or report['vod_rapid_ws_comparison']['captured_packaged_rapid_reclose_match'])
         if args.m3u_rust_http:
             report['passed'] = report['passed'] and report['m3u_rust_http']['passed']
         if args.m3u_rust_renderer:

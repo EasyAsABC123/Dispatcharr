@@ -62,7 +62,7 @@ struct Limited<R> {
 // invalid trailing member after a complete stream, but still rejects truncated
 // potential members (including all-zero XZ padding). liblzma preserves that
 // distinction and also accepts legacy .lzma content in an .xz-named upload.
-struct SourceLzma<R: BufRead> {
+pub(crate) struct SourceLzma<R: BufRead> {
     reader: R,
     stream: xz2::stream::Stream,
     limit: u64,
@@ -71,7 +71,7 @@ struct SourceLzma<R: BufRead> {
     member_finished: bool,
 }
 impl<R: BufRead> SourceLzma<R> {
-    fn new(reader: R, limit: u64) -> io::Result<Self> {
+    pub(crate) fn new(reader: R, limit: u64) -> io::Result<Self> {
         let stream = xz2::stream::Stream::new_auto_decoder(limit, 0)?;
         Ok(Self {
             reader,
@@ -264,7 +264,10 @@ fn le64(bytes: &[u8]) -> u64 {
     u64::from_le_bytes(bytes[..8].try_into().unwrap())
 }
 /// Inspect the bounded footer before the ZIP library allocates entry metadata.
-fn check_zip_directory(file: &mut File, limits: UploadLimits) -> Result<(), UploadError> {
+pub(crate) fn check_zip_directory(
+    file: &mut File,
+    limits: UploadLimits,
+) -> Result<(), UploadError> {
     let length = file.metadata()?.len();
     let tail_size = length.min(65557) as usize;
     file.seek(SeekFrom::End(-(tail_size as i64)))?;

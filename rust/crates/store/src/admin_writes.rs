@@ -26,6 +26,11 @@ fn field_error(field: &str, message: &str) -> StoreError {
 pub(crate) fn body_object(body: Body) -> Result<Map<String, Value>, StoreError> {
     let Json(value) =
         body.map_err(|_| StoreError::InvalidInput(json!({"detail":"JSON parse error"})))?;
+    if value.is_null() {
+        return Err(StoreError::InvalidInput(
+            json!({"non_field_errors":["No data provided"]}),
+        ));
+    }
     value.as_object().cloned().ok_or_else(||StoreError::InvalidInput(json!({"non_field_errors":[format!("Invalid data. Expected a dictionary, but got {}.",datatype(&value))]})))
 }
 fn datatype(value: &Value) -> &'static str {
@@ -492,14 +497,14 @@ pub(crate) async fn create_user(
 async fn change_user(
     auth: AuthService,
     id: i64,
-    fields: Map<String, Value>,
+    body: Body,
     partial: bool,
 ) -> Result<Json<Value>, StoreError> {
     // Match DRF's object lookup before validation so missing objects return 404.
     if auth.store.user_by_id(id).await?.is_none() {
         return Err(user_missing());
     }
-    let fields = user_input(fields, partial, false)?;
+    let fields = user_input(body_object(body)?, partial, false)?;
     check_user_unique(&auth, &fields, Some(id)).await?;
     let password = if let Some(value) = fields.get("password") {
         Some(
@@ -556,7 +561,7 @@ pub(crate) async fn patch_user(
     body: Body,
 ) -> Result<Json<Value>, StoreError> {
     auth.account_user(peer, headers, true).await?;
-    change_user(auth, id, body_object(body)?, true).await
+    change_user(auth, id, body, true).await
 }
 pub(crate) async fn put_user(
     State(auth): State<AuthService>,
@@ -566,7 +571,7 @@ pub(crate) async fn put_user(
     body: Body,
 ) -> Result<Json<Value>, StoreError> {
     auth.account_user(peer, headers, true).await?;
-    change_user(auth, id, body_object(body)?, false).await
+    change_user(auth, id, body, false).await
 }
 pub(crate) async fn delete_user(
     State(auth): State<AuthService>,
@@ -707,7 +712,7 @@ pub(crate) async fn create_group(
 async fn change_group(
     auth: AuthService,
     id: i64,
-    fields: Map<String, Value>,
+    body: Body,
     partial: bool,
 ) -> Result<Json<Value>, StoreError> {
     let exists: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM auth_group WHERE id=$1)")
@@ -717,7 +722,7 @@ async fn change_group(
     if !exists {
         return Err(group_missing());
     }
-    let fields = group_input(fields, partial)?;
+    let fields = group_input(body_object(body)?, partial)?;
     check_group(&auth, &fields, Some(id)).await?;
     let mut transaction = auth.store.pool().begin().await?;
     let row = sqlx::query("SELECT name FROM auth_group WHERE id=$1 FOR UPDATE")
@@ -745,7 +750,7 @@ pub(crate) async fn patch_group(
     body: Body,
 ) -> Result<Json<Value>, StoreError> {
     auth.account_user(peer, headers, true).await?;
-    change_group(auth, id, body_object(body)?, true).await
+    change_group(auth, id, body, true).await
 }
 pub(crate) async fn put_group(
     State(auth): State<AuthService>,
@@ -755,7 +760,7 @@ pub(crate) async fn put_group(
     body: Body,
 ) -> Result<Json<Value>, StoreError> {
     auth.account_user(peer, headers, true).await?;
-    change_group(auth, id, body_object(body)?, false).await
+    change_group(auth, id, body, false).await
 }
 pub(crate) async fn delete_group(
     State(auth): State<AuthService>,

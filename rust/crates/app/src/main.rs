@@ -475,6 +475,16 @@ async fn run() -> Result<(), String> {
         dispatcharr_store::OutputProfileWrites::new(auth.clone(), profile_redis.as_deref())
             .await
             .map_err(|_| "Output profile initialization failed (credentials omitted)")?;
+    let epg_programs = dispatcharr_store::EpgProgramReads::new(
+        auth.clone(),
+        dispatcharr_store::EpgProgramReadLimits {
+            concurrent_responses: positive("RUST_MAX_EPG_READ_RESPONSES", 4)?,
+            response_bytes: positive("RUST_EPG_READ_RESPONSE_BYTES", 16 * 1024 * 1024)?,
+            row_bytes: positive("RUST_EPG_READ_ROW_BYTES", 1024 * 1024)?,
+            deadline: Duration::from_millis(positive("RUST_EPG_READ_TIMEOUT_MS", 2000)? as u64),
+        },
+    )
+    .map_err(|_| "Invalid EPG programme read configuration")?;
     let xc = xc
         .map(|gateway| {
             gateway.with_live(playback::dispatcher(
@@ -490,6 +500,7 @@ async fn run() -> Result<(), String> {
         .with_state(store)
         .merge(auth.clone().router())
         .merge(output_profiles.clone().router())
+        .merge(epg_programs.clone().router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))
         .merge(playback::router(
@@ -579,6 +590,7 @@ async fn run() -> Result<(), String> {
         output,
         xc,
         output_profiles,
+        epg_programs,
         hdhr,
         live_statistics,
     };
@@ -646,6 +658,7 @@ struct ShutdownServices {
     output: Option<dispatcharr_output_http::OutputGateway>,
     xc: Option<dispatcharr_xc_http::XcGateway>,
     output_profiles: dispatcharr_store::OutputProfileWrites,
+    epg_programs: dispatcharr_store::EpgProgramReads,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
     live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
 }
@@ -662,11 +675,12 @@ async fn shutdown_components(services: ShutdownServices) {
         output,
         xc,
         output_profiles,
+        epg_programs,
         hdhr,
         live_statistics,
     } = services;
     engine.shutdown();
-    let (live, _, _, vod, catchup, management, realtime, output, xc, profiles, hdhr) = tokio::join!(
+    let (live, _, _, vod, catchup, management, realtime, output, xc, profiles, programs, hdhr) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
             if let Some(hls) = hls {
@@ -721,9 +735,10 @@ async fn shutdown_components(services: ShutdownServices) {
             }
         },
         output_profiles.shutdown(Duration::from_secs(8)),
+        epg_programs.shutdown(Duration::from_secs(8)),
         hdhr.shutdown(),
     );
-    if !live || !vod || !catchup || !management || !realtime || !output || !xc || !profiles || !hdhr
+    if !live || !vod || !catchup || !management || !realtime || !output || !xc || !profiles || !programs || !hdhr
     {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }

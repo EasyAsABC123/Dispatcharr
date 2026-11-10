@@ -50,8 +50,13 @@ fn mapped_projection_errors_and_unmapped_skips_are_separate() {
     });
     let mut rows = Vec::new();
     while let Some(batch) = rx.blocking_recv() {
-        assert_eq!(batch.rows.len(), 1);
-        rows.extend(batch.rows);
+        if let Batch::Rows {
+            rows: batch_rows, ..
+        } = batch
+        {
+            assert_eq!(batch_rows.len(), 1);
+            rows.extend(batch_rows);
+        }
     }
     let parsed = worker.join().unwrap().unwrap();
     assert_eq!(
@@ -135,7 +140,11 @@ fn changed_open_file_never_reports_success_after_staging_started() {
             tx,
         )
     });
-    assert!(rx.blocking_recv().is_some());
+    loop {
+        if matches!(rx.blocking_recv(), Some(Batch::Rows { .. })) {
+            break;
+        }
+    }
     use std::io::Write;
     fs::OpenOptions::new()
         .append(true)
@@ -183,4 +192,45 @@ fn capacity_charges_retained_string_allocation_and_rejects_invalid_queue_limits(
     ] {
         assert!(config.validate().is_err());
     }
+}
+
+#[test]
+fn progress_boundary_follows_all_five_thousand_queued_rows() {
+    let fixture = Fixture::new(&xml(5001));
+    let (tx, mut rx) = mpsc::channel(2);
+    let path = fixture.0.clone();
+    let worker = thread::spawn(move || {
+        parse_file(
+            path,
+            mapping(),
+            ImportConfig {
+                batch_rows: 2500,
+                ..ImportConfig::default()
+            },
+            Arc::new(AtomicBool::new(false)),
+            tx,
+        )
+    });
+    assert!(matches!(rx.blocking_recv(), Some(Batch::Validated)));
+    let mut count = 0;
+    let mut progress = Vec::new();
+    while let Some(batch) = rx.blocking_recv() {
+        if let Batch::Rows {
+            rows,
+            progress: tick,
+        } = batch
+        {
+            count += rows.len();
+            if let Some(value) = tick {
+                assert_eq!(value, count as u64);
+                progress.push(value);
+            }
+        }
+    }
+    assert_eq!(count, 5001);
+    assert_eq!(progress, [5000]);
+    assert_eq!(
+        worker.join().unwrap().unwrap().report.parsed_programmes,
+        5001
+    );
 }

@@ -22,6 +22,20 @@ pub trait UpdateEventSink: Send + Sync {
         group: &'a str,
         message: serde_json::Value,
     ) -> BoxFuture<'a, Result<(), UpdateEventError>>;
+    /// Retain caller-owned admission through publication. Transports that
+    /// supervise physical I/O after cancellation override this to transfer the
+    /// guard into each owned operation; the default retains it for send().
+    fn send_retained<'a>(
+        &'a self,
+        group: &'a str,
+        message: serde_json::Value,
+        guard: std::sync::Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<(), UpdateEventError>> {
+        Box::pin(async move {
+            let _guard = guard;
+            self.send(group, message).await
+        })
+    }
 }
 
 /// Nonblocking notification that acknowledged live-client metadata changed.

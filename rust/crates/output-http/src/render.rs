@@ -65,7 +65,7 @@ pub fn urlencode(pairs: &[(String, String)]) -> String {
         .collect::<Vec<_>>()
         .join("&")
 }
-fn display_number(value: Option<f64>) -> Result<String, Error> {
+pub fn display_number(value: Option<f64>) -> Result<String, Error> {
     let Some(value) = value else {
         return Ok(String::new());
     };

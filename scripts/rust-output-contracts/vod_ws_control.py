@@ -30,6 +30,19 @@ elif action=='stop-daphne':
             os.kill(pid,signal.SIGTERM)
         path.unlink()
     print(json.dumps({'stopped':True}))
+elif action=='rapid-audit-before':
+    from core.models import SystemEvent
+    print(json.dumps({'after':SystemEvent.objects.order_by('-id').values_list('id',flat=True).first() or 0}))
+elif action=='rapid-audit-after':
+    from core.models import SystemEvent
+    from core.utils import RedisClient
+    after,sid=sys.argv[2].split(':',1)
+    if not after.isascii() or not after.isdecimal() or not sid.startswith('fixture-packaged-vod-') or len(sid)>128:raise RuntimeError('Invalid owned rapid audit marker')
+    seed=json.loads(Path('/evidence/vod-seed.json').read_text())
+    redis=RedisClient.get_client()
+    print(json.dumps({'audit':list(SystemEvent.objects.filter(id__gt=int(after),event_type__in=['vod_start','vod_stop']).order_by('id').values('event_type','details')),
+                      'remaining_metadata':bool(redis.exists('vod_persistent_connection:'+sid)),
+                      'provider_connections':int(redis.get('profile_connections:'+str(seed['provider_profile_id'])) or 0)}))
 elif action=='inspect':
     from core.utils import RedisClient
     sid=sys.argv[2]

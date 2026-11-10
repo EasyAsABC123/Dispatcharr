@@ -1,0 +1,228 @@
+{
+  "format_version": 1,
+  "scope": "Immutable image22 previously characterized M4 Source/native functional contracts after Program JSON route/shared null changes; not full M4 acceptance",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m4-all-functional-image22-1/vod-contracts.json",
+  "evidence_sha256": "c28d470e57c896a8371a2ad6d671eb207517d002f59555b3180ca03841e7f01f",
+  "provenance": {
+    "image_id": "sha256:4860d56aa58cc70fc6900e0ce42555958d9877e808ef8cb8d7d20dfcedf01757",
+    "source_tree_sha256": "5d2d8b06c366275347ef917d00ce3b522a1dcc26fe9522a0bf383d4ba7f14bf5",
+    "build_manifest_sha256": "1f31eedc045abb255f6708b6ea6d8d530e149688b99a9f0fcdc535ef64503f08"
+  },
+  "tool_manifest_sha256": "2877f41658dd2f695ee4e88605668cdecf7d6a060177128ec5e86fd7389ab11f",
+  "comparisons": {
+    "wire_comparison": {
+      "format_version": 1,
+      "scope": "captured native XC VOD seven-case wire comparison only",
+      "captured_wire_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false,
+      "remaining_gates": [
+        "bound candidate build/source provenance",
+        "authenticated handoff and user/network controls",
+        "provider/cross-worker session lifecycle",
+        "full metadata/WebSocket side effects",
+        "decoded browser execution",
+        "resource/performance matrix"
+      ]
+    },
+    "profile_alias_comparison": {
+      "captured_wire_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_management_comparison": {
+      "captured_management_matches": true,
+      "differences": [],
+      "normalizations": [
+        "Allow order as unordered original DRF method set",
+        "Only top-level timestamp replaced after verifying it lies within each actual request interval"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_xc_comparison": {
+      "captured_direct_auth_matches": true,
+      "differences": [],
+      "normalizations": [
+        "opaque redirect SID and query token values",
+        "Allow method order is a set; original DRF order varies by Python hash seed",
+        "JSON object content compared semantically; each Content-Length must match its actual body bytes"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_direct_auth_comparison": {
+      "captured_direct_auth_matches": true,
+      "differences": [],
+      "normalizations": [
+        "opaque redirect SID and query token values",
+        "Allow method order is a set; original DRF order varies by Python hash seed",
+        "JSON object content compared semantically; each Content-Length must match its actual body bytes"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_busy_seek_comparison": {
+      "captured_busy_controls_match": true,
+      "differences": [],
+      "normalizations": [
+        "elapsed time and queued old-response bytes are observed, not equated",
+        "immediate client-close scheduling is observed; established grace is checked after 9 seconds",
+        "busy statistics byte totals reflect differently buffered delivery and remain a separate contract"
+      ],
+      "continuous_quota_sampling_verified": false,
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_idle_reopen_comparison": {
+      "captured_idle_reopen_matches": true,
+      "differences": [],
+      "normalizations": [
+        "wall-clock timestamps compared by preservation/reanchor relationships",
+        "numeric seek base tolerance 1e-9 seconds",
+        "bounded sliding TTLs account for observer boot"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_native_limit_comparison": {
+      "captured_wire_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_session_comparison": {
+      "captured_wire_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_media_comparison": {
+      "captured_media_matches": true,
+      "differences": [],
+      "normalizations": [
+        "elapsed wall time is measured separately",
+        "observer boot makes exact remaining TTL unstable; source policy/bounds and30second jitter ceiling retained"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    }
+  },
+  "decoders": [
+    {
+      "backend": "baseline",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    },
+    {
+      "backend": "candidate",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    }
+  ],
+  "groups": {
+    "vod_wire": 7,
+    "profile_alias_react": 2,
+    "management": 31,
+    "management_active_idle": 2,
+    "xc_alias": 23,
+    "direct_auth": 15,
+    "busy_seek": 3,
+    "idle_reopen": 3,
+    "positive_limit_redirect": true,
+    "session_api": 24,
+    "archive_media": 6
+  },
+  "full_m4_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Broader full application/continuous quota and unsupported source variants remain independently tracked.",
+    "This functional replay does not establish a new resource/performance result.",
+    "Host lifecycle/fault acceptance is separate from this packaged functional scope."
+  ],
+  "packaged_events_and_boundaries": {
+    "passed": true,
+    "cleanup": true,
+    "evidence": "artifacts/rust/m4-events-boundaries-image22-1/vod-contracts.json",
+    "sha256": "306d3a1ed6ee75898d72dc7cc9907fe76d1a7b0bfa109dd63270d97270c048e0",
+    "comparisons": {
+      "vod_ws_comparison": {
+        "captured_packaged_vod_events_match": true,
+        "differences": [],
+        "normalizations": [
+          "Own timestamps/elapsed/consumed progress validated; stable complete DTOs compared",
+          "Original stopping snapshot races metadata removal; empty/nonempty final snapshots permitted"
+        ],
+        "application_parity_verified": false,
+        "performance_verified": false
+      },
+      "timeshift_ws_comparison": {
+        "captured_packaged_timeshift_events_match": true,
+        "differences": [],
+        "normalizations": [
+          "Actual capability IDs replaced by first-seen session ordinals",
+          "Own timestamps/elapsed/byte-rate progress validated; stable full DTOs and snapshot counts compared"
+        ],
+        "application_parity_verified": false,
+        "performance_verified": false
+      },
+      "timeshift_media_comparison": {
+        "captured_media_matches": true,
+        "differences": [],
+        "normalizations": [
+          "elapsed wall time is measured separately",
+          "observer boot makes exact remaining TTL unstable; source policy/bounds and30second jitter ceiling retained"
+        ],
+        "application_parity_verified": false,
+        "performance_verified": false
+      }
+    },
+    "vod_byte_boundaries": {
+      "format_version": 1,
+      "scope": "Packaged actualrangebody progress boundary",
+      "capture_complete": true,
+      "events": [
+        {
+          "case": "range-819199",
+          "status": 206,
+          "bytes": 819199,
+          "sha256": "4982d0533dd35d95195596183e1d6e05a0587848564594cf10f8d763b445e0bb",
+          "bytes_sent": 819199,
+          "metadata_present_at_eof": true
+        },
+        {
+          "case": "range-819200",
+          "status": 206,
+          "bytes": 819200,
+          "sha256": "83ed2f3e9d49a217ee4ace25599d588c5a5d0c96374d9e1fe4ace4e17bc9c86c",
+          "bytes_sent": 819200,
+          "metadata_present_at_eof": true
+        },
+        {
+          "case": "range-819201",
+          "status": 206,
+          "bytes": 819201,
+          "sha256": "d2fd5781d8f9d8dc23f0ca86caeea5665ed1ed5800b875602b2a80757ee289b7",
+          "bytes_sent": 819200,
+          "metadata_present_at_eof": true
+        }
+      ],
+      "source_progress_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "provenance": {
+      "image_id": "sha256:4860d56aa58cc70fc6900e0ce42555958d9877e808ef8cb8d7d20dfcedf01757",
+      "source_tree_sha256": "5d2d8b06c366275347ef917d00ce3b522a1dcc26fe9522a0bf383d4ba7f14bf5",
+      "build_manifest_sha256": "1f31eedc045abb255f6708b6ea6d8d530e149688b99a9f0fcdc535ef64503f08"
+    },
+    "tool_manifest_sha256": "2877f41658dd2f695ee4e88605668cdecf7d6a060177128ec5e86fd7389ab11f"
+  }
+}

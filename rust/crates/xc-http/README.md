@@ -2,7 +2,7 @@
 
 Original Dispatcharr authors and contributors retain full application credit.
 The account/live component is in the workspace and attached to the application
-when Redis is configured. Packaged application verification is pending. The
+when Redis is configured. Packaged image21 passed the captured scope. The
 host comparison in `artifacts/rust/m7-xc-native-6` passed 76 actual original/native
 HTTP cases plus seven real PostgreSQL/Redis resource tests. This does not complete
 the XC/XMLTV migration or establish a performance improvement.
@@ -51,6 +51,9 @@ XMLTV cache/dummy-programme behaviors are separate open gates. Canonical
 refresh, movie/series/EPG actions, XMLTV, and full milestone acceptance remain
 open. The live long/short entry adapter is now main-wired to the existing media
 dispatcher; its 36 captured Source auth/method/lookup wire cases pass in the host
-component. Positive generated-URL playback and packaged static/shutdown behavior
-remain unverified. Catalog success does not imply playback acceptance. Resource
+component. Exact image21 passed all 112 catalog/live-entry cases and an actual
+catalog-derived TS URL decoded as H264/AAC with 74 video frames and zero decoder
+errors. Nested static routing and shutdown (0.207 seconds, exit0, no OOM) passed;
+see `scripts/rust-xc-contracts/verified-xc-image21-1.json`. Other formats and the
+positive per-user policy matrix remain separate gates. Resource
 measurements require a later immutable, equivalent-side-effect paired run.

@@ -1,0 +1,23 @@
+# Component-only execution: original Dispatcharr authors retain application credit.
+FROM rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f AS build
+WORKDIR /workspace
+ENV CARGO_TARGET_DIR=/tmp/dispatcharr-target
+COPY rust/ ./rust/
+RUN mkdir -p "$CARGO_TARGET_DIR" && cargo test --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-ingest-epg --test source_sql --test policy_cache_sql --test reporter_sql --no-run && \
+    mkdir -p /test-bin && \
+    for suite in source_sql policy_cache_sql reporter_sql; do \
+      artifact="$(find /tmp/dispatcharr-target/release/deps -maxdepth 1 -type f -name "$suite-*" -executable)"; \
+      test -n "$artifact" || exit 1; install -m 0755 "$artifact" "/test-bin/$suite" || exit 1; \
+    done
+COPY rust/runtime/ingest_epg_reporter_test.sh /test-bin/run
+RUN chmod 0755 /test-bin/run
+FROM debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+LABEL org.opencontainers.image.title="Dispatcharr EPG component tests" \
+      org.opencontainers.image.licenses="AGPL-3.0-only" \
+      org.opencontainers.image.description="Original Dispatcharr credit belongs to its original authors and contributors. Component tests only; refresh-job parity incomplete."
+COPY --from=build /test-bin /test-bin
+COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
+COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
+COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
+USER 65532:65532
+ENTRYPOINT ["/test-bin/run"]

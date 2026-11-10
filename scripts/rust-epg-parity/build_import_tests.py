@@ -18,6 +18,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-manifest', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--reporter',action='store_true')
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -27,7 +28,9 @@ def main():
     archive = args.build_manifest.parent / 'source.tar'
     if not manifest['passed'] or tree != manifest['source_tree_sha256'] or sha(archive) != manifest['source_archive_sha256']:
         raise ValueError('Canonical immutable source binding failed')
-    for name in ('rust/Dockerfile.ingest-epg-tests', 'rust/runtime/ingest_epg_test.sh',
+    dockerfile='rust/Dockerfile.ingest-epg-reporter-tests' if args.reporter else 'rust/Dockerfile.ingest-epg-tests'
+    entrypoint='rust/runtime/ingest_epg_reporter_test.sh' if args.reporter else 'rust/runtime/ingest_epg_test.sh'
+    for name in (dockerfile, entrypoint,
                  'rust/crates/ingest-epg/tests/source_sql.rs', 'rust/crates/ingest-epg/tests/policy_cache_sql.rs'):
         if name not in sources:
             raise ValueError('Canonical archive predates component Docker verification')
@@ -35,12 +38,12 @@ def main():
     report = {'format_version': 1, 'scope': 'Immutable EPG component test image only',
               'passed': False, 'tag': tag, 'source_tree_sha256': tree, 'source_sha256': sources,
               'source_archive_sha256': sha(archive), 'canonical_manifest_sha256': sha(args.build_manifest),
-              'tool_sha256': sha(Path(__file__)), 'application_image_verified': False,
+              'tool_sha256': sha(Path(__file__)), 'dockerfile':dockerfile, 'application_image_verified': False,
               'full_refresh_job_verified': False, 'performance_verified': False}
     try:
         began = time.monotonic()
         with archive.open('rb') as source, (output / 'build.log').open('wb') as log:
-            subprocess.run(['docker', 'build', '-f', 'rust/Dockerfile.ingest-epg-tests',
+            subprocess.run(['docker', 'build', '-f', dockerfile,
                 '--label', 'org.opencontainers.image.source-tree-sha256=' + tree, '-t', tag, '-'],
                 stdin=source, stdout=log, stderr=subprocess.STDOUT, check=True, timeout=1800)
         report['build_seconds'] = time.monotonic() - began

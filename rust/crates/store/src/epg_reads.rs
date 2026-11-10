@@ -33,7 +33,7 @@ impl EpgReadResource {
             json!({"detail":format!("No {model} matches the given query.")}),
         )
     }
-    fn project(self, row: PgRow, detail: bool, origin: &str) -> Result<Value, StoreError> {
+    pub(crate) fn project(self, row: PgRow, detail: bool, origin: &str) -> Result<Value, StoreError> {
         match self {
             Self::Sources => return crate::provider_reads::epg_read_projection(row, true),
             Self::EpgData => return crate::provider_reads::epg_read_projection(row, false),

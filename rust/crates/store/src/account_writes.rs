@@ -243,10 +243,31 @@ pub(crate) async fn patch_me(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, false).await?;
     let Json(body) =
         body.map_err(|_| StoreError::InvalidInput(json!({"detail":"JSON parse error"})))?;
+    // Original me() calls request.data.keys() before its serializer. Preserve
+    // the captured default Django HTML500 for authenticated nonobject bodies;
+    // permissions still run first and no model mutation is attempted.
+    if !body.is_object() {
+        return Ok((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            [("content-type", "text/html; charset=utf-8")],
+            r#"
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Server Error (500)</title>
+</head>
+<body>
+  <h1>Server Error (500)</h1><p></p>
+</body>
+</html>
+"#,
+        )
+            .into_response());
+    }
     let fields = owner_patch(body)?;
     let password = if let Some(value) = fields.get("password") {
         Some(
@@ -280,7 +301,7 @@ pub(crate) async fn patch_me(
     sqlx::query("UPDATE accounts_user SET first_name=$2,last_name=$3,email=$4,custom_properties=$5,password=COALESCE($6,password) WHERE id=$1")
         .bind(user.id).bind(first_name).bind(last_name).bind(email).bind(properties).bind(password).execute(&mut *transaction).await?;
     transaction.commit().await?;
-    Ok(Json(auth.store.serialized_user(user.id).await?))
+    Ok(Json(auth.store.serialized_user(user.id).await?).into_response())
 }
 
 async fn change_key(

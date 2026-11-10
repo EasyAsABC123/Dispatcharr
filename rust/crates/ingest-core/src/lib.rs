@@ -42,7 +42,7 @@ pub use xmltv_metadata::{extract_xmltv_properties, XmltvElement, XmltvMetadataEr
 mod xmltv_programme;
 pub use xmltv_programme::{project_xmltv_programme, XmltvProgramme, XmltvProgrammeError};
 mod xmltv_extract;
-pub use xmltv_extract::{detect_xmltv_format, XmltvFormat};
+pub use xmltv_extract::{detect_xmltv_format, extract_xmltv_owned, XmltvExtractError, XmltvFormat};
 #[derive(Clone, Debug, PartialEq)]
 pub struct ImportedCacheGroup {
     pub name: String,

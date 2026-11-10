@@ -1,0 +1,118 @@
+{
+  "scope": "Actual original/canonical image22 rapid-reclose HTTP and packaged WebSocket full statistics, audit and Redis cleanup",
+  "passed": true,
+  "provenance": {
+    "image_id": "sha256:4860d56aa58cc70fc6900e0ce42555958d9877e808ef8cb8d7d20dfcedf01757",
+    "source_tree_sha256": "5d2d8b06c366275347ef917d00ce3b522a1dcc26fe9522a0bf383d4ba7f14bf5",
+    "build_manifest_sha256": "1f31eedc045abb255f6708b6ea6d8d530e149688b99a9f0fcdc535ef64503f08"
+  },
+  "comparison": {
+    "captured_packaged_rapid_reclose_match": true,
+    "differences": [],
+    "normalizations": [
+      "Independent legacy timer threads can interleave stop/stat pairs; exact event multiplicities and transition/audit payloads retained",
+      "Snapshot times/elapsed/progress validated; complete stable DTOs compared; stopping snapshot may retain the same active DTO or be empty"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "source_event_counts": {
+    "vod_started": 1,
+    "vod_stats": 3,
+    "vod_stopped": 2
+  },
+  "candidate_event_counts": {
+    "vod_started": 1,
+    "vod_stats": 3,
+    "vod_stopped": 2
+  },
+  "server_acknowledged_close_before_reopen": true,
+  "source_reclose_seconds": 0.8446377749933163,
+  "candidate_reclose_seconds": 0.38899561800644733,
+  "source_final": {
+    "audit": [
+      {
+        "event_type": "vod_start",
+        "details": {
+          "username": null,
+          "client_ip": "172.19.0.1",
+          "content_name": "Offline native VOD fixture",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9"
+        }
+      },
+      {
+        "event_type": "vod_stop",
+        "details": {
+          "username": null,
+          "client_ip": "172.19.0.1",
+          "content_name": "Offline native VOD fixture",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9"
+        }
+      },
+      {
+        "event_type": "vod_stop",
+        "details": {
+          "username": null,
+          "client_ip": "172.19.0.1",
+          "content_name": "Offline native VOD fixture",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9"
+        }
+      }
+    ],
+    "remaining_metadata": false,
+    "provider_connections": 0
+  },
+  "candidate_final": {
+    "audit": [
+      {
+        "event_type": "vod_start",
+        "details": {
+          "username": null,
+          "client_ip": "172.19.0.1",
+          "content_name": "Offline native VOD fixture",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9"
+        }
+      },
+      {
+        "event_type": "vod_stop",
+        "details": {
+          "username": null,
+          "client_ip": "172.19.0.1",
+          "content_name": "Offline native VOD fixture",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9"
+        }
+      },
+      {
+        "event_type": "vod_stop",
+        "details": {
+          "username": null,
+          "client_ip": "172.19.0.1",
+          "content_name": "Offline native VOD fixture",
+          "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9"
+        }
+      }
+    ],
+    "remaining_metadata": false,
+    "provider_connections": 0
+  },
+  "ordinary_vod_ws_comparison": {
+    "captured_packaged_vod_events_match": true,
+    "differences": [],
+    "normalizations": [
+      "Own timestamps/elapsed/consumed progress validated; stable complete DTOs compared",
+      "Original stopping snapshot races metadata removal; empty/nonempty final snapshots permitted"
+    ],
+    "application_parity_verified": false,
+    "performance_verified": false
+  },
+  "evidence_directory": "artifacts/rust/m4-rapid-reclose-ws-image22-2",
+  "artifact_sha256": {
+    "vod-contracts.json": "f272e984578a3769884ff9ae63b17091779a75f6883e2f323f51df8249d1bc3a",
+    "vod-rapid-ws-source.json": "fe53bf0c62bde729ffcede109f622f6046eb95b67b72d7e6d6271240af2e7d5f",
+    "vod-rapid-ws-candidate.json": "89f7d05f9863b4139c5ff8e8632a0b6df50d5b4d746d877802f8e3c70d446919"
+  },
+  "cleanup_passed": true,
+  "performance_verified": false,
+  "application_parity_verified": false,
+  "failed_predecessor": "image22-1 retained: client sockets overlapped at the original server and scheduled only one timer. Corrected fixture waits for actual Redis active_streams=0 before reconnect and after reclose; no Rust runtime change."
+}

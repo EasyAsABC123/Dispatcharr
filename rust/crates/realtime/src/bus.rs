@@ -152,8 +152,12 @@ impl RealtimeBus {
     pub fn available_read_bytes(&self) -> usize {
         self.inner.read_bytes.available_permits()
     }
-    pub fn available_publish_bytes(&self)->usize {self.inner.publish_bytes.available_permits()}
-    pub fn stop_accepting(&self) {self.inner.connections.close();}
+    pub fn available_publish_bytes(&self) -> usize {
+        self.inner.publish_bytes.available_permits()
+    }
+    pub fn stop_accepting(&self) {
+        self.inner.connections.close();
+    }
     pub fn reserve_member(&self) -> Result<Membership> {
         let slot = self
             .inner
@@ -178,6 +182,22 @@ impl RealtimeBus {
         })
     }
     pub async fn publish(&self, group: &str, message: Value) -> Result<()> {
+        self.publish_inner(group, message, None).await
+    }
+    pub async fn publish_retained(
+        &self,
+        group: &str,
+        message: Value,
+        guard: Arc<dyn Send + Sync>,
+    ) -> Result<()> {
+        self.publish_inner(group, message, Some(guard)).await
+    }
+    async fn publish_inner(
+        &self,
+        group: &str,
+        message: Value,
+        guard: Option<Arc<dyn Send + Sync>>,
+    ) -> Result<()> {
         if !valid_group(group) || !message.is_object() {
             return Err(UpdateEventError::InvalidMessage);
         }
@@ -189,7 +209,7 @@ impl RealtimeBus {
                 MEMBERS,
                 &[format!("asgi:group:{group}")],
                 &[now().to_string().as_bytes(), maximum.as_bytes()],
-                (),
+                guard.clone(),
             )
             .await
             .map_err(map)?
@@ -197,6 +217,14 @@ impl RealtimeBus {
         if status != 0 {
             return Err(UpdateEventError::Capacity);
         }
+        self.publish_members(message, members, guard).await
+    }
+    async fn publish_members(
+        &self,
+        message: Value,
+        members: Vec<String>,
+        guard: Option<Arc<dyn Send + Sync>>,
+    ) -> Result<()> {
         if members.is_empty() {
             return Ok(());
         }
@@ -260,7 +288,7 @@ impl RealtimeBus {
         let _: (usize, _) = self
             .inner
             .transport
-            .command(PUBLISH, &keys, &args, budget)
+            .command(PUBLISH, &keys, &args, (budget, guard))
             .await
             .map_err(map)?;
         Ok(())
@@ -367,7 +395,18 @@ impl UpdateEventSink for RealtimeBus {
     fn send<'a>(&'a self, group: &'a str, message: Value) -> BoxFuture<'a, Result<()>> {
         Box::pin(self.publish(group, message))
     }
+    fn send_retained<'a>(
+        &'a self,
+        group: &'a str,
+        message: Value,
+        guard: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<()>> {
+        Box::pin(self.publish_retained(group, message, guard))
+    }
 }
+#[cfg(test)]
+#[path = "retained_tests.rs"]
+mod retained_tests;
 pub struct Membership {
     inner: Arc<MemberInner>,
 }

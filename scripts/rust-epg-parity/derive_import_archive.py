@@ -20,6 +20,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-evidence', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--reporter',action='store_true')
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -40,7 +41,8 @@ def main():
     if hashes != base['rust_source_sha256']:
         raise ValueError('Accepted runtime map differs from archive bytes')
     additions = {}
-    for name in ADDITIONS:
+    additions_paths=('rust/Dockerfile.ingest-epg-reporter-tests','rust/runtime/ingest_epg_reporter_test.sh','LICENSE','ATTRIBUTION.md') if args.reporter else ADDITIONS
+    for name in additions_paths:
         data = (ROOT / name).read_bytes()
         if name in files and files[name] != data:
             raise ValueError('Component packaging must not replace accepted runtime bytes')
@@ -55,7 +57,7 @@ def main():
             item.mode = 0o644
             item.mtime = 0
             target.addfile(item, io.BytesIO(data))
-    record = {'format_version': 1, 'scope': 'Component source archive derived from accepted import46 runtime; not an application build',
+    record = {'format_version': 1, 'scope': 'Component source archive derived from exact accepted runtime; not an application build',
         'passed': True, 'source_sha256': source_map, 'source_tree_sha256': tree,
         'source_archive_sha256': sha((output / 'source.tar').read_bytes()),
         'base_evidence_sha256': sha(base_bytes), 'base_runtime_archive_sha256': base['rust_source_archive_sha256'],

@@ -5,14 +5,37 @@ use chrono::{DateTime, Utc};
 use dispatcharr_output_store::transport::{ClassifiedError, RedisTransport, TransportConfig};
 use dispatcharr_store::{
     decode_source_cache, encode_source_cache, source_cache_values_equal, source_epg_history_policy,
-    Store,
+    source_system_settings_defaults, Store,
 };
 use serde_json::{json, Value};
 use sqlx::Row;
 use std::{sync::Arc, time::Duration};
 use tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
-const GROUP: &str = ":1:coresettings:group:epg_settings";
-const VERSION: &str = ":1:coresettings:groupver:epg_settings";
+#[derive(Clone, Copy)]
+enum Group {
+    Epg,
+    System,
+}
+impl Group {
+    fn name(self) -> &'static str {
+        match self {
+            Self::Epg => "epg_settings",
+            Self::System => "system_settings",
+        }
+    }
+    fn defaults(self) -> Value {
+        match self {
+            Self::Epg => defaults(),
+            Self::System => source_system_settings_defaults(),
+        }
+    }
+    fn key(self) -> String {
+        format!(":1:coresettings:group:{}", self.name())
+    }
+    fn version(self) -> String {
+        format!(":1:coresettings:groupver:{}", self.name())
+    }
+}
 const MAX_BYTES: usize = 1024 * 1024;
 const GET: &str = r#"
 local kind=redis.call('TYPE',KEYS[1]).ok
@@ -24,8 +47,10 @@ return {1,value}
 "#;
 const SET: &str = "return redis.call('SET',KEYS[1],ARGV[1],'EX',300)";
 struct PolicyWork {
-    _permit: OwnedSemaphorePermit,
+    // Rust drops fields in declaration order: release the caller guard before
+    // advertising this physical operation's admission as available.
     _caller: Arc<dyn Send + Sync>,
+    _permit: OwnedSemaphorePermit,
 }
 struct Connection {
     generation: u64,
@@ -84,6 +109,28 @@ impl CachedSwapPolicy {
         }
         self.transport_config.command_timeout = timeout;
         Ok(self)
+    }
+    /// Exact pinned Source system settings through the same retained cache/SQL
+    /// transport. Full defaults preserve Django grouped-cache interoperability.
+    /// Non-UTC deployment defaults require their own environment proof.
+    pub async fn retained_system_settings(
+        &self,
+        context: SwapPolicyContext,
+    ) -> Result<Value, ImportError> {
+        context.ensure_active()?;
+        let permit = self
+            .admission
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| ImportError::Capacity("policy physical work"))?;
+        let context = SwapPolicyContext {
+            cancelled: context.cancelled,
+            retained: Arc::new(PolicyWork {
+                _caller: context.retained,
+                _permit: permit,
+            }),
+        };
+        self.group(Group::System, &context).await
     }
     async fn transport(
         &self,
@@ -156,7 +203,11 @@ impl CachedSwapPolicy {
             Err(_) => Err(ImportError::Parser),
         }
     }
-    async fn database(&self, context: &SwapPolicyContext) -> Result<Value, ImportError> {
+    async fn database(
+        &self,
+        group: Group,
+        context: &SwapPolicyContext,
+    ) -> Result<Value, ImportError> {
         context.ensure_active()?;
         let store = self.store.clone();
         let retained = context.retained.clone();
@@ -164,18 +215,23 @@ impl CachedSwapPolicy {
         // SQL reply even if a direct caller drops this policy future.
         let value=tokio::spawn(async move{
             let _retained=retained;
-            let row=sqlx::query("SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key='epg_settings'")
-                .fetch_optional(store.pool()).await?;
+            let row=sqlx::query("SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key=$1")
+                .bind(group.name()).fetch_optional(store.pool()).await?;
             let value=if let Some(row)=row{
                 if row.try_get::<Option<i32>,_>("bytes")?.unwrap_or(0)>MAX_BYTES as i32{return Err(ImportError::Capacity("EPG settings SQL value"));}
                 row.try_get::<Option<Value>,_>("value")?.unwrap_or(Value::Null)
             }else{Value::Null};
-            Ok(if value.as_object().is_some_and(|map|!map.is_empty()){value}else{defaults()})
+            Ok(if value.as_object().is_some_and(|map|!map.is_empty()){value}else{group.defaults()})
         }).await.map_err(|_|ImportError::Worker)??;
         context.ensure_active()?;
         Ok(value)
     }
-    async fn fill(&self, value: &Value, context: &SwapPolicyContext) -> Result<(), ImportError> {
+    async fn fill(
+        &self,
+        key: String,
+        value: &Value,
+        context: &SwapPolicyContext,
+    ) -> Result<(), ImportError> {
         let Some((generation, transport)) = self.transport(context).await? else {
             return Ok(());
         };
@@ -188,7 +244,7 @@ impl CachedSwapPolicy {
         match transport
             .command_classified::<String, _>(
                 SET,
-                &[GROUP.into()],
+                &[key],
                 &[encoded.as_slice()],
                 context.retained.clone(),
             )
@@ -203,23 +259,23 @@ impl CachedSwapPolicy {
             Err(_) => Err(ImportError::Parser),
         }
     }
-    async fn group(&self, context: &SwapPolicyContext) -> Result<Value, ImportError> {
-        match self.read(GROUP, context).await? {
+    async fn group(&self, group: Group, context: &SwapPolicyContext) -> Result<Value, ImportError> {
+        match self.read(&group.key(), context).await? {
             Read::Value(Some(value)) if value.is_object() => return Ok(value),
-            Read::Backend => return self.database(context).await,
+            Read::Backend => return self.database(group, context).await,
             _ => {}
         }
-        let before = match self.read(VERSION, context).await? {
+        let before = match self.read(&group.version(), context).await? {
             Read::Value(value) => value.unwrap_or(Value::Null),
-            Read::Backend => return self.database(context).await,
+            Read::Backend => return self.database(group, context).await,
         };
-        let value = self.database(context).await?;
-        let after = match self.read(VERSION, context).await? {
+        let value = self.database(group, context).await?;
+        let after = match self.read(&group.version(), context).await? {
             Read::Value(value) => value.unwrap_or(Value::Null),
             Read::Backend => return Ok(value),
         };
         if source_cache_values_equal(&before, &after) {
-            self.fill(&value, context).await?;
+            self.fill(group.key(), &value, context).await?;
         }
         Ok(value)
     }
@@ -241,7 +297,7 @@ impl SwapPolicyProvider for CachedSwapPolicy {
                 }),
             };
             let now = (self.clock)();
-            let value = self.group(&context).await?;
+            let value = self.group(Group::Epg, &context).await?;
             context.ensure_active()?;
             let history = source_epg_history_policy(&value).map_err(|_| ImportError::Parser)?;
             Ok(SwapPolicy { now, history })
@@ -250,4 +306,52 @@ impl SwapPolicyProvider for CachedSwapPolicy {
 }
 fn defaults() -> Value {
     json!({"epg_match_mode":"default","epg_match_ignore_prefixes":[],"epg_match_ignore_suffixes":[],"epg_match_ignore_custom":[],"epg_history_min_days":1,"epg_history_max_days":30,"epg_default_prev_days":0,"epg_default_days":0})
+}
+
+#[cfg(test)]
+mod retained_group_tests {
+    use super::*;
+    #[test]
+    fn original_group_names_and_full_defaults_are_separate() {
+        assert_eq!(Group::Epg.key(), ":1:coresettings:group:epg_settings");
+        assert_eq!(
+            Group::System.version(),
+            ":1:coresettings:groupver:system_settings"
+        );
+        assert_eq!(Group::Epg.defaults().as_object().unwrap().len(), 8);
+        let system = Group::System.defaults();
+        assert_eq!(system.as_object().unwrap().len(), 9);
+        assert_eq!(system["max_system_events"], 100);
+        assert!(system.get("epg_history_min_days").is_none());
+    }
+    #[test]
+    fn admission_cannot_report_complete_before_caller_guard_drops() {
+        use std::sync::{mpsc, Mutex};
+        struct BlockDrop {
+            entered: mpsc::Sender<()>,
+            release: Mutex<mpsc::Receiver<()>>,
+        }
+        impl Drop for BlockDrop {
+            fn drop(&mut self) {
+                self.entered.send(()).unwrap();
+                self.release.lock().unwrap().recv().unwrap();
+            }
+        }
+        let (entered, observed) = mpsc::channel();
+        let (release, released) = mpsc::channel();
+        let admission = Arc::new(Semaphore::new(1));
+        let work = PolicyWork {
+            _caller: Arc::new(BlockDrop {
+                entered,
+                release: Mutex::new(released),
+            }),
+            _permit: admission.clone().try_acquire_owned().unwrap(),
+        };
+        let worker = std::thread::spawn(move || drop(work));
+        observed.recv_timeout(Duration::from_secs(2)).unwrap();
+        assert_eq!(admission.available_permits(), 0);
+        release.send(()).unwrap();
+        worker.join().unwrap();
+        assert_eq!(admission.available_permits(), 1);
+    }
 }

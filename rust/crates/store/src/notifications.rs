@@ -457,8 +457,30 @@ async fn guarded_write(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
+    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
 ) -> Result<Json<Value>, StoreError> {
     auth.account_user(peer, headers, true).await?;
+    crate::admin_writes::body_object(body)?;
+    Err(StoreError::Unsupported(
+        "Administrative notification production and scheduling have not been ported.",
+    ))
+}
+async fn guarded_detail_write(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    headers: HeaderMap,
+    method: axum::http::Method,
+    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
+) -> Result<Json<Value>, StoreError> {
+    let user = auth.account_user(peer, headers, true).await?;
+    let id = key(raw)?;
+    if visible(&auth, &user, Some(id)).await?.is_empty() {
+        return Err(missing());
+    }
+    if method != axum::http::Method::DELETE {
+        crate::admin_writes::body_object(body)?;
+    }
     Err(StoreError::Unsupported(
         "Administrative notification production and scheduling have not been ported.",
     ))
@@ -471,9 +493,9 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route(
             "/api/core/notifications/{id}/",
             get(detail)
-                .put(guarded_write)
-                .patch(guarded_write)
-                .delete(guarded_write),
+                .put(guarded_detail_write)
+                .patch(guarded_detail_write)
+                .delete(guarded_detail_write),
         )
         .route("/api/core/notifications/{id}/dismiss/", post(dismiss))
         .with_state(auth)

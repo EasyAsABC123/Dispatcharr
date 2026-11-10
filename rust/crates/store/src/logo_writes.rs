@@ -127,6 +127,11 @@ async fn input(request: Request, upload_only: bool) -> Result<Input, StoreError>
                     crate::startup_bootstrap::json_error(&raw, e)
                 ))
             })?;
+            if !upload_only && value.is_null() {
+                return Err(StoreError::InvalidInput(
+                    json!({"non_field_errors":["No data provided"]}),
+                ));
+            }
             fields = if upload_only {
                 value.as_object().cloned().unwrap_or_default()
             } else {

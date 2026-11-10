@@ -1,0 +1,24 @@
+[package]
+name = "dispatcharr-xmltv-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+axum = "0.8"
+bytes = "1"
+chrono = "0.4"
+dispatcharr-contracts = {path="../contracts"}
+dispatcharr-store = {path="../store"}
+dispatcharr-ingest-core = {path="../ingest-core"}
+dispatcharr-output-http = {path="../output-http"}
+dispatcharr-output-store = {path="../output-store"}
+dispatcharr-xc-http = {path="../xc-http"}
+futures-util = "0.3"
+async-stream = "0.3"
+num-bigint = "0.4"
+serde_json = {version="1",features=["arbitrary_precision","preserve_order"]}
+sha2 = "0.10"
+sqlx = {version="0.8",features=["runtime-tokio-rustls","postgres","json","chrono"]}
+tokio = {version="1",features=["rt-multi-thread","sync","time","net","macros"]}
+url = "2"

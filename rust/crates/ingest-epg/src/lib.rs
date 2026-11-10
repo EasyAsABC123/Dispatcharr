@@ -2,6 +2,7 @@
 //! projection and staged-swap algorithms. Original authors retain full credit.
 //! Application scheduling/status/cache/event wiring remains a separate gate.
 pub mod cache_policy;
+pub mod reporter;
 use chrono::{DateTime, Utc};
 use dispatcharr_ingest_core::{
     project_xmltv_programme, xmltv_file_handle_is_complete, XmltvProgramme, XmltvReader,
@@ -100,6 +101,15 @@ impl std::fmt::Display for ImportError {
     }
 }
 impl std::error::Error for ImportError {}
+
+#[derive(Clone)]
+pub struct ImportReporting {
+    pub reporter: reporter::GuideReporter,
+    pub source_name: String,
+    /// Missing files with a URL still require download orchestration. This
+    /// adapter only translates Source's explicit no-URL branch when false.
+    pub source_has_url: bool,
+}
 
 pub struct ImportRequest {
     pub source_id: i64,
@@ -209,7 +219,8 @@ impl EpgImporter {
         request: ImportRequest,
         retained: Arc<dyn Send + Sync>,
     ) -> Result<ImportReport, ImportError> {
-        self.import_with_provider(request, retained, None).await
+        self.import_with_provider(request, retained, None, None)
+            .await
     }
     /// Refresh Source history/cache policy and sample the cutoff clock after
     /// parser completion, rather than binding them at the start of a long file.
@@ -219,7 +230,23 @@ impl EpgImporter {
         retained: Arc<dyn Send + Sync>,
         provider: Arc<dyn SwapPolicyProvider>,
     ) -> Result<ImportReport, ImportError> {
-        self.import_with_provider(request, retained, Some(provider))
+        self.import_with_provider(request, retained, Some(provider), None)
+            .await
+    }
+    /// Add source-characterized status/progress effects to the owned importer.
+    /// Download/extraction, SQL exception spelling, integrations and late mapping
+    /// task dispatch remain separate orchestration gates; this stays app-unwired.
+    pub async fn import_file_reported(
+        &self,
+        request: ImportRequest,
+        retained: Arc<dyn Send + Sync>,
+        provider: Option<Arc<dyn SwapPolicyProvider>>,
+        reporting: ImportReporting,
+    ) -> Result<ImportReport, ImportError> {
+        if reporting.source_name.capacity() > 4096 {
+            return Err(ImportError::Capacity("source name"));
+        }
+        self.import_with_provider(request, retained, provider, Some(reporting))
             .await
     }
     async fn import_with_provider(
@@ -227,6 +254,7 @@ impl EpgImporter {
         request: ImportRequest,
         retained: Arc<dyn Send + Sync>,
         provider: Option<Arc<dyn SwapPolicyProvider>>,
+        reporting: Option<ImportReporting>,
     ) -> Result<ImportReport, ImportError> {
         if self.inner.stopping.load(Ordering::Acquire) {
             return Err(ImportError::Stopping);
@@ -257,10 +285,21 @@ impl EpgImporter {
             armed: true,
         };
         let inner = self.inner.clone();
-        let result =
-            tokio::spawn(async move { import_owned(inner, request, state, provider).await })
-                .await
-                .map_err(|_| ImportError::Worker)?;
+        let result = tokio::spawn(async move {
+            let source_id=request.source_id;
+            let result=import_owned(inner,request,state.clone(),provider,reporting.clone()).await;
+            if let (Some(reporting),Err(error))=(reporting,result.as_ref()) {
+                let failure=match error {
+                    ImportError::Incomplete=>Some(("EPG file appears incomplete (missing closing </tv>). Keeping previous data when available; will retry on next refresh.","EPG file appears incomplete (missing closing </tv>). Keeping previous data when available; will retry on next refresh.")),
+                    ImportError::Io(value) if value.kind()==io::ErrorKind::NotFound&&!reporting.source_has_url=>Some(("No URL provided, cannot fetch EPG data","No URL provided")),
+                    _=>None,
+                };
+                if let Some((message,publication_error))=failure {
+                    let _=reporting.reporter.execute(reporter::ReportAction::Failed(reporter::FailedImport{source_id,source_name:reporting.source_name,last_message:message.into(),publication_error:publication_error.into()}),job_context(&state)).await;
+                }
+            }
+            result
+        }).await.map_err(|_|ImportError::Worker)?;
         cancellation.armed = false;
         result
     }
@@ -288,8 +327,18 @@ impl EpgImporter {
     }
 }
 
-struct Batch {
-    rows: Vec<XmltvProgramme>,
+enum Batch {
+    Validated,
+    Rows {
+        rows: Vec<XmltvProgramme>,
+        progress: Option<u64>,
+    },
+}
+fn job_context(state: &Arc<PhysicalJob>) -> SwapPolicyContext {
+    SwapPolicyContext {
+        cancelled: state.cancelled.clone(),
+        retained: state.clone(),
+    }
 }
 #[derive(Default)]
 struct Parsed {
@@ -344,8 +393,11 @@ fn send(
     flag: &AtomicBool,
 ) -> Result<(), ImportError> {
     cancelled(flag)?;
-    tx.blocking_send(Batch { rows })
-        .map_err(|_| ImportError::Cancelled)
+    tx.blocking_send(Batch::Rows {
+        rows,
+        progress: None,
+    })
+    .map_err(|_| ImportError::Cancelled)
 }
 fn parse_file(
     path: PathBuf,
@@ -364,6 +416,8 @@ fn parse_file(
     if !xmltv_file_handle_is_complete(&mut file) {
         return Err(ImportError::Incomplete);
     }
+    tx.blocking_send(Batch::Validated)
+        .map_err(|_| ImportError::Cancelled)?;
     let mut monitor = file.try_clone()?;
     let reader = XmltvReader::from_file(file)?;
     let mut parsed = Parsed::default();
@@ -407,6 +461,15 @@ fn parse_file(
         channels.insert(*epg);
         rows.push(row);
         bytes += charge;
+        if parsed.report.parsed_programmes.is_multiple_of(5000) {
+            cancelled(&flag)?;
+            tx.blocking_send(Batch::Rows {
+                rows: std::mem::replace(&mut rows, Vec::with_capacity(config.batch_rows)),
+                progress: Some(parsed.report.parsed_programmes),
+            })
+            .map_err(|_| ImportError::Cancelled)?;
+            bytes = baseline;
+        }
         Ok(())
     });
     parsed.report.parser = match stats {
@@ -435,15 +498,46 @@ async fn import_owned(
     request: ImportRequest,
     state: Arc<PhysicalJob>,
     provider: Option<Arc<dyn SwapPolicyProvider>>,
+    reporting: Option<ImportReporting>,
 ) -> Result<ImportReport, ImportError> {
     cancelled(&state.cancelled)?;
+    if let Some(reporting) = reporting.as_ref() {
+        reporting
+            .reporter
+            .execute(
+                reporter::ReportAction::Progress {
+                    source_id: request.source_id,
+                    progress: 0,
+                },
+                job_context(&state),
+            )
+            .await?;
+    }
     let stage = inner
         .store
         .begin_guide_staging(request.source_id, state.clone())
         .await?;
     let (stage, mapping) = stage.mapping_snapshot().await?;
+    let (stage, total_epg_entries) = if reporting.is_some() {
+        stage.source_entry_count().await?
+    } else {
+        (stage, 0)
+    };
+    let mapped_tvg_ids = mapping.by_tvg_id.len();
     cancelled(&state.cancelled)?;
     if mapping.epg_ids.is_empty() {
+        if let Some(reporting) = reporting.as_ref() {
+            reporting
+                .reporter
+                .execute(
+                    reporter::ReportAction::NoMappings {
+                        source_id: request.source_id,
+                        total_epg_entries: total_epg_entries as u64,
+                    },
+                    job_context(&state),
+                )
+                .await?;
+        }
         return Ok(ImportReport {
             no_mapped_channels: true,
             ..ImportReport::default()
@@ -469,12 +563,47 @@ async fn import_owned(
             failure = Some(error);
             break;
         }
-        match staging.take().unwrap().push(batch.rows).await {
-            Ok(stage) => staging = Some(stage),
-            Err(error) => {
-                failure = Some(error.into());
-                break;
+        let result = async {
+            match batch {
+                Batch::Validated => {
+                    if let Some(reporting) = reporting.as_ref() {
+                        reporting
+                            .reporter
+                            .execute(
+                                reporter::ReportAction::Progress {
+                                    source_id: request.source_id,
+                                    progress: 10,
+                                },
+                                job_context(&state),
+                            )
+                            .await?;
+                    }
+                }
+                Batch::Rows { rows, progress } => {
+                    if !rows.is_empty() {
+                        staging = Some(staging.take().unwrap().push(rows).await?);
+                    }
+                    if let (Some(reporting), Some(processed)) = (reporting.as_ref(), progress) {
+                        reporting
+                            .reporter
+                            .execute(
+                                reporter::ReportAction::Staging {
+                                    source_id: request.source_id,
+                                    processed,
+                                    mapped_tvg_ids,
+                                },
+                                job_context(&state),
+                            )
+                            .await?;
+                    }
+                }
             }
+            Ok::<_, ImportError>(())
+        }
+        .await;
+        if let Err(error) = result {
+            failure = Some(error);
+            break;
         }
     }
     if failure.is_some() {
@@ -490,6 +619,18 @@ async fn import_owned(
     }
     let mut parsed = parsed?;
     cancelled(&state.cancelled)?;
+    if let Some(reporting) = reporting.as_ref() {
+        reporting
+            .reporter
+            .execute(
+                reporter::ReportAction::Progress {
+                    source_id: request.source_id,
+                    progress: 90,
+                },
+                job_context(&state),
+            )
+            .await?;
+    }
     let policy = if let Some(provider) = provider.filter(|_| parsed.report.parsed_programmes > 0) {
         provider
             .resolve(SwapPolicyContext {
@@ -516,6 +657,23 @@ async fn import_owned(
             state.cancelled.clone(),
         )
         .await?;
+    if let Some(reporting) = reporting {
+        reporting
+            .reporter
+            .execute(
+                reporter::ReportAction::Committed(reporter::CompletedImport {
+                    source_id: request.source_id,
+                    source_name: reporting.source_name,
+                    accepted: parsed.report.parsed_programmes,
+                    channels_with_programmes: parsed.report.channels_with_programmes,
+                    skipped_unmapped: parsed.report.skipped_unmapped,
+                    total_epg_entries,
+                    mapped_tvg_ids,
+                }),
+                job_context(&state),
+            )
+            .await?;
+    }
     Ok(parsed.report)
 }
 

@@ -1,0 +1,38 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Bounded nonroot Docker Compose execution of app-unwired guide reporter/importer component. Not full refresh jobs, actual producer WS delivery or performance acceptance.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain full application/algorithm credit.",
+  "evidence": "artifacts/rust/m6-guide-reporter-component-docker-60",
+  "image_id": "sha256:08f6cbe19abdec3bff2cc6f84dcc287de83f4fe3c6cc5def820ac5eb8c2e8d64",
+  "component_source_tree_sha256": "5334e2552a3325d9e3f3fea0833ad306574dbf0ba3e9f17dea92f2818216525a",
+  "runtime_base_archive_sha256": "dcfe276f63ee43035b2143cc3bf3c1e597f5a4d9352c5c0880df5f007f08b292",
+  "runtime_files_preserved": 379,
+  "packaging_additions_sha256": {
+    "rust/Dockerfile.ingest-epg-reporter-tests": "516dc0a84429f56cd4dca86e4adbacee4bb7157445425f2d167d51fcd6dbf72f",
+    "rust/runtime/ingest_epg_reporter_test.sh": "ac8816b4446035930be5bbee66afe6e9cac524733791a3029a72e38c49424648",
+    "LICENSE": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+    "ATTRIBUTION.md": "44dafbead10ed6def886b0bd0c27e106d9a2025c4fa24700f66803c328b1997a"
+  },
+  "native_source_import_producer_cases": 8,
+  "physical_sql_guard_order_cases": 2,
+  "native_default_cache_original_django_keys": 9,
+  "container_user": "65532:65532",
+  "limits": {
+    "memory_bytes": 536870912,
+    "cpus": 2,
+    "pids": 128
+  },
+  "cleanup_passed": true,
+  "application_jobs_verified": false,
+  "websocket_delivery_verified": false,
+  "performance_verified": false,
+  "source_only_cases": [
+    "Python injected swap-error (arbitrary SQL exception translation/recovery remains open)"
+  ],
+  "evidence_sha256": {
+    "artifacts/rust/m6-guide-reporter-component-docker-60/integration.json": "ed0d54158e4a440e1b97a7883a4ec8dd420648c200a246247de43d51e78f12d1",
+    "artifacts/rust/m6-guide-reporter-component-docker-60/native-container-tests.log": "6b3a489f1dc6988a86e727e8c055fe8631162070b9fb2ba708fbfb2b017e6219",
+    "artifacts/rust/m6-guide-reporter-component-docker-60/native-system-cache.json": "e622333556fe0a51122aa2b9882ab59b356f8333e6c75863459322264dfea8a9"
+  }
+}
