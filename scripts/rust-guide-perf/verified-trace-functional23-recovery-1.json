@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "scope": "Real original/native functional request trace and numeric cache witness smoke; no resource sampling/qualification/performance acceptance",
+  "performance_verified": false,
+  "report": "artifacts/rust/m5-m7-guide-trace-functional23-recovery-1/integration.json",
+  "report_sha256": "2e0857de2ec4fe75d5be52679680dea88d1f19e77e9c31d841f0c6a22dcf2566",
+  "build_manifest": "artifacts/rust/candidate-build-image23-recovery-1/build.json",
+  "build_manifest_sha256": "d370a8a2c79ebd7cabddfcba5bea81dcaf4d9e9fc201e01d23256353782a492f",
+  "candidate_image_binding": {
+    "image_id": "sha256:6178eff8a3a32a9f5dcf7c691a8b518716f96d424c1e4cc62f87697253c266e4",
+    "source_tree_sha256": "5a58751e7d2e1df2d3db0f04c80dd00406cd71da813a5402e0227d8083a8fb9f",
+    "manifest_verified": true
+  },
+  "tool_source": "artifacts/rust/m5-m7-guide-trace-functional23-recovery-1/tool-source",
+  "cleanup": "project removed",
+  "runs": [
+    {
+      "backend": "source",
+      "report": "artifacts/rust/m5-m7-guide-trace-functional23-recovery-1/trace-functional-source.json",
+      "sha256": "17309de21231cd6dc6ea5f39611c4c4b07d0f6229ad4ca8da76cb4f915c31d05",
+      "paced_traces": 2,
+      "cold_traces": 1,
+      "cache_before": {
+        "generation": "0",
+        "chunks": 29,
+        "bytes": 13015448,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 298,
+        "smallest_chunk_bytes": 6,
+        "largest_chunk_bytes": 574800,
+        "key_types": {
+          "chunks": "list",
+          "ready": "string",
+          "status": "string",
+          "lock": "none"
+        },
+        "key_ttl_seconds": {
+          "chunks": 298,
+          "ready": 298,
+          "status": 298,
+          "lock": -2
+        }
+      },
+      "cache_after": {
+        "generation": "0",
+        "chunks": 29,
+        "bytes": 13015448,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 299,
+        "smallest_chunk_bytes": 6,
+        "largest_chunk_bytes": 574800,
+        "key_types": {
+          "chunks": "list",
+          "ready": "string",
+          "status": "string",
+          "lock": "none"
+        },
+        "key_ttl_seconds": {
+          "chunks": 299,
+          "ready": 299,
+          "status": 299,
+          "lock": -2
+        }
+      }
+    },
+    {
+      "backend": "candidate",
+      "report": "artifacts/rust/m5-m7-guide-trace-functional23-recovery-1/trace-functional-candidate.json",
+      "sha256": "3000414b748dd441f7ed4d946edda8420a1096aa9ae650e7eff14da0d5fa1c9e",
+      "paced_traces": 2,
+      "cold_traces": 1,
+      "cache_before": {
+        "generation": "0",
+        "chunks": 204,
+        "bytes": 13015448,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 298,
+        "smallest_chunk_bytes": 6,
+        "largest_chunk_bytes": 65536,
+        "key_types": {
+          "chunks": "list",
+          "ready": "string",
+          "status": "string",
+          "lock": "none"
+        },
+        "key_ttl_seconds": {
+          "chunks": 298,
+          "ready": 298,
+          "status": 298,
+          "lock": -2
+        }
+      },
+      "cache_after": {
+        "generation": "0",
+        "chunks": 204,
+        "bytes": 13015448,
+        "ready": "1",
+        "status": "ready",
+        "locked": false,
+        "ready_ttl_seconds": 299,
+        "smallest_chunk_bytes": 6,
+        "largest_chunk_bytes": 65536,
+        "key_types": {
+          "chunks": "list",
+          "ready": "string",
+          "status": "string",
+          "lock": "none"
+        },
+        "key_ttl_seconds": {
+          "chunks": 299,
+          "ready": 299,
+          "status": 299,
+          "lock": -2
+        }
+      }
+    }
+  ],
+  "interpretation": "Source29members versus native204members was observed in this later functional fixture; it does not invent cache metadata or latency vectors for the earlier stopped matrix.",
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

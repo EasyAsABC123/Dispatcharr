@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "scope": "Functional complete-stack Docker working-memory and cgroup-v2 counter observer against exact recovered image23; no qualification or performance trial",
+  "performance_verified": false,
+  "measurements_started": false,
+  "report": "artifacts/rust/m5-m7-guide-observer-smoke23-recovery-1/integration.json",
+  "report_sha256": "77dd5016a4dd0479fef75334d286ce67b4111a5f8db0ec7bba6a0ca5d705f90f",
+  "tool_source": "artifacts/rust/m5-m7-guide-observer-smoke23-recovery-1/tool-source",
+  "build_manifest": "artifacts/rust/candidate-build-image23-recovery-1/build.json",
+  "build_manifest_sha256": "d370a8a2c79ebd7cabddfcba5bea81dcaf4d9e9fc201e01d23256353782a492f",
+  "candidate_image_binding": {
+    "image_id": "sha256:6178eff8a3a32a9f5dcf7c691a8b518716f96d424c1e4cc62f87697253c266e4",
+    "source_tree_sha256": "5a58751e7d2e1df2d3db0f04c80dd00406cd71da813a5402e0227d8083a8fb9f",
+    "manifest_verified": true
+  },
+  "source_archive_sha256": "1234f5bdff9c2381c6a2ee6624b02f6ca87b7756da1d8b94b5c60a6bdface8d7",
+  "cleanup": "project removed",
+  "observer_smoke": [
+    {
+      "backend": "source",
+      "passed": true,
+      "samples": 3,
+      "services": [
+        "baseline",
+        "origin",
+        "source"
+      ],
+      "limits_verified": true,
+      "monotonic_counters_verified": true,
+      "memory_metric": "Docker working-memory sum, infrastructure+origin+one backend",
+      "cpu_metric": "Sum of complete-window cgroup usage_usec/time per selected service",
+      "performance_verified": false
+    },
+    {
+      "backend": "candidate",
+      "passed": true,
+      "samples": 3,
+      "services": [
+        "baseline",
+        "candidate",
+        "origin"
+      ],
+      "limits_verified": true,
+      "monotonic_counters_verified": true,
+      "memory_metric": "Docker working-memory sum, infrastructure+origin+one backend",
+      "cpu_metric": "Sum of complete-window cgroup usage_usec/time per selected service",
+      "performance_verified": false
+    }
+  ],
+  "remaining": [
+    "Source-only qualification grid and all15 paired measurements require coordinated parent quiet cues; none have run.",
+    "Full executable experiment orchestration still needs fake-callback lifecycle/negative controls before live qualification."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

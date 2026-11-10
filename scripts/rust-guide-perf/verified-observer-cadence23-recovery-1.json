@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "scope": "Functional one-shot Docker API working-set/CLI parity plus full-stack10-second cadence and bounded cache reset/rebuild; no qualification or gain trial",
+  "performance_verified": false,
+  "measurements_started": false,
+  "report": "artifacts/rust/m5-m7-guide-observer-cadence23-recovery-1/integration.json",
+  "report_sha256": "0746ecd3a93cea15d727aec0a1d2bb8a7122ef4fb3599548ff3fa70d9d485d35",
+  "tool_source": "artifacts/rust/m5-m7-guide-observer-cadence23-recovery-1/tool-source",
+  "build_manifest": "artifacts/rust/candidate-build-image23-recovery-1/build.json",
+  "build_manifest_sha256": "d370a8a2c79ebd7cabddfcba5bea81dcaf4d9e9fc201e01d23256353782a492f",
+  "candidate_image_binding": {
+    "image_id": "sha256:6178eff8a3a32a9f5dcf7c691a8b518716f96d424c1e4cc62f87697253c266e4",
+    "source_tree_sha256": "5a58751e7d2e1df2d3db0f04c80dd00406cd71da813a5402e0227d8083a8fb9f",
+    "manifest_verified": true
+  },
+  "source_archive_sha256": "1234f5bdff9c2381c6a2ee6624b02f6ca87b7756da1d8b94b5c60a6bdface8d7",
+  "cleanup": "project removed",
+  "observer_smoke": [
+    {
+      "backend": "source",
+      "cache_reset_rebuild_verified": true,
+      "passed": true,
+      "samples": 10,
+      "services": [
+        "baseline",
+        "origin",
+        "source"
+      ],
+      "functional_cadence_seconds": 10.000066325999796,
+      "maximum_sample_observer_seconds": 0.00470493400007399,
+      "cli_memory_comparisons": [
+        {
+          "service": "baseline",
+          "difference_bytes": 2457.5999999940395,
+          "tolerance_bytes": 3458252.8000000003,
+          "passed": true
+        },
+        {
+          "service": "origin",
+          "difference_bytes": 4096.0,
+          "tolerance_bytes": 2097152,
+          "passed": true
+        },
+        {
+          "service": "source",
+          "difference_bytes": 422707.1999999881,
+          "tolerance_bytes": 5437849.600000001,
+          "passed": true
+        }
+      ],
+      "limits_verified": true,
+      "monotonic_counters_verified": true,
+      "memory_metric": "Docker working-memory sum, infrastructure+origin+one backend",
+      "cpu_metric": "Sum of complete-window cgroup usage_usec/time per selected service",
+      "performance_verified": false
+    },
+    {
+      "backend": "candidate",
+      "cache_reset_rebuild_verified": true,
+      "passed": true,
+      "samples": 10,
+      "services": [
+        "baseline",
+        "candidate",
+        "origin"
+      ],
+      "functional_cadence_seconds": 10.000062780999542,
+      "maximum_sample_observer_seconds": 0.003577520999897388,
+      "cli_memory_comparisons": [
+        {
+          "service": "baseline",
+          "difference_bytes": 246579.19999998808,
+          "tolerance_bytes": 3502981.12,
+          "passed": true
+        },
+        {
+          "service": "origin",
+          "difference_bytes": 155320.3200000003,
+          "tolerance_bytes": 2097152,
+          "passed": true
+        },
+        {
+          "service": "candidate",
+          "difference_bytes": 32.76800000015646,
+          "tolerance_bytes": 2097152,
+          "passed": true
+        }
+      ],
+      "limits_verified": true,
+      "monotonic_counters_verified": true,
+      "memory_metric": "Docker working-memory sum, infrastructure+origin+one backend",
+      "cpu_metric": "Sum of complete-window cgroup usage_usec/time per selected service",
+      "performance_verified": false
+    }
+  ],
+  "accepted_phase_minimum_samples": 50,
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

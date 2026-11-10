@@ -1,0 +1,110 @@
+{
+  "passed": true,
+  "scope": "Stored-guide functional request/cache concurrency smoke; not performance measurement",
+  "measurements_started": false,
+  "performance_verified": false,
+  "fixture_counts": {
+    "channels": 500,
+    "guides": 50,
+    "stored_programmes": 2250
+  },
+  "reference_xml_counts": {
+    "channels": 500,
+    "programmes": 22500
+  },
+  "candidate_image_binding": {
+    "image_id": "sha256:6178eff8a3a32a9f5dcf7c691a8b518716f96d424c1e4cc62f87697253c266e4",
+    "source_tree_sha256": "5a58751e7d2e1df2d3db0f04c80dd00406cd71da813a5402e0227d8083a8fb9f",
+    "manifest_verified": true
+  },
+  "cleanup": "project removed",
+  "checks": [
+    {
+      "backend": "source",
+      "kind": "current500",
+      "passed": true
+    },
+    {
+      "backend": "source",
+      "kind": "xml-cold",
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 13015448,
+      "body_sha256": "564913a6424f8d2b515d337f37f21ad0e3b33b40576a8e72efd5c64a176086f8"
+    },
+    {
+      "backend": "source",
+      "kind": "xml-hot",
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 13015448,
+      "body_sha256": "564913a6424f8d2b515d337f37f21ad0e3b33b40576a8e72efd5c64a176086f8"
+    },
+    {
+      "backend": "source",
+      "kind": "xml-cold",
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 13015448,
+      "body_sha256": "564913a6424f8d2b515d337f37f21ad0e3b33b40576a8e72efd5c64a176086f8"
+    },
+    {
+      "backend": "source",
+      "kind": "xml-hot",
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 13015448,
+      "body_sha256": "564913a6424f8d2b515d337f37f21ad0e3b33b40576a8e72efd5c64a176086f8"
+    },
+    {
+      "backend": "candidate",
+      "kind": "current500",
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "kind": "xml-cold",
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 13015448,
+      "body_sha256": "564913a6424f8d2b515d337f37f21ad0e3b33b40576a8e72efd5c64a176086f8"
+    },
+    {
+      "backend": "candidate",
+      "kind": "xml-hot",
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 13015448,
+      "body_sha256": "564913a6424f8d2b515d337f37f21ad0e3b33b40576a8e72efd5c64a176086f8"
+    },
+    {
+      "backend": "candidate",
+      "kind": "xml-cold",
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 13015448,
+      "body_sha256": "564913a6424f8d2b515d337f37f21ad0e3b33b40576a8e72efd5c64a176086f8"
+    },
+    {
+      "backend": "candidate",
+      "kind": "xml-hot",
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 13015448,
+      "body_sha256": "564913a6424f8d2b515d337f37f21ad0e3b33b40576a8e72efd5c64a176086f8"
+    }
+  ],
+  "build_manifest_sha256": "d370a8a2c79ebd7cabddfcba5bea81dcaf4d9e9fc201e01d23256353782a492f",
+  "report": "artifacts/rust/m5-m7-guide-functional-smoke23-recovery-1/integration.json",
+  "report_sha256": "b04a50561125ab51eac4d83b5202d517aa284a6ba84dc4dcf702d01f023986e8",
+  "tool_source": "artifacts/rust/m5-m7-guide-functional-smoke23-recovery-1/tool-source",
+  "tool_source_manifest_sha256": "0ec3e8e339be7f934a00282d7f7a419ea0e417d99e8dab44864ef7a312301f7a",
+  "resource_limits": "Original web and candidate each separately inspected2CPU/512MiB; PostgreSQL/Redis outside backend cgroups, idle origin present. No resource sampling.",
+  "remaining": [
+    "Paced Source-only qualification under fresh quiet authorization",
+    "Frozen rates/settings/fixture/image/budgets and complete30-phase matrix driver",
+    "Actual CPU/throttling/memory/PG diagnostics and comparison gates",
+    "No Current/XMLTV performance gain inferred from this functional smoke"
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

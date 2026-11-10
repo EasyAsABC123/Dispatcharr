@@ -1,0 +1,672 @@
+{
+  "passed": false,
+  "performance_verified": false,
+  "scope": "Stopped stored-guide Current500/50 and XMLTV performance experiment against exact recovered image23; first failed pair retained, whole15-pair matrix not accepted",
+  "stop_reason": "HotXMLTV1 trial1 p95completion ratio1.16275025465 exceeded frozen1.10 budget. Exact owned process interrupted after detection; no automatic rerun or threshold changes.",
+  "build_manifest": "artifacts/rust/candidate-build-image23-recovery-1/build.json",
+  "build_manifest_sha256": "d370a8a2c79ebd7cabddfcba5bea81dcaf4d9e9fc201e01d23256353782a492f",
+  "candidate_image_binding": {
+    "image_id": "sha256:6178eff8a3a32a9f5dcf7c691a8b518716f96d424c1e4cc62f87697253c266e4",
+    "source_tree_sha256": "5a58751e7d2e1df2d3db0f04c80dd00406cd71da813a5402e0227d8083a8fb9f",
+    "manifest_verified": true
+  },
+  "candidate_source_archive_sha256": "1234f5bdff9c2381c6a2ee6624b02f6ca87b7756da1d8b94b5c60a6bdface8d7",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "frozen_plan": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/frozen-plan.json",
+  "frozen_plan_file_sha256": "7442b999ed610abcaf5bfaca7d9312bde5e3541af2844c527990dc046fee1ccb",
+  "plan_seal": "7d5870979d1ed5044151ed91461143cf7152885729da7d93f6adbaf2a9223d75",
+  "policy_sha256": "b32a2f883d21985665963fba1fab584a635fdf3f92f281568c4d80c805c1c8e0",
+  "fixture_binding": {
+    "snapshot": {
+      "channels": 500,
+      "stored_programmes": 2250,
+      "first": "2026-11-10T02:29:04+00:00",
+      "last": "2026-11-11T04:29:04+00:00",
+      "current_until": "2026-11-10T06:29:04+00:00",
+      "fixture_sha256": "585a23c2d4a1befc1b65bd745370709611d2bc149ff40f00becac4229a5100df",
+      "schema_sha256": "7d14f257d439eb858b4609c5aca6bac6d1ad187c7a455f393712256e457e4606"
+    },
+    "fixture_clock": "2026-11-10T04:29:04+00:00",
+    "reference_sha256": "a72a8b0fdc785c43af30f01d1ef53a8e4ae7f56c16b8962355fe181b329c8fc5",
+    "channel_uuids_sha256": "f6d0de00e947df499fd91470df72cbdadb2a75e58593515edd454b768d6e4217"
+  },
+  "selected_periods_seconds": {
+    "current-500-shared50": 5,
+    "xmltv-cold-1": 10,
+    "xmltv-cold-10": 10,
+    "xmltv-hot-1": 1,
+    "xmltv-hot-10": 1
+  },
+  "source_qualification_phases": 18,
+  "source_unqualified_rates": [
+    {
+      "workload": "current-500-shared50",
+      "period_seconds": 2.5,
+      "pacing_fraction": 0.43333333333333335,
+      "actual_delivery_errors": 0,
+      "late_verified_completions_excluded": 10,
+      "reason": "Failed predeclared Source pacing; retained and not selected. Qualification row errors/correct_responses fields aggregate validation failures, not merely delivery errors."
+    },
+    {
+      "workload": "current-500-shared50",
+      "period_seconds": 1.25,
+      "pacing_fraction": 0.20833333333333334,
+      "actual_delivery_errors": 0,
+      "late_verified_completions_excluded": 10,
+      "reason": "Failed predeclared Source pacing; retained and not selected. Qualification row errors/correct_responses fields aggregate validation failures, not merely delivery errors."
+    }
+  ],
+  "completed_matrix_phases": 20,
+  "completed_pairs": 10,
+  "passed_pairs": 9,
+  "failed_pairs": 1,
+  "planned_pairs": 15,
+  "unmeasured_workloads": [
+    "xmltv-hot-10"
+  ],
+  "incomplete_workloads": [
+    "xmltv-hot-1 trial2 interrupted, trial3 not started"
+  ],
+  "comparisons": [
+    {
+      "workload": "current-500-shared50",
+      "trial": 1,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.011988261595609452,
+        "peak_working_memory_bytes": 0.36047989174381573,
+        "completion_p95_ms": 0.010916553955318925,
+        "throughput_per_second": 1.0084033613445378
+      },
+      "ttfb_p95_ceiling_ms": 1071.077642799719
+    },
+    {
+      "workload": "current-500-shared50",
+      "trial": 2,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.0119610487769384,
+        "peak_working_memory_bytes": 0.3438578844629325,
+        "completion_p95_ms": 0.010818749392088848,
+        "throughput_per_second": 1.0084033613445378
+      },
+      "ttfb_p95_ceiling_ms": 1092.6515016993108
+    },
+    {
+      "workload": "current-500-shared50",
+      "trial": 3,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.012030079200963197,
+        "peak_working_memory_bytes": 0.3453264283895067,
+        "completion_p95_ms": 0.010474481481239323,
+        "throughput_per_second": 1.0084033613445378
+      },
+      "ttfb_p95_ceiling_ms": 1097.0163127001797
+    },
+    {
+      "workload": "xmltv-cold-1",
+      "trial": 1,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.865044521826932,
+        "peak_working_memory_bytes": 0.46272382548306573,
+        "completion_p95_ms": 1.0310572831195373,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 55.00000000000001
+    },
+    {
+      "workload": "xmltv-cold-1",
+      "trial": 2,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.8453498372442312,
+        "peak_working_memory_bytes": 0.45192076624669575,
+        "completion_p95_ms": 0.8935508265246552,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 55.00000000000001
+    },
+    {
+      "workload": "xmltv-cold-1",
+      "trial": 3,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.8742410542354703,
+        "peak_working_memory_bytes": 0.4538005668642103,
+        "completion_p95_ms": 0.9760809842899318,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 55.00000000000001
+    },
+    {
+      "workload": "xmltv-cold-10",
+      "trial": 1,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.8128056234031732,
+        "peak_working_memory_bytes": 0.44137908833376255,
+        "completion_p95_ms": 1.0508543676557043,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 91.20891669990671
+    },
+    {
+      "workload": "xmltv-cold-10",
+      "trial": 2,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.7922107729222497,
+        "peak_working_memory_bytes": 0.4225290501149279,
+        "completion_p95_ms": 1.0057581734215228,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 86.84733089994552
+    },
+    {
+      "workload": "xmltv-cold-10",
+      "trial": 3,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "failures": [],
+      "ratios": {
+        "cpu_percent_mean": 0.801993216342987,
+        "peak_working_memory_bytes": 0.4305423103820968,
+        "completion_p95_ms": 1.0469298803705838,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 90.31581020017258
+    },
+    {
+      "workload": "xmltv-hot-1",
+      "trial": 1,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": false,
+      "failures": [
+        "regression:completion_p95_ms"
+      ],
+      "ratios": {
+        "cpu_percent_mean": 0.8866906328197695,
+        "peak_working_memory_bytes": 0.3964604125083167,
+        "completion_p95_ms": 1.1627502546495692,
+        "throughput_per_second": 1.0
+      },
+      "ttfb_p95_ceiling_ms": 55.00000000000001
+    }
+  ],
+  "workload_medians": {
+    "current-500-shared50": {
+      "complete_pairs": 3,
+      "all_completed_pairs_passed": true,
+      "three_pair_workload_gate_passed": true,
+      "median_native_source_ratios": {
+        "cpu_percent_mean": 0.011988261595609452,
+        "peak_working_memory_bytes": 0.3453264283895067,
+        "completion_p95_ms": 0.010818749392088848,
+        "throughput_per_second": 1.0084033613445378
+      }
+    },
+    "xmltv-cold-1": {
+      "complete_pairs": 3,
+      "all_completed_pairs_passed": true,
+      "three_pair_workload_gate_passed": true,
+      "median_native_source_ratios": {
+        "cpu_percent_mean": 0.865044521826932,
+        "peak_working_memory_bytes": 0.4538005668642103,
+        "completion_p95_ms": 0.9760809842899318,
+        "throughput_per_second": 1.0
+      }
+    },
+    "xmltv-cold-10": {
+      "complete_pairs": 3,
+      "all_completed_pairs_passed": true,
+      "three_pair_workload_gate_passed": true,
+      "median_native_source_ratios": {
+        "cpu_percent_mean": 0.801993216342987,
+        "peak_working_memory_bytes": 0.4305423103820968,
+        "completion_p95_ms": 1.0469298803705838,
+        "throughput_per_second": 1.0
+      }
+    },
+    "xmltv-hot-1": {
+      "complete_pairs": 1,
+      "all_completed_pairs_passed": false,
+      "three_pair_workload_gate_passed": false,
+      "median_native_source_ratios": {
+        "cpu_percent_mean": 0.8866906328197695,
+        "peak_working_memory_bytes": 0.3964604125083167,
+        "completion_p95_ms": 1.1627502546495692,
+        "throughput_per_second": 1.0
+      }
+    }
+  },
+  "failed_hot1_details": {
+    "source": {
+      "normalized": {
+        "cpu_percent_mean": 5.276235652195145,
+        "peak_working_memory_bytes": 461721600,
+        "ttfb_p95_ms": 3.0625629997302894,
+        "completion_p95_ms": 44.398375999662676,
+        "throughput_per_second": 1.0,
+        "pacing_fraction": 1,
+        "samples": 60,
+        "errors": 0,
+        "sample_errors": 0,
+        "late_completed": 0,
+        "oom_kills": 0,
+        "counter_resets": 0,
+        "correct_responses": true,
+        "cache_state_verified": true,
+        "fixture_unchanged": true,
+        "limits_verified": true
+      },
+      "per_service_counters": {
+        "baseline": {
+          "cpu_percent_mean": 0.401011079836771,
+          "cpu_usage_usec": 241257,
+          "elapsed_seconds": 60.16217808700003,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "origin": {
+          "cpu_percent_mean": 0.04928929774135981,
+          "cpu_usage_usec": 29654,
+          "elapsed_seconds": 60.16316190099951,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "source": {
+          "cpu_percent_mean": 4.825935274617014,
+          "cpu_usage_usec": 2903433,
+          "elapsed_seconds": 60.16311522599972,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        }
+      },
+      "counter_before_interservice_skew_seconds": 0.08855312100058654,
+      "counter_after_interservice_skew_seconds": 0.08949026000027516,
+      "counter_before_observer_seconds": 0.16003055300006963,
+      "counter_after_observer_seconds": 0.16201582000030612,
+      "sampler_max_observer_seconds": 0.004458022000108031,
+      "first_sample_elapsed_seconds": 0.0035912990006181644,
+      "last_sample_elapsed_seconds": 59.21296995400007,
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-hot-1-trial-1-source.json",
+      "sha256": "2776bbe81f974e56bfda366b67f73311bc96a1aa823289328abf7c587cecd6a0"
+    },
+    "candidate": {
+      "normalized": {
+        "cpu_percent_mean": 4.678388729351142,
+        "peak_working_memory_bytes": 183054336,
+        "ttfb_p95_ms": 1.2771740002790466,
+        "completion_p95_ms": 51.624222999635094,
+        "throughput_per_second": 1.0,
+        "pacing_fraction": 1,
+        "samples": 60,
+        "errors": 0,
+        "sample_errors": 0,
+        "late_completed": 0,
+        "oom_kills": 0,
+        "counter_resets": 0,
+        "correct_responses": true,
+        "cache_state_verified": true,
+        "fixture_unchanged": true,
+        "limits_verified": true
+      },
+      "per_service_counters": {
+        "baseline": {
+          "cpu_percent_mean": 3.6241926692010673,
+          "cpu_usage_usec": 2180129,
+          "elapsed_seconds": 60.15488686699973,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "origin": {
+          "cpu_percent_mean": 0.05196865514046221,
+          "cpu_usage_usec": 31262,
+          "elapsed_seconds": 60.15549164299955,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "candidate": {
+          "cpu_percent_mean": 1.0022274050096125,
+          "cpu_usage_usec": 602908,
+          "elapsed_seconds": 60.15680642799998,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        }
+      },
+      "counter_before_interservice_skew_seconds": 0.08315562000007048,
+      "counter_after_interservice_skew_seconds": 0.0850751810003203,
+      "counter_before_observer_seconds": 0.15570091500012495,
+      "counter_after_observer_seconds": 0.15576104599949758,
+      "sampler_max_observer_seconds": 0.003898914999808767,
+      "first_sample_elapsed_seconds": 0.003791111999817076,
+      "last_sample_elapsed_seconds": 59.212372214000425,
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-hot-1-trial-1-candidate.json",
+      "sha256": "b0ad588651a8132d615494cd0adc91eef78e0e53bacc03c1eb1178c6c4723655"
+    }
+  },
+  "correctness": {
+    "xml_body_bytes": 13015448,
+    "xml_body_sha256": "0bbf104f9170609596f1f1107bfb1c63e65600b998980ab4ecd05a587b1030cf",
+    "xml_channels": 500,
+    "xml_programme_mappings": 22500,
+    "current_rows": 500,
+    "typed_or_full_hash_validation_every_delivered_response": true,
+    "matrix_semantic_delivery_errors": 0,
+    "matrix_sample_errors": 0,
+    "minimum_matrix_samples": 60,
+    "predeclared_minimum_samples": 50
+  },
+  "reports": {
+    "integration": {
+      "path": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/integration.json",
+      "sha256": "cba762be4f2c0a48bf75ac9c75d6e4adac5f3be75751f4b3d80ad9146a5b49dc"
+    },
+    "matrix": {
+      "path": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/guide-run.json",
+      "sha256": "035fc36ee1ea0137c0a3569e2ff79eb7a2fa532f9eff721a800b55335981e4e7"
+    },
+    "pairs": {
+      "path": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/pairs.json",
+      "sha256": "bde8096065774d2f94bbd4917e5acbe1b1f748cc4e48c93d2acee2ac0c49d45e"
+    },
+    "qualification": {
+      "path": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/source-qualification.json",
+      "sha256": "1becd1445464750150404dccbbdaf28180bb46a86c8d17b0653d09c7de0d7627"
+    }
+  },
+  "phase_reports": [
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/current-500-shared50-qualification-0.json",
+      "sha256": "0bbd756d1dc51e2542572344d96e6667e9f2469242adb48c147ba5235d1b4666"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/current-500-shared50-qualification-1.json",
+      "sha256": "aea746b6ffad8182372c445a9f04a00329bf95c54d5d4960bfa8edaa8dd5715a"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/current-500-shared50-qualification-2.json",
+      "sha256": "aa2e84571b41786a637a03df24672c4ee55fce9246bc503b90992fee194cc4fb"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/current-500-shared50-qualification-3.json",
+      "sha256": "bb70f638a6db9faea265eda0ad033632be7ac926ae634518cd413bfcb12dcce8"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-cold-1-qualification-0.json",
+      "sha256": "8e957587d41e99519bfd2f93eb223db8293f913bf728d7551de936c6d8a8c933"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-cold-1-qualification-1.json",
+      "sha256": "2be3b5afdbdba46dfb74ce5b7599436aa19693c4ee6baa90a88cadf26fd0d3a7"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-cold-1-qualification-2.json",
+      "sha256": "31d04bd0ef74bed3c9ae63fbe8cb092045c270db6787c7005b391ddc202d2df6"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-cold-10-qualification-0.json",
+      "sha256": "d05be531c0841c691836452bfef20d2c2ac0ab52c713647b36bd78df69eb55ba"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-cold-10-qualification-1.json",
+      "sha256": "c4b103098f9facc462134c967401f0cc9455021ede9a9e70c24ee8d14cc8593e"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-cold-10-qualification-2.json",
+      "sha256": "46bf32f36f6b30996239f58568bff97d73fa866bb07e44ca788a92dacac89b00"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-hot-1-qualification-0.json",
+      "sha256": "793bbf2a3414d3f1a60ab42d705683a8f87e378b0b81f2ea6e1a0c692d48615b"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-hot-1-qualification-1.json",
+      "sha256": "e4e63c6849927442233de3d06dd9d9108acf4bb593cebb8333013c2c8c158744"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-hot-1-qualification-2.json",
+      "sha256": "d305e392f1e88d0d77cfde51eaa1dc932510bb21481f116b4ebd0b03b3dbeb26"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-hot-1-qualification-3.json",
+      "sha256": "1bb0a87bd78c2b0c78a1c35108a575a157c28f2fc7bfae531abdbd9de44c4475"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-hot-10-qualification-0.json",
+      "sha256": "894081c85c062650e8a42ec02fbe84576e83a714b4c0884b1ec3dc4ba6b275ef"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-hot-10-qualification-1.json",
+      "sha256": "1e080ed9453dfe4555777406ddc294fca842b58b1b6b90cf45ea15e88d98e7f9"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-hot-10-qualification-2.json",
+      "sha256": "e6ac2961fa3657e21f33b512bb0907fccf0f255fa185b3a9ea7b5decc82d4fc0"
+    },
+    {
+      "stage": "qualification",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/qualification/xmltv-hot-10-qualification-3.json",
+      "sha256": "4042af62985a92edae6e09ac3400a944833421c95d9fce3dd891527cae22913b"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/current-500-shared50-trial-1-source.json",
+      "sha256": "65dfc9f3e168f188b95906326e0cc70d98cc1997476bda499a94e94b92c71638"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/current-500-shared50-trial-1-candidate.json",
+      "sha256": "89a28f651fc7d95ca493330972633031f95abf6fef521a2d608d911c27ef3e99"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/current-500-shared50-trial-2-candidate.json",
+      "sha256": "e715dcccc3e9cc69ad5d6b6a1c0d4bc884865360c00974ce6dfe26734d066c50"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/current-500-shared50-trial-2-source.json",
+      "sha256": "2515f0f4eabf1c5ba5029bc5dfc341c62f76227ee03d4417db0c8312cf95b8d3"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/current-500-shared50-trial-3-source.json",
+      "sha256": "962404139893b19cdf2beab3c2be7627cb656e9f278c1a7bb3ab13bedf0830e2"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/current-500-shared50-trial-3-candidate.json",
+      "sha256": "15095befbebd7842dd140f21e93c8749147867daeeecc39deacbd1274e537808"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-1-trial-1-source.json",
+      "sha256": "dd923efae6723ae38763f4c64e5d47d69e0c7c6e27e4d7a9c0ad9a9254c1eb2d"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-1-trial-1-candidate.json",
+      "sha256": "7276c295dbd8370b5e1b61ad48b12c09f7f2d9ec30ef1655226e60bd9145e455"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-1-trial-2-candidate.json",
+      "sha256": "a037cf34c18c3d74db50e740f9d70ebf9bb2f5e6e4f975baecbeaf382c4a5aae"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-1-trial-2-source.json",
+      "sha256": "219d151d88a2de07d341fa424ecc28cf33b3ed46c718968ef0959750e3a03b4e"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-1-trial-3-source.json",
+      "sha256": "c68ffe212c23d2ec5b5db4535520614d12b0db763aa51991da44f2a6d288ad96"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-1-trial-3-candidate.json",
+      "sha256": "7cdb72f5497f449f80329e0b4b0d8b44566706d153aed395b099060bda041756"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-10-trial-1-source.json",
+      "sha256": "1040fc71883aa3783035963a532bd795163a9424f50875af0abdb4be9d9d036b"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-10-trial-1-candidate.json",
+      "sha256": "861eed91d7b5d780f9e900b44a29ec5d5e47227fbd34044c704c21992fe19528"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-10-trial-2-candidate.json",
+      "sha256": "00dd15e7aa4e32d1052714dd12bee4a593c2d9c1be71c107304d55008fd09f8d"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-10-trial-2-source.json",
+      "sha256": "4de52e4b6e6d17d14437a4f7f961a46b20a50053b85bb78b1454b1826a22b1ec"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-10-trial-3-source.json",
+      "sha256": "e9d4c59e8a23aafb431266c3bbc02ad85ce9d74b9e2bc1755e9f1012b31803c5"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-cold-10-trial-3-candidate.json",
+      "sha256": "d6a3fea866dcf5d22429b5092b8eb30808d73e986297a53f9bb891c496a2b25e"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-hot-1-trial-1-source.json",
+      "sha256": "2776bbe81f974e56bfda366b67f73311bc96a1aa823289328abf7c587cecd6a0"
+    },
+    {
+      "stage": "matrix",
+      "report": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-hot-1-trial-1-candidate.json",
+      "sha256": "b0ad588651a8132d615494cd0adc91eef78e0e53bacc03c1eb1178c6c4723655"
+    }
+  ],
+  "tool_source": "artifacts/rust/m5-m7-guide-experiment23-recovery-1/tool-source",
+  "tool_sources_canonical_sha256": "a40ccf79e1f151abb580a8552fd879383574fdd89f57322a2fbdecfca292a05f",
+  "important_tool_hashes": {
+    "scripts/rust-integration/api_load.py": "f1a6a290bec7c57b45107c4ce32bcc6c40508d2f86244a688a8ea0cd09a0b838",
+    "scripts/rust-perf/perf.py": "301b502d928540db7ee5e2177caa664121dd9250a341d764c9a203e25c786dc5",
+    "scripts/rust-guide-perf/plan.py": "4509cc929e1c2cd4bd3dc52806114a97f6b719e3249ea64edfd96d9608ea90c8",
+    "scripts/rust-guide-perf/README.md": "565787fe94e8bc16591a20d1f3e1634307bb8677e5390f8e13499db914f9a4fe",
+    "scripts/rust-guide-perf/reader.py": "7ec8a559b29883603d34222d824206242ea8c8658d05bd8b0ca73c47a4d67e64",
+    "scripts/rust-guide-perf/fixture.py": "06c4590066959a36da75b41da5a637736c238370c531f1cd68e8267102a1833c",
+    "scripts/rust-guide-perf/test_scaffold.py": "ff5866bdafcb60d25e9b0b2985f8799abe606991a16c80eac4eeefecc041b47c",
+    "scripts/rust-guide-perf/verified-functional-smoke23-recovery-1.json": "184b6a28d5371c903e02da249c5eeef14486d74082a48a39439943aaf140c5e7",
+    "scripts/rust-guide-perf/load.py": "c3eb6e28fede6f9303a58252a616738807418c106f46f7e50af3d0af3a0a03aa",
+    "scripts/rust-guide-perf/cgroup.py": "83221c96647611c22367fc37859431bba1533334a33b1415c631e039bad0a401",
+    "scripts/rust-guide-perf/acceptance.py": "937d6d732e11cc511fe362464044e6161747d3abde1a5068b96cf45dd2aeefcc",
+    "scripts/rust-guide-perf/test_acceptance.py": "b46afb734c008d861c2460fcef951bed9ff5b2aeb05b7f5ad4d5ddba82e49982",
+    "scripts/rust-guide-perf/qualification.py": "9681c518f45ab4f1bf959153d199a8176c105e21009690483332c53ab871dc0e",
+    "scripts/rust-guide-perf/test_qualification.py": "4e7f0811fb25f37e496b19e69bf14566e945aff0926778d3102881d1d7a1a342",
+    "scripts/rust-guide-perf/observer.py": "c1ee76ae1b5bd3836a6698ca55c9f02b88623228fc28609dfe87fe6e3c8bd671",
+    "scripts/rust-guide-perf/orchestrator.py": "b6788a7c3ce54cd38d83b451369a18188f8f298bd899d2db2ea5b24fa935c2a0",
+    "scripts/rust-guide-perf/cache.py": "1f7e480cd268c13a82509be8953a2f08133becdc1afff699702368b967c4a1db",
+    "scripts/rust-guide-perf/smoke.py": "f69f74629dea81acb4d2176041cc0dc14517778c3dd8633267aea72f11f1ddfc",
+    "scripts/rust-guide-perf/test_runtime.py": "fed4cb182fb17b0d29246bd24fc2bf26f644ed575061b93ca39789b7a41b14cf",
+    "scripts/rust-guide-perf/verified-observer-smoke23-recovery-1.json": "37dec3430e81beadd3754016e730e7ed9fafde2004d50802db465be760a35cdf",
+    "scripts/rust-guide-perf/test_orchestrator.py": "0a4b739c3f649d31341085eb554402231c7bbf498ae03f03187f1f7457a63bbd",
+    "scripts/rust-guide-perf/verified-observer-smoke23-recovery-2.json": "444d6cd6fc541db71471a4634128f3741c7946a0b1e191a22507aebe9cd4803e",
+    "scripts/rust-guide-perf/docker_stats.py": "bc554c7c30ba004dc5b8a6e78758ca1431696d0ce94302180b6cc5aa693ddb25",
+    "scripts/rust-guide-perf/test_docker_stats.py": "9de9025b188a7f49a2fcadcc3eee2666fa45b28590ff5586a8e0e54757238ce0",
+    "scripts/rust-guide-perf/verified-observer-cadence23-recovery-1.json": "c231139f073e1c6bb7988aebaaac6495a700e9064d27cf87a9b9878b96e22bff",
+    "scripts/rust-m4-perf/compose.yml": "8a47dbc0ec0b3dbd31a093963fcd8171bc46d9a95fbfb9ccb971d94886116ceb",
+    "scripts/rust-m4-perf/source_web.py": "b48f2667a8cc3e87cd5652c719ef2b4c447cb49b18c5262967d44c0d9adca872"
+  },
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "independent_docker_ps_after_cleanup": "empty",
+  "evidence_limits": [
+    "Per-request latency arrays were not returned by reused api_load; aggregate p95s, error counts and all60 resource samples/counters are retained. Do not infer unseen distributions.",
+    "Ready/status/bytes/generation/lock checks were performed before/after everyXML phase and each cold reset, but numeric cache chunk counts/snapshots were not saved; unavailable after cleanup.",
+    "PostgreSQL-specific PSS/private/session snapshots were planned but not wired into this runner. Whole infrastructure/PG/Redis container working-memory and CPU are included in every primary metric.",
+    "The first failing pair stops overall acceptance; nine earlier passed pairs and three completed three-pair workload results remain preserved, never substituted for full matrix acceptance."
+  ],
+  "next_steps": [
+    "Root investigates native cached-reader/Redis command overhead; retained counters show baselineCPU.4010% Source versus3.6242% Native while webCPU drops4.8259% to1.0022%. This observation does not alone prove a cause.",
+    "Add bounded per-request timing vectors and saved cache-state/chunk metadata before any future qualification, without altering fixed budgets.",
+    "Any runtime optimization requires new canonical immutable image, functional compatibility gates and fresh coordinated qualification/matrix. No automatic rerun."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing.",
+  "code_audit_correction": "Original streaming_chunk_cache.py response follower also uses LINDEX per member (line170). LRANGE is used only by our diagnostic state reader. Source programme export groups roughly1000 programmes per cache member, while native64KiB output members cause more READ operations; this is an audit hypothesis for the observed Redis CPU shift, not measured chunk-count evidence from the stopped run.",
+  "published_phase_projection": {
+    "path": "scripts/rust-guide-perf/evidence-guide-experiment23-recovery-1.json",
+    "sha256": "86129a0d7da3046fe49f660c7eabd56a56524062f9254f39c8c24be9c24e427d",
+    "phases": 38,
+    "scope": "Whitelisted numerical fields from every retained raw phase; container IDs become known service names and monotonic clocks are relative to first before-counter. All samples/cgroup values preserved; raw hashes bind originals. No missing request traces or chunk witnesses invented."
+  }
+}

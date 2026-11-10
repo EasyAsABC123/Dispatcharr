@@ -37,7 +37,7 @@ def request(base, path, token, timeout, expected=UNSET):
 
 def phase(base, paths, token, expected, *, users, duration, period, timeout,
           sample=None, sample_interval=1, read_request=None, stagger=False,
-          require_complete_before_deadline=False):
+          require_complete_before_deadline=False, retain_traces=False):
     if (not 1 <= users <= 100 or not 0 < duration <= 300
             or not .05 <= period <= 10 or not 0 < timeout <= 10
             or not 0 < sample_interval <= 10 or not 1 <= len(paths) <= 32
@@ -45,6 +45,11 @@ def phase(base, paths, token, expected, *, users, duration, period, timeout,
         raise ValueError('Invalid bounded API workload')
     if read_request is not None and not callable(read_request):
         raise ValueError('API request adapter must be callable')
+    if type(retain_traces) is not bool:
+        raise ValueError('Trace selection must be boolean')
+    trace_per_user_limit = math.ceil(duration / period) + 1
+    if retain_traces and users * trace_per_user_limit > 10000:
+        raise ValueError('Request trace ceiling is10000 rows; reduce declared load or disable traces')
     read = request if read_request is None else read_request
     began_phase = time.monotonic()
     stop = threading.Event()
@@ -64,26 +69,46 @@ def phase(base, paths, token, expected, *, users, duration, period, timeout,
 
     def user(index):
         result = {'completed': 0, 'late_completed': 0, 'errors': {}, 'ttfb': [], 'roundtrip': [],
-                  'per_path': {path: 0 for path in paths}}
+                  'per_path': {path: 0 for path in paths}, 'traces': []}
         if stagger:
             stop.wait(max(0, began_phase+index*period/users-time.monotonic()))
         sequence = index
+        attempt = 0
         while time.monotonic() < deadline:
-            path = paths[sequence % len(paths)]
+            path_index = sequence % len(paths)
+            path = paths[path_index]
             sequence += 1
             began = time.monotonic()
+            first, elapsed, error_name = None, None, None
             try:
                 _, first, elapsed = read(base, path, token, timeout, expected[path])
-                if require_complete_before_deadline and time.monotonic() > deadline:
+                if retain_traces and (any(type(v) not in [int, float] or not math.isfinite(v)
+                                         or v < 0 for v in [first, elapsed]) or elapsed < first):
+                    raise ValueError('Invalid request timing from adapter')
+                ended = time.monotonic()
+                if require_complete_before_deadline and ended > deadline:
                     result['late_completed'] += 1
-                    continue
-                result['completed'] += 1
-                result['per_path'][path] += 1
-                result['ttfb'].append(first)
-                result['roundtrip'].append(elapsed)
+                else:
+                    result['completed'] += 1
+                    result['per_path'][path] += 1
+                    result['ttfb'].append(first)
+                    result['roundtrip'].append(elapsed)
             except Exception as error:
-                name = type(error).__name__
-                result['errors'][name] = result['errors'].get(name, 0)+1
+                ended = time.monotonic()
+                error_name = type(error).__name__[:64]
+                result['errors'][error_name] = result['errors'].get(error_name, 0)+1
+                first, elapsed = None, None
+            if retain_traces:
+                if len(result['traces']) >= trace_per_user_limit:
+                    result['errors']['TraceCapacity'] = result['errors'].get('TraceCapacity', 0)+1
+                    break
+                result['traces'].append({'user_index': index, 'attempt_index': attempt,
+                    'path_index': path_index, 'started_seconds': began-began_phase,
+                    'ttfb_ms': first, 'completion_ms': elapsed,
+                    'verified_complete_seconds': ended-began_phase,
+                    'in_window': ended <= deadline, 'error_type': error_name,
+                    'disposition': 'error' if error_name else ('late' if ended > deadline else 'success')})
+                attempt += 1
             # Closed-loop fixed user pacing; do not burst to catch up after a
             # slow request. Throughput gates detect a backend that falls behind.
             stop.wait(max(0, min(deadline, began+period)-time.monotonic()))
@@ -105,7 +130,7 @@ def phase(base, paths, token, expected, *, users, duration, period, timeout,
     errors = sum(sum(row['errors'].values()) for row in rows)
     ttfb = [value for row in rows for value in row['ttfb']]
     roundtrip = [value for row in rows for value in row['roundtrip']]
-    return {'summary': {'completed': completed, 'errors': errors,
+    result = {'summary': {'completed': completed, 'errors': errors,
                 'users_without_success': sum(not row['completed'] for row in rows),
                 'late_completed': sum(row['late_completed'] for row in rows),
                 'requests_per_second': completed/duration,
@@ -116,6 +141,15 @@ def phase(base, paths, token, expected, *, users, duration, period, timeout,
                 'per_path': {path: sum(row['per_path'][path] for row in rows) for path in paths}},
             'worker_errors': [row['errors'] for row in rows],
             'resource_samples': samples, 'sample_errors': sample_errors}
+    if retain_traces:
+        traces = sorted((trace for row in rows for trace in row['traces']),
+                        key=lambda trace: (trace['started_seconds'], trace['user_index']))
+        result['request_traces'] = traces
+        result['trace_scope'] = ('Bounded timing/indices only; no URL, token, headers, '
+                                 'request/response body or exception text. Late work excluded '
+                                 'when require_complete_before_deadline is true.')
+        result['trace_limit'] = 10000
+    return result
 
 
 def compare(old, new):

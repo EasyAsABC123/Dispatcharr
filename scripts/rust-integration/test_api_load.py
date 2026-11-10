@@ -96,6 +96,54 @@ class ApiLoadTests(unittest.TestCase):
         self.assertEqual(result['summary']['late_completed'],1)
         self.assertEqual(result['summary']['users_without_success'],1)
 
+    def test_opt_in_traces_reproduce_p95_and_omit_secrets_paths_bodies(self):
+        import json
+        def adapter(*args):
+            return {'uuid': 'PRIVATE_BODY_UUID'}, 1, 2
+        result = api_load.phase('http://fixture', ['/private/UUID-path'], 'PRIVATE_TOKEN',
+            {'/private/UUID-path': {}}, users=2, duration=.06, period=.1, timeout=1,
+            read_request=adapter, stagger=True, retain_traces=True,
+            require_complete_before_deadline=True)
+        traces = result['request_traces']
+        self.assertEqual(len(traces), 2)
+        self.assertEqual(result['summary']['completed'], len(traces))
+        self.assertEqual(result['summary']['roundtrip_ms_p95'],
+                         api_load.percentile([r['completion_ms'] for r in traces], .95))
+        self.assertTrue(all(r['in_window'] and r['disposition'] == 'success' for r in traces))
+        raw = json.dumps(traces)
+        for private in ['PRIVATE_TOKEN', 'PRIVATE_BODY_UUID', 'UUID-path', 'Authorization']:
+            self.assertNotIn(private, raw)
+        plain = api_load.phase('http://fixture', ['guide'], 'private', {'guide': None},
+            users=1, duration=.01, period=.1, timeout=1, read_request=adapter)
+        self.assertNotIn('request_traces', plain)
+
+    def test_late_and_error_traces_preserve_exclusion_and_redact_exception_text(self):
+        import time
+        def late(*args):
+            time.sleep(.02)
+            return None, 1, 20
+        result = api_load.phase('http://fixture', ['guide'], 'PRIVATE_TOKEN', {'guide': None},
+            users=1, duration=.005, period=.1, timeout=1, read_request=late,
+            retain_traces=True, require_complete_before_deadline=True)
+        self.assertEqual(result['summary']['completed'], 0)
+        self.assertEqual(result['summary']['late_completed'], 1)
+        self.assertEqual(result['request_traces'][0]['disposition'], 'late')
+        self.assertFalse(result['request_traces'][0]['in_window'])
+        def error(*args):
+            raise ValueError('PRIVATE_TOKEN PRIVATE_BODY_UUID')
+        failed = api_load.phase('http://fixture', ['guide'], 'PRIVATE_TOKEN', {'guide': None},
+            users=1, duration=.005, period=.1, timeout=1, read_request=error, retain_traces=True)
+        trace = failed['request_traces'][0]
+        self.assertEqual(trace['error_type'], 'ValueError')
+        self.assertEqual(trace['disposition'], 'error')
+        self.assertIsNone(trace['ttfb_ms'])
+        self.assertIsNone(trace['completion_ms'])
+        self.assertNotIn('PRIVATE', str(trace))
+        with self.assertRaises(ValueError):
+            api_load.phase('http://fixture', ['guide'], 'private', {'guide': None},
+                users=100, duration=300, period=.05, timeout=1,
+                read_request=error, retain_traces=True)
+
     def test_workload_limits_reject_nan_or_unbounded_worker_counts(self):
         for users, duration in [(0, 1), (101, 1), (1, math.nan), (1, 301)]:
             with self.assertRaises(ValueError):
