@@ -1,0 +1,62 @@
+{
+  "passed": false,
+  "scope": "Actual immutable image37 realSQL/HTTP/Redis restart immediate replay: first native reopen503, following same-ID200, old body101/827392 continues; not Source parity.",
+  "original_authors": "Original Dispatcharr authors retain full application and algorithm credit.",
+  "proof": "artifacts/rust/m4-vod-fast-recovery-image37-216/vod-contracts.json",
+  "proof_sha256": "e3f5b443628eabcdacc2dee86c5c99989705759150359023623674f8b6701b23",
+  "candidate_manifest": "artifacts/rust/m4-vod-fast-recovery-image37-216/candidate-build-manifest.json",
+  "candidate_manifest_sha256": "f764cb21b478a609888937d5c951aac6e663d343ad10a53049aab2c2b2b05c48",
+  "strict_schedule": {
+    "checks": {
+      "after_loss": true,
+      "reopen": false,
+      "additional_active_entry": false,
+      "old_progress": false,
+      "younger_after_old_close": false,
+      "retired_reopen": false,
+      "younger_after_retired_reopen": false,
+      "same_id_reopen_wire": false,
+      "additional_current_entry_wire": true,
+      "retired_public_reopen_wire": true,
+      "old_body": true,
+      "old_progress_bytes": true,
+      "delegated_progress_value": false,
+      "third_close_count": true,
+      "old_close_public_effect": true,
+      "young_continuity": false,
+      "young_extra_bytes": false,
+      "prefixes": false,
+      "audit_event_order": false
+    },
+    "passed": false,
+    "scope": "Selected actualHTTP all-missing-restart scalar/body/audit-type schedule; no complete metadata DTO/event IP/timestamps, WebSocket, partial-loss, default application or resource acceptance.",
+    "counter_note": "Missing provider counter and zero both represent zero, as Source public counter readers do; origin request counts are relative to each capture baseline."
+  },
+  "cleanup_passed": true,
+  "source_reopen": {
+    "status": 200,
+    "streaming": true,
+    "first_bytes": 8192,
+    "first_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+  },
+  "native_reopen": {
+    "status": 503,
+    "streaming": false
+  },
+  "native_additional": {
+    "status": 200,
+    "streaming": true,
+    "first_bytes": 8192,
+    "first_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+  },
+  "native_old_progress": {
+    "chunks_read": 101,
+    "bytes_read": 827392,
+    "tail_sha256": "a4fef825a51c506fdfb51f04319bb42404f76f979c9ef1701f53305272f075bf",
+    "ended": false,
+    "error": null
+  },
+  "cause": "Not yet classified: capture typed first-attempt failure before changing runtime. Do not infer cached connection versus concurrent scope/pending context solely from503.",
+  "frozen_tools_count": 513,
+  "frozen_tools_map_sha256": "fd509455d64451ac19da643d9ea6995762e5f943ea1621b1b4b5681cef0e9a63"
+}

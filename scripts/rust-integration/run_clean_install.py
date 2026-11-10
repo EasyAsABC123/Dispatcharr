@@ -73,7 +73,7 @@ def main():
         raise TimeoutError('Fixture readiness deadline')
     def sql(query):return command(base+['exec','-T','database','psql','-U','dispatch','-d','dispatcharr','-At','-c',query]).strip()
     try:
-        stage='infrastructure';command(base+['up','-d','database','cache']);wait(lambda:command(base+['exec','-T','database','pg_isready','-U','dispatch','-d','dispatcharr']).strip().endswith('accepting connections'))
+        stage='infrastructure';command(base+['up','-d','database','cache']);wait(lambda:command(base+['exec','-T','database','pg_isready','-h','127.0.0.1','-U','dispatch','-d','dispatcharr']).strip().endswith('accepting connections'))
         record('fresh-empty-database',sql("SELECT count(*) FROM pg_tables WHERE schemaname='public'")=='0')
         stage='default-off';command(base+['-f',str(off),'up','-d','--no-build','candidate']);container=command(base+['ps','-a','-q','candidate']).strip()
         wait(lambda:json.loads(command(['docker','inspect',container]))[0]['State']['Status']=='exited',30)
