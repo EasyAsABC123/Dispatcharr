@@ -85,13 +85,26 @@ impl Store {
         };
         let expires = Instant::now() + Duration::from_secs(2);
         let mut tx = self.pool().begin().await?;
-        sqlx::query("SET LOCAL statement_timeout='2000ms'")
-            .execute(&mut *tx)
-            .await?;
-        sqlx::query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY")
-            .execute(&mut *tx)
-            .await?;
         let result = async {
+            sqlx::query("SET LOCAL statement_timeout='2000ms'")
+                .execute(&mut *tx)
+                .await?;
+            sqlx::query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY")
+                .execute(&mut *tx)
+                .await?;
+            // The bounded guard is a separate SELECT. Acquire its phase's
+            // relations before that SELECT can pin the repeatable-read snapshot,
+            // matching Source visibility after a real relation-lock wait.
+            let mut tables = "dispatcharr_channels_channel, dispatcharr_channels_channeloverride, epg_epgdata, epg_epgsource".to_owned();
+            if user.user_level < 10 {
+                tables.push_str(", accounts_user_channel_profiles");
+            }
+            if profile.is_some() || user.user_level < 10 {
+                tables.push_str(", dispatcharr_channels_channelprofilemembership");
+            }
+            sqlx::query(&format!("LOCK TABLE {tables} IN ACCESS SHARE MODE"))
+                .execute(&mut *tx)
+                .await?;
             // Preserve Source projection widths and join planning. A bounded
             // EXISTS preflight in the same snapshot prevents large text/JSON
             // values crossing the subsequent client boundary.

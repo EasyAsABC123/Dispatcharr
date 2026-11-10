@@ -43,8 +43,13 @@ def main():
     parser.add_argument('--current-bridge',action='store_true',help='Real Store to real CurrentLookup with one-connection pool, Source outcomes and physical ownership')
     parser.add_argument('--current-lookup',action='store_true',help='Native component-only fresh-index/file lookup and physical guards; no app or durable queue')
     parser.add_argument('--index-service',action='store_true',help='Native retained index SQL/task/file-lease component; separate from pure scanner')
-    parser.add_argument('--source-helper',choices=['file_job_source.py','auto_logos_source.py','programme_index_source.py','current_lookup_source.py','current_order_source.py'],default='file_job_source.py')
+    parser.add_argument('--source-helper',choices=['file_job_source.py','auto_logos_source.py','programme_index_source.py','current_lookup_source.py','current_order_source.py','grid_concurrency_source.py'],default='file_job_source.py')
+    parser.add_argument('--grid-concurrency-native',action='store_true',help='Actual Store grid metadata relation-lock comparison; no HTTP or performance acceptance')
     args = parser.parse_args()
+    if args.grid_concurrency_native:
+        if args.source_helper!='grid_concurrency_source.py' or args.native or args.native_test_manifest or args.current_order_native or args.current_bridge or args.current_lookup or args.index_service:parser.error('Grid native gate requires its Source helper and no other native modes')
+        args.native=True
+    if args.source_helper=='grid_concurrency_source.py' and not args.grid_concurrency_native and (args.native or args.native_test_manifest or args.current_order_native or args.current_bridge or args.current_lookup or args.index_service):parser.error('Grid concurrency oracle is Source-only')
     if args.current_bridge:args.current_lookup=True
     if args.current_order_native:
         if args.source_helper!='current_order_source.py' or args.native_test_manifest or args.current_lookup or args.index_service:parser.error('Store current-order gate requires its Source helper and host component tests')
@@ -69,6 +74,7 @@ def main():
                      'scripts/rust-epg-parity/programme_index_source.py',
                      'scripts/rust-epg-parity/current_lookup_source.py',
                      'scripts/rust-epg-parity/current_order_source.py',
+                     'scripts/rust-epg-parity/grid_concurrency_source.py',
                      'scripts/rust-epg-parity/component_container.py',
                      'scripts/rust-epg-contracts/source_reads.py',
                      'scripts/rust-epg-contracts/window_source.py',
@@ -80,7 +86,7 @@ def main():
         target.write_bytes(source_tool.read_bytes())
         hashes[relative] = hashlib.sha256(target.read_bytes()).hexdigest()
     project = 'dispatcharr-epg-file-job-'+uuid.uuid4().hex[:10]
-    report = {'scope':('original-current-programme-metadata-order' if args.source_helper=='current_order_source.py' else 'original-current-file-lookup-preconditions' if args.source_helper=='current_lookup_source.py' else 'original-automatic-EPG-logo-helper' if args.source_helper=='auto_logos_source.py' else 'original-programme-index' if args.source_helper=='programme_index_source.py' else 'original-file-refresh-task-ordering'), 'passed':False,
+    report = {'scope':('original-grid-concurrency' if args.source_helper=='grid_concurrency_source.py' else 'original-current-programme-metadata-order' if args.source_helper=='current_order_source.py' else 'original-current-file-lookup-preconditions' if args.source_helper=='current_lookup_source.py' else 'original-automatic-EPG-logo-helper' if args.source_helper=='auto_logos_source.py' else 'original-programme-index' if args.source_helper=='programme_index_source.py' else 'original-file-refresh-task-ordering'), 'passed':False,
               'native_verified':False, 'performance_verified':False,
               'project':project, 'tool_source_sha256':hashes,'source_helper':args.source_helper}
     status = 1
@@ -137,12 +143,22 @@ def main():
                              timeout=120, body=(tools/'scripts/rust-epg-parity'/args.source_helper).read_text())
             (output/'source-worker.log').write_text(result.stderr)
             fixture = json.loads(result.stdout.splitlines()[-1])
-            fixture_path = output/('current-order-source.json' if args.source_helper=='current_order_source.py' else 'current-lookup-source.json' if args.source_helper=='current_lookup_source.py' else 'auto-logos-source.json' if args.source_helper=='auto_logos_source.py' else 'programme-index-source.json' if args.source_helper=='programme_index_source.py' else 'file-job-source.json')
+            fixture_path = output/('grid-concurrency-source.json' if args.source_helper=='grid_concurrency_source.py' else 'current-order-source.json' if args.source_helper=='current_order_source.py' else 'current-lookup-source.json' if args.source_helper=='current_lookup_source.py' else 'auto-logos-source.json' if args.source_helper=='auto_logos_source.py' else 'programme-index-source.json' if args.source_helper=='programme_index_source.py' else 'file-job-source.json')
             fixture_path.write_text(json.dumps(fixture, indent=2)+'\n')
             report.update(passed=True, source_cases=len(fixture['cases']),
                           fixture_sha256=hashlib.sha256(fixture_path.read_bytes()).hexdigest())
             if args.source_helper=='current_order_source.py':report['source_mutation_schedules']=len(fixture['mutation_schedules'])
-            if args.native:
+            if args.grid_concurrency_native:
+                frozen=output/'frozen-source'
+                for relative,data_bytes in captured.items():
+                    target=frozen/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data_bytes)
+                pg=command(compose+['port','baseline','5432']).stdout.strip()
+                native_env=dict(env,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+pg+'/dispatcharr',GRID_CONCURRENCY_DISPOSABLE_FIXTURE='playback-fixture-only',GRID_CONCURRENCY_FIXTURE=str(fixture_path),CARGO_TARGET_DIR=str(output/'cargo-target'))
+                result=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-store','--test','grid_concurrency_sql','--locked','--offline','--','--ignored','--nocapture','--test-threads=1'],env=native_env,text=True,capture_output=True,timeout=600)
+                (output/'native-grid-concurrency.log').write_text(result.stdout+'\n'+result.stderr)
+                result.check_returncode()
+                report.update(native_verified=True,native_metadata_relation_lock_verified=True,application_stream_schedule_verified=False)
+            if args.native and not args.grid_concurrency_native:
                 if args.native_test_manifest:
                     spec=importlib.util.spec_from_file_location('file_job_component',tools/'scripts/rust-epg-parity/component_container.py')
                     component=importlib.util.module_from_spec(spec);spec.loader.exec_module(component)

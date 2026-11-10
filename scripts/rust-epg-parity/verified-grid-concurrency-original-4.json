@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "scope": "Original-only grid partition/iterator and actual relation-lock schedules; no native acceptance",
+  "evidence": "artifacts/rust/m5-grid-concurrency-source-4",
+  "report_sha256": "ac434aa4b135622bf3ca191ccff8b07a658c619aae48f2a6333820f8ee2f38f7",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "dataset": "scripts/rust-epg-parity/datasets/grid-concurrency-original-4.json",
+  "dataset_sha256": "416546977990317925918043c7a1747a330fec40dff6d9b101aa2656fe891965",
+  "cases": 4,
+  "native_verified": false,
+  "performance_verified": false,
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "tool_source_sha256": {
+    "scripts/rust-epg-parity/run_file_job.py": "c42740bcd4ee435f5a5e97afd40df0da696815640f0d29fe9503559b83c7db05",
+    "scripts/rust-epg-parity/grid_concurrency_source.py": "41d803b72d882d20d4d87e8c1d8ac4fd453008c37a44ec77a718d72582760447",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9"
+  },
+  "prior_attempts": [
+    {
+      "evidence": "artifacts/rust/m5-grid-concurrency-source-1",
+      "passed": false,
+      "reason": "Fixture expected only owned programmes, but profile creation automatically included existing baseline channels."
+    },
+    {
+      "evidence": "artifacts/rust/m5-grid-concurrency-source-2",
+      "passed": false,
+      "reason": "Same profile setup assertion with retained diagnostic body; fixed by disabling unrelated memberships in the owned profile."
+    },
+    {
+      "evidence": "artifacts/rust/m5-grid-concurrency-source-3",
+      "passed": true,
+      "reason": "All4 behavior cases passed; Django heap cleanup cleared CaptureQueriesContext logs. Source4 uses a passive execute wrapper to retain actual SQL independently."
+    }
+  ],
+  "limitations": [
+    "Original view executed through DRF APIRequestFactory with forced owned admin authentication, not external network/middleware.",
+    "Clock pinned, original view/query/generator bodies unchanged; actor writes affect only owned rows.",
+    "Successful post-prefix deletion returns empty data; exception/truncation, growth limits, caller cancellation and full native stream schedules remain open."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}

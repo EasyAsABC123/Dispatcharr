@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "scope": "Fixed actual grid metadata relation-lock schedule plus original/native grid component regressions; not packaged application acceptance or new performance evidence",
+  "evidence": "artifacts/rust/m5-grid-concurrency-native-2",
+  "report_sha256": "514db347b209e979ae2021a2cf6fd7562c471b49990526df67a7861ece95eda9",
+  "rust_source_archive_sha256": "7e60bd19c0cf3c511cd72dc0565076a97e5562b8e951904f8fb1172340df95cb",
+  "runtime_delta_sha256": {
+    "rust/crates/store/src/epg_grid_db.rs": "81fc8101a31b51bdd96ddbc25d5d6646a09c1a5eccd69fe15865d6aa06abbf83"
+  },
+  "test_sha256": {
+    "rust/crates/store/tests/grid_concurrency_sql.rs": "96a4bf9ed0025e1f879d33c6e99c7d818047332cd174f540a60dbeb3f8dd1056"
+  },
+  "unchanged_other_production_store_modules": 64,
+  "unchanged_other_production_store_map_sha256": "72dd10dd63b8725fc2839f33c191b5073b3084a00ee9d281eca8632cd96f9c95",
+  "source_dataset": "scripts/rust-epg-parity/datasets/grid-concurrency-original-4.json",
+  "source_dataset_sha256": "416546977990317925918043c7a1747a330fec40dff6d9b101aa2656fe891965",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_concurrency_cases": 4,
+  "native_metadata_relation_lock_tests": 1,
+  "regressions": {
+    "evidence": "artifacts/rust/m5-grid-snapshot-regression-1",
+    "report_sha256": "3ca36112815d2f598f27221a38d3275f2457687a34cf7406b5768fa572a77de1",
+    "metadata_stored_cases": 22,
+    "complete_entity_cases": 22,
+    "http_factory_cases": 40,
+    "actual_original_head_cases": 1,
+    "http_and_physical_tests": 2,
+    "strict_store_all_targets_clippy": true,
+    "store_unit_passed": 102,
+    "store_unit_external_ignored": 5,
+    "archive_replay_validation_tests": 6
+  },
+  "validation_input_note": "Rust snapshot includes sibling test-only VOD drafts not promoted by this evidence. Initial Store Clippy lacked their external Source dataset; corrected validation restored exact tracked canonical dataset, bound by validation-extra-inputs.json. Both logs retained. Other production Store modules verified unchanged; Store lib adds only the sibling cfg(test) prototype.",
+  "logs_sha256": {
+    "artifacts/rust/m5-grid-concurrency-native-2/native-grid-concurrency.log": "3b307794acf0200ececa4b00ab95a05f9af6a5c036e958ee5b161b5760a5d1c8",
+    "artifacts/rust/m5-grid-concurrency-native-2/store-clippy.log": "1d0969ea5ec8aabd77c8e543032f0ee024313a6498b84c703673d5b2f179cf38",
+    "artifacts/rust/m5-grid-concurrency-native-2/store-clippy-with-dataset.log": "dbe0ca0157982dfcc4b88105508f7cdcd7f674c9350b9745bdf8bc9bdadac02a",
+    "artifacts/rust/m5-grid-concurrency-native-2/store-unit-with-dataset.log": "298ff0f138ae36f201b02527e0cf913138f00973317f10f09e120ce572c67945",
+    "artifacts/rust/m5-grid-concurrency-native-2/validation-extra-inputs.json": "4750f9437ff3760a36861f4cf4bb816c1cb03f0557f1e40206d03e3d3bb30db3",
+    "artifacts/rust/m5-grid-snapshot-regression-1/native-grid.log": "80d1d4ec58196dc091c3952d64ba8b2e60729be193ee72da1d9c1c1de56d33f2",
+    "artifacts/rust/m5-grid-snapshot-regression-1/native-grid-entity.log": "89960d56b408fb1a88ef525a137fc6d83fd83400ac0fa4023383cc55024dd957",
+    "artifacts/rust/m5-grid-snapshot-regression-1/native-grid-http.log": "6956b2d975e6fb3e625aad4de11e505b9160de7d2f2a38b2c124ea0fea5259aa",
+    "artifacts/rust/m5-grid-archive-validation-tests-1.log": "65378dcad145da2497120819bebfc3c46534dce9714ce064b3d809a56654aca2"
+  },
+  "failed_predecessor": "scripts/rust-epg-parity/verified-grid-concurrency-native-1-failed.json",
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "native_metadata_relation_lock_verified": true,
+  "application_stream_schedule_verified": false,
+  "packaged_application_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing.",
+  "tool_source_sha256": {
+    "scripts/rust-epg-parity/run_file_job.py": "e353af910be3aef6669b71008314897343051191bb45d0f30cb50113d1f1e7a6",
+    "scripts/rust-epg-parity/grid_concurrency_source.py": "41d803b72d882d20d4d87e8c1d8ac4fd453008c37a44ec77a718d72582760447",
+    "scripts/rust-epg-contracts/control_reads.py": "3ac6338a852fbdfd6095d2fc56e73e4dd10e8906db05e4241376ff6123a51a32",
+    "scripts/rust-epg-contracts/test_control_reads.py": "1a57a762c893f6f9918b321a7602b0936d9ea422b6eff56f2619b026b2b4a469"
+  }
+}

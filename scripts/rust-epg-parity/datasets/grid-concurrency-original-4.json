@@ -1,0 +1,230 @@
+{
+  "scope": "Original grid partition/iterator and actual metadata relation-lock schedules",
+  "cases": [
+    {
+      "name": "replace-programmes-after-partition",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body": {
+        "data": [
+          {
+            "id": 2,
+            "start_time": "2026-11-10T11:30:00Z",
+            "end_time": "2026-11-10T12:30:00Z",
+            "title": "after-partition",
+            "sub_title": null,
+            "description": null,
+            "tvg_id": "rust-grid-concurrency-entry",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      },
+      "opening_prefix": "{\"data\":[",
+      "queries_before_iteration": 2,
+      "queries": [
+        {
+          "sql": "SELECT \"core_coresettings\".\"id\", \"core_coresettings\".\"key\", \"core_coresettings\".\"name\", \"core_coresettings\".\"value\" FROM \"core_coresettings\" WHERE \"core_coresettings\".\"key\" = %s LIMIT 21",
+          "params": [
+            "network_access"
+          ],
+          "many": false
+        },
+        {
+          "sql": "SELECT DISTINCT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\", COALESCE(\"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channel\".\"name\") AS \"effective_name\", COALESCE(\"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channel\".\"channel_number\") AS \"effective_channel_number\", COALESCE(\"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"channel_group_id\") AS \"effective_channel_group_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channel\".\"logo_id\") AS \"effective_logo_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvg_id\") AS \"effective_tvg_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\") AS \"effective_tvc_guide_stationid\", COALESCE(\"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"epg_data_id\") AS \"effective_epg_data_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\") AS \"effective_stream_profile_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channel\".\"is_radio\") AS \"effective_is_radio\", T10.\"id\", T10.\"tvg_id\", T10.\"name\", T10.\"icon_url\", T10.\"epg_source_id\", \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\", \"dispatcharr_channels_channeloverride\".\"id\", \"dispatcharr_channels_channeloverride\".\"channel_id\", \"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channeloverride\".\"created_at\", \"dispatcharr_channels_channeloverride\".\"updated_at\", \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\", T14.\"id\", T14.\"name\", T14.\"source_type\", T14.\"url\", T14.\"username\", T14.\"password\", T14.\"is_active\", T14.\"file_path\", T14.\"extracted_file_path\", T14.\"refresh_interval\", T14.\"refresh_task_id\", T14.\"custom_properties\", T14.\"priority\", T14.\"status\", T14.\"last_message\", T14.\"created_at\", T14.\"updated_at\" FROM \"dispatcharr_channels_channel\" INNER JOIN \"dispatcharr_channels_channelprofilemembership\" ON (\"dispatcharr_channels_channel\".\"id\" = \"dispatcharr_channels_channelprofilemembership\".\"channel_id\") LEFT OUTER JOIN \"dispatcharr_channels_channeloverride\" ON (\"dispatcharr_channels_channel\".\"id\" = \"dispatcharr_channels_channeloverride\".\"channel_id\") LEFT OUTER JOIN \"epg_epgdata\" ON (\"dispatcharr_channels_channeloverride\".\"epg_data_id\" = \"epg_epgdata\".\"id\") LEFT OUTER JOIN \"epg_epgdata\" T10 ON (\"dispatcharr_channels_channel\".\"epg_data_id\" = T10.\"id\") LEFT OUTER JOIN \"epg_epgsource\" ON (T10.\"epg_source_id\" = \"epg_epgsource\".\"id\") LEFT OUTER JOIN \"epg_epgsource\" T14 ON (\"epg_epgdata\".\"epg_source_id\" = T14.\"id\") WHERE (NOT \"dispatcharr_channels_channel\".\"hidden_from_output\" AND \"dispatcharr_channels_channelprofilemembership\".\"channel_profile_id\" = %s AND \"dispatcharr_channels_channelprofilemembership\".\"enabled\")",
+          "params": [
+            1
+          ],
+          "many": false
+        },
+        {
+          "sql": "DELETE FROM \"epg_programdata\" WHERE \"epg_programdata\".\"id\" = %s",
+          "params": [
+            1
+          ],
+          "many": false
+        },
+        {
+          "sql": "INSERT INTO \"epg_programdata\" (\"epg_id\", \"start_time\", \"end_time\", \"title\", \"sub_title\", \"description\", \"tvg_id\", \"program_id\", \"custom_properties\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING \"epg_programdata\".\"id\"",
+          "params": [
+            1,
+            "2026-11-10 11:30:00+00:00",
+            "2026-11-10 12:30:00+00:00",
+            "after-partition",
+            null,
+            null,
+            "rust-grid-concurrency-entry",
+            null,
+            "Jsonb({})"
+          ],
+          "many": false
+        },
+        {
+          "sql": "SELECT \"epg_programdata\".\"id\" AS \"id\", \"epg_programdata\".\"start_time\" AS \"start_time\", \"epg_programdata\".\"end_time\" AS \"end_time\", \"epg_programdata\".\"title\" AS \"title\", \"epg_programdata\".\"sub_title\" AS \"sub_title\", \"epg_programdata\".\"description\" AS \"description\", \"epg_programdata\".\"tvg_id\" AS \"tvg_id\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"season\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"episode\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_new\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_live\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_premiere\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"premiere_text\" FROM \"epg_programdata\" WHERE (\"epg_programdata\".\"end_time\" > %s AND \"epg_programdata\".\"epg_id\" IN (%s) AND \"epg_programdata\".\"start_time\" < %s)",
+          "params": [
+            "season",
+            "episode",
+            "new",
+            "live",
+            "premiere",
+            "premiere_text",
+            "2026-11-10 11:00:00+00:00",
+            1,
+            "2026-11-11 12:00:00+00:00"
+          ],
+          "many": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "hide-channel-after-partition",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body": {
+        "data": [
+          {
+            "id": 3,
+            "start_time": "2026-11-10T11:30:00Z",
+            "end_time": "2026-11-10T12:30:00Z",
+            "title": "before-partition",
+            "sub_title": null,
+            "description": null,
+            "tvg_id": "rust-grid-concurrency-entry",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false
+          }
+        ]
+      },
+      "opening_prefix": "{\"data\":[",
+      "queries_before_iteration": 1,
+      "queries": [
+        {
+          "sql": "SELECT DISTINCT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\", COALESCE(\"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channel\".\"name\") AS \"effective_name\", COALESCE(\"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channel\".\"channel_number\") AS \"effective_channel_number\", COALESCE(\"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"channel_group_id\") AS \"effective_channel_group_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channel\".\"logo_id\") AS \"effective_logo_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvg_id\") AS \"effective_tvg_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\") AS \"effective_tvc_guide_stationid\", COALESCE(\"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"epg_data_id\") AS \"effective_epg_data_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\") AS \"effective_stream_profile_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channel\".\"is_radio\") AS \"effective_is_radio\", T10.\"id\", T10.\"tvg_id\", T10.\"name\", T10.\"icon_url\", T10.\"epg_source_id\", \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\", \"dispatcharr_channels_channeloverride\".\"id\", \"dispatcharr_channels_channeloverride\".\"channel_id\", \"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channeloverride\".\"created_at\", \"dispatcharr_channels_channeloverride\".\"updated_at\", \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\", T14.\"id\", T14.\"name\", T14.\"source_type\", T14.\"url\", T14.\"username\", T14.\"password\", T14.\"is_active\", T14.\"file_path\", T14.\"extracted_file_path\", T14.\"refresh_interval\", T14.\"refresh_task_id\", T14.\"custom_properties\", T14.\"priority\", T14.\"status\", T14.\"last_message\", T14.\"created_at\", T14.\"updated_at\" FROM \"dispatcharr_channels_channel\" INNER JOIN \"dispatcharr_channels_channelprofilemembership\" ON (\"dispatcharr_channels_channel\".\"id\" = \"dispatcharr_channels_channelprofilemembership\".\"channel_id\") LEFT OUTER JOIN \"dispatcharr_channels_channeloverride\" ON (\"dispatcharr_channels_channel\".\"id\" = \"dispatcharr_channels_channeloverride\".\"channel_id\") LEFT OUTER JOIN \"epg_epgdata\" ON (\"dispatcharr_channels_channeloverride\".\"epg_data_id\" = \"epg_epgdata\".\"id\") LEFT OUTER JOIN \"epg_epgdata\" T10 ON (\"dispatcharr_channels_channel\".\"epg_data_id\" = T10.\"id\") LEFT OUTER JOIN \"epg_epgsource\" ON (T10.\"epg_source_id\" = \"epg_epgsource\".\"id\") LEFT OUTER JOIN \"epg_epgsource\" T14 ON (\"epg_epgdata\".\"epg_source_id\" = T14.\"id\") WHERE (NOT \"dispatcharr_channels_channel\".\"hidden_from_output\" AND \"dispatcharr_channels_channelprofilemembership\".\"channel_profile_id\" = %s AND \"dispatcharr_channels_channelprofilemembership\".\"enabled\")",
+          "params": [
+            1
+          ],
+          "many": false
+        },
+        {
+          "sql": "UPDATE \"dispatcharr_channels_channel\" SET \"hidden_from_output\" = %s WHERE \"dispatcharr_channels_channel\".\"id\" = %s",
+          "params": [
+            true,
+            11
+          ],
+          "many": false
+        },
+        {
+          "sql": "SELECT \"epg_programdata\".\"id\" AS \"id\", \"epg_programdata\".\"start_time\" AS \"start_time\", \"epg_programdata\".\"end_time\" AS \"end_time\", \"epg_programdata\".\"title\" AS \"title\", \"epg_programdata\".\"sub_title\" AS \"sub_title\", \"epg_programdata\".\"description\" AS \"description\", \"epg_programdata\".\"tvg_id\" AS \"tvg_id\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"season\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"episode\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_new\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_live\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_premiere\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"premiere_text\" FROM \"epg_programdata\" WHERE (\"epg_programdata\".\"end_time\" > %s AND \"epg_programdata\".\"epg_id\" IN (%s) AND \"epg_programdata\".\"start_time\" < %s)",
+          "params": [
+            "season",
+            "episode",
+            "new",
+            "live",
+            "premiere",
+            "premiere_text",
+            "2026-11-10 11:00:00+00:00",
+            1,
+            "2026-11-11 12:00:00+00:00"
+          ],
+          "many": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "delete-programmes-after-opening-prefix",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body": {
+        "data": []
+      },
+      "opening_prefix": "{\"data\":[",
+      "queries_before_iteration": 1,
+      "queries": [
+        {
+          "sql": "SELECT DISTINCT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\", COALESCE(\"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channel\".\"name\") AS \"effective_name\", COALESCE(\"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channel\".\"channel_number\") AS \"effective_channel_number\", COALESCE(\"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"channel_group_id\") AS \"effective_channel_group_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channel\".\"logo_id\") AS \"effective_logo_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvg_id\") AS \"effective_tvg_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\") AS \"effective_tvc_guide_stationid\", COALESCE(\"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"epg_data_id\") AS \"effective_epg_data_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\") AS \"effective_stream_profile_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channel\".\"is_radio\") AS \"effective_is_radio\", T10.\"id\", T10.\"tvg_id\", T10.\"name\", T10.\"icon_url\", T10.\"epg_source_id\", \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\", \"dispatcharr_channels_channeloverride\".\"id\", \"dispatcharr_channels_channeloverride\".\"channel_id\", \"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channeloverride\".\"created_at\", \"dispatcharr_channels_channeloverride\".\"updated_at\", \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\", T14.\"id\", T14.\"name\", T14.\"source_type\", T14.\"url\", T14.\"username\", T14.\"password\", T14.\"is_active\", T14.\"file_path\", T14.\"extracted_file_path\", T14.\"refresh_interval\", T14.\"refresh_task_id\", T14.\"custom_properties\", T14.\"priority\", T14.\"status\", T14.\"last_message\", T14.\"created_at\", T14.\"updated_at\" FROM \"dispatcharr_channels_channel\" INNER JOIN \"dispatcharr_channels_channelprofilemembership\" ON (\"dispatcharr_channels_channel\".\"id\" = \"dispatcharr_channels_channelprofilemembership\".\"channel_id\") LEFT OUTER JOIN \"dispatcharr_channels_channeloverride\" ON (\"dispatcharr_channels_channel\".\"id\" = \"dispatcharr_channels_channeloverride\".\"channel_id\") LEFT OUTER JOIN \"epg_epgdata\" ON (\"dispatcharr_channels_channeloverride\".\"epg_data_id\" = \"epg_epgdata\".\"id\") LEFT OUTER JOIN \"epg_epgdata\" T10 ON (\"dispatcharr_channels_channel\".\"epg_data_id\" = T10.\"id\") LEFT OUTER JOIN \"epg_epgsource\" ON (T10.\"epg_source_id\" = \"epg_epgsource\".\"id\") LEFT OUTER JOIN \"epg_epgsource\" T14 ON (\"epg_epgdata\".\"epg_source_id\" = T14.\"id\") WHERE (NOT \"dispatcharr_channels_channel\".\"hidden_from_output\" AND \"dispatcharr_channels_channelprofilemembership\".\"channel_profile_id\" = %s AND \"dispatcharr_channels_channelprofilemembership\".\"enabled\")",
+          "params": [
+            1
+          ],
+          "many": false
+        },
+        {
+          "sql": "DELETE FROM \"epg_programdata\" WHERE \"epg_programdata\".\"epg_id\" = %s",
+          "params": [
+            1
+          ],
+          "many": false
+        },
+        {
+          "sql": "SELECT \"epg_programdata\".\"id\" AS \"id\", \"epg_programdata\".\"start_time\" AS \"start_time\", \"epg_programdata\".\"end_time\" AS \"end_time\", \"epg_programdata\".\"title\" AS \"title\", \"epg_programdata\".\"sub_title\" AS \"sub_title\", \"epg_programdata\".\"description\" AS \"description\", \"epg_programdata\".\"tvg_id\" AS \"tvg_id\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"season\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"episode\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_new\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_live\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"flag_premiere\", (\"epg_programdata\".\"custom_properties\" -> %s) AS \"premiere_text\" FROM \"epg_programdata\" WHERE (\"epg_programdata\".\"end_time\" > %s AND \"epg_programdata\".\"epg_id\" IN (%s) AND \"epg_programdata\".\"start_time\" < %s)",
+          "params": [
+            "season",
+            "episode",
+            "new",
+            "live",
+            "premiere",
+            "premiere_text",
+            "2026-11-10 11:00:00+00:00",
+            1,
+            "2026-11-11 12:00:00+00:00"
+          ],
+          "many": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "hide-channel-during-source-relation-lock",
+      "witness": {
+        "pid": 236,
+        "wait_event_type": "Lock",
+        "wait_event": "relation",
+        "query": "SELECT DISTINCT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\", COALESCE(\"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channel\".\"nam"
+      },
+      "status": 200,
+      "body": {
+        "data": []
+      },
+      "queries": [
+        {
+          "sql": "SELECT DISTINCT \"dispatcharr_channels_channel\".\"id\", \"dispatcharr_channels_channel\".\"channel_number\", \"dispatcharr_channels_channel\".\"name\", \"dispatcharr_channels_channel\".\"logo_id\", \"dispatcharr_channels_channel\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"uuid\", \"dispatcharr_channels_channel\".\"user_level\", \"dispatcharr_channels_channel\".\"is_adult\", \"dispatcharr_channels_channel\".\"auto_created\", \"dispatcharr_channels_channel\".\"auto_created_by_id\", \"dispatcharr_channels_channel\".\"is_catchup\", \"dispatcharr_channels_channel\".\"catchup_days\", \"dispatcharr_channels_channel\".\"is_radio\", \"dispatcharr_channels_channel\".\"hidden_from_output\", \"dispatcharr_channels_channel\".\"created_at\", \"dispatcharr_channels_channel\".\"updated_at\", COALESCE(\"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channel\".\"name\") AS \"effective_name\", COALESCE(\"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channel\".\"channel_number\") AS \"effective_channel_number\", COALESCE(\"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channel\".\"channel_group_id\") AS \"effective_channel_group_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channel\".\"logo_id\") AS \"effective_logo_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channel\".\"tvg_id\") AS \"effective_tvg_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channel\".\"tvc_guide_stationid\") AS \"effective_tvc_guide_stationid\", COALESCE(\"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channel\".\"epg_data_id\") AS \"effective_epg_data_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channel\".\"stream_profile_id\") AS \"effective_stream_profile_id\", COALESCE(\"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channel\".\"is_radio\") AS \"effective_is_radio\", T10.\"id\", T10.\"tvg_id\", T10.\"name\", T10.\"icon_url\", T10.\"epg_source_id\", \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\", \"dispatcharr_channels_channeloverride\".\"id\", \"dispatcharr_channels_channeloverride\".\"channel_id\", \"dispatcharr_channels_channeloverride\".\"name\", \"dispatcharr_channels_channeloverride\".\"channel_number\", \"dispatcharr_channels_channeloverride\".\"channel_group_id\", \"dispatcharr_channels_channeloverride\".\"logo_id\", \"dispatcharr_channels_channeloverride\".\"tvg_id\", \"dispatcharr_channels_channeloverride\".\"tvc_guide_stationid\", \"dispatcharr_channels_channeloverride\".\"epg_data_id\", \"dispatcharr_channels_channeloverride\".\"stream_profile_id\", \"dispatcharr_channels_channeloverride\".\"is_radio\", \"dispatcharr_channels_channeloverride\".\"created_at\", \"dispatcharr_channels_channeloverride\".\"updated_at\", \"epg_epgdata\".\"id\", \"epg_epgdata\".\"tvg_id\", \"epg_epgdata\".\"name\", \"epg_epgdata\".\"icon_url\", \"epg_epgdata\".\"epg_source_id\", T14.\"id\", T14.\"name\", T14.\"source_type\", T14.\"url\", T14.\"username\", T14.\"password\", T14.\"is_active\", T14.\"file_path\", T14.\"extracted_file_path\", T14.\"refresh_interval\", T14.\"refresh_task_id\", T14.\"custom_properties\", T14.\"priority\", T14.\"status\", T14.\"last_message\", T14.\"created_at\", T14.\"updated_at\" FROM \"dispatcharr_channels_channel\" INNER JOIN \"dispatcharr_channels_channelprofilemembership\" ON (\"dispatcharr_channels_channel\".\"id\" = \"dispatcharr_channels_channelprofilemembership\".\"channel_id\") LEFT OUTER JOIN \"dispatcharr_channels_channeloverride\" ON (\"dispatcharr_channels_channel\".\"id\" = \"dispatcharr_channels_channeloverride\".\"channel_id\") LEFT OUTER JOIN \"epg_epgdata\" ON (\"dispatcharr_channels_channeloverride\".\"epg_data_id\" = \"epg_epgdata\".\"id\") LEFT OUTER JOIN \"epg_epgdata\" T10 ON (\"dispatcharr_channels_channel\".\"epg_data_id\" = T10.\"id\") LEFT OUTER JOIN \"epg_epgsource\" ON (T10.\"epg_source_id\" = \"epg_epgsource\".\"id\") LEFT OUTER JOIN \"epg_epgsource\" T14 ON (\"epg_epgdata\".\"epg_source_id\" = T14.\"id\") WHERE (NOT \"dispatcharr_channels_channel\".\"hidden_from_output\" AND \"dispatcharr_channels_channelprofilemembership\".\"channel_profile_id\" = %s AND \"dispatcharr_channels_channelprofilemembership\".\"enabled\")",
+          "params": [
+            1
+          ],
+          "many": false
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "clock": "2026-11-10T12:00:00+00:00",
+  "user_id": 1,
+  "profile_id": 1,
+  "channel_id": 11,
+  "epg_id": 1,
+  "source_id": 1,
+  "native_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit."
+}

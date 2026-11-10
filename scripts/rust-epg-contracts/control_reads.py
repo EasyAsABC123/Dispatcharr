@@ -27,9 +27,35 @@ def load(path, name):
     return value
 
 
-def freeze_current_rust(output, prefix='current'):
+def freeze_current_rust(output, prefix='current', source_archive=None):
     frozen = output/(prefix+'-frozen-source')
     hashes = {}
+    if source_archive is not None:
+        # Replay the accepted component snapshot while sibling agents continue
+        # editing. Preserve archive bytes and reject paths outside rust/.
+        if source_archive.stat().st_size > 128 * 1024 * 1024:
+            raise ValueError('Rust source archive exceeds fixture bound')
+        data = source_archive.read_bytes()
+        files = {}
+        with tarfile.open(fileobj=io.BytesIO(data)) as archive:
+            total = 0
+            for member in archive.getmembers():
+                path = Path(member.name)
+                total += member.size
+                if (not member.isfile() or not member.name.startswith('rust/')
+                        or path.is_absolute() or '..' in path.parts
+                        or member.name in files or total > 128 * 1024 * 1024):
+                    raise ValueError('Invalid Rust source archive member')
+                files[member.name] = archive.extractfile(member).read()
+        if not {'rust/Cargo.toml', 'rust/Cargo.lock'} <= files.keys():
+            raise ValueError('Rust source archive lacks workspace inputs')
+        for relative, contents in files.items():
+            destination = frozen/relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(contents)
+            hashes[relative] = hashlib.sha256(contents).hexdigest()
+        (output/(prefix+'-rust-source.tar')).write_bytes(data)
+        return frozen, hashes
     with tarfile.open(output/(prefix+'-rust-source.tar'), 'w') as archive:
         for base, directories, names in os.walk(ROOT/'rust'):
             directories[:] = sorted(d for d in directories if d not in {'target','.git','__pycache__'})
@@ -62,11 +88,14 @@ def main():
     parser.add_argument('--native-current', action='store_true', help='Run frozen current-programme parser/DB selection against original guide capture')
     parser.add_argument('--candidate-current', action='store_true', help='Compare actual Source/native real-clock current-programme wire instead of programme list reads')
     parser.add_argument('--native-grid', action='store_true', help='Run original/native grid metadata and stored-row component comparisons')
+    parser.add_argument('--grid-source-archive', type=Path, help='Replay a retained whole-Rust archive for native grid component gates')
     parser.add_argument('--native-grid-http', action='store_true', help='Compare original Factory grid captures to independent native HTTP, plus physical resource gates')
     parser.add_argument('--grid-negotiation-source', action='store_true', help='Capture additional original-only guide Accept/format/method grammar separately from accepted40cases')
     parser.add_argument('--native-grid-wire', action='store_true', help='Draft actual original/native-network guide replay with real clocks and strict expiry/hour guards')
     parser.add_argument('--candidate-grid-wire', action='store_true', help='Compare actual unpatched original/native packaged grid network replies')
     args = parser.parse_args()
+    if args.grid_source_archive and not (args.native_grid or args.native_grid_http or args.native_grid_wire):
+        parser.error('grid-source-archive requires a native grid component gate')
     if args.candidate_grid_wire:
         if not args.candidate_image:parser.error('candidate-grid-wire requires candidate-image and build-manifest')
         args.guide_source=True
@@ -110,7 +139,9 @@ def main():
     report = {'scope':'original-stored-EPG-read-oracle', 'passed':False,
               'native_verified':False, 'performance_verified':False,
               'project':project, 'tool_source_sha256':hashes}
-    grid_snapshot = freeze_current_rust(output, 'grid') if args.native_grid or args.native_grid_http or args.native_grid_wire else None
+    grid_snapshot = freeze_current_rust(output, 'grid', args.grid_source_archive) if args.native_grid or args.native_grid_http or args.native_grid_wire else None
+    if args.grid_source_archive:
+        report['replayed_grid_source_archive_sha256'] = hashlib.sha256((output/'grid-rust-source.tar').read_bytes()).hexdigest()
     status = 1
     with integration.fixture_source(report, False, output) as directory:
         source = Path(directory)/'source'
