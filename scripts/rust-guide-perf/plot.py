@@ -50,6 +50,8 @@ def main():
     fig.subplots_adjust(left=.085, right=.98, top=.85, bottom=.23)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(args.output.with_suffix('.svg'), metadata={'Date':None})
+    svg = args.output.with_suffix('.svg')
+    svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines())+'\n')
     fig.savefig(args.output.with_suffix('.png'), dpi=180)
     plt.close(fig)
     print(args.output.with_suffix('.svg'))
