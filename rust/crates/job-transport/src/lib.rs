@@ -12,3 +12,11 @@ pub mod transport;
 pub mod worker;
 
 pub mod index_driver;
+
+// Component-only visibility recovery; production driver has no recovery hook.
+#[cfg(test)]
+pub mod visibility;
+
+// Bounded observed exception payload codec; worker classification/writer attachment are separate.
+#[cfg(test)]
+pub mod index_failure;

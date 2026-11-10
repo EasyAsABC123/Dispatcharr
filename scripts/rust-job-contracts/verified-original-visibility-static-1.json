@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "scope": "Static pinned Original Kombu defaults and actual poller call sites; no elapsed runtime observation/native recovery proof",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "versions": {
+    "kombu": "5.6.2",
+    "redis": "6.4.0"
+  },
+  "channel_defaults": {
+    "unacked_key": "unacked",
+    "unacked_index_key": "unacked_index",
+    "unacked_mutex_key": "unacked_mutex",
+    "unacked_mutex_expire": 300,
+    "visibility_timeout": 3600,
+    "unacked_restore_limit": null
+  },
+  "restore_visible_signature": "(self, start=0, num=10, interval=10)",
+  "captures": [
+    {
+      "path": "artifacts/rust/m6-original-visibility-defaults-1",
+      "observer_sha256": "1c3b003c66bd2ebf8c23d4caf4783e16be9b9c2e3a8788b76b18b6a9674f0060",
+      "implementation_sha256": "7d723a18f9af082003a3f5502b923a1dc02720756a4205bfe5b9b3519bf89b06",
+      "network": "none",
+      "read_only": true,
+      "uid": 65534,
+      "exit_code": 0,
+      "cleanup": "docker run --rm completed"
+    },
+    {
+      "path": "artifacts/rust/m6-original-visibility-poller-2",
+      "observer_sha256": "64d4f62cb53f3813a2e4c1e8086fa9cf3f51a2ab37126ce308935bb78d95b0e7",
+      "implementation_sha256": "9ba2ffc02f2a6cfc7a9e5df0ce214a9c6560c524b42465ad7019d09e2bbd4828",
+      "network": "none",
+      "read_only": true,
+      "uid": 65534,
+      "exit_code": 0,
+      "cleanup": "docker run --rm completed"
+    }
+  ],
+  "facts": [
+    "Source Mutex uses nonblocking redis lock with300second expiry, releases by token and ignores expired/not-owned release.",
+    "The event-loop registration invokes on_poll_init immediately and schedules maybe_restore_messages every10seconds. Both pass channel.unacked_restore_limit, whose default is None, to restore_visible.",
+    "restore_visible selects ZREVRANGEBYSCORE and skips9of10 calls after its first call. Its helper default num10 differs from the actual worker default None/all eligible.",
+    "Static call composition suggests100second recurring scans after the initial scan on the captured async path; actual runtime cadence and visibility expiration are not observed here.",
+    "Source119 actual ordering remains separate authority. A future bounded native one-pass batch must not be mislabeled as a full Source worker sweep."
+  ],
+  "application_started": false,
+  "broker_connected": false,
+  "actual_polling_cadence_observed": false,
+  "actual_visibility_expiry_observed": false,
+  "native_visibility_recovery_verified": false,
+  "credit": "Original Dispatcharr application authors and Celery/Kombu/redis-py framework authors retain full credit and original licensing."
+}

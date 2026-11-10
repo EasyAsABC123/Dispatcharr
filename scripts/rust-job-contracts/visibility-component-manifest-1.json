@@ -1,0 +1,80 @@
+{
+  "scope": "Exact test-only visibility component promotion closure, no automatic driver/polling/app route",
+  "source_archive": "artifacts/rust/m6-index-visibility-resources-1/rust-source.tar",
+  "source_archive_sha256": "b89b4fec02b2cdb43d5a42b9add48051e60efd06c9404ece564c4dfd6331d053",
+  "files": [
+    {
+      "path": "rust/crates/job-transport/src/visibility.rs",
+      "frozen_path": "artifacts/rust/m6-index-visibility-resources-1/frozen/rust/crates/job-transport/src/visibility.rs",
+      "sha256": "28dac7a65f845afb8dd34c55457717edc61865179e22081fc65c15c6f5f19966"
+    },
+    {
+      "path": "rust/crates/job-transport/src/transport.rs",
+      "frozen_path": "artifacts/rust/m6-index-visibility-resources-1/frozen/rust/crates/job-transport/src/transport.rs",
+      "sha256": "40a3a54c82afb25506b8761691f69bfc72584bfb7fd90fca0aa8fbc39fca1e87"
+    },
+    {
+      "path": "rust/crates/job-transport/src/lib.rs",
+      "frozen_path": "artifacts/rust/m6-index-visibility-resources-1/frozen/rust/crates/job-transport/src/lib.rs",
+      "sha256": "3f40e1fc9e562b1a33ede03c183789911d4ad8d41ddf64ec43755e93639576ab"
+    }
+  ],
+  "selected_tool": {
+    "path": "scripts/rust-job-contracts/run_visibility_resources.py",
+    "frozen_path": "artifacts/rust/m6-index-visibility-resources-1/tool-source/scripts/rust-job-contracts/run_visibility_resources.py",
+    "sha256": "05997151c6512fd9c4bdf6c28a5c0eb9fac9791b02a64f431f029fecee2c719b"
+  },
+  "summaries": [
+    {
+      "path": "scripts/rust-job-contracts/verified-index-visibility-resources-1.json",
+      "sha256": "983a4d4b37203c89fe5f9ec3f9753698dedf3a35cdadd8fe7c869531737f76d8"
+    },
+    {
+      "path": "scripts/rust-job-contracts/verified-original-visibility-static-1.json",
+      "sha256": "cb5d4e805398e884ee16d22aa99f7c105809a59113e04bec49c54ce2d2ebbec9"
+    }
+  ],
+  "validation": {
+    "report": "artifacts/rust/m6-index-visibility-resources-1/validation.json",
+    "sha256": "857e6c849ad634a161f5a8bbd007c0c84a09dbbfeefc0d6636a04d1ed625250e",
+    "unit_tests": 12,
+    "actual_redis_tests": 3,
+    "strict_all_targets_clippy": true
+  },
+  "graph_change_required_by_component": false,
+  "captured_graph_context_sha256": {
+    "rust/Cargo.toml": "29654811e31104d99146a16b6418d2990d089274a75b35f0c10c9240891b9800",
+    "rust/Cargo.lock": "afa0cfb1f7fe47989587354bd067c5a2a4f820ce6a8230b78226cbdf6440892e",
+    "rust/crates/stream-core/Cargo.toml": "9dfe5cf92b59fe6cbf8d8d20637ca7a17940ba16ad51167313c24cf88cc3c588",
+    "rust/crates/stream-runtime/Cargo.toml": "193c687d72e9eccffd885c2dbaee11a008f14fc313213e308d003a95ae090d0d",
+    "rust/crates/contracts/Cargo.toml": "3d9e46de4b7a4ddcd8468bb96e8337efba32de1d43d2905943ff0b8b9630bc77",
+    "rust/crates/stream-http/Cargo.toml": "936c4f2de64a68366bcc8d7eb309038bb2228607a7e9a26653f50d0b7c64b084",
+    "rust/crates/store/Cargo.toml": "bb634c78f3a3492ee4b696be3e4aedb35fdeb381db0ecf6365264e2c1aae1d04",
+    "rust/crates/app/Cargo.toml": "f87d650d17dac3f44584cc4cb7f7d82ab20df0119a6910d3811d186d7da6911e",
+    "rust/crates/coordination/Cargo.toml": "4b602b22fd242d4668a5b6658135b0aba3c23699cdcd629ca485ca810aa4ba9f",
+    "rust/crates/clients/Cargo.toml": "d7a926ab066349263a882589f8d037fe726ec98ef3bd3ea6e15b999bf355c819",
+    "rust/crates/hls-core/Cargo.toml": "8f64bac5b93ea7f311cfed062843ac297d4b9f03af5a9799305c10c5ea5da74f",
+    "rust/crates/hls-http/Cargo.toml": "f396bda872ba9e207767dd3192306b2f039ab14da7453f7840e5ab80ff07d26d",
+    "rust/crates/vod-http/Cargo.toml": "913c975c12d533ceb1c86d7e9788dad8d43569301db7acbdd738e7811d470fde",
+    "rust/crates/output-store/Cargo.toml": "641b618c529a771d78c7b41941ce317f1101398f2a410729d165f788782ad61e",
+    "rust/crates/fmp4-core/Cargo.toml": "9ae3aa99d9f36166c7e5153957d65eaad362ba615215eecb71f2c2d2bc72dda9",
+    "rust/crates/fmp4-http/Cargo.toml": "53e4835c03a3f4976a9a1970005dc0976ef579623abca038a57de152b062efdd",
+    "rust/crates/input-store/Cargo.toml": "795b331a6ef29011371e42290a335784918a38131d32ac7a136a74b7515428bf",
+    "rust/crates/timeshift-core/Cargo.toml": "6c5c58baa5aa323050bcd78165d88c381b182828c7ce21d48ab1fe3cba75c0de",
+    "rust/crates/timeshift-http/Cargo.toml": "aee4ca2dac74d5f6bce76fc0ac3743520fe1d87eecf339b08e14799bca1e9379",
+    "rust/crates/ingest-core/Cargo.toml": "aae8a8442a5a22329751246cb996d536d3b376cc9126cfdd1559a21184ac25dd",
+    "rust/crates/upstream-http/Cargo.toml": "6b39ca5e1d3584ea1c29b7e8e422cf4a9aa6bbc96623fe51398f52f2f19a1321",
+    "rust/crates/ingest-http/Cargo.toml": "90b982d8b48a5c277cd6582f90625d7dc254e93d7e2bb9465dd693aa20d69a1d",
+    "rust/crates/realtime/Cargo.toml": "e6485e42e6123e9996bbe3349067dccf2515fc8cb8244469a009b553510b35b1",
+    "rust/crates/output-http/Cargo.toml": "5726aae38f97b08c2d15acb4ce6f68a04d4850f7824369fe09f10319196ee56e",
+    "rust/crates/hdhr-http/Cargo.toml": "180c0fbf10946fe8b48317f3de9cde4a111f253f36adf25a39d8ed2167d6fc3f",
+    "rust/crates/xmltv-parser/Cargo.toml": "66254333261ae5a0c599769535ab3b752ac2c04a0d61958ae9ed121cec99ce75",
+    "rust/crates/ingest-epg/Cargo.toml": "1500aacfa9dfc0dfdb7a136f73dc2f094b365194de5d91bdea9bd35f73729228",
+    "rust/crates/xc-http/Cargo.toml": "56f3882d1455c242fad8269e6e759e45b40f70bf6c40e998adc24c64fafead95",
+    "rust/crates/backups/Cargo.toml": "6abe5ec8be0dce9d93b6a14af7f762971d03404c451563594b52aec0d7fa4403",
+    "rust/crates/xmltv-http/Cargo.toml": "cf3d1ec52b740531330c0667bbac676488e033aecaf3e2ee4c0193ca3874a06a",
+    "rust/crates/job-transport/Cargo.toml": "8512284f61a15f1969b6a789b33988766ec2882f8df56358408a39352ee994c1"
+  },
+  "coupled_transport_note": "Only LostMutex enum and cfg(test) settled broker/restore_visible_owned helpers added to accepted job transport. Root may use exact whole captured file; newer codec/writer WIP must remain separate.",
+  "credit": "Original Dispatcharr/Celery/Kombu/redis-py authors retain application/framework credit and licensing."
+}

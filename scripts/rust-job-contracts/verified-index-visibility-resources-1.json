@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "scope": "Bounded10 one-pass index-only visible reservation restore component; no automatic cadence/Source full-sweep/application claim",
+  "bounded_one_pass_visibility_component_verified": true,
+  "production_module_registered": false,
+  "native_automatic_visibility_recovery_verified": false,
+  "source_full_sweep_equivalence_verified": false,
+  "actual_source_polling_cadence_observed": false,
+  "native_application_driver_hook_verified": false,
+  "performance_verified": false,
+  "report": "artifacts/rust/m6-index-visibility-resources-1/integration.json",
+  "report_sha256": "10887b35e475d8d7770d3db76e4ed6dd6dc9164206f16db83a211fa3cd4407ee",
+  "resource_tests": 3,
+  "resource_tests_log_sha256": "004a7256dc947adca1502c035138e24b14bbf65cdb8d683d6dcf396a1b50d46c",
+  "frozen_validation": {
+    "report": "artifacts/rust/m6-index-visibility-resources-1/validation.json",
+    "sha256": "857e6c849ad634a161f5a8bbd007c0c84a09dbbfeefc0d6636a04d1ed625250e",
+    "library_tests": 12,
+    "external_tests_ignored_in_default_run": 3,
+    "strict_all_targets_clippy": true
+  },
+  "source_archive": "artifacts/rust/m6-index-visibility-resources-1/rust-source.tar",
+  "source_archive_sha256": "b89b4fec02b2cdb43d5a42b9add48051e60efd06c9404ece564c4dfd6331d053",
+  "job_crate_files_sha256": {
+    "rust/crates/job-transport/Cargo.toml": "8512284f61a15f1969b6a789b33988766ec2882f8df56358408a39352ee994c1",
+    "rust/crates/job-transport/README.md": "80c1aa7bcfb1a446d7bf7b3a339ba18739217d7ec89599e0127008eaac417b58",
+    "rust/crates/job-transport/src/protocol.rs": "2d1b308a0bbbc2a2f2bfa75de68711682c96228a879255ee96977ae7d0899099",
+    "rust/crates/job-transport/src/decode.rs": "2e295cef12ef2b4cee4ef0058c1dc7afc0539a5c693e811484f2c2cdf456b785",
+    "rust/crates/job-transport/src/lib.rs": "3f40e1fc9e562b1a33ede03c183789911d4ad8d41ddf64ec43755e93639576ab",
+    "rust/crates/job-transport/src/transport.rs": "40a3a54c82afb25506b8761691f69bfc72584bfb7fd90fca0aa8fbc39fca1e87",
+    "rust/crates/job-transport/src/worker.rs": "25065ab7fc6f2e3ea88b007994b8d7fff518a15a70a336d70e76862ff6180d59",
+    "rust/crates/job-transport/src/index_protocol.rs": "e95469921d769d20556b98905ad5eca7e8e677c052e115c6822ccd466bc821da",
+    "rust/crates/job-transport/src/index_worker.rs": "10fd251666efb6721bfab37e7ff87a81b74df8fa947e3492885864fecb6d1f39",
+    "rust/crates/job-transport/src/index_dispatch.rs": "d115ae56ccf1526dcb15a8584b0a70dc44c1af5c99f383355cda9d77adf57de8",
+    "rust/crates/job-transport/src/eta.rs": "78ffe70e0069ce0a2811c618d92c31846974d6152dbb32c90ae5f7cf6d6568ee",
+    "rust/crates/job-transport/src/scheduled_index.rs": "dfb59a5ff117150ae4867d18f524012b5614f7da8bb3d394fb4d91f4ab0dcf50",
+    "rust/crates/job-transport/src/index_driver.rs": "368853e29506a671b4312b3e31a1ac196b5a8ee92382323cb186debbcd1510cb",
+    "rust/crates/job-transport/src/visibility.rs": "28dac7a65f845afb8dd34c55457717edc61865179e22081fc65c15c6f5f19966",
+    "rust/crates/job-transport/datasets/source-results.json": "1deac8212c544d830de8d06560e7f6d70efe29c8235daa9ac780a4d95af0d0cb",
+    "rust/crates/job-transport/datasets/source-index-109.json": "2a351c9af034d05bce76dc94d9e737f46b4c070d7c24076ff020e57eba8c81ba",
+    "rust/crates/job-transport/datasets/source-index-eta-117.json": "30dacac4cf32638592398f088d046539f42bf32e86c56c8318c170e5af914aae",
+    "rust/crates/job-transport/examples/job_fixture.rs": "60ccb006a5dfb19284125a9f78d6e5b202dafbc647ffc19ebed57ccdbce3a04f",
+    "rust/crates/job-transport/examples/create_worker_fixture.rs": "38cf590d521430c35124f593d691a61e27c55eb8954a9158aaa2133ba6ca7180",
+    "rust/crates/job-transport/examples/index_worker_fixture.rs": "0a263f609ae143e1f21d92ac1c909aafef7853fc1b1232d22ff8f63c0c7e8e55",
+    "rust/crates/job-transport/examples/eta_worker_fixture.rs": "5b295499dad9123ff1136b32453fe67f0513bf62fc6eea4d6c1793b3cb7e8806",
+    "rust/crates/job-transport/tests/resources.rs": "fd4c07513c1415bc1802509a4b5a78b9453d1dd99d135fa4bff66e80f991e4fd",
+    "rust/crates/job-transport/tests/eta_limits.rs": "558527dde3ad4c065feec67a72c770640bbb905812e71965a1182018f07758f8",
+    "rust/crates/job-transport/tests/current_http_driver.rs": "837bdfddb1896870788991fd2cfbe3b3fe96a1d754d9a227b029501b34b53a38"
+  },
+  "job_crate_files_canonical_sha256": "f8370f5c58bdc38910578c8a783d17ee56c6769c58f9fcb6fb2e5653ddff08c2",
+  "tool_source": "artifacts/rust/m6-index-visibility-resources-1/tool-source",
+  "runner_sha256": "05997151c6512fd9c4bdf6c28a5c0eb9fac9791b02a64f431f029fecee2c719b",
+  "source_references": [
+    {
+      "path": "scripts/rust-epg-parity/verified-index-eta-order-original-119.json",
+      "sha256": "5f2cadfdc0c267005066412706dd9cda837a66d08ea004b405e64f9a847ca92f"
+    },
+    {
+      "path": "scripts/rust-job-contracts/verified-original-visibility-static-1.json",
+      "sha256": "cb5d4e805398e884ee16d22aa99f7c105809a59113e04bec49c54ce2d2ebbec9"
+    }
+  ],
+  "scope_details": [
+    "Test-only module restores one bounded batch up to10 index reservations; it does not poll or attach to IndexDriver/application.",
+    "Actual Redis score ordering and tag-derived lexical tie order reproduce Source119 delivery order ahead of existing queued markers; fresh reservations remain untouched.",
+    "Unsupported foreign task tuple remains byte-identical. An existing foreign mutex returns MutexHeld. Exact owner token, selected score/cutoff and exact stored tuple fence destructive restore.",
+    "A one-MiB replacement mutex is rejected using bounded length checks; a changed score is not restored. No broad malicious-DB memory bound claim is inferred.",
+    "The targeted reply gate waits until Redis has executed restore but blocks its response. Aborted caller retains physical command slot, caller owner and mutex; shutdown deadline reports incomplete. After actual reply, mutex is released and owners drain, while the operation records AmbiguousRestore rather than fabricated success/counts.",
+    "Original channel restore limit defaults None/full eligible set; async poller passes None and schedules a10second helper call which itself skips9of10 after initial invocation. This static fact does not establish elapsed cadence/expiration, and bounded10 is not Source full-sweep parity."
+  ],
+  "remaining_gates": [
+    "Production module promotion and configured driver recovery hook only after lifecycle/operator-policy review.",
+    "Bounded pagination/full-sweep behavior and actual Source async polling/cadence/expiry observation, including over10 stale entries.",
+    "Crash during recovery, mutex expiry/replacement races across processes, broker failures and malformed/oversized foreign reservation variants.",
+    "Native exception results remain separate Source136-derived work; no public202 or restore authority."
+  ],
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "copied_nonempty_tables": 26,
+  "credit": "Original Dispatcharr authors/contributors retain application/algorithm credit and AGPL licensing; Celery/Kombu/redis-py authors retain task transport/backend credit and licenses."
+}

@@ -30,6 +30,7 @@ pub enum Error {
     AmbiguousPublication(Uuid),
     DrainTimeout,
     LostReservation,
+    LostMutex,
     AmbiguousReservation { task_id: Uuid, delivery_tag: Uuid },
     AmbiguousAck(Uuid),
     AmbiguousRestore(Uuid),
@@ -486,6 +487,73 @@ impl Jobs {
             _ => Err(Error::Corrupt),
         }
     }
+    #[cfg(test)]
+    pub(crate) async fn broker_settled<T: redis::FromRedisValue + Send + 'static>(
+        &self,
+        source: &str,
+        keys: &[String],
+        args: &[&[u8]],
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<T, Error> {
+        let (done, completed) = tokio::sync::oneshot::channel();
+        let guard: Arc<dyn Send + Sync> = Arc::new((caller, PhysicalCompletion(Some(done))));
+        let lease = self.cleanup_lease(guard)?;
+        match self
+            .inner
+            .broker
+            .command_classified::<T, _>(source, keys, args, lease)
+            .await
+        {
+            Ok((value, _held)) => Ok(value),
+            Err(ClassifiedError::Backend) => {
+                let _ = completed.await;
+                Err(Error::Backend)
+            }
+            Err(error) => Err(map(error)),
+        }
+    }
+    #[cfg(test)]
+    pub(crate) async fn restore_visible_owned(
+        &self,
+        receipt: &crate::eta::Reservation,
+        score: &str,
+        ceiling: &str,
+        token: &str,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        self.owns_reservation(receipt)?;
+        let tag = receipt.delivery_tag().to_string();
+        let keys = vec![
+            "celery".to_owned(),
+            "unacked".to_owned(),
+            "unacked_index".to_owned(),
+            "unacked_mutex".to_owned(),
+        ];
+        let caller: Arc<dyn Send + Sync> = Arc::new((owner, receipt.clone()));
+        match self
+            .broker_settled::<i64>(
+                crate::visibility::RESTORE_VISIBLE,
+                &keys,
+                &[
+                    tag.as_bytes(),
+                    receipt.tuple_bytes(),
+                    &receipt.receipt.restored_bytes,
+                    score.as_bytes(),
+                    ceiling.as_bytes(),
+                    token.as_bytes(),
+                ],
+                caller,
+            )
+            .await
+        {
+            Ok(1) => Ok(true),
+            Ok(0) => Ok(false),
+            Ok(-5) => Err(Error::LostMutex),
+            Ok(_) => Err(Error::Corrupt),
+            Err(Error::Backend) => Err(Error::AmbiguousRestore(receipt.message().task_id)),
+            Err(error) => Err(error),
+        }
+    }
     async fn reserve_prepared(
         &self,
         candidate: crate::eta::Candidate,
@@ -756,7 +824,6 @@ impl Jobs {
         children: Vec<Uuid>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        let lease = self.lease(caller)?;
         let child_tuples: Vec<serde_json::Value> = children
             .into_iter()
             .map(|child| serde_json::json!([[child.to_string(), null], null]))
@@ -771,6 +838,31 @@ impl Jobs {
         if bytes.len() > decode::MAX_RESULT_BYTES {
             return Err(Error::Protocol);
         }
+        self.write_metadata(id, bytes, caller).await
+    }
+    #[cfg(test)]
+    pub(crate) async fn write_observed_index_failure(
+        &self,
+        expected: Uuid,
+        failure: &crate::index_failure::ObservedFailure,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if expected != failure.task_id {
+            return Err(Error::Protocol);
+        }
+        let bytes = failure.encode().map_err(|_| Error::Protocol)?;
+        self.write_metadata(expected, bytes, caller).await
+    }
+    async fn write_metadata(
+        &self,
+        id: Uuid,
+        bytes: Vec<u8>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if bytes.len() > decode::MAX_RESULT_BYTES {
+            return Err(Error::Protocol);
+        }
+        let lease = self.lease(caller)?;
         let keys = vec![format!("celery-tasks:celery-task-meta-{id}")];
         match self
             .inner
