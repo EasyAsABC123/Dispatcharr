@@ -1,0 +1,123 @@
+{
+  "scope": "Actual original HTTP ordinary GET corpus versus test-only nativePostgreSQL read component; no shipped/nativeHTTP/fullVOD acceptance",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": "artifacts/rust/m5-vod-rest-native-sql-6/http",
+  "frozen_rust_manifest_sha256": "69c4f8758e386b741bd661b238e0dcc2cd584f3e260f4c42cbb208ff95bd53fb",
+  "frozen_runtime_overlay": "artifacts/rust/m5-vod-rest-materialized-source-1/overlay.json",
+  "successful_tool_source": "artifacts/rust/m5-vod-rest-native-sql-6/http/tools",
+  "source_sha256": {
+    "rust/crates/store/src/vod_api_draft.rs": "22dbd1d302fd1bbe2d90be2f8bb0c70d84175ff1368d5eb6b0d39741abd8a7d9",
+    "rust/crates/store/src/vod_api_dto.rs": "d2dc77d53926606285f3cf7b9746a67a9367cbd173747b859880fa89f57b4e25",
+    "rust/crates/store/src/vod_api_projection.rs": "b809b5e597f8f7e2509ca2c7fc9d616eaeb1415823919d950534fc7526e99ac4",
+    "rust/crates/store/src/vod_api_pagination.rs": "29dd2514722a7543b1bf744a05fd47f8fa885c0fdb502ad853bb421b84e9f208",
+    "rust/crates/store/src/vod_api_query.rs": "a6a96468edf2524967fb63834862d23e44aaf06faa13c6bafe69cff1a7205c0b",
+    "rust/crates/store/src/vod_api_sql.rs": "72b668ca8a09332052f2405caab046e8d0f898aeac1f837af8a78edba8ba3e00",
+    "rust/crates/store/src/vod_api_owned_read.rs": "2ae98c292df207f31d08a310d8ad9381b5722bb6ae6bc685273f0f0fdfa42be6",
+    "rust/crates/store/src/vod_api_read_component.rs": "419a8a5e6656a238bf07ece6f7cad4b91450a78cd0a9c5f3e623cd0580f9e275",
+    "rust/crates/store/src/vod_api_category_seed.rs": "a0fbbf5c4a4bc30b9547fec51011e907be73368e4b4dda758484c108b6a3f06e",
+    "rust/crates/store/src/vod_api_native_tests.rs": "1260e9624c3c50e4153261e97b1587ba9b725a3a4c5f67895379cc978e221847",
+    "rust/crates/store/src/vod_api_source_tests.rs": "f3df977e5f200b573a1d2e20c425922dec31b7e5c4502a144b61635c5172e242"
+  },
+  "evidence_sha256": {
+    "source-run.json": "242c8b6d2ae4552ba98e1c9ec48a282e5a1765e77f95fae3a6567a11fddf99cf",
+    "ordinary-sql.json": "498f0261e03d8445d3fe60ec6f0e9d4bb288139f023bfa08142b09426c7bd8a5",
+    "ordering-plans.json": "134dd89d369e22da5b65f9de561cc83da49305921965e03bec85025f079ff546",
+    "owned-caller-frame.json": "adbaea5fcebdf912438872785cbabde5cb9fc0a1f1cecc213b4a34ddc81540b4",
+    "owned-logical-timeout.json": "02efa40f4ee7ec7230d4a775b0470a62f6f251670277e8a9de60cb238e4776b4",
+    "source-schedule.json": "9c4cc582e2b2a964913c8d3fe806d9ef3fcbf6dab7286b5e795ab33b90a7f579",
+    "metadata-schedule.json": "ba9dc0ce212591124668ae9ddf19e71aed67af72212dd9209f94e8bbf41849d2",
+    "native-sql-tests.log": "9478f28359dca887376c7f304c7e30feac32502e83414aea5c040956b7adec2e"
+  },
+  "checks": {
+    "original_http_cases_captured": 463,
+    "ordinary_get_cases_exact_status_json_and_body_sha256": 201,
+    "ordinary_differences": [],
+    "ordinary_unsupported_cases": [],
+    "outside_component_cases_not_counted_as_pass": 262,
+    "actual_pg_physical_tests": 2,
+    "source_factory_native_metadata_schedule_exact_body": true,
+    "pure_source_dto_filter_pagination_assertions": 5,
+    "strict_store_all_target_clippy": true,
+    "physical_workers_after_read": 0,
+    "retained_memory_after_read": 0
+  },
+  "physical": {
+    "owned-caller-frame.json": {
+      "passed": true,
+      "scope": "ActualPG component ownership; not HTTP/app performance",
+      "actual_blocked_read_workers": 2,
+      "aborted_caller_did_not_release_physical_admission": true,
+      "third_request_capacity_before_auth_sql": true,
+      "detached_frame_len": 8512,
+      "detached_frame_retained_capacity": 9216,
+      "worker_shutdown_with_held_frame": true,
+      "lastclone_released_memory": true,
+      "pool_statement_timeout_restored": "3s"
+    },
+    "owned-logical-timeout.json": {
+      "passed": true,
+      "scope": "ActualPG component ownership; no native HTTP/global authcache proof",
+      "logical_timeout_ms": 150,
+      "physical_statement_timeout_ms": 2000,
+      "pending_query_witness_after_logical_timeout": true,
+      "retained_bytes_while_pending": 71303168,
+      "all_memory_returned_after_physical_rollback": true
+    }
+  },
+  "schedule": {
+    "scope": "OriginalFactory vsNativeSQL same phase interleaving; not native HTTP/fullconcurrency proof",
+    "passed": true,
+    "source_status": 200,
+    "native_status": 200,
+    "source_sha256": "ca221f674ec51f5fd4b409cc411d05d18d0d12f16df44efdfb3df9623441f2db",
+    "native_sha256": "ca221f674ec51f5fd4b409cc411d05d18d0d12f16df44efdfb3df9623441f2db",
+    "selected_logo_scalars_from_page": true,
+    "counts_names_fresh_after_page": true
+  },
+  "source_order_correction": {
+    "failed_fixtures": [
+      "artifacts/rust/m5-vod-rest-native-sql-2",
+      "artifacts/rust/m5-vod-rest-native-sql-3",
+      "artifacts/rust/m5-vod-rest-native-sql-5"
+    ],
+    "observed_movie_tied_order_differences": 20,
+    "causal_evidence": "artifacts/rust/m5-vod-rest-native-sql-5/http/ordering-plans.json",
+    "source_and_inner_page_order": [
+      1,
+      2,
+      3
+    ],
+    "old_final_order": [
+      2,
+      1,
+      3
+    ],
+    "fix": "Source-shaped page as MATERIALIZED CTE, guarded scalar scan, bounded retained PgRows inRust order, fresh metadata lookups; no newPKtie/window/outerORDER"
+  },
+  "operational_failures_preserved": [
+    {
+      "evidence": "artifacts/rust/m5-vod-rest-native-sql-1",
+      "reason": "Harness used wrong DBusername before any readSQL; cleanup complete"
+    },
+    {
+      "evidence": "artifacts/rust/m5-vod-rest-native-sql-4",
+      "reason": "Plan probe named id resolved nullable joinedlogo column; physical2passed, fixed probe tocolumn0"
+    }
+  ],
+  "remaining_gates": [
+    "Category normal lazy-seed effects, partial SQL failure and retained-owner tests",
+    "Full raw Decimal/Boolean/quoted search/filter grammar; unknown forms remain explicitunsupported",
+    "Native HTTP permission/headers/HEAD/OPTIONS negotiation and unchangedReact page flows",
+    "Unified/category/provider/action/artwork reads beyond these201 ordinary GETs",
+    "Production retained authentication scope including internalRedis/cache timeout replies",
+    "Large-catalogue EXPLAIN/metadata allocation amplification/querycounts/concurrent relation schedules",
+    "Fresh/stale/forced provider-info refresh and effects; no cached-only substitute",
+    "Canonical packaged image and app-level tests/performance after wiring"
+  ],
+  "production_registered": false,
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "cleanup": "owned Compose project removed",
+  "original_credit": "All application and algorithm credit belongs to original Dispatcharr authors and contributors; AGPL licensing preserved."
+}

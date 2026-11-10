@@ -1,0 +1,162 @@
+{
+  "scope": "Actual original HTTP ordinary GET corpus versus test-only nativePostgreSQL read component; no shipped/nativeHTTP/fullVOD acceptance",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": "artifacts/rust/m5-vod-rest-native-sql-7/http",
+  "frozen_rust_manifest_sha256": "103fe4054b5d903457826a9b0802747f0a5262259070eba226df08e964a855dc",
+  "frozen_runtime_overlay": "artifacts/rust/m5-vod-rest-category-source-1/overlay.json",
+  "successful_tool_source": "artifacts/rust/m5-vod-rest-native-sql-7/http/tools",
+  "source_sha256": {
+    "rust/crates/store/src/vod_api_draft.rs": "22dbd1d302fd1bbe2d90be2f8bb0c70d84175ff1368d5eb6b0d39741abd8a7d9",
+    "rust/crates/store/src/vod_api_dto.rs": "d2dc77d53926606285f3cf7b9746a67a9367cbd173747b859880fa89f57b4e25",
+    "rust/crates/store/src/vod_api_projection.rs": "b809b5e597f8f7e2509ca2c7fc9d616eaeb1415823919d950534fc7526e99ac4",
+    "rust/crates/store/src/vod_api_pagination.rs": "29dd2514722a7543b1bf744a05fd47f8fa885c0fdb502ad853bb421b84e9f208",
+    "rust/crates/store/src/vod_api_query.rs": "a6a96468edf2524967fb63834862d23e44aaf06faa13c6bafe69cff1a7205c0b",
+    "rust/crates/store/src/vod_api_sql.rs": "72b668ca8a09332052f2405caab046e8d0f898aeac1f837af8a78edba8ba3e00",
+    "rust/crates/store/src/vod_api_owned_read.rs": "2ae98c292df207f31d08a310d8ad9381b5722bb6ae6bc685273f0f0fdfa42be6",
+    "rust/crates/store/src/vod_api_read_component.rs": "419a8a5e6656a238bf07ece6f7cad4b91450a78cd0a9c5f3e623cd0580f9e275",
+    "rust/crates/store/src/vod_api_category_seed.rs": "a0fbbf5c4a4bc30b9547fec51011e907be73368e4b4dda758484c108b6a3f06e",
+    "rust/crates/store/src/vod_api_native_tests.rs": "8ae36e733944feb41c4e11fa0c268b128d9e1d388e7bc37048edb128146002a8",
+    "rust/crates/store/src/vod_api_source_tests.rs": "f3df977e5f200b573a1d2e20c425922dec31b7e5c4502a144b61635c5172e242"
+  },
+  "evidence_sha256": {
+    "source-run.json": "6cef40a99da7d79cfbae823f146557e4bb42fe86504b55e5585fa44dd926dedb",
+    "ordinary-sql.json": "d36c4c3f759444fbe538fcc8f62276951a03c034b95584d7420a872381330d8f",
+    "ordering-plans.json": "e8dd3b3457b4d2facc7369e79863afb772ffd49f204feb18c2d15e249031a951",
+    "owned-caller-frame.json": "adbaea5fcebdf912438872785cbabde5cb9fc0a1f1cecc213b4a34ddc81540b4",
+    "owned-logical-timeout.json": "02efa40f4ee7ec7230d4a775b0470a62f6f251670277e8a9de60cb238e4776b4",
+    "source-schedule.json": "cb31cac648ea30d9e636be8bed976a65fd923182e827296eaaebd9eb97030eb8",
+    "metadata-schedule.json": "818a1278b979987ee67cf3d5dae1d22a692b58ba8f27702196ee89b2e2e255a0",
+    "native-sql-tests.log": "54bd8b9e3d0d1b3bc54480b12775559bcbc7c88a3e71214ad2a58ee6482f3874",
+    "source-category-fault.json": "ea3169730a226def256ac268b8bca507c55d356c551cd81ca69ffd9f50166e39",
+    "category-effects.json": "522b5816e3496dbacf4e1eabdcbcf2a2529d118892f118dd078942901980cdd9"
+  },
+  "checks": {
+    "original_http_cases_captured": 463,
+    "ordinary_get_cases_exact_status_json_and_body_sha256": 201,
+    "ordinary_differences": [],
+    "ordinary_unsupported_cases": [],
+    "outside_component_cases_not_counted_as_pass": 262,
+    "actual_pg_physical_tests": 3,
+    "source_factory_native_metadata_schedule_exact_body": true,
+    "pure_source_dto_filter_pagination_assertions": 5,
+    "strict_store_all_target_clippy": true,
+    "physical_workers_after_read": 0,
+    "retained_memory_after_read": 0,
+    "category_lazy_defaults_idempotence_actual_source_effects": true,
+    "category_partial_pg_failure_prefix_and_retained_owner": true
+  },
+  "physical": {
+    "owned-caller-frame.json": {
+      "passed": true,
+      "scope": "ActualPG component ownership; not HTTP/app performance",
+      "actual_blocked_read_workers": 2,
+      "aborted_caller_did_not_release_physical_admission": true,
+      "third_request_capacity_before_auth_sql": true,
+      "detached_frame_len": 8512,
+      "detached_frame_retained_capacity": 9216,
+      "worker_shutdown_with_held_frame": true,
+      "lastclone_released_memory": true,
+      "pool_statement_timeout_restored": "3s"
+    },
+    "owned-logical-timeout.json": {
+      "passed": true,
+      "scope": "ActualPG component ownership; no native HTTP/global authcache proof",
+      "logical_timeout_ms": 150,
+      "physical_statement_timeout_ms": 2000,
+      "pending_query_witness_after_logical_timeout": true,
+      "retained_bytes_while_pending": 71303168,
+      "all_memory_returned_after_physical_rollback": true
+    },
+    "category-effects.json": {
+      "passed": true,
+      "scope": "Actual Source normal/categoryPGfailure prefix vs lowlevel nativehelper; no nativeHTTP/categoryroute acceptance",
+      "owned_relations_before": 9,
+      "owned_relations_after": 13,
+      "source_effects_equal_by_semantic_category_kind": true,
+      "normalization": "Uncategorized row IDs differ after explicit fixture reset; kinds/account/enabled preserved; original relations/properties exact",
+      "existing_defaults_unchanged": true,
+      "idempotent_repeat": true,
+      "source_failure": {
+        "class": "ProgrammingError",
+        "sqlstate": "P0001",
+        "message": "owned-vod-series-failure\nCONTEXT:  PL/pgSQL function rust_vod_fixture_fail_series() line 1 at RAISE"
+      },
+      "retained_category_prefix": [
+        "movie"
+      ],
+      "aborted_caller_kept_owner_through_pending_insert_and_failure_cleanup": true,
+      "all_memory_and_workers_returned": true,
+      "restored_normal_fixture_state": true
+    }
+  },
+  "schedule": {
+    "scope": "OriginalFactory vsNativeSQL same phase interleaving; not native HTTP/fullconcurrency proof",
+    "passed": true,
+    "source_status": 200,
+    "native_status": 200,
+    "source_sha256": "ca221f674ec51f5fd4b409cc411d05d18d0d12f16df44efdfb3df9623441f2db",
+    "native_sha256": "ca221f674ec51f5fd4b409cc411d05d18d0d12f16df44efdfb3df9623441f2db",
+    "selected_logo_scalars_from_page": true,
+    "counts_names_fresh_after_page": true
+  },
+  "source_order_correction": {
+    "failed_fixtures": [
+      "artifacts/rust/m5-vod-rest-native-sql-2",
+      "artifacts/rust/m5-vod-rest-native-sql-3",
+      "artifacts/rust/m5-vod-rest-native-sql-5"
+    ],
+    "observed_movie_tied_order_differences": 20,
+    "causal_evidence": "artifacts/rust/m5-vod-rest-native-sql-5/http/ordering-plans.json",
+    "source_and_inner_page_order": [
+      1,
+      2,
+      3
+    ],
+    "old_final_order": [
+      2,
+      1,
+      3
+    ],
+    "fix": "Source-shaped page as MATERIALIZED CTE, guarded scalar scan, bounded retained PgRows inRust order, fresh metadata lookups; no newPKtie/window/outerORDER"
+  },
+  "operational_failures_preserved": [
+    {
+      "evidence": "artifacts/rust/m5-vod-rest-native-sql-1",
+      "reason": "Harness used wrong DBusername before any readSQL; cleanup complete"
+    },
+    {
+      "evidence": "artifacts/rust/m5-vod-rest-native-sql-4",
+      "reason": "Plan probe named id resolved nullable joinedlogo column; physical2passed, fixed probe tocolumn0"
+    }
+  ],
+  "remaining_gates": [
+    "Category-list HTTP serialization/filters/permissions/negotiation and broader malformed default coercions; normal lazy helper/failureprefix passed",
+    "Full raw Decimal/Boolean/quoted search/filter grammar; unknown forms remain explicitunsupported",
+    "Native HTTP permission/headers/HEAD/OPTIONS negotiation and unchangedReact page flows",
+    "Unified/category/provider/action/artwork reads beyond these201 ordinary GETs",
+    "Production retained authentication scope including internalRedis/cache timeout replies",
+    "Large-catalogue EXPLAIN/metadata allocation amplification/querycounts/concurrent relation schedules",
+    "Fresh/stale/forced provider-info refresh and effects; no cached-only substitute",
+    "Canonical packaged image and app-level tests/performance after wiring"
+  ],
+  "production_registered": false,
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "cleanup": "owned Compose project removed",
+  "original_credit": "All application and algorithm credit belongs to original Dispatcharr authors and contributors; AGPL licensing preserved.",
+  "prior_ordinary_component_proof": "scripts/rust-vod-api-contracts/verified-vod-rest-native-sql-1.json",
+  "lint_binding": {
+    "strict_store_all_target_clippy": true,
+    "scope": "Pre-capture workspace validation of the same bound11 VOD module sources, not a rerun against the entire frozen7 composite tree. Actual frozen7 cargo test executed all five component functions.",
+    "log": "artifacts/rust/m5-vod-rest-draft-compile-1/category-peer-clippy.log",
+    "log_sha256": "70a816f4780ef55ffc0ed95e2a45366794eb4597d221a2fe6bbcb96d85e654ee",
+    "whole_frozen_tree_lint_rerun": "Queued after grid benchmark quiet window; no tests/builds run during quiet."
+  },
+  "reproduction_helper_inputs_sha256": {
+    "scripts/rust-vod-api-contracts/run.py": "0340318267d6ada778a09d96c2b1659e51fbf55c4a9a60dd50cbe46516c47825",
+    "scripts/rust-vod-api-contracts/schedule_source.py": "bc49674ed6f73a1ff671d2608d129089867ba1ec439f187b8b95899888bc3319",
+    "scripts/rust-vod-api-contracts/category_fault_source.py": "b8993bfbf120a6394ff60853ae0de08d8213c6b8d4f64bffd23708e69ef4ee2d",
+    "scripts/rust-vod-api-contracts/source-default-queries-1.json": "12349b3e7b3b1968d6f29ac56ab5303bf5aa0bc09029cbaf7e54c3c51a456f4f"
+  }
+}

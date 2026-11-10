@@ -334,3 +334,7 @@ pub use epg_current_file::{CurrentFileLookup, CurrentFileOutcome, CurrentFileReq
 mod backup_jobs_status;
 
 mod epg_current_lookup;
+
+// Test-only Source VOD REST prototype; no production exports or routes.
+#[cfg(test)]
+mod vod_api_draft;

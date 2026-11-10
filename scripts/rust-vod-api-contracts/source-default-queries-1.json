@@ -1,0 +1,28 @@
+{
+  "scope": "Actual capturedSourceFactory default ordinary SELECT statements; no credentials or auth SQL",
+  "source_corpus": "artifacts/rust/m5-vod-rest-source-1/factory/source-corpus.json",
+  "source_corpus_sha256": "2f86b7fa3056653c45dbb65ccadb9198e9463e67de5dc249af912b5cbea54f57",
+  "queries": {
+    "movies": {
+      "sql": "SELECT DISTINCT \"vod_movie\".\"id\", \"vod_movie\".\"uuid\", \"vod_movie\".\"name\", \"vod_movie\".\"description\", \"vod_movie\".\"year\", \"vod_movie\".\"rating\", \"vod_movie\".\"genre\", \"vod_movie\".\"duration_secs\", \"vod_movie\".\"logo_id\", \"vod_movie\".\"tmdb_id\", \"vod_movie\".\"imdb_id\", \"vod_movie\".\"language\", \"vod_movie\".\"is_adult\", \"vod_movie\".\"custom_properties\", \"vod_movie\".\"created_at\", \"vod_movie\".\"updated_at\", \"vod_vodlogo\".\"id\", \"vod_vodlogo\".\"name\", \"vod_vodlogo\".\"url\" FROM \"vod_movie\" INNER JOIN \"vod_m3umovierelation\" ON (\"vod_movie\".\"id\" = \"vod_m3umovierelation\".\"movie_id\") INNER JOIN \"m3u_m3uaccount\" ON (\"vod_m3umovierelation\".\"m3u_account_id\" = \"m3u_m3uaccount\".\"id\") LEFT OUTER JOIN \"vod_vodlogo\" ON (\"vod_movie\".\"logo_id\" = \"vod_vodlogo\".\"id\") WHERE \"m3u_m3uaccount\".\"is_active\" ORDER BY \"vod_movie\".\"name\" ASC LIMIT 20",
+      "sql_sha256": "de61f0b124c4e086ab4cf159f3067c7c8b9654dd9ec45bc10c2e2b39b0cbc14e",
+      "source_case_index": 4,
+      "path": "/api/vod/movies/",
+      "role": "standard"
+    },
+    "series": {
+      "sql": "SELECT DISTINCT \"vod_series\".\"id\", \"vod_series\".\"uuid\", \"vod_series\".\"name\", \"vod_series\".\"description\", \"vod_series\".\"year\", \"vod_series\".\"rating\", \"vod_series\".\"genre\", \"vod_series\".\"logo_id\", \"vod_series\".\"tmdb_id\", \"vod_series\".\"imdb_id\", \"vod_series\".\"language\", \"vod_series\".\"custom_properties\", \"vod_series\".\"created_at\", \"vod_series\".\"updated_at\", \"vod_vodlogo\".\"id\", \"vod_vodlogo\".\"name\", \"vod_vodlogo\".\"url\" FROM \"vod_series\" INNER JOIN \"vod_m3useriesrelation\" ON (\"vod_series\".\"id\" = \"vod_m3useriesrelation\".\"series_id\") INNER JOIN \"m3u_m3uaccount\" ON (\"vod_m3useriesrelation\".\"m3u_account_id\" = \"m3u_m3uaccount\".\"id\") LEFT OUTER JOIN \"vod_vodlogo\" ON (\"vod_series\".\"logo_id\" = \"vod_vodlogo\".\"id\") WHERE \"m3u_m3uaccount\".\"is_active\" ORDER BY \"vod_series\".\"name\" ASC LIMIT 3",
+      "sql_sha256": "2e5c71e0610e073f38da778b4a36b61aeda809b38eaeb581fec4f2e8c69af9bc",
+      "source_case_index": 78,
+      "path": "/api/vod/series/",
+      "role": "standard"
+    },
+    "episodes": {
+      "sql": "SELECT DISTINCT \"vod_episode\".\"id\", \"vod_episode\".\"uuid\", \"vod_episode\".\"name\", \"vod_episode\".\"description\", \"vod_episode\".\"air_date\", \"vod_episode\".\"rating\", \"vod_episode\".\"duration_secs\", \"vod_episode\".\"series_id\", \"vod_episode\".\"season_number\", \"vod_episode\".\"episode_number\", \"vod_episode\".\"tmdb_id\", \"vod_episode\".\"imdb_id\", \"vod_episode\".\"custom_properties\", \"vod_episode\".\"created_at\", \"vod_episode\".\"updated_at\", \"vod_series\".\"id\", \"vod_series\".\"uuid\", \"vod_series\".\"name\", \"vod_series\".\"description\", \"vod_series\".\"year\", \"vod_series\".\"rating\", \"vod_series\".\"genre\", \"vod_series\".\"logo_id\", \"vod_series\".\"tmdb_id\", \"vod_series\".\"imdb_id\", \"vod_series\".\"language\", \"vod_series\".\"custom_properties\", \"vod_series\".\"created_at\", \"vod_series\".\"updated_at\" FROM \"vod_episode\" INNER JOIN \"vod_m3uepisoderelation\" ON (\"vod_episode\".\"id\" = \"vod_m3uepisoderelation\".\"episode_id\") INNER JOIN \"m3u_m3uaccount\" ON (\"vod_m3uepisoderelation\".\"m3u_account_id\" = \"m3u_m3uaccount\".\"id\") INNER JOIN \"vod_series\" ON (\"vod_episode\".\"series_id\" = \"vod_series\".\"id\") WHERE \"m3u_m3uaccount\".\"is_active\" ORDER BY \"vod_series\".\"name\" ASC, \"vod_episode\".\"season_number\" ASC, \"vod_episode\".\"episode_number\" ASC LIMIT 8",
+      "sql_sha256": "8b563b44d46fb7dbb0c620b7b3fce4b8e4ba6f2b2038370b7b0c022d6ea6045b",
+      "source_case_index": 152,
+      "path": "/api/vod/episodes/",
+      "role": "standard"
+    }
+  }
+}

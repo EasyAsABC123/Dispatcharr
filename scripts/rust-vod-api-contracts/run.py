@@ -24,6 +24,8 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--mode',choices=['factory','http','both'],default='both')
+    parser.add_argument('--native-sql',action='store_true',help='Compare ordinary read component on actual Source database; not native HTTP/app acceptance')
+    parser.add_argument('--frozen-rust-source',type=Path,help='Reuse an already captured coherent Rust tree for a harness-only correction')
     args=parser.parse_args()
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     report={'scope':'Original VOD REST metadata-only capture; separate Factory and network fixtures',
@@ -36,15 +38,30 @@ def main():
             files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),
                 ROOT/'docker/compose.rust-playback.yml',ROOT/'scripts/rust-integration/shared_ts.py',
                 ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'scripts/rust-baseline/dependencies.py',
+                *([ROOT/'scripts/rust-vod-api-contracts/source-vod-rest-1.json',ROOT/'scripts/rust-vod-api-contracts/source-default-queries-1.json',ROOT/'scripts/rust-vod-api-contracts/schedule_source.py',ROOT/'scripts/rust-vod-api-contracts/category_fault_source.py']if args.native_sql else []),
                 *[ROOT/'scripts/rust-playback-baseline'/name for name in
                   ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']]]
             tools=evidence/'tools';hashes={}
             for path in files:
                 target=tools/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True)
                 data=path.read_bytes();target.write_bytes(data);hashes[str(path.relative_to(ROOT))]=hashlib.sha256(data).hexdigest()
+            if args.native_sql:
+                rust=(args.frozen_rust_source or(ROOT/'rust')).resolve()
+                if not(rust/'Cargo.toml').is_file():raise RuntimeError('Rust source root missingCargo.toml')
+                for directory,names,filenames in os.walk(rust):
+                    names[:]=[name for name in names if name not in ['target','.git','__pycache__']]
+                    for filename in filenames:
+                        path=Path(directory)/filename;target=tools/'rust'/path.relative_to(rust)
+                        target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
+                rust_hashes={str(path.relative_to(tools/'rust')):hashlib.sha256(path.read_bytes()).hexdigest()for path in(tools/'rust').rglob('*')if path.is_file()}
+                result_manifest=hashlib.sha256(json.dumps(rust_hashes,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+                (evidence/'frozen-source-ready.json').write_text(json.dumps({'rust_manifest_sha256':result_manifest}))
             project='dispatcharr-vod-api-'+mode+'-'+uuid.uuid4().hex[:10]
             result={'scope':'Original '+mode+' VOD REST source capture','passed':False,
                 'project':project,'tool_sha256':hashes,'observation':mode,'commands':[]}
+            if args.native_sql:
+                result['native_rust_manifest_sha256']=result_manifest
+                result['native_rust_source_input']=str(rust)
             with fixture_source(result,evidence,'source-run.json')as temporary:
                 source=Path(temporary)/'source';source.mkdir()
                 archive=subprocess.check_output(['git','archive',BASELINE],cwd=ROOT)
@@ -53,7 +70,7 @@ def main():
                 (source/'media').mkdir(exist_ok=True)
                 environment=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(evidence),
                     FIXTURE_SECONDS='900',DISPATCHARR_ENV='aio')
-                ports=evidence/'ports.yml';result['ports']=write_port_overlay(ports,{'baseline':[5656],'origin':[8080]})
+                ports=evidence/'ports.yml';result['ports']=write_port_overlay(ports,{'baseline':[5656,5432]if args.native_sql else[5656],'origin':[8080]})
                 overlay=evidence/'oracle.yml';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[
                     str(tools/'scripts/rust-vod-api-contracts')+':/vod-api-probe:ro']}}}))
                 compose=['docker','compose','-p',project,'-f',str(tools/'docker/compose.rust-playback.yml'),'-f',str(overlay),'-f',str(ports)]
@@ -85,6 +102,25 @@ def main():
                         corpus_sha256=hashlib.sha256(data.encode()).hexdigest(),provider_trap_attempts=len(corpus['provider_trap_attempts']),
                         provider_refresh_rows_unchanged=corpus['provider_refresh_rows_unchanged'])
                     assert result['passed'],'Incomplete Source metadata capture or unexpected provider refresh'
+                    if args.native_sql:
+                        scheduled=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/schedule_source.py'],timeout=30)
+                        (evidence/'source-schedule.json').write_text(json.dumps(json.loads(scheduled.stdout.splitlines()[-1]),indent=2)+'\n')
+                        faulted=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_fault_source.py'],timeout=30)
+                        (evidence/'source-category-fault.json').write_text(json.dumps(json.loads(faulted.stdout.splitlines()[-1]),indent=2)+'\n')
+                        pgport=command(compose+['port','baseline','5432']).stdout.strip().rsplit(':',1)[1]
+                        native_environment=dict(environment,DATABASE_URL='postgresql://dispatch:playback-fixture-only@127.0.0.1:'+pgport+'/dispatcharr',
+                            VOD_API_NATIVE_FIXTURE='playback-fixture-only',VOD_SOURCE_CORPUS=str(evidence/'source-corpus.json'),VOD_NATIVE_EVIDENCE=str(evidence),VOD_SOURCE_DEFAULT_SQL=str(tools/'scripts/rust-vod-api-contracts/source-default-queries-1.json'),VOD_SOURCE_SCHEDULE=str(evidence/'source-schedule.json'),VOD_SOURCE_CATEGORY_FAULT=str(evidence/'source-category-fault.json'))
+                        target=Path(os.environ.get('VOD_CARGO_TARGET_DIR',str(ROOT/'artifacts/rust/vod-rest-cargo-target')))
+                        argv=['cargo','test','--manifest-path',str(tools/'rust/Cargo.toml'),'--target-dir',str(target),'--locked','--offline','-p','dispatcharr-store','--lib',
+                            'vod_api_draft::vod_api_native_tests','--','--ignored','--nocapture','--test-threads=1']
+                        result['native_command']=argv
+                        with(evidence/'native-sql-tests.log').open('w')as log:
+                            native=subprocess.run(argv,cwd=ROOT,env=native_environment,text=True,stdout=log,stderr=subprocess.STDOUT,timeout=240)
+                        native.check_returncode()
+                        result['native_ordinary_component']=json.loads((evidence/'ordinary-sql.json').read_text())
+                        assert result['native_ordinary_component']['passed'],'Native ordinary component mismatch'
+                        result['native_scope']='Only original ordinary read cases vs nativeSQL component; outside/unsupported families not counted as passes'
+
                 except Exception as error:
                     result.update(failure=type(error).__name__,failure_message=str(error));result['passed']=False
                 finally:
