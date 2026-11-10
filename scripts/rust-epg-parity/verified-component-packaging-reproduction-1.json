@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "scope": "Exact accepted447runtime inputs with allowed packaging; build/tag/script reproduction only, no new component execution/performance",
+  "preserved_setup_failures": [
+    "Initial derive used runtime-snapshot metadata instead of accepted result report",
+    "Initial script observer expected source filename rather than actual fixed /test-bin/run path"
+  ],
+  "records": [
+    {
+      "component": "logo-job",
+      "image_id": "sha256:1ae0e779cabf73a127349cbab14a5d0bbe19236b2f500c1683057eb0d4f5b096",
+      "tag": "dispatcharr-rust-epg-tests:602403ceba067fce8821-logo-job",
+      "source_tree_sha256": "602403ceba067fce8821d8d86c6b96102153577a347dc154a8e5c504df362a43",
+      "manifest": "artifacts/rust/m6-component-reproduction-build-logo-job-1/build.json",
+      "manifest_sha256": "725d70929c4b63af054f9738ff7bdc85fdd627ca83316b8f50932e7b5862c3e5",
+      "entrypoint": [
+        "/test-bin/run"
+      ],
+      "entrypoint_script_sha256": "dd3131254855eb71f2b4924e023f86f40cc353642a8bd6442ebe0622833a1f94"
+    },
+    {
+      "component": "file-job",
+      "image_id": "sha256:81e0d8ce47d6ef645d37a8442e9961497cd8d7a1e7c985411c864c866c28f252",
+      "tag": "dispatcharr-rust-epg-tests:cb49bbd6f639048dfe07-file-job",
+      "source_tree_sha256": "cb49bbd6f639048dfe0749a6b4cc6fa16954371f9aca88f2b728b8c1185cfa12",
+      "manifest": "artifacts/rust/m6-component-reproduction-build-file-job-1/build.json",
+      "manifest_sha256": "91e8b98197183c78325d4dd1c385c671504ab46c3dbc55dddfb717246b797173",
+      "entrypoint": [
+        "/test-bin/run"
+      ],
+      "entrypoint_script_sha256": "ce9edf65984102c79fdab9f8becf7ef6f492860387bb00a7d26b774ff7f94828"
+    },
+    {
+      "component": "channels",
+      "image_id": "sha256:2ddfb7de88fa47f31bc9fd772397b7c06486e7085ebedd8ec6b68d5d4d1b1b19",
+      "tag": "dispatcharr-rust-epg-tests:cb49bbd6f639048dfe07-channels",
+      "source_tree_sha256": "cb49bbd6f639048dfe0749a6b4cc6fa16954371f9aca88f2b728b8c1185cfa12",
+      "manifest": "artifacts/rust/m6-component-reproduction-build-channels-1/build.json",
+      "manifest_sha256": "ca54438fc60f93bf03bde4f91eafee990538839b8ae0c30aba9dca7b6941fbb9",
+      "entrypoint": [
+        "/test-bin/run"
+      ],
+      "entrypoint_script_sha256": "bf552ba85b8dda53f5fb4eaccfa58ebbb073f03427e5c322972b68ad974c4301"
+    }
+  ],
+  "evidence": "artifacts/rust/m6-component-reproduction-result.json",
+  "evidence_sha256": "af57a76d5bae419a18780d9ac6630e54e4d14f494253392a301b3dc40912232b",
+  "tool_sha256": {
+    "scripts/rust-epg-parity/build_import_tests.py": "f95e21ca935251783cd47543d84ab697723aac316cb1357d7900895aae7f8a3e",
+    "scripts/rust-epg-parity/derive_import_archive.py": "ab4b496fee6d37d3705a355d1c9f737ac54f5ba62de2980eb990374e84bf317b",
+    "scripts/rust-epg-parity/channels_source.py": "ff5cd0320b9e4c98797f81edded6eca540c844ad152bbfb6d2238c5c073f9d4a",
+    "scripts/rust-epg-parity/run_channels.py": "d0e964388a83b9ee975b705d49d4524f0b855f0ea201a45c367f0f73dea421e7"
+  },
+  "source_channel_tools_match_executed_84": true,
+  "performance_verified": false,
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors."
+}

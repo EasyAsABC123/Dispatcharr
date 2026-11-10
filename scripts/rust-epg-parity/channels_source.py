@@ -17,7 +17,7 @@ import django
 django.setup()
 from apps.epg import tasks
 from apps.epg.models import EPGSource,EPGData,ProgramData
-from apps.channels.models import Channel,ChannelOverride
+from apps.channels.models import Channel,ChannelOverride,Logo
 from apps.channels import utils as channel_utils
 from core import utils as core_utils
 from core.models import SystemEvent
@@ -56,10 +56,13 @@ def main():
         ('identifier-too-long',channel('x'*256,'<display-name>Too long</display-name>')),
         ('flush-before-error',''.join(channel('new-'+str(i),'<display-name>Guide</display-name>') for i in range(501))+channel('x'*256)),
         ('missing-file',''),
+        ('auto-logo-on',channel('mapped-base','<display-name>Automatic icon</display-name>','<icon src="https://fixture.invalid/rust-auto-logo-on/new"/>')),
+        ('auto-logo-bad-properties',channel('mapped-base','<display-name>Stored before property error</display-name>')),
     ]
     cases=[]
     for ordinal,(name,body) in enumerate(definitions):
-        source=EPGSource.objects.create(name=PREFIX+name,is_active=False,source_type='xmltv',custom_properties={})
+        properties={'auto_apply_epg_logos':True} if name=='auto-logo-on' else [True] if name=='auto-logo-bad-properties' else {}
+        source=EPGSource.objects.create(name=PREFIX+name,is_active=False,source_type='xmltv',custom_properties=properties)
         initial=[]
         for index,tvg in enumerate(['existing','stale','mapped-base','mapped-override',None,'']):
             initial.append(EPGData(tvg_id=tvg,name='Before '+str(index),icon_url='https://fixture.invalid/old',epg_source=source))
@@ -74,6 +77,7 @@ def main():
         path.write_bytes(payload)
         if name=='missing-file':path.unlink()
         source.file_path=str(path);source.save(update_fields=['file_path'])
+        base_logo_before=base.logo_id
         before=rows(source)
         before_programmes=list(ProgramData.objects.filter(epg__epg_source=source).values('id','epg_id','start_time','end_time','title','sub_title','description','tvg_id','program_id','custom_properties'))
         effects=[]
@@ -83,6 +87,7 @@ def main():
             stored['epg_rows']=EPGData.objects.filter(epg_source=source).count()
             stored['programmes']=ProgramData.objects.filter(epg__epg_source=source).count()
             stored['audit_events']=SystemEvent.objects.filter(details__source_name=source.name).count()
+            stored['base_logo_url']=Channel.objects.filter(pk=base.pk).values_list('logo__url',flat=True).first()
             return stored
         def wire(group,message):
             effects.append({'kind':'publication','group':group,'message':message,'state':state()})
@@ -103,14 +108,15 @@ def main():
             cases.append({'name':name,'source_id':source.pk,'xml_base64':base64.b64encode(payload).decode(),
                 'file_exists':path.exists(),'before':before,'before_programmes':before_programmes,'before_state':before_state,'after':rows(source),
                 'after_state':after_state,'passed':passed,'effects':effects,'base_epg_id':base.epg_data_id,
-                'override_epg_id':override.epg_data_id,'base_id':base.pk,'override_id':override.pk})
+                'override_epg_id':override.epg_data_id,'base_id':base.pk,'override_id':override.pk,'source_properties':properties})
             # Restore only this isolated source for the native pass. Keep the
             # original rows/effects above immutable, including partial failures.
             ProgramData.objects.filter(epg__epg_source=source).delete()
             EPGData.objects.filter(epg_source=source).delete()
             EPGData.objects.bulk_create([EPGData(epg_source=source,**row) for row in before])
             ProgramData.objects.bulk_create([ProgramData(**row) for row in before_programmes])
-            Channel.objects.filter(pk=base.pk).update(epg_data_id=before[2]['id'])
+            Channel.objects.filter(pk=base.pk).update(epg_data_id=before[2]['id'],logo_id=base_logo_before)
+            Logo.objects.filter(url='https://fixture.invalid/rust-auto-logo-on/new').delete() if name=='auto-logo-on' else None
             ChannelOverride.objects.filter(pk=override.pk).update(epg_data_id=before[3]['id'])
             EPGSource.objects.filter(pk=source.pk).update(status=before_state['status'],last_message=before_state['last_message'],updated_at=before_state['updated_at'],file_path=before_state['file_path'])
             SystemEvent.objects.filter(details__source_name=source.name).delete()

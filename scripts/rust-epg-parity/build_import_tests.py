@@ -19,7 +19,11 @@ def main():
     parser.add_argument('--build-manifest', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--reporter',action='store_true')
+    parser.add_argument('--channels',action='store_true')
+    parser.add_argument('--file-job',action='store_true')
+    parser.add_argument('--logo-job',action='store_true')
     args = parser.parse_args()
+    if sum([args.channels,args.reporter,args.file_job,args.logo_job])>1:parser.error('Choose one component packaging set')
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     manifest = json.loads(args.build_manifest.read_bytes())
@@ -30,15 +34,21 @@ def main():
         raise ValueError('Canonical immutable source binding failed')
     dockerfile='rust/Dockerfile.ingest-epg-reporter-tests' if args.reporter else 'rust/Dockerfile.ingest-epg-tests'
     entrypoint='rust/runtime/ingest_epg_reporter_test.sh' if args.reporter else 'rust/runtime/ingest_epg_test.sh'
+    if args.channels:dockerfile,entrypoint='rust/Dockerfile.ingest-epg-channel-tests','rust/runtime/ingest_epg_channel_test.sh'
+    if args.file_job:dockerfile,entrypoint='rust/Dockerfile.ingest-epg-file-job-tests','rust/runtime/ingest_epg_file_job_test.sh'
+    if args.logo_job:dockerfile,entrypoint='rust/Dockerfile.ingest-epg-logo-job-tests','rust/runtime/ingest_epg_logo_job_test.sh'
     for name in (dockerfile, entrypoint,
                  'rust/crates/ingest-epg/tests/source_sql.rs', 'rust/crates/ingest-epg/tests/policy_cache_sql.rs'):
         if name not in sources:
             raise ValueError('Canonical archive predates component Docker verification')
-    tag = 'dispatcharr-rust-epg-tests:' + tree[:20]
+    component = 'reporter' if args.reporter else 'channels' if args.channels else 'file-job' if args.file_job else 'logo-job' if args.logo_job else 'import'
+    # A canonical archive can contain several component Dockerfiles. Their
+    # entrypoints differ even when the source tree is identical.
+    tag = 'dispatcharr-rust-epg-tests:' + tree[:20] + '-' + component
     report = {'format_version': 1, 'scope': 'Immutable EPG component test image only',
               'passed': False, 'tag': tag, 'source_tree_sha256': tree, 'source_sha256': sources,
               'source_archive_sha256': sha(archive), 'canonical_manifest_sha256': sha(args.build_manifest),
-              'tool_sha256': sha(Path(__file__)), 'dockerfile':dockerfile, 'application_image_verified': False,
+              'tool_sha256': sha(Path(__file__)), 'dockerfile':dockerfile, 'component':component, 'application_image_verified': False,
               'full_refresh_job_verified': False, 'performance_verified': False}
     try:
         began = time.monotonic()

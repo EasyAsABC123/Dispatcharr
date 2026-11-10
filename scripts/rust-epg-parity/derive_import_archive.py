@@ -21,7 +21,11 @@ def main():
     parser.add_argument('--source-evidence', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--reporter',action='store_true')
+    parser.add_argument('--channels',action='store_true')
+    parser.add_argument('--file-job',action='store_true')
+    parser.add_argument('--logo-job',action='store_true')
     args = parser.parse_args()
+    if sum([args.channels,args.reporter,args.file_job,args.logo_job])>1:parser.error('Choose one component packaging set')
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     base_bytes = args.source_evidence.read_bytes()
@@ -42,6 +46,9 @@ def main():
         raise ValueError('Accepted runtime map differs from archive bytes')
     additions = {}
     additions_paths=('rust/Dockerfile.ingest-epg-reporter-tests','rust/runtime/ingest_epg_reporter_test.sh','LICENSE','ATTRIBUTION.md') if args.reporter else ADDITIONS
+    if args.channels:additions_paths=('rust/Dockerfile.ingest-epg-channel-tests','rust/runtime/ingest_epg_channel_test.sh','LICENSE','ATTRIBUTION.md')
+    if args.file_job:additions_paths=('rust/Dockerfile.ingest-epg-file-job-tests','rust/runtime/ingest_epg_file_job_test.sh','LICENSE','ATTRIBUTION.md')
+    if args.logo_job:additions_paths=('rust/Dockerfile.ingest-epg-logo-job-tests','rust/runtime/ingest_epg_logo_job_test.sh','LICENSE','ATTRIBUTION.md')
     for name in additions_paths:
         data = (ROOT / name).read_bytes()
         if name in files and files[name] != data:

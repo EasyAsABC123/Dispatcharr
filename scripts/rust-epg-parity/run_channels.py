@@ -37,7 +37,9 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
 
     parser.add_argument('--native',action='store_true',help='Compare frozen native channel helper against original rows/progress')
+    parser.add_argument('--native-test-manifest',type=Path)
     args = parser.parse_args()
+    if args.native_test_manifest:args.native=True
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     tools = output/'tool-source'
@@ -59,7 +61,7 @@ def main():
               'native_verified':False, 'performance_verified':False,
               'project':project, 'tool_source_sha256':hashes}
     status = 1
-    if args.native:
+    if args.native and not args.native_test_manifest:
         captured={str(path.relative_to(ROOT)):path.read_bytes() for path in (ROOT/'rust').rglob('*') if path.is_file() and not set(path.relative_to(ROOT/'rust').parts)&{'target','.git','__pycache__'}}
         rust_hashes={name:hashlib.sha256(data).hexdigest() for name,data in captured.items()}
         with tarfile.open(output/'rust-source.tar','w') as archive:
@@ -109,16 +111,25 @@ def main():
             report.update(passed=True, source_cases=len(fixture['cases']),
                           fixture_sha256=hashlib.sha256(fixture_path.read_bytes()).hexdigest())
             if args.native:
-                frozen=Path(directory)/'rust-source'
-                for relative,data_bytes in captured.items():
-                    target=frozen/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data_bytes)
-                pg=command(compose+['port','baseline','5432']).stdout.strip()
-                redis=command(compose+['port','baseline','6379']).stdout.strip()
-                native_env=dict(env,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+pg+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis+'/0',EPG_CHANNEL_DISPOSABLE_FIXTURE='playback-fixture-only',EPG_CHANNEL_FIXTURE=str(fixture_path),CARGO_TARGET_DIR=str(output/'cargo-target'))
-                result=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-ingest-epg','--test','channels_sql','--locked','--offline','--','--ignored','--nocapture','--test-threads=1'],env=native_env,text=True,capture_output=True,timeout=600)
-                (output/'native-channels.log').write_text(result.stdout+'\n'+result.stderr)
-                result.check_returncode()
-                report.update(native_verified=True,native_source_cases=19,application_jobs_verified=False,websocket_transport_verified=False,auto_logo_enabled_variants_verified=False)
+                if args.native_test_manifest:
+                    spec=importlib.util.spec_from_file_location('channel_component',tools/'scripts/rust-epg-parity/component_container.py')
+                    component=importlib.util.module_from_spec(spec);spec.loader.exec_module(component)
+                    code,provenance=component.execute(compose,env,output,args.native_test_manifest.resolve(),'channels_sql','channels-source.json')
+                    report['native_container']=provenance
+                    report['rust_source_sha256']=provenance['source_sha256']
+                    report['rust_source_archive_sha256']=provenance['source_archive_sha256']
+                    if code!=0:raise RuntimeError('Native channel component failed')
+                else:
+                    frozen=Path(directory)/'rust-source'
+                    for relative,data_bytes in captured.items():
+                        target=frozen/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data_bytes)
+                    pg=command(compose+['port','baseline','5432']).stdout.strip()
+                    redis=command(compose+['port','baseline','6379']).stdout.strip()
+                    native_env=dict(env,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+pg+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis+'/0',EPG_CHANNEL_DISPOSABLE_FIXTURE='playback-fixture-only',EPG_CHANNEL_FIXTURE=str(fixture_path),CARGO_TARGET_DIR=str(output/'cargo-target'))
+                    result=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-ingest-epg','--test','channels_sql','--locked','--offline','--','--ignored','--nocapture','--test-threads=1'],env=native_env,text=True,capture_output=True,timeout=600)
+                    (output/'native-channels.log').write_text(result.stdout+'\n'+result.stderr)
+                    result.check_returncode()
+                report.update(native_verified=True,native_source_cases=21,native_physical_scenarios=2,application_jobs_verified=False,websocket_transport_verified=False,auto_logo_enabled_variants_verified=True)
             status = 0
         except subprocess.CalledProcessError as error:
             (output/'failed-command.log').write_text((error.stdout or '')+'\n'+(error.stderr or ''))
