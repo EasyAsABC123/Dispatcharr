@@ -1,6 +1,8 @@
 //! Cached Redis restart differential component; no runtime reconnect changes.
 //! Original Dispatcharr authors retain all application and algorithm credit.
-use dispatcharr_coordination::{TaskLease, TaskLockConfig, TaskLocks};
+use dispatcharr_coordination::{
+    AcquireRequest, Coordinator, LeaseConfig, TaskLease, TaskLockConfig, TaskLocks,
+};
 use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
 use serde_json::{json, Value};
 use std::{
@@ -46,6 +48,7 @@ async fn main() {
         }
     });
     let mut locks: Option<TaskLocks> = None;
+    let mut coordinator: Option<Coordinator> = None;
     let mut transport: Option<RedisTransport> = None;
     let mut lease: Option<TaskLease> = None;
     while let Some(line) = rx.recv().await {
@@ -72,6 +75,24 @@ async fn main() {
                     }
                     Err(error) => record["locks_error"] = json!(format!("{error:?}")),
                 }
+                let fresh = Coordinator::connect(
+                    &url,
+                    LeaseConfig {
+                        namespace: task.clone(),
+                        heartbeat_interval: None,
+                        reap_interval: None,
+                        command_timeout: Duration::from_millis(300),
+                        ..Default::default()
+                    },
+                )
+                .await;
+                match fresh {
+                    Ok(value) => {
+                        coordinator = Some(value);
+                        record["coordinator_ready"] = json!(true);
+                    }
+                    Err(error) => record["coordinator_error"] = json!(format!("{error:?}")),
+                }
                 let fresh = RedisTransport::connect_classified(
                     &url,
                     TransportConfig {
@@ -87,6 +108,25 @@ async fn main() {
                         record["transport_ready"] = json!(true);
                     }
                     Err(error) => record["transport_error"] = json!(format!("{error:?}")),
+                }
+            }
+            "coordinate" => {
+                match coordinator
+                    .as_ref()
+                    .unwrap()
+                    .acquire(AcquireRequest {
+                        channel_id: format!("{}-{}", task, command["id"]),
+                        provider_profile_id: Some(42),
+                        provider_max_streams: 1,
+                        credential_pool: None,
+                    })
+                    .await
+                {
+                    Ok(value) => match value.release().await {
+                        Ok(removed) => record["result"] = json!(removed),
+                        Err(error) => record["error"] = json!(format!("{error:?}")),
+                    },
+                    Err(error) => record["error"] = json!(format!("{error:?}")),
                 }
             }
             "acquire" => {
@@ -136,6 +176,7 @@ async fn main() {
             "shutdown" => {
                 assert!(lease.is_none());
                 locks = None;
+                coordinator = None;
                 transport = None;
                 record["done"] = json!(true);
             }

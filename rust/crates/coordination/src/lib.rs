@@ -7,7 +7,10 @@ pub use task_locks::{
     TaskLockRedisCause, TaskLocks,
 };
 
-use redis::{aio::MultiplexedConnection, Script};
+use redis::{
+    aio::{ConnectionManager, ConnectionManagerConfig},
+    Script,
+};
 use std::{
     fmt,
     sync::{
@@ -99,7 +102,7 @@ impl fmt::Display for Error {
 impl std::error::Error for Error {}
 
 struct Inner {
-    connection: MultiplexedConnection,
+    connection: ConnectionManager,
     config: LeaseConfig,
     commands: Arc<Semaphore>,
     acquire: Script,
@@ -213,7 +216,11 @@ impl Coordinator {
         let client = redis::Client::open(url).map_err(|_| Error::InvalidConfiguration)?;
         let connection = time::timeout(
             config.command_timeout,
-            client.get_multiplexed_async_connection(),
+            client.get_connection_manager_with_config(
+                ConnectionManagerConfig::new()
+                    .set_number_of_retries(0)
+                    .set_connection_timeout(config.command_timeout),
+            ),
         )
         .await
         .map_err(|_| Error::RedisUnavailable)?

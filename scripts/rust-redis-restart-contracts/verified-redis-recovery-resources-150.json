@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "scope": "Actual Redis response-loss publication/no-replay, shared reconnect and pending reply ownership controls",
+  "evidence": "artifacts/rust/m8-redis-recovery-resources-150",
+  "native_test_functions": 3,
+  "checks": [
+    "Lost LPUSH reply returns Backend; real list contains exactly one unchanged message before/after future-command recovery.",
+    "16 concurrent future operations wait on one fresh connection, with exact two accepted proxy connections including original.",
+    "Logical script timeout retains caller and operation slot while actual reply is held; no reconnection or second increment."
+  ],
+  "rust_source_archive_sha256": "ce7170b063a68d2ab16b0fc0346491f76d4c118940fa6bcaf98993c26a37e55f",
+  "runtime_sha256": {
+    "rust/crates/coordination/src/lib.rs": "129262b3447b2d2031cde5b3753e9c0755cbe0d8be42b61b73fe2bd65586c355",
+    "rust/crates/coordination/src/task_locks.rs": "32905db00b188b3e591f5d6770a6c4c8f163b4ed4b36dd6e53c9d85e81cf8825",
+    "rust/crates/output-store/src/transport.rs": "c1cd903a5afb0a6e0a8ebfb5ee7e00f41ef7a0ff435e7ccf69198c5eb0902d4f"
+  },
+  "test_sha256": "3b98cc576724c40e8678f3f9279a2e3d5003ec1cf5f12f798b1e4f616209a2b5",
+  "native_test_binary_sha256": {
+    "redis_reconnect": "976b7d9f4e8f6d46f06170f25ac55370f5f3b15712bac950fe799230549a1ecc"
+  },
+  "default_database_unchanged": true,
+  "default_database_post_native_checked": true,
+  "cleanup": "project removed",
+  "application_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and redis-rs authors retain application/client credit and licensing."
+}

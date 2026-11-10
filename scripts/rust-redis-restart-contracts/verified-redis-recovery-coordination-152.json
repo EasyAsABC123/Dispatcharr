@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "scope": "Three managed Redis owners: Coordinator/TaskLocks/RedisTransport coordination regression, not full application recovery",
+  "evidence": "artifacts/rust/m8-redis-recovery-coordination-152",
+  "rust_source_archive_sha256": "4a673e02ed838e480e3c4a158371e310c5909fc6c9a6063c5ac24cbcc4bfa292",
+  "native_test_functions": 16,
+  "targets": {
+    "redis_reconnect": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "task_locks": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.32s",
+    "acquire_cancel": "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.38s",
+    "redis": "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.82s",
+    "task_lock_detailed": "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s"
+  },
+  "original_worker_checks": 17,
+  "original_task_lock_peer": {
+    "passed": true,
+    "original_default_ttl": 300,
+    "source_and_native_mutual_exclusion": true,
+    "source_reacquires_after_native_release": true
+  },
+  "runtime_sha256": {
+    "rust/Cargo.lock": "898c20e9239523325795d43ca65ede8dc88d0e4fcc2f3c485afcd516f564b681",
+    "rust/crates/coordination/Cargo.toml": "0a4af4593a6fbef38c4072509426acebd7a624cb6ddf82fcb65f7c1551e9a5c1",
+    "rust/crates/coordination/src/lib.rs": "129262b3447b2d2031cde5b3753e9c0755cbe0d8be42b61b73fe2bd65586c355",
+    "rust/crates/coordination/src/task_locks.rs": "32905db00b188b3e591f5d6770a6c4c8f163b4ed4b36dd6e53c9d85e81cf8825",
+    "rust/crates/output-store/Cargo.toml": "fcc1776b379be3ae6f5768bcdd1e87f4fec6b123cd82c5552e06fa03b039f777",
+    "rust/crates/output-store/src/transport.rs": "c1cd903a5afb0a6e0a8ebfb5ee7e00f41ef7a0ff435e7ccf69198c5eb0902d4f"
+  },
+  "default_database_post_native_checked": true,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "earlier_attempt": {
+    "evidence": "artifacts/rust/m8-redis-recovery-coordination-151",
+    "passed": false,
+    "classification": "Fixture setup: Original task-lock peer and required environment omitted; no runtime regression inferred."
+  },
+  "remaining_owners": [
+    "ClientStore",
+    "VOD SessionPool",
+    "NotificationCache"
+  ],
+  "application_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and redis-rs authors retain application/client credit and licensing."
+}

@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "execution_passed": true,
+  "migration_gate_passed": true,
+  "scope": "Isolated cached Coordinator/TaskLocks/RedisTransport bounded subsequent-operation recovery; not full application recovery",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "actual_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "redis_run_ids": [
+    "1abd088dfe1ebc9d0f426e52d4f6396b077f2023",
+    "3765d77ce1d4d4880702127cf67f0380eec79728"
+  ],
+  "source_recovery_verified": true,
+  "native_cached_transport_recovered": true,
+  "native_cached_tasklocks_recovered": true,
+  "native_cached_coordinator_recovered": true,
+  "native_rebuild_positive_control": true,
+  "observed_retry_delays": [
+    0,
+    0.1,
+    1
+  ],
+  "original_apps_initialized": false,
+  "application_hook_verified": false,
+  "reconnect_runtime_modified": true,
+  "reconnect_runtime_modified_by_probe": false,
+  "performance_verified": false,
+  "cleanup": "owned container removed",
+  "cleanup_passed": true,
+  "rust_source_archive_sha256": "5560451073ab1debc9973d4ea84db9c7e73e1b28bfd0fb1c8fa5f74afdb08bb0",
+  "native_binary_sha256": "137c17659f4b76f6bd1b1b3b3477ea7aef167d523089f155bcd55696bdec4ec0",
+  "source_snapshot_origin": {
+    "manifest": "artifacts/rust/m8-cached-redis-recovery-148/proof.json",
+    "sha256": "0387e3f088e85974d1f09712d4cf501cd5b9f9f6b483c592104718c34c4152e8",
+    "previous_execution_passed": false,
+    "scope": "Exact successfully compiled source/binary reused; prior fixture setup failure retained"
+  },
+  "baseline_binding": {
+    "manifest": "artifacts/rust/m8-cached-redis-restart-147/proof.json",
+    "sha256": "e8e62ef5c99f2f29278a24ec3ab46db9019b9ebd82a4c569f94d9311f9698e08",
+    "runtime_changed": {
+      "rust/crates/coordination/src/lib.rs": true,
+      "rust/crates/coordination/src/task_locks.rs": true,
+      "rust/crates/output-store/src/transport.rs": true
+    }
+  },
+  "evidence": "artifacts/rust/m8-cached-redis-recovery-149",
+  "checks": 34,
+  "limitations": [
+    "Recovery succeeds on subsequent operations within the declared three attempts; the first post-restart native command still reports the prior connection error. No immediate-first-operation parity is claimed.",
+    "No destructive command is silently retried; separate150 transport tests verify this.",
+    "Source147 recovery mismatch and145/146/148 setup/probe-order failures remain retained.",
+    "Component and declared endpoints only; no full application restart, TLS deployment or performance acceptance."
+  ],
+  "credit": "Original Dispatcharr authors retain application/algorithm credit and AGPL licensing; Redis/redis-py/redis-rs and ConnectionManager dependency authors retain client/server credit.",
+  "historical_proof_scope_note": "The original proof inherited a no-reconnect-fix label from147; reconnect_runtime_modified=true and native source/binary hashes identify the actual manager fix."
+}

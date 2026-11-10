@@ -45,3 +45,29 @@ worker/service/shared transport and prints `NATIVE_INDEX_TERMINAL_JSON=` with
 caller/lease/job audits. It creates no triggers or source rows. The fixture must
 have one intended consumer and queue; this test peer is not an application intake
 API or a general claim-selection policy.
+
+## Release precedence and unsupported permission mappings
+
+Later Source-only authorities are
+[INDEX-DOUBLE-FAILURE.md](INDEX-DOUBLE-FAILURE.md) and
+[INDEX-CACHE-ACL.md](INDEX-CACHE-ACL.md). The Original finally-release exception
+replaces a prior Directory/ProgrammingError in the terminal result; the earlier
+error remains traceback context. Normal Written data stays committed after a
+release failure. Acquisition SET denial happens before the file-open/build/finally
+region and must not be treated as a release override.
+
+The adapter's current Released-only gate intentionally leaves all these new
+release cases operational. A future release mapping must inspect the physically
+settled release cause before operation failure and must retain the commit state.
+CAS-not-owner, missing runtime, timeout and ambiguous replies are not observed
+Python release exceptions.
+
+NOPERM is not authentication failure. PlainDEL includes the authenticated username
+and denied command. The same user running a LuaDEL probe produces ResponseError
+with script context, while a user with no EVAL permission can execute the Original
+task successfully using plain commands. Do not fabricate Original plainDEL fields
+from an arbitrary native Lua error or silently delete without owner fencing.
+Bounded reconnect and same-ACL native comparisons precede any mapping. Safe
+endpoint/username fields may be retained; credential-bearing URLs/passwords may
+not become diagnostics. Source ConnectionError strings do not justify inventing
+errno111 from an EOF, BrokenPipe or coarse RedisUnavailable.

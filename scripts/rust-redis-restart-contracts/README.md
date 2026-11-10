@@ -15,3 +15,11 @@ python3 scripts/rust-redis-restart-contracts/run.py \
 ```
 
 Rust and tool closures, the actual native binary, immutable Original revision/image and cleanup evidence are bound in each output's `proof.json`. The example binary is mounted into the Original runtime for ABI compatibility; this is a component probe, not a rebuilt application/Compose deployment or a performance measurement.
+
+The later [bounded recovery design](RECOVERY-DESIGN.md) and
+[combined checkpoint](../rust-integration/verified-recovery-permission-components-1.json)
+supersede the initial mismatch only for TaskLocks, main Coordinator and shared
+RedisTransport. Other independent cached clients, first-operation parity, full
+application recovery and performance remain open. The probe itself never edits
+production code; the separately reviewed runtime change is explicit in those
+manifests.

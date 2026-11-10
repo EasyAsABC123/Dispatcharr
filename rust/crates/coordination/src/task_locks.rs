@@ -1,6 +1,9 @@
 //! Bounded, owner-checked job leases on original task_lock_* Redis keys.
 //! Original Dispatcharr authors retain application and algorithm credit.
-use redis::{aio::MultiplexedConnection, Script};
+use redis::{
+    aio::{ConnectionManager, ConnectionManagerConfig},
+    Script,
+};
 use std::{
     fmt,
     sync::{
@@ -107,7 +110,7 @@ impl From<TaskLockError> for TaskLockDetailedError {
 }
 
 struct Locks {
-    connection: MultiplexedConnection,
+    connection: ConnectionManager,
     config: TaskLockConfig,
     commands: Arc<Semaphore>,
     leases: Arc<Semaphore>,
@@ -143,9 +146,17 @@ impl TaskLocks {
         {
             return Err(TaskLockError::Invalid);
         }
-        let connection = redis::Client::open(url)
-            .map_err(|_| TaskLockError::Invalid)?
-            .get_multiplexed_async_connection()
+        let client = redis::Client::open(url).map_err(|_| TaskLockError::Invalid)?;
+        // The manager reconnects a shared future for subsequent commands; it
+        // returns the failed command error without replaying an uncertain SET
+        // or DEL. A single connection attempt is bounded; no response timeout
+        // may release physical owners while a queued Redis reply is pending.
+        let connection = client
+            .get_connection_manager_with_config(
+                ConnectionManagerConfig::new()
+                    .set_number_of_retries(0)
+                    .set_connection_timeout(Duration::from_secs(2)),
+            )
             .await
             .map_err(|_| TaskLockError::RedisUnavailable)?;
         Ok(Self {

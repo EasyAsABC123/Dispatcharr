@@ -1,0 +1,116 @@
+{
+  "passed": true,
+  "scope": "Actual Original seven cached ACL profiles including quick GET-denied success; no native mapping",
+  "credit": "Original Dispatcharr authors and contributors retain full application/algorithm credit and AGPL licensing. Redis/redis-py, Celery/Kombu, Django/PostgreSQL and Rust dependency authors retain their credit/licenses.",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "report": "artifacts/rust/m6-original-index-cache-acl-2/integration.json",
+  "report_sha256": "4712f7364de1943c78bb2af963e1c1fead8d2d80cea2386a16d36c2fcf296766",
+  "private_observation_sha256": "f14ed9fff00db29097f81436774cdff4c286212ab4034009e63e023b2a29d34d",
+  "checks": 52,
+  "source_profiles": 7,
+  "projection": [
+    {
+      "name": "set_denied",
+      "status": "FAILURE",
+      "exception_type": "NoPermissionError",
+      "exception_module": "redis.exceptions",
+      "index_written": false,
+      "source_lock_retained": false,
+      "result_ttl": 3600
+    },
+    {
+      "name": "set_denied_directory",
+      "status": "FAILURE",
+      "exception_type": "NoPermissionError",
+      "exception_module": "redis.exceptions",
+      "index_written": false,
+      "source_lock_retained": false,
+      "result_ttl": 3600
+    },
+    {
+      "name": "del_denied",
+      "status": "FAILURE",
+      "exception_type": "NoPermissionError",
+      "exception_module": "redis.exceptions",
+      "index_written": true,
+      "source_lock_retained": true,
+      "result_ttl": 3600
+    },
+    {
+      "name": "key_denied",
+      "status": "FAILURE",
+      "exception_type": "NoPermissionError",
+      "exception_module": "redis.exceptions",
+      "index_written": false,
+      "source_lock_retained": false,
+      "result_ttl": 3600
+    },
+    {
+      "name": "plain_without_eval",
+      "status": "SUCCESS",
+      "exception_type": null,
+      "exception_module": null,
+      "index_written": true,
+      "source_lock_retained": false,
+      "result_ttl": 3600
+    },
+    {
+      "name": "del_denied_eval_allowed",
+      "status": "FAILURE",
+      "exception_type": "NoPermissionError",
+      "exception_module": "redis.exceptions",
+      "index_written": true,
+      "source_lock_retained": true,
+      "result_ttl": 3600
+    },
+    {
+      "name": "get_denied_eval_allowed",
+      "status": "SUCCESS",
+      "exception_type": null,
+      "exception_module": null,
+      "index_written": true,
+      "source_lock_retained": false,
+      "result_ttl": 3600
+    }
+  ],
+  "selected_tools": [
+    {
+      "path": "scripts/rust-job-contracts/run_index_acl.py",
+      "frozen_path": "artifacts/rust/m6-original-index-cache-acl-2/tool-source/scripts/rust-job-contracts/run_index_acl.py",
+      "sha256": "911a2a3503414bbc53971eed32329d5d89d30c151ce737c7c45b83c183398201"
+    },
+    {
+      "path": "scripts/rust-job-contracts/source_index_acl.py",
+      "frozen_path": "artifacts/rust/m6-original-index-cache-acl-2/tool-source/scripts/rust-job-contracts/source_index_acl.py",
+      "sha256": "76cbbe2a13e0b41b99b2203cac48c18b2bb50fd6750304c6b4de4e3a871e2cb9"
+    },
+    {
+      "path": "scripts/rust-job-contracts/index_acl_observer.py",
+      "frozen_path": "artifacts/rust/m6-original-index-cache-acl-2/tool-source/scripts/rust-job-contracts/index_acl_observer.py",
+      "sha256": "5b6797a9ab55802f4c10d187ceaf9d5d616ad2e3d7ddffbbe784bbce605cad81"
+    },
+    {
+      "path": "scripts/rust-epg-parity/source_index_worker.py",
+      "frozen_path": "artifacts/rust/m6-original-index-cache-acl-2/tool-source/scripts/rust-epg-parity/source_index_worker.py",
+      "sha256": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba"
+    },
+    {
+      "path": "scripts/rust-epg-parity/index_worker_observer.py",
+      "frozen_path": "artifacts/rust/m6-original-index-cache-acl-2/tool-source/scripts/rust-epg-parity/index_worker_observer.py",
+      "sha256": "8effb86fd4bb06e0c83c09d15fe02b3cc1f2e1013768fef39377ae590ecc9eef"
+    }
+  ],
+  "owned_acl_users_removed": 7,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "performance_verified": false,
+  "native_terminal_classifier_verified": false,
+  "native_generic_acl_parity_verified": false,
+  "facts": [
+    "Direct SET/key denial occurs before Original protected body and finally release. No index or task lock is created.",
+    "A quick Original task with GET denied still succeeds because its renewal GET is delayed; this does not establish long-running renewal behavior.",
+    "Original plain DEL and native fenced Lua GET/DEL require different capabilities and return different error families/context. These differences remain unaccepted.",
+    "No endpoint or IO errno inference, no stripping script context, and no unfenced-delete fallback."
+  ]
+}

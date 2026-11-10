@@ -35,7 +35,12 @@ it does not close the M6 application, recovery or performance gates.
 The [cached Redis restart comparison](../scripts/rust-redis-restart-contracts/verified-cached-redis-restart-147.json)
 completed successfully as an experiment but **failed the recovery gate**: the
 Original cached client recovered, while existing native connections did not.
-Reconstructed native connections succeeded. Bounded recovery remains required.
+Reconstructed native connections succeeded. The later
+[bounded recovery checkpoint](../scripts/rust-integration/verified-recovery-permission-components-1.json)
+adds managed future-operation recovery for TaskLocks, Coordinator and shared
+RedisTransport without replaying uncertain commands. A first post-restart call
+can still fail; independent live-client/VOD/notification-cache owners and full
+application recovery remain separate gates.
 The [Original double-failure capture](../scripts/rust-job-contracts/INDEX-DOUBLE-FAILURE.md)
 also establishes that a release failure overrides a directory/SQL failure and
 does not undo a committed index. Neither observation is a native compatibility

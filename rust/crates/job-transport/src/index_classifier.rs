@@ -23,6 +23,48 @@ use std::{future::Future, pin::Pin};
 /// Classification is restricted to Source136/139 outcomes plus the separately
 /// verified P0001 field formatter. Unclassified controls stay operational.
 pub fn classify(report: IndexExecutionReport) -> Result<Terminal, Error> {
+    // A physically completed direct SET denial precedes the Original protected
+    // body/finally. Its owner-checked acquisition cleanup is a separate native
+    // safety operation, not a Source release exception overriding the SET cause.
+    if report.commit == Commit::NotWritten {
+        if let (Err(failed), Release::AcquisitionCleanup(_)) = (&report.operation, &report.release)
+        {
+            if failed.stage == IndexStage::AcquireFileLock {
+                if let IndexFailureCause::Lock(
+                    dispatcharr_coordination::TaskLockDetailedError::Acquisition { cause, cleanup },
+                ) = &failed.cause
+                {
+                    use dispatcharr_coordination::TaskLockCleanupOutcome;
+                    if !matches!(cleanup, TaskLockCleanupOutcome::Unavailable)
+                        && cause.kind == redis::ErrorKind::ExtensionError
+                        && cause.code.as_deref() == Some("NOPERM")
+                        && !cause.code_oversized
+                        && cause.io_kind.is_none()
+                        && cause.raw_os_error.is_none()
+                        && !cause.detail_oversized
+                    {
+                        if let Some(detail) = &cause.detail {
+                            let direct_set = detail
+                                .strip_prefix("User ")
+                                .and_then(|text| {
+                                    text.strip_suffix(
+                                        " has no permissions to run the 'set' command",
+                                    )
+                                })
+                                .is_some_and(|username| !username.is_empty());
+                            if detail.len() <= 8192
+                                && (direct_set || detail == "No permissions to access a key")
+                            {
+                                return Failure::new(FailureKind::CachePermission, vec![json!(detail)], "acquire_file_lock",
+                                    "Physically completed direct SET NOPERM before index execution; acquisition cleanup settled; no index commit.")
+                                    .map(Terminal::Raised).map_err(|_| Error::Execution);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     match (&report.operation, &report.release, report.commit) {
         (Ok(IndexOutcome::Written), Release::Released, Commit::Written)
         | (
@@ -262,6 +304,64 @@ mod tests {
             );
         }
     }
+    #[test]
+    fn only_observed_set_or_key_server_denials_classify_after_settled_cleanup() {
+        use dispatcharr_coordination::{
+            TaskLockCleanupOutcome, TaskLockDetailedError, TaskLockRedisCause,
+        };
+        fn report(detail: &str, code: &str) -> IndexExecutionReport {
+            let cause = TaskLockRedisCause {
+                kind: redis::ErrorKind::ExtensionError,
+                code: Some(code.into()),
+                code_oversized: false,
+                io_kind: None,
+                raw_os_error: None,
+                detail: Some(detail.into()),
+                detail_oversized: false,
+            };
+            IndexExecutionReport {
+                operation: Err(IndexStageFailure {
+                    stage: IndexStage::AcquireFileLock,
+                    cause: IndexFailureCause::Lock(TaskLockDetailedError::Acquisition {
+                        cause,
+                        cleanup: TaskLockCleanupOutcome::NotOwner,
+                    }),
+                }),
+                commit: Commit::NotWritten,
+                release: Release::AcquisitionCleanup(TaskLockCleanupOutcome::NotOwner),
+            }
+        }
+        for detail in [
+            "User owned_acl_fixture has no permissions to run the 'set' command",
+            "No permissions to access a key",
+        ] {
+            let Terminal::Raised(failure) = classify(report(detail, "NOPERM")).unwrap() else {
+                panic!("expected direct SET permission failure")
+            };
+            assert_eq!(failure.kind(), FailureKind::CachePermission);
+            let metadata: serde_json::Value = serde_json::from_slice(
+                &failure
+                    .metadata(
+                        uuid::Uuid::new_v4(),
+                        None,
+                        &[],
+                        "2026-11-10T00:00:00.000000+00:00",
+                    )
+                    .unwrap(),
+            )
+            .unwrap();
+            assert_eq!(metadata["result"]["exc_message"], json!([detail]));
+            assert_eq!(metadata["result"]["exc_type"], "NoPermissionError");
+        }
+        for detail in ["User owned_acl_fixture has no permissions to run the 'get' command","ACL failure in script: User owned_acl_fixture has no permissions to run the 'del' command","", "NOPERM other"] {assert_eq!(classify(report(detail,"NOPERM")),Err(Error::Execution));}
+        assert_eq!(
+            classify(report("No permissions to access a key", "ERR")),
+            Err(Error::Execution)
+        );
+        let mut uncertain = report("No permissions to access a key", "NOPERM");
+        uncertain.release = Release::TimedOut;
+        assert_eq!(classify(uncertain), Err(Error::Execution));
+    }
     #[tokio::test]
     #[ignore = "Guarded copiedDB real IndexService classified worker peer; stdin JSON, no app hook."]
     async fn native_classified_service_peer() {
@@ -468,8 +568,186 @@ mod tests {
         assert!(weak.upgrade().is_none());
         assert_eq!(calls.load(Ordering::SeqCst), 1);
         println!(
-            "NATIVE_INDEX_TERMINAL_JSON={}",
-            json!({"calls":1,"outcome":outcome,"owner_released":true,"physical_jobs":0,"file_lease_slots":1,"worker_drained":true,"service_drained":true,"shared_transport_drained":true})
+            "\nNATIVE_INDEX_TERMINAL_JSON={}",
+            json!({"calls":1,"task_id":task_id.to_string(),"source_id":source_id,"outcome":outcome,"owner_released":true,"physical_jobs":0,"file_lease_slots":1,"worker_drained":true,"service_drained":true,"shared_transport_drained":true})
+        );
+    }
+    #[tokio::test]
+    #[ignore = "Owned copiedDB same-ACL detailed report audit only; no permission classifier/result writer."]
+    async fn native_permission_report_peer() {
+        use dispatcharr_coordination::{
+            TaskLockCleanupOutcome, TaskLockConfig, TaskLockDetailedError, TaskLockRedisCause,
+            TaskLocks,
+        };
+        use dispatcharr_ingest_epg::{
+            index_service::{IndexConfig, IndexServices},
+            programme_index::IndexLimits,
+        };
+        use std::{io::Read, path::PathBuf, time::Duration};
+        fn cause(value: &TaskLockRedisCause) -> serde_json::Value {
+            json!({"kind":format!("{:?}",value.kind),"code":value.code,"code_oversized":value.code_oversized,"io_kind":value.io_kind.map(|v|format!("{v:?}")),"raw_os_error":value.raw_os_error,"detail":value.detail,"detail_oversized":value.detail_oversized})
+        }
+        fn cleanup(value: &TaskLockCleanupOutcome) -> serde_json::Value {
+            match value {
+                TaskLockCleanupOutcome::Released => json!({"state":"Released"}),
+                TaskLockCleanupOutcome::NotOwner => json!({"state":"NotOwner"}),
+                TaskLockCleanupOutcome::Unavailable => json!({"state":"Unavailable"}),
+                TaskLockCleanupOutcome::Failed(e) => json!({"state":"Failed","cause":cause(e)}),
+            }
+        }
+        fn lock(value: &TaskLockDetailedError) -> serde_json::Value {
+            match value {
+                TaskLockDetailedError::Operational(e) => {
+                    json!({"family":"Operational","error":format!("{e:?}")})
+                }
+                TaskLockDetailedError::Redis(e) => json!({"family":"Redis","cause":cause(e)}),
+                TaskLockDetailedError::Acquisition {
+                    cause: e,
+                    cleanup: c,
+                } => json!({"family":"Acquisition","cause":cause(e),"cleanup":cleanup(c)}),
+            }
+        }
+        assert_eq!(
+            std::env::var("JOB_DISPOSABLE_FIXTURE").as_deref(),
+            Ok("playback-fixture-only")
+        );
+        let db = std::env::var("POSTGRES_DB").unwrap();
+        assert!(
+            db.starts_with("rust_probe_backup_jobs_")
+                && db.len() <= 63
+                && db
+                    .bytes()
+                    .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_')
+        );
+        let mut bytes = Vec::new();
+        std::io::stdin()
+            .take(16385)
+            .read_to_end(&mut bytes)
+            .unwrap();
+        assert!(bytes.len() <= 16384);
+        let input: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+        let field = |key: &str| input[key].as_str().unwrap();
+        let database = field("database_url");
+        assert!(["postgres", "postgresql"]
+            .into_iter()
+            .any(
+                |scheme| ["127.0.0.1", "localhost"].into_iter().any(|host| database
+                    == format!("{scheme}://dispatch:playback-fixture-only@{host}:5432/{db}"))
+            ));
+        let info = redis::Client::open(field("locks_url"))
+            .unwrap()
+            .get_connection_info()
+            .clone();
+        assert_eq!(info.redis.db, 0);
+        assert_eq!(
+            info.redis.password.as_deref(),
+            Some("playback-fixture-only")
+        );
+        assert!(info
+            .redis
+            .username
+            .as_ref()
+            .is_some_and(|u| u.starts_with("owned_acl_") && u.len() < 64));
+        assert!(
+            matches!(&info.addr,redis::ConnectionAddr::Tcp(h,6379)if h=="127.0.0.1"||h=="localhost")
+        );
+        let source = input["source_id"].as_i64().unwrap();
+        assert!(source > 0);
+        struct NoChild;
+        impl dispatcharr_ingest_epg::index_service::IndexDispatcher for NoChild {
+            fn defer<'a>(
+                &'a self,
+                _: i64,
+                _: u32,
+                _: u32,
+                _: SwapPolicyContext,
+            ) -> Pin<Box<dyn Future<Output = Result<(), ImportError>> + Send + 'a>> {
+                Box::pin(async { Err(ImportError::Worker) })
+            }
+        }
+        let store = dispatcharr_store::Store::connect(database, 1)
+            .await
+            .unwrap();
+        let locks = TaskLocks::connect(
+            field("locks_url"),
+            TaskLockConfig {
+                max_leases: 1,
+                max_commands: 4,
+                ..TaskLockConfig::default()
+            },
+        )
+        .await
+        .unwrap();
+        let service = IndexService::new(
+            IndexServices {
+                store: store.clone(),
+                locks: locks.clone(),
+                dispatcher: Arc::new(NoChild),
+                clock: Arc::new(chrono::Utc::now),
+            },
+            IndexConfig {
+                max_jobs: 1,
+                limits: IndexLimits {
+                    state_bytes: 1 << 20,
+                    file_bytes: 16 << 20,
+                    max_keys: 10000,
+                    max_tags: 10000,
+                },
+                cache_dir: PathBuf::from("/evidence/permission-cache"),
+                release_timeout: Duration::from_secs(5),
+                max_index_json_bytes: 1 << 20,
+                max_memory_bytes: 32 << 20,
+                path_context: Some(
+                    dispatcharr_ingest_epg::current_lookup::SourcePathContext::new(
+                        PathBuf::from("/app"),
+                        PathBuf::from("/app/media"),
+                    )
+                    .unwrap(),
+                ),
+            },
+        )
+        .unwrap();
+        let owner = Arc::new(());
+        let weak = Arc::downgrade(&owner);
+        let report = service
+            .build_report_with_dispatcher(
+                IndexRequest {
+                    source_id: source,
+                    retry: 0,
+                    cancelled: Arc::new(AtomicBool::new(false)),
+                },
+                owner,
+                Arc::new(NoChild),
+            )
+            .await
+            .unwrap();
+        let operation = match &report.operation {
+            Ok(outcome) => json!({"ok":format!("{outcome:?}")}),
+            Err(failed) => {
+                json!({"stage":format!("{:?}",failed.stage),"cause":match &failed.cause {IndexFailureCause::Lock(e)=>lock(e),IndexFailureCause::Operation(_)=>json!({"family":"UnclassifiedOperation"})}})
+            }
+        };
+        let release = match &report.release {
+            Release::AcquisitionCleanup(e) => {
+                json!({"state":"AcquisitionCleanup","cleanup":cleanup(e)})
+            }
+            Release::Failed(e) => json!({"state":"Failed","error":lock(e)}),
+            Release::Released => json!({"state":"Released"}),
+            Release::NotOwner => json!({"state":"NotOwner"}),
+            Release::NotAcquired => json!({"state":"NotAcquired"}),
+            Release::TimedOut => json!({"state":"TimedOut"}),
+            Release::RuntimeUnavailable => json!({"state":"RuntimeUnavailable"}),
+        };
+        let commit = format!("{:?}", report.commit);
+        drop(report);
+        assert!(service.shutdown(Duration::from_secs(5)).await);
+        assert_eq!(service.physical_jobs(), 0);
+        assert_eq!(locks.available_leases(), 1);
+        assert!(weak.upgrade().is_none());
+        store.pool().close().await;
+        println!(
+            "\nNATIVE_PERMISSION_REPORT_JSON={}",
+            json!({"operation":operation,"commit":commit,"release":release,"physical_jobs":0,"file_lease_slots":1,"owner_released":true,"diagnostic_only":true})
         );
     }
 }

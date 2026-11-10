@@ -12,6 +12,7 @@ pub enum FailureKind {
     Programming,
     CacheConnection,
     CacheAuthentication,
+    CachePermission,
     UninitializedCache,
     ChildPublication,
 }
@@ -22,6 +23,7 @@ impl FailureKind {
             Self::Programming => ("django.db.utils", "ProgrammingError"),
             Self::CacheConnection => ("redis.exceptions", "ConnectionError"),
             Self::CacheAuthentication => ("redis.exceptions", "AuthenticationError"),
+            Self::CachePermission => ("redis.exceptions", "NoPermissionError"),
             Self::UninitializedCache => ("builtins", "AttributeError"),
             Self::ChildPublication => ("kombu.exceptions", "OperationalError"),
         }

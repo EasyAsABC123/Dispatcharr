@@ -1,7 +1,10 @@
 //! Cancellation-safe bounded Redis transport shared by input/output stores.
 //! Original Dispatcharr application attribution remains in ATTRIBUTION.md.
 use crate::Error;
-use redis::{aio::MultiplexedConnection, AsyncConnectionConfig, Script};
+use redis::{
+    aio::{ConnectionManager, ConnectionManagerConfig},
+    Script,
+};
 use std::{sync::Arc, time::Duration};
 use tokio::sync::Semaphore;
 #[derive(Clone, Debug)]
@@ -56,7 +59,7 @@ impl OperationError {
     }
 }
 struct Inner {
-    connection: MultiplexedConnection,
+    connection: ConnectionManager,
     operations: Arc<Semaphore>,
     queued: Arc<Semaphore>,
     config: TransportConfig,
@@ -88,9 +91,15 @@ impl RedisTransport {
             return Err(OperationError::Configuration);
         }
         let client = redis::Client::open(url).map_err(|_| OperationError::Configuration)?;
+        // Share one bounded reconnection future across clones. The manager
+        // returns a failing command's error; it never retries that command on
+        // the replacement connection. Keep response_timeout unset so a logical
+        // deadline cannot free admission/caller before a real reply/disconnect.
         let connection = client
-            .get_multiplexed_async_connection_with_config(
-                &AsyncConnectionConfig::new().set_connection_timeout(config.command_timeout),
+            .get_connection_manager_with_config(
+                ConnectionManagerConfig::new()
+                    .set_number_of_retries(0)
+                    .set_connection_timeout(config.command_timeout),
             )
             .await
             .map_err(OperationError::redis)?;
