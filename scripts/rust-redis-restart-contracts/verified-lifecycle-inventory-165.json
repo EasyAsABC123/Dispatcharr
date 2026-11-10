@@ -1,0 +1,77 @@
+{
+  "scope": "Read-only persistent Redis protocol/state inventory; not behavioral acceptance",
+  "inventory_complete_at_scope": true,
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "inspector": "Unprivileged read-only128MiB/0.5CPU image withnetworknone; AST/metadata source reading only, no application/Redis/DB/provider started",
+  "library_evidence": {
+    "pinned-library-source.json": {
+      "sha256": "b75634d364019674f609535f9cf3ca09bc84bf544f3d464f314057b0b7758398",
+      "files": {
+        "channels-redis": {
+          "version": "4.3.0",
+          "file": "channels_redis/core.py",
+          "sha256": "46d6aa3e3a565141186e70911f29b0e2b058131e3e68821ad8395534bb74606e"
+        },
+        "redis": {
+          "version": "6.4.0",
+          "file": "redis/asyncio/client.py",
+          "sha256": "e9ae7eb7161c44cb4e6e46fb05f8b4f0c290418d35a32e4d2a91c095f84814d3"
+        }
+      }
+    },
+    "pinned-subscription-source.json": {
+      "sha256": "07d74954bf0f55c7b66778506c2a45e84e3862593964f986314bf0f83b82c666",
+      "files": {
+        "redis/client.py": {
+          "package": "redis",
+          "version": "6.4.0",
+          "sha256": "5e6a3abdaf282a0ee4b03f2dbf9f8412b085ab73a1a5f7884ae47e9d60484520"
+        },
+        "channels/consumer.py": {
+          "package": "channels",
+          "version": "4.3.2",
+          "sha256": "67f43567763026e1a7e599a63aab488724245231a8b0866ce565b6aee2311d11"
+        },
+        "channels/utils.py": {
+          "package": "channels",
+          "version": "4.3.2",
+          "sha256": "657913012c7e41ff5f7098c21d01499241ffa130eb7077ab8dccb2c8753c8b21"
+        },
+        "redis/asyncio/connection.py": {
+          "package": "redis",
+          "version": "6.4.0",
+          "sha256": "0f6f0e79c7ee7d27fa736809f14849868ae158ca477851f1c48696c6fbd01e87"
+        }
+      }
+    }
+  },
+  "reviewed_source_sha256": {
+    "rust/crates/store/src/output_profile_writes.rs": "aa48d81f0175956ad30a004681704e928a68a54fe7473aaedb6e19e0f659d818",
+    "rust/crates/realtime/src/bus.rs": "1a045ce6b82b8a102c8120daf06a7e05fc8d443c98789e34caa6740eec375513",
+    "rust/crates/realtime/src/gateway.rs": "ed8d8b9beea0e3a48c13653821845c4cffc17ff75a0f9282e6acc8659fa74701",
+    "rust/crates/input-store/src/lib.rs": "5a11f4d732dcbaf13baddc1ce9891e9f1705fa928cbec9b4d621898890e30da4",
+    "rust/crates/output-store/src/lib.rs": "500349bd767b2001962bc641d96d62fa77682a352a85103c5849541ef6122ffa",
+    "rust/crates/xmltv-http/src/cache.rs": "bdbf871ad524a1ed6264486aa1f3a66e5f2376a47e97bdaaa6d553a64c6117d1",
+    "rust/crates/ingest-epg/src/cache_policy.rs": "9ee3ebc44288270c4240f42ebdd00f1048fe8c1e0bb2e0aedb144e4a88544c8d",
+    "core/redis_pubsub.py": "698fb33c45a19d6b847be881d5913bf581cad0b813e887437c4b63f0943792c5",
+    "apps/proxy/live_proxy/server.py": "f6aecdd437c1931bc5bb18f2f005b000d32f4e695d1a85ef131550462806d4ea",
+    "dispatcharr/consumers.py": "429bb971a13b853c4b87f63d0f350c68f94d5e3bff79455945e1cbb8a1fb1775",
+    "dispatcharr/settings.py": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+    "apps/output/streaming_chunk_cache.py": "563eec6cdfe5f3d0b664a51aed7f96ef617ac13051be3e1c9c7113cd315bb805"
+  },
+  "new_cached_owner": "OutputProfileWrites.ProfileCache manualmultiplexedconnection/driver",
+  "priority_gates": [
+    "ActiveVOD actualSourceHTTP/nativeimage34",
+    "SeventhProfileCache mutation/invalidation/driver overrestart",
+    "ExistingWebSocket sorted-set membership/reader/cancel/ACK overrestart",
+    "RawlivePubSub workflows and reconnect",
+    "Input/outputmedia ownership/cursors",
+    "XMLTV/settingsgeneration acrossrestart/concurrentSQL",
+    "Queue/ETA/results state-loss (separatelyscopedworkers)"
+  ],
+  "runtime_changes": false,
+  "behavior_verified": false,
+  "application_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit; Redis/Channels clients retain their respective implementation credit."
+}

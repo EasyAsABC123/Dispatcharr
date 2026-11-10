@@ -1,0 +1,219 @@
+{
+  "passed": false,
+  "execution_passed": true,
+  "migration_gate_passed": false,
+  "scope": "Valid actual Original/native image34 HTTP activeVOD Redis state-loss mismatch; no runtimepolicyfix",
+  "evidence": "artifacts/rust/m4-active-vod-http-image34-166",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "candidate_provenance": {
+    "image_id": "sha256:b0034daea0add637f63f01702be047a02d32d78c9f03089ed093065e2a0c92c9",
+    "source_tree_sha256": "01977eb04b0e1ba70e75a6b0230a986f5ba9a3245b51fa1853e10a7e7ed5fc11",
+    "build_manifest_sha256": "ec229ae670e1fe377d2d7778d94c69df04f1b36106f65dbc6ace03bbbf213712",
+    "container_id": "fc8bcb6882beb8adcb2e58777ab2cba81a00fadaa6c7a819cc4af763d4bf9d6d",
+    "started_at": "2026-11-10T16:43:24.466675726Z"
+  },
+  "candidate_git_revision": "a84d4acafe7bf70667129c5d6ddf3c74b2b505d5",
+  "candidate_process_preserved": true,
+  "tool_manifest_sha256": "abaa44c61f2c999862863c76bb1e8f84594cf5d74fb836079651b3a3fa20861c",
+  "comparison": {
+    "both_captures_complete": true,
+    "old_body_ended_matches": false,
+    "old_body_bytes_match": false,
+    "same_id_reopen_status_matches": false,
+    "both_sampled_prefixes_match_origin": true,
+    "application_parity_verified": false
+  },
+  "source": {
+    "initial_status": 200,
+    "old_body": {
+      "bytes": 278528,
+      "sha256": "ec963a1f453562493de923e92949d60302716fb3d548394f6024dd607e55f8af",
+      "ended": false,
+      "error": null
+    },
+    "same_id_reopen": {
+      "status": 200,
+      "streaming": true,
+      "first_bytes": 8192,
+      "first_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+    },
+    "observations": [
+      {
+        "phase": "active-before-loss",
+        "metadata_exists": true,
+        "active_streams": "1",
+        "provider_count": "1",
+        "ttl": 3598,
+        "observer_error_type": null
+      },
+      {
+        "phase": "server-down-body-held",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": null,
+        "observer_error_type": "ConnectionError"
+      },
+      {
+        "phase": "server-restarted-no-reseed",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": -2,
+        "observer_error_type": null
+      },
+      {
+        "phase": "old-body-after-loss-sampling",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": -2,
+        "observer_error_type": null
+      },
+      {
+        "phase": "same-id-reopen-before-close",
+        "metadata_exists": true,
+        "active_streams": "1",
+        "provider_count": "1",
+        "ttl": 3598,
+        "observer_error_type": null
+      },
+      {
+        "phase": "sibling-closed-old-body-held",
+        "metadata_exists": true,
+        "active_streams": "1",
+        "provider_count": "1",
+        "ttl": 3598,
+        "observer_error_type": null
+      },
+      {
+        "phase": "all-bodies-closed-after-grace",
+        "metadata_exists": true,
+        "active_streams": "1",
+        "provider_count": "1",
+        "ttl": 3596,
+        "observer_error_type": null
+      }
+    ],
+    "audit_types": [
+      "vod_start",
+      "vod_start",
+      "vod_stop"
+    ],
+    "redis_run_ids": [
+      "52d666a0388eab7b8eea57eec08c2d0536ce82f3",
+      "53aacd790149d1126244134f247625dbaca1bab4"
+    ]
+  },
+  "native": {
+    "initial_status": 200,
+    "old_body": {
+      "bytes": 65536,
+      "sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+      "ended": true,
+      "error": null
+    },
+    "same_id_reopen": {
+      "status": 503,
+      "streaming": false,
+      "error_body": "No available stream"
+    },
+    "observations": [
+      {
+        "phase": "active-before-loss",
+        "metadata_exists": true,
+        "active_streams": "1",
+        "provider_count": "1",
+        "ttl": 3598,
+        "observer_error_type": null
+      },
+      {
+        "phase": "server-down-body-held",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": null,
+        "observer_error_type": "ConnectionError"
+      },
+      {
+        "phase": "server-restarted-no-reseed",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": -2,
+        "observer_error_type": null
+      },
+      {
+        "phase": "old-body-after-loss-sampling",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": -2,
+        "observer_error_type": null
+      },
+      {
+        "phase": "same-id-reopen-before-close",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": -2,
+        "observer_error_type": null
+      },
+      {
+        "phase": "sibling-closed-old-body-held",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": -2,
+        "observer_error_type": null
+      },
+      {
+        "phase": "all-bodies-closed-after-grace",
+        "metadata_exists": false,
+        "active_streams": null,
+        "provider_count": null,
+        "ttl": -2,
+        "observer_error_type": null
+      }
+    ],
+    "audit_types": [
+      "vod_start"
+    ],
+    "redis_run_ids": [
+      "53aacd790149d1126244134f247625dbaca1bab4",
+      "302272059fa514a6d800edc1369ed11afe855891"
+    ]
+  },
+  "origin_fixture": {
+    "fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "fixture_bytes": 4299455,
+    "duration_seconds": 30,
+    "video": "h264",
+    "audio": "aac",
+    "etag": "\"4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c\"",
+    "requests": 0,
+    "head_requests": 0,
+    "bytes": 0,
+    "bytes_per_second": 32768
+  },
+  "fixture_policy": {
+    "bytes_per_second": 32768,
+    "wire_read_bytes": 8192,
+    "sample_maximum_bytes": 278528,
+    "redis_restart": "Owned sameport SHUTDOWN NOSAVE/restartwithoutpersistence; no reseededstate or processreplacement",
+    "candidate_proxy_override": "Owned fixture privateCIDRs; privateXFFhop fallsbacktosocketpeer, so Source127/native172metadataIPdiffexcludedfromeventparity"
+  },
+  "interpretation": [
+    "Original continuesexact278528-byteprefix withnoEOF; nativeendsafter65536bytes withEOF.",
+    "OriginalsameSIDreopen200 vsnative503 No available stream.",
+    "SourceHTTPmetadata/providerremain1 at1.5s afterwireclose; this is boundedobservation, not backendquiescence or longtermleakclaim.",
+    "StaticNativecauses identified: SessionPool monitor stops onlostlease/missingtoken/Rediserror; stoppedexistinglocalSessionrejectsreopen503. Exactbranchtests/recoverydesign remainnext."
+  ],
+  "full_file_decoder_verified": false,
+  "event_detail_parity_verified": false,
+  "cleanup_passed": true,
+  "active_session_recovery_verified": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain all application and algorithm credit."
+}

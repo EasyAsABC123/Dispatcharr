@@ -38,6 +38,7 @@ def main():
     parser.add_argument('--native-categories',action='store_true',help='New test-only category SQL component; no app routes')
     parser.add_argument('--native-http',action='store_true',help='Run independent native TCP HTTP peer against original network corpus')
     parser.add_argument('--http-wire',action='store_true',help='Add original network method/detail/negotiation/routing characterization')
+    parser.add_argument('--category-closed-gaps',action='store_true',help='Newcategory revision: requirezeroHTTP exclusions and compare18Source/native default exception responses')
     parser.add_argument('--category-browser',action='store_true',help='Actual unchanged React category selection for movie-only/series-only Standard users; requires packaged-categories')
     parser.add_argument('--packaged-categories',action='store_true',help='Manifest-bound category+ordinary app replay, mixed burst and initial fault; no host peer build')
     parser.add_argument('--build-manifest','--candidate-build-manifest',dest='build_manifest',type=Path,help='Successful immutable app manifest for packaged replay; skips native peer compilation')
@@ -45,6 +46,7 @@ def main():
     args=parser.parse_args()
     manifest=json.loads(args.build_manifest.read_text())if args.build_manifest else None
     if args.candidate_image and manifest is None:parser.error('--candidate-image requires --build-manifest')
+    if args.category_closed_gaps and not args.packaged_categories:parser.error('--category-closed-gaps requires --packaged-categories')
     if args.category_browser and not args.packaged_categories:parser.error('--category-browser requires --packaged-categories')
     if args.packaged_categories and manifest is None:parser.error('--packaged-categories requires --build-manifest')
     if args.packaged_categories:args.category_forms_source=True;args.category_wire_source=True
@@ -64,7 +66,7 @@ def main():
     try:
         for mode in modes:
             evidence=out/mode;evidence.mkdir()
-            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('category_query_semantics_source.py')]if args.category_query_source else[]),*([Path(__file__).with_name('category_defaults_wire_source.py')]if args.category_defaults_wire_source else[]),*([Path(__file__).with_name('category_initial_source.py')]if args.category_initial_source or args.packaged_categories else[]),*([Path(__file__).with_name('category_burst_source.py')]if args.native_categories or args.packaged_categories else[]),*([Path(__file__).with_name('category_defaults_source.py')]if args.category_defaults_source else[]),*([Path(__file__).with_name('category_schedule_source.py')]if args.category_schedule_source else[]),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
+            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('category_query_semantics_source.py')]if args.category_query_source else[]),*([Path(__file__).with_name('category_defaults_wire_source.py')]if args.category_defaults_wire_source or args.category_closed_gaps else[]),*([Path(__file__).with_name('category_initial_source.py')]if args.category_initial_source or args.packaged_categories else[]),*([Path(__file__).with_name('category_burst_source.py')]if args.native_categories or args.packaged_categories else[]),*([Path(__file__).with_name('category_defaults_source.py')]if args.category_defaults_source else[]),*([Path(__file__).with_name('category_schedule_source.py')]if args.category_schedule_source else[]),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
                 *([Path(__file__).with_name('category_packaged_probe.py')]if args.packaged_categories else[]),
                 *([Path(__file__).with_name(name)for name in ['category_browser.js','category_browser_fixture.py','category_browser_runner.py']]if args.category_browser else[]),
                 ROOT/'docker/compose.rust-playback.yml',ROOT/'scripts/rust-integration/shared_ts.py',
@@ -95,7 +97,7 @@ def main():
                 result['native_rust_source_input']=str(rust)
             with fixture_source(result,evidence,'source-run.json')as temporary:
                 source=Path(temporary)/'source';source.mkdir()
-                archive=subprocess.check_output(['git','-C',subprocess.check_output(['git','rev-parse','--show-toplevel'],cwd=ROOT,text=True).strip(),'archive',BASELINE],cwd=ROOT)
+                archive=subprocess.check_output(['git','archive',BASELINE],cwd=ROOT)
                 result['baseline_archive_sha256']=hashlib.sha256(archive).hexdigest()
                 subprocess.run(['tar','-x','--no-same-owner','-C',str(source)],input=archive,check=True)
                 (source/'media').mkdir(exist_ok=True)
@@ -181,12 +183,19 @@ def main():
                         result['packaged_ordinary_http_passed']=packaged['passed'];assert packaged['passed'],'Packaged ordinary HTTP mismatch'
                         if args.packaged_categories:
                             from category_packaged_probe import probe as category_probe
-                            categories=category_probe(candidate_base,corpus,observed_categories,observed_mixed)
+                            categories=category_probe(candidate_base,corpus,observed_categories,observed_mixed,expected_exclusions=0 if args.category_closed_gaps else 4)
                             (evidence/'packaged-category-http.json').write_text(json.dumps(categories,indent=2)+'\n');result['packaged_category_http_passed']=categories['passed'];assert categories['passed'],'Packaged category wire/mixed mismatch'
                             initial_observations={}
                             for target in ['original','candidate']:
                                 initial=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','-e','VOD_CATEGORY_INITIAL_TARGET='+target,'baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_initial_source.py'],timeout=30)
                                 initial_observations[target]=json.loads(initial.stdout.splitlines()[-1])
+                            if args.category_closed_gaps:
+                                default_observations={}
+                                for target in ['original','candidate']:
+                                    observed_defaults=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','-e','VOD_CATEGORY_DEFAULTS_TARGET='+target,'baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_defaults_wire_source.py'],timeout=45)
+                                    default_observations[target]=json.loads(observed_defaults.stdout.splitlines()[-1])
+                                default_pass=default_observations['original']['records']==default_observations['candidate']['records']and all(row['normal_fixture_props_and_exact_links_restored']for row in default_observations.values())
+                                (evidence/'packaged-category-defaults-wire.json').write_text(json.dumps({'passed':default_pass,'observations':default_observations},indent=2)+'\n');result['packaged_category_default_wire_passed']=default_pass;assert default_pass,'Packagedcategory default500wire/effects mismatch'
                             original_initial=initial_observations['original'];candidate_initial=initial_observations['candidate']
                             initial_pass=all(original_initial[key]==candidate_initial[key]for key in ['response','committed_category_type_prefix','application_headers'])and all(row['original_category_and_relationship_rows_exactly_restored']for row in initial_observations.values())
                             (evidence/'packaged-category-initial.json').write_text(json.dumps({'passed':initial_pass,'observations':initial_observations},indent=2)+'\n');result['packaged_category_initial_passed']=initial_pass;assert initial_pass,'Packaged category initial fault/prefix mismatch'

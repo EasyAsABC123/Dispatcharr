@@ -5,7 +5,7 @@ No performance, fullVOD, provider-refresh or browser acceptance is inferred.
 import concurrent.futures,hashlib,http.client,ipaddress,json,threading,time
 from urllib.parse import urlsplit,parse_qsl
 
-def probe(base,source,source_burst,source_mixed):
+def probe(base,source,source_burst,source_mixed,expected_exclusions=4):
     parsed=urlsplit(base)
     if parsed.scheme!='http' or not ipaddress.ip_address(parsed.hostname).is_loopback or not parsed.port:raise RuntimeError('Owned loopback candidate endpoint required')
     def request(case):
@@ -46,4 +46,4 @@ def probe(base,source,source_burst,source_mixed):
         futures=[executor.submit(mixed_reader,index)for index in range(10)];mixed_barrier.wait(timeout=5);mixed=[future.result(timeout=15)for future in futures]
     expected_mixed={row['index']:row for row in source_mixed['records']}
     mixed_pass=all(row['status']==200 and row['body_sha256']==expected_mixed[row['index']]['body_sha256']for row in mixed)
-    return {'passed':not differences and len(records)>150 and burst_pass and mixed_pass and len(exclusions)==4 and all(row['recognized_open_case']for row in exclusions),'scope':__doc__,'compared':len(records),'outside_component_not_pass':outside,'records':records,'differences':differences,'explicit_unsupported_not_parity_pass':exclusions,'source_simultaneous10':source_burst,'candidate_simultaneous10':burst,'burst_pass':burst_pass,'source_mixed10':source_mixed,'candidate_mixed10':mixed,'mixed_pass':mixed_pass,'candidate_start_spread_seconds':max(row['started_seconds']for row in burst)-min(row['started_seconds']for row in burst),'performance_verified':False,'browser_verified':False}
+    return {'passed':not differences and len(records)>150 and burst_pass and mixed_pass and len(exclusions)==expected_exclusions and all(row['recognized_open_case']for row in exclusions),'scope':__doc__,'compared':len(records),'outside_component_not_pass':outside,'records':records,'differences':differences,'explicit_unsupported_not_parity_pass':exclusions,'source_simultaneous10':source_burst,'candidate_simultaneous10':burst,'burst_pass':burst_pass,'source_mixed10':source_mixed,'candidate_mixed10':mixed,'mixed_pass':mixed_pass,'candidate_start_spread_seconds':max(row['started_seconds']for row in burst)-min(row['started_seconds']for row in burst),'performance_verified':False,'browser_verified':False}

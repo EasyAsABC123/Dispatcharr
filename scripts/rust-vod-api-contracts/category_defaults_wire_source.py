@@ -12,13 +12,16 @@ from apps.m3u.models import M3UAccount
 from apps.vod.models import VODCategory,M3UVODCategoryRelation
 prefix='rust-probe-vod-rest-';user=User.objects.get(username=prefix+'both_off');account=M3UAccount.objects.get(name=prefix+'second');categories=list(VODCategory.objects.filter(name='Uncategorized').order_by('category_type'));assert len(categories)==2
 saved_props=account.custom_properties;saved=list(M3UVODCategoryRelation.objects.filter(m3u_account=account,category__in=categories).values());assert len(saved)==2
+target=os.environ.get('VOD_CATEGORY_DEFAULTS_TARGET','original')
+if target not in ['original','candidate']:raise RuntimeError('Only owned original/candidate targets allowed')
+host,port=('127.0.0.1',5656)if target=='original'else('candidate',9192)
 records=[]
 def restore_links():
  M3UVODCategoryRelation.objects.filter(m3u_account=account,category__in=categories).delete()
  M3UVODCategoryRelation.objects.bulk_create([M3UVODCategoryRelation(**row)for row in saved])
  for row in saved:M3UVODCategoryRelation.objects.filter(pk=row['id']).update(**{key:value for key,value in row.items()if key!='id'})
 def invoke():
- client=http.client.HTTPConnection('127.0.0.1',5656,timeout=10)
+ client=http.client.HTTPConnection(host,port,timeout=10)
  try:
   client.request('GET','/api/vod/categories/',headers={'Host':'localhost','Accept':'application/json','Authorization':'Bearer '+str(AccessToken.for_user(user))});response=client.getresponse();body=response.read(65537);assert len(body)<=65536
   return {'status':response.status,'body_bytes':len(body),'body_sha256':hashlib.sha256(body).hexdigest(),'body':body.decode('utf-8'),'content_type':response.getheader('Content-Type'),'selected_headers':{name:response.getheader(name)for name in ['Content-Length','Allow','Vary','WWW-Authenticate']}}
@@ -34,4 +37,4 @@ try:
 finally:
  M3UAccount.objects.filter(pk=account.pk).update(custom_properties=saved_props);restore_links()
  assert list(M3UVODCategoryRelation.objects.filter(m3u_account=account,category__in=categories).values())==saved
-print(json.dumps({'passed':True,'scope':'Actual original HTTP default coercions/exception bodies and committed effects, exact restored category-link rows; no native acceptance','records':records,'normal_fixture_props_and_exact_links_restored':True}))
+print(json.dumps({'passed':True,'scope':'Actual '+target+' HTTP default coercions/exception bodies and committed effects; exact restored category-link rows; target comparison is owned by caller','target':target,'records':records,'normal_fixture_props_and_exact_links_restored':True}))

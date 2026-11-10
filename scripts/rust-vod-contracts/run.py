@@ -27,6 +27,9 @@ def rootless_port_collision(stderr):
     return isinstance(stderr,str) and 'RootlessKit PortManager.AddPort()' in stderr and 'bind: address already in use' in stderr
 
 
+class ActiveSourceComplete(Exception):
+    """Only the new isolated Source active-session capture completed."""
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
@@ -36,6 +39,9 @@ def main():
     parser.add_argument('--timeshift-redirect-session', action='store_true', help='Use Redirect channel with empty allowed profiles to verify established capability still proxies')
     parser.add_argument('--m3u-rust-http', action='store_true', help='Compare actual native M3U HTTP/auth/cache with original source')
     parser.add_argument('--m3u-rust-renderer', action='store_true', help='Compare native SQL/renderer positive export bytes with original source')
+    parser.add_argument('--vod-active-restart-http-source', action='store_true', help='Source-only actual HTTP active VOD Redis state-loss characterization')
+    parser.add_argument('--vod-active-restart-native', action='store_true', help='Capture Original active state loss then frozen native actual HTTP behavior; no automatic parity acceptance')
+    parser.add_argument('--vod-active-restart-source', action='store_true', help='Characterize actual active Original VOD iterator over owned Redis-only state loss; isolated source-only mode')
     parser.add_argument('--vod-rapid-reclose-source', action='store_true', help='Characterize actual original rapid-reclose duplicate-stop timer race separately')
     parser.add_argument('--vod-rapid-reclose-rust', action='store_true', help='Compare original rapid-reclose event multiplicity, native fenced cleanup and retained timer admission')
     parser.add_argument('--vod-rapid-reclose-ws', action='store_true', help='Compare actual rapid-reclose HTTP, packaged WebSocket multiplicity, full DTOs, audits and Redis cleanup')
@@ -118,6 +124,12 @@ def main():
         args.timeshift_media = True
     if args.timeshift_rust_test or args.timeshift_media or args.timeshift_admission_source or args.timeshift_native_limit or args.timeshift_idle_reopen or args.timeshift_busy_seek or args.timeshift_direct_auth or args.timeshift_xc or args.timeshift_management:
         args.timeshift_sessions = True
+    if args.vod_active_restart_native:
+        if not args.candidate_overlay or not args.candidate_build_manifest:parser.error('native active restart capture requires immutable candidate overlay/manifest')
+        args.vod_active_restart_http_source=True
+    if args.vod_active_restart_http_source:args.vod_active_restart_source=True
+    if args.vod_active_restart_source and args.candidate_overlay and not args.vod_active_restart_native:
+        parser.error('active restart Source characterization does not yet implement candidate comparison')
     if bool(args.candidate_overlay) != bool(args.candidate_build_manifest):
         parser.error('candidate overlay and immutable build manifest must be provided together')
     if args.source_frontend_from_candidate and not args.candidate_build_manifest:
@@ -146,6 +158,12 @@ def main():
         compose += ['-f',str(tool_root/'scripts/rust-output-contracts/compose.yml')]
     if args.vod_playback_ws:
         compose += ['-f',str(tool_root/'scripts/rust-output-contracts/compose.ws.yml')]
+    if args.vod_active_restart_source:
+        active_overlay=output/'active-vod-fixture.yml'
+        active_overlay.write_text('services:\n  origin:\n    environment:\n      VOD_FIXTURE_BYTES_PER_SECOND: "32768"\n')
+        if args.vod_active_restart_native:
+            with active_overlay.open('a') as fixture:fixture.write('  candidate:\n    environment:\n      DISPATCHARR_TRUSTED_PROXIES: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"\n')
+        # Apply this owned functional fixture override after candidate policy.
     candidate_manifest = None
     candidate_manifest_bytes = None
     if args.candidate_overlay:
@@ -160,6 +178,7 @@ def main():
         compose += ['-f',str(overlay)]
         if args.m3u_output:
             compose += ['-f',str(tool_root/'scripts/rust-output-contracts/candidate-policy.yml')]
+    if args.vod_active_restart_source:compose += ['-f',str(active_overlay)]
     port_source = (tool_root/'scripts/rust-integration/fixture_ports.py').read_bytes()
     (output/'fixture-ports-tool.py').write_bytes(port_source)
     port_namespace = {'__file__':str(tool_root/'scripts/rust-integration/fixture_ports.py')}
@@ -232,6 +251,39 @@ def main():
                 time.sleep(1)
         command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/vod-verification/seed.py'])
         seed = json.loads((output/'vod-seed.json').read_text())
+        if args.vod_active_restart_source:
+            active_controller='active_restart_http_source.py'if args.vod_active_restart_http_source else'active_restart_source.py'
+            command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/vod-verification/'+active_controller],timeout=150)
+            active=json.loads((output/'vod-active-restart-source.json').read_text())
+            report['active_vod_restart_source']=active
+            report['active_source_transport']='actual HTTP'if args.vod_active_restart_http_source else'full manager responseiterator'
+            report['scope']='Actual Original active VOD body/state-loss component; no native/HTTP/auth/performance parity claim'
+            report['passed']=active['capture_complete']
+            report['active_session_recovery_verified']=False
+            if not report['passed']:raise RuntimeError('Incomplete Original active VOD restart capture')
+            if args.vod_active_restart_native:
+                report['active_candidate_reset']={'web_stop':json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/verification/supervisor.py','control','stop'])),'redis_clear':command(compose+['exec','-T','baseline','redis-cli','FLUSHDB']).strip()}
+                command(compose+['up','-d','--no-build','candidate'])
+                candidate=address('candidate',9192);deadline=time.monotonic()+60
+                while True:
+                    try:
+                        with urllib.request.urlopen(candidate+'/health/ready',timeout=2)as response:
+                            if json.load(response).get('status')=='ready':break
+                    except(OSError,ValueError):pass
+                    if time.monotonic()>deadline:raise TimeoutError('Native active candidate readiness')
+                    time.sleep(.25)
+                inspected=json.loads(command([args.docker,'inspect',container('candidate')]))[0]
+                spec=importlib.util.spec_from_file_location('active_build_adapter',tool_root/'scripts/rust-playback-baseline/run.py');adapter=importlib.util.module_from_spec(spec);spec.loader.exec_module(adapter)
+                tree=adapter.validate_build_manifest(candidate_manifest,inspected['Image'],(inspected['Config'].get('Labels')or{}).get('org.opencontainers.image.source-tree-sha256'))
+                report['active_candidate_provenance']={'image_id':inspected['Image'],'source_tree_sha256':tree,'build_manifest_sha256':hashlib.sha256(candidate_manifest_bytes).hexdigest(),'container_id':inspected['Id'],'started_at':inspected['State']['StartedAt']}
+                command(compose+['exec','-T','-e','ACTIVE_NATIVE_BASE_URL=http://candidate:9192','baseline','/dispatcharrpy/bin/python','/vod-verification/active_restart_native.py'],timeout=150)
+                native=json.loads((output/'vod-active-restart-native.json').read_text());report['active_vod_restart_native']=native
+                final=json.loads(command([args.docker,'inspect',container('candidate')]))[0]
+                report['active_candidate_process_preserved']=final['Id']==inspected['Id']and final['State']['StartedAt']==inspected['State']['StartedAt']and final['RestartCount']==0
+                report['active_vod_comparison']={'both_captures_complete':active['capture_complete']and native['capture_complete'],'old_body_ended_matches':active['old_body']['ended']==native['old_body']['ended'],'old_body_bytes_match':active['old_body']['bytes']==native['old_body']['bytes'],'same_id_reopen_status_matches':active['same_id_reopen']['status']==native['same_id_reopen']['status'],'both_sampled_prefixes_match_origin':active['body_prefix_matches_origin']and native['body_prefix_matches_origin'],'application_parity_verified':False}
+                report['passed']&=native['capture_complete']and report['active_candidate_process_preserved']
+                report['scope']='Actual Original full-manager and frozen native HTTP active state-loss characterization; differences are evidence, not parity acceptance'
+            raise ActiveSourceComplete()
         if args.vod_rapid_reclose_source:
             rapid=json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_rapid_reclose_fixture.py'],timeout=60).splitlines()[-1])
             (output/'vod-rapid-reclose-source.json').write_text(json.dumps(rapid,indent=2)+'\n')
@@ -783,6 +835,8 @@ def main():
             report['passed'] = report['passed'] and report['timeshift_native_limit']['expected_control_behaviors_passed'] and (not candidate_manifest or report['candidate_timeshift_native_limit']['expected_control_behaviors_passed'] and report['timeshift_native_limit_comparison']['captured_wire_matches'])
         if args.profile_aliases and args.source_frontend_from_candidate:
             report['passed'] = report['passed'] and report['profile_alias_comparison']['captured_wire_matches']
+    except ActiveSourceComplete:
+        pass
     except BaseException as error:
         report['failure'] = type(error).__name__
         raise

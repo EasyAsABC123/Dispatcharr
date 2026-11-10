@@ -1,0 +1,158 @@
+{
+  "passed": true,
+  "scope": "Image34 existing broad regression gates plus scoped category API/actualReact; no category/fullapp performance or complete migration acceptance",
+  "original_credit": "All application/algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "image": {
+    "tag": "dispatcharr-rust-candidate:category-recovery-image34-1",
+    "image_id": "sha256:b0034daea0add637f63f01702be047a02d32d78c9f03089ed093065e2a0c92c9",
+    "source_tree_sha256": "01977eb04b0e1ba70e75a6b0230a986f5ba9a3245b51fa1853e10a7e7ed5fc11",
+    "git_revision": "a84d4acafe7bf70667129c5d6ddf3c74b2b505d5"
+  },
+  "gates": [
+    {
+      "name": "full_API",
+      "evidence": "artifacts/rust/integration-full-image34-1/integration.json",
+      "passed": true,
+      "sha256": "ed738eb5330a9f77866380186bda4dd10bfffc4ddc6585de4b68eb4ea218aafc",
+      "count": 1024,
+      "cleanup": "project removed",
+      "project": "dispatcharr-rust-probe-314ca67b5e",
+      "successful_tools": "artifacts/rust/integration-full-image34-1/tool-source"
+    },
+    {
+      "name": "proxy",
+      "evidence": "artifacts/rust/proxy-auth-image34-1/integration.json",
+      "passed": true,
+      "sha256": "3fe127e1f67cd4e3fbbfebd29f28fbf84163e02e39dde20e8494a6dc32d44c73",
+      "count": 38,
+      "cleanup": "project removed",
+      "project": "dispatcharr-rust-probe-0c6e8613b5",
+      "successful_tools": "artifacts/rust/proxy-auth-image34-1/tool-source"
+    },
+    {
+      "name": "auth_hash",
+      "evidence": "artifacts/rust/auth-hash-image34-1/integration.json",
+      "passed": true,
+      "sha256": "fe6cfe58993c1733471dddf67dd4d16a604cd39dca244b3c8600c9ee5045a1a3",
+      "count": 34,
+      "cleanup": "project removed",
+      "project": "dispatcharr-rust-probe-17a6fef927",
+      "successful_tools": "artifacts/rust/auth-hash-image34-1/tool-source"
+    },
+    {
+      "name": "user_agent",
+      "evidence": "artifacts/rust/user-agent-image34-1/integration.json",
+      "passed": true,
+      "sha256": "da51858bf5e8aa781799f9117c47b10b1af4209280140ab0a3eb6dfd387a43a1",
+      "count": 95,
+      "cleanup": "project removed",
+      "project": "dispatcharr-user-agents-e83c7858cb",
+      "successful_tools": "artifacts/rust/user-agent-image34-1/tool-source",
+      "check_count": 95,
+      "checks_sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542"
+    },
+    {
+      "name": "output_profile",
+      "evidence": "artifacts/rust/output-profile-image34-1/integration.json",
+      "passed": true,
+      "sha256": "d3e6a2e992e5a6373e21db2f178bd590490824312186e401bbd76779629e4ec2",
+      "count": 130,
+      "cleanup": "project removed",
+      "project": "dispatcharr-output-profiles-526b28c6aa",
+      "successful_tools": "artifacts/rust/output-profile-image34-1/tool-source",
+      "check_count": 130,
+      "checks_sha256": "563963af071f3bf50f0566b45cbcfde77d3e78731765ad330268a834a8c77dd0"
+    },
+    {
+      "name": "GRID",
+      "evidence": "artifacts/rust/guide-grid-packaged-image34-1/integration.json",
+      "passed": true,
+      "sha256": "35fe6bd6539454bd5864ba14b2b022e1981e5d0973d4958a8584d7b33fb4d43f",
+      "count": 43,
+      "cleanup": "project removed",
+      "project": "dispatcharr-epg-reads-6edf2af416",
+      "successful_tools": "artifacts/rust/guide-grid-packaged-image34-1/tool-source",
+      "case_count": 43,
+      "checks_sha256": "5a1d6749e47b1784f6c865128200101618da05fc864e0058eff58f5fd0452615"
+    },
+    {
+      "name": "stored_current",
+      "evidence": "artifacts/rust/current-packaged-image34-1/integration.json",
+      "passed": true,
+      "sha256": "b7c6b4de84657f7600da563c0380e2df5c3a1dde088ca72bef86045977c65ff8",
+      "count": 64,
+      "cleanup": "project removed",
+      "project": "dispatcharr-epg-reads-61c514579b",
+      "successful_tools": "artifacts/rust/current-packaged-image34-1/tool-source",
+      "case_count": 64,
+      "checks_sha256": "371072b99e9a984c40de6b5405671c8d0c3f54af58a3306a4f3a1533b2573ba4"
+    },
+    {
+      "name": "media",
+      "evidence": "artifacts/rust/m4-functional-image34-1/result.json",
+      "passed": true,
+      "sha256": "64ccb8ad80c78234ffec62fc90d53d0f563a5bf12d5463ca1e125e1c4639fc2a",
+      "count": null,
+      "cleanup": true,
+      "project": "dispatcharr-m4-perf-85ad0e81bb",
+      "successful_tools": "artifacts/rust/m4-functional-image34-1/tool-source",
+      "measurements_started": false,
+      "decoded_frames": [
+        {
+          "protocol": "vod",
+          "backend": "source",
+          "frames": 200
+        },
+        {
+          "protocol": "vod",
+          "backend": "candidate",
+          "frames": 200
+        },
+        {
+          "protocol": "timeshift",
+          "backend": "source",
+          "frames": 199
+        },
+        {
+          "protocol": "timeshift",
+          "backend": "candidate",
+          "frames": 199
+        }
+      ]
+    },
+    {
+      "name": "fresh_install",
+      "evidence": "artifacts/rust/clean-install-image34-1/integration.json",
+      "passed": true,
+      "sha256": "1705cf1b1e425322bad4003ab32e70915691b3b86fce41b826b932bbbe959cb7",
+      "count": 11,
+      "cleanup": "project removed",
+      "project": "dispatcharr-native-install-b7a2c2f741",
+      "successful_tools": "artifacts/rust/clean-install-image34-1/tool-source",
+      "actual_React_bootstrap_APIs_per_login_and_restart": 16,
+      "Django_service_absent": true
+    },
+    {
+      "name": "category_API_UI",
+      "evidence": "artifacts/rust/m5-vod-category-closed-browser-image34-1/http/source-run.json",
+      "passed": true,
+      "sha256": "6071f73237e195102261aca8a5dae148776ef86bbb0654db057e8afb4039cd48",
+      "count": 664,
+      "cleanup": "owned Compose project removed",
+      "project": "dispatcharr-vod-api-http-4adf97b464",
+      "successful_tools": "artifacts/rust/m5-vod-category-closed-browser-image34-1/http/tools"
+    }
+  ],
+  "open_known_category_HTTP_cases": 0,
+  "open_known_category_default_exception_wire_cases": 0,
+  "category_summary": "scripts/rust-vod-api-contracts/verified-category-browser-image34-1.json",
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "independent_owned_cleanup": {
+    "passed": true,
+    "projects": 10,
+    "evidence": "artifacts/rust/image34-regression-owned-projects-1.json",
+    "sha256": "96661b8c351921a5811f8d3f65dd347f85c1ee8d1a2927d29eb744c86ed009d1"
+  },
+  "tool_review": "artifacts/rust/vod-category-image34-selected-tools-review-1.json"
+}
