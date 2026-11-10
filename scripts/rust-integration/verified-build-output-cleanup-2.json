@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "scope": "Second user-requested completed Cargo-output cleanup; preserves sources/WIP/evidence/toolchains/Docker. No runtime or backend performance change.",
+  "credit": "Original Dispatcharr authors/contributors retain full application/algorithm credit and AGPL licensing.",
+  "incremental_cleanup": {
+    "inventoried_targets": 36,
+    "deleted_targets": 35,
+    "deleted_apparent_bytes": 38151383690,
+    "deleted_apparent_GiB": 35.531244883313775,
+    "deleted_allocated_estimate_bytes": 38740381696,
+    "measured_filesystem_free_increase_bytes": 13384515584,
+    "measured_filesystem_free_increase_GiB": 12.465301513671875,
+    "before_disk": {
+      "total_bytes": 995907784704,
+      "used_bytes": 421755559936,
+      "free_bytes": 563992125440
+    },
+    "after_disk": {
+      "total_bytes": 995907784704,
+      "used_bytes": 407946797056,
+      "free_bytes": 577376641024
+    },
+    "outer_evidence_binaries_preserved": 426,
+    "outer_evidence_binary_bytes": 48772952072,
+    "recorded_target_local_evidence_copied_or_matched": 0,
+    "remaining_protected_targets": [
+      {
+        "path": "artifacts/rust/vod-unified-schedule-controls-1/target",
+        "apparent_bytes": 763563783,
+        "protected_by": [
+          "/home/justin/github/Dispatcharr/artifacts/rust/vod-unified-schedule-controls-1/target"
+        ]
+      }
+    ],
+    "manifest": "artifacts/rust/build-output-cleanup-2/manifest.json",
+    "manifest_sha256": "5c0b8a82c124e08443a8f245b34eaa4cd99930683ffe9ef34d3a4d9b2d44f7fb",
+    "deletion_journal": "artifacts/rust/build-output-cleanup-2/deletions.jsonl",
+    "deletion_journal_sha256": "a566b8dde5e8a0a623719207214e4830dbda147b999f0a013ea37d2b2aaa7f48",
+    "execution_log_sha256": "3cf1af57ae6b25c71c72c3b06051fbf9ea42988394573caa522abeb06e2c1858",
+    "execution_tool_sha256": "c93d5ef96d2b93acfdb784ac5b9aa161920d46ac643c0c101d19b375591b4ee9"
+  },
+  "source_preservation": {
+    "wip_files_before": 87,
+    "wip_files_after": 87,
+    "concurrent_non_cleanup_source_changes": [
+      "scripts/rust-vod-contracts/active_restart_http_source.py",
+      "scripts/rust-vod-contracts/active_restart_native.py",
+      "scripts/rust-vod-contracts/run.py"
+    ],
+    "concurrent_change_owner": "baseline_matrix acknowledged all three as authorized concurrent Python controller/runner edits; no source-loss concern",
+    "git_worktree_clean_claimed": false,
+    "source_or_draft_deletion_performed": false
+  },
+  "review": {
+    "committed_cleanup_controls_passed": 6,
+    "controls_run_by": "Root independently before execution",
+    "journal_matches_deleted_inventory": true,
+    "all35_deleted_roots_absent": true,
+    "all426_outside_binary_paths_and_sizes_retained": true,
+    "protected_target_exists": true,
+    "independent_review_by": "Root also repeated journal/absence/binary path+size/protected-root checks; no second multi-GB hash pass.",
+    "current_process_and_fresh_Docker_bind_protection": true
+  },
+  "earlier_cleanup_separate": {
+    "deleted_targets": 253,
+    "deleted_apparent_bytes": 961419623827,
+    "measured_filesystem_free_increase_bytes": 356708818944,
+    "measured_filesystem_free_increase_GiB": 332.21097564697266,
+    "summary": "scripts/rust-integration/verified-build-output-cleanup-1.json"
+  },
+  "limitations": [
+    "Apparent/allocated estimates differ from actual free space because outputs can share extents/hard links and other processes may change disk use.",
+    "The reported free-space increase is observed across this cleanup interval, not a claim that the filesystem stayed unchanged afterward.",
+    "The first and second cleanup totals describe separate execution passes; rebuilt paths can recur, so summed deleted roots are not unique projects.",
+    "All pending tracked/untracked source and drafts remain; this is not a clean Git worktree or full migration completion claim."
+  ]
+}
