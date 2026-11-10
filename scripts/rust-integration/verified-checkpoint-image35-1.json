@@ -1,0 +1,319 @@
+{
+  "passed": true,
+  "scope": "Canonical image35 packaged regression checkpoint, including actual profile-cache Redis restart fix; no active VOD recovery or performance/fullmigration acceptance",
+  "credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors; AGPL retained.",
+  "git_revision": "ced7c9d4f0bc05b401784dcf7126654daf7b3729",
+  "image_id": "sha256:21bd905637a55527d106b42c2129cad38f369ebcfeac2140d13d417e4a232bf7",
+  "source_tree_sha256": "74ef08b3de08e6e35fd475434d35fc3779f601bafbd4ff9b60dc838936a31b3d",
+  "source_archive_sha256": "d607c5fad356ad42bcac2f08f000208bc97bcfbe81b5092161296c8e69f5d6bc",
+  "build_manifest": {
+    "path": "artifacts/rust/candidate-build-profile-lease-orphan-image35-1/build.json",
+    "sha256": "2c6499150f6515ee480d39991a3304efd663b062fb6bb3caa820cd7ba95ececa"
+  },
+  "all_compiled_Rust_tree_inputs_match_reviewed_workspace": 560,
+  "parent_source_check": {
+    "path": "artifacts/rust/image35-parent-source-check-1.json",
+    "sha256": "71e7e5c306e344e500c295c7d508b23bb5f4a3ca36c08b32c95cd7fc957a669a"
+  },
+  "default_workspace_tests": 351,
+  "external_fixture_tests_ignored": 360,
+  "strict_wholeworkspace_clippy": true,
+  "gates": [
+    {
+      "name": "integration-full",
+      "passed": true,
+      "evidence": "artifacts/rust/integration-full-image35-1/integration.json",
+      "evidence_sha256": "842afc1d45253ed00bef3ef551e944ae890d3b73f10b748b9155338e22d18ce6",
+      "project": "dispatcharr-rust-probe-cf932c47b6",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/integration-full-image35-1/tool-source",
+      "tool_map_sha256": "ea12ba0a6043587ffd4239a58dc0feb40e3fa6c23658717a43ed73058c954afe",
+      "checks": 1024
+    },
+    {
+      "name": "proxy-auth",
+      "passed": true,
+      "evidence": "artifacts/rust/proxy-auth-image35-1/integration.json",
+      "evidence_sha256": "8da5906b4c911ddbfce9fd0b6f4785543351f49f33c9eb80a44f8ec1f0388a49",
+      "project": "dispatcharr-rust-probe-f7bdf35fa6",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/proxy-auth-image35-1/tool-source",
+      "tool_map_sha256": "ea12ba0a6043587ffd4239a58dc0feb40e3fa6c23658717a43ed73058c954afe",
+      "checks": 38
+    },
+    {
+      "name": "auth-hash",
+      "passed": true,
+      "evidence": "artifacts/rust/auth-hash-image35-1/integration.json",
+      "evidence_sha256": "9e8ebe962129cfac9d29c79ed6b4102f2d22cb3ce82d930f8e7f8c8bc704dc3a",
+      "project": "dispatcharr-rust-probe-706b29c1d4",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/auth-hash-image35-1/tool-source",
+      "tool_map_sha256": "ea12ba0a6043587ffd4239a58dc0feb40e3fa6c23658717a43ed73058c954afe",
+      "checks": 34
+    },
+    {
+      "name": "user-agent",
+      "passed": true,
+      "evidence": "artifacts/rust/user-agent-image35-1/integration.json",
+      "evidence_sha256": "5e6f907db176d1edc0f4d15ece2c1d22c55e1665e1d8728b3fb8bc63c552ec6c",
+      "project": "dispatcharr-user-agents-660f492eef",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/user-agent-image35-1/tool-source",
+      "tool_map_sha256": "ea12ba0a6043587ffd4239a58dc0feb40e3fa6c23658717a43ed73058c954afe",
+      "checks": 95,
+      "Source_reference_cases": 79,
+      "packaged_checks_sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542"
+    },
+    {
+      "name": "output-profile",
+      "passed": true,
+      "evidence": "artifacts/rust/output-profile-image35-1/integration.json",
+      "evidence_sha256": "4869076731e3ea8fbf6f7ef6e5ebb07645fbf1e6e2031056983fa3fc85e9cf8c",
+      "project": "dispatcharr-output-profiles-ca01b266b3",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/output-profile-image35-1/tool-source",
+      "tool_map_sha256": "ea12ba0a6043587ffd4239a58dc0feb40e3fa6c23658717a43ed73058c954afe",
+      "checks": 130,
+      "Source_reference_cases": 127,
+      "packaged_checks_sha256": "563963af071f3bf50f0566b45cbcfde77d3e78731765ad330268a834a8c77dd0"
+    },
+    {
+      "name": "profile-restart",
+      "passed": true,
+      "evidence": "artifacts/rust/profile-restart-image35-1/integration.json",
+      "evidence_sha256": "17d3b46df7a5a3050275ce4a4b2657368a0c8a350d4558df5ed35f20c3979d8e",
+      "project": "dispatcharr-output-profiles-97ade316ea",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/profile-restart-image35-1/tool-source",
+      "tool_map_sha256": "ea12ba0a6043587ffd4239a58dc0feb40e3fa6c23658717a43ed73058c954afe",
+      "selected_actual_attempts_per_backend": 3,
+      "phases": [
+        {
+          "backend": "candidate",
+          "server_run_id_changed": true,
+          "same_observer_and_source_workers": true,
+          "first_status": 204,
+          "first_response_SQL_cache_exact": true,
+          "later_logical_attempts": [
+            {
+              "ordinal": 2,
+              "matches_expected": true
+            },
+            {
+              "ordinal": 3,
+              "matches_expected": true
+            }
+          ]
+        },
+        {
+          "backend": "source",
+          "server_run_id_changed": true,
+          "same_observer_and_source_workers": true,
+          "first_status": 204,
+          "first_response_SQL_cache_exact": true,
+          "later_logical_attempts": [
+            {
+              "ordinal": 2,
+              "matches_expected": true
+            },
+            {
+              "ordinal": 3,
+              "matches_expected": true
+            }
+          ]
+        }
+      ],
+      "candidate_process_preserved": true,
+      "packaged_checks_sha256": "c642a510c73fbb0f326786b4aeb949e7fe3f35343e133c6f9faf70a34a3c23a5",
+      "historical_negative": "scripts/rust-redis-restart-contracts/verified-profile-cache-restart-image34-2.json",
+      "scope": "Selected same-service profile/cache restart recovery; not active media continuity or arbitrary Redis recovery"
+    },
+    {
+      "name": "guide-grid-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/guide-grid-packaged-image35-1/integration.json",
+      "evidence_sha256": "5b718efa51194d194b07bf1362af8afc7467cecbdabf1fca2fcdd2e1c728824c",
+      "project": "dispatcharr-epg-reads-94a8b2d320",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/guide-grid-packaged-image35-1/tool-source",
+      "tool_map_sha256": "daec45ef64214037e63024a3e3286f237e25237f39d89300b19640688efe3b33",
+      "actual_cases": 43,
+      "packaged_checks_sha256": "11cf882e006cfe6da53d3ee3c313d2a6bd32b8b561c9c8139b959500ff28fd14"
+    },
+    {
+      "name": "current-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/current-packaged-image35-1/integration.json",
+      "evidence_sha256": "595c6a7c48a14b4850b02f33c55a3861eac78ff1dc85dc9a54078016953262fd",
+      "project": "dispatcharr-epg-reads-2776e91554",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/current-packaged-image35-1/tool-source",
+      "tool_map_sha256": "daec45ef64214037e63024a3e3286f237e25237f39d89300b19640688efe3b33",
+      "actual_cases": 64,
+      "packaged_checks_sha256": "5f8a5ddf8a99c86c23d20d950d1f0add0c110b136fe826916766978b8866ebe4"
+    },
+    {
+      "name": "m4-functional",
+      "passed": true,
+      "evidence": "artifacts/rust/m4-functional-image35-1/result.json",
+      "evidence_sha256": "252b1518e833db758c14533875874b13a9b918ffcd7b3e3c5b128749f8c9fd17",
+      "project": "dispatcharr-m4-perf-38f5cbe8f6",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/m4-functional-image35-1/tool-source",
+      "tool_map_sha256": "a8d5fb4f0b49b8e6c6eee65eaa10161dd658c40aeb87923f5d90180b3a1c7fb3",
+      "measurements_started": false,
+      "actual_decoded_frames": [
+        {
+          "protocol": "vod",
+          "backend": "source",
+          "frames": 200,
+          "audio_video_mapped": true,
+          "provider_counter_released": true
+        },
+        {
+          "protocol": "vod",
+          "backend": "candidate",
+          "frames": 200,
+          "audio_video_mapped": true,
+          "provider_counter_released": true
+        },
+        {
+          "protocol": "timeshift",
+          "backend": "source",
+          "frames": 199,
+          "audio_video_mapped": true,
+          "provider_counter_released": true
+        },
+        {
+          "protocol": "timeshift",
+          "backend": "candidate",
+          "frames": 199,
+          "audio_video_mapped": true,
+          "provider_counter_released": true
+        }
+      ]
+    },
+    {
+      "name": "clean-install",
+      "passed": true,
+      "evidence": "artifacts/rust/clean-install-image35-1/integration.json",
+      "evidence_sha256": "f9eae57d631f48c9a34697518976cfb1a7aa5644480128cc50f4d5951fefbda8",
+      "project": "dispatcharr-native-install-2904adea49",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/clean-install-image35-1/tool-source",
+      "tool_map_sha256": "2a5572f9ca6ab1d978685db88aa773f64e1d262d75448330411f7ecd2631125e",
+      "checks": 11,
+      "actual_React_bootstrap_paths_per_first_login_and_restart": 16,
+      "no_Django_service": true
+    },
+    {
+      "name": "category-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/category-browser-image35-1/http/source-run.json",
+      "evidence_sha256": "3619de7c7e40f574a642e39f642ae3f4c9d6c4289a51e83cfe2b436b930ae6f9",
+      "project": "dispatcharr-vod-api-http-37c6143fd6",
+      "owned_cleanup_verified": true,
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/category-browser-image35-1/http/tools",
+      "tool_map_sha256": "0d2583c6c180b8758c8938f159899a42d96ec9744dc8a34c1612b022ed429b11",
+      "Source_network_cases": 664,
+      "ordinary_exact_responses": 393,
+      "category_exact_responses": 163,
+      "default_wire_effects_cases": 18,
+      "captured_category_exclusions": 0,
+      "category_and_mixed10_bursts": true,
+      "actual_unchanged_React_sessions": 4,
+      "actual_React_comparisons": [
+        {
+          "kind": "movies",
+          "exact_selected_label_and_ordered_content_and_visible_count": true
+        },
+        {
+          "kind": "series",
+          "exact_selected_label_and_ordered_content_and_visible_count": true
+        }
+      ],
+      "fixture_restoration": {
+        "restored": true,
+        "users_passwords_and_rows_exact": true,
+        "poster_relations_exact": true,
+        "category_enabled_flags_exact": true
+      },
+      "frontend_immutable_binding": {
+        "donor_image_id": "sha256:21bd905637a55527d106b42c2129cad38f369ebcfeac2140d13d417e4a232bf7",
+        "files": 85,
+        "sha256": "43dc51e1a1794de354bc694297ee673ac373b3ec9b249eccd47a377ec8bb06ef",
+        "scope": "Exact unchanged canonical React bundle, mounted into original git-source fixture and served by uWSGI static-map; no JS/backend view patches"
+      },
+      "candidate_shutdown": {
+        "elapsed_seconds": 0.3604172199993627,
+        "exit_code": 0,
+        "running": false
+      }
+    }
+  ],
+  "successful_tools_binding": "artifacts/rust/image35-packaged-tool-binding-1.json",
+  "Source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "profile_cache_packaged_restart_verified": true,
+  "historical_image34_profile_failure": "scripts/rust-redis-restart-contracts/verified-profile-cache-restart-image34-2.json",
+  "active_VOD_state_loss_recovery_verified": false,
+  "remaining_scope": "Packaged profile/cache restart does not establish active VOD/TS Redis restart continuity, generic plugin/worker parity, provider refresh, arbitrary SQL/fault grammar or complete application migration.",
+  "performance_verified": false,
+  "whole_application_verified": false,
+  "full_milestone_complete": false
+}

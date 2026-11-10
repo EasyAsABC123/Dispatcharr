@@ -85,3 +85,6 @@ The [actual active-VOD Redis state-loss comparison](../scripts/rust-redis-restar
 
 
 The separate [image34 category-list resource matrix](rust-vod-category-performance.md) now passes all six pairs with exact Original response bytes and unchanged throughput. At one/ten virtual readers, CPU decreases 70.4%/70.7% and sampled peak group memory decreases 60.4%/61.6%. The fixed fixture contains 242 categories and 501 nested links; polling intervals are Source-qualified at one/five seconds. This is metadata API evidence, with complete traces and scoped bindings; it does not close active-media recovery or establish complete VOD/browser/application gains.
+
+
+[Image35](../scripts/rust-integration/verified-checkpoint-image35-1.json) repeats the captured category/ordinary API and actual unchanged React workflows, together with broader packaged regressions and the profile-cache restart fix. Its runtime matches the exact validated committed source. Active media recovery and uncaptured/provider/unified workflows remain separate; the accepted image34 category and image31 ordinary-list resource reports keep their original image bindings.
