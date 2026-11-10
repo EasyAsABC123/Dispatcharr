@@ -51,8 +51,13 @@
   "remaining": [
     "Mixed-family queue consumption and automatic visibility/cadence recovery remain open; index intake preserves unsupported foreign heads.",
     "Native exception result serialization, schedules and complete job/status APIs remain open.",
-    "Current HTTP Parsing to actual worker to programme flow is a separate pending component gate.",
     "Default packaged current-file hookup, production volume cutover/rollback and full application parity require additional gates."
   ],
-  "credit": "Original Dispatcharr authors and contributors retain full application/algorithm credit and AGPL licensing; Celery/Kombu authors retain transport algorithm credit."
+  "credit": "Original Dispatcharr authors and contributors retain full application/algorithm credit and AGPL licensing; Celery/Kombu authors retain transport algorithm credit.",
+  "later_http_index_driver_gate": {
+    "path": "scripts/rust-epg-parity/verified-current-http-index-driver-134.json",
+    "sha256": "9d76852f95bf62b014ebcf7194f40c81fbd93f5c1210c309d1ef262cffaba042",
+    "runtime_modules_identical_to_commit": "d1329a65",
+    "application_hook_verified": false
+  }
 }

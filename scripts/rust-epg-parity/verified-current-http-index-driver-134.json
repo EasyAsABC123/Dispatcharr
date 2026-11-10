@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "scope": "Actual Original/native HTTP Parsing\u2192real Redis initial publication\u2192supervised IndexDriver(ServiceExecutor(IndexService))\u2192PostgreSQL index\u2192real Store/CurrentLookup programme response; app-unwired",
+  "evidence": "artifacts/rust/m6-current-http-index-driver-134",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_cases": 20,
+  "native_test_functions": 1,
+  "source_first": {
+    "status": 200,
+    "mime": "application/json",
+    "body": [
+      {
+        "epg_data_id": 1,
+        "parsing": true
+      }
+    ]
+  },
+  "source_second": {
+    "status": 200,
+    "mime": "application/json",
+    "body": [
+      {
+        "title": "Owned HTTP guide",
+        "description": "Original driver reference",
+        "sub_title": "",
+        "start_time": "2026-11-10T11:20:20+00:00",
+        "end_time": "2026-11-10T13:20:20+00:00",
+        "epg_data_id": 1
+      }
+    ]
+  },
+  "rust_source_archive_sha256": "b751238d658af1bc4acadfbe1f66177cb1b606c39e929641d81bb552d302895a",
+  "runtime_and_test_sha256": {
+    "rust/Cargo.lock": "afa0cfb1f7fe47989587354bd067c5a2a4f820ce6a8230b78226cbdf6440892e",
+    "rust/crates/job-transport/Cargo.toml": "8512284f61a15f1969b6a789b33988766ec2882f8df56358408a39352ee994c1",
+    "rust/crates/job-transport/tests/current_http_driver.rs": "837bdfddb1896870788991fd2cfbe3b3fe96a1d754d9a227b029501b34b53a38",
+    "rust/crates/job-transport/src/index_driver.rs": "368853e29506a671b4312b3e31a1ac196b5a8ee92382323cb186debbcd1510cb",
+    "rust/crates/job-transport/src/scheduled_index.rs": "dfb59a5ff117150ae4867d18f524012b5614f7da8bb3d394fb4d91f4ab0dcf50",
+    "rust/crates/job-transport/src/index_worker.rs": "10fd251666efb6721bfab37e7ff87a81b74df8fa947e3492885864fecb6d1f39",
+    "rust/crates/job-transport/src/index_dispatch.rs": "d115ae56ccf1526dcb15a8584b0a70dc44c1af5c99f383355cda9d77adf57de8",
+    "rust/crates/job-transport/src/transport.rs": "c5fa2b54afe8e00d331732e3af08eaea3583867973df6ffbca6b509474ef2c99",
+    "rust/crates/job-transport/src/eta.rs": "78ffe70e0069ce0a2811c618d92c31846974d6152dbb32c90ae5f7cf6d6568ee",
+    "rust/crates/ingest-epg/src/index_service.rs": "baa150a373de92d407483c479bc5a1dc85e138aea7f9dbf65c48c308eda957b1",
+    "rust/crates/ingest-epg/src/current_lookup.rs": "e42bba652696893322948a89f44f027d6d4a5ed3e6a8db4ae33e13f7b1186696",
+    "rust/crates/store/src/epg_program_http.rs": "1d96def389edbd3eedde2e9769ca4816f9260df9cbe52124c410c129a2089ec3"
+  },
+  "native_test_binary_sha256": {
+    "current_http_driver": "0f980a1228ed1bef22d1078bce7933211271bc0592d9e5a6f79c0da37da27c0f"
+  },
+  "checks": [
+    "First authenticated native TCPHTTP POST matches Original200 Parsing and publishes exactly one initial Index envelope to realRedis.",
+    "IndexDriver actual background intake invokes ServiceExecutor/IndexService and writes the real PostgreSQL byte-offset index; result backend completion observed.",
+    "Second native TCPHTTP POST through same realStore pool1 and CurrentLookup matches Original programme JSON exactly.",
+    "Both file services use explicit immutable SourcePathContext(/app,/app/media); stored absolute fixture paths unchanged.",
+    "Orderly HTTP/dispatcher/driver/lookup/index/sharedJobs drains; queue/unacked/file-lock and lookup physical/memory counts return to zero."
+  ],
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "source_snapshot": "artifacts/rust/m6-current-http-index-driver-134/native-source",
+  "tool_snapshot": "artifacts/rust/m6-current-http-index-driver-134/tool-source",
+  "application_wired": false,
+  "production_volume_modified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Isolated owned broker8/result9 and copied PostgreSQL, not general shared queue acceptance.",
+    "No automatic visibility recovery, unrelated task families, mixed-queue routing, or app startup/deployment acceptance.",
+    "UID/copied-volume rehearsal is separate127; this bridge binary runs inside the Original fixture for matching host ABI.",
+    "133 setup failure (Original HTTP reached defaultDB instead of copiedDB) retained;134 uses dedicated unchanged Original WSGI with copiedDB."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application/algorithm credit and AGPL licensing; Celery/Kombu retain transport credit.",
+  "runtime_matches_commit_d1329a65": {
+    "rust/crates/job-transport/src/index_driver.rs": true,
+    "rust/crates/job-transport/src/scheduled_index.rs": true,
+    "rust/crates/job-transport/src/index_worker.rs": true,
+    "rust/crates/job-transport/src/index_dispatch.rs": true,
+    "rust/crates/job-transport/src/transport.rs": true,
+    "rust/crates/job-transport/src/eta.rs": true,
+    "rust/crates/ingest-epg/src/index_service.rs": true,
+    "rust/crates/ingest-epg/src/current_lookup.rs": true,
+    "rust/crates/store/src/epg_program_http.rs": true
+  }
+}

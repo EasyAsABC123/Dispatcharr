@@ -21,3 +21,7 @@ dispatcharr-coordination = {path="../coordination"}
 zip = {version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs"]}
 tokio = {version="1",features=["io-util","net"]}
 sha2 = "0.10"
+axum = "0.8"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+jsonwebtoken = "9"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres"] }

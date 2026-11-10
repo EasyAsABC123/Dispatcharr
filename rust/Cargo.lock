@@ -664,6 +664,7 @@ dependencies = [
 name = "dispatcharr-job-transport"
 version = "0.1.0"
 dependencies = [
+ "axum",
  "base64 0.22.1",
  "chrono",
  "dispatcharr-backups",
@@ -671,9 +672,12 @@ dependencies = [
  "dispatcharr-ingest-epg",
  "dispatcharr-output-store",
  "dispatcharr-store",
+ "jsonwebtoken",
  "redis",
+ "reqwest",
  "serde_json",
  "sha2 0.10.9",
+ "sqlx",
  "tokio",
  "uuid",
  "zip",
