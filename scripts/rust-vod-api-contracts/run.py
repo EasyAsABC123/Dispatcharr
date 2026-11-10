@@ -19,6 +19,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT/'scripts/rust-integration')]
 from shared_ts import BASELINE,IMAGE,fixture_source
 from fixture_ports import write_port_overlay
+from run import candidate_overlay,validate_candidate_image
 
 
 def main():
@@ -29,7 +30,16 @@ def main():
     parser.add_argument('--frozen-rust-source',type=Path,help='Reuse an already captured coherent Rust tree for a harness-only correction')
     parser.add_argument('--native-http',action='store_true',help='Run independent native TCP HTTP peer against original network corpus')
     parser.add_argument('--http-wire',action='store_true',help='Add original network method/detail/negotiation/routing characterization')
+    parser.add_argument('--build-manifest','--candidate-build-manifest',dest='build_manifest',type=Path,help='Successful immutable app manifest for packaged replay; skips native peer compilation')
+    parser.add_argument('--candidate-image',help='Must equal the successful manifest tag')
     args=parser.parse_args()
+    manifest=json.loads(args.build_manifest.read_text())if args.build_manifest else None
+    if args.candidate_image and manifest is None:parser.error('--candidate-image requires --build-manifest')
+    if manifest is not None:
+        if not manifest.get('passed')or(args.candidate_image and args.candidate_image!=manifest['tag']):parser.error('Successful matching candidate manifest required')
+        if args.native_sql or args.native_http:parser.error('Packaged replay must not compile a host native peer')
+        if args.mode!='http':parser.error('Packaged replay requires --mode http')
+        args.http_wire=True
     if args.native_http:args.native_sql=True;args.http_wire=True
     if args.http_wire and args.mode!='http':parser.error('--http-wire requires --mode http')
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
@@ -40,7 +50,7 @@ def main():
     try:
         for mode in modes:
             evidence=out/mode;evidence.mkdir()
-            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
+            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
                 ROOT/'docker/compose.rust-playback.yml',ROOT/'scripts/rust-integration/shared_ts.py',
                 ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'scripts/rust-baseline/dependencies.py',
                 *([ROOT/'scripts/rust-vod-api-contracts/source-vod-rest-1.json',ROOT/'scripts/rust-vod-api-contracts/source-default-queries-1.json',ROOT/'scripts/rust-vod-api-contracts/schedule_source.py',ROOT/'scripts/rust-vod-api-contracts/category_fault_source.py']if args.native_sql else []),
@@ -75,10 +85,13 @@ def main():
                 (source/'media').mkdir(exist_ok=True)
                 environment=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(evidence),
                     FIXTURE_SECONDS='900',DISPATCHARR_ENV='aio')
-                ports=evidence/'ports.yml';result['ports']=write_port_overlay(ports,{'baseline':[5656,5432,6379]if args.native_sql else[5656],'origin':[8080]})
+                ports=evidence/'ports.yml';result['ports']=write_port_overlay(ports,{'baseline':[5656,5432,6379]if args.native_sql else[5656],'origin':[8080],**({'candidate':[9192]}if manifest is not None else{})})
                 overlay=evidence/'oracle.yml';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[
                     str(tools/'scripts/rust-vod-api-contracts')+':/vod-api-probe:ro']}}}))
                 compose=['docker','compose','-p',project,'-f',str(tools/'docker/compose.rust-playback.yml'),'-f',str(overlay),'-f',str(ports)]
+                if manifest is not None:
+                    candidate=candidate_overlay(tools/'docker/compose.rust-candidate.yml',evidence/'candidate.yml',manifest['tag']);compose+=['-f',str(candidate),'-f',str(ports)]
+                    result['build_manifest_sha256']=hashlib.sha256(args.build_manifest.read_bytes()).hexdigest();shutil.copyfile(args.build_manifest,evidence/'build-manifest.json')
                 def command(argv,timeout=180):
                     result['commands'].append(argv)
                     completed=subprocess.run(argv,cwd=ROOT,env=environment,text=True,capture_output=True,timeout=timeout)
@@ -110,6 +123,34 @@ def main():
                     if args.http_wire:
                         burst=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/burst_source.py'],timeout=30)
                         observed=json.loads(burst.stdout.splitlines()[-1]);assert observed['passed'];(evidence/'source-burst.json').write_text(json.dumps(observed,indent=2)+'\n')
+                    if manifest is not None:
+                        command(compose+['up','-d','--no-build','candidate'])
+                        identifier=command(compose+['ps','-q','candidate']).stdout.strip()
+                        inspected=json.loads(command(['docker','inspect',identifier]).stdout)[0]
+                        result['candidate_binding']=validate_candidate_image(manifest,inspected)
+                        candidate_base='http://'+command(compose+['port','candidate','9192']).stdout.strip()
+                        import urllib.request
+                        deadline=time.monotonic()+90
+                        while True:
+                            try:
+                                with urllib.request.urlopen(candidate_base+'/api/core/version/',timeout=2)as response:assert response.status==200
+                                break
+                            except (OSError,AssertionError):
+                                if time.monotonic()>=deadline:raise RuntimeError('Packaged candidate readiness deadline')
+                                time.sleep(.1)
+                        sys.path.insert(0,str(tools/'scripts/rust-vod-api-contracts'))
+                        from packaged_probe import probe
+                        packaged=probe(candidate_base,corpus,observed)
+                        (evidence/'packaged-http.json').write_text(json.dumps(packaged,indent=2)+'\n')
+                        result['packaged_ordinary_http_passed']=packaged['passed'];assert packaged['passed'],'Packaged ordinary HTTP mismatch'
+                        effects=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/effects_source.py'],timeout=30)
+                        after=json.loads(effects.stdout.splitlines()[-1]);before={key:corpus['final_effects'][key]for key in after}
+                        (evidence/'packaged-effects.json').write_text(json.dumps({'passed':after==before,'before':before,'after':after},indent=2)+'\n');assert after==before,'Packaged reads changed owned metadata/provider refresh rows'
+                        shutdown_at=time.monotonic();command(compose+['stop','--timeout','15','candidate'],timeout=25)
+                        stopped=json.loads(command(['docker','inspect',identifier]).stdout)[0]['State']
+                        result['candidate_shutdown']={'elapsed_seconds':time.monotonic()-shutdown_at,'exit_code':stopped['ExitCode'],'running':stopped['Running']}
+                        assert not stopped['Running']and stopped['ExitCode']==0,'Packaged candidate did not stop gracefully'
+                        result['application_image_verified']=True
                     if args.native_sql:
                         scheduled=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/schedule_source.py'],timeout=30)
                         (evidence/'source-schedule.json').write_text(json.dumps(json.loads(scheduled.stdout.splitlines()[-1]),indent=2)+'\n')

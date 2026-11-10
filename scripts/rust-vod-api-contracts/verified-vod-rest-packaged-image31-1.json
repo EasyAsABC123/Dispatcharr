@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "scope": "Actual original unpatched VOD HTTP versus immutable image31 ordinaryMovie/Series/Episode reads; no fullVOD/browser/performance acceptance",
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors/contributors; AGPL preserved.",
+  "evidence": "artifacts/rust/m5-vod-rest-packaged-image31-1/http",
+  "successful_tool_source": "artifacts/rust/m5-vod-rest-packaged-image31-1/http/tools",
+  "candidate": {
+    "image_id": "sha256:5d4a6f84842b960a9d1b39f35d099a598149fb2e189f3ba0d8dafd0b4e48b02a",
+    "source_tree_sha256": "9c8a48c474f0bdfa04b1172fd59a1657c7e9e5385c70e040a52dff645a3456e6",
+    "manifest_verified": true
+  },
+  "tag": "dispatcharr-rust-candidate:vod-reads-image31-1",
+  "build_manifest_sha256": "b14728586689cf78bb6fd812a42d45785118afceb48bfa17685cd6c5a0a10da9",
+  "source_sha256": "e3493b7506d241bccbb1884e52e16523473d6ba657d6298138e275e6b90b318e",
+  "checks": {
+    "original_http_cases": 592,
+    "implemented_route_status_body_hash_MIME_and_selected_headers_exact": 393,
+    "differences": [],
+    "outside_component_cases_not_parity_pass": 199,
+    "native_simultaneous10_all200_same_source_hash": true,
+    "source_simultaneous10_all200_same_body": true,
+    "selected_headers": [
+      "Content-Length",
+      "Allow",
+      "Vary",
+      "WWW-Authenticate",
+      "X-Content-Type-Options",
+      "X-Frame-Options",
+      "Referrer-Policy",
+      "Cross-Origin-Opener-Policy"
+    ],
+    "owned_category_metadata_provider_refresh_rows_unchanged": true,
+    "graceful_shutdown": {
+      "elapsed_seconds": 0.42349991100127227,
+      "exit_code": 0,
+      "running": false
+    }
+  },
+  "limits_binding": "Manifest-bound committed app constructs VodReads from VodReadLimits::default():2active/192MiB/256waiters, arrival5s and SQL3s, same limits as functionalHTTP5 proof. This is source binding, not a dynamic heap measurement.",
+  "route_scope": [
+    "/api/vod/movies/",
+    "/api/vod/movies/{pk}/",
+    "/api/vod/series/",
+    "/api/vod/series/{pk}/",
+    "/api/vod/episodes/",
+    "/api/vod/episodes/{pk}/"
+  ],
+  "host_physical_proof": "scripts/rust-vod-api-contracts/verified-vod-rest-native-http-1.json",
+  "remaining": [
+    "BrowsableHTML intentionally501; negotiation grammar beyond captured592 observations is not generalized",
+    "Categories/unified/provider/actions/artwork and provider refresh remain separate capabilities",
+    "Suffix/no-slash behavior not a new ordinary adapter capability; existing route precedence preserved",
+    "UnchangedReact full VOD workflow and allocator-wide resource amplification not inferred",
+    "No measured performance claims"
+  ],
+  "cleanup": "owned Compose project removed",
+  "performance_verified": false,
+  "browser_verified": false,
+  "full_milestone_complete": false,
+  "evidence_sha256": {
+    "source-run.json": "9fb58ba35867fb115cc6e4020afe571caf9a88ae34bfbedc558ab5721f1b27f6",
+    "packaged-http.json": "0420010db6804c82c926f7706c750695b1fe1513388b54e6d59654de3d9490b0",
+    "packaged-effects.json": "929f8a2772bcf683a19e52d4cf6f6e3e50841366d6b31ce96dbf03f73ae80c60",
+    "source-burst.json": "f0eff1df29cfd1e228ac99bf74ea939c146b6fd19098a080e8ac190a9e4c7193",
+    "build-manifest.json": "b14728586689cf78bb6fd812a42d45785118afceb48bfa17685cd6c5a0a10da9"
+  }
+}

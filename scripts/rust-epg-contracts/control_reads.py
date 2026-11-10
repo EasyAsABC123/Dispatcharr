@@ -153,7 +153,10 @@ def main():
         env = dict(os.environ, BASELINE_SOURCE_DIR=str(source),
                    BASELINE_EVIDENCE_DIR=str(output), DISPATCHARR_ENV='aio')
         ports = output/'fixture-ports.yml'
-        report['fixture_ports'] = write_port_overlay(ports, {'baseline':[5656,5432,6379]})
+        service_ports = {'baseline':[5656,5432,6379], 'origin':[8080]}
+        if args.candidate_image:
+            service_ports['candidate'] = [9192]
+        report['fixture_ports'] = write_port_overlay(ports, service_ports)
         compose = ['docker','compose','-p',project,'-f',str(tools/'docker/compose.rust-playback.yml'),
                    '-f',str(ports)]
         if args.candidate_image:
@@ -163,6 +166,8 @@ def main():
                 'environment':{'DISPATCHARR_TRUSTED_PROXIES':'127.0.0.0/8,172.16.0.0/12,10.0.0.0/8'},
                 'cpus':2,'mem_limit':'512m','pids_limit':128}}}))
             compose += ['-f',str(tools/'docker/compose.rust-candidate.yml'),'-f',str(candidate_overlay)]
+        # Override every published port after all service templates are merged.
+        compose += ['-f',str(ports)]
 
         def command(arguments, timeout=180, body=None):
             return subprocess.run(arguments, env=env, input=body, text=True,

@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "scope": "Committed image31 ordinary VOD reads, shared cached authentication, packaged API and React regression checkpoint; no full milestone or new performance acceptance",
+  "git_revision": "db532d0295eeab33f5ba4e9160d1146272cb1d45",
+  "image_id": "sha256:5d4a6f84842b960a9d1b39f35d099a598149fb2e189f3ba0d8dafd0b4e48b02a",
+  "source_tree_sha256": "9c8a48c474f0bdfa04b1172fd59a1657c7e9e5385c70e040a52dff645a3456e6",
+  "source_archive_sha256": "0645251fb7c85d8886482157577041aa5da6b198466327c6ea13f150e82eecc0",
+  "build_manifest": "artifacts/rust/candidate-build-vod-reads-image31-1/build.json",
+  "build_manifest_sha256": "b14728586689cf78bb6fd812a42d45785118afceb48bfa17685cd6c5a0a10da9",
+  "workspace_validation": {
+    "evidence": "artifacts/rust/checkpoint-image31-validation-1",
+    "strict_all_targets_clippy": true,
+    "passed": 322,
+    "external_fixture_ignored": 282,
+    "suites": 146,
+    "clippy_log_sha256": "f27df48549736b54ac9fedf254f997a89b2157771f29fe510a04c1d1d5b3eeab",
+    "test_log_sha256": "46c8187df27028e84376baca5bc492510d8fdb6f48932e1f883453dde210aec1",
+    "matching_committed_inputs_manifest_sha256": "18894098963d5d27f6589bebc0100ebd44b87a7589a6910e8cc9121a1eed8e7b"
+  },
+  "packaged_regressions": [
+    {
+      "evidence": "artifacts/rust/integration-full-image31-1",
+      "report_sha256": "5a7a051f56892d60ae716da6c34dd5ff61996099449cda666d14c762e65ffa2a",
+      "passed": true,
+      "cleanup": "project removed",
+      "checks": 1024
+    },
+    {
+      "evidence": "artifacts/rust/proxy-auth-image31-1",
+      "report_sha256": "409264c22f15b45507f2721edb723e443cf5434b78aca7fb07e4efdaacadfe1c",
+      "passed": true,
+      "cleanup": "project removed",
+      "checks": 38
+    },
+    {
+      "evidence": "artifacts/rust/auth-hash-image31-1",
+      "report_sha256": "a9841afec1e6ed56d830eb6ff4d337ef759376cf154e1b4f9f55080de7296e28",
+      "passed": true,
+      "cleanup": "project removed",
+      "checks": 34
+    },
+    {
+      "evidence": "artifacts/rust/clean-install-browser-image31-1",
+      "report_sha256": "dfaf5c58506b1f285a8aec73f15b3727bcff4bcbe1debb937bae46acee511e48",
+      "passed": true,
+      "cleanup": "project removed",
+      "checks": 16,
+      "no_django_service": true
+    },
+    {
+      "evidence": "artifacts/rust/user-agent-image31-1",
+      "report_sha256": "f327ec09856ab9de57e587a8cfcef1a77b6de12a8d69657b3b3acda75a0ad777",
+      "passed": true,
+      "cleanup": "project removed",
+      "source_cases": 79,
+      "default_id_cases": 13,
+      "resource_checks": 3
+    },
+    {
+      "evidence": "artifacts/rust/output-profile-image31-1",
+      "report_sha256": "abdac9fea53f65a93c22cea427f9da3647abe9beeac0b2af8cd5df210dffa34e",
+      "passed": true,
+      "cleanup": "project removed",
+      "source_cases": 127,
+      "sql_fault_cases": 4,
+      "resource_checks": 3
+    }
+  ],
+  "packaged_grid": {
+    "evidence": "artifacts/rust/guide-grid-packaged-image31-3",
+    "source_native_network_cases": 43,
+    "report_sha256": "3b01ef01a6dcb802da5554d78f626cc624af461e1d61575b20f60bd82c4de7ef",
+    "wire_report_sha256": "f84ed8390c657c161e544aa4ea539628fae908291349eea9927974c7c9f1cb40",
+    "cleanup": "project removed",
+    "normalization": null
+  },
+  "ordinary_vod": "scripts/rust-vod-api-contracts/verified-vod-rest-packaged-image31-1.json",
+  "performance_verified": false,
+  "whole_application_parity_verified": false,
+  "full_milestones_completed": [],
+  "remaining": [
+    "VOD categories/unified/provider actions/artwork and full React VOD workflows remain open.",
+    "Native current-file/index driver integration, job execution and migration/cutover are separate pending gates.",
+    "Image30 GRID and image28 Current/XMLTV performance remain bound to those images and workloads.",
+    "Four media preflight phases verify consumed prefixes, decoding, observed WebSocket events and released counters; they do not establish exact realtime payload parity or complete VOD/timeshift coverage."
+  ],
+  "retained_attempts": [
+    {
+      "evidence": "artifacts/rust/grid-functional-image31-1",
+      "outcome": "Pre-fixture static image30 policy rejects image31; no measurements or workload requests."
+    },
+    {
+      "evidence": "artifacts/rust/guide-grid-packaged-image31-1",
+      "outcome": "Fixture origin auto-port collided; project removed before Source oracle/native execution."
+    },
+    {
+      "evidence": "artifacts/rust/guide-grid-packaged-image31-2",
+      "outcome": "Original real-clock oracle refuses final ten minutes before UTC-hour boundary; project removed before native comparison."
+    }
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit, branding, AGPL license and history.",
+  "vod_timeshift_media_preflight": {
+    "evidence": "artifacts/rust/m4-functional-image31-1",
+    "report_sha256": "9d799240a21fcc85760271bf241ee0b63789805db2a09d880ffe93e6b5974567",
+    "scope": "Sustained native XC VOD and archive catch-up playback subset; not full application acceptance",
+    "source_native_phases": 4,
+    "exact_prefix_bytes": 1048576,
+    "strict_audio_video_decoding": true,
+    "websocket_event_observation": true,
+    "provider_counter_released": true,
+    "cleanup_passed": true,
+    "performance_verified": false,
+    "full_m4_parity_verified": false
+  }
+}
