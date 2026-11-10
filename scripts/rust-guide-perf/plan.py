@@ -5,9 +5,9 @@ Original Dispatcharr authors retain full application credit and AGPL licensing.
 import datetime,hashlib,json,math
 from pathlib import Path
 SOURCE='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
-IMAGE='sha256:2c197d053675ee81800ecd39f7cb9b6620c1887a705cd02974d9c3751531df39'
-TREE='565083061ffb764ac4c4c3ef2a6455cdd0e7a5a7eba1403e068f5bddfbf8ba46'
-ARCHIVE='ace6ee12836e4498ed49c38c704da10ea27ad7ae44c23eaba697aed6a2022d72'
+IMAGE='sha256:0844627cf65913ddea6a3bc01fbf8bdd596055735765cac6bd593921b620f8e2'
+TREE='59d5db446ffc4eaa3c68c20ecc552c98d6725aa2beb788ffddba89762e5a1c82'
+ARCHIVE='5fa1034dd2407cca5e733338576f88f2bbf71b8663d06a0d7d66bc4ff5b51bb2'
 POLICY={
  'format_version':1,'scope':'Stored-guide Current channel branch and XMLTV export only; not browser or full migration acceptance',
  'historical_candidate_image':IMAGE,'candidate_source_tree':TREE,'original_revision':SOURCE,
@@ -39,7 +39,7 @@ def select_period(workload,rows):
  if not feasible:raise ValueError('Source cannot sustain any declared pacing; no matrix acceptance')
  return min(feasible)
 def freeze(path,qualification,manifest,fixture_binding=None):
- if manifest.get('passed')is not True or manifest.get('source_tree_sha256')!=TREE or manifest.get('source_archive_sha256')!=ARCHIVE:raise ValueError('Exact tested23 source tree required')
+ if manifest.get('passed')is not True or manifest.get('source_tree_sha256')!=TREE or manifest.get('source_archive_sha256')!=ARCHIVE:raise ValueError('Exact configured source tree/archive required')
  if set(qualification)!={work['name']for work in POLICY['workloads']}:raise ValueError('Missing workload qualification')
  periods={work['name']:select_period(work,qualification[work['name']])for work in POLICY['workloads']}
  record={'candidate_image':manifest['image_id'],'candidate_manifest_canonical_sha256':digest(manifest),'policy':POLICY,'policy_sha256':digest(POLICY),'source_qualification_sha256':digest(qualification),'selected_periods_seconds':periods,'measurements_started':False}

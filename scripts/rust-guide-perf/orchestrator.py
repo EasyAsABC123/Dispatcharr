@@ -237,6 +237,24 @@ def run(*, action, output, manifest, tools, seed, reference, current, xml,
                                   'reference_sha256': plan.digest(reference),
                                   'channel_uuids_sha256': plan.digest(seed['channel_uuids'])})
             report.update(passed=True, plan_sha256=record['plan_sha256'], selected_periods_seconds=record['selected_periods_seconds'])
+        elif action == 'cold-preflight':
+            report['quiet_authorization_sha256'] = qualification.authorize_preflight(quiet_path, manifest)
+            work = next(row for row in plan.POLICY['workloads'] if row['name'] == 'xmltv-cold-10')
+            # Fixed before either backend runs; no candidate rate selection.
+            period = 10
+            pair = {'workload': work['name'], 'trial': 1, 'order': ['source', 'candidate']}
+            for backend in pair['order']:
+                qualification.authorize_preflight(quiet_path, manifest)
+                pair[backend], _ = measured(backend, work, period,
+                                           plan.POLICY['warmup_seconds'], plan.POLICY['measurement_seconds'],
+                                           work['name'] + '-preflight-' + backend)
+            save(output/'pairs.json', [pair])
+            report['budget_comparison'] = acceptance.compare(pair['source'], pair['candidate'])
+            report['passed'] = report['budget_comparison']['passed']
+            report['diagnostic_only'] = True
+            report['performance_verified'] = False
+            report['full_matrix_accepted'] = False
+            report['source_qualification_performed'] = False
         elif action == 'matrix':
             q = json.loads(Path(qualification_path).read_text())
             frozen = json.loads(Path(plan_path).read_text())

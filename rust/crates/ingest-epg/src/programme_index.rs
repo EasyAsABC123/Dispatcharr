@@ -210,7 +210,7 @@ fn active(cancel: &AtomicBool) -> Result<(), ImportError> {
     }
 }
 /// None matches Source's (-1,-1); an absent end matches (idx,-1), including EOF.
-fn find_tag(buffer: &[u8], mut position: usize) -> Option<(usize, Option<usize>)> {
+pub(crate) fn find_tag(buffer: &[u8], mut position: usize) -> Option<(usize, Option<usize>)> {
     while position <= buffer.len() {
         let index = position + memmem::find(&buffer[position..], TAG)?;
         let follow = index + TAG.len();
@@ -232,7 +232,7 @@ fn find_tag(buffer: &[u8], mut position: usize) -> Option<(usize, Option<usize>)
 }
 /// Python bytes regex channel\s*=\s*(?:"([^"]+)"|'([^']+)'), with no word
 /// boundary. Empty values and attribute-prefix quirks are intentionally literal.
-fn channel_attribute(buffer: &[u8]) -> Option<&[u8]> {
+pub(crate) fn channel_attribute(buffer: &[u8]) -> Option<&[u8]> {
     let mut search = 0;
     while search <= buffer.len() {
         let start = search + memmem::find(&buffer[search..], b"channel")?;

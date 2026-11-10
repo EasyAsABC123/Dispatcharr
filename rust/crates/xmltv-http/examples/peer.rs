@@ -54,7 +54,7 @@ async fn main() {
         }
         println!(
             "{}",
-            json!({"active_requests":gateway.active_requests(),"available_bytes":gateway.available_memory_bytes()})
+            json!({"active_requests":gateway.active_requests(),"available_bytes":gateway.available_memory_bytes(),"cache":gateway.cache_diagnostics()})
         );
         io::stdout().flush().unwrap();
     }
@@ -64,7 +64,7 @@ async fn main() {
     reader.abort();
     println!(
         "{}",
-        json!({"closed":true,"drained":drained,"active_requests":gateway.active_requests(),"available_bytes":gateway.available_memory_bytes()})
+        json!({"closed":true,"drained":drained,"active_requests":gateway.active_requests(),"available_bytes":gateway.available_memory_bytes(),"cache":gateway.cache_diagnostics()})
     );
     io::stdout().flush().unwrap();
 }

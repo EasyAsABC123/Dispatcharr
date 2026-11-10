@@ -168,6 +168,10 @@ impl Gateway {
     pub fn active_requests(&self) -> usize {
         self.inner.config.max_requests - self.inner.requests.available_permits()
     }
+    /// Bounded process-local counters; no public application HTTP route.
+    pub fn cache_diagnostics(&self) -> serde_json::Value {
+        self.inner.cache.diagnostics()
+    }
     pub fn available_memory_bytes(&self) -> usize {
         self.inner.memory.available_permits()
     }

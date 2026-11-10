@@ -62,6 +62,20 @@ struct Inner {
     io: Arc<Semaphore>,
     cleanups: AtomicUsize,
     active: AtomicUsize,
+    metrics: Metrics,
+}
+#[derive(Default)]
+struct Metrics {
+    leader: AtomicUsize,
+    follower: AtomicUsize,
+    ready: AtomicUsize,
+    reads: AtomicUsize,
+    data: AtomicUsize,
+    waits: AtomicUsize,
+    ends: AtomicUsize,
+    writes: AtomicUsize,
+    members: AtomicUsize,
+    written_bytes: AtomicUsize,
 }
 struct Active(Arc<Inner>);
 impl Active {
@@ -213,6 +227,7 @@ impl Cache {
                 config,
                 cleanups: AtomicUsize::new(0),
                 active: AtomicUsize::new(0),
+                metrics: Metrics::default(),
             }),
         })
     }
@@ -292,6 +307,12 @@ impl Cache {
             -1 => return Err(CacheError::Capacity),
             _ => return Err(CacheError::Corrupt),
         };
+        match state {
+            EntryState::Leader => &self.inner.metrics.leader,
+            EntryState::Follower => &self.inner.metrics.follower,
+            EntryState::Ready => &self.inner.metrics.ready,
+        }
+        .fetch_add(1, Ordering::Relaxed);
         if state != EntryState::Leader {
             acquisition.armed.store(false, Ordering::Release);
         }
@@ -342,6 +363,7 @@ impl Cache {
             read_bytes.to_string().into_bytes(),
         ]);
         let source = format!("{PRELUDE}\n{READ}");
+        self.inner.metrics.reads.fetch_add(1, Ordering::Relaxed);
         let values: Vec<_> = args.iter().map(Vec::as_slice).collect();
         let ((status, data, next, offset), (budget, frame, guard, _active)): (
             (i64, Vec<u8>, usize, usize),
@@ -359,6 +381,7 @@ impl Cache {
             .map_err(map)?;
         match status {
             1 => {
+                self.inner.metrics.data.fetch_add(1, Ordering::Relaxed);
                 let delivered = cursor
                     .delivered
                     .checked_add(data.len())
@@ -379,12 +402,23 @@ impl Cache {
                     _frame: frame,
                 }))
             }
-            0 => Ok(Read::Wait),
-            2 => Ok(Read::End),
+            0 => {
+                self.inner.metrics.waits.fetch_add(1, Ordering::Relaxed);
+                Ok(Read::Wait)
+            }
+            2 => {
+                self.inner.metrics.ends.fetch_add(1, Ordering::Relaxed);
+                Ok(Read::End)
+            }
             3 => Ok(Read::Failed),
             -1 => Err(CacheError::Capacity),
             _ => Err(CacheError::Corrupt),
         }
+    }
+    pub fn diagnostics(&self) -> serde_json::Value {
+        let m = &self.inner.metrics;
+        let n = |v: &AtomicUsize| v.load(Ordering::Relaxed);
+        serde_json::json!({"leader_opens":n(&m.leader),"follower_opens":n(&m.follower),"ready_opens":n(&m.ready),"read_command_attempts":n(&m.reads),"data_replies":n(&m.data),"wait_replies":n(&m.waits),"end_replies":n(&m.ends),"put_command_attempts":n(&m.writes),"put_members":n(&m.members),"put_payload_bytes":n(&m.written_bytes),"available_io_bytes":self.available_io_bytes()})
     }
     pub fn read_batch_bytes(&self) -> usize {
         self.inner
@@ -459,7 +493,92 @@ impl Cache {
         Ok(())
     }
 }
+#[must_use]
+pub(crate) struct PutBatch {
+    pub accepted: usize,
+    pub capacity_reached: bool,
+}
 impl Entry {
+    /// Append a bounded valid prefix atomically. A later invalid/over-cap
+    /// member is explicit so the owner can deliver the prior good bytes first.
+    pub(crate) async fn put_batch(
+        &self,
+        chunks: &[&str],
+        guard: Arc<dyn Send + Sync>,
+    ) -> Result<PutBatch, CacheError> {
+        if chunks.is_empty() || chunks.len() > 32 {
+            return Err(CacheError::Configuration);
+        }
+        let bound = self.cache.read_batch_bytes();
+        let mut bytes = 0usize;
+        let mut valid = 0usize;
+        for chunk in chunks {
+            if chunk.len() > self.cache.inner.config.chunk_bytes
+                || bytes.checked_add(chunk.len()).is_none_or(|n| n > bound)
+            {
+                break;
+            }
+            bytes += chunk.len();
+            valid += 1;
+        }
+        if valid == 0 {
+            return Err(CacheError::Capacity);
+        }
+        let budget = self
+            .cache
+            .inner
+            .io
+            .clone()
+            .try_acquire_many_owned(
+                (4 * bytes.max(self.cache.inner.config.chunk_bytes.min(bound))) as u32,
+            )
+            .map_err(|_| CacheError::Capacity)?;
+        let mut args = self.cache.args(&self.base, &self.token);
+        args.extend(
+            chunks[..valid]
+                .iter()
+                .map(|chunk| chunk.as_bytes().to_vec()),
+        );
+        let values: Vec<_> = args.iter().map(Vec::as_slice).collect();
+        self.cache
+            .inner
+            .metrics
+            .writes
+            .fetch_add(1, Ordering::Relaxed);
+        self.cache
+            .inner
+            .metrics
+            .members
+            .fetch_add(valid, Ordering::Relaxed);
+        self.cache
+            .inner
+            .metrics
+            .written_bytes
+            .fetch_add(bytes, Ordering::Relaxed);
+        let ((accepted, capacity), _): ((i64, i64), _) = self
+            .cache
+            .inner
+            .transport
+            .command(
+                &format!("{PRELUDE}\n{PUT_BATCH}"),
+                &[],
+                &values,
+                (budget, guard, self.acquisition.clone()),
+            )
+            .await
+            .map_err(map)?;
+        if accepted == -2 {
+            return Err(CacheError::LostOwner);
+        }
+        let accepted = usize::try_from(accepted).map_err(|_| CacheError::Corrupt)?;
+        if accepted > valid || !matches!(capacity, 0 | 1) {
+            return Err(CacheError::Corrupt);
+        }
+        Ok(PutBatch {
+            accepted,
+            capacity_reached: capacity == 1 || valid < chunks.len(),
+        })
+    }
     pub async fn put(&self, chunk: &str, guard: Arc<dyn Send + Sync>) -> Result<usize, CacheError> {
         if chunk.len() > self.cache.inner.config.chunk_bytes {
             return Err(CacheError::Capacity);
@@ -474,6 +593,21 @@ impl Entry {
         let mut args = self.cache.args(&self.base, &self.token);
         args.push(chunk.as_bytes().to_vec());
         let source = format!("{PRELUDE}\n{PUT}");
+        self.cache
+            .inner
+            .metrics
+            .writes
+            .fetch_add(1, Ordering::Relaxed);
+        self.cache
+            .inner
+            .metrics
+            .members
+            .fetch_add(1, Ordering::Relaxed);
+        self.cache
+            .inner
+            .metrics
+            .written_bytes
+            .fetch_add(chunk.len(), Ordering::Relaxed);
         let values: Vec<_> = args.iter().map(Vec::as_slice).collect();
         let (status, _): (i64, _) = self
             .cache
@@ -560,6 +694,21 @@ const PUT: &str = r#"
 local total=sweep();check(base);local value=ours();if not value then return -2 end;if value.bytes>total then error('CORRUPT XMLTV bytes')end;local payload=ARGV[12]
 if #payload>chunkbytes or value.bytes+#payload>maxexport or total+#payload>maxbytes or redis.call('LLEN',base..':chunks')>=maxchunks then return -1 end
 local count=redis.call('RPUSH',base..':chunks',payload);value.bytes=value.bytes+#payload;save(base,value,lockttl);redis.call('SET',byteskey,total+#payload);for _,tail in ipairs({':chunks',':status',':lock',':rust_fence'})do redis.call('EXPIRE',base..tail,lockttl)end;return count
+"#;
+const PUT_BATCH: &str = r#"
+local total=sweep();check(base);local value=ours();if not value then return{-2,0}end;if value.bytes>total then error('CORRUPT XMLTV bytes')end
+local count=redis.call('LLEN',base..':chunks');local accepted=0;local size=0;local capacity=0
+if #ARGV<12 or #ARGV>43 then return redis.error_reply('CORRUPT XMLTV batch')end
+for i=12,#ARGV do local payload=ARGV[i]
+ if #payload>chunkbytes or value.bytes+size+#payload>maxexport or total+size+#payload>maxbytes or count+accepted>=maxchunks then capacity=1;break end
+ size=size+#payload;accepted=accepted+1
+end
+if accepted>0 then
+ local payloads={};for i=12,11+accepted do payloads[#payloads+1]=ARGV[i]end
+ redis.call('RPUSH',base..':chunks',unpack(payloads));value.bytes=value.bytes+size;save(base,value,lockttl);redis.call('SET',byteskey,total+size)
+ for _,tail in ipairs({':chunks',':status',':lock',':rust_fence'})do redis.call('EXPIRE',base..tail,lockttl)end
+end
+return{accepted,capacity}
 "#;
 const FINISH: &str = r#"
 local total=sweep();check(base);local value=ours();if not value then return 0 end;if value.bytes>total then error('CORRUPT XMLTV bytes')end

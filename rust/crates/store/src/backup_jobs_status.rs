@@ -1,6 +1,6 @@
 //! Pure observed original backup_status projection; test-only, no route/queue/202.
 //! Original Dispatcharr authors retain full application credit and AGPL licensing.
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use std::io::{self, Write};
 const MAX_BYTES: usize = 1024 * 1024;
 const MAX_NODES: usize = 8192;

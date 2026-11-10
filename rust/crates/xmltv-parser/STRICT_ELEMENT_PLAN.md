@@ -1,6 +1,6 @@
-# Strict single-element parser: post24 draft
+# Strict single-element parser component
 
-Original Dispatcharr authors and contributors retain all application and algorithm credit. This document describes unimplemented, unverified work for the byte-offset current-programme reader. Existing recover-mode parsing remains unchanged.
+Original Dispatcharr authors and contributors retain all application and algorithm credit. The additive strict parser passed its standalone Source and resource gates. The byte-offset current-programme reader and application integration remain separate work. Existing recover-mode parsing remains unchanged.
 
 The original `_parse_programme_element` always prepends its HTML4 entity DOCTYPE and calls strict `etree.fromstring` with entity resolution, DTD loading and no network. It returns the document root, preserves text whitespace, and rejects malformed XML. This differs from the streaming parser's recover mode, blank-text handling and nested programme end-event emission. The new lookup must not substitute the recover parser for this function.
 
@@ -12,4 +12,6 @@ A fresh strict context omits RECOVER and NOBLANKS. It retains no-network protect
 
 Source goldens must cover DTD/entity handling, leading/direct text, CDATA, comments/PIs, nested programmes, namespaces/attributes, duplicates, invalid UTF-8/characters, malformed/truncated XML, trailing documents, declarations/BOM placement and empty input. Local external entity/file behavior stays explicitly unaccepted until tested against uniquely owned sentinel fixtures. A no-network test must use an owned fixture endpoint, never foreign resources. Native adversarial tests must cover input, token/node, expansion, depth, heap and extraction limits, mid-work cancellation, repeated failure cleanup and concurrency. Existing streaming differential tests and native sanitizer checks must also pass before any integration claim.
 
-No parser code, application route, stored index lookup or performance acceptance follows from this plan alone. Source execution and compilation are queued until the coordinated guide-performance quiet window ends.
+Frozen runtime92 passed 288 original strict-helper cases and 1,144 existing recover-mode cases. Its 14 native tests and strict all-target Clippy passed. The immutable-runtime-bound resource94 runner passed all 288 cases with the C shim/driver under ASAN, UBSAN and leak detection, plus four standalone capacity/resource scenarios. The private static libxml2 archive was not itself sanitizer-instrumented. Owned sentinel/loopback cases establish only their measured helper behavior, not general external-loader parity.
+
+See `scripts/rust-epg-parity/verified-strict-element-source-native-92.json` for archive, runnable tool snapshots and evidence digests. The existing strict/recover constructors and allocator remain separate entry points sharing one translation-unit arena. No application route, stored index lookup or performance acceptance follows from these component proofs.

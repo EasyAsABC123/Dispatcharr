@@ -9,8 +9,8 @@ import acceptance
 from plan import POLICY, TREE, ARCHIVE, digest, select_period
 
 
-def authorize(path, manifest):
-    """Qualification precedes plan sealing, so bind policy rather than plan SHA."""
+def _authorize(path, manifest, scope):
+    """Bind quiet coordination to the exact policy and immutable candidate."""
     if (manifest.get('passed') is not True or manifest.get('source_tree_sha256') != TREE
             or manifest.get('source_archive_sha256') != ARCHIVE):
         raise ValueError('Passing exact configured source/archive manifest required')
@@ -20,7 +20,7 @@ def authorize(path, manifest):
     value = json.loads(raw)
     expiry = datetime.datetime.fromisoformat(value['expires_utc'])
     boot = Path('/proc/sys/kernel/random/boot_id').read_text().strip()
-    if (value.get('scope') != 'guide-source-qualification'
+    if (value.get('scope') != scope
             or value.get('authorized') is not True
             or value.get('candidate_image') != manifest.get('image_id')
             or value.get('candidate_manifest_canonical_sha256') != digest(manifest)
@@ -28,8 +28,17 @@ def authorize(path, manifest):
             or value.get('boot_id') != boot
             or expiry.tzinfo is None
             or datetime.datetime.now(datetime.timezone.utc) >= expiry):
-        raise ValueError('Fresh matching Source-only quiet authorization required')
+        raise ValueError('Fresh matching scoped quiet authorization required')
     return hashlib.sha256(raw).hexdigest()
+
+
+def authorize(path, manifest):
+    return _authorize(path, manifest, 'guide-source-qualification')
+
+
+def authorize_preflight(path, manifest):
+    # Preflight is fixed-rate diagnostics, never Source qualification or a seal.
+    return _authorize(path, manifest, 'guide-cold-preflight')
 
 
 def row(workload, period, phase, backend_counters):

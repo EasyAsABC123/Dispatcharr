@@ -6,6 +6,8 @@ pub mod cache_policy;
 pub mod channel_core;
 mod channel_sql;
 pub mod channels;
+pub mod current_file;
+pub mod current_lookup;
 pub mod file_job;
 mod file_lease;
 pub mod index_service;

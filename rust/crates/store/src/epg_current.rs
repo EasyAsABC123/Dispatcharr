@@ -23,7 +23,7 @@ fn unhandled() -> StoreError {
         json!({"detail":"Original current-programme view raises an unhandled input exception."}),
     )
 }
-fn capacity() -> StoreError {
+pub(super) fn capacity() -> StoreError {
     StoreError::StatusBody(503, json!({"detail":"Guide read capacity unavailable."}))
 }
 fn integer(value: &Value) -> Result<Option<i64>, StoreError> {
@@ -104,18 +104,24 @@ fn project(row: sqlx::postgres::PgRow, maximum: usize) -> Result<Vec<u8>, StoreE
     if row.try_get::<bool, _>("oversized")? {
         return Err(capacity());
     }
+    encode_programme(row, maximum)
+}
+pub(super) fn encode_programme(
+    row: sqlx::postgres::PgRow,
+    maximum: usize,
+) -> Result<Vec<u8>, StoreError> {
     let value = EpgReadResource::Programs.project(row, false, "")?;
     let mut bytes = crate::epg_program_http::BoundedJson::new(maximum);
     serde_json::to_writer(&mut bytes, &value).map_err(|_| capacity())?;
     Ok(bytes.into_data())
 }
-struct Reply {
+pub(super) struct Reply {
     bytes: crate::epg_program_http::BoundedJson,
     rows: usize,
     maximum_rows: usize,
 }
 impl Reply {
-    fn new(maximum_rows: usize, maximum_bytes: usize) -> Result<Self, StoreError> {
+    pub(super) fn new(maximum_rows: usize, maximum_bytes: usize) -> Result<Self, StoreError> {
         use std::io::Write;
         let mut bytes = crate::epg_program_http::BoundedJson::new(maximum_bytes);
         bytes.write_all(b"[").map_err(|_| capacity())?;
@@ -125,7 +131,12 @@ impl Reply {
             maximum_rows,
         })
     }
-    fn append(&mut self, base: &[u8], field: &str, value: &Value) -> Result<(), StoreError> {
+    pub(super) fn append(
+        &mut self,
+        base: &[u8],
+        field: &str,
+        value: &Value,
+    ) -> Result<(), StoreError> {
         use std::io::Write;
         if self.rows >= self.maximum_rows || base.last() != Some(&b'}') {
             return Err(capacity());
@@ -144,7 +155,7 @@ impl Reply {
         self.rows += 1;
         Ok(())
     }
-    fn finish(mut self) -> Result<Vec<u8>, StoreError> {
+    pub(super) fn finish(mut self) -> Result<Vec<u8>, StoreError> {
         use std::io::Write;
         self.bytes.write_all(b"]").map_err(|_| capacity())?;
         Ok(self.bytes.into_data())

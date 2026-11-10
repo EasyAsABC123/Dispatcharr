@@ -23,6 +23,12 @@ class Qualification(unittest.TestCase):
             path = Path(folder) / 'quiet.json'
             path.write_text(json.dumps(value))
             self.assertEqual(len(qualification.authorize(path, manifest)), 64)
+            with self.assertRaises(ValueError):
+                qualification.authorize_preflight(path, manifest)
+            path.write_text(json.dumps(dict(value, scope='guide-cold-preflight')))
+            self.assertEqual(len(qualification.authorize_preflight(path, manifest)), 64)
+            with self.assertRaises(ValueError):
+                qualification.authorize(path, manifest)
             for key, changed in [('scope', 'guide-resource-measurement'),
                                  ('boot_id', 'before-reboot'), ('authorized', 1),
                                  ('candidate_image', 'other'), ('policy_sha256', 'other'),

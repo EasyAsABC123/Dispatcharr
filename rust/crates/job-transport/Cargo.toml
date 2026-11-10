@@ -1,0 +1,17 @@
+[package]
+name = "dispatcharr-job-transport"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+dispatcharr-output-store = {path="../output-store"}
+base64 = "0.22"
+redis = {version="0.32",features=["tokio-comp"]}
+serde_json = {version="1",features=["arbitrary_precision","preserve_order"]}
+tokio = {version="1",features=["rt-multi-thread","sync","time","macros"]}
+uuid = {version="1",features=["v4"]}
+
+[dev-dependencies]
+tokio = {version="1",features=["io-util","net"]}
+sha2 = "0.10"

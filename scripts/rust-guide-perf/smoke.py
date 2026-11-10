@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Functional stored-guide fixture/load smoke only; never samples performance.
-Original Dispatcharr authors retain full application credit. No matrix/quiet authorization implied.
+"""Stored-guide functional checks, bounded preflight and sealed measurements.
+Original Dispatcharr authors retain full application credit. Measurement actions require their explicitly scoped quiet coordination.
 """
 import argparse,concurrent.futures,hashlib,importlib.util,json,os,subprocess,sys,time,uuid
 from pathlib import Path
@@ -11,10 +11,14 @@ from tool_snapshot import snapshot_sources
 from plan import TREE
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--candidate-build-manifest',required=True,type=Path);p.add_argument('--action',choices=['functional','observer-smoke','instrumentation-smoke','experiment'],default='functional');p.add_argument('--quiet-authorization',type=Path);p.add_argument('--measurement-authorization',type=Path);a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--candidate-build-manifest',required=True,type=Path);p.add_argument('--action',choices=['functional','observer-smoke','instrumentation-smoke','cold-preflight','experiment'],default='functional');p.add_argument('--quiet-authorization',type=Path);p.add_argument('--measurement-authorization',type=Path);a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
  if any(out.iterdir()):p.error('Output must be empty')
  manifest=json.loads(a.candidate_build_manifest.read_text())
  if manifest.get('passed')is not True or manifest.get('source_tree_sha256')!=TREE:p.error('Passing exact configured candidate source/archive manifest required')
+ if a.action=='cold-preflight':
+  if not a.quiet_authorization:p.error('Cold preflight needs a fresh matching quiet cue')
+  from qualification import authorize_preflight
+  authorize_preflight(a.quiet_authorization,manifest)
  if a.action=='experiment':
   if not a.quiet_authorization or not a.measurement_authorization:p.error('Experiment needs parent qualification and subsequent measurement quiet-cue paths')
   from qualification import authorize
@@ -25,7 +29,7 @@ def main():
    if path.is_file()and'__pycache__'not in path.parts:
     data=path.read_bytes();target=tools/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);hashes[str(path.relative_to(ROOT))]=hashlib.sha256(data).hexdigest()
  spec=importlib.util.spec_from_file_location('captured_guide_reader',tools/'scripts/rust-guide-perf/reader.py');reader=importlib.util.module_from_spec(spec);spec.loader.exec_module(reader)
- project='dispatcharr-guide-smoke-'+uuid.uuid4().hex[:10];report={'passed':False,'scope':'Stored-guide functional request/cache concurrency smoke; not performance measurement','measurements_started':False,'performance_verified':False,'project':project,'tool_source_sha256':hashes,'build_manifest_sha256':hashlib.sha256(a.candidate_build_manifest.read_bytes()).hexdigest(),'checks':[]};status=1
+ project='dispatcharr-guide-smoke-'+uuid.uuid4().hex[:10];report={'passed':False,'scope':'Stored-guide Current/XMLTV fixture; only a complete sealed matrix can establish scoped performance acceptance','measurements_started':False,'performance_verified':False,'project':project,'tool_source_sha256':hashes,'build_manifest_sha256':hashlib.sha256(a.candidate_build_manifest.read_bytes()).hexdigest(),'checks':[]};status=1
  with fixture_source(report,False,out)as directory:
   source=Path(directory)/'source';source.mkdir();source.chmod(0o755);subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(source)],input=subprocess.check_output(['git','archive',BASELINE],cwd=ROOT),check=True);(source/'media').mkdir(exist_ok=True)
   environment=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(out),DISPATCHARR_ENV='aio');candidate=candidate_overlay(tools/'docker/compose.rust-candidate.yml',out/'candidate-overlay.yml',manifest['tag'])
@@ -105,6 +109,10 @@ def main():
      observed=orchestrator.run(action=a.action,output=out,**shared)
      report['observer_smoke']=observed
      if not observed['passed']:raise RuntimeError('Guide observer smoke failed')
+    elif a.action=='cold-preflight':
+     observed=orchestrator.run(action='cold-preflight',output=out,quiet_path=a.quiet_authorization,**shared)
+     report['cold_preflight']=observed
+     if not observed['passed']:raise RuntimeError('Cold preflight failed unchanged budget checks')
     else:
      qualification_dir=out/'qualification';qualification_dir.mkdir()
      qualified=orchestrator.run(action='qualify',output=qualification_dir,quiet_path=a.quiet_authorization,**shared)
@@ -116,9 +124,11 @@ def main():
       if time.monotonic()>deadline:raise TimeoutError('Parent measurement cue not issued within20minutes')
       time.sleep(1)
      matrix_dir=out/'matrix';matrix_dir.mkdir()
+     report['measurements_started']=True
      measured=orchestrator.run(action='matrix',output=matrix_dir,quiet_path=a.measurement_authorization,plan_path=qualification_dir/'frozen-plan.json',qualification_path=qualification_dir/'source-qualification.json',**shared)
      report['matrix']=measured
      if not measured['passed']:raise RuntimeError('Guide predeclared matrix failed')
+     report['performance_verified']=measured['performance_verified']
    report['passed']=True;status=0
   except (OSError,ValueError,AssertionError,RuntimeError,subprocess.SubprocessError)as error:
    report['error_type']=type(error).__name__

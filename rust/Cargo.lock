@@ -615,6 +615,7 @@ name = "dispatcharr-ingest-epg"
 version = "0.1.0"
 dependencies = [
  "base64 0.22.1",
+ "bytes",
  "chrono",
  "dispatcharr-contracts",
  "dispatcharr-coordination",
@@ -654,6 +655,19 @@ dependencies = [
  "redis",
  "serde_json",
  "tokio",
+]
+
+[[package]]
+name = "dispatcharr-job-transport"
+version = "0.1.0"
+dependencies = [
+ "base64 0.22.1",
+ "dispatcharr-output-store",
+ "redis",
+ "serde_json",
+ "sha2 0.10.9",
+ "tokio",
+ "uuid",
 ]
 
 [[package]]

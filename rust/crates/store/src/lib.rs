@@ -30,9 +30,13 @@ mod epg_current;
 mod epg_current_http;
 mod epg_grid_helpers;
 mod epg_grid_window;
-pub use epg_grid_window::{grid_parse_datetime, grid_resolve_window, GridTimestamp, GridWindowError};
-pub use epg_grid_helpers::{grid_channel_profile, grid_dummy_span, grid_encode_batch, grid_program_value};
 pub use epg_current::CurrentProgramSelection;
+pub use epg_grid_helpers::{
+    grid_channel_profile, grid_dummy_span, grid_encode_batch, grid_program_value,
+};
+pub use epg_grid_window::{
+    grid_parse_datetime, grid_resolve_window, GridTimestamp, GridWindowError,
+};
 mod ip_lookup;
 mod notifications;
 mod python_action;
@@ -323,5 +327,10 @@ pub fn source_html_unescape(value: &str) -> String {
 
 mod epg_grid_iso;
 
+mod epg_current_file;
+pub use epg_current_file::{CurrentFileLookup, CurrentFileOutcome, CurrentFileRequest};
+
 #[cfg(test)]
 mod backup_jobs_status;
+
+mod epg_current_lookup;

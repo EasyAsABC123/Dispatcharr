@@ -618,3 +618,177 @@ async fn bounded_batch_fanout100_progresses_with_detached_slow_frame() {
         "XMLTV_BATCH_FANOUT=100;HELD_SLOW_FRAME_INDEPENDENT=true;FINAL_CLONE_BYTES_RETURNED=true"
     );
 }
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis; partial-batch publication and delivery error ordering"]
+async fn multi_put_preserves_valid_prefix_and_deferred_capacity_error() {
+    use crate::delivery::{Delivery, Source};
+    for batch in [8, 16] {
+        let cache = fixture(CacheConfig {
+            chunk_bytes: 8,
+            read_batch_bytes: batch,
+            max_read_bytes: 128,
+            max_export_bytes: 9,
+            max_cache_bytes: 1024,
+            ..CacheConfig::default()
+        })
+        .await;
+        let entry = cache
+            .open(
+                &prefix(&format!("put-prefix-{batch}")),
+                "put-prefix-owner-aaaa",
+                guard(),
+            )
+            .await
+            .unwrap();
+        let base = entry.base.clone();
+        let source: Source = Box::pin(futures_util::stream::iter(vec![Ok("12345678abc".into())]));
+        let mut delivery =
+            Delivery::new(cache.clone(), entry, Some(source), Duration::from_secs(2)).unwrap();
+        let frame = delivery.next(guard()).await.unwrap().unwrap();
+        assert_eq!(frame.as_ref(), b"12345678");
+        drop(frame);
+        assert_eq!(
+            delivery.next(guard()).await.err(),
+            Some(CacheError::Capacity)
+        );
+        drop(delivery);
+        raw(&cache,"if redis.call('LLEN',KEYS[1]..':chunks')~=0 or redis.call('GET',KEYS[1]..':status')~='error'then return redis.error_reply('prefix cleanup')end;return 1",std::slice::from_ref(&base),&[]).await;
+        remove(&cache, &[base]).await;
+    }
+    let cache = fixture(CacheConfig {
+        chunk_bytes: 8,
+        read_batch_bytes: 32,
+        max_read_bytes: 256,
+        ..CacheConfig::default()
+    })
+    .await;
+    let entry = cache
+        .open(&prefix("put-malformed"), "put-malformed-owner-aa", guard())
+        .await
+        .unwrap();
+    let result = entry
+        .put_batch(&["valid", "123456789", "tail"], guard())
+        .await
+        .unwrap();
+    assert_eq!(result.accepted, 1);
+    assert!(result.capacity_reached);
+    let mut cursor = Cursor::default();
+    match cache
+        .read(&entry.base, &mut cursor, false, guard())
+        .await
+        .unwrap()
+    {
+        Read::Data(data) => assert_eq!(data.as_ref(), b"valid"),
+        _ => panic!("valid prefix expected"),
+    }
+    entry.abort(guard()).await.unwrap();
+    remove(&cache, std::slice::from_ref(&entry.base)).await;
+    drop(entry);
+    assert!(cache.drain_cleanup(Duration::from_secs(1)).await);
+    println!("XMLTV_MULTI_PUT_PREFIX=single8_and_batch16_equal;MALFORMED_NEXT_MEMBER=prefix_preserved_explicit_error");
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis; batched write quota, UTF8 and stale fencing"]
+async fn multi_put_bounds_member_count_quota_and_stale_owner() {
+    let cache = fixture(CacheConfig {
+        chunk_bytes: 8,
+        read_batch_bytes: 64,
+        max_read_bytes: 512,
+        max_chunks: 2,
+        ..CacheConfig::default()
+    })
+    .await;
+    let key = prefix("put-fences");
+    let old = cache
+        .open(&key, "put-old-owner-aaaaaa", guard())
+        .await
+        .unwrap();
+    let result = old
+        .put_batch(&["東京", "café", "later"], guard())
+        .await
+        .unwrap();
+    assert_eq!(result.accepted, 2);
+    assert!(result.capacity_reached);
+    let mut cursor = Cursor::default();
+    match cache
+        .read(&old.base, &mut cursor, false, guard())
+        .await
+        .unwrap()
+    {
+        Read::Data(data) => assert_eq!(data.as_ref(), "東京café".as_bytes()),
+        _ => panic!("committed valid UTF8 prefix expected"),
+    }
+    // Reacquire the same generation after retiring only its ready/lock flags.
+    raw(
+        &cache,
+        "redis.call('DEL',KEYS[1]..':ready',KEYS[1]..':lock');return 1",
+        std::slice::from_ref(&old.base),
+        &[],
+    )
+    .await;
+    let newer = cache
+        .open(&key, "put-new-owner-bbbbbb", guard())
+        .await
+        .unwrap();
+    assert_eq!(newer.state, EntryState::Leader);
+    assert_eq!(
+        old.put_batch(&["stale"], guard())
+            .await
+            .err()
+            .map(|e| e == CacheError::LostOwner),
+        Some(true)
+    );
+    let result = newer.put_batch(&["current"], guard()).await.unwrap();
+    assert_eq!(result.accepted, 1);
+    assert!(!result.capacity_reached);
+    newer.finish(guard()).await.unwrap();
+    assert_eq!(body(&cache, &newer.base).await, b"current");
+    remove(&cache, std::slice::from_ref(&newer.base)).await;
+    drop(old);
+    drop(newer);
+    assert!(cache.drain_cleanup(Duration::from_secs(1)).await);
+}
+
+#[tokio::test]
+#[ignore = "requires isolated actual Redis; delayed batch reply and cancelled leader cleanup"]
+async fn cancelled_multi_put_holds_bytes_and_owner_until_physical_reply() {
+    let cache = fixture(CacheConfig::default()).await;
+    let entry = cache
+        .open(
+            &prefix("put-cancelled"),
+            "put-cancelled-owner-aaaa",
+            guard(),
+        )
+        .await
+        .unwrap();
+    let base = entry.base.clone();
+    let permits = Arc::new(Semaphore::new(1));
+    let request: Arc<dyn Send + Sync> = Arc::new(permits.clone().acquire_owned().await.unwrap());
+    let maximum = cache.available_io_bytes();
+    pause().await;
+    let task = tokio::spawn(async move { entry.put_batch(&["first", "second"], request).await });
+    tokio::time::timeout(Duration::from_millis(100), async {
+        while cache.available_io_bytes() == maximum {
+            tokio::time::sleep(Duration::from_millis(1)).await;
+        }
+    })
+    .await
+    .unwrap();
+    task.abort();
+    let _ = task.await;
+    assert!(cache.available_io_bytes() < maximum);
+    assert_eq!(permits.available_permits(), 0);
+    assert!(!cache.drain_cleanup(Duration::from_millis(10)).await);
+    tokio::time::timeout(Duration::from_secs(2), async {
+        while cache.available_io_bytes() != maximum || permits.available_permits() != 1 {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert!(cache.drain_cleanup(Duration::from_secs(2)).await);
+    raw(&cache,"if redis.call('LLEN',KEYS[1]..':chunks')~=0 then return redis.error_reply('abandoned batch retained')end;return 1",std::slice::from_ref(&base),&[]).await;
+    remove(&cache, &[base]).await;
+}

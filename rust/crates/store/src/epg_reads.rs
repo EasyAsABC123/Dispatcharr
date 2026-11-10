@@ -44,7 +44,9 @@ impl EpgReadResource {
             Self::EpgData => return crate::provider_reads::epg_read_projection(row, false),
             Self::Programs => {}
         }
-        let id = row.try_get::<i64, _>("id")?;
+        let id = row
+            .try_get::<i64, _>("id")
+            .or_else(|_| row.try_get::<i32, _>("id").map(i64::from))?;
         let mut value = json!({"id":id});
         for name in ["start_time", "end_time"] {
             value[name] = timestamp(row.try_get(name)?).into();

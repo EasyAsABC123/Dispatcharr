@@ -71,6 +71,9 @@ pub fn generate_counted(
         }
         if !batch.is_empty(){yield std::mem::take(&mut batch);}
         drop(numbers);
+        // Keep preamble and200-channel phase yields unchanged. Only real
+        // programme batching grows; every frame still obeys max_frame_bytes.
+        let target=ctx.max_frame_bytes.min(512*1024);
         let lookback=ctx.now-Duration::days(ctx.window.prev_days);
         let cutoff=(ctx.window.forward_days>0).then(||ctx.now+Duration::days(ctx.window.forward_days));
         let mut programmes=rows::programmes(&store,real.keys().copied().collect(),lookback,cutoff,&limits);

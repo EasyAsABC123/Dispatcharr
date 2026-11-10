@@ -18,6 +18,7 @@ pub struct Delivery {
     complete: bool,
     deadline: tokio::time::Instant,
     refreshed: Option<tokio::time::Instant>,
+    deferred_error: Option<CacheError>,
 }
 impl Delivery {
     pub fn new(
@@ -42,6 +43,7 @@ impl Delivery {
             complete: false,
             deadline: tokio::time::Instant::now() + wait,
             refreshed: None,
+            deferred_error: None,
         })
     }
     pub fn completed_build(&self) -> bool {
@@ -51,6 +53,12 @@ impl Delivery {
         &mut self,
         guard: Arc<dyn Send + Sync>,
     ) -> Result<Option<CacheBytes>, CacheError> {
+        if let Some(error) = self.deferred_error.take() {
+            let _ = self.entry.abort(guard.clone()).await;
+            self.source = None;
+            self.pending = None;
+            return Err(error);
+        }
         if self.source.is_some() {
             if self.pending.is_none() {
                 match self.source.as_mut().expect("leader source").next().await {
@@ -71,18 +79,39 @@ impl Delivery {
                 }
             }
             if let Some(value) = &self.pending {
-                let mut end = (self.offset + self.cache.chunk_bytes()).min(value.len());
-                while end > self.offset && !value.is_char_boundary(end) {
-                    end -= 1;
+                let limit = (self.offset + self.cache.read_batch_bytes()).min(value.len());
+                let mut at = self.offset;
+                let mut parts = Vec::with_capacity(8);
+                while at < limit && parts.len() < 32 {
+                    let mut end = (at + self.cache.chunk_bytes()).min(limit);
+                    while end > at && !value.is_char_boundary(end) {
+                        end -= 1;
+                    }
+                    if end == at {
+                        break;
+                    }
+                    parts.push(&value[at..end]);
+                    at = end;
                 }
-                if end == self.offset && end < value.len() {
-                    return Err(CacheError::Capacity);
+                if parts.is_empty() {
+                    if at < value.len() {
+                        return Err(CacheError::Capacity);
+                    }
+                    parts.push("");
                 }
-                self.entry
-                    .put(&value[self.offset..end], guard.clone())
-                    .await?;
-                self.offset = end;
-                if end == value.len() {
+                let result = self.entry.put_batch(&parts, guard.clone()).await?;
+                self.offset += parts[..result.accepted]
+                    .iter()
+                    .map(|part| part.len())
+                    .sum::<usize>();
+                if result.capacity_reached {
+                    if result.accepted == 0 {
+                        let _ = self.entry.abort(guard.clone()).await;
+                        return Err(CacheError::Capacity);
+                    }
+                    self.deferred_error = Some(CacheError::Capacity);
+                }
+                if self.offset == value.len() {
                     self.pending = None;
                 }
             }

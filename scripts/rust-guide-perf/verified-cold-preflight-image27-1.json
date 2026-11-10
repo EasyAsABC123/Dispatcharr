@@ -1,0 +1,300 @@
+{
+  "passed": false,
+  "scope": "Isolated fixed-rate Source/native coldXMLTV10 preflight; diagnostic only, not fullguide matrix/qualification acceptance",
+  "performance_verified": false,
+  "full_matrix_accepted": false,
+  "source_qualification_performed": false,
+  "normal_failure_cleanup": true,
+  "manual_interrupt": false,
+  "build_manifest": "artifacts/rust/candidate-build-lookup-snapshot-image27-2/build.json",
+  "build_manifest_sha256": "035e3fede81e6faab195903da449441abba5a07d660de7e6a60fd23e666a323a",
+  "candidate_image_binding": {
+    "image_id": "sha256:0844627cf65913ddea6a3bc01fbf8bdd596055735765cac6bd593921b620f8e2",
+    "source_tree_sha256": "59d5db446ffc4eaa3c68c20ecc552c98d6725aa2beb788ffddba89762e5a1c82",
+    "manifest_verified": true
+  },
+  "source_archive_sha256": "5fa1034dd2407cca5e733338576f88f2bbf71b8663d06a0d7d66bc4ff5b51bb2",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "quiet_cue": "artifacts/rust/guide-performance-quiet-3/cold-preflight.json",
+  "quiet_cue_sha256": "7938a554a441314fe2045f2c07599266bff96a99983e33c7eaf7b1e68ec2d8ac",
+  "policy_sha256": "b0e71ce2f53d69f2aaae386c62aa454d96f93ff53b43907335ef57aae52a4bdf",
+  "workload": {
+    "name": "xmltv-cold-10",
+    "kind": "xml",
+    "method": "GET",
+    "path": "/output/epg?days=1&prev_days=0",
+    "users": 10,
+    "cache_state": "cold",
+    "period_candidates_seconds": [
+      10,
+      15,
+      20
+    ]
+  },
+  "period_seconds": 10,
+  "warmup_seconds": 15,
+  "measurement_seconds": 60,
+  "budgets": {
+    "max_cpu_ratio": 1.0,
+    "max_memory_ratio": 1.0,
+    "max_ttfb_p95_ratio": 1.1,
+    "ttfb_floor_ms": 50,
+    "max_completion_p95_ratio": 1.1,
+    "min_throughput_ratio": 0.95,
+    "min_pacing_fraction": 0.95,
+    "max_errors": 0,
+    "minimum_samples": 50,
+    "max_oom_kills": 0,
+    "max_counter_resets": 0
+  },
+  "limits": {
+    "backend": {
+      "memory_bytes": 536870912,
+      "nano_cpus": 2000000000
+    },
+    "infrastructure": {
+      "memory_bytes": 1073741824,
+      "nano_cpus": 1000000000
+    },
+    "origin": {
+      "memory_bytes": 1073741824,
+      "nano_cpus": 2000000000
+    }
+  },
+  "comparison": {
+    "passed": false,
+    "failures": [
+      "regression:completion_p95_ms"
+    ],
+    "ratios": {
+      "cpu_percent_mean": 0.8856031986028939,
+      "peak_working_memory_bytes": 0.4036244370634901,
+      "completion_p95_ms": 1.2220335092041117,
+      "throughput_per_second": 1.0
+    },
+    "ttfb_p95_ceiling_ms": 87.64010420127306
+  },
+  "details": {
+    "source": {
+      "normalized": {
+        "cpu_percent_mean": 7.4084405104962245,
+        "peak_working_memory_bytes": 492048384,
+        "ttfb_p95_ms": 79.67282200115733,
+        "completion_p95_ms": 459.0603569995437,
+        "throughput_per_second": 1.0,
+        "pacing_fraction": 1,
+        "samples": 60,
+        "errors": 0,
+        "sample_errors": 0,
+        "late_completed": 0,
+        "oom_kills": 0,
+        "counter_resets": 0,
+        "correct_responses": true,
+        "cache_state_verified": true,
+        "fixture_unchanged": true,
+        "limits_verified": true
+      },
+      "cache_witness": {
+        "scope": "Before/after numeric cache states outside measured window",
+        "requested_state": "cold",
+        "before": {
+          "generation": "0",
+          "chunks": 29,
+          "bytes": 13015448,
+          "ready": "1",
+          "status": "ready",
+          "locked": false,
+          "ready_ttl_seconds": 295,
+          "smallest_chunk_bytes": 6,
+          "largest_chunk_bytes": 574800,
+          "key_types": {
+            "chunks": "list",
+            "ready": "string",
+            "status": "string",
+            "lock": "none"
+          },
+          "key_ttl_seconds": {
+            "chunks": 295,
+            "ready": 295,
+            "status": 295,
+            "lock": -2
+          }
+        },
+        "after": {
+          "generation": "0",
+          "chunks": 29,
+          "bytes": 13015448,
+          "ready": "1",
+          "status": "ready",
+          "locked": false,
+          "ready_ttl_seconds": 290,
+          "smallest_chunk_bytes": 6,
+          "largest_chunk_bytes": 574800,
+          "key_types": {
+            "chunks": "list",
+            "ready": "string",
+            "status": "string",
+            "lock": "none"
+          },
+          "key_ttl_seconds": {
+            "chunks": 290,
+            "ready": 290,
+            "status": 290,
+            "lock": -2
+          }
+        }
+      },
+      "service_counter_deltas": {
+        "baseline": {
+          "cpu_percent_mean": 0.8284396934367547,
+          "cpu_usage_usec": 498323,
+          "elapsed_seconds": 60.15199464100078,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "origin": {
+          "cpu_percent_mean": 0.05027310672046775,
+          "cpu_usage_usec": 30240,
+          "elapsed_seconds": 60.15144472400061,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "source": {
+          "cpu_percent_mean": 6.529727710339002,
+          "cpu_usage_usec": 3927645,
+          "elapsed_seconds": 60.15021106900167,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        }
+      },
+      "before_counter_interservice_skew_seconds": 0.09219154699894716,
+      "after_counter_interservice_skew_seconds": 0.09040797499983455,
+      "sampler_max_seconds": 0.004625341000064509,
+      "traces": 60,
+      "completion_min_ms": 396.5858109986584,
+      "completion_max_ms": 471.6802650000318,
+      "raw_file": "artifacts/rust/guide-cold-preflight-image27-1/xmltv-cold-10-preflight-source.json",
+      "raw_sha256": "7659e1fbee5f81371a2a348658add36751c81ae5870f48b3aa8d793f72e2f952"
+    },
+    "candidate": {
+      "normalized": {
+        "cpu_percent_mean": 6.560938612754713,
+        "peak_working_memory_bytes": 198602752,
+        "ttfb_p95_ms": 83.28780499869026,
+        "completion_p95_ms": 560.9871390006447,
+        "throughput_per_second": 1.0,
+        "pacing_fraction": 1,
+        "samples": 60,
+        "errors": 0,
+        "sample_errors": 0,
+        "late_completed": 0,
+        "oom_kills": 0,
+        "counter_resets": 0,
+        "correct_responses": true,
+        "cache_state_verified": true,
+        "fixture_unchanged": true,
+        "limits_verified": true
+      },
+      "cache_witness": {
+        "scope": "Before/after numeric cache states outside measured window",
+        "requested_state": "cold",
+        "before": {
+          "generation": "0",
+          "chunks": 203,
+          "bytes": 13015448,
+          "ready": "1",
+          "status": "ready",
+          "locked": false,
+          "ready_ttl_seconds": 295,
+          "smallest_chunk_bytes": 6,
+          "largest_chunk_bytes": 65536,
+          "key_types": {
+            "chunks": "list",
+            "ready": "string",
+            "status": "string",
+            "lock": "none"
+          },
+          "key_ttl_seconds": {
+            "chunks": 295,
+            "ready": 295,
+            "status": 295,
+            "lock": -2
+          }
+        },
+        "after": {
+          "generation": "0",
+          "chunks": 203,
+          "bytes": 13015448,
+          "ready": "1",
+          "status": "ready",
+          "locked": false,
+          "ready_ttl_seconds": 290,
+          "smallest_chunk_bytes": 6,
+          "largest_chunk_bytes": 65536,
+          "key_types": {
+            "chunks": "list",
+            "ready": "string",
+            "status": "string",
+            "lock": "none"
+          },
+          "key_ttl_seconds": {
+            "chunks": 290,
+            "ready": 290,
+            "status": 290,
+            "lock": -2
+          }
+        }
+      },
+      "service_counter_deltas": {
+        "baseline": {
+          "cpu_percent_mean": 4.951456207938837,
+          "cpu_usage_usec": 2978690,
+          "elapsed_seconds": 60.15785811099704,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "origin": {
+          "cpu_percent_mean": 0.047883882661810206,
+          "cpu_usage_usec": 28805,
+          "elapsed_seconds": 60.155940577002184,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        },
+        "candidate": {
+          "cpu_percent_mean": 1.5615985221540658,
+          "cpu_usage_usec": 939343,
+          "elapsed_seconds": 60.15265682400059,
+          "throttled_period_fraction": 0.0,
+          "throttled_usec": 0
+        }
+      },
+      "before_counter_interservice_skew_seconds": 0.08695604799868306,
+      "after_counter_interservice_skew_seconds": 0.08175476100223023,
+      "sampler_max_seconds": 0.004298761999962153,
+      "traces": 60,
+      "completion_min_ms": 460.61819099850254,
+      "completion_max_ms": 561.2631359981606,
+      "raw_file": "artifacts/rust/guide-cold-preflight-image27-1/xmltv-cold-10-preflight-candidate.json",
+      "raw_sha256": "6be8e04f268f3db59d1f54557edc65fd9ff44445482ddc85997f6bd9acef35a7"
+    }
+  },
+  "report": "artifacts/rust/guide-cold-preflight-image27-1/integration.json",
+  "report_sha256": "beeb87f0b59b7047d76275dc884ad4c8e7d23b1ecdab785cd276947bb0135a6f",
+  "preflight_report_sha256": "529ebd9315eef640aa4e9fc2251c9c9519c82184eb890cd25fe394f5e8b544b6",
+  "pairs_sha256": "55b8bf934757ed8703da45215e36eb66e61bf586416797a517ab83c24f78f813",
+  "tool_source": "artifacts/rust/guide-cold-preflight-image27-1/tool-source",
+  "tool_map_canonical_sha256": "76ab79b437a2ac283384fb600e17870182d367534aac008fade25c4d487c6d31",
+  "published_projection": "scripts/rust-guide-perf/evidence-cold-preflight-image27-1.json",
+  "published_projection_sha256": "d93516de3763fd2c7c8ed85a26f8dbe29d5f37efbd8e88539e202c7aa3fe35a3",
+  "resource_samples": 120,
+  "request_traces": 120,
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "next_steps": [
+    "Completionp95 exceeds unchanged1.10 budget; no fullmatrix or gain acceptance. Root investigates retained cold10 timing/cache/command path before new runtime.",
+    "Retain both completed phases and all exact body/counter/witness checks; no favorable replacement, threshold/rate retune or automatic rerun.",
+    "Any runtime optimization requires a new canonical immutable image plus compatibility gates and independentlyauthorized experiment."
+  ],
+  "credit": "Original Dispatcharr authors retain application credit and AGPL licensing."
+}
