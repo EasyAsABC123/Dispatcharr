@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "scope": "Owned copied media/data UID65532 component rehearsal; no application hook/default mount change",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "runtime_image": "sha256:56c2d22e0f347230a7e009ae982af2ce354166c560b422be2abf0dcb57a0e3ef",
+  "runtime_manifest_sha256": "069baedff4b95c7301177e8884c77f1ead04cd895c5d50954cd19cb59c6ad6ad",
+  "source_snapshot_origin": {
+    "manifest": "artifacts/rust/m6-index-volume-copy-125/integration.json",
+    "manifest_sha256": "7bad04c9baf5c4ece71b72ca255d8666ca9d7f7884a1777ff72034648f0fbdf2",
+    "previous_fixture_passed": false,
+    "scope": "Reuses exact successfully compiled source; prior fixture copy setup failure remains unaccepted."
+  },
+  "rust_source_archive_sha256": "1458609facc81d9ca02127a5576eba2c289359b5ec39dc0f74eb1434f4f3e734",
+  "component_packaging_sha256": {
+    "LICENSE": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+    "ATTRIBUTION.md": "44dafbead10ed6def886b0bd0c27e106d9a2025c4fa24700f66803c328b1997a",
+    "Dockerfile.index-volume-component": "0bd5fb79bae53f4879c8a1e81e871c2c0504c90ba77dc198974283cfe45fc69b"
+  },
+  "component_builder_image_id": "sha256:fe817e2d3912a3339224c298b0d4df197fec811fcbfa611620ce6710fd482e46",
+  "binary_sha256": "c43f6e57b0a18f72bfa7e292f987ccd3919f60df692b947fd381079a89ce71f0",
+  "native_uid": 65532,
+  "native_process_cwd": "/",
+  "explicit_source_cwd": "/app",
+  "explicit_media_root": "/app/media",
+  "native_component_protocol_roundtrip": true,
+  "existing_production_volume_modified": false,
+  "application_hook_verified": false,
+  "application_image_rebuilt": false,
+  "default_database_unchanged": true,
+  "cleanup": "owned containers/project removed",
+  "resources_retained": false,
+  "performance_verified": false,
+  "evidence": "artifacts/rust/m6-index-volume-copy-127",
+  "checks_passed": 58,
+  "path_cases": 11,
+  "runtime_source_paths": "artifacts/rust/m6-index-volume-copy-127/frozen-source",
+  "tool_snapshot": "artifacts/rust/m6-index-volume-copy-127/tool-source",
+  "integration_sha256": "1321435f273ac8fcc7341aac62ba0d654ab2e06770537ce341a5d816ecbf609d",
+  "runtime_source_sha256": {
+    "rust/crates/ingest-epg/src/current_lookup.rs": "476bc757ac6f11a17bfb005c6ca0d09e738fcb2c5d0cae5a1ace8c85e0546b8b",
+    "rust/crates/ingest-epg/src/index_service.rs": "baa150a373de92d407483c479bc5a1dc85e138aea7f9dbf65c48c308eda957b1",
+    "rust/crates/job-transport/examples/index_worker_fixture.rs": "0a263f609ae143e1f21d92ac1c909aafef7853fc1b1232d22ff8f63c0c7e8e55"
+  },
+  "limitations": [
+    "A separately compiled frozen component binary is mounted into the exact runtime image; its application executable is unchanged.",
+    "Copied fixture media/data only: no production volume cutover, app callback attachment or environment defaults.",
+    "Failed125 tmpfs-copy setup and126 host/bookworm ABI mismatch retained.",
+    "Remaining malformed-index shapes and native HTTP dispatch-failure renderer require separate gates."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing.",
+  "reproduction": "source artifacts/rust/tooling/environment.sh && python3 scripts/rust-epg-parity/run_index_volume.py --output artifacts/rust/m6-index-volume-copy-next --runtime-manifest artifacts/rust/candidate-build-grid-queue-image30-1/build.json --rust-snapshot-manifest artifacts/rust/m6-index-volume-copy-125/integration.json"
+}

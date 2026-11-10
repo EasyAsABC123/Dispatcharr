@@ -44,6 +44,7 @@ pub struct EpgProgramReads {
     limits: EpgProgramReadLimits,
     workers: Arc<Semaphore>,
     current_clock: Arc<dyn Fn() -> chrono::DateTime<chrono::Utc> + Send + Sync>,
+    current_file_lookup: Option<(Arc<dyn crate::CurrentFileLookup>, std::path::PathBuf)>,
 }
 fn unavailable() -> StoreError {
     StoreError::StatusBody(503, json!({"detail":"Guide read capacity unavailable."}))
@@ -122,17 +123,35 @@ impl EpgProgramReads {
         let state = self.clone();
         let (sender, receiver) = oneshot::channel();
         tokio::spawn(async move {
-            let result = state
-                .auth
-                .store
-                .current_programmes_db(selection, now, 50000, state.limits.response_bytes)
-                .await
-                .map(|data| {
-                    Bytes::from_owner(OwnedJson {
-                        data,
-                        _lease: lease,
-                    })
-                });
+            let data = match (&state.current_file_lookup, selection) {
+                (Some((lookup, cache_root)), crate::CurrentProgramSelection::EpgData(ids)) => {
+                    state
+                        .auth
+                        .store
+                        .current_epg_with_file_lookup(
+                            ids,
+                            now,
+                            state.limits.response_bytes,
+                            cache_root.clone(),
+                            lookup.clone(),
+                            lease.clone(),
+                        )
+                        .await
+                }
+                (_, selection) => {
+                    state
+                        .auth
+                        .store
+                        .current_programmes_db(selection, now, 50000, state.limits.response_bytes)
+                        .await
+                }
+            };
+            let result = data.map(|data| {
+                Bytes::from_owner(OwnedJson {
+                    data,
+                    _lease: lease,
+                })
+            });
             let _ = sender.send(result);
         });
         tokio::time::timeout(self.limits.deadline, receiver)
@@ -153,7 +172,23 @@ impl EpgProgramReads {
             limits,
             workers: Arc::new(Semaphore::new(limits.concurrent_responses)),
             current_clock: Arc::new(chrono::Utc::now),
+            current_file_lookup: None,
         })
+    }
+    /// Optional component adapter. The default and Channels selection remain
+    /// DB-only. Callers must supply a separately verified dispatcher/path context.
+    pub fn with_current_file_lookup(
+        mut self,
+        lookup: Arc<dyn crate::CurrentFileLookup>,
+        cache_root: std::path::PathBuf,
+    ) -> Result<Self, StoreError> {
+        if !cache_root.is_absolute() || cache_root.as_os_str().len() > 4096 {
+            return Err(StoreError::Unsupported(
+                "Invalid current-programme cache root",
+            ));
+        }
+        self.current_file_lookup = Some((lookup, cache_root));
+        Ok(self)
     }
     pub fn with_current_clock(
         mut self,

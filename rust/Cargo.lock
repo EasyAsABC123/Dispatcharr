@@ -614,6 +614,7 @@ dependencies = [
 name = "dispatcharr-ingest-epg"
 version = "0.1.0"
 dependencies = [
+ "axum",
  "base64 0.22.1",
  "bytes",
  "chrono",
@@ -624,8 +625,10 @@ dependencies = [
  "dispatcharr-store",
  "dispatcharr-xmltv-parser",
  "futures-util",
+ "jsonwebtoken",
  "memchr",
  "redis",
+ "reqwest",
  "serde_json",
  "sqlx",
  "tokio",

@@ -13,6 +13,10 @@ use std::{
 };
 #[derive(Debug)]
 pub enum CurrentFileError {
+    /// Only a failed missing-index publication; Original propagates HTTP500.
+    Dispatch(ImportError),
+    /// Invalid stored index structure/offset, distinct from XML parser limits.
+    IndexShape,
     Runtime(ImportError),
     Time(XmltvTimeError),
 }
@@ -113,7 +117,7 @@ pub fn read_current_file(
     }
     if interleaved {
         // Source offsets[-1] raises for a malformed empty interleaved index.
-        let offset = offsets.last().ok_or(ImportError::Parser)?;
+        let offset = offsets.last().ok_or(CurrentFileError::IndexShape)?;
         file.seek(SeekFrom::Start(*offset))?;
         scan(
             &mut file,
@@ -180,7 +184,7 @@ pub fn read_current_with_opener(
         return Ok(CurrentFileResult::Missing);
     }
     active(cancel)?;
-    let offset = offsets.last().ok_or(ImportError::Parser)?;
+    let offset = offsets.last().ok_or(CurrentFileError::IndexShape)?;
     let mut file = open()?;
     active(cancel)?;
     if !file.metadata()?.is_file() {

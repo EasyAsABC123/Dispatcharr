@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "scope": "Reviewed current-file HTTP adapter, copied path context, bounded index intake/ETA and duplicate-ID worker components; no app hookup or complete M6/M8 acceptance",
+  "base_revision": "47c12527691725ad38d3dec25f49ad19079284cd",
+  "validation_evidence": "artifacts/rust/current-index-component-workspace-1",
+  "reviewed_inputs_sha256": "f0a95c44c1dcd3c9892527b082574528cafd8a129b16b301a4747cb8d4f53c4d",
+  "compiled_source_manifest_sha256": "69bbc706e63d5e23a07742ea0afaaa2bcf39c22253d27c1b22368067d9c0840c",
+  "strict_workspace_all_targets_clippy": true,
+  "clippy_log_sha256": "81b761da7baa5665dd3d4b64925d54be85f38978646c4308feece0582a9ca1ee",
+  "workspace_tests": {
+    "passed": 325,
+    "failed": 0,
+    "external_fixture_ignored": 293,
+    "suites": 149,
+    "log_sha256": "24ab4151a022611ad781a9faa8ce8b591c22c1ac2aa86a28d339a335efa15224"
+  },
+  "component_proofs": [
+    {
+      "path": "scripts/rust-job-contracts/verified-final-index-worker-closure-3.json",
+      "sha256": "34b7a2e9d4b78c66c9496d5f3a81da35ac08154b157092d6d3fa2d6212a8273f"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-index-volume-copy-127.json",
+      "sha256": "ec398ced0694e7bbd77b4fb687ec7e109a3f449393797cc578d4b8402467ed4b"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-current-dispatch-http-source-native-128.json",
+      "sha256": "7e701df4acd6c9c0c0f9c3c23f13b3b6cdc59ef089b7b684c066a57bcb508ff7"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-current-malformed-index-original-129.json",
+      "sha256": "3a78bbe380f476bc7571f5be3be2b81ffc280e863184cc3c91e04f86d73c427e"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-current-malformed-index-source-native-130.json",
+      "sha256": "f461b1968cc35ae2b1b8ef78312ac984e2f442c718aab639401ef53bd2723d78"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-current-bridge-specific500-131.json",
+      "sha256": "c8121c397d6100c2d7e252058654b689b9cfc87607a9afcd01298b65b20ffe6a"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-index-service-default-path-132.json",
+      "sha256": "6b7808c60ce7fb8e0808fefdee66e69e5b80e6fa38d4fd828ff9365ca1ce26e5"
+    }
+  ],
+  "source_composition": "Exact job3 frozen modules/graph plus accepted131 current-file/HTTP modules/tests. Only overlapping difference is the tested131 current_bridge_sql assertion update. No application/main changes. Newer test/graph drafts excluded.",
+  "application_hook_verified": false,
+  "performance_verified": false,
+  "full_milestones_complete": [],
+  "remaining": [
+    "Mixed-family queue consumption and automatic visibility/cadence recovery remain open; index intake preserves unsupported foreign heads.",
+    "Native exception result serialization, schedules and complete job/status APIs remain open.",
+    "Current HTTP Parsing to actual worker to programme flow is a separate pending component gate.",
+    "Default packaged current-file hookup, production volume cutover/rollback and full application parity require additional gates."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application/algorithm credit and AGPL licensing; Celery/Kombu authors retain transport algorithm credit."
+}

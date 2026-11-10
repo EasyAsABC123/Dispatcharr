@@ -29,6 +29,10 @@ pub enum Error {
     AmbiguousResult(Uuid),
     AmbiguousPublication(Uuid),
     DrainTimeout,
+    LostReservation,
+    AmbiguousReservation { task_id: Uuid, delivery_tag: Uuid },
+    AmbiguousAck(Uuid),
+    AmbiguousRestore(Uuid),
 }
 #[derive(Clone, Debug)]
 pub struct Config {
@@ -49,6 +53,16 @@ struct Lease {
     _slot: OwnedSemaphorePermit,
     _caller: Arc<dyn Send + Sync>,
 }
+// A reserve timeout is logical only. The unique marker remains inside the
+// physical command's Lease until its real reply/disconnection has completed.
+struct PhysicalCompletion(Option<tokio::sync::oneshot::Sender<()>>);
+impl Drop for PhysicalCompletion {
+    fn drop(&mut self) {
+        if let Some(done) = self.0.take() {
+            let _ = done.send(());
+        }
+    }
+}
 struct Inner {
     broker: RedisTransport,
     result: RedisTransport,
@@ -56,6 +70,8 @@ struct Inner {
     closed: AtomicBool,
     config: Config,
     database: String,
+    index_only: bool,
+    eta: std::sync::Mutex<Option<Arc<crate::eta::Pool>>>,
 }
 #[derive(Clone)]
 pub struct Jobs {
@@ -113,6 +129,38 @@ impl Jobs {
         if b.get_connection_info().addr != r.get_connection_info().addr {
             return Err(Error::Configuration);
         }
+        Self::connect_owned(broker, result, config, database.to_owned(), false).await
+    }
+    /// Production connection authority for programme-index tasks only. This
+    /// neither starts a consumer nor grants backup/restore publication/execution.
+    /// Configured broker/backend may use different endpoints or the same DB,
+    /// matching Source's separately configurable URLs. Errors never downgrade TLS.
+    pub(crate) fn operation_capacity(&self) -> usize {
+        self.inner.config.operations
+    }
+    pub async fn connect_index(broker: &str, result: &str, config: Config) -> Result<Self, Error> {
+        Self::connect_owned(broker, result, config, String::new(), true).await
+    }
+    async fn connect_owned(
+        broker: &str,
+        result: &str,
+        config: Config,
+        database: String,
+        index_only: bool,
+    ) -> Result<Self, Error> {
+        if broker.len() > 4096
+            || result.len() > 4096
+            || config.operations == 0
+            || config.operations > 16
+            || config.command_timeout.is_zero()
+            || config.command_timeout > Duration::from_secs(30)
+            || config.max_queued_jobs == 0
+            || config.max_queued_jobs > 10000
+        {
+            return Err(Error::Configuration);
+        }
+        redis::Client::open(broker).map_err(|_| Error::Configuration)?;
+        redis::Client::open(result).map_err(|_| Error::Configuration)?;
         let options = TransportConfig {
             max_operations: config.operations,
             max_queued_operations: config.operations,
@@ -131,7 +179,9 @@ impl Jobs {
                 slots: Arc::new(Semaphore::new(config.operations)),
                 closed: AtomicBool::new(false),
                 config,
-                database: database.to_owned(),
+                database,
+                index_only,
+                eta: std::sync::Mutex::new(None),
             }),
         })
     }
@@ -153,11 +203,69 @@ impl Jobs {
             _caller: caller,
         })
     }
+    pub(crate) fn eta_pool(
+        &self,
+        limits: crate::eta::Limits,
+    ) -> Result<Arc<crate::eta::Pool>, Error> {
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(Error::Closed);
+        }
+        let mut existing = self.inner.eta.lock().unwrap();
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(Error::Closed);
+        }
+        if let Some(pool) = existing.as_ref() {
+            if pool.limits != limits {
+                return Err(Error::Configuration);
+            };
+            return Ok(pool.clone());
+        }
+        let pool = Arc::new(crate::eta::Pool::new(limits)?);
+        *existing = Some(pool.clone());
+        Ok(pool)
+    }
+    pub fn eta_available_slots(&self) -> Option<usize> {
+        self.inner
+            .eta
+            .lock()
+            .unwrap()
+            .as_ref()
+            .map(|pool| pool.count.available_permits())
+    }
+    pub(crate) fn owns_reservation(
+        &self,
+        reservation: &crate::eta::Reservation,
+    ) -> Result<(), Error> {
+        if self
+            .inner
+            .eta
+            .lock()
+            .unwrap()
+            .as_ref()
+            .is_some_and(|pool| Arc::ptr_eq(pool, &reservation.pool))
+        {
+            Ok(())
+        } else {
+            Err(Error::Configuration)
+        }
+    }
+    fn cleanup_lease(&self, caller: Arc<dyn Send + Sync>) -> Result<Lease, Error> {
+        let slot = self
+            .inner
+            .slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| Error::Capacity)?;
+        Ok(Lease {
+            _slot: slot,
+            _caller: caller,
+        })
+    }
     pub fn available_slots(&self) -> usize {
         self.inner.slots.available_permits()
     }
-    pub fn copied_database(&self) -> &str {
-        &self.inner.database
+    pub fn copied_database(&self) -> Option<&str> {
+        (!self.inner.index_only).then_some(self.inner.database.as_str())
     }
     pub async fn publish(
         &self,
@@ -165,6 +273,9 @@ impl Jobs {
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
+        if self.inner.index_only {
+            return Err(Error::UnsupportedTask);
+        }
         let lease = self.lease(caller)?;
         let bytes = protocol::encode(
             task,
@@ -267,10 +378,287 @@ impl Jobs {
             _ => Err(Error::Corrupt),
         }
     }
+    /// Reserve only captured manual index ETA children. Count/tuple-byte limits
+    /// cover the shared Source unacked namespace, including foreign reservations.
+    pub async fn peek_index_candidate(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        limits: crate::eta::Limits,
+    ) -> Result<Option<crate::eta::Candidate>, Error> {
+        let pool = self.eta_pool(limits)?;
+        let budget = Arc::new(pool.acquire()?);
+        let guard = Arc::new((caller, budget.clone()));
+        let lease = self.lease(guard)?;
+        let keys = vec!["celery".to_owned()];
+        let (reply, _held) = self
+            .inner
+            .broker
+            .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => crate::eta::Receipt::prepare(&reply.1)
+                .map(|receipt| {
+                    Some(crate::eta::Candidate {
+                        receipt: Arc::new(receipt),
+                        budget,
+                        pool,
+                    })
+                })
+                .map_err(|_| Error::UnsupportedTask),
+            _ => Err(Error::Corrupt),
+        }
+    }
+    pub async fn reserve_index_candidate(
+        &self,
+        candidate: crate::eta::Candidate,
+        caller: Arc<dyn Send + Sync>,
+        limits: crate::eta::Limits,
+    ) -> Result<crate::eta::Reservation, Error> {
+        let pool = self.eta_pool(limits)?;
+        if !Arc::ptr_eq(&pool, &candidate.pool) {
+            return Err(Error::Configuration);
+        }
+        let budget = candidate.budget.clone();
+        self.reserve_prepared(candidate, caller, limits, budget)
+            .await
+    }
+    /// Driver-only supervised reserve: never execute on an ambiguous logical
+    /// timeout. Keep the same frame credit, wait for the physical command, then
+    /// reconcile the exact owner tuple before handing a receipt to execution.
+    /// The intake supervisor must retain/poll this future through shutdown.
+    pub async fn reserve_index_candidate_settled(
+        &self,
+        candidate: crate::eta::Candidate,
+        caller: Arc<dyn Send + Sync>,
+        limits: crate::eta::Limits,
+    ) -> Result<crate::eta::Reservation, Error> {
+        let expected = crate::eta::Reservation::new_shared(
+            candidate.receipt.clone(),
+            candidate.budget.clone(),
+            candidate.pool.clone(),
+        );
+        let (done, completed) = tokio::sync::oneshot::channel();
+        let physical: Arc<dyn Send + Sync> =
+            Arc::new((caller.clone(), PhysicalCompletion(Some(done))));
+        match self
+            .reserve_index_candidate(candidate, physical, limits)
+            .await
+        {
+            Err(Error::AmbiguousReservation { .. }) => {
+                // Completion closes only when the actual command drops its
+                // unique guard, including after a detached timeout.
+                let _ = completed.await;
+                loop {
+                    match self.reservation_present(&expected, caller.clone()).await {
+                        Ok(true) => return Ok(expected),
+                        Ok(false) => return Err(Error::ClaimRace),
+                        Err(Error::Backend | Error::Capacity) => {
+                            tokio::time::sleep(Duration::from_millis(100)).await;
+                        }
+                        Err(error) => return Err(error),
+                    }
+                }
+            }
+            result => result,
+        }
+    }
+    async fn reservation_present(
+        &self,
+        reservation: &crate::eta::Reservation,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        self.owns_reservation(reservation)?;
+        let lease = self.cleanup_lease(Arc::new((caller, reservation.clone())))?;
+        let keys = vec!["unacked".to_owned(), "unacked_index".to_owned()];
+        let tag = reservation.delivery_tag().to_string();
+        let (reply, _held) = self
+            .inner
+            .broker
+            .command_classified::<(i64, Vec<u8>), _>(READ_ETA, &keys, &[tag.as_bytes()], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(false),
+            1 if reply.1 == reservation.tuple_bytes() => Ok(true),
+            1 => Err(Error::LostReservation),
+            _ => Err(Error::Corrupt),
+        }
+    }
+    async fn reserve_prepared(
+        &self,
+        candidate: crate::eta::Candidate,
+        caller: Arc<dyn Send + Sync>,
+        limits: crate::eta::Limits,
+        budget: Arc<crate::eta::Budget>,
+    ) -> Result<crate::eta::Reservation, Error> {
+        let reservation =
+            crate::eta::Reservation::new_shared(candidate.receipt, budget, candidate.pool);
+        let guard = Arc::new((caller, reservation.clone()));
+        let lease = self.lease(guard)?;
+        let keys = vec![
+            "celery".to_owned(),
+            "unacked".to_owned(),
+            "unacked_index".to_owned(),
+        ];
+        let tag = reservation.delivery_tag().to_string();
+        let score = format!(
+            "{:.6}",
+            chrono::Utc::now().timestamp_micros() as f64 / 1_000_000.0
+        );
+        let count = limits.max_pending.to_string();
+        let bytes = limits.max_pending_bytes.to_string();
+        let r = &reservation.receipt;
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(
+                crate::eta::RESERVE,
+                &keys,
+                &[
+                    &r.queued_bytes,
+                    tag.as_bytes(),
+                    &r.tuple_bytes,
+                    score.as_bytes(),
+                    count.as_bytes(),
+                    bytes.as_bytes(),
+                ],
+                lease,
+            )
+            .await
+        {
+            Ok((1, _)) => Ok(reservation),
+            Ok((0, _)) => Err(Error::ClaimRace),
+            Ok((-4, _)) => Err(Error::Capacity),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousReservation {
+                task_id: reservation.message().task_id,
+                delivery_tag: reservation.delivery_tag(),
+            }),
+            Err(e) => Err(map(e)),
+        }
+    }
+    pub async fn reserve_index_eta(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        limits: crate::eta::Limits,
+    ) -> Result<Option<crate::eta::Reservation>, Error> {
+        let Some(candidate) = self.peek_index_candidate(caller.clone(), limits).await? else {
+            return Ok(None);
+        };
+        if candidate.message().eta.is_none() {
+            return Err(Error::UnsupportedTask);
+        }
+        self.reserve_index_candidate(candidate, caller, limits)
+            .await
+            .map(Some)
+    }
+    pub async fn read_index_eta(
+        &self,
+        tag: Uuid,
+        caller: Arc<dyn Send + Sync>,
+        limits: crate::eta::Limits,
+    ) -> Result<Option<crate::eta::Reservation>, Error> {
+        let pool = self.eta_pool(limits)?;
+        let budget = Arc::new(pool.acquire()?);
+        let guard = Arc::new((caller, budget.clone()));
+        let lease = self.lease(guard)?;
+        let keys = vec!["unacked".to_owned(), "unacked_index".to_owned()];
+        let field = tag.to_string();
+        let (reply, _held) = self
+            .inner
+            .broker
+            .command_classified::<(i64, Vec<u8>), _>(READ_ETA, &keys, &[field.as_bytes()], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => crate::eta::Receipt::from_stored(&reply.1, tag)
+                .map(|r| Some(crate::eta::Reservation::new(r, budget, pool)))
+                .map_err(|_| Error::Corrupt),
+            _ => Err(Error::Corrupt),
+        }
+    }
+    /// Cleanup remains permitted after close: a failed final drain cannot strand
+    /// an admitted reservation by forbidding its owned ACK/restore operations.
+    pub async fn ack_index_eta(
+        &self,
+        reservation: &crate::eta::Reservation,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<(), Error> {
+        self.owns_reservation(reservation)?;
+        let lease = self.cleanup_lease(Arc::new((caller, reservation.clone())))?;
+        let tag = reservation.delivery_tag().to_string();
+        let keys = vec![
+            "celery".to_owned(),
+            "unacked".to_owned(),
+            "unacked_index".to_owned(),
+        ];
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(
+                crate::eta::ACK,
+                &keys,
+                &[tag.as_bytes(), reservation.tuple_bytes()],
+                lease,
+            )
+            .await
+        {
+            Ok((1, _)) => Ok(()),
+            Ok((0, _)) => Err(Error::LostReservation),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => {
+                Err(Error::AmbiguousAck(reservation.message().task_id))
+            }
+            Err(e) => Err(map(e)),
+        }
+    }
+    pub async fn restore_index_eta(
+        &self,
+        reservation: &crate::eta::Reservation,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<(), Error> {
+        self.owns_reservation(reservation)?;
+        let lease = self.cleanup_lease(Arc::new((caller, reservation.clone())))?;
+        let tag = reservation.delivery_tag().to_string();
+        let keys = vec![
+            "celery".to_owned(),
+            "unacked".to_owned(),
+            "unacked_index".to_owned(),
+        ];
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(
+                crate::eta::RESTORE,
+                &keys,
+                &[
+                    tag.as_bytes(),
+                    reservation.tuple_bytes(),
+                    &reservation.receipt.restored_bytes,
+                ],
+                lease,
+            )
+            .await
+        {
+            Ok((1, _)) => Ok(()),
+            Ok((0, _)) => Err(Error::LostReservation),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => {
+                Err(Error::AmbiguousRestore(reservation.message().task_id))
+            }
+            Err(e) => Err(map(e)),
+        }
+    }
     pub(crate) async fn claim_create(
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<Uuid>, Error> {
+        if self.inner.index_only {
+            return Err(Error::UnsupportedTask);
+        }
         let lease = self.lease(caller.clone())?;
         let keys = vec!["celery".to_owned()];
         let (reply, held) = self
@@ -401,15 +789,35 @@ impl Jobs {
     /// have been released. Detached commands retain their Lease until reply/drop.
     pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
         self.inner.closed.store(true, Ordering::Release);
+        let deadline = tokio::time::Instant::now() + timeout;
+        let eta = self.inner.eta.lock().unwrap().clone();
+        let _eta = if let Some(pool) = eta {
+            Some(
+                tokio::time::timeout(
+                    deadline.saturating_duration_since(tokio::time::Instant::now()),
+                    pool.count
+                        .clone()
+                        .acquire_many_owned(pool.limits.max_pending as u32),
+                )
+                .await
+                .map_err(|_| Error::DrainTimeout)?
+                .map_err(|_| Error::Backend)?,
+            )
+        } else {
+            None
+        };
         let all = self
             .inner
             .slots
             .clone()
             .acquire_many_owned(self.inner.config.operations as u32);
-        let _held = tokio::time::timeout(timeout, all)
-            .await
-            .map_err(|_| Error::DrainTimeout)?
-            .map_err(|_| Error::Backend)?;
+        let _held = tokio::time::timeout(
+            deadline.saturating_duration_since(tokio::time::Instant::now()),
+            all,
+        )
+        .await
+        .map_err(|_| Error::DrainTimeout)?
+        .map_err(|_| Error::Backend)?;
         Ok(())
     }
 }
@@ -463,4 +871,14 @@ if t=='string'then
  if old.status=='SUCCESS'then return 0 end
 end
 redis.call('SETEX',KEYS[1],3600,ARGV[1]);redis.call('PUBLISH',KEYS[1],ARGV[1]);return 1
+"#;
+
+const READ_ETA: &str = r#"
+local h=redis.call('TYPE',KEYS[1]).ok;local z=redis.call('TYPE',KEYS[2]).ok
+if h=='none'and z=='none'then return{0,''}end
+if h~='hash'or z~='zset'then return{-1,''}end
+if redis.call('HSTRLEN',KEYS[1],ARGV[1])>131072 then return{-1,''}end
+local raw=redis.call('HGET',KEYS[1],ARGV[1]);if not raw then return{0,''}end
+if not redis.call('ZSCORE',KEYS[2],ARGV[1])then return{-1,''}end
+return{1,raw}
 "#;

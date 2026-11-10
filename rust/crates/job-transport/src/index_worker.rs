@@ -55,6 +55,14 @@ pub struct ChildPublisher {
     state: Arc<Mutex<ChildState>>,
 }
 impl ChildPublisher {
+    pub(crate) fn context(jobs: Jobs, parent: IndexMessage, owner: Arc<dyn Send + Sync>) -> Self {
+        Self {
+            jobs,
+            parent,
+            owner,
+            state: Arc::new(Mutex::new(ChildState::Empty)),
+        }
+    }
     /// Exact observed manual busy deferral only. The caller can retain an
     /// IndexService SwapPolicyContext in its Arc through the real broker reply.
     pub async fn defer(
@@ -97,7 +105,7 @@ impl ChildPublisher {
         *self.state.lock().unwrap() = ChildState::Committed(id);
         Ok(id)
     }
-    fn completed_children(&self) -> Result<Vec<Uuid>, Error> {
+    pub(crate) fn completed_children(&self) -> Result<Vec<Uuid>, Error> {
         match *self.state.lock().unwrap() {
             ChildState::Empty => Ok(Vec::new()),
             ChildState::Committed(id) => Ok(vec![id]),
@@ -123,10 +131,14 @@ pub struct IndexWorker {
 pub enum Run {
     Empty,
     Completed(Uuid),
+    /// Handler executed; only rewriting an existing SUCCESS result was skipped.
     ResultAlreadySucceeded(Uuid),
 }
 impl IndexWorker {
     pub fn new_fixture(jobs: Jobs, executor: Arc<dyn IndexExecutor>) -> Self {
+        Self::new(jobs, executor)
+    }
+    pub fn new(jobs: Jobs, executor: Arc<dyn IndexExecutor>) -> Self {
         Self {
             inner: Arc::new(Inner {
                 jobs,
@@ -197,10 +209,63 @@ impl IndexWorker {
             .await
             .map_err(|_| Error::DrainTimeout)?
             .map_err(|_| Error::Closed)?;
-        self.inner
-            .jobs
-            .shutdown(timeout)
-            .await
-            .map_err(Error::Transport)
+        // Shared transport remains open for other active worker families.
+        // The owner closes Jobs once all producer/worker drains complete.
+        Ok(())
+    }
+}
+
+/// Concrete adapter using the independently accepted IndexService. Per-task
+/// child lineage lives in its immutable dispatcher, never service-global state.
+pub struct ServiceExecutor {
+    service: dispatcharr_ingest_epg::index_service::IndexService,
+}
+impl ServiceExecutor {
+    pub fn new(service: dispatcharr_ingest_epg::index_service::IndexService) -> Self {
+        Self { service }
+    }
+}
+struct ServiceDispatcher(ChildPublisher);
+impl dispatcharr_ingest_epg::index_service::IndexDispatcher for ServiceDispatcher {
+    fn defer<'a>(
+        &'a self,
+        id: i64,
+        retry: u32,
+        seconds: u32,
+        context: dispatcharr_ingest_epg::SwapPolicyContext,
+    ) -> Pin<Box<dyn Future<Output = Result<(), dispatcharr_ingest_epg::ImportError>> + Send + 'a>>
+    {
+        Box::pin(async move {
+            context.ensure_active()?;
+            self.0
+                .defer(id, retry, seconds, Arc::new(context))
+                .await
+                .map_err(|_| dispatcharr_ingest_epg::ImportError::Worker)?;
+            Ok(())
+        })
+    }
+}
+impl IndexExecutor for ServiceExecutor {
+    fn execute<'a>(
+        &'a self,
+        message: IndexMessage,
+        publisher: ChildPublisher,
+        owner: Arc<dyn Send + Sync>,
+    ) -> ExecuteFuture<'a> {
+        Box::pin(async move {
+            self.service
+                .build_with_dispatcher(
+                    dispatcharr_ingest_epg::index_service::IndexRequest {
+                        source_id: message.source_id,
+                        retry: message.retry,
+                        cancelled: Arc::new(AtomicBool::new(false)),
+                    },
+                    owner,
+                    Arc::new(ServiceDispatcher(publisher)),
+                )
+                .await
+                .map_err(|_| Error::Execution)?;
+            Ok(())
+        })
     }
 }

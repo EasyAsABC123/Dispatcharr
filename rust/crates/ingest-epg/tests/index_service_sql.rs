@@ -100,6 +100,7 @@ fn write_spec(path: &std::path::Path, parts: &Value) {
 }
 fn config() -> IndexConfig {
     IndexConfig {
+        path_context: None,
         max_jobs: 2,
         limits: IndexLimits {
             state_bytes: 1024 * 1024,

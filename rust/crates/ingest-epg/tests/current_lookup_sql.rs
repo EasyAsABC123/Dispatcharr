@@ -224,7 +224,7 @@ async fn original_lookup_guards_fresh_clock_and_index_with_explicit_shape_bounda
         .await
         .unwrap();
     let mut compared = 0;
-    let mut unsupported = 0;
+    let mut malformed = 0;
     for case in fixture["cases"].as_array().unwrap() {
         let name = case["name"].as_str().unwrap();
         if matches!(name, "missing-epg" | "no-source") {
@@ -247,10 +247,10 @@ async fn original_lookup_guards_fresh_clock_and_index_with_explicit_shape_bounda
         let result = CurrentFileLookup::lookup(&gateway, request(case), Arc::new(())).await;
         if !case["failure"].is_null() {
             assert!(
-                matches!(result, Err(StoreError::Unsupported(_))),
+                matches!(result, Err(StoreError::StatusBody(500, _))),
                 "{name}: {result:?}"
             );
-            unsupported += 1;
+            malformed += 1;
         } else {
             let actual = match result.unwrap() {
                 CurrentFileOutcome::Found(bytes) => {
@@ -286,8 +286,8 @@ async fn original_lookup_guards_fresh_clock_and_index_with_explicit_shape_bounda
         assert_eq!(gateway.retained_memory_bytes(), 0);
     }
     assert_eq!(compared, 17);
-    assert_eq!(unsupported, 6);
-    println!("17 original Source outcomes;6 explicit unsupported malformed shapes;2 metadata-only skips outside callback; no durable dispatch claim");
+    assert_eq!(malformed, 6);
+    println!("17 original Source outcomes;6 malformed shapes return Source500;2 metadata-only skips outside callback; no durable dispatch claim");
     store.pool().close().await;
 }
 #[tokio::test]

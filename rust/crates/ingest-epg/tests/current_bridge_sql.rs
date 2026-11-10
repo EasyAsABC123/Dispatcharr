@@ -44,7 +44,7 @@ async fn real_store_real_lookup_pool_one_source_outcomes_and_retained_bytes() {
         .await
         .unwrap();
     let mut matched = 0;
-    let mut unsupported = 0;
+    let mut malformed = 0;
     for case in fixture["cases"].as_array().unwrap() {
         prepare(&store, case).await;
         let name = case["name"].as_str().unwrap();
@@ -88,10 +88,10 @@ async fn real_store_real_lookup_pool_one_source_outcomes_and_retained_bytes() {
         .expect("pool-one real bridge deadlocked");
         if !case["failure"].is_null() {
             assert!(
-                matches!(result, Err(StoreError::Unsupported(_))),
+                matches!(result, Err(StoreError::StatusBody(500, _))),
                 "{name}: {result:?}"
             );
-            unsupported += 1;
+            malformed += 1;
         } else {
             let actual: Value = serde_json::from_slice(&result.unwrap()).unwrap();
             let expected = if case["result"].is_null() {
@@ -139,8 +139,8 @@ async fn real_store_real_lookup_pool_one_source_outcomes_and_retained_bytes() {
         assert!(gateway.shutdown(Duration::from_secs(2)).await);
     }
     assert_eq!(matched, 19);
-    assert_eq!(unsupported, 6);
-    println!("CURRENT_BRIDGE_SOURCE=19literal+6explicitUnsupported;realpool1;retainedfinalBytes;component-onlypublication");
+    assert_eq!(malformed, 6);
+    println!("CURRENT_BRIDGE_SOURCE=19literal+6malformedSource500;realpool1;retainedfinalBytes;component-onlypublication");
     store.pool().close().await;
 }
 #[tokio::test]

@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "scope": "Independent actualRedis ETA frame/count/byte/retention operations; no native timer/daemon/apphook acceptance",
+  "evidence": "artifacts/rust/m8-native-eta-limits-124",
+  "native_test_functions": 3,
+  "checks": [
+    "Oversized queue65537 and storedtuple131073 reject before destructivePOP/large reply transfer; observed reply delta<8192bytes.",
+    "Global foreign reservation count and totalbytes cause atomic backpressure with queue/foreignvalues preserved.",
+    "Held Candidate frames/clones retain localbudget; crossJobsCandidate rejected; transferredbudget is not doubleacquired.",
+    "Emptyhead race reportsClaimRace; huge replacedownervalue cannot beACKed/restored ordeleted.",
+    "Reservation clones holdbudget through shutdown; ownedcleanup permitted afterclose.",
+    "Callerabort afteractualreserve/restore reply isheld andACKlogicaltimeout retain caller+operation/receipt slots throughactualreply, then drain."
+  ],
+  "failed_setup": "123 selected wrong package for new test target; preserved with Sourcebasepassing/no nativeexecution.",
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "rust_source_archive_sha256": "80b9e624e8832e074bd6fce2915eb627cf6035d758de8f2c8dce9350597393a5",
+  "native_test_binary_sha256": {
+    "eta_limits": "d64170936a3fd69769ed94f9d39ef2c898b79da73ff77df1d55e03346732d31e"
+  },
+  "test_source_sha256": "558527dde3ad4c065feec67a72c770640bbb905812e71965a1182018f07758f8",
+  "eta_source_sha256": "78ffe70e0069ce0a2811c618d92c31846974d6152dbb32c90ae5f7cf6d6568ee",
+  "transport_source_sha256": "d5ddf3c90ab7b80ce796750a96e5545830aac184244d20e4f66b09b1607ef09d",
+  "native_eta_timer_verified": false,
+  "native_eta_worker_verified": false,
+  "application_hook_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr/Celery/Kombu authors and contributors retain all application/algorithm credit and licensing."
+}

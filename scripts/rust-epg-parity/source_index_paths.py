@@ -11,7 +11,7 @@ from apps.epg import tasks
 from apps.epg.models import EPGSource,EPGData,EPGSourceIndex
 NOW=dt.datetime(2026,11,10,12,tzinfo=dt.timezone.utc)
 root=Path('/app/media')/('rust-path-owned-'+uuid.uuid4().hex);root.mkdir(parents=True)
-report=json.loads(Path('/evidence/source-index-worker-private.json').read_text());cases=[]
+report=json.loads(Path('/evidence/source-index-worker-private.json').read_text());base_passed=report['passed'];report['passed']=False;cases=[]
 def programme(title,start='20261110110000',stop='20261110130000',channel='one'):
  return f'<programme channel="{channel}" start="{start} +0000" stop="{stop} +0000"><title>{title}</title></programme>'.encode()
 content=programme('ordinary');(root/'guide.xml').write_bytes(content);(root/'sub').mkdir();(root/'target').mkdir();(root/'target'/'sub').mkdir();(root/'target'/'guide.xml').write_bytes(programme('symlink-parent'));(root/'link').symlink_to(root/'target'/'sub',target_is_directory=True);(root/'broken').symlink_to(root/'absent.xml')
@@ -74,7 +74,7 @@ try:
  if unprivileged.get('failure_type')!='PermissionError':raise AssertionError('Actual unprivileged Source permission witness')
  report['path_context']={'cwd':os.getcwd(),'media_root':str(__import__('django.conf',fromlist=['settings']).settings.MEDIA_ROOT),'media_is_symlink':Path('/app/media').is_symlink(),'media_realpath':os.path.realpath('/app/media'),'uid':os.getuid(),'owned_root':str(root),'cases':cases,'permission_denial_verified':True,'permission_observation':unprivileged,'volume_migration_verified':False,'worker_cwd_verified':all(row.get('cwd')=='/app'for row in report['observer']['index-prerun.jsonl']),'worker_uids':sorted({row.get('uid')for row in report['observer']['index-prerun.jsonl']})}
  report['checks'].append({'name':'owned-path-corpus-captured','passed':len(cases)==20})
- report['passed']=report['passed']and len(cases)==20
+ report['passed']=base_passed and len(cases)==20
 finally:
  shutil.rmtree(root)
  Path('/evidence/source-index-worker-private.json').write_text(json.dumps(report,indent=2,default=str))

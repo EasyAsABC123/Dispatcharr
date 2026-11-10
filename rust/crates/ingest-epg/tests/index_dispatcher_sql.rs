@@ -135,6 +135,7 @@ async fn default_and_concurrent_overrides_do_not_share_task_trace_or_release_bef
             clock: Arc::new(chrono::Utc::now),
         },
         IndexConfig {
+            path_context: None,
             max_jobs: 2,
             limits: IndexLimits {
                 state_bytes: 1024 * 1024,

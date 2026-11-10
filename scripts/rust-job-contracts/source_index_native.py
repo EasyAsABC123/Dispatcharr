@@ -32,7 +32,7 @@ def wait(fn,seconds=30):
   time.sleep(.025)
  raise TimeoutError('Owned index observation deadline')
 def native(action,**fields):
- request={'action':action,'broker_url':os.environ['CELERY_BROKER_URL'],'result_url':os.environ['CELERY_RESULT_BACKEND'],**fields}
+ request={'action':action,'broker_url':os.environ['CELERY_BROKER_URL'],'result_url':os.environ['CELERY_RESULT_BACKEND'],'production_connector':os.environ.get('INDEX_PRODUCTION_CONNECTOR')=='1',**fields}
  p=subprocess.run(['/evidence/native-index-worker'],input=json.dumps(request),text=True,capture_output=True,timeout=30)
  if p.returncode:
   (Path('/evidence')/'native-index-failure-private.log').write_text(p.stderr[-65536:])
@@ -59,6 +59,8 @@ def stop_source_worker():
   except subprocess.TimeoutExpired:os.killpg(worker.pid,signal.SIGKILL);worker.wait(timeout=5)
  worker=None
 try:
+ if os.environ.get('INDEX_PRODUCTION_CONNECTOR')=='1':
+  check('index-only-production-constructor-no-backup-authority',native('capabilities')=={'index_only':True,'backup_restore_rejected':True}and broker.llen('celery')==0)
  # Obtain the exact original SQL/index reference without changing its algorithm.
  build_programme_index(source.id);reference=EPGSourceIndex.objects.get(source_id=source.id).data;EPGSourceIndex.objects.filter(source_id=source.id).delete()
  check('original-reference-index-nonempty',reference=={'channels':{'fixture&one':[4]},'interleaved_channels':[]})

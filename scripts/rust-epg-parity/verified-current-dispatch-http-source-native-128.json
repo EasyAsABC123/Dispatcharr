@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "scope": "Original actual HTTP broker-publication failure versus native actual loopback HTTP using real Store/CurrentLookup and unchanged original-compatible renderer; app-unwired",
+  "evidence": "artifacts/rust/m6-current-dispatch-http-source-native-128",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_http": {
+    "status": 500,
+    "mime": "text/html; charset=utf-8",
+    "body_bytes": 145,
+    "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+    "exception_class": "kombu.exceptions.OperationalError",
+    "fault_scope": "Controlled broker dependency failure only; unchanged Original WSGI/view/error renderer.",
+    "index_exists": false
+  },
+  "original_dispatch_attempts": 1,
+  "native_test_functions": 1,
+  "native_checks": [
+    "Typed CurrentFileError::Dispatch distinct from other runtime/time/file errors.",
+    "Shared CurrentFileLookup trait returns StatusBody500; no Parsing after failed publication.",
+    "Real Store programme-first/metadata/file callback bridge propagates500 with pool1.",
+    "Caller drops, physical jobs and retained memory drain after each error.",
+    "Actual loopback POST with authenticated fixture user reaches real Store pool1 and real CurrentLookup callback.",
+    "Exact Original HTTP500 HTML145 bytes/content-type, Allow and retained caller/SQL/file/service drain pass."
+  ],
+  "runtime_sources": {
+    "rust/crates/ingest-epg/src/current_file.rs": "ae34620719eee7625c4eed1da5fdff75732af434bf9a4446c8f26818baf07ec2",
+    "rust/crates/ingest-epg/src/current_lookup.rs": "476bc757ac6f11a17bfb005c6ca0d09e738fcb2c5d0cae5a1ace8c85e0546b8b",
+    "rust/crates/ingest-epg/tests/current_dispatch_sql.rs": "b1c36079bda638fa78c7ee4c7730d5d1a710e762e3ddfa2807276c68f4ef8026",
+    "rust/crates/store/src/epg_program_http.rs": "1d96def389edbd3eedde2e9769ca4816f9260df9cbe52124c410c129a2089ec3"
+  },
+  "native_test_binary_sha256": {
+    "current_dispatch_sql": "5296d27c9e34398c4d60772a9315d2645444712b1f6bad0de367ebe7434d33fc"
+  },
+  "rust_source_archive_sha256": "b1a83f031e5751095e950d04df8fddc166863fdbb58804ab70f9c3a6c555206b",
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_actual_http_route_verified": true,
+  "application_hook_verified": false,
+  "production_dispatch_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Controlled Original task.delay dependency fault, not a physical broker outage.",
+    "Optional component injection only: default DB-only and Channels behavior preserved; no application hookup.",
+    "Malformed-index six-shape HTTP parity and real worker/cutover gates remain separate."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application/algorithm credit and AGPL licensing.",
+  "tool_snapshot": "artifacts/rust/m6-current-dispatch-http-source-native-128/tool-source",
+  "source_snapshot": "artifacts/rust/m6-current-dispatch-http-source-native-128/native-source"
+}

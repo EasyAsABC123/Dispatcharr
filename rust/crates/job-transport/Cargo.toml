@@ -5,6 +5,7 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
+dispatcharr-ingest-epg = {path="../ingest-epg"}
 dispatcharr-backups = {path="../backups"}
 chrono = "0.4"
 dispatcharr-output-store = {path="../output-store"}
@@ -15,7 +16,6 @@ tokio = {version="1",features=["rt-multi-thread","sync","time","macros"]}
 uuid = {version="1",features=["v4"]}
 
 [dev-dependencies]
-dispatcharr-ingest-epg = {path="../ingest-epg"}
 dispatcharr-store = {path="../store"}
 dispatcharr-coordination = {path="../coordination"}
 zip = {version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs"]}

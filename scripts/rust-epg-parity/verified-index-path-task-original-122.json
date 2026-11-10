@@ -1,0 +1,89 @@
+{
+  "passed": true,
+  "scope": "Original index-task first-truthy/cache/relative-path and current-file result oracle; no native worker/application acceptance",
+  "evidence": "artifacts/rust/m6-index-path-task-original-122",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "index_task_path_cases": 10,
+  "cases": [
+    {
+      "name": "absolute",
+      "index_written": true,
+      "current_found": true,
+      "normal_null_return": true
+    },
+    {
+      "name": "relative",
+      "index_written": true,
+      "current_found": true,
+      "normal_null_return": true
+    },
+    {
+      "name": "dotdot",
+      "index_written": true,
+      "current_found": true,
+      "normal_null_return": true
+    },
+    {
+      "name": "symlink-parent",
+      "index_written": true,
+      "current_found": true,
+      "normal_null_return": true
+    },
+    {
+      "name": "extracted",
+      "index_written": true,
+      "current_found": true,
+      "normal_null_return": true
+    },
+    {
+      "name": "missing-preferred",
+      "index_written": false,
+      "current_found": false,
+      "normal_null_return": true
+    },
+    {
+      "name": "whitespace",
+      "index_written": false,
+      "current_found": false,
+      "normal_null_return": true
+    },
+    {
+      "name": "null-cache",
+      "index_written": true,
+      "current_found": true,
+      "normal_null_return": true
+    },
+    {
+      "name": "empty-cache",
+      "index_written": true,
+      "current_found": true,
+      "normal_null_return": true
+    },
+    {
+      "name": "broken",
+      "index_written": false,
+      "current_found": false,
+      "normal_null_return": true
+    }
+  ],
+  "source_path_context": {
+    "source_cwd": "/app",
+    "media_root": "/app/media",
+    "now": "2026-11-10T11:23:07+00:00"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_worker_context_verified": false,
+  "volume_cutover_verified": false,
+  "application_hook_verified": false,
+  "performance_verified": false,
+  "source_report_sha256": "d11ead55fd5e563c7f6a4482df3a90d62078ff1be9ce9033b7fa7b2bf9807380",
+  "tool_source_sha256": {
+    "scripts/rust-epg-parity/index_worker_observer.py": "8effb86fd4bb06e0c83c09d15fe02b3cc1f2e1013768fef39377ae590ecc9eef",
+    "scripts/rust-epg-parity/index_worker_publish.py": "8e85c49270682cbf2ab749b6b8dbdc408cd9b873134fb90d945cabf30f545727",
+    "scripts/rust-epg-parity/source_index_worker.py": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba",
+    "scripts/rust-epg-parity/run_index_worker.py": "e9cf4c203cd406e25ee95dbe42cf0706f03e9d828d0cc33343168e916bd1a496",
+    "scripts/rust-epg-parity/source_index_path_task.py": "d17d8cad2a52c15eb664300a3dabbf6d130e9536683c93eb09cc3b498c2c827a"
+  },
+  "credit": "Original Dispatcharr authors and contributors retain all application/algorithm credit and AGPL licensing."
+}

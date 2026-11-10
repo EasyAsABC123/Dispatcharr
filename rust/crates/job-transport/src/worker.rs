@@ -220,11 +220,9 @@ impl Worker {
             .await
             .map_err(|_| Error::DrainTimeout)?
             .map_err(|_| Error::Closed)?;
-        self.inner
-            .jobs
-            .shutdown(timeout)
-            .await
-            .map_err(Error::Transport)
+        // Shared transport remains open for other active worker families.
+        // The owner closes Jobs once all producer/worker drains complete.
+        Ok(())
     }
 }
 /// Validate before pop. No general task, ETA, expiry, callbacks, chain, retry,

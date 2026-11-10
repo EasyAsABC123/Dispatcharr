@@ -1,0 +1,285 @@
+{
+  "scope": "Original117 ETA reservation/restoration values; native implementation unverified until future gates",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_report_sha256": "e4fbf427f629ec9b92463e4ded3e768be09bea961501dbd0c2b7be7b67fb6990",
+  "normalization": [
+    "Consistent synthetic UUIDs preserve task/delivery/root/parent relationships; origin replaced by source-fixture@redacted.",
+    "Wall epochs reduced to score-minus-observation skew; Source ETA values remain exact.",
+    "Actual unacked tuple/object types, persistent key TTLs and restored redelivered fields remain. No actual one-hour expiry is claimed."
+  ],
+  "reservations": [
+    {
+      "phase": "before-warm-stop",
+      "delivery_tag": "00000000-0000-0000-0000-000000000001",
+      "tuple": [
+        {
+          "body": "W1szXSwgeyJfZGVmZXJfcmV0cnkiOiAxfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.epg.tasks.build_programme_index_task",
+            "id": "00000000-0000-0000-0000-000000000002",
+            "shadow": null,
+            "eta": "2026-11-10T10:04:24.157815+00:00",
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "00000000-0000-0000-0000-000000000003",
+            "parent_id": "00000000-0000-0000-0000-000000000003",
+            "argsrepr": "[3]",
+            "kwargsrepr": "{'_defer_retry': 1}",
+            "origin": "source-fixture@redacted",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "00000000-0000-0000-0000-000000000002",
+            "reply_to": "00000000-0000-0000-0000-000000000004",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "",
+        "celery"
+      ],
+      "score_minus_wall_seconds": -0.07251691818237305,
+      "types": {
+        "unacked": "hash",
+        "unacked_index": "zset",
+        "celery": "none"
+      },
+      "ttls": {
+        "unacked": -1,
+        "unacked_index": -1
+      }
+    },
+    {
+      "phase": "before-hard-stop",
+      "delivery_tag": "00000000-0000-0000-0000-000000000005",
+      "tuple": [
+        {
+          "body": "W1szXSwgeyJfZGVmZXJfcmV0cnkiOiAxfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.epg.tasks.build_programme_index_task",
+            "id": "00000000-0000-0000-0000-000000000006",
+            "shadow": null,
+            "eta": "2026-11-10T10:04:27.771946+00:00",
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "00000000-0000-0000-0000-000000000007",
+            "parent_id": "00000000-0000-0000-0000-000000000007",
+            "argsrepr": "[3]",
+            "kwargsrepr": "{'_defer_retry': 1}",
+            "origin": "source-fixture@redacted",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "00000000-0000-0000-0000-000000000006",
+            "reply_to": "00000000-0000-0000-0000-000000000008",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "00000000-0000-0000-0000-000000000005"
+          }
+        },
+        "",
+        "celery"
+      ],
+      "score_minus_wall_seconds": -0.07645487785339355,
+      "types": {
+        "unacked": "hash",
+        "unacked_index": "zset",
+        "celery": "none"
+      },
+      "ttls": {
+        "unacked": -1,
+        "unacked_index": -1
+      }
+    },
+    {
+      "phase": "after-hard-stop",
+      "delivery_tag": "00000000-0000-0000-0000-000000000005",
+      "tuple": [
+        {
+          "body": "W1szXSwgeyJfZGVmZXJfcmV0cnkiOiAxfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.epg.tasks.build_programme_index_task",
+            "id": "00000000-0000-0000-0000-000000000006",
+            "shadow": null,
+            "eta": "2026-11-10T10:04:27.771946+00:00",
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "00000000-0000-0000-0000-000000000007",
+            "parent_id": "00000000-0000-0000-0000-000000000007",
+            "argsrepr": "[3]",
+            "kwargsrepr": "{'_defer_retry': 1}",
+            "origin": "source-fixture@redacted",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "00000000-0000-0000-0000-000000000006",
+            "reply_to": "00000000-0000-0000-0000-000000000008",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "00000000-0000-0000-0000-000000000005"
+          }
+        },
+        "",
+        "celery"
+      ],
+      "score_minus_wall_seconds": -0.0843360424041748,
+      "types": {
+        "unacked": "hash",
+        "unacked_index": "zset",
+        "celery": "none"
+      },
+      "ttls": {
+        "unacked": -1,
+        "unacked_index": -1
+      }
+    }
+  ],
+  "restored": [
+    {
+      "phase": "after-warm-restore",
+      "envelope": {
+        "body": "W1szXSwgeyJfZGVmZXJfcmV0cnkiOiAxfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "00000000-0000-0000-0000-000000000002",
+          "shadow": null,
+          "eta": "2026-11-10T10:04:24.157815+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "00000000-0000-0000-0000-000000000003",
+          "parent_id": "00000000-0000-0000-0000-000000000003",
+          "argsrepr": "[3]",
+          "kwargsrepr": "{'_defer_retry': 1}",
+          "origin": "source-fixture@redacted",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "redelivered": true
+        },
+        "properties": {
+          "correlation_id": "00000000-0000-0000-0000-000000000002",
+          "reply_to": "00000000-0000-0000-0000-000000000004",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery",
+            "redelivered": true
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "00000000-0000-0000-0000-000000000001"
+        }
+      }
+    },
+    {
+      "phase": "fixture-forced-aged-score-restoration",
+      "envelope": {
+        "body": "W1szXSwgeyJfZGVmZXJfcmV0cnkiOiAxfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "00000000-0000-0000-0000-000000000006",
+          "shadow": null,
+          "eta": "2026-11-10T10:04:27.771946+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "00000000-0000-0000-0000-000000000007",
+          "parent_id": "00000000-0000-0000-0000-000000000007",
+          "argsrepr": "[3]",
+          "kwargsrepr": "{'_defer_retry': 1}",
+          "origin": "source-fixture@redacted",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "redelivered": true
+        },
+        "properties": {
+          "correlation_id": "00000000-0000-0000-0000-000000000006",
+          "reply_to": "00000000-0000-0000-0000-000000000008",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery",
+            "redelivered": true
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "00000000-0000-0000-0000-000000000005"
+        }
+      }
+    }
+  ],
+  "restore_queue_order_verified": false,
+  "credit": "Original Dispatcharr, Celery and Kombu authors retain protocol/transport/algorithm credit and original licensing."
+}

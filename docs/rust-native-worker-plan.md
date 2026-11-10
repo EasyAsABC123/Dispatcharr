@@ -58,3 +58,79 @@ No native application202 route, production constructor, scheduler, destructive r
 The native consumer deliberately retains all ETA/parented messages at the head rather than claiming unsupported reservation semantics. Original109 did not retain the complete raw unacked tuple/score and post-restore redelivery envelope, so native ETA consumption and production driver/app dispatch remain open. Index exceptions are not rewritten into a backup failure dictionary or an invented null success. The first failed fixture remains retained: creating an active missing-file test source triggered Source's real post-save refresh publication, which the native consumer correctly refused. Fresh inactive fixture sources corrected that setup without changing native runtime bytes. All projects were removed and the default database stayed unchanged. No new performance claim follows.
 
 [Original ETA117](../scripts/rust-epg-parity/verified-index-eta-original-117.json) subsequently supplies26 passing raw reservation/redelivery controls. The original unacked hash uses delivery_tag fields and JSON `[message,exchange,routing_key]`, paired with wall-clock scores in unacked_index and no TTL on either key. Warm restoration changes only the two redelivered flags; hard loss preserves a future reservation. Explicitly aging the owned score by3605seconds lets the unchanged Original restore function requeue it, and an actual restarted worker completes the same task/lineage. This controlled transport observation does not prove real one-hour expiry, original polling cadence or a native ETA consumer. It supersedes the earlier missing-capture statement only for those recorded fields.
+
+## Index-only constructor and concrete public dispatcher
+
+[Constructor interoperability1](../scripts/rust-job-contracts/verified-index-production-constructor-1.json) passes19 real checks through `Jobs::connect_index`, the concrete initial-publication dispatcher and shared IndexService executor. [Public-dispatch resources1](../scripts/rust-job-contracts/verified-index-public-dispatch-resources-1.json) passes two real Redis reply/caller/admission/drain controls. Both frozen trees have the same runtime hash. All actual execution still uses explicitly owned copied databases, and cleanup/default-database checks pass. The new connection API has no fixture-environment precondition and grants only index publication/execution capability; Create/Restore publication is rejected. Independently configurable broker/backend URLs are exposed, with the pinned local Redis layout proven here; broad transport/TLS/Sentinel configurations remain separate gates.
+
+The CurrentLookup dispatcher returns success only after a real publication reply. A timed-out or aborted caller keeps its context and publication admission until the underlying command reply; it never returns a successful Parsing dispatch for an ambiguous publication. Closing/draining initial publication leaves shared worker child/result I/O open until the worker's separate drain. These are library components, with no app/main hook or application202 promotion. The new frozen unit/Clippy validation is queued until the coordinated GRID quiet window ends; pre-capture all-target Clippy and the actual19+2 gates are retained separately. Native ETA reservation/redelivery execution and production startup/shutdown integration remain pending.
+
+## Post-quiet ETA and shared-lifecycle gates
+
+The quiet-window draft `job-transport/src/eta_draft.rs` is deliberately unregistered and uncompiled. Its normalized Source117 dataset contains three actual reservation tuples and two restored envelopes. It validates the observed message/exchange/routing-key tuple, delivery-tag identity and paired `redelivered=true` fields, retaining exact existing bytes for owner comparisons. Draft reserve/ACK/restore scripts are not execution evidence. Restore placement has no selected default: Source117's single ETA cannot establish list end or multi-reservation order. The queued pinned Kombu implementation/ordering capture must settle that before integration.
+
+After quiet, first validate the new public constructor/dispatcher frozen trees and the shared-worker lifecycle change. Family shutdown must close/drain only its own admission; a caller-owned final shared Jobs close follows all producer/worker drains under one absolute deadline. Run both directions against actual Redis: idle Index shutdown while Create still needs its result; idle Create shutdown while Index still needs a child/result. These handlers isolate physical ownership and do not substitute for actual archive/index algorithm tests.
+
+Then register the ETA codec only for its Source corpus/negative controls. Compare actual broker queue/unacked/unacked_index states for reserve, due-time earlyACK, warm restore and Source/native interoperation, including exact tag/tuple/TTL geometry and redelivery fields. Pause each mutating reply after server acceptance, drop/timeout the caller, and verify task/worker/physical ownership plus failed-drain behavior. Hard process loss while awaiting ETA must leave the reservation; original/native recovery requires separately labeled fixture-aged-score and actual visibility observations. Source117's forced old score is not a one-hour wait or real worker polling-cadence proof.
+
+A production worker needs separate bounded pending-ETA, prefetched and active admissions: an ETA timer cannot occupy the only execution slot and stall unrelated immediate tasks. No input ACK occurs before the captured pool-acceptance boundary. Warm shutdown restores reserved, unstarted work and drains active work, retaining each owner through the actual reply. Unsupported task families stay untouched. Task exceptions, priority/routing configurations, transport faults and startup/restore failure boundaries remain explicit until captured and tested. Only after these gates should the app connect the real CurrentLookup dispatcher and worker lifecycle; application202 and destructive restore remain separate milestones.
+
+The reserved index scheduler now has a separate frozen component proof in
+`scripts/rust-job-contracts/verified-native-index-eta-worker-1.json`:20 checks,
+10 library tests and strict all-target Clippy. An actual Original ETA task is
+reserved with the captured Kombu tuple/tag/zset geometry, remains PENDING before
+due, and executes the real IndexService at or after its ETA. Eight future tasks
+leave the active execution slot free; warm close restores the Original119
+reverse-delivery order and only the two captured redelivery fields change.
+Actual Original workers consume these restored envelopes. Process exit and hard
+loss retain reservations; the recovery witness explicitly ages the owned score
+by3605seconds and invokes Original `restore_visible`. This proves neither an
+elapsed one-hour timeout nor autonomous restore polling.
+
+Independent native124 tests additionally cover frame/count/byte admission,
+resident Candidate clones, cross-connection receipt ownership, empty-head races,
+large foreign replacements and retention through actual paused Redis replies.
+These are reservation/resource proofs, separate from the timer proof.
+
+A new application-unwired `IndexDriver` draft settles intake before scheduler
+close. A logical reserve timeout waits for physical completion, then reconciles
+the exact stored owner tuple before execution. Its actual Redis lifecycle tests
+are pending under `m6-index-driver-resources-1`; compilation alone is not runtime
+acceptance. Automatic visibility recovery and the full CurrentLookup HTTP
+Parsing-to-programme/dispatch500/path-context sequence remain explicit gates
+before application attachment. Shared Jobs closes only after all worker families
+and initial publishers have drained. No public202 or restore-worker authority is
+added by these components. Original Dispatcharr, Celery and Kombu authors retain
+their application and transport algorithm credit.
+
+The later stageable component closure is recorded in
+`scripts/rust-job-contracts/verified-final-index-worker-closure-3.json`.
+Constructor19, ETA20,11 individual physical-owner tests and3 independent ETA
+boundary tests were replayed against one retained driver2 tree. The first intake
+fixture failed because its single command slot let intake compete with execution;
+the constructor now requires at least active+1 slots and exposes executor errors.
+The first combined physical replay also preserved deliberate task heads between
+independent unit cases; its failures are retained. The successful replay isolates
+each case using only the disposable project's broker8/result9 namespaces.
+
+A final revision adds checked arithmetic before validating public scheduling
+counts, including usize::MAX tests, and clarifies result-outcome comments.
+Both handler algorithms and result-write paths remain unchanged. Exact source
+deltas, selected successful tool snapshots, graph inputs and coupled ingest test
+files are in the closure manifest. Final frozen validation passes11 library tests
+and strict all-target Clippy.
+
+Actual Original duplicate2 establishes16 checks: repeated task IDs reexecute the
+index handler in the same and a restarted worker, while the existing SUCCESS
+metadata and its decreasing TTL remain unchanged. Final native duplicate1 repeats
+those checks and adds8 actual immediate/ETA SQL/result checks. The native handlers
+already execute before their metadata-only SUCCESS guard; no execution skip was
+present or removed. `AlreadySucceeded` describes suppression of a result rewrite.
+The first Source duplicate fixture incorrectly expected a new result date and is
+retained as a failed fixture, rather than changing Original behavior.
+
+These proofs still do not attach an application driver or implement autonomous
+visibility recovery, exception result writing or public202. The CurrentLookup
+HTTP Parsing-to-programme lifecycle and exact failure/path/cache context must be
+proved before attachment. Original Dispatcharr authors retain full application
+credit; Celery/Kombu authors retain task transport/backend algorithm credit.

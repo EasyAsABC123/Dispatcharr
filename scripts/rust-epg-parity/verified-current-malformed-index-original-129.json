@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "scope": "Pinned Original actual WSGI malformed stored-index six-shape HTTP error golden",
+  "evidence": "artifacts/rust/m6-current-malformed-index-original-129",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "cases": [
+    {
+      "name": "malformed-root",
+      "index": [],
+      "status": 500,
+      "mime": "text/html; charset=utf-8",
+      "body_bytes": 145,
+      "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+    },
+    {
+      "name": "malformed-channels",
+      "index": {
+        "channels": null
+      },
+      "status": 500,
+      "mime": "text/html; charset=utf-8",
+      "body_bytes": 145,
+      "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+    },
+    {
+      "name": "negative-offset",
+      "index": {
+        "channels": {
+          "fixture&one": [
+            -1
+          ]
+        }
+      },
+      "status": 500,
+      "mime": "text/html; charset=utf-8",
+      "body_bytes": 145,
+      "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+    },
+    {
+      "name": "float-offset",
+      "index": {
+        "channels": {
+          "fixture&one": [
+            0.5
+          ]
+        }
+      },
+      "status": 500,
+      "mime": "text/html; charset=utf-8",
+      "body_bytes": 145,
+      "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+    },
+    {
+      "name": "null-offsets",
+      "index": {
+        "channels": {
+          "fixture&one": null
+        }
+      },
+      "status": 500,
+      "mime": "text/html; charset=utf-8",
+      "body_bytes": 145,
+      "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+    },
+    {
+      "name": "empty-interleaved",
+      "index": {
+        "channels": {
+          "fixture&one": []
+        },
+        "interleaved_channels": [
+          "fixture&one"
+        ]
+      },
+      "status": 500,
+      "mime": "text/html; charset=utf-8",
+      "body_bytes": 145,
+      "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+    }
+  ],
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain all application and algorithm credit and AGPL licensing."
+}

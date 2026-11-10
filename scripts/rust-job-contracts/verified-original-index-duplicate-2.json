@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "scope": "Actual pinned Original repeated index task ID executes again while existing SUCCESS metadata/TTL are preserved; Source-only",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "report": "artifacts/rust/m6-original-index-duplicate-2/integration.json",
+  "report_sha256": "f085a9071d6e6108f8f0dc75eec33293f37e7463570aaa0f4862a7208c21396e",
+  "private_observation_sha256": "c856f3a7abe071a5204c70e23da2d5b1769f4bbf2d7c51b1d0a25d07c20a5748",
+  "checks": 16,
+  "checks_projection": [
+    {
+      "name": "same-explicit-id-0",
+      "passed": true
+    },
+    {
+      "name": "actual-index-reexecuted-0",
+      "passed": true
+    },
+    {
+      "name": "result-ttl-0",
+      "passed": true
+    },
+    {
+      "name": "prior-success-present-1",
+      "passed": true
+    },
+    {
+      "name": "same-explicit-id-1",
+      "passed": true
+    },
+    {
+      "name": "existing-success-metadata-preserved-1",
+      "passed": true
+    },
+    {
+      "name": "existing-success-ttl-not-refreshed-1",
+      "passed": true
+    },
+    {
+      "name": "actual-index-reexecuted-1",
+      "passed": true
+    },
+    {
+      "name": "result-ttl-1",
+      "passed": true
+    },
+    {
+      "name": "prior-success-present-2",
+      "passed": true
+    },
+    {
+      "name": "same-explicit-id-2",
+      "passed": true
+    },
+    {
+      "name": "existing-success-metadata-preserved-2",
+      "passed": true
+    },
+    {
+      "name": "existing-success-ttl-not-refreshed-2",
+      "passed": true
+    },
+    {
+      "name": "actual-index-reexecuted-2",
+      "passed": true
+    },
+    {
+      "name": "result-ttl-2",
+      "passed": true
+    },
+    {
+      "name": "queue-reservations-and-lock-drained",
+      "passed": true
+    }
+  ],
+  "worker_deduplicate_successful_tasks": false,
+  "task_acks_late": false,
+  "task_track_started": false,
+  "same_and_restarted_worker_verified": true,
+  "native_repeated_id_behavior_verified": false,
+  "scope_details": [
+    "An actual Original task first creates an index; later publications explicitly use the same task UUID while SUCCESS exists in result Redis. Each changed guide produces its new expected SQL index, in both the same and a restarted actual Original worker.",
+    "The original SUCCESS metadata remains exactly equal and its TTL continues decreasing; execution is not deduplicated by the result-write guard.",
+    "Native source review already invokes the handler before its metadata-only SUCCESS guard; a separately bound actual native duplicate witness is still required."
+  ],
+  "tool_source": "artifacts/rust/m6-original-index-duplicate-2/tool-source",
+  "tool_source_sha256": {
+    "scripts/rust-job-contracts/worker_tasks.py": "46a52852fa6ba5115494079eb5f7a1797447539eac292b98c7cb3c80ffffab56",
+    "scripts/rust-job-contracts/source_index_duplicate.py": "5912b8428fbb271afeadc35ef16f199ec8ba3f66a100dd4a48bff693d58e3c38",
+    "scripts/rust-job-contracts/run_index_duplicate.py": "2191b16945500ad0cc6a6ffff4f92fb9f41331b5dafe6a7c97a3f78f0663342b"
+  },
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "failed_attempt": {
+    "report": "artifacts/rust/m6-original-index-duplicate-1/integration.json",
+    "sha256": "777b3c2cf16480a7ecf4bd28f5eb2811a857d69b80ac0ca8a94d566f51daf690",
+    "reason": "The fixture observed changed SQL after duplicate execution, then incorrectly required a newer result date_done and timed out. Fresh Source2 verifies retained SUCCESS metadata/TTL; no runtime/Source behavior was changed."
+  },
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL licensing; Celery/Kombu authors retain task transport/backend algorithm credit."
+}

@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "scope": "Original missing-index publication-failure HTTP golden plus app-unwired native error classification/real Store callback bridge",
+  "evidence": "artifacts/rust/m6-current-dispatch-failure-source-native-121",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_http": {
+    "status": 500,
+    "mime": "text/html; charset=utf-8",
+    "body_bytes": 145,
+    "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+    "exception_class": "kombu.exceptions.OperationalError",
+    "fault_scope": "Controlled broker dependency failure only; unchanged Original WSGI/view/error renderer.",
+    "index_exists": false
+  },
+  "original_dispatch_attempts": 1,
+  "native_test_functions": 1,
+  "native_checks": [
+    "Typed CurrentFileError::Dispatch distinct from other runtime/time/file errors.",
+    "Shared CurrentFileLookup trait returns StatusBody500; no Parsing after failed publication.",
+    "Real Store programme-first/metadata/file callback bridge propagates500 with pool1.",
+    "Caller drops, physical jobs and retained memory drain after each error."
+  ],
+  "runtime_sources": {
+    "rust/crates/ingest-epg/src/current_file.rs": "ae34620719eee7625c4eed1da5fdff75732af434bf9a4446c8f26818baf07ec2",
+    "rust/crates/ingest-epg/src/current_lookup.rs": "8adc1d0ccc54f2082d8d0d46f33b84235bcf65d61a6203f0a33c7f22710e850a",
+    "rust/crates/ingest-epg/tests/current_dispatch_sql.rs": "9f95f9a5f8d227c5744d025fc3124e60d487a48a36b92da90e03970910b30023"
+  },
+  "native_test_binary_sha256": {
+    "current_dispatch_sql": "dbc8bf65922a1592ffe57c5cb9abb48515b0c56279f565157a03cec5aadaa0c1"
+  },
+  "rust_source_archive_sha256": "6f284629a867adc3568891b7e3b342f894c3de712bf34932cd2856496a8abf15",
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_actual_http_route_verified": false,
+  "application_hook_verified": false,
+  "production_dispatch_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Original broker dependency is deliberately faulted at task.delay while unchanged WSGI/view/middleware render actualHTTP500; this is not a physical Redis outage proof.",
+    "Native Store callback status is verified; existing epg_current_http500 renderer must be replayed with real callback before app hookup.",
+    "No unrelated capacity/time/file error mapping was broadened."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application/algorithm credit and AGPL licensing."
+}

@@ -125,9 +125,19 @@ async fn main() {
             name: PathBuf::from("/evidence").join(name),
         });
     }
-    let worker = Worker::new_fixture(jobs, handler);
+    let worker = Worker::new_fixture(jobs.clone(), handler);
     let result = worker.run_once(Arc::new(())).await;
-    let drain = worker.shutdown(Duration::from_secs(5)).await;
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(5);
+    let drain = worker
+        .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+        .await;
+    let drain = match drain {
+        Ok(()) => jobs
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+            .map_err(dispatcharr_job_transport::worker::Error::Transport),
+        Err(error) => Err(error),
+    };
     match (result, drain) {
         (Ok(outcome), Ok(())) => println!(
             "{}",

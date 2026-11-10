@@ -66,7 +66,7 @@ impl SourcePathContext {
     pub fn media_root(&self) -> &std::path::Path {
         &self.media_root
     }
-    fn resolve(&self, path: std::path::PathBuf) -> std::path::PathBuf {
+    pub(crate) fn resolve(&self, path: std::path::PathBuf) -> std::path::PathBuf {
         if path.is_absolute() {
             path
         } else {
@@ -304,6 +304,8 @@ impl CurrentFileLookup for CurrentLookup {
     ) -> BoxFuture<'_, Result<CurrentFileOutcome, StoreError>> {
         Box::pin(async move {
             CurrentLookup::lookup(self,request,caller).await.map_err(|error|match error {
+            CurrentFileError::IndexShape=>StoreError::StatusBody(500,serde_json::json!({"detail":"Current programme index invalid."})),
+            CurrentFileError::Dispatch(_)=>StoreError::StatusBody(500,serde_json::json!({"detail":"Current programme index publication failed."})),
             CurrentFileError::Runtime(ImportError::Store(error))=>error,
             CurrentFileError::Runtime(ImportError::Parser)=>StoreError::Unsupported("Unsupported stored programme index shape; Source malformed-index failure parity is not implemented."),
             CurrentFileError::Time(_)=>StoreError::StatusBody(500,serde_json::json!({"detail":"Current programme timestamp invalid."})),
@@ -410,7 +412,8 @@ impl Inner {
                 self.services
                     .dispatcher
                     .dispatch(request.source_id, context.clone())
-                    .await?;
+                    .await
+                    .map_err(CurrentFileError::Dispatch)?;
                 context.ensure_active()?;
                 Ok(CurrentFileOutcome::Parsing)
             }
@@ -495,13 +498,13 @@ impl Inner {
             let row=sqlx::query("SELECT jsonb_typeof(data) AS root_type,jsonb_typeof(data->'channels') AS channel_type,(data->'channels') ? $2 AS present,jsonb_typeof(data->'channels'->$2) AS offset_type,octet_length((data->'channels'->$2)::text) AS offset_bytes,CASE WHEN octet_length((data->'channels'->$2)::text)<=4096 THEN (data->'channels'->$2)::text END AS offsets,jsonb_typeof(data->'interleaved_channels') AS interleaved_type,(data->'interleaved_channels') ? $2 AS interleaved FROM epg_epgsourceindex WHERE source_id=$1").bind(source).bind(tvg).fetch_optional(&mut connection).await.map_err(ImportError::from)?;
             context.ensure_active()?;let Some(row)=row else{return Ok(FreshIndex::Absent);};
             let root:Option<String>=row.get("root_type");if root.as_deref().is_none_or(|v|v=="null"){return Ok(FreshIndex::Absent);}
-            let channels:Option<String>=row.get("channel_type");if root.as_deref()!=Some("object")||channels.as_deref().is_some_and(|v|v!="object"){return Err(ImportError::Parser.into());}
+            let channels:Option<String>=row.get("channel_type");if root.as_deref()!=Some("object")||channels.as_deref().is_some_and(|v|v!="object"){return Err(CurrentFileError::IndexShape);}
             if !row.get::<Option<bool>,_>("present").unwrap_or(false){return Ok(FreshIndex::Missing);}
-            if row.get::<Option<String>,_>("offset_type").as_deref()!=Some("array"){return Err(ImportError::Parser.into());}
+            if row.get::<Option<String>,_>("offset_type").as_deref()!=Some("array"){return Err(CurrentFileError::IndexShape);}
             let text:Option<String>=row.get("offsets");let text=text.ok_or(ImportError::Capacity("current index target bytes"))?;
-            let values:Vec<u64>=serde_json::from_str(&text).map_err(|_|ImportError::Parser)?;
+            let values:Vec<u64>=serde_json::from_str(&text).map_err(|_|CurrentFileError::IndexShape)?;
             if values.len()>self.config.limits.max_offsets{return Err(ImportError::Capacity("current index offsets").into());}
-            let interleaved_type:Option<String>=row.get("interleaved_type");if interleaved_type.as_deref().is_some_and(|v|v!="array"&&v!="null"){return Err(ImportError::Parser.into());}
+            let interleaved_type:Option<String>=row.get("interleaved_type");if interleaved_type.as_deref().is_some_and(|v|v!="array"&&v!="null"){return Err(CurrentFileError::IndexShape);}
             Ok(FreshIndex::Offsets{values,interleaved:row.get::<Option<bool>,_>("interleaved").unwrap_or(false)})
         }.await;
         // No pooled transaction survives into file work; physical close is

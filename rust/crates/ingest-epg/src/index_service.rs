@@ -39,6 +39,8 @@ pub struct IndexServices {
 }
 #[derive(Clone, Debug)]
 pub struct IndexConfig {
+    /// None preserves the existing process-CWD/cache_dir component behavior.
+    pub path_context: Option<crate::current_lookup::SourcePathContext>,
     pub max_jobs: usize,
     pub limits: IndexLimits,
     pub cache_dir: PathBuf,
@@ -336,10 +338,17 @@ impl Inner {
             .filter(|path| !path.is_empty())
             .or_else(|| file.filter(|path| !path.is_empty()));
         let make_cache = selected.is_none();
-        let path = selected
+        let cache = self.config.path_context.as_ref().map_or_else(
+            || self.config.cache_dir.clone(),
+            |context| context.media_root().join("cached_epg"),
+        );
+        let selected = selected
             .map(PathBuf::from)
-            .unwrap_or_else(|| self.config.cache_dir.join(format!("{id}.tmp")));
-        let cache = self.config.cache_dir.clone();
+            .unwrap_or_else(|| cache.join(format!("{id}.tmp")));
+        let path = self.config.path_context.as_ref().map_or_else(
+            || selected.clone(),
+            |context| context.resolve(selected.clone()),
+        );
         let limits = self.config.limits;
         let worker = context.clone();
         let json_bytes = self.config.max_index_json_bytes;

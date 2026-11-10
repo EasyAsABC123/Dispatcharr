@@ -6,7 +6,7 @@ from pathlib import Path
 import source_index_worker as f
 from apps.epg.models import EPGSource,EPGSourceIndex
 source=EPGSource(name='rust-index-eta-owned',source_type='xmltv',is_active=False,file_path=str(f.path));EPGSource.objects.bulk_create([source]);key='task_lock_epg_source_file_'+str(source.id);marker=b'rust-index-eta-owned';f.cache.set(key,marker,ex=300)
-report=f.report;report['scope']='Original-only index ETA reservation/raw redelivery/forced-aged-score restore; no native ETA consumer or real visibility-expiry claim';observations=[];report['eta_observations']=observations
+report=f.report;report['passed']=False;report['scope']='Original-only index ETA reservation/raw redelivery/forced-aged-score restore; no native ETA consumer or real visibility-expiry claim';observations=[];report['eta_observations']=observations
 
 def queued(ident):
  rows=f.broker.lrange('celery',0,63)

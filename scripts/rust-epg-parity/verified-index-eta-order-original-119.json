@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "scope": "Original restore queue ends/order and actual future-ETA versus active prefetch; no native implementation acceptance",
+  "evidence": "artifacts/rust/m6-index-eta-order-original-119",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "checks": 26,
+  "static_implementation": "artifacts/rust/m8-kombu-restore-implementation-1/proof.json",
+  "actual_queue_rules": {
+    "producer": "LPUSH, consumed from right; existing queued C thenD observed right-pop C,D.",
+    "warm_restore": "Original OrderedDict delivered insertion A,B is RPUSHed A,B; right-pop order B,A before existing C,D.",
+    "visible_restore": "Original ZREVRANGEBYSCORE visits newer aged score first; RPUSH reversal gives older reservation first in right-pop order.",
+    "equal_score_restore": "Redis descending tag lexical iteration is reversed by RPUSH/right-pop, yielding ascending tag lexical delivery; labels are not a tie-breaker."
+  },
+  "actual_worker_future_eta": {
+    "concurrency": 1,
+    "configured_prefetch_multiplier": 4,
+    "reserved_future_messages": 8,
+    "stats_prefetch_counts": [
+      12
+    ],
+    "fixture_eta_seconds": 180,
+    "normal_index_busy_countdown_seconds": 5,
+    "any_eta_executed_before_stop": false,
+    "actual_warm_right_pop_order": [
+      "ETA-7",
+      "ETA-6",
+      "ETA-5",
+      "ETA-4",
+      "ETA-3",
+      "ETA-2",
+      "ETA-1",
+      "ETA-0"
+    ]
+  },
+  "failed_attempt": "118 had a wrong fixture expectation for random delivery-tag ties; actual observed lists preserved;119 derives tie expectation from tags.",
+  "actual_visibility_expiry_observed": false,
+  "native_eta_consumer_verified": false,
+  "native_reservation_limit_verified": false,
+  "production_dispatch_verified": false,
+  "performance_verified": false,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "source_report_sha256": "563459d279cd28faf40e2b196fd7883ce873c63fc0a5043cbdb20e1d7ab3cabf",
+  "tool_source_sha256": {
+    "scripts/rust-epg-parity/index_worker_observer.py": "8effb86fd4bb06e0c83c09d15fe02b3cc1f2e1013768fef39377ae590ecc9eef",
+    "scripts/rust-epg-parity/index_worker_publish.py": "8e85c49270682cbf2ab749b6b8dbdc408cd9b873134fb90d945cabf30f545727",
+    "scripts/rust-epg-parity/source_index_worker.py": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba",
+    "scripts/rust-epg-parity/run_index_worker.py": "ea9353a0e864fffb790d3a002b5e236b9886ec6a412672d2652c67bfbe73c65b",
+    "scripts/rust-epg-parity/source_index_eta_order.py": "8b9f47355d58de5dc122eff86e9252bc7db675589a867eda41670dee0ca6e2b0"
+  },
+  "limitations": [
+    "Warm/visible queued-marker cases invoke unchanged Original QoS directly; the eight-ETA warm-stop case uses the real Original worker.",
+    "Aged scores are controlled fixture timestamps, not an actual one-hour wait.",
+    "Native ETA reservation count/bytes need independent explicit resource bounds; ordinary active prefetch4 is not an ETA reservation cap."
+  ],
+  "credit": "Original Dispatcharr/Celery/Kombu authors and contributors retain all application and algorithm credit and licensing."
+}
