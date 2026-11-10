@@ -1,0 +1,172 @@
+{
+  "passed": true,
+  "execution_passed": true,
+  "recovered": {
+    "live": true,
+    "cache": true,
+    "vod": true
+  },
+  "physical_owner_resources_verified": true,
+  "new_client_accounting_after_restart": true,
+  "new_client_ttl_after_restart": true,
+  "no_duplicate_counter_after_future_flush": true,
+  "migration_gate_passed": true,
+  "rust_source_archive_sha256": "bfea3836b62b7d0615b240c856fea0bd3314b7d0b9ce7deeaf5d7b03a0ed6ce6",
+  "resource_tests": [
+    {
+      "binary": "admission",
+      "selected": null,
+      "expected_count": 10,
+      "passed": true,
+      "log": "resource-0-admission.log"
+    },
+    {
+      "binary": "era",
+      "selected": null,
+      "expected_count": 6,
+      "passed": true,
+      "log": "resource-1-era.log"
+    },
+    {
+      "binary": "cache",
+      "selected": "notifications::tests::cancelled_cache_command_retains_physical_slot_and_scope",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-2-cache.log"
+    },
+    {
+      "binary": "cache",
+      "selected": "notifications::tests::cache_logical_timeout_retains_pending_reply_and_composed_scopes",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-3-cache.log"
+    },
+    {
+      "binary": "cache",
+      "selected": "notifications::tests::cache_cancelled_burst_cannot_reuse_sixteen_pending_slots",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-4-cache.log"
+    },
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::physical_dropped_ticket_retains_request_and_session_until_actual_reply",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-5-vod.log"
+    },
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::physical_cancelled_setup_retains_request_and_session_until_actual_reply",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-6-vod.log"
+    }
+  ],
+  "cleanup": "owned container removed",
+  "cleanup_passed": true,
+  "redis_run_ids": [
+    "72a4ecec034440dfd643d62006adb3af6d55bea3",
+    "04680ba561a8be00cef66fccc352a115bbff12f5"
+  ],
+  "actual_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "binaries": {
+    "live": {
+      "sha256": "9ff014caf85f4e2e1915a6b2be834d0ff7ae3f0f6f6c9cd501e77feeacdc201b",
+      "test": "persistent_client_owner_protocol"
+    },
+    "cache": {
+      "sha256": "7feeb44ed3cb3511c284c2ed4998005ca2c4bc79bb53c2575bcf44b7f8c1a160",
+      "test": "notifications::notification_restart_peer::persistent_notification_owner_protocol"
+    },
+    "vod": {
+      "sha256": "08af835117fbaad1fbe09ea80eb1a92b9748656dfd95897d10058724b9c4ae55",
+      "test": "sessions::session_restart_peer::persistent_vod_owner_protocol"
+    }
+  },
+  "resource_binaries": {
+    "admission": "e4f34c5c9c174e3858cde1ee18c5d62a6f94f759e369a30155dd8a4c3c736d00",
+    "era": "4bfc4a3884743f8f07c3b34141efd086224f4cdf4c192ab026e63750c8bd3e83"
+  },
+  "scope": "Bounded subsequent-operation recovery for remaining3cached owners, owned VOD setup and live future-flush heartbeat accounting; component-only",
+  "evidence": "artifacts/rust/m8-remaining-redis-owner-recovery-159",
+  "physical_tests": 21,
+  "checks": 28,
+  "runtime_sha256": {
+    "rust/crates/clients/Cargo.toml": "38481cee2dc95eb2e8eba1eb1b1b96f765235be57a969575e2fc955a319d3bdc",
+    "rust/crates/store/Cargo.toml": "757bad9048e08609603a2754612d18f78871d09460e11fc502817d4446707a28",
+    "rust/crates/vod-http/Cargo.toml": "b37203ac9e3d4c4e5af8d0c3da9888f2b6dc95b5ce583c4bb1a1f8e07b463407",
+    "rust/crates/clients/src/lib.rs": "1057c0d75b105fd72ff70479ac1bcc2ce340d0bbaf233fd7d30856a259f405cd",
+    "rust/crates/clients/src/era.rs": "f64233a7d3a325fd90baf7a916d01e0ff089297e00c8625a3892b84e572d8cbe",
+    "rust/crates/clients/src/vod.rs": "ce3fe1265a74108320ec8be996a84f7a1945bc43ccc7bfb9b492e6afa630b855",
+    "rust/crates/store/src/notifications.rs": "78e7aca831b9d4447ba4a3ed73957948b67f110920ffebe9ff801f05bf9dfb91",
+    "rust/crates/vod-http/src/sessions.rs": "6bf420f79fe2621f0c8d9a4a11df2e72486f641edc766bd871860348af4b2fa7"
+  },
+  "test_sha256": {
+    "rust/crates/clients/tests/redis_restart_peer.rs": "d7af1c822bcebbefbd3bb20361e0d41975ffb439964589f67f7019a6d27c47b8",
+    "rust/crates/store/src/notification_restart_peer.rs": "03e00b913964d535de41db1b6b9bb4e6d72753c3998ec5685bd3f8a552475d8e",
+    "rust/crates/vod-http/src/session_restart_peer.rs": "b7c5394025b5bc73db23f7009b356c0ad23e390a1721f5942a3d02d3007d93b1"
+  },
+  "heartbeat_observations": [
+    {
+      "peer": "live",
+      "command": {
+        "action": "probe_register"
+      },
+      "result": {
+        "action": "probe_register",
+        "id": "client_94ab25f2b06b4f91979f30a5aadaef45",
+        "pid": 31
+      }
+    },
+    {
+      "peer": "original",
+      "command": {
+        "action": "inspect_native",
+        "id": "client_94ab25f2b06b4f91979f30a5aadaef45"
+      },
+      "result": {
+        "action": "inspect_native",
+        "pid": 25,
+        "bytes": "8192",
+        "ttl": 60,
+        "same_client": true,
+        "same_cache": true,
+        "apps_ready": false
+      }
+    },
+    {
+      "peer": "original",
+      "command": {
+        "action": "inspect_native",
+        "id": "client_94ab25f2b06b4f91979f30a5aadaef45"
+      },
+      "result": {
+        "action": "inspect_native",
+        "pid": 25,
+        "bytes": "8192",
+        "ttl": 60,
+        "same_client": true,
+        "same_cache": true,
+        "apps_ready": false
+      }
+    }
+  ],
+  "retained_failed_attempts": {
+    "153": "restrictive fixture bind permissions",
+    "154": "test progress prefix broke JSON reply framing",
+    "155": "valid all3cached native owners stale after actual restart; reconstructed clients healthy",
+    "156": "valid VOD canceled setup freed admission before actualRedis reply",
+    "157": "rejected fulltree snapshot coherence (two category files straddled edits)",
+    "158": "valid read+21physical pass but heartbeatbytes0 after8192consumed; observer identity flag shadowing separately disclosed"
+  },
+  "remaining_gates": [
+    "Packaged application HTTP/media/auth/notification regression against exact selected composite.",
+    "Whole application state-loss and active-session reconstruction/cancellation under server restart.",
+    "Immediate-first-operation Source parity (native may return stale error while new shared connection is established).",
+    "TLS/endpoint permissions and performance acceptance."
+  ],
+  "application_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application and algorithm credit; redis-rs authors retain connection-manager implementation credit."
+}

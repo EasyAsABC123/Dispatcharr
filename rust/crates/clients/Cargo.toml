@@ -6,7 +6,7 @@ license.workspace = true
 
 [dependencies]
 dispatcharr-contracts = { path = "../contracts" }
-redis = { version = "0.32", features = ["tokio-comp"] }
+redis = { version = "0.32", features = ["tokio-comp", "connection-manager"] }
 serde_json = "1"
 tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
 uuid = { version = "1", features = ["v4"] }

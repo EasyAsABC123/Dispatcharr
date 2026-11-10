@@ -14,6 +14,8 @@ use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 pub(crate) enum ReadError {
     Source(crate::StoreError), Capacity, Deadline, Cancelled, Shutdown, WorkerFailed,
     Unsupported(&'static str),
+    /// Captured uncaught Source exception; only category dispatch constructs it.
+    SourceUnhandledFault(&'static str),
 }
 impl From<sqlx::Error> for ReadError { fn from(value:sqlx::Error)->Self {Self::Source(value.into())} }
 impl From<crate::StoreError> for ReadError { fn from(value:crate::StoreError)->Self {Self::Source(value)} }

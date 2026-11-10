@@ -1,0 +1,1979 @@
+{
+  "scope": "Actual Original refresh argument defaults/positional forms and imported local-file child publication; no child execution/native/remote acceptance",
+  "fixture_control": {
+    "child_routes": "all tasks except refresh_epg_data \u2192 owned-refresh-children",
+    "worker_queues": [
+      "celery"
+    ],
+    "purpose": "capture actual generated child envelopes without executing unrelated families",
+    "task_or_helper_replacement": false
+  },
+  "normalization": "None. Identifiers/origins/paths are owned synthetic fixture values, never production data or credentials. Child routing differs explicitly; task helpers and parent body are unchanged.",
+  "messages": [
+    {
+      "name": "inactive_default",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "155b3427-6687-47cc-86f5-f9872efb3b92",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "155b3427-6687-47cc-86f5-f9872efb3b92",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "155b3427-6687-47cc-86f5-f9872efb3b92",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "9c14812d-1818-4f73-829e-45bb80ea6fee"
+        }
+      }
+    },
+    {
+      "name": "inactive_force_kw",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1syXSwgeyJmb3JjZSI6IHRydWV9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "804657db-7c31-4a10-a3ae-db49e5888560",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "804657db-7c31-4a10-a3ae-db49e5888560",
+          "parent_id": null,
+          "argsrepr": "[2]",
+          "kwargsrepr": "{'force': True}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "804657db-7c31-4a10-a3ae-db49e5888560",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "d81000b9-b0a1-4169-a0a5-304269611cd3"
+        }
+      }
+    },
+    {
+      "name": "inactive_force_pos",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1szLCB0cnVlXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "dadd2115-bf4c-4326-81b3-56b58ecf422e",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "dadd2115-bf4c-4326-81b3-56b58ecf422e",
+          "parent_id": null,
+          "argsrepr": "(3, True)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "dadd2115-bf4c-4326-81b3-56b58ecf422e",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "099859c3-e6d0-4563-a830-9ae15c80bb13"
+        }
+      }
+    },
+    {
+      "name": "inactive_retry_pos",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1s0LCB0cnVlLCA3XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "ca614821-dc34-4fe5-89f8-655e352b40c5",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "ca614821-dc34-4fe5-89f8-655e352b40c5",
+          "parent_id": null,
+          "argsrepr": "(4, True, 7)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "ca614821-dc34-4fe5-89f8-655e352b40c5",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "3a123185-0fc9-4770-84bd-b1c065b2e8e0"
+        }
+      }
+    },
+    {
+      "name": "inactive_all_kw",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1tdLCB7InNvdXJjZV9pZCI6IDUsICJmb3JjZSI6IGZhbHNlLCAiX2ZpbGVfZGVmZXJfcmV0cnkiOiAyfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "07308eaa-266e-485d-b430-bedf780fd174",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "07308eaa-266e-485d-b430-bedf780fd174",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{'source_id': 5, 'force': False, '_file_defer_retry': 2}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "07308eaa-266e-485d-b430-bedf780fd174",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "43882270-4263-45df-977b-58f3e51e13be"
+        }
+      }
+    },
+    {
+      "name": "busy_default",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1s2XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+          "parent_id": null,
+          "argsrepr": "(6,)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "20e821ef-0d71-4a21-af6e-cdcb376569e7"
+        }
+      }
+    },
+    {
+      "name": "busy_default",
+      "kind": "child",
+      "envelope": {
+        "body": "W1s2XSwgeyJmb3JjZSI6IGZhbHNlLCAiX2ZpbGVfZGVmZXJfcmV0cnkiOiAxfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "3488ad7b-b4cf-4915-904e-e39c16d43686",
+          "shadow": null,
+          "eta": "2026-11-10T15:18:35.235873+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+          "parent_id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+          "argsrepr": "[6]",
+          "kwargsrepr": "{'force': False, '_file_defer_retry': 1}",
+          "origin": "gen601@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "3488ad7b-b4cf-4915-904e-e39c16d43686",
+          "reply_to": "0c6d6be6-9a3b-30ef-95c9-1928c241ade2",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "215064c4-e2fb-4b22-9fad-12cf579c689e"
+        }
+      }
+    },
+    {
+      "name": "busy_retry_pos",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1s3LCB0cnVlLCA3XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+          "parent_id": null,
+          "argsrepr": "(7, True, 7)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "69b43807-77bc-4067-ae9c-69a04651159d"
+        }
+      }
+    },
+    {
+      "name": "busy_retry_pos",
+      "kind": "child",
+      "envelope": {
+        "body": "W1s3XSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDh9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "9d548b2c-89a6-43ef-a796-236ffc71d120",
+          "shadow": null,
+          "eta": "2026-11-10T15:18:38.068751+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+          "parent_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+          "argsrepr": "[7]",
+          "kwargsrepr": "{'force': True, '_file_defer_retry': 8}",
+          "origin": "gen641@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "9d548b2c-89a6-43ef-a796-236ffc71d120",
+          "reply_to": "b3bb3f4f-5c66-36ad-b599-6a2d263ad583",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "800ffe79-e466-4c40-aa25-371c9911b9ea"
+        }
+      }
+    },
+    {
+      "name": "imported_default",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1s4XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "parent_id": null,
+          "argsrepr": "(8,)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "d378eea6-630b-4b7b-9a36-f5edaad1e1da"
+        }
+      }
+    },
+    {
+      "name": "imported_default",
+      "kind": "child",
+      "envelope": {
+        "body": "W1s4XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "c9b15783-1f1e-4aee-bb1c-2c81622031d0",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "parent_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "argsrepr": "(8,)",
+          "kwargsrepr": "{}",
+          "origin": "gen681@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "c9b15783-1f1e-4aee-bb1c-2c81622031d0",
+          "reply_to": "bad50125-0c59-3521-a7a4-de62e90cd047",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "owned-refresh-children"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "ab634c83-f067-470c-bcde-78de6522beff"
+        }
+      }
+    },
+    {
+      "name": "imported_default",
+      "kind": "child",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.evaluate_series_rules",
+          "id": "8c5c9182-661e-4946-9199-5a1b892e976e",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "parent_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen681@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "8c5c9182-661e-4946-9199-5a1b892e976e",
+          "reply_to": "bad50125-0c59-3521-a7a4-de62e90cd047",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "owned-refresh-children"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "4e0a78cf-e5d1-4b39-913f-485d5bc55655"
+        }
+      }
+    },
+    {
+      "name": "imported_force_pos",
+      "kind": "refresh-parent",
+      "envelope": {
+        "body": "W1s5LCB0cnVlXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "parent_id": null,
+          "argsrepr": "(9, True)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "375cabb8-8266-40f0-a0bc-df49a3e4dcec"
+        }
+      }
+    },
+    {
+      "name": "imported_force_pos",
+      "kind": "child",
+      "envelope": {
+        "body": "W1s5XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "375baa76-7450-497c-b8da-b97921bdc806",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "parent_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "argsrepr": "(9,)",
+          "kwargsrepr": "{}",
+          "origin": "gen755@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "375baa76-7450-497c-b8da-b97921bdc806",
+          "reply_to": "8e0def23-9619-37ce-95a5-3f7791b732f7",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "owned-refresh-children"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "8f330f03-e618-4e17-ab3c-edd7ba95be1d"
+        }
+      }
+    },
+    {
+      "name": "imported_force_pos",
+      "kind": "child",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.evaluate_series_rules",
+          "id": "03bdad00-2c23-45ea-8cd0-ec5c7cdcd767",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "parent_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen755@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "03bdad00-2c23-45ea-8cd0-ec5c7cdcd767",
+          "reply_to": "8e0def23-9619-37ce-95a5-3f7791b732f7",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "owned-refresh-children"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "46916db5-40b4-45bf-ba4c-0535f5496d5e"
+        }
+      }
+    }
+  ],
+  "results": [
+    {
+      "name": "inactive_default",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:06.131755+00:00",
+        "task_id": "155b3427-6687-47cc-86f5-f9872efb3b92"
+      },
+      "raw_metadata_sha256": "01c7c7545854969ca6691444aa50ac2b555d9df649f9f591a2c347ae7ebcf6d6",
+      "ttl": 3598
+    },
+    {
+      "name": "inactive_force_kw",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:08.977276+00:00",
+        "task_id": "804657db-7c31-4a10-a3ae-db49e5888560"
+      },
+      "raw_metadata_sha256": "9f15bac8ebae469a64f73421426a7009e712e85bc55d9bd2e8da9b6bed0382d2",
+      "ttl": 3598
+    },
+    {
+      "name": "inactive_force_pos",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:11.844073+00:00",
+        "task_id": "dadd2115-bf4c-4326-81b3-56b58ecf422e"
+      },
+      "raw_metadata_sha256": "551abdbd7965e05dcccac16847e4b9d2466097d5aea5946ef3c9d698fdd7a372",
+      "ttl": 3598
+    },
+    {
+      "name": "inactive_retry_pos",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:14.663647+00:00",
+        "task_id": "ca614821-dc34-4fe5-89f8-655e352b40c5"
+      },
+      "raw_metadata_sha256": "188d43b82ba75e0289cc7a2b4db11956da0759909882313333556d5082073a45",
+      "ttl": 3598
+    },
+    {
+      "name": "inactive_all_kw",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:17.484049+00:00",
+        "task_id": "07308eaa-266e-485d-b430-bedf780fd174"
+      },
+      "raw_metadata_sha256": "e95e0855b4950224ca69ec0103d9ca0edb2f082c009216a8fd32abd811e028e1",
+      "ttl": 3598
+    },
+    {
+      "name": "busy_default",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "3488ad7b-b4cf-4915-904e-e39c16d43686",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:20.303747+00:00",
+        "task_id": "998d6715-0516-4723-9ebf-f7663141cc6c"
+      },
+      "raw_metadata_sha256": "424523449e78edb21b9b777e0cd55623c60278a5dec18e13d19b812a1a44dc47",
+      "ttl": 3598
+    },
+    {
+      "name": "busy_retry_pos",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "9d548b2c-89a6-43ef-a796-236ffc71d120",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:23.133716+00:00",
+        "task_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4"
+      },
+      "raw_metadata_sha256": "ea7188f843ab69f2d73e01cbc68ab7ca069746fef9d6b993dc5cbdefca8bc298",
+      "ttl": 3598
+    },
+    {
+      "name": "imported_default",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "c9b15783-1f1e-4aee-bb1c-2c81622031d0",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "8c5c9182-661e-4946-9199-5a1b892e976e",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:26.392388+00:00",
+        "task_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24"
+      },
+      "raw_metadata_sha256": "0e629e111d6e26ca8a577f51eaf2f98e1bea80ab0420f5744d7b25fd061f5858",
+      "ttl": 3599
+    },
+    {
+      "name": "imported_force_pos",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "375baa76-7450-497c-b8da-b97921bdc806",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "03bdad00-2c23-45ea-8cd0-ec5c7cdcd767",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:29.180686+00:00",
+        "task_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd"
+      },
+      "raw_metadata_sha256": "b5aaa5717a00c64a1ff51eb987492ca186435d68cbbafaa54eca7d783c5262fe",
+      "ttl": 3599
+    }
+  ],
+  "source_cases": [
+    {
+      "name": "inactive_default",
+      "source_id": 1,
+      "envelope": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "155b3427-6687-47cc-86f5-f9872efb3b92",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "155b3427-6687-47cc-86f5-f9872efb3b92",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "155b3427-6687-47cc-86f5-f9872efb3b92",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "9c14812d-1818-4f73-829e-45bb80ea6fee"
+        }
+      },
+      "body": [
+        [
+          1
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:06.131755+00:00",
+        "task_id": "155b3427-6687-47cc-86f5-f9872efb3b92"
+      },
+      "raw_result_sha256": "01c7c7545854969ca6691444aa50ac2b555d9df649f9f591a2c347ae7ebcf6d6",
+      "result_ttl": 3598,
+      "postrun": {
+        "id": "155b3427-6687-47cc-86f5-f9872efb3b92",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 401
+      },
+      "children": [],
+      "index": {
+        "owned": "before"
+      },
+      "source_status": "idle",
+      "source_message": null,
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MDQgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODA0ICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [],
+      "locks": {
+        "refresh": null,
+        "file": null
+      }
+    },
+    {
+      "name": "inactive_force_kw",
+      "source_id": 2,
+      "envelope": {
+        "body": "W1syXSwgeyJmb3JjZSI6IHRydWV9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "804657db-7c31-4a10-a3ae-db49e5888560",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "804657db-7c31-4a10-a3ae-db49e5888560",
+          "parent_id": null,
+          "argsrepr": "[2]",
+          "kwargsrepr": "{'force': True}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "804657db-7c31-4a10-a3ae-db49e5888560",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "d81000b9-b0a1-4169-a0a5-304269611cd3"
+        }
+      },
+      "body": [
+        [
+          2
+        ],
+        {
+          "force": true
+        },
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:08.977276+00:00",
+        "task_id": "804657db-7c31-4a10-a3ae-db49e5888560"
+      },
+      "raw_result_sha256": "9f15bac8ebae469a64f73421426a7009e712e85bc55d9bd2e8da9b6bed0382d2",
+      "result_ttl": 3598,
+      "postrun": {
+        "id": "804657db-7c31-4a10-a3ae-db49e5888560",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 441
+      },
+      "children": [],
+      "index": {
+        "owned": "before"
+      },
+      "source_status": "idle",
+      "source_message": null,
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MDcgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODA3ICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [],
+      "locks": {
+        "refresh": null,
+        "file": null
+      }
+    },
+    {
+      "name": "inactive_force_pos",
+      "source_id": 3,
+      "envelope": {
+        "body": "W1szLCB0cnVlXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "dadd2115-bf4c-4326-81b3-56b58ecf422e",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "dadd2115-bf4c-4326-81b3-56b58ecf422e",
+          "parent_id": null,
+          "argsrepr": "(3, True)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "dadd2115-bf4c-4326-81b3-56b58ecf422e",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "099859c3-e6d0-4563-a830-9ae15c80bb13"
+        }
+      },
+      "body": [
+        [
+          3,
+          true
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:11.844073+00:00",
+        "task_id": "dadd2115-bf4c-4326-81b3-56b58ecf422e"
+      },
+      "raw_result_sha256": "551abdbd7965e05dcccac16847e4b9d2466097d5aea5946ef3c9d698fdd7a372",
+      "result_ttl": 3598,
+      "postrun": {
+        "id": "dadd2115-bf4c-4326-81b3-56b58ecf422e",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 481
+      },
+      "children": [],
+      "index": {
+        "owned": "before"
+      },
+      "source_status": "idle",
+      "source_message": null,
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MTAgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODEwICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [],
+      "locks": {
+        "refresh": null,
+        "file": null
+      }
+    },
+    {
+      "name": "inactive_retry_pos",
+      "source_id": 4,
+      "envelope": {
+        "body": "W1s0LCB0cnVlLCA3XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "ca614821-dc34-4fe5-89f8-655e352b40c5",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "ca614821-dc34-4fe5-89f8-655e352b40c5",
+          "parent_id": null,
+          "argsrepr": "(4, True, 7)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "ca614821-dc34-4fe5-89f8-655e352b40c5",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "3a123185-0fc9-4770-84bd-b1c065b2e8e0"
+        }
+      },
+      "body": [
+        [
+          4,
+          true,
+          7
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:14.663647+00:00",
+        "task_id": "ca614821-dc34-4fe5-89f8-655e352b40c5"
+      },
+      "raw_result_sha256": "188d43b82ba75e0289cc7a2b4db11956da0759909882313333556d5082073a45",
+      "result_ttl": 3598,
+      "postrun": {
+        "id": "ca614821-dc34-4fe5-89f8-655e352b40c5",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 521
+      },
+      "children": [],
+      "index": {
+        "owned": "before"
+      },
+      "source_status": "idle",
+      "source_message": null,
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MTMgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODEzICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [],
+      "locks": {
+        "refresh": null,
+        "file": null
+      }
+    },
+    {
+      "name": "inactive_all_kw",
+      "source_id": 5,
+      "envelope": {
+        "body": "W1tdLCB7InNvdXJjZV9pZCI6IDUsICJmb3JjZSI6IGZhbHNlLCAiX2ZpbGVfZGVmZXJfcmV0cnkiOiAyfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "07308eaa-266e-485d-b430-bedf780fd174",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "07308eaa-266e-485d-b430-bedf780fd174",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{'source_id': 5, 'force': False, '_file_defer_retry': 2}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "07308eaa-266e-485d-b430-bedf780fd174",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "43882270-4263-45df-977b-58f3e51e13be"
+        }
+      },
+      "body": [
+        [],
+        {
+          "source_id": 5,
+          "force": false,
+          "_file_defer_retry": 2
+        },
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:17.484049+00:00",
+        "task_id": "07308eaa-266e-485d-b430-bedf780fd174"
+      },
+      "raw_result_sha256": "e95e0855b4950224ca69ec0103d9ca0edb2f082c009216a8fd32abd811e028e1",
+      "result_ttl": 3598,
+      "postrun": {
+        "id": "07308eaa-266e-485d-b430-bedf780fd174",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 561
+      },
+      "children": [],
+      "index": {
+        "owned": "before"
+      },
+      "source_status": "idle",
+      "source_message": null,
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MTYgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODE2ICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [],
+      "locks": {
+        "refresh": null,
+        "file": null
+      }
+    },
+    {
+      "name": "busy_default",
+      "source_id": 6,
+      "envelope": {
+        "body": "W1s2XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+          "parent_id": null,
+          "argsrepr": "(6,)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "20e821ef-0d71-4a21-af6e-cdcb376569e7"
+        }
+      },
+      "body": [
+        [
+          6
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "3488ad7b-b4cf-4915-904e-e39c16d43686",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:20.303747+00:00",
+        "task_id": "998d6715-0516-4723-9ebf-f7663141cc6c"
+      },
+      "raw_result_sha256": "424523449e78edb21b9b777e0cd55623c60278a5dec18e13d19b812a1a44dc47",
+      "result_ttl": 3598,
+      "postrun": {
+        "id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 601
+      },
+      "children": [
+        {
+          "id": "3488ad7b-b4cf-4915-904e-e39c16d43686",
+          "sender": "apps.epg.tasks.refresh_epg_data",
+          "utc": "2026-11-10T15:18:20.238740+00:00",
+          "observed": {
+            "location": "reserved",
+            "envelope": {
+              "body": "W1s2XSwgeyJmb3JjZSI6IGZhbHNlLCAiX2ZpbGVfZGVmZXJfcmV0cnkiOiAxfSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "apps.epg.tasks.refresh_epg_data",
+                "id": "3488ad7b-b4cf-4915-904e-e39c16d43686",
+                "shadow": null,
+                "eta": "2026-11-10T15:18:35.235873+00:00",
+                "expires": null,
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  14400,
+                  null
+                ],
+                "root_id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+                "parent_id": "998d6715-0516-4723-9ebf-f7663141cc6c",
+                "argsrepr": "[6]",
+                "kwargsrepr": "{'force': False, '_file_defer_retry': 1}",
+                "origin": "gen601@fa0ca2eac00f",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "3488ad7b-b4cf-4915-904e-e39c16d43686",
+                "reply_to": "0c6d6be6-9a3b-30ef-95c9-1928c241ade2",
+                "delivery_mode": 2,
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "celery"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "215064c4-e2fb-4b22-9fad-12cf579c689e"
+              }
+            }
+          }
+        }
+      ],
+      "index": null,
+      "source_status": "idle",
+      "source_message": null,
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MTkgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODE5ICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [],
+      "locks": {
+        "refresh": null,
+        "file": "owned-busy"
+      }
+    },
+    {
+      "name": "busy_retry_pos",
+      "source_id": 7,
+      "envelope": {
+        "body": "W1s3LCB0cnVlLCA3XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+          "parent_id": null,
+          "argsrepr": "(7, True, 7)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "69b43807-77bc-4067-ae9c-69a04651159d"
+        }
+      },
+      "body": [
+        [
+          7,
+          true,
+          7
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "9d548b2c-89a6-43ef-a796-236ffc71d120",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:23.133716+00:00",
+        "task_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4"
+      },
+      "raw_result_sha256": "ea7188f843ab69f2d73e01cbc68ab7ca069746fef9d6b993dc5cbdefca8bc298",
+      "result_ttl": 3598,
+      "postrun": {
+        "id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 641
+      },
+      "children": [
+        {
+          "id": "9d548b2c-89a6-43ef-a796-236ffc71d120",
+          "sender": "apps.epg.tasks.refresh_epg_data",
+          "utc": "2026-11-10T15:18:23.071575+00:00",
+          "observed": {
+            "location": "reserved",
+            "envelope": {
+              "body": "W1s3XSwgeyJmb3JjZSI6IHRydWUsICJfZmlsZV9kZWZlcl9yZXRyeSI6IDh9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "apps.epg.tasks.refresh_epg_data",
+                "id": "9d548b2c-89a6-43ef-a796-236ffc71d120",
+                "shadow": null,
+                "eta": "2026-11-10T15:18:38.068751+00:00",
+                "expires": null,
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  14400,
+                  null
+                ],
+                "root_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+                "parent_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4",
+                "argsrepr": "[7]",
+                "kwargsrepr": "{'force': True, '_file_defer_retry': 8}",
+                "origin": "gen641@fa0ca2eac00f",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "9d548b2c-89a6-43ef-a796-236ffc71d120",
+                "reply_to": "b3bb3f4f-5c66-36ad-b599-6a2d263ad583",
+                "delivery_mode": 2,
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "celery"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "800ffe79-e466-4c40-aa25-371c9911b9ea"
+              }
+            }
+          }
+        }
+      ],
+      "index": null,
+      "source_status": "idle",
+      "source_message": null,
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MjEgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODIxICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [],
+      "locks": {
+        "refresh": null,
+        "file": "owned-busy"
+      }
+    },
+    {
+      "name": "imported_default",
+      "source_id": 8,
+      "envelope": {
+        "body": "W1s4XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "parent_id": null,
+          "argsrepr": "(8,)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "d378eea6-630b-4b7b-9a36-f5edaad1e1da"
+        }
+      },
+      "body": [
+        [
+          8
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "c9b15783-1f1e-4aee-bb1c-2c81622031d0",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "8c5c9182-661e-4946-9199-5a1b892e976e",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:26.392388+00:00",
+        "task_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24"
+      },
+      "raw_result_sha256": "0e629e111d6e26ca8a577f51eaf2f98e1bea80ab0420f5744d7b25fd061f5858",
+      "result_ttl": 3599,
+      "postrun": {
+        "id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 681
+      },
+      "children": [
+        {
+          "id": "c9b15783-1f1e-4aee-bb1c-2c81622031d0",
+          "sender": "apps.epg.tasks.build_programme_index_task",
+          "utc": "2026-11-10T15:18:26.353973+00:00",
+          "observed": {
+            "location": "queued",
+            "envelope": {
+              "body": "W1s4XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "apps.epg.tasks.build_programme_index_task",
+                "id": "c9b15783-1f1e-4aee-bb1c-2c81622031d0",
+                "shadow": null,
+                "eta": null,
+                "expires": null,
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  null,
+                  null
+                ],
+                "root_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+                "parent_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+                "argsrepr": "(8,)",
+                "kwargsrepr": "{}",
+                "origin": "gen681@fa0ca2eac00f",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "c9b15783-1f1e-4aee-bb1c-2c81622031d0",
+                "reply_to": "bad50125-0c59-3521-a7a4-de62e90cd047",
+                "delivery_mode": 2,
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "owned-refresh-children"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "ab634c83-f067-470c-bcde-78de6522beff"
+              }
+            }
+          }
+        },
+        {
+          "id": "8c5c9182-661e-4946-9199-5a1b892e976e",
+          "sender": "apps.channels.tasks.evaluate_series_rules",
+          "utc": "2026-11-10T15:18:26.355095+00:00",
+          "observed": {
+            "location": "queued",
+            "envelope": {
+              "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "apps.channels.tasks.evaluate_series_rules",
+                "id": "8c5c9182-661e-4946-9199-5a1b892e976e",
+                "shadow": null,
+                "eta": null,
+                "expires": null,
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  null,
+                  null
+                ],
+                "root_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+                "parent_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24",
+                "argsrepr": "()",
+                "kwargsrepr": "{}",
+                "origin": "gen681@fa0ca2eac00f",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "8c5c9182-661e-4946-9199-5a1b892e976e",
+                "reply_to": "bad50125-0c59-3521-a7a4-de62e90cd047",
+                "delivery_mode": 2,
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "owned-refresh-children"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "4e0a78cf-e5d1-4b39-913f-485d5bc55655"
+              }
+            }
+          }
+        }
+      ],
+      "index": null,
+      "source_status": "success",
+      "source_message": "Parsed 1 programs for 1 channels (skipped 0 programs for 0 unmapped channels)",
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MjQgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODI0ICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [
+        {
+          "title": "Owned refresh programme",
+          "start_time": "2026-11-10 16:18:24+00:00",
+          "end_time": "2026-11-10 17:18:24+00:00"
+        }
+      ],
+      "locks": {
+        "refresh": null,
+        "file": null
+      }
+    },
+    {
+      "name": "imported_force_pos",
+      "source_id": 9,
+      "envelope": {
+        "body": "W1s5LCB0cnVlXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "parent_id": null,
+          "argsrepr": "(9, True)",
+          "kwargsrepr": "{}",
+          "origin": "gen361@fa0ca2eac00f",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+          "reply_to": "8efbc301-860b-3e31-9b63-31eb1e8835f6",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "375cabb8-8266-40f0-a0bc-df49a3e4dcec"
+        }
+      },
+      "body": [
+        [
+          9,
+          true
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "375baa76-7450-497c-b8da-b97921bdc806",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "03bdad00-2c23-45ea-8cd0-ec5c7cdcd767",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:29.180686+00:00",
+        "task_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd"
+      },
+      "raw_result_sha256": "b5aaa5717a00c64a1ff51eb987492ca186435d68cbbafaa54eca7d783c5262fe",
+      "result_ttl": 3599,
+      "postrun": {
+        "id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 755
+      },
+      "children": [
+        {
+          "id": "375baa76-7450-497c-b8da-b97921bdc806",
+          "sender": "apps.epg.tasks.build_programme_index_task",
+          "utc": "2026-11-10T15:18:29.134475+00:00",
+          "observed": {
+            "location": "queued",
+            "envelope": {
+              "body": "W1s5XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "apps.epg.tasks.build_programme_index_task",
+                "id": "375baa76-7450-497c-b8da-b97921bdc806",
+                "shadow": null,
+                "eta": null,
+                "expires": null,
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  null,
+                  null
+                ],
+                "root_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+                "parent_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+                "argsrepr": "(9,)",
+                "kwargsrepr": "{}",
+                "origin": "gen755@fa0ca2eac00f",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "375baa76-7450-497c-b8da-b97921bdc806",
+                "reply_to": "8e0def23-9619-37ce-95a5-3f7791b732f7",
+                "delivery_mode": 2,
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "owned-refresh-children"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "8f330f03-e618-4e17-ab3c-edd7ba95be1d"
+              }
+            }
+          }
+        },
+        {
+          "id": "03bdad00-2c23-45ea-8cd0-ec5c7cdcd767",
+          "sender": "apps.channels.tasks.evaluate_series_rules",
+          "utc": "2026-11-10T15:18:29.135661+00:00",
+          "observed": {
+            "location": "queued",
+            "envelope": {
+              "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "apps.channels.tasks.evaluate_series_rules",
+                "id": "03bdad00-2c23-45ea-8cd0-ec5c7cdcd767",
+                "shadow": null,
+                "eta": null,
+                "expires": null,
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  null,
+                  null
+                ],
+                "root_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+                "parent_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd",
+                "argsrepr": "()",
+                "kwargsrepr": "{}",
+                "origin": "gen755@fa0ca2eac00f",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "03bdad00-2c23-45ea-8cd0-ec5c7cdcd767",
+                "reply_to": "8e0def23-9619-37ce-95a5-3f7791b732f7",
+                "delivery_mode": 2,
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "owned-refresh-children"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "46916db5-40b4-45bf-ba4c-0535f5496d5e"
+              }
+            }
+          }
+        }
+      ],
+      "index": null,
+      "source_status": "success",
+      "source_message": "Parsed 1 programs for 1 channels (skipped 0 programs for 0 unmapped channels)",
+      "xml_base64": "PHR2PjxjaGFubmVsIGlkPSJtYXBwZWQiPjxkaXNwbGF5LW5hbWU+T3duZWQgcmVmcmVzaGVkIGd1aWRlPC9kaXNwbGF5LW5hbWU+PC9jaGFubmVsPjxwcm9ncmFtbWUgY2hhbm5lbD0ibWFwcGVkIiBzdGFydD0iMjAyNjExMTAxNjE4MjcgKzAwMDAiIHN0b3A9IjIwMjYxMTEwMTcxODI3ICswMDAwIj48dGl0bGU+T3duZWQgcmVmcmVzaCBwcm9ncmFtbWU8L3RpdGxlPjwvcHJvZ3JhbW1lPjwvdHY+",
+      "programmes": [
+        {
+          "title": "Owned refresh programme",
+          "start_time": "2026-11-10 16:18:27+00:00",
+          "end_time": "2026-11-10 17:18:27+00:00"
+        }
+      ],
+      "locks": {
+        "refresh": null,
+        "file": null
+      }
+    }
+  ]
+}

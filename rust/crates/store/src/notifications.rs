@@ -9,7 +9,7 @@ use axum::{
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
-use redis::{aio::MultiplexedConnection, FromRedisValue};
+use redis::{aio::{ConnectionManager, ConnectionManagerConfig}, FromRedisValue};
 use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Row};
 use std::{net::SocketAddr, sync::Arc, time::Duration};
@@ -17,7 +17,7 @@ use tokio::{sync::{OwnedSemaphorePermit, Semaphore}, time::timeout};
 
 #[derive(Clone)]
 pub struct NotificationCache {
-    connection: MultiplexedConnection,
+    connection: ConnectionManager,
     permits: Arc<Semaphore>,
     queued: Arc<Semaphore>,
     retained_scope: Option<Arc<dyn Send + Sync>>,
@@ -39,7 +39,7 @@ impl NotificationCache {
         let client = redis::Client::open(url).map_err(|_| unavailable())?;
         let connection = timeout(
             Duration::from_secs(5),
-            client.get_multiplexed_async_connection(),
+            client.get_connection_manager_with_config(ConnectionManagerConfig::new().set_number_of_retries(0).set_connection_timeout(Duration::from_secs(5))),
         )
         .await
         .map_err(|_| unavailable())?
@@ -754,3 +754,7 @@ mod tests {
     }
 
 }
+
+#[cfg(test)]
+#[path = "notification_restart_peer.rs"]
+mod notification_restart_peer;

@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "scope": "Actual Original refresh early ACK with owned FIFO parser I/O; graceful finish and hard process-group loss/restart bounded non-replay, Source only",
+  "credit": "Original Dispatcharr authors/contributors retain full application/algorithm credit and AGPL licensing; Celery/Kombu, Redis/redis-py, Django/PostgreSQL and dependency authors retain credit/licenses.",
+  "checks": 17,
+  "blocked_parser_cases": 2,
+  "fresh_replacement_probe": 1,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "report": "artifacts/rust/m6-original-epg-refresh-ack-2/integration.json",
+  "report_sha256": "5f9abc26a7622409e8e27df082ef49a5ee646cb3e38313eabaeaa2dabfdda8c2",
+  "private_observation_sha256": "a20892a096168219d7e3990af9a204801a0d5c94113cc484f177f0db6d33c63c",
+  "dataset": {
+    "path": "scripts/rust-job-contracts/source-epg-refresh-ack-2.json",
+    "sha256": "b401687e29d271c714842d5e55493fe6bdb3773c8e13a53a36d318c1d1794955"
+  },
+  "selected_tools": [
+    {
+      "path": "scripts/rust-job-contracts/run_epg_refresh_ack.py",
+      "frozen_path": "artifacts/rust/m6-original-epg-refresh-ack-2/tool-source/scripts/rust-job-contracts/run_epg_refresh_ack.py",
+      "sha256": "86c048bd855e69cd7415f4f9b5e89e02e8bd09b99be0a5f3828ea7228b7a454a"
+    },
+    {
+      "path": "scripts/rust-job-contracts/source_epg_refresh_ack.py",
+      "frozen_path": "artifacts/rust/m6-original-epg-refresh-ack-2/tool-source/scripts/rust-job-contracts/source_epg_refresh_ack.py",
+      "sha256": "6a468f3e1116816f2b2cbe627b9fb3cc0d50a7ee13789adececdef9f49ca92bf"
+    },
+    {
+      "path": "scripts/rust-job-contracts/epg_refresh_ack_observer.py",
+      "frozen_path": "artifacts/rust/m6-original-epg-refresh-ack-2/tool-source/scripts/rust-job-contracts/epg_refresh_ack_observer.py",
+      "sha256": "6a513ef9b4ddaa7f0e3139fa94b00e7b99133d62748394cc0f9bb93d64ecc45e"
+    },
+    {
+      "path": "scripts/rust-job-contracts/epg_refresh_import_observer.py",
+      "frozen_path": "artifacts/rust/m6-original-epg-refresh-ack-2/tool-source/scripts/rust-job-contracts/epg_refresh_import_observer.py",
+      "sha256": "58439d2e02ace4dc2a029df2fadbf59739ff947c24c421f9a12cf77ad2c0fbdd"
+    }
+  ],
+  "fixture_control": {
+    "child_routes": "non-refresh\u2192owned-refresh-children, unconsumed",
+    "input": "owned FIFO .txt real local-file parser",
+    "task_or_function_replacement": false,
+    "warm_signal": "SIGTERM to worker main PID only",
+    "hard_signal": "SIGKILL to owned entire process group"
+  },
+  "attributes": {
+    "id": "bcf29235-04ea-453b-8e6e-bb0aad17643d",
+    "own_unacked_tags": [],
+    "acks_late": false,
+    "reject_on_worker_lost": null,
+    "track_started": false,
+    "ignore_result": false,
+    "max_retries": 3,
+    "time_limit": 14400,
+    "soft_time_limit": null
+  },
+  "hardloss_residual_lock_ttl": {
+    "refresh": 296,
+    "file": 296
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_refresh_ack_or_worker_verified": false,
+  "actual_visibility_expiry_verified": false,
+  "generic_worker_lost_exception_payload_verified": false,
+  "application_202_or_scheduler_verified": false,
+  "performance_verified": false,
+  "facts": [
+    "Real refresh task acks_lateFalse, reject_on_worker_lostNone, track_startedFalse, ignore_resultFalse, max_retries3, hard_time_limit14400 and no soft limit are directly observed.",
+    "Before blocked real FIFO parser I/O completes, exact task is absent from broker queue and unacked, backend result is absent/PENDING, and stored byte index is already invalidated.",
+    "SIGTERM to the worker main PID waits for the body; supplying owned XML completes normalSUCCESS/null, releases refresh/file locks and produces resultTTL within3590..3600.",
+    "SIGKILL to entire owned worker process group leaves no postrun/terminal backend record and retains refresh/file locked keys near300seconds.",
+    "Replacement Original worker completes a fresh inactive task, while lost task remains unexecuted during an explicitly one-second bounded non-replay witness. This is not an elapsedvisibility-timeout proof.",
+    "Child routing is an explicit unconsumed owned queue control; no unrelated task family executes. No task/helper function is replaced."
+  ],
+  "failed_attempts": [
+    {
+      "report": "artifacts/rust/m6-original-epg-refresh-ack-1/integration.json",
+      "report_sha256": "1e32677892d4a04458185dc79af6f2ba6189758feb6585105bd9c9e8ce583813",
+      "reason": "Fixture sent graceful SIGTERM to entire process group, also killing prefork child; actual log shows WorkerLostError and subsequent FIFO reader observation timed out. Raw result payload was not captured, so no generic WorkerLost payload claim.",
+      "correction": "Use main-PID SIGTERM for graceful case; retain explicit entire-group SIGKILL only for controlled hardloss.",
+      "default_database_unchanged": true,
+      "cleanup": "project removed"
+    }
+  ],
+  "remaining_gates": [
+    "Native typed publication/Original worker interoperability and result/null-string decoding.",
+    "Native refresh claim/earlyACK/worker/restart/result writer retaining physical work and file leases.",
+    "Ordinary child routing/execution and missing-source orphan cleanup; body/finally exception precedence and hard-limit enforcement."
+  ]
+}

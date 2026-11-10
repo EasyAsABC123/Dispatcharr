@@ -1,0 +1,321 @@
+{
+  "scope": "Exact normal Original refresh metadata projection only; owned synthetic identities, no credentials or production data",
+  "source_datasets": [
+    {
+      "path": "scripts/rust-job-contracts/source-epg-refresh-worker-results-2.json",
+      "sha256": "42f918257c36ad76f54e97d36c2a1abf69e179292ecd2ad8e26aa32fa8c8f4f2"
+    },
+    {
+      "path": "scripts/rust-job-contracts/source-epg-refresh-import-2.json",
+      "sha256": "65a0d9504e430157ebda7daad26a41bbae71281022e4c010f71f050d8c47ddfa"
+    },
+    {
+      "path": "scripts/rust-job-contracts/source-epg-refresh-descendant-1.json",
+      "sha256": "ff811e931b019446a722fa8814c4e771f937e07a2c3dd5f5c6298a4e01202676"
+    }
+  ],
+  "results": [
+    {
+      "name": "wrapper/inactive",
+      "source_id": 1,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:05:48.035769+00:00",
+        "task_id": "a1d70271-e7cc-4bfe-8df8-3abd507636e9"
+      }
+    },
+    {
+      "name": "wrapper/dummy",
+      "source_id": 2,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:05:50.973304+00:00",
+        "task_id": "677cd994-0eee-4bfd-97f7-b103776305f9"
+      }
+    },
+    {
+      "name": "wrapper/missing",
+      "source_id": 3,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": "EPG source 3 does not exist, task cleaned up",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:05:53.830041+00:00",
+        "task_id": "3b6cd465-c466-4145-9c4b-5be81991a479"
+      }
+    },
+    {
+      "name": "wrapper/refresh_busy",
+      "source_id": 4,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:05:56.646800+00:00",
+        "task_id": "4b488393-c0d5-432d-bd3f-3686e96f2743"
+      }
+    },
+    {
+      "name": "wrapper/file_busy",
+      "source_id": 5,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "e03296d9-cea6-4900-8c9f-0a2930f05a55",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:05:59.508443+00:00",
+        "task_id": "895217cb-b2a0-496b-9417-470d9d4a6378"
+      }
+    },
+    {
+      "name": "wrapper/parser_busy",
+      "source_id": 6,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "9ef9988a-01f1-406a-a7e5-6169343ad177",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:06:02.349938+00:00",
+        "task_id": "6e9e15e6-be70-4609-b11a-e90e71459782"
+      }
+    },
+    {
+      "name": "wrapper/exhausted",
+      "source_id": 7,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:06:05.262822+00:00",
+        "task_id": "46ddae66-d735-4512-8354-176395d4d840"
+      }
+    },
+    {
+      "name": "initial/import/inactive_default",
+      "source_id": 1,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:06.131755+00:00",
+        "task_id": "155b3427-6687-47cc-86f5-f9872efb3b92"
+      }
+    },
+    {
+      "name": "initial/import/inactive_force_kw",
+      "source_id": 2,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:08.977276+00:00",
+        "task_id": "804657db-7c31-4a10-a3ae-db49e5888560"
+      }
+    },
+    {
+      "name": "initial/import/inactive_force_pos",
+      "source_id": 3,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:11.844073+00:00",
+        "task_id": "dadd2115-bf4c-4326-81b3-56b58ecf422e"
+      }
+    },
+    {
+      "name": "initial/import/inactive_retry_pos",
+      "source_id": 4,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:14.663647+00:00",
+        "task_id": "ca614821-dc34-4fe5-89f8-655e352b40c5"
+      }
+    },
+    {
+      "name": "initial/import/inactive_all_kw",
+      "source_id": 5,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:18:17.484049+00:00",
+        "task_id": "07308eaa-266e-485d-b430-bedf780fd174"
+      }
+    },
+    {
+      "name": "initial/import/busy_default",
+      "source_id": 6,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "3488ad7b-b4cf-4915-904e-e39c16d43686",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:20.303747+00:00",
+        "task_id": "998d6715-0516-4723-9ebf-f7663141cc6c"
+      }
+    },
+    {
+      "name": "initial/import/busy_retry_pos",
+      "source_id": 7,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "9d548b2c-89a6-43ef-a796-236ffc71d120",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:23.133716+00:00",
+        "task_id": "0bcc3505-bc7c-411a-9d9e-b387a10174a4"
+      }
+    },
+    {
+      "name": "initial/import/imported_default",
+      "source_id": 8,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "c9b15783-1f1e-4aee-bb1c-2c81622031d0",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "8c5c9182-661e-4946-9199-5a1b892e976e",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:26.392388+00:00",
+        "task_id": "014e317d-0b9f-48cd-a6b8-1c35fee47f24"
+      }
+    },
+    {
+      "name": "initial/import/imported_force_pos",
+      "source_id": 9,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "375baa76-7450-497c-b8da-b97921bdc806",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "03bdad00-2c23-45ea-8cd0-ec5c7cdcd767",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:18:29.180686+00:00",
+        "task_id": "d3b0007d-13e2-4ada-a3bc-58386d75c9bd"
+      }
+    },
+    {
+      "name": "descendant/busy-parent-actual-child-import",
+      "source_id": 1,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "88513b34-81c6-4bd8-bdae-accbc38a8789",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:46:52.115725+00:00",
+        "task_id": "15d1ebdd-688d-449f-a1d9-d252b7d46f96"
+      }
+    },
+    {
+      "name": "descendant/busy-parent-actual-child-import/child",
+      "source_id": 1,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "58ed7fd1-099f-4e44-9d62-0308dffc74db",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "ef6a0248-4285-490a-89d8-b7962428b2c1",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-10T15:47:07.520283+00:00",
+        "parent_id": "15d1ebdd-688d-449f-a1d9-d252b7d46f96",
+        "task_id": "88513b34-81c6-4bd8-bdae-accbc38a8789"
+      }
+    }
+  ]
+}

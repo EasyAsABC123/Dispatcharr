@@ -28,6 +28,8 @@ def main():
     parser.add_argument('--mode',choices=['factory','http','both'],default='both')
     parser.add_argument('--native-sql',action='store_true',help='Compare ordinary read component on actual Source database; not native HTTP/app acceptance')
     parser.add_argument('--frozen-rust-source',type=Path,help='Reuse an already captured coherent Rust tree for a harness-only correction')
+    parser.add_argument('--category-query-source',action='store_true',help='Actual original category ordering SQL and installed search parser helpers')
+    parser.add_argument('--category-defaults-wire-source',action='store_true',help='Actual original network default BooleanField exception responses/effects')
     parser.add_argument('--category-initial-source',action='store_true',help='Actual original network category initialization fault/committed-prefix capture')
     parser.add_argument('--category-wire-source',action='store_true',help='Actual original category HEAD/OPTIONS/negotiation/JSON indentation capture')
     parser.add_argument('--category-forms-source',action='store_true',help='Original network extra category form/order/search grammar')
@@ -51,7 +53,7 @@ def main():
         if args.native_sql or args.native_http or args.native_categories:parser.error('Packaged replay must not compile a host native peer')
         if args.mode!='http':parser.error('Packaged replay requires --mode http')
         args.http_wire=True
-    if args.native_categories:args.native_sql=True;args.category_schedule_source=True;args.category_defaults_source=True;args.category_initial_source=True
+    if args.native_categories:args.native_sql=True;args.category_schedule_source=True;args.category_defaults_source=True;args.category_initial_source=True;args.category_defaults_wire_source=True;args.category_query_source=True
     if args.native_http:args.native_sql=True;args.http_wire=True
     if args.http_wire and args.mode!='http':parser.error('--http-wire requires --mode http')
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
@@ -62,7 +64,7 @@ def main():
     try:
         for mode in modes:
             evidence=out/mode;evidence.mkdir()
-            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('category_initial_source.py')]if args.category_initial_source or args.packaged_categories else[]),*([Path(__file__).with_name('category_burst_source.py')]if args.native_categories or args.packaged_categories else[]),*([Path(__file__).with_name('category_defaults_source.py')]if args.category_defaults_source else[]),*([Path(__file__).with_name('category_schedule_source.py')]if args.category_schedule_source else[]),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
+            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('category_query_semantics_source.py')]if args.category_query_source else[]),*([Path(__file__).with_name('category_defaults_wire_source.py')]if args.category_defaults_wire_source else[]),*([Path(__file__).with_name('category_initial_source.py')]if args.category_initial_source or args.packaged_categories else[]),*([Path(__file__).with_name('category_burst_source.py')]if args.native_categories or args.packaged_categories else[]),*([Path(__file__).with_name('category_defaults_source.py')]if args.category_defaults_source else[]),*([Path(__file__).with_name('category_schedule_source.py')]if args.category_schedule_source else[]),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
                 *([Path(__file__).with_name('category_packaged_probe.py')]if args.packaged_categories else[]),
                 *([Path(__file__).with_name(name)for name in ['category_browser.js','category_browser_fixture.py','category_browser_runner.py']]if args.category_browser else[]),
                 ROOT/'docker/compose.rust-playback.yml',ROOT/'scripts/rust-integration/shared_ts.py',
@@ -93,7 +95,7 @@ def main():
                 result['native_rust_source_input']=str(rust)
             with fixture_source(result,evidence,'source-run.json')as temporary:
                 source=Path(temporary)/'source';source.mkdir()
-                archive=subprocess.check_output(['git','archive',BASELINE],cwd=ROOT)
+                archive=subprocess.check_output(['git','-C',subprocess.check_output(['git','rev-parse','--show-toplevel'],cwd=ROOT,text=True).strip(),'archive',BASELINE],cwd=ROOT)
                 result['baseline_archive_sha256']=hashlib.sha256(archive).hexdigest()
                 subprocess.run(['tar','-x','--no-same-owner','-C',str(source)],input=archive,check=True)
                 (source/'media').mkdir(exist_ok=True)
@@ -207,6 +209,12 @@ def main():
                     if args.category_initial_source:
                         initial=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_initial_source.py'],timeout=30)
                         result['original_category_initial']=json.loads(initial.stdout.splitlines()[-1]);(evidence/'category-initial-source.json').write_text(json.dumps(result['original_category_initial'],indent=2)+'\n');assert result['original_category_initial']['passed']
+                    if args.category_query_source:
+                        query_observed=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_query_semantics_source.py'],timeout=30)
+                        result['original_category_query_semantics']=json.loads(query_observed.stdout.splitlines()[-1]);(evidence/'category-query-source.json').write_text(json.dumps(result['original_category_query_semantics'],indent=2)+'\n');assert result['original_category_query_semantics']['passed']
+                    if args.category_defaults_wire_source:
+                        wire=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_defaults_wire_source.py'],timeout=45)
+                        result['original_category_defaults_wire']=json.loads(wire.stdout.splitlines()[-1]);(evidence/'category-defaults-wire-source.json').write_text(json.dumps(result['original_category_defaults_wire'],indent=2)+'\n');assert result['original_category_defaults_wire']['passed']
                     if args.category_defaults_source:
                         defaults=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_defaults_source.py'],timeout=30)
                         result['original_category_defaults']=json.loads(defaults.stdout.splitlines()[-1]);(evidence/'category-defaults-source.json').write_text(json.dumps(result['original_category_defaults'],indent=2)+'\n')
@@ -223,7 +231,7 @@ def main():
                     if args.native_sql:
                         pgport=command(compose+['port','baseline','5432']).stdout.strip().rsplit(':',1)[1]
                         redisport=command(compose+['port','baseline','6379']).stdout.strip().rsplit(':',1)[1]
-                        native_environment=dict(environment,VOD_MIXED_BURST=str(evidence/'source-vod-mixed-burst.json'),VOD_CATEGORY_INITIAL_REFERENCE=str(evidence/'category-initial-source.json'),VOD_CATEGORY_BURST=str(evidence/'source-category-burst.json'),VOD_CATEGORY_DEFAULTS_REFERENCE=str(evidence/'category-defaults-source.json'),VOD_CATEGORY_SCHEDULE_REFERENCE=str(evidence/'category-schedule-source.json'),VOD_CATEGORY_NATIVE='playback-fixture-only',VOD_TEST_NATIVE_HTTP='1'if args.native_http else'0',VOD_SOURCE_BURST=str(evidence/'source-burst.json'),REDIS_TEST_URL='redis://:playback-fixture-only@127.0.0.1:'+redisport,VOD_TEST_CACHED_AUTH='1',DATABASE_URL='postgresql://dispatch:playback-fixture-only@127.0.0.1:'+pgport+'/dispatcharr',
+                        native_environment=dict(environment,VOD_CATEGORY_DEFAULTS_WIRE_REFERENCE=str(evidence/'category-defaults-wire-source.json'),VOD_CATEGORY_QUERY_REFERENCE=str(evidence/'category-query-source.json'),VOD_MIXED_BURST=str(evidence/'source-vod-mixed-burst.json'),VOD_CATEGORY_INITIAL_REFERENCE=str(evidence/'category-initial-source.json'),VOD_CATEGORY_BURST=str(evidence/'source-category-burst.json'),VOD_CATEGORY_DEFAULTS_REFERENCE=str(evidence/'category-defaults-source.json'),VOD_CATEGORY_SCHEDULE_REFERENCE=str(evidence/'category-schedule-source.json'),VOD_CATEGORY_NATIVE='playback-fixture-only',VOD_TEST_NATIVE_HTTP='1'if args.native_http else'0',VOD_SOURCE_BURST=str(evidence/'source-burst.json'),REDIS_TEST_URL='redis://:playback-fixture-only@127.0.0.1:'+redisport,VOD_TEST_CACHED_AUTH='1',DATABASE_URL='postgresql://dispatch:playback-fixture-only@127.0.0.1:'+pgport+'/dispatcharr',
                             VOD_API_NATIVE_FIXTURE='playback-fixture-only',VOD_SOURCE_CORPUS=str(evidence/'source-corpus.json'),VOD_NATIVE_EVIDENCE=str(evidence),VOD_SOURCE_DEFAULT_SQL=str(tools/'scripts/rust-vod-api-contracts/source-default-queries-1.json'),VOD_SOURCE_SCHEDULE=str(evidence/'source-schedule.json'),VOD_SOURCE_CATEGORY_FAULT=str(evidence/'source-category-fault.json'))
                         target=Path(os.environ.get('VOD_CARGO_TARGET_DIR',str(ROOT/'artifacts/rust/vod-rest-cargo-target')))
                         argv=['cargo','test','--manifest-path',str(tools/'rust/Cargo.toml'),'--target-dir',str(target),'--locked','--offline','-p','dispatcharr-store','--lib',

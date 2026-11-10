@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "scope": "Test-only actual ADMIT/PendingCreate reply ownership overlay on exact159 production runtime",
+  "evidence": "artifacts/rust/m8-vod-admit-reply-161",
+  "rust_source_archive_sha256": "682c2976e287de86b3ed451d36c86aec2048248080806a2ede0babad0385d222",
+  "production_base": "artifacts/rust/redis-remaining-owners-stageable-159.json",
+  "production_sha256": {
+    "rust/crates/clients/Cargo.toml": "38481cee2dc95eb2e8eba1eb1b1b96f765235be57a969575e2fc955a319d3bdc",
+    "rust/crates/store/Cargo.toml": "757bad9048e08609603a2754612d18f78871d09460e11fc502817d4446707a28",
+    "rust/crates/vod-http/Cargo.toml": "b37203ac9e3d4c4e5af8d0c3da9888f2b6dc95b5ce583c4bb1a1f8e07b463407",
+    "rust/crates/clients/src/lib.rs": "1057c0d75b105fd72ff70479ac1bcc2ce340d0bbaf233fd7d30856a259f405cd",
+    "rust/crates/clients/src/era.rs": "f64233a7d3a325fd90baf7a916d01e0ff089297e00c8625a3892b84e572d8cbe",
+    "rust/crates/clients/src/vod.rs": "ce3fe1265a74108320ec8be996a84f7a1945bc43ccc7bfb9b492e6afa630b855",
+    "rust/crates/store/src/notifications.rs": "78e7aca831b9d4447ba4a3ed73957948b67f110920ffebe9ff801f05bf9dfb91",
+    "rust/crates/vod-http/src/sessions.rs": "6bf420f79fe2621f0c8d9a4a11df2e72486f641edc766bd871860348af4b2fa7"
+  },
+  "physical_tests": 23,
+  "new_tests": [
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::admit_reply::lost_admit_reply_retains_pending_cleanup_through_noscript_and_real_reply",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-7-vod.log"
+    },
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::admit_reply::delayed_admit_reply_retains_pending_cleanup_after_logical_timeout",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-8-vod.log"
+    }
+  ],
+  "runtime_changed": false,
+  "new_controls": [
+    "Actual cold ADMIT EVALSHA returns NOSCRIPT, library loads it, exactly1successful ADMIT mutation executes; proxy drops only that successfulreply.",
+    "Actual PendingCreate CAS cleanup returns NOSCRIPT, library loads it, actual DEL executes once; its successfulreply remains held past2.2s.",
+    "True request/session permits remain unavailable and pending_cleanups=1; drain cannot finish while actualcleanupreply is held.",
+    "Actual ADMIT mutation reply held pastlogical2s; caller receiveserror while PendingCreate retains true physical admission through latercleanup.",
+    "Afterrelease: request/session slots1, pendingcleanupdrained, no sessionhash/providerquota residue, cleanup_succeeded true."
+  ],
+  "retained_setup_failure": {
+    "160": "CLI out-variable was accidentally inside validationguard; failedbeforearchive/container. Log retainedat artifacts/rust/m8-vod-admit-reply-160-run.log."
+  },
+  "cleanup": "owned container removed",
+  "cleanup_passed": true,
+  "application_recovery_verified": false,
+  "active_session_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and redis-rs authors retain full application/algorithm/client credit and licensing."
+}

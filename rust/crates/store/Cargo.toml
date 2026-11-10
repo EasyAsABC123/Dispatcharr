@@ -26,7 +26,7 @@ num-bigint = "0.4"
 pbkdf2 = "0.12"
 rand = "0.8"
 regex = "1.13"
-redis = {version="0.32",features=["tokio-comp"]}
+redis = {version="0.32",features=["tokio-comp","connection-manager"]}
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["arbitrary_precision", "preserve_order"] }
 sha1 = "0.10"

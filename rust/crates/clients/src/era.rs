@@ -27,7 +27,7 @@ fn local(store: &Inner, channel: &str) -> Vec<Arc<ClientInner>> {
 pub(super) async fn supervised<T, F, Fut>(store: Arc<Inner>, operation: F) -> Result<T, Error>
 where
     T: Send + 'static,
-    F: FnOnce(MultiplexedConnection) -> Fut + Send + 'static,
+    F: FnOnce(ConnectionManager) -> Fut + Send + 'static,
     Fut: std::future::Future<Output = Result<T, Error>> + Send + 'static,
 {
     let permit = match store.control_slots.clone().try_acquire_owned() {

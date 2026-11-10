@@ -61,11 +61,25 @@ passes packaged API, actual scoped React workflows and broader regressions.
 Its four query/format and seven default-error exclusions remain explicit. It
 does not close M5 or establish new performance gains.
 
+The later [owner/category/refresh component checkpoint](../scripts/rust-integration/verified-owners-categories-refresh-components-1.json)
+passes strict workspace checks and345 default tests. Its final actual fixtures
+match163 category responses with no captured query/format exclusions, all18
+default-error/effect cases and393 ordinary VOD responses. Independent cached
+client/cache/VOD recovery, retained VOD setup/cleanup and immutable FileJob
+dispatch now have bounded component evidence. New canonical packaging, active
+session state-loss behavior, additional Redis owners and performance remain open.
+
 The [Original EPG refresh worker reference](../scripts/rust-job-contracts/EPG-REFRESH-WORKER.md)
 passes50 real-worker checks for inactive/dummy/missing sources, busy locks,
 parser-count deferral and exhaustion. Refresh uses15-second child deferral and a
 distinct missing-source string result. Native refresh task transport, successful
 imports and application integration remain open.
+
+The refresh reference also covers successful imports, actual child/grandchild
+lineage and early ACK/hard-loss behavior. The accepted native service override
+retains per-run dispatch through real pending replies, with test-only protocol
+and normal-result decoding. A native refresh consumer and result writer remain
+separate work; Source-worker interoperability is not a default native consumer.
 
 Current evidence is described in the [local verification guide](rust-local-verification.md).
 The separate [image14 API characterization](../scripts/rust-integration/verified-api-resources-image14-1.json) passes three paired resource trials at identical40successfulrequests/second, with14,400 exact JSON responses and zero errors. Median paired CPU and sampled working-memory ratios are0.10483and0.62949. This read-only synthetic API subset does not close browser, authentication, realtime, background-job or full M5/application acceptance.

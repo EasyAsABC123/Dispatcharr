@@ -1,0 +1,76 @@
+{
+  "passed": false,
+  "execution_passed": true,
+  "recovered": {
+    "live": true,
+    "cache": true,
+    "vod": true
+  },
+  "physical_owner_resources_verified": true,
+  "new_client_accounting_after_restart": false,
+  "migration_gate_passed": false,
+  "rust_source_archive_sha256": "6b74f29a9ffcb7c7a957e33b7e9d1a1190a6ae5801dcc8e5f771382a6148c893",
+  "resource_tests": [
+    {
+      "binary": "admission",
+      "selected": null,
+      "expected_count": 10,
+      "passed": true,
+      "log": "resource-0-admission.log"
+    },
+    {
+      "binary": "era",
+      "selected": null,
+      "expected_count": 6,
+      "passed": true,
+      "log": "resource-1-era.log"
+    },
+    {
+      "binary": "cache",
+      "selected": "notifications::tests::cancelled_cache_command_retains_physical_slot_and_scope",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-2-cache.log"
+    },
+    {
+      "binary": "cache",
+      "selected": "notifications::tests::cache_logical_timeout_retains_pending_reply_and_composed_scopes",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-3-cache.log"
+    },
+    {
+      "binary": "cache",
+      "selected": "notifications::tests::cache_cancelled_burst_cannot_reuse_sixteen_pending_slots",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-4-cache.log"
+    },
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::physical_dropped_ticket_retains_request_and_session_until_actual_reply",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-5-vod.log"
+    },
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::physical_cancelled_setup_retains_request_and_session_until_actual_reply",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-6-vod.log"
+    }
+  ],
+  "cleanup": "owned container removed",
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m8-remaining-redis-owner-recovery-158",
+  "scope": "Read recovery and21physical owner tests pass; live restart heartbeat bytes remain0, so acceptancefalse",
+  "counterexample": "Native registers a fresh client and reports8192consumedbytes; independent actual Original Redis client observes bytes_sent=0 after150ms. OldEVALSHA heartbeat scriptcache is gone after restart.",
+  "source_observer_note": "inspect_native accidentally reused the identity-observer variable, so its post-inspection same_client flag is false despite using the same existing client reference. This does not affect rawHGET bytes0 or earlier cached-recovery identity checks;159 fixes only that local variable name.",
+  "rejected_capture": {
+    "157": "Source archive straddled2unrelated category file edits before finalStreamhold; preserved but not accepted."
+  },
+  "application_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application and algorithm credit."
+}

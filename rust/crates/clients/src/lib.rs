@@ -13,7 +13,7 @@ pub mod vod;
 pub use hls::HlsSessionInfo;
 
 use dispatcharr_contracts::PlaybackViewer;
-use redis::{aio::MultiplexedConnection, Script};
+use redis::{aio::{ConnectionManager, ConnectionManagerConfig}, Script};
 use serde_json::json;
 use std::{
     collections::{BTreeMap, HashMap},
@@ -71,7 +71,7 @@ struct Inner {
     runtime: tokio::runtime::Handle,
     control_slots: Arc<Semaphore>,
     control_queue: Arc<Semaphore>,
-    connection: MultiplexedConnection,
+    connection: ConnectionManager,
     config: ClientConfig,
     clients: Mutex<HashMap<String, Weak<ClientInner>>>,
     live_stats: Mutex<statistics::State>,
@@ -90,7 +90,7 @@ pub struct ClientStore {
 struct ClientInner {
     runtime: tokio::runtime::Handle,
     store: Weak<Inner>,
-    connection: MultiplexedConnection,
+    connection: ConnectionManager,
     config: ClientConfig,
     id: String,
     channel: String,
@@ -374,7 +374,7 @@ return 1
         let client = redis::Client::open(url).map_err(|_| Error::InvalidConfiguration)?;
         let connection = time::timeout(
             config.command_timeout,
-            client.get_multiplexed_async_connection(),
+            client.get_connection_manager_with_config(ConnectionManagerConfig::new().set_number_of_retries(0).set_connection_timeout(config.command_timeout)),
         )
         .await
         .map_err(|_| Error::RedisUnavailable)?
@@ -659,13 +659,29 @@ async fn flush(inner: &Inner, clients: &[Arc<ClientInner>]) -> Result<(), Error>
             .arg(average)
             .arg(&client.output_format);
     }
-    let result: Vec<i64> = time::timeout(
+    let reply: Result<Vec<i64>, redis::RedisError> = time::timeout(
         inner.config.command_timeout,
         pipeline.query_async(&mut connection),
     )
     .await
-    .map_err(|_| Error::RedisUnavailable)?
     .map_err(|_| Error::RedisUnavailable)?;
+    let result = match reply {
+        Ok(result) => result,
+        Err(error) => {
+            // A restarted server loses its script cache. Reload only after an
+            // explicit NOSCRIPT response, for a future flush. Never replay a
+            // failed/partially completed pipeline or an uncertain I/O command.
+            if error.kind() == redis::ErrorKind::NoScriptError {
+                let loaded: String = time::timeout(
+                    inner.config.command_timeout,
+                    redis::cmd("SCRIPT").arg("LOAD").arg(scripts::HEARTBEAT).query_async(&mut connection),
+                ).await.map_err(|_| Error::RedisUnavailable)?
+                    .map_err(|_| Error::RedisUnavailable)?;
+                if loaded != inner.heartbeat_sha { return Err(Error::RedisUnavailable); }
+            }
+            return Err(Error::RedisUnavailable);
+        }
+    };
     if result.len() != clients.len() {
         return Err(Error::RedisUnavailable);
     }

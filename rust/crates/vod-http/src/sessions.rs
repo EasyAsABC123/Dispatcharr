@@ -1,7 +1,7 @@
 use crate::events::{Producer, Transition};
 use crate::resolver::{VodCandidate, VodRequest, VodSource};
 use dispatcharr_coordination::{AcquireRequest, Coordinator, Lease, ProviderReservation};
-use redis::{aio::MultiplexedConnection, AsyncCommands, Script};
+use redis::{aio::{ConnectionManager, ConnectionManagerConfig}, AsyncCommands, Script};
 use serde_json::json;
 use std::{
     collections::{BTreeMap, HashMap},
@@ -79,10 +79,10 @@ pub(crate) struct Session {
     lease: Lease,
     metadata_token: String,
     state: Mutex<State>,
-    _slot: OwnedSemaphorePermit,
+    _slot: Arc<OwnedSemaphorePermit>,
 }
 struct Inner {
-    connection: MultiplexedConnection,
+    connection: ConnectionManager,
     coordinator: Coordinator,
     sessions: Mutex<HashMap<String, Arc<Session>>>,
     slots: Arc<Semaphore>,
@@ -142,7 +142,7 @@ impl Progress {
 pub(crate) struct Ticket {
     pub session: Arc<Session>,
     pool: Weak<Inner>,
-    _request: Option<OwnedSemaphorePermit>,
+    _request: Option<Arc<OwnedSemaphorePermit>>,
     is_new: bool,
     body_started: AtomicBool,
 }
@@ -159,10 +159,10 @@ impl SessionPool {
             Duration::from_secs(3),
             redis::Client::open(url)
                 .map_err(|_| redis_error())?
-                .get_multiplexed_async_connection_with_config(
-                    &redis::AsyncConnectionConfig::new()
-                        .set_connection_timeout(Duration::from_secs(2))
-                        .set_response_timeout(Duration::from_secs(2)),
+                .get_connection_manager_with_config(
+                    ConnectionManagerConfig::new()
+                        .set_number_of_retries(0)
+                        .set_connection_timeout(Duration::from_secs(2)),
                 ),
         )
         .await
@@ -317,12 +317,23 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
-        let request_permit = self
-            .inner
-            .requests
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| unavailable())?;
+        // Bound work before spawning. Dropping the caller only abandons its
+        // observer; setup keeps admission through actual Redis replies and any
+        // token-fenced cleanup, including before PendingCreate is installed.
+        let request_permit = Arc::new(self.inner.requests.clone().try_acquire_owned().map_err(|_| unavailable())?);
+        let pool = self.clone();
+        let id = id.to_owned();
+        let request = request.clone();
+        tokio::spawn(async move { pool.enter_owned(&id, source, &request, request_permit).await })
+            .await.map_err(|_| unavailable())?
+    }
+    async fn enter_owned(
+        &self,
+        id: &str,
+        source: VodSource,
+        request: &VodRequest,
+        request_permit: Arc<OwnedSemaphorePermit>,
+    ) -> Result<Ticket, dispatcharr_store::StoreError> {
         // This lock serializes bounded session SETUP only, never media/network body I/O.
         let mut registry = self.inner.sessions.lock().await;
         if self.stopped() {
@@ -408,12 +419,7 @@ impl SessionPool {
             }
             return Ok(ticket);
         }
-        let slot = self
-            .inner
-            .slots
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| unavailable())?;
+        let slot = Arc::new(self.inner.slots.clone().try_acquire_owned().map_err(|_| unavailable())?);
         let mut connection = self.inner.connection.clone();
         let existing: bool = connection
             .exists(key(id))
@@ -472,6 +478,8 @@ impl SessionPool {
             token: metadata_token.clone(),
             armed: true,
             pool: Arc::downgrade(&self.inner),
+            retained_request: Some(request_permit.clone()),
+            retained_slot: Some(slot.clone()),
         };
         let fields: BTreeMap<String, String> = fields
             .into_iter()
@@ -610,7 +618,7 @@ fn key(id: &str) -> String {
 }
 // The original delayed timer checks the current global session ID, not the
 // timer's former local owner. Missing, malformed and failed reads are inactive.
-async fn source_has_active_streams(connection: &mut MultiplexedConnection, id: &str) -> bool {
+async fn source_has_active_streams(connection: &mut ConnectionManager, id: &str) -> bool {
     let value: Result<Option<String>, _> = redis::cmd("HGET")
         .arg(key(id))
         .arg("active_streams")
@@ -801,11 +809,13 @@ impl Drop for Ticket {
 // A canceled SETUP may have reached Redis even if its reply was never read.
 // Cleanup is token fenced and cannot delete another worker's session.
 struct PendingCreate {
-    connection: MultiplexedConnection,
+    connection: ConnectionManager,
     id: String,
     token: String,
     armed: bool,
     pool: Weak<Inner>,
+    retained_request: Option<Arc<OwnedSemaphorePermit>>,
+    retained_slot: Option<Arc<OwnedSemaphorePermit>>,
 }
 impl Drop for PendingCreate {
     fn drop(&mut self) {
@@ -816,11 +826,14 @@ impl Drop for PendingCreate {
         let id = self.id.clone();
         let token = self.token.clone();
         let pool = self.pool.upgrade();
+        let retained_request = self.retained_request.take();
+        let retained_slot = self.retained_slot.take();
         if let Ok(runtime) = tokio::runtime::Handle::try_current() {
             if let Some(pool) = &pool {
                 pool.pending_cleanups.fetch_add(1, Ordering::AcqRel);
             }
             runtime.spawn(async move {
+                let _retained = (retained_request, retained_slot);
                 let cleaned: Result<i64,_> = Script::new("if redis.call('HGET',KEYS[1],'rust_owner_token')==ARGV[1] then return redis.call('DEL',KEYS[1]) end return 0")
                     .key(key(&id)).arg(token).invoke_async(&mut connection).await;
                 if let Some(pool)=pool{if cleaned.is_err(){pool.cleanup_failed.store(true,Ordering::Release);}pool.pending_cleanups.fetch_sub(1,Ordering::AcqRel);}
@@ -875,3 +888,7 @@ fn idle_match(
         })
         .cloned()
 }
+
+#[cfg(test)]
+#[path = "session_restart_peer.rs"]
+mod session_restart_peer;

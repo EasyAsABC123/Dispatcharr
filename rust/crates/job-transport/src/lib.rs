@@ -29,3 +29,15 @@ pub mod pg_failure_format;
 // Known observed stage mappings only; production service adapter is unchanged.
 #[cfg(test)]
 pub mod index_classifier;
+
+// Observed refresh wire component; no worker or application authority.
+#[cfg(test)]
+pub mod refresh_protocol;
+
+// Immutable refresh child-lineage adapter component; no broker dispatch authority.
+#[cfg(test)]
+pub mod refresh_dispatch;
+
+// Observed normal refresh results; no writer or application authority.
+#[cfg(test)]
+pub mod refresh_result;

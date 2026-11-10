@@ -1,0 +1,153 @@
+{
+  "scope": "Actual Original refresh early ACK with owned FIFO parser I/O; graceful finish and hard process-group loss/restart bounded non-replay, Source only",
+  "fixture_control": {
+    "child_routes": "non-refresh\u2192owned-refresh-children, unconsumed",
+    "input": "owned FIFO .txt real local-file parser",
+    "task_or_function_replacement": false,
+    "warm_signal": "SIGTERM to worker main PID only",
+    "hard_signal": "SIGKILL to owned entire process group"
+  },
+  "normalization": "None; all identifiers/origins/paths are owned synthetic fixture values. No credentials/tokens or production data.",
+  "cases": [
+    {
+      "name": "graceful",
+      "source_id": 1,
+      "envelope": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "bcf29235-04ea-453b-8e6e-bb0aad17643d",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "bcf29235-04ea-453b-8e6e-bb0aad17643d",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen367@d4642e2aa5c1",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "bcf29235-04ea-453b-8e6e-bb0aad17643d",
+          "reply_to": "ea92554b-8067-315b-9b2b-c852c55d1274",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "16d945c1-0e84-4825-9c9c-9533b773716c"
+        }
+      },
+      "ack_observation": {
+        "id": "bcf29235-04ea-453b-8e6e-bb0aad17643d",
+        "own_unacked_tags": [],
+        "acks_late": false,
+        "reject_on_worker_lost": null,
+        "track_started": false,
+        "ignore_result": false,
+        "max_retries": 3,
+        "time_limit": 14400,
+        "soft_time_limit": null
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:42:06.593622+00:00",
+        "task_id": "bcf29235-04ea-453b-8e6e-bb0aad17643d"
+      },
+      "postrun": {
+        "id": "bcf29235-04ea-453b-8e6e-bb0aad17643d",
+        "state": "SUCCESS",
+        "result": null,
+        "pid": 407
+      }
+    },
+    {
+      "name": "hardloss",
+      "source_id": 2,
+      "envelope": {
+        "body": "W1syXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "e631fd32-b0a6-45c0-b1c7-5e34a90dcc92",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "e631fd32-b0a6-45c0-b1c7-5e34a90dcc92",
+          "parent_id": null,
+          "argsrepr": "(2,)",
+          "kwargsrepr": "{}",
+          "origin": "gen367@d4642e2aa5c1",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "e631fd32-b0a6-45c0-b1c7-5e34a90dcc92",
+          "reply_to": "ea92554b-8067-315b-9b2b-c852c55d1274",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "280949f4-2770-4efa-9648-aa1ff6c12279"
+        }
+      },
+      "ack_observation": {
+        "id": "e631fd32-b0a6-45c0-b1c7-5e34a90dcc92",
+        "own_unacked_tags": [],
+        "acks_late": false,
+        "reject_on_worker_lost": null,
+        "track_started": false,
+        "ignore_result": false,
+        "max_retries": 3,
+        "time_limit": 14400,
+        "soft_time_limit": null
+      },
+      "replacement_metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T15:42:11.424765+00:00",
+        "task_id": "b7041c2e-91aa-43a7-be0a-f1ada0aa5dd0"
+      },
+      "remaining_lock_ttl": {
+        "refresh": 296,
+        "file": 296
+      },
+      "nonreplay_observation_seconds": 1,
+      "controlled_process_group_sigkill": true
+    }
+  ]
+}

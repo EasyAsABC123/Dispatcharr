@@ -67,7 +67,7 @@ fn parse(pairs:&[(String,String)])->Result<CategoryQuery,ReadError> {
     if let Some(search)=last(pairs,"search") {
         if let Some(quoted)=search.strip_prefix('"').and_then(|value|value.strip_suffix('"')).filter(|value|!value.chars().any(|c|matches!(c,'"'|'\\'|'\0'))) {result.terms=vec![quoted.to_owned()];}
         else {
-            if search.chars().any(|c|matches!(c,'\''|'"'|'\\'|'\0')) {return Err(ReadError::Unsupported("Category general quoted/control search grammar not captured"));}
+            if search.chars().any(|c|matches!(c,'\''|'"'|'\0')) {return Err(ReadError::Unsupported("Category general quoted/control search grammar not captured"));}
             result.terms=search.split(|c|c==','||space(c)).filter(|v|!v.is_empty()).map(str::to_owned).collect();
         }
         if result.terms.len()>32{return Err(ReadError::Capacity);}
@@ -75,11 +75,21 @@ fn parse(pairs:&[(String,String)])->Result<CategoryQuery,ReadError> {
     if let Some(order)=last(pairs,"ordering") {
         for item in order.split(',') {let item=item.trim_matches(space);if item.starts_with("--"){continue;}
             let descending=item.starts_with('-');let name=item.strip_prefix('-').unwrap_or(item);
-            if let Some(name)=match name {"name"=>Some("name"),"id"=>Some("id"),"category_type"=>Some("category_type"),"get_category_type_display"|"m3u_relations"=>return Err(ReadError::Unsupported("Category callable/reverse-relation ordering needs separate SQL/fault gate")),_=>None} {result.order.push((name,descending));}
+            if let Some(name)=match name {"name"=>Some("name"),"id"=>Some("id"),"category_type"=>Some("category_type"),"m3u_relations"=>Some("m3u_relations"),"get_category_type_display"=>return Err(ReadError::SourceUnhandledFault("Original Django FieldError from callable ordering")),_=>None} {result.order.push((name,descending));}
         }
     }
     if result.order.len()>16{return Err(ReadError::Capacity);}
     Ok(result)
+}
+fn category_negotiate(headers:&HeaderMap,uri:&axum::http::Uri)->Result<(),StoreError> {
+    let format=url::form_urlencoded::parse(uri.query().unwrap_or("").as_bytes()).filter(|(key,_)|key=="format").last().map(|(_,value)|value.into_owned());
+    if format.as_deref()==Some("api") {
+        let accept=headers.get("accept").map(|value|dispatcharr_contracts::source_header_value(value.as_bytes())).unwrap_or_else(||"*/*".into());
+        if !accept.split(',').any(|value|matches!(value.trim().split(';').next(),Some("*/*"|"text/*"|"text/html"))) {
+            return Err(StoreError::StatusBody(406,json!({"detail":"Could not satisfy the request Accept header."})));
+        }
+    }
+    super::vod_api_http::negotiate(headers,uri)
 }
 fn contains(value:&str)->String {format!("%{}%",value.replace('\\',"\\\\").replace('%',"\\%").replace('_',"\\_"))}
 fn statement(selection:&CategoryQuery,visible:&Visibility,id:Option<i64>)->Statement {
@@ -89,10 +99,11 @@ fn statement(selection:&CategoryQuery,visible:&Visibility,id:Option<i64>)->State
     else if !visible.series {predicates.push("c.category_type='movie'".into());}
     if let Some(name)=&selection.name {let arg=statement.bind(Bind::Text(contains(name)));predicates.push(format!("UPPER(c.name::text) LIKE UPPER({arg})"));}
     if let Some(kind)=&selection.kind {let arg=statement.bind(Bind::Text(kind.clone()));predicates.push(format!("c.category_type={arg}"));}
-    let join=if let Some(account)=selection.account {let arg=statement.bind(Bind::Integer(account));predicates.push(format!("account_filter.m3u_account_id={arg}"));" INNER JOIN vod_m3uvodcategoryrelation account_filter ON account_filter.category_id=c.id"}else{""};
+    let reverse_order=selection.order.iter().any(|(field,_)|*field=="m3u_relations");
+    let join=if let Some(account)=selection.account {let arg=statement.bind(Bind::Integer(account));predicates.push(format!("account_filter.m3u_account_id={arg}"));" INNER JOIN vod_m3uvodcategoryrelation account_filter ON account_filter.category_id=c.id"}else if reverse_order {" LEFT OUTER JOIN vod_m3uvodcategoryrelation account_filter ON account_filter.category_id=c.id"}else{""};
     for term in &selection.terms {let arg=statement.bind(Bind::Text(contains(term)));predicates.push(format!("UPPER(c.name::text) LIKE UPPER({arg})"));}
     if let Some(id)=id {let arg=statement.bind(Bind::Integer(id));predicates.push(format!("c.id={arg}"));}
-    let order=if selection.order.is_empty(){"c.name ASC".into()}else{selection.order.iter().map(|(name,desc)|format!("c.{name} {}",if *desc{"DESC"}else{"ASC"})).collect::<Vec<_>>().join(",")};
+    let order=if selection.order.is_empty(){"c.name ASC".into()}else{selection.order.iter().map(|(name,desc)|format!("{} {}",if *name=="m3u_relations"{"account_filter.id".to_owned()}else{format!("c.{name}")},if *desc{"DESC"}else{"ASC"})).collect::<Vec<_>>().join(",")};
     let conditions=if predicates.is_empty(){"true".into()}else{predicates.join(" AND ")};
     // Source-shaped full category columns preserve the name-tie input width.
     // The4097 guard is explicit resource admission, never truncated success.
@@ -135,7 +146,7 @@ impl CategoryReads {
             let indent=http.as_ref().and_then(|_|super::vod_api_http::json_indent(&request.headers));
             let result=async {
             work.check()?;
-            if let Some(http)=&http {super::vod_api_http::negotiate(&request.headers,&http.uri)?;request.query=url::form_urlencoded::parse(http.uri.query().unwrap_or("").as_bytes()).into_owned().collect();}
+            if let Some(http)=&http {category_negotiate(&request.headers,&http.uri)?;request.query=url::form_urlencoded::parse(http.uri.query().unwrap_or("").as_bytes()).into_owned().collect();}
             let guard=work.physical_guard();let guard:Arc<dyn Send+Sync>=match http.as_ref().and_then(|value|value.scope.as_ref()){Some(scope)=>Arc::new((guard,scope.clone())),None=>guard};
             let scoped=state.auth.clone().with_retained_scope(guard);let user=scoped.account_user(request.peer,request.headers,false).await?;
             work.check()?;
@@ -229,13 +240,13 @@ mod tests {
             let response=reads.read(CategoryRequest{peer:"127.0.0.1:30000".parse().unwrap(),headers:headers.clone(),query:vec![],detail:None}).await;
             let rows=sqlx::query("SELECT c.category_type,r.enabled,r.custom_properties FROM vod_m3uvodcategoryrelation r JOIN vod_vodcategory c ON c.id=r.category_id WHERE r.m3u_account_id=$1 AND c.name='Uncategorized' ORDER BY c.category_type").bind(account_id).fetch_all(&pool).await.unwrap();
             let effects:Vec<_>=rows.iter().map(|row|json!({"category__category_type":row.try_get::<String,_>("category_type").unwrap(),"enabled":row.try_get::<bool,_>("enabled").unwrap(),"custom_properties":row.try_get::<Value,_>("custom_properties").unwrap()})).collect();
-            let expected_success=record["outcome"]["status"]==200;let good=if expected_success {success+=1;response.as_ref().is_ok_and(|body|body.as_ref()==b"[]")}else{excluded+=1;matches!(response,Err(ReadError::Unsupported(_)))};
+            let expected_success=record["outcome"]["status"]==200;let good=if expected_success {success+=1;response.as_ref().is_ok_and(|body|body.as_ref()==b"[]")}else{excluded+=1;matches!(response,Err(ReadError::SourceUnhandledFault(_))|Err(ReadError::Source(StoreError::Database(_))))};
             let effects_equal=json!(effects)==record["committed_links"];failed|=!good||!effects_equal;
-            results.push(json!({"default":record["default"],"missing":record["missing"],"source_success":expected_success,"native_supported_success":expected_success&&good,"source_fault_not_wire_parity":!expected_success,"effects_equal":effects_equal}));
+            results.push(json!({"default":record["default"],"missing":record["missing"],"source_success":expected_success,"native_supported_success":expected_success&&good,"factory_exception_semantics_only":!expected_success,"effects_equal":effects_equal}));
         }
         sqlx::query("UPDATE m3u_m3uaccount SET custom_properties=$1 WHERE id=$2").bind(saved_properties).bind(account_id).execute(&pool).await.unwrap();sqlx::query("DELETE FROM vod_m3uvodcategoryrelation r USING vod_vodcategory c WHERE r.category_id=c.id AND c.name='Uncategorized' AND r.m3u_account_id=$1").bind(account_id).execute(&pool).await.unwrap();
         for row in saved {sqlx::query("INSERT INTO vod_m3uvodcategoryrelation(category_id,m3u_account_id,enabled,custom_properties,created_at,updated_at) VALUES($1,$2,$3,$4,now(),now())").bind(row.try_get::<i64,_>("category").unwrap()).bind(account_id).bind(row.try_get::<bool,_>("enabled").unwrap()).bind(row.try_get::<Value,_>("custom_properties").unwrap()).execute(&pool).await.unwrap();}
-        let drained=reads.shutdown(Duration::from_secs(5)).await;pool.close().await;let report=json!({"passed":!failed&&drained,"scope":"Actual originalFactory success/default and committed-effect records versus nativePG; seven exception rendering branches explicitly not parity passes","supported_success_cases":success,"unsupported_source_fault_cases":excluded,"results":results,"normal_semantic_links_and_properties_restored":true,"workers_drained":drained,"retained_memory":reads.runtime.retained_memory_bytes()});std::fs::write(std::path::PathBuf::from(std::env::var("VOD_NATIVE_EVIDENCE").unwrap()).join("category-defaults-native.json"),serde_json::to_vec_pretty(&report).unwrap()).unwrap();assert_eq!(report["passed"],true);
+        let drained=reads.shutdown(Duration::from_secs(5)).await;pool.close().await;let report=json!({"passed":!failed&&drained,"scope":"Actual originalFactory default/committed-effect semantics versus nativePG; actual exception-wire proof belongs to the separate18case network test","supported_success_cases":success,"factory_exception_semantics_cases":excluded,"network_wire_proof":"category-defaults-wire-native.json","results":results,"normal_semantic_links_and_properties_restored":true,"workers_drained":drained,"retained_memory":reads.runtime.retained_memory_bytes()});std::fs::write(std::path::PathBuf::from(std::env::var("VOD_NATIVE_EVIDENCE").unwrap()).join("category-defaults-native.json"),serde_json::to_vec_pretty(&report).unwrap()).unwrap();assert_eq!(report["passed"],true);
     }
     #[tokio::test]
     #[ignore="guarded actual original database/corpus category comparison"]
@@ -253,7 +264,7 @@ mod tests {
             // Negotiation/indent/format cases belong to the independent HTTP
             // test. This SQL-only entry point deliberately does not dispatch
             // renderer selection or its pre-auth errors.
-            if case["headers"]["HTTP_ACCEPT"].as_str()!=Some("application/json")||url::form_urlencoded::parse(query.as_bytes()).any(|(key,_)|key=="format") {outside+=1;continue;}
+            if case["headers"]["HTTP_ACCEPT"].as_str()!=Some("application/json")||case["expected"]["content_type"].as_str()!=Some("application/json")||url::form_urlencoded::parse(query.as_bytes()).any(|(key,_)|key=="format") {outside+=1;continue;}
             let mut headers=HeaderMap::new();for(name,value)in case["headers"].as_object().unwrap() {let name=name.strip_prefix("HTTP_").unwrap_or(name).replace('_',"-");headers.insert(HeaderName::from_bytes(name.as_bytes()).unwrap(),HeaderValue::from_str(value.as_str().unwrap()).unwrap());}
             let request=CategoryRequest {peer:"127.0.0.1:30000".parse().unwrap(),headers,query:url::form_urlencoded::parse(query.as_bytes()).into_owned().collect(),detail:(pieces.len()==4).then(||pieces[3].into())};
             let (status,data)=match reads.read(request).await {
@@ -280,6 +291,21 @@ mod tests {
     #[tokio::test]
     #[ignore="actual original/native mixed ordinary/category shared admission"]
     async fn ordinary_and_category_share_admission_and_memory() {super::super::vod_api_category_http::compare_shared_ordinary_contention().await;}
+    #[tokio::test]
+    #[ignore="actual original/native network BooleanField/default fault wire"]
+    async fn default_boolean_fault_wire_matches_source() {super::super::vod_api_category_http::compare_default_fault_wire().await;}
+    #[tokio::test]
+    #[ignore="actual original category reverse-order SQL combinations"]
+    async fn reverse_order_reuses_original_relation_join_and_multiplicity() {
+        assert_eq!(std::env::var("VOD_CATEGORY_NATIVE").as_deref(),Ok("playback-fixture-only"));
+        let source:Value=serde_json::from_slice(&std::fs::read(std::env::var("VOD_SOURCE_CORPUS").unwrap()).unwrap()).unwrap();let reference:Value=serde_json::from_slice(&std::fs::read(std::env::var("VOD_CATEGORY_QUERY_REFERENCE").unwrap()).unwrap()).unwrap();assert_eq!(reference["passed"],true);
+        let url=std::env::var("DATABASE_URL").unwrap();assert!(url.contains("playback-fixture-only"));let pool=sqlx::postgres::PgPoolOptions::new().max_connections(8).connect(&url).await.unwrap();let auth=AuthService::new(crate::Store::from_pool(pool.clone()),crate::AuthConfig::new("playback-fixture-only".into()).unwrap()).with_notification_cache(crate::NotificationCache::connect(&std::env::var("REDIS_TEST_URL").unwrap()).await.unwrap());let reads=CategoryReads::new(auth,ReadLimits::default()).unwrap();
+        let case=source["cases"].as_array().unwrap().iter().find(|case|case["path"]=="/api/vod/categories/"&&case["role"]=="standard"&&case["method"]=="GET").unwrap();let mut headers=HeaderMap::new();for(name,value)in case["headers"].as_object().unwrap(){headers.insert(HeaderName::from_bytes(name.strip_prefix("HTTP_").unwrap_or(name).replace('_',"-").as_bytes()).unwrap(),HeaderValue::from_str(value.as_str().unwrap()).unwrap());}let mut results=Vec::new();
+        for record in reference["ordering"].as_array().unwrap(){let query=record["query"].as_object().unwrap().iter().map(|(key,value)|(key.clone(),value.as_str().unwrap().to_owned())).collect();let result=reads.read(CategoryRequest{peer:"127.0.0.1:30000".parse().unwrap(),headers:headers.clone(),query,detail:None}).await;
+            let passed=if record["outcome"]["exception"]=="FieldError"{matches!(result,Err(ReadError::SourceUnhandledFault(_)))}else{let body=result.unwrap();let data:Value=serde_json::from_slice(&body).unwrap();let ids:Vec<_>=data.as_array().unwrap().iter().map(|row|row["id"].clone()).collect();json!(ids)==record["outcome"]["ids"]};results.push(json!({"query":record["query"],"passed":passed}));
+        }
+        let drained=reads.shutdown(Duration::from_secs(3)).await;pool.close().await;let passed=results.iter().all(|row|row["passed"]==true)&&drained;std::fs::write(std::path::PathBuf::from(std::env::var("VOD_NATIVE_EVIDENCE").unwrap()).join("category-query-native.json"),serde_json::to_vec_pretty(&json!({"passed":passed,"scope":"Actual originalFactory SQL order/join and nativePG IDs/multiplicity; callable FieldError semantic here, network500 separately tested","records":results,"workers_drained":drained})).unwrap()).unwrap();assert!(passed,"reverse relation query differences retained");
+    }
     #[tokio::test]
     #[ignore="actual category PostgreSQL lock/caller deadline and detached frame admission"]
     async fn owned_category_reads_keep_admission_until_sql_reply_and_frame_drop() {

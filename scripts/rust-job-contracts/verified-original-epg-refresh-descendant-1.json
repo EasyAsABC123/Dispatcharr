@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "scope": "Actual Original busy refresh parent to15second child execution/local import/index-SeriesRules grandchild publication; no native/remote/grandchild execution acceptance",
+  "credit": "Original Dispatcharr authors/contributors retain full application/algorithm credit and AGPL licensing; Celery/Kombu, Redis/redis-py and framework/dependency authors retain their credit/licenses.",
+  "checks": 18,
+  "refresh_parent_cases": 1,
+  "actual_refresh_child_executions": 1,
+  "nonrefresh_grandchild_publications": 2,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "report": "artifacts/rust/m6-original-epg-refresh-descendant-1/integration.json",
+  "report_sha256": "4824b84cb5827bce176d675651d7cbe7774e71bc5118558082098d157a5e6fd8",
+  "private_observation_sha256": "260fcac731b91a054b9581cddfd157f55002ce50d7a9a2f1d7fc25b4a40a2d8b",
+  "dataset": {
+    "path": "scripts/rust-job-contracts/source-epg-refresh-descendant-1.json",
+    "sha256": "ff811e931b019446a722fa8814c4e771f937e07a2c3dd5f5c6298a4e01202676"
+  },
+  "selected_tools": [
+    {
+      "path": "scripts/rust-job-contracts/run_epg_refresh_descendant.py",
+      "frozen_path": "artifacts/rust/m6-original-epg-refresh-descendant-1/tool-source/scripts/rust-job-contracts/run_epg_refresh_descendant.py",
+      "sha256": "429573a78179bd786a84f1116335a356ba28af9be4653e274838f4a28476e09c"
+    },
+    {
+      "path": "scripts/rust-job-contracts/source_epg_refresh_descendant.py",
+      "frozen_path": "artifacts/rust/m6-original-epg-refresh-descendant-1/tool-source/scripts/rust-job-contracts/source_epg_refresh_descendant.py",
+      "sha256": "7f60693039cfef4002cda8e70d5b57616de8bd558f3038cdaf878e4a8b1584e2"
+    },
+    {
+      "path": "scripts/rust-job-contracts/epg_refresh_import_observer.py",
+      "frozen_path": "artifacts/rust/m6-original-epg-refresh-descendant-1/tool-source/scripts/rust-job-contracts/epg_refresh_import_observer.py",
+      "sha256": "58439d2e02ace4dc2a029df2fadbf59739ff947c24c421f9a12cf77ad2c0fbdd"
+    }
+  ],
+  "fixture_control": {
+    "child_routes": "all tasks except refresh_epg_data \u2192 owned-refresh-children",
+    "worker_queues": [
+      "celery"
+    ],
+    "purpose": "capture actual generated child envelopes without executing unrelated families",
+    "task_or_helper_replacement": false
+  },
+  "owned_dependency_mutation": "Delete only owned-busy file-lock value using compare-and-delete after busy parent finishes, allowing actual deferred refresh child to proceed.",
+  "actual_eta_lateness_seconds": 0.000566,
+  "parent_result_ttl": 3583,
+  "child_result_ttl": 3599,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_protocol_or_worker_verified": false,
+  "nonrefresh_grandchild_execution_verified": false,
+  "normal_grandchild_routing_verified": false,
+  "performance_verified": false,
+  "historical_runner_scope_label_correction": "The copied runner integration scope retained the prior no-child-execution phrase. Actual Source private report and checked facts establish refresh-child execution; only non-refresh grandchildren remain unconsumed. No historical raw report has been rewritten.",
+  "facts": [
+    "Busy default parent returns normalSUCCESS/null, index invalidated, refresh lease released and exactly one new refresh child with forceFalse/retry1/retries header0/countdown15.",
+    "After owned blocking file lock removal, actual Original worker runs child at its ETA and commits real channel/programme rows.",
+    "Child request root_id and parent_id equal original parent; child result adds parent_id=original task and keeps normalSUCCESS/null.",
+    "Index and SeriesRules grandchildren root_id remain original while parent_id is immediate refresh child, and child result lists both actual IDs.",
+    "Original parent result raw bytes remain unchanged after descendant execution. Parent and child TTLs expire independently.",
+    "All refresh/file leases released; only the two non-refresh grandchildren remain in explicitly unconsumed owned queue; no other family executes."
+  ],
+  "remaining_gates": [
+    "Bounded normal-result decoder and actual native publication/worker intake.",
+    "Ordinary grandchild routing/execution and broader descendant/failure/restart cases."
+  ],
+  "failed_attempts": []
+}

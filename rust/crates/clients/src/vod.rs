@@ -4,7 +4,7 @@
 //! and preemption keys without creating any phantom live metadata.
 use crate::Error;
 use dispatcharr_contracts::UserLimitPolicy;
-use redis::{aio::MultiplexedConnection, Script};
+use redis::Script;
 use serde_json::json;
 use std::{collections::BTreeMap, time::Duration};
 
@@ -19,8 +19,8 @@ pub struct Admission<'a> {
     pub timeout: Duration,
     pub ttl: Duration,
 }
-pub async fn admit(
-    connection: &mut MultiplexedConnection,
+pub async fn admit<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
     request: Admission<'_>,
 ) -> Result<bool, Error> {
     let Admission {

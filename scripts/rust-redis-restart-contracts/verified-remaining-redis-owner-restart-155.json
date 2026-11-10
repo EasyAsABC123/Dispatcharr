@@ -1,0 +1,53 @@
+{
+  "passed": false,
+  "execution_passed": true,
+  "scope": "Remaining cached-owner read/state-loss component; no full application or constructor/lifecycle parity",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "actual_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "redis_run_ids": [
+    "5aa60f6ef9ea15c985595cbc4d5f27d6ffa5aa21",
+    "251d2659663c3bc01a2f0ef06d7a7421f03babd6"
+  ],
+  "recovered": {
+    "live": false,
+    "cache": false,
+    "vod": false
+  },
+  "known_mismatch_detected": true,
+  "migration_gate_passed": false,
+  "cleanup": "owned container removed",
+  "cleanup_passed": true,
+  "rust_source_archive_sha256": "48ccd3205695639961ee041798d2c0f1886d99e95bbde0b43c3a4c21e3276eb9",
+  "binaries": {
+    "live": {
+      "sha256": "c0598bcee63bf94d71349eb7da2404ef54d7087b8983f7be6f403eded3dac2d6",
+      "test": "persistent_client_owner_protocol"
+    },
+    "cache": {
+      "sha256": "01cc99cd7eaf43d5c594f90cf6902d0fe8f0397e60c8fd3d5cc393bcf8af674e",
+      "test": "notifications::notification_restart_peer::persistent_notification_owner_protocol"
+    },
+    "vod": {
+      "sha256": "ed0285354defb3525350606fd864b1a8251560f9214da8b23cb4bff6c3522e45",
+      "test": "sessions::session_restart_peer::persistent_vod_owner_protocol"
+    }
+  },
+  "source_snapshot_origin": {
+    "manifest": "artifacts/rust/m8-remaining-redis-owner-restart-153/proof.json",
+    "sha256": "fc5cc78be7fa287f050afd9b9f1576fae995155caae4b45deb9902f0ae0da86d",
+    "previous_execution_passed": false,
+    "scope": "Exact successfully compiled153 Rust and binaries reused; earlier setup failure retained"
+  },
+  "evidence": "artifacts/rust/m8-remaining-redis-owner-restart-155",
+  "checks": 28,
+  "application_recovery_verified": false,
+  "performance_verified": false,
+  "interpretation": "All3 cached native owners remain stale after actual same-port restart; Original recovers and independent reconstructed native owners pass. VOD false while reseeded Source true is an actual stale-read mismatch, not equivalent empty state.",
+  "setup_attempts": {
+    "153": "Compiled all3 binaries; fixture bind paths inherited restrictive umask and prevented Redis startup underUID65532.",
+    "154": "Corrected mount permissions; test-harness progress prefix consumed first JSON reply.",
+    "155": "Quiet test-harness output fixes protocol framing only; exact153 source archive and binaries reused."
+  },
+  "credit": "Original Dispatcharr authors retain full application and algorithm credit."
+}

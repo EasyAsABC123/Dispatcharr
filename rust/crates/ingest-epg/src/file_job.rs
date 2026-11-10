@@ -215,6 +215,18 @@ impl FileJobRunner {
         request: FileJobRequest,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<FileJobOutcome, ImportError> {
+        self.run_with_dispatcher(request, caller, self.inner.services.dispatcher.clone())
+            .await
+    }
+    /// Per-execution immutable publication context. Concurrent executions never
+    /// mutate the configured default dispatcher or another parent's lineage.
+    /// The owned supervisor retains this Arc through physical child replies.
+    pub async fn run_with_dispatcher(
+        &self,
+        request: FileJobRequest,
+        caller: Arc<dyn Send + Sync>,
+        dispatcher: Arc<dyn GuideTaskDispatcher>,
+    ) -> Result<FileJobOutcome, ImportError> {
         if self.inner.stopping.load(Ordering::Acquire) {
             return Err(ImportError::Stopping);
         }
@@ -244,7 +256,7 @@ impl FileJobRunner {
             armed: true,
         };
         let inner = self.inner.clone();
-        let result = tokio::spawn(async move { inner.run_owned(request, job).await })
+        let result = tokio::spawn(async move { inner.run_owned(request, job, dispatcher).await })
             .await
             .map_err(|_| ImportError::Worker)?;
         cancel.armed = false;
@@ -283,6 +295,7 @@ impl Inner {
         &self,
         request: FileJobRequest,
         job: Arc<Job>,
+        dispatcher: Arc<dyn GuideTaskDispatcher>,
     ) -> Result<FileJobOutcome, ImportError> {
         let lease = match self
             .services
@@ -303,7 +316,9 @@ impl Inner {
                 _guard: guard,
             }),
         };
-        let result = self.refresh(&request, context.clone()).await;
+        let result = self
+            .refresh(&request, context.clone(), dispatcher.as_ref())
+            .await;
         // Source performs terminal-state cleanup while refresh lease is held.
         // Cancellation does not suppress this final best-effort error effect.
         let final_context = SwapPolicyContext {
@@ -345,6 +360,7 @@ impl Inner {
         &self,
         request: &FileJobRequest,
         context: SwapPolicyContext,
+        dispatcher: &dyn GuideTaskDispatcher,
     ) -> Result<FileJobOutcome, ImportError> {
         context.ensure_active()?;
         let Some(source) = self.source(request.source_id).await? else {
@@ -383,6 +399,7 @@ impl Inner {
                         request,
                         "per-channel program parses in progress",
                         context,
+                        dispatcher,
                     )
                     .await;
             }
@@ -396,7 +413,13 @@ impl Inner {
             Ok(v) => v,
             Err(TaskLockError::Held) => {
                 return self
-                    .defer(&source, request, "EPG file in use (index build)", context)
+                    .defer(
+                        &source,
+                        request,
+                        "EPG file in use (index build)",
+                        context,
+                        dispatcher,
+                    )
                     .await
             }
             Err(_) => return Err(ImportError::Worker),
@@ -410,7 +433,9 @@ impl Inner {
                 _guard: file_guard,
             }),
         };
-        let result = self.local_file(&source, file_context.clone()).await;
+        let result = self
+            .local_file(&source, file_context.clone(), dispatcher)
+            .await;
         drop(file_context);
         if !released.wait(self.config.release_timeout).await {
             return Err(ImportError::Worker);
@@ -420,8 +445,7 @@ impl Inner {
             other => return Ok(other),
         }
         context.ensure_active()?;
-        self.services
-            .dispatcher
+        dispatcher
             .dispatch(
                 ChildTask::ProgrammeIndex {
                     source_id: source.id,
@@ -434,17 +458,14 @@ impl Inner {
             .bind((self.services.clock)())
             .execute(self.services.store.pool())
             .await?;
-        let _ = self
-            .services
-            .dispatcher
-            .dispatch(ChildTask::SeriesRules, context)
-            .await;
+        let _ = dispatcher.dispatch(ChildTask::SeriesRules, context).await;
         Ok(FileJobOutcome::Imported)
     }
     async fn local_file(
         &self,
         source: &Source,
         context: SwapPolicyContext,
+        dispatcher: &dyn GuideTaskDispatcher,
     ) -> Result<FileJobOutcome, ImportError> {
         if source.url.as_deref().is_some_and(|v| !v.is_empty()) {
             return Ok(FileJobOutcome::Unsupported("remote XMLTV download"));
@@ -625,8 +646,7 @@ impl Inner {
             Err(error) => return Err(error),
         };
         if !report.no_mapped_channels {
-            self.services
-                .dispatcher
+            dispatcher
                 .dispatch(
                     ChildTask::LateProgrammes {
                         source_id: source.id,
@@ -670,6 +690,7 @@ impl Inner {
         request: &FileJobRequest,
         reason: &str,
         context: SwapPolicyContext,
+        dispatcher: &dyn GuideTaskDispatcher,
     ) -> Result<FileJobOutcome, ImportError> {
         if request.defer_retry >= 480 {
             let msg = format!("EPG refresh blocked for too long ({reason}); retry later");
@@ -677,8 +698,7 @@ impl Inner {
                 .await?;
             return Ok(FileJobOutcome::Failed);
         }
-        self.services
-            .dispatcher
+        dispatcher
             .dispatch(
                 ChildTask::RefreshDeferred {
                     source_id: source.id,
