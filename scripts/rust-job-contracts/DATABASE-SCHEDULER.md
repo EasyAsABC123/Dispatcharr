@@ -6,6 +6,12 @@ licenses. This capture changes no application or scheduler implementation.
 
 [The Original-only gate](verified-original-database-scheduler-2.json) passes30
 checks using a copied database and isolated broker8/result9 in Docker Compose.
+The later [41-check capture](verified-original-database-scheduler-3.json) repeats
+these checks and records11 explicit clock vectors for minute boundaries, leap
+day, weekday/list/step expressions, New York DST gap/fold, Lord Howe's half-hour
+gap and Kathmandu's quarter-hour offset. Each vector supplies `nowfun` and
+last-run inputs to the unmodified Original calculation and records due/next.
+These are reference outputs, not native calendar parity or elapsed transitions.
 Nine real ModelEntry cases cover due/not-due intervals, disabled/future-start/
 expired entries, first/completed one-off entries and invalid args/kwargs JSON.
 Expired and invalid entries are disabled; completed one-off entries also reset
@@ -30,7 +36,8 @@ are Original code. Owned task/interval rows are removed, prior enabled states
 are restored in the copied database, and the untouched default database manifest
 is checked after execution. Fixture projects and volumes are removed.
 
-Crontab/DST/timezone boundaries, default initialization, full scheduler startup,
+Native crontab/DST/timezone equivalence, elapsed transitions, timezone query
+filtering, default initialization, full scheduler startup,
 disabled-entry reloading, OS-process crashes, publication/sync crash windows,
 backup execution/retention, native implementation, packaging and performance
 remain separate gates. Reconstruction in this process is not a process restart

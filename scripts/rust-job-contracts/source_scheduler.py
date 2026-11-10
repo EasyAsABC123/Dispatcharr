@@ -2,7 +2,7 @@
 Original Dispatcharr/Celery/django-celery-beat authors retain code credit/licenses.
 No task execution, restore, external providers, or native scheduler.
 """
-import base64, datetime as dt, hashlib, importlib.metadata, json, os, sys
+import base64, datetime as dt, hashlib, importlib.metadata, json, math, os, sys
 from pathlib import Path
 if os.environ.get('JOB_DISPOSABLE_FIXTURE')!='playback-fixture-only':raise RuntimeError('Explicit owned fixture required')
 database=os.environ.get('POSTGRES_DB','')
@@ -12,7 +12,7 @@ import django;django.setup()
 import redis
 from dispatcharr.celery import app
 from django.utils import timezone
-from django_celery_beat.models import IntervalSchedule, PeriodicTask
+from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 from django_celery_beat.schedulers import DatabaseScheduler, ModelEntry
 broker=redis.Redis.from_url(os.environ['CELERY_BROKER_URL']);backend=redis.Redis.from_url(os.environ['CELERY_RESULT_BACKEND'])
 if broker.connection_pool.connection_kwargs['db']!=8 or backend.connection_pool.connection_kwargs['db']!=9:raise RuntimeError('Owned isolated namespaces required')
@@ -21,7 +21,7 @@ report={'passed':False,'scope':'Actual Original ModelEntry and lazy DatabaseSche
 def check(name,value):
  report['checks'].append({'name':name,'passed':bool(value)})
  if not value:raise AssertionError(name)
-prior=list(PeriodicTask.objects.values_list('id','enabled'));owned=[];scheduler=None;restart=None
+prior=list(PeriodicTask.objects.values_list('id','enabled'));owned=[];crons=[];scheduler=None;restart=None
 interval=IntervalSchedule.objects.create(every=3600,period=IntervalSchedule.SECONDS)
 def create(label,**changes):
  values={'name':'rust-owned-scheduler-'+label,'task':'apps.backups.tasks.scheduled_backup_task','interval':interval,'last_run_at':timezone.now()-dt.timedelta(hours=2),'args':'[]','kwargs':'{"retention_count":2}','headers':'{"owned_scope":"scheduler_probe"}'};values.update(changes)
@@ -35,6 +35,28 @@ try:
   if label in ['expired','one_off_done','bad_args','bad_kwargs']:check('model-entry-disables-'+label,not row.enabled)
   if label=='one_off_done':check('one-off-resets-count',row.total_run_count==0)
   report['cases'].append({'name':label,'due':state.is_due,'next_seconds':state.next,'enabled_after':row.enabled,'total_run_count_after':row.total_run_count,'last_run_at':row.last_run_at.isoformat() if row.last_run_at else None})
+  row.enabled=False;row.save(update_fields=['enabled'])
+ # Dependency-injected clock vectors exercise the unmodified Original schedule
+ # calculation. These are not elapsed DST transitions or complete tick tests.
+ vectors=[
+  ('utc_before','UTC','0','14','*','*','*','2026-11-10T13:59:59+00:00','2026-11-10T13:59:00+00:00'),
+  ('utc_boundary','UTC','0','14','*','*','*','2026-11-10T14:00:00+00:00','2026-11-10T13:59:00+00:00'),
+  ('leap_day','UTC','0','0','*','29','2','2024-02-29T00:00:00+00:00','2024-02-28T00:00:00+00:00'),
+  ('sunday','UTC','0','0','0','*','*','2026-11-08T00:00:00+00:00','2026-11-07T00:00:00+00:00'),
+  ('weekday_range','UTC','15','9','1-5','*','*','2026-11-10T09:15:00+00:00','2026-11-10T09:14:00+00:00'),
+  ('ny_spring_gap','America/New_York','30','2','*','*','*','2026-03-08T03:00:00-04:00','2026-03-07T02:30:00-05:00'),
+  ('ny_fall_first','America/New_York','30','1','*','*','*','2026-11-01T01:30:00-04:00','2026-10-31T01:30:00-04:00'),
+  ('ny_fall_second','America/New_York','30','1','*','*','*','2026-11-01T01:30:00-05:00','2026-11-01T01:30:00-04:00'),
+  ('lord_howe_gap','Australia/Lord_Howe','15','2','*','*','*','2026-10-04T02:30:00+11:00','2026-10-03T02:15:00+10:30'),
+  ('quarter_offset','Asia/Kathmandu','0','9','*','*','*','2026-11-10T09:00:00+05:45','2026-11-09T09:00:00+05:45'),
+  ('list_and_step','UTC','*/15','8,9','1-5','*','*','2026-11-10T09:15:00+00:00','2026-11-10T09:00:00+00:00')]
+ report['calendar_vectors']=[]
+ for label,zone,minute,hour,weekday,day,month,now,last in vectors:
+  cron=CrontabSchedule.objects.create(timezone=zone,minute=minute,hour=hour,day_of_week=weekday,day_of_month=day,month_of_year=month);crons.append(cron.pk)
+  row=create('calendar_'+label,interval=None,crontab=cron,last_run_at=dt.datetime.fromisoformat(last));entry=ModelEntry(row,app=app)
+  fixed=dt.datetime.fromisoformat(now);entry.schedule.nowfun=lambda value=fixed:value
+  state=entry.is_due();check('calendar-finite-delay-'+label,isinstance(state.is_due,bool) and math.isfinite(state.next) and state.next>0)
+  report['calendar_vectors'].append({'name':label,'timezone':zone,'minute':minute,'hour':hour,'day_of_week':weekday,'day_of_month':day,'month_of_year':month,'now':now,'last_run_at':last,'due':state.is_due,'next_seconds':state.next,'scope':'Controlled public nowfun dependency, not elapsed time or scheduler query filtering'})
   row.enabled=False;row.save(update_fields=['enabled'])
  row=create('actual_publication');original_last=row.last_run_at
  # Lazy construction deliberately omits setup_schedule/default-row installation.
@@ -90,6 +112,7 @@ finally:
  if scheduler is not None:scheduler.close()
  if restart is not None:restart.close()
  PeriodicTask.objects.filter(pk__in=owned).delete();interval.delete()
+ CrontabSchedule.objects.filter(pk__in=crons).delete()
  for pk,enabled in prior:PeriodicTask.objects.filter(pk=pk).update(enabled=enabled)
  report['owned_rows_removed']=not PeriodicTask.objects.filter(pk__in=owned).exists()
  Path('/evidence/source-scheduler-private.json').write_text(json.dumps(report,indent=2)+'\n')

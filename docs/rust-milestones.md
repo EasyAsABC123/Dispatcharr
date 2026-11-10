@@ -42,8 +42,9 @@ does not undo a committed index. Neither observation is a native compatibility
 pass or a performance claim.
 
 The [Original database scheduler reference](../scripts/rust-job-contracts/DATABASE-SCHEDULER.md)
-passes30 copied-database checks for due state, actual publication, persisted run
-counts, reconstruction, preloaded scheduler overlap and rejected publication.
+passes41 copied-database checks for due state, actual publication, persisted run
+counts, reconstruction, preloaded scheduler overlap, rejected publication and11
+controlled calendar/timezone reference vectors.
 Native scheduling, calendar/timezone boundaries, crash windows, packaging and
 performance remain open.
 
