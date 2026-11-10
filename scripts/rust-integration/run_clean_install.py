@@ -5,17 +5,29 @@ Official PostgreSQL/Redis and the immutable Rust candidate are the only services
 No Django/original app or source mounts populate the database. All original
 application credit remains with Dispatcharr authors and contributors.
 """
-import argparse,hashlib,json,os,select,signal,subprocess,time,urllib.request,uuid
+import argparse,hashlib,json,os,select,shutil,signal,subprocess,time,urllib.request,uuid
 from pathlib import Path
 from fixture_ports import write_port_overlay
 from tool_snapshot import snapshot_sources
 from run import validate_candidate_image
 ROOT=Path(__file__).resolve().parents[2]
-NODE='/home/justin/.local/share/paseo-runtime/node-v22.23.2-linux-x64/bin/node'
+def browser_tools():
+    node = os.environ.get('RUST_BROWSER_NODE') or shutil.which('node')
+    chromium = os.environ.get('RUST_BROWSER_CHROMIUM') or shutil.which('chromium') or shutil.which('chromium-browser')
+    if not node or not chromium:
+        raise RuntimeError('Browser checks require Node.js22+ and Chromium on PATH, or RUST_BROWSER_NODE/RUST_BROWSER_CHROMIUM')
+    node = str(Path(node).resolve(strict=True))
+    chromium = str(Path(chromium).resolve(strict=True))
+    version = subprocess.check_output([node, '--version'], text=True, timeout=10).strip()
+    if int(version.removeprefix('v').split('.')[0]) < 22:
+        raise RuntimeError('Browser checks require Node.js22+ for the built-in WebSocket client')
+    return node, chromium, version
 class Browser:
     def __init__(self,script,log):
-        self.log=log.open('w');self.process=subprocess.Popen([NODE,str(script)],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.log,text=True,start_new_session=True);self.browser_pid=None
+        node, chromium, version = browser_tools()
+        self.log=log.open('w');self.process=subprocess.Popen([node,str(script)],env=dict(os.environ,RUST_BROWSER_CHROMIUM=chromium),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.log,text=True,start_new_session=True);self.browser_pid=None
         self.ready=self.read(20);self.browser_pid=self.ready.pop('browser_pid',None)
+        self.ready.update(node_version=version, browser_launcher_sha256=hashlib.sha256(Path(chromium).read_bytes()).hexdigest())
         if self.ready.get('ready')is not True:raise RuntimeError('Browser startup failed')
     def read(self,seconds=90):
         if not select.select([self.process.stdout],[],[],seconds)[0]:raise TimeoutError('Browser response deadline')
@@ -77,7 +89,7 @@ def main():
         subprocess.run(base+['exec','-T','cache','redis-cli','-a','playback-fixture-only','-x','SET',':1:dispatcharr:ip_lookup_lock'],env=environment,input=bytes([0x80,4,0x88,ord('.')]),stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=True,timeout=10)
         command(base+['exec','-T','cache','redis-cli','-a','playback-fixture-only','EXPIRE',':1:dispatcharr:ip_lookup_lock','600'])
         initial=http(url+'/api/accounts/initialize-superuser/');record('first-admin-form-status',initial[0]==200 and initial[1].get('superuser_exists')is False and initial[1].get('setup_allowed')is True)
-        stage='browser-first-admin';browser=Browser(tools/'scripts/rust-integration/clean_browser.js',output/'browser.log');report['browser']=browser.ready;report['browser_executable_sha256']=hashlib.sha256(Path('/usr/bin/chromium').read_bytes()).hexdigest()
+        stage='browser-first-admin';browser=Browser(tools/'scripts/rust-integration/clean_browser.js',output/'browser.log');report['browser']=browser.ready
         credentials={'username':'rust-probe-clean-admin','password':'native-clean-fixture-'+uuid.uuid4().hex,'email':'Native@EXAMPLE.INVALID','secret':'playback-fixture-only','url':url}
         result=browser.send({'op':'setup',**credentials});record('actual-react-first-admin-login-init',result.get('authenticated')is True and result.get('required_api_paths_passed')==result.get('required_api_paths') and not result.get('failed_api_responses') and result.get('exceptions')==0,result)
         if result.get('failed'):raise RuntimeError('Browser setup failed')
