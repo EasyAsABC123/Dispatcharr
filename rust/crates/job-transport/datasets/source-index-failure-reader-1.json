@@ -1,0 +1,371 @@
+{
+  "scope": "Known Original index error records plus native SET/key metadata accepted by actual Original AsyncResult; data-only generic reader vectors, no Python imports or HTTP exception projection",
+  "sources": [
+    {
+      "path": "rust/crates/job-transport/datasets/source-index-failure-136.json",
+      "sha256": "4295a04e1c24fef87d8fa20668ed16b2ee80d0fa25a59f9ea669376918188914",
+      "section": "cases"
+    },
+    {
+      "path": "scripts/rust-epg-parity/source-index-initialization-results-138.json",
+      "sha256": "017c2715fbdccc2e92086f948317a5e7b1b23f91644660ecacbdf6fa23e17828",
+      "section": "cases"
+    },
+    {
+      "path": "artifacts/rust/m6-native-index-cache-acl-classified-1/source-index-worker-private.json",
+      "sha256": "da5b4c8c4b109941a8af60140c0da14afd0e1a8da43444603f829ba2774bdc33",
+      "section": "cache_acl_cases"
+    },
+    {
+      "path": "artifacts/rust/m6-native-index-cache-acl-classified-1/source-index-worker-private.json",
+      "sha256": "da5b4c8c4b109941a8af60140c0da14afd0e1a8da43444603f829ba2774bdc33",
+      "section": "native_permission_terminals"
+    }
+  ],
+  "rows": [
+    {
+      "name": "cases-directory",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "IsADirectoryError",
+          "exc_message": [
+            21,
+            "Is a directory"
+          ],
+          "exc_module": "builtins"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3477, in build_programme_index_task\n    build_programme_index(source_id)\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3388, in build_programme_index\n    with open(file_path, 'rb') as f:\n         ~~~~^^^^^^^^^^^^^^^^^\nIsADirectoryError: [Errno 21] Is a directory: '/evidence/index-files/failures'\n",
+        "children": [],
+        "date_done": "2026-11-10T12:28:56.002877+00:00",
+        "task_id": "3821008c-531b-479e-9673-b79c30dca40b"
+      },
+      "raw_sha256": "ad2865c1707713e7f35ee5788c93a99b3636f80a0e206dc02303526f8010a6ca"
+    },
+    {
+      "name": "cases-sql-write",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ProgrammingError",
+          "exc_message": [
+            "owned-index-sql-write-failure\nCONTEXT:  PL/pgSQL function owned_index_failure() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 987, in get_or_create\n    return self.get(**kwargs), False\n           ~~~~~~~~^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 639, in get\n    raise self.model.DoesNotExist(\n        \"%s matching query does not exist.\" % self.model._meta.object_name\n    )\napps.epg.models.EPGSourceIndex.DoesNotExist: EPGSourceIndex matching query does not exist.\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.RaiseException: owned-index-sql-write-failure\nCONTEXT:  PL/pgSQL function owned_index_failure() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3477, in build_programme_index_task\n    build_programme_index(source_id)\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3449, in build_programme_index\n    EPGSourceIndex.objects.update_or_create(\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        source_id=source_id, defaults={'data': result}\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1029, in update_or_create\n    obj, created = self.select_for_update().get_or_create(\n                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        create_defaults, **kwargs\n        ^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 994, in get_or_create\n    return self.create(**params), True\n           ~~~~~~~~~~~^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 669, in create\n    obj.save(force_insert=True, using=self.db)\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 874, in save\n    self.save_base(\n    ~~~~~~~~~~~~~~^\n        using=using,\n        ^^^^^^^^^^^^\n    ...<2 lines>...\n        update_fields=update_fields,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 966, in save_base\n    updated = self._save_table(\n        raw,\n    ...<4 lines>...\n        update_fields,\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 1169, in _save_table\n    results = self._do_insert(\n        cls._base_manager, using, insert_fields, returning_fields, raw\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 1220, in _do_insert\n    return manager._insert(\n           ~~~~~~~~~~~~~~~^\n        [self],\n        ^^^^^^^\n    ...<3 lines>...\n        raw=raw,\n        ^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1918, in _insert\n    return query.get_compiler(using=using).execute_sql(returning_fields)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1925, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: owned-index-sql-write-failure\nCONTEXT:  PL/pgSQL function owned_index_failure() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-10T12:28:56.054070+00:00",
+        "task_id": "c559ee52-3235-4e4b-8883-b2ae9434bad3"
+      },
+      "raw_sha256": "50bc392e583fc5b4455cbd2c5cb3dd4111e4fdd0bc3e35b0f9e27edb173aa617"
+    },
+    {
+      "name": "cases-cache-network",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ConnectionError",
+          "exc_message": [
+            "Error 111 connecting to 127.0.0.1:32999. Connection refused."
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 389, in connect_check_health\n    sock = self.retry.call_with_retry(\n        lambda: self._connect(), lambda error: self.disconnect(error)\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 390, in <lambda>\n    lambda: self._connect(), lambda error: self.disconnect(error)\n            ~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 803, in _connect\n    raise err\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 787, in _connect\n    sock.connect(socket_address)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nConnectionRefusedError: [Errno 111] Connection refused\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 2305, in set\n    return self.execute_command(\"SET\", *pieces, **options)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 627, in _execute_command\n    conn = self.connection or pool.get_connection()\n                              ~~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/utils.py\", line 195, in wrapper\n    return func(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 1533, in get_connection\n    connection.connect()\n    ~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 380, in connect\n    self.connect_check_health(check_health=True)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 397, in connect_check_health\n    raise ConnectionError(self._error_message(e))\nredis.exceptions.ConnectionError: Error 111 connecting to 127.0.0.1:32999. Connection refused.\n",
+        "children": [],
+        "date_done": "2026-11-10T12:28:56.125927+00:00",
+        "task_id": "a3cc06fe-de74-4e71-b6f1-109a23090bdf"
+      },
+      "raw_sha256": "da3d9c436423941e2437ff7f8636e87201b14a29f766e4032f13c669490d6f89"
+    },
+    {
+      "name": "cases-cache-auth",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "AuthenticationError",
+          "exc_message": [
+            "invalid username-password pair or user is disabled."
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 2305, in set\n    return self.execute_command(\"SET\", *pieces, **options)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 627, in _execute_command\n    conn = self.connection or pool.get_connection()\n                              ~~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/utils.py\", line 195, in wrapper\n    return func(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 1533, in get_connection\n    connection.connect()\n    ~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 380, in connect\n    self.connect_check_health(check_health=True)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 403, in connect_check_health\n    self.on_connect_check_health(check_health=check_health)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 475, in on_connect_check_health\n    auth_response = self.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 650, in read_response\n    response = self._parser.read_response(disable_decoding=disable_decoding)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/_parsers/resp2.py\", line 15, in read_response\n    result = self._read_response(disable_decoding=disable_decoding)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/_parsers/resp2.py\", line 38, in _read_response\n    raise error\nredis.exceptions.AuthenticationError: invalid username-password pair or user is disabled.\n",
+        "children": [],
+        "date_done": "2026-11-10T12:28:56.176805+00:00",
+        "task_id": "557398ce-6345-45b4-81d3-aa240fe52f0e"
+      },
+      "raw_sha256": "5d9e5c4460b361c1c2686d743c904f1191ac1db5d7f7b949d3419f0430086e5b"
+    },
+    {
+      "name": "cases-release-network",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ConnectionError",
+          "exc_message": [
+            "Error 111 connecting to 127.0.0.1:32999. Connection refused."
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 389, in connect_check_health\n    sock = self.retry.call_with_retry(\n        lambda: self._connect(), lambda error: self.disconnect(error)\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 390, in <lambda>\n    lambda: self._connect(), lambda error: self.disconnect(error)\n            ~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 803, in _connect\n    raise err\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 787, in _connect\n    sock.connect(socket_address)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nConnectionRefusedError: [Errno 111] Connection refused\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3480, in build_programme_index_task\n    release_task_lock(_EPG_SOURCE_FILE_LOCK, source_id)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 368, in release_task_lock\n    redis_client.delete(lock_id)\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/index-tools/index_failure_observer.py\", line 17, in delete\n    def delete(self,*args,**kwargs):return self.closed.delete(*args,**kwargs)\n                                           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 1712, in delete\n    return self.execute_command(\"DEL\", *names)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 627, in _execute_command\n    conn = self.connection or pool.get_connection()\n                              ~~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/utils.py\", line 195, in wrapper\n    return func(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 1533, in get_connection\n    connection.connect()\n    ~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 380, in connect\n    self.connect_check_health(check_health=True)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 397, in connect_check_health\n    raise ConnectionError(self._error_message(e))\nredis.exceptions.ConnectionError: Error 111 connecting to 127.0.0.1:32999. Connection refused.\n",
+        "children": [],
+        "date_done": "2026-11-10T12:28:56.233888+00:00",
+        "task_id": "a362a5dc-4c2b-4e70-a7a7-643b0a9a48d8"
+      },
+      "raw_sha256": "6c7f866819e9236ad6172c8b41c233bb9b367003397cd1ad784e7b19933c05f3"
+    },
+    {
+      "name": "cases-cache-init-url",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "AttributeError",
+          "exc_message": [
+            "'NoneType' object has no attribute 'set'"
+          ],
+          "exc_module": "builtins"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n                    ^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'set'\n",
+        "children": [],
+        "date_done": "2026-11-10T13:17:33.460075+00:00",
+        "task_id": "093352fc-c587-4344-96ce-4dcf0538336a"
+      },
+      "raw_sha256": "7cc857a21ae57820e2ee58da554291b35dca8e64fdb2b95f99fde8bf7cacf523"
+    },
+    {
+      "name": "cases-cache-init-network",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "AttributeError",
+          "exc_message": [
+            "'NoneType' object has no attribute 'set'"
+          ],
+          "exc_module": "builtins"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n                    ^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'set'\n",
+        "children": [],
+        "date_done": "2026-11-10T13:17:48.585446+00:00",
+        "task_id": "3bd24104-4a4c-495c-8a5b-8544f3b8427e"
+      },
+      "raw_sha256": "23edf6b299d12a05299203886e5c18c1c71abc2a2b23779a35bcea43ec430ef1"
+    },
+    {
+      "name": "cases-busy-defer-publish",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "OperationalError",
+          "exc_message": [
+            "Error 111 connecting to 127.0.0.1:60871. Connection refused."
+          ],
+          "exc_module": "kombu.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/utils/functional.py\", line 32, in __call__\n    return self.__value__\n           ^^^^^^^^^^^^^^\nAttributeError: 'ChannelPromise' object has no attribute '__value__'. Did you mean: '__call__'?\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/transport/virtual/base.py\", line 951, in create_channel\n    return self._avail_channels.pop()\n           ~~~~~~~~~~~~~~~~~~~~~~~~^^\nIndexError: pop from empty list\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 389, in connect_check_health\n    sock = self.retry.call_with_retry(\n        lambda: self._connect(), lambda error: self.disconnect(error)\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 390, in <lambda>\n    lambda: self._connect(), lambda error: self.disconnect(error)\n            ~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 803, in _connect\n    raise err\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 787, in _connect\n    sock.connect(socket_address)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nConnectionRefusedError: [Errno 111] Connection refused\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/connection.py\", line 474, in _reraise_as_library_errors\n    yield\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/connection.py\", line 461, in _ensure_connection\n    return retry_over_time(\n        self._connection_factory, self.recoverable_connection_errors,\n    ...<2 lines>...\n        callback, timeout=timeout\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/utils/functional.py\", line 318, in retry_over_time\n    return fun(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/connection.py\", line 941, in _connection_factory\n    self._connection = self._establish_connection()\n                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/connection.py\", line 863, in _establish_connection\n    conn = self.transport.establish_connection()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/transport/virtual/base.py\", line 975, in establish_connection\n    self._avail_channels.append(self.create_channel(self))\n                                ~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/transport/virtual/base.py\", line 953, in create_channel\n    channel = self.Channel(connection)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/transport/redis.py\", line 757, in __init__\n    self.client.ping()\n    ~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 1219, in ping\n    return self.execute_command(\"PING\", **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 627, in _execute_command\n    conn = self.connection or pool.get_connection()\n                              ~~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/utils.py\", line 195, in wrapper\n    return func(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 1533, in get_connection\n    connection.connect()\n    ~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 380, in connect\n    self.connect_check_health(check_health=True)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 397, in connect_check_health\n    raise ConnectionError(self._error_message(e))\nredis.exceptions.ConnectionError: Error 111 connecting to 127.0.0.1:60871. Connection refused.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3467, in build_programme_index_task\n    build_programme_index_task.apply_async(\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        args=[source_id],\n        ^^^^^^^^^^^^^^^^^\n        kwargs={'_defer_retry': _defer_retry + 1},\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        countdown=_EPG_TVG_PARSE_DEFER_SECONDS,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/task.py\", line 627, in apply_async\n    return app.send_task(\n           ~~~~~~~~~~~~~^\n        self.name, args, kwargs, task_id=task_id, producer=producer,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        **options\n        ^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/base.py\", line 969, in send_task\n    amqp.send_task_message(P, name, message, **options)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/amqp.py\", line 559, in send_task_message\n    ret = producer.publish(\n        body,\n    ...<8 lines>...\n        **properties\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/messaging.py\", line 190, in publish\n    return _publish(\n        body, priority, content_type, content_encoding,\n        headers, properties, routing_key, mandatory, immediate,\n        exchange_name, declare, timeout, confirm_timeout, retry, retry_policy\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/connection.py\", line 558, in _ensured\n    return fun(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/messaging.py\", line 200, in _publish\n    channel = self.channel\n              ^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/messaging.py\", line 224, in _get_channel\n    channel = self._channel = channel()\n                              ~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/utils/functional.py\", line 34, in __call__\n    value = self.__value__ = self.__contract__()\n                             ~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/messaging.py\", line 240, in <lambda>\n    channel = ChannelPromise(lambda: connection.default_channel)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/connection.py\", line 960, in default_channel\n    self._ensure_connection(**conn_opts)\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/connection.py\", line 460, in _ensure_connection\n    with ctx():\n         ~~~^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 162, in __exit__\n    self.gen.throw(value)\n    ~~~~~~~~~~~~~~^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/kombu/connection.py\", line 478, in _reraise_as_library_errors\n    raise ConnectionError(str(exc)) from exc\nkombu.exceptions.OperationalError: Error 111 connecting to 127.0.0.1:60871. Connection refused.\n",
+        "children": [],
+        "date_done": "2026-11-10T13:17:48.908729+00:00",
+        "task_id": "6d538a7f-49d3-4489-9e59-cc9e9bead245"
+      },
+      "raw_sha256": "d18c385ab40036f56f79251242b1a4297a650ec386ef0d8b267f353ed8f55f72"
+    },
+    {
+      "name": "cache_acl_cases-set_denied",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_7611c44c1f31 has no permissions to run the 'set' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 2305, in set\n    return self.execute_command(\"SET\", *pieces, **options)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: User owned_acl_7611c44c1f31 has no permissions to run the 'set' command\n",
+        "children": [],
+        "date_done": "2026-11-10T15:09:14.550093+00:00",
+        "task_id": "97342dd4-5be9-493d-a0c5-21eae7cd8998"
+      },
+      "raw_sha256": "0f7f1d88d9f5908183bc9ab3cc093ca4af36c50fda3af020469a5bfaf0612119"
+    },
+    {
+      "name": "cache_acl_cases-set_denied_directory",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_de3a4bba0586 has no permissions to run the 'set' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 2305, in set\n    return self.execute_command(\"SET\", *pieces, **options)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: User owned_acl_de3a4bba0586 has no permissions to run the 'set' command\n",
+        "children": [],
+        "date_done": "2026-11-10T15:09:14.647346+00:00",
+        "task_id": "38a1f3d8-aaf8-48eb-9db7-bcbecc46d47e"
+      },
+      "raw_sha256": "44e7ca3609e41eb3d5491062cc86ab688cce4f11db2ac991504beb131bbb64be"
+    },
+    {
+      "name": "cache_acl_cases-del_denied",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_8bb6a830d2a4 has no permissions to run the 'del' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3480, in build_programme_index_task\n    release_task_lock(_EPG_SOURCE_FILE_LOCK, source_id)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 368, in release_task_lock\n    redis_client.delete(lock_id)\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 1712, in delete\n    return self.execute_command(\"DEL\", *names)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: User owned_acl_8bb6a830d2a4 has no permissions to run the 'del' command\n",
+        "children": [],
+        "date_done": "2026-11-10T15:09:14.704794+00:00",
+        "task_id": "12bad9d2-3e3e-41a3-bd01-6b87685912d7"
+      },
+      "raw_sha256": "a1be9686f8351312fa30e23bf9f0c7a21ee7a63bfbc1653e9d4946c6ca7cdf6a"
+    },
+    {
+      "name": "cache_acl_cases-key_denied",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "No permissions to access a key"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 2305, in set\n    return self.execute_command(\"SET\", *pieces, **options)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: No permissions to access a key\n",
+        "children": [],
+        "date_done": "2026-11-10T15:09:14.751219+00:00",
+        "task_id": "fe649ec3-dad7-467a-8ba4-3a8f6b771ca2"
+      },
+      "raw_sha256": "8321aa37dd5a3ca43047b3302bbd49f974bace909f5810915b55cba001117b29"
+    },
+    {
+      "name": "cache_acl_cases-del_denied_eval_allowed",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_e600d1076f5f has no permissions to run the 'del' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3480, in build_programme_index_task\n    release_task_lock(_EPG_SOURCE_FILE_LOCK, source_id)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 368, in release_task_lock\n    redis_client.delete(lock_id)\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 1712, in delete\n    return self.execute_command(\"DEL\", *names)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: User owned_acl_e600d1076f5f has no permissions to run the 'del' command\n",
+        "children": [],
+        "date_done": "2026-11-10T15:09:14.860511+00:00",
+        "task_id": "576bffc9-3b15-4792-96a1-8db6e298967a"
+      },
+      "raw_sha256": "954ca24d73b37720fa0aad0c5bec4ef52aade4b305839b30e956c26a5c774605"
+    },
+    {
+      "name": "native_permission_terminals-set_denied-immediate",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_7611c44c1f31 has no permissions to run the 'set' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Native Dispatcharr index task diagnostic [acquire_file_lock]: Physically completed direct SET NOPERM before index execution; acquisition cleanup settled; no index commit.",
+        "children": [],
+        "date_done": "2026-11-10T15:09:17.240684+00:00",
+        "task_id": "0189ceb0-5981-4759-8489-6ba58bc6adae"
+      },
+      "raw_sha256": "0c02cc290ab92a90b13fa63cae8614ee58c90afc7df153c3499a79a5de789e3a"
+    },
+    {
+      "name": "native_permission_terminals-set_denied-scheduled",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_7611c44c1f31 has no permissions to run the 'set' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Native Dispatcharr index task diagnostic [acquire_file_lock]: Physically completed direct SET NOPERM before index execution; acquisition cleanup settled; no index commit.",
+        "children": [],
+        "date_done": "2026-11-10T15:09:17.345272+00:00",
+        "task_id": "8a39c004-e948-4cc4-b34d-d1d0d96fa3c1"
+      },
+      "raw_sha256": "3cf14e82eaff8a747eb24413646d7b524aa9c0235ef78d806c41eb3040a21e9c"
+    },
+    {
+      "name": "native_permission_terminals-set_denied_directory-immediate",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_de3a4bba0586 has no permissions to run the 'set' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Native Dispatcharr index task diagnostic [acquire_file_lock]: Physically completed direct SET NOPERM before index execution; acquisition cleanup settled; no index commit.",
+        "children": [],
+        "date_done": "2026-11-10T15:09:17.378500+00:00",
+        "task_id": "334ae23c-eba4-4444-a8f7-9b6aa205d565"
+      },
+      "raw_sha256": "ec00296dc494fbbc7cd6980a78ded1d93eb7b1797a4defabef10ee94535ed3bd"
+    },
+    {
+      "name": "native_permission_terminals-set_denied_directory-scheduled",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_de3a4bba0586 has no permissions to run the 'set' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Native Dispatcharr index task diagnostic [acquire_file_lock]: Physically completed direct SET NOPERM before index execution; acquisition cleanup settled; no index commit.",
+        "children": [],
+        "date_done": "2026-11-10T15:09:17.482197+00:00",
+        "task_id": "e454ccf0-d829-485d-a2c0-f77921ca2f70"
+      },
+      "raw_sha256": "f7f2578dd1bee0c16fd44ef5a776f8894cdc5342a2f72d9777e7b0b5c1e264a1"
+    },
+    {
+      "name": "native_permission_terminals-key_denied-immediate",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "No permissions to access a key"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Native Dispatcharr index task diagnostic [acquire_file_lock]: Physically completed direct SET NOPERM before index execution; acquisition cleanup settled; no index commit.",
+        "children": [],
+        "date_done": "2026-11-10T15:09:17.516850+00:00",
+        "task_id": "6a08d429-d995-4998-bc06-bd01f72ae3a4"
+      },
+      "raw_sha256": "0e0917021629a7378775d1b4b3674ce055691f7e6f82ce7d214ca6367030d985"
+    },
+    {
+      "name": "native_permission_terminals-key_denied-scheduled",
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "No permissions to access a key"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Native Dispatcharr index task diagnostic [acquire_file_lock]: Physically completed direct SET NOPERM before index execution; acquisition cleanup settled; no index commit.",
+        "children": [],
+        "date_done": "2026-11-10T15:09:17.620591+00:00",
+        "task_id": "7056a359-da40-4b58-9598-0006e4cb27c1"
+      },
+      "raw_sha256": "5a2aaa67c7112ee629c368c9087685b7b9fbf667ae33495f1d0484b8261f34ed"
+    }
+  ],
+  "credit": "Original Dispatcharr authors/contributors and original framework authors retain all application/algorithm/framework credit and licenses."
+}

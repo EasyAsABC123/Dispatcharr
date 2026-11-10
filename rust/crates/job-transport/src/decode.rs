@@ -152,17 +152,45 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
             .get("exc_type")
             .and_then(Value::as_str)
             .ok_or(DecodeError::UnsupportedException)?;
-        if object.get("exc_module").and_then(Value::as_str) != Some("builtins")
-            || !matches!(class, "ValueError" | "KeyError")
-        {
-            return Err(DecodeError::UnsupportedException);
-        }
+        let module = object
+            .get("exc_module")
+            .and_then(Value::as_str)
+            .ok_or(DecodeError::UnsupportedException)?;
         let arguments = object
             .get("exc_message")
             .and_then(Value::as_array)
             .ok_or(DecodeError::UnsupportedException)?;
         if arguments.len() > 8 {
             return Err(DecodeError::Capacity);
+        }
+        // These are data descriptors from captured Source records. No module
+        // is imported and no exception constructor or HTTP mapper is invoked.
+        let supported = match (module, class) {
+            ("builtins", "ValueError" | "KeyError") => true,
+            ("builtins", "IsADirectoryError") => {
+                arguments.len() == 2
+                    && arguments[0].as_i64() == Some(21)
+                    && arguments[1].as_str() == Some("Is a directory")
+            }
+            ("builtins", "AttributeError")
+            | ("django.db.utils", "ProgrammingError")
+            | (
+                "redis.exceptions",
+                "ConnectionError" | "AuthenticationError" | "NoPermissionError",
+            )
+            | ("kombu.exceptions", "OperationalError") => {
+                if arguments.len() != 1 || !arguments[0].is_string() {
+                    return Err(DecodeError::UnsupportedException);
+                }
+                if arguments[0].as_str().unwrap().len() > 8192 {
+                    return Err(DecodeError::Capacity);
+                }
+                true
+            }
+            _ => false,
+        };
+        if !supported {
+            return Err(DecodeError::UnsupportedException);
         }
         Some(Exception {
             class: class.to_owned(),
@@ -185,6 +213,57 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn observed_index_failure_metadata_is_read_without_importing_exception_classes() {
+        let corpus: Value = serde_json::from_str(include_str!(
+            "../datasets/source-index-failure-reader-1.json"
+        ))
+        .unwrap();
+        assert_eq!(corpus["rows"].as_array().unwrap().len(), 19);
+        for row in corpus["rows"].as_array().unwrap() {
+            let metadata = &row["metadata"];
+            let id = Uuid::parse_str(metadata["task_id"].as_str().unwrap()).unwrap();
+            let value = decode(&serde_json::to_vec(metadata).unwrap(), id).unwrap();
+            assert_eq!(value.state, State::Failure);
+            assert_eq!(value.result, metadata["result"]);
+            let exception = value.exception.unwrap();
+            assert_eq!(exception.class, metadata["result"]["exc_type"]);
+            assert_eq!(
+                exception.arguments,
+                *metadata["result"]["exc_message"].as_array().unwrap()
+            );
+            assert_eq!(value.traceback.as_deref(), metadata["traceback"].as_str());
+        }
+    }
+    #[test]
+    fn observed_exception_names_do_not_authorize_foreign_modules_or_argument_shapes() {
+        let corpus: Value = serde_json::from_str(include_str!(
+            "../datasets/source-index-failure-reader-1.json"
+        ))
+        .unwrap();
+        let original = &corpus["rows"][0]["metadata"];
+        let id = Uuid::parse_str(original["task_id"].as_str().unwrap()).unwrap();
+        for descriptor in [
+            serde_json::json!({"exc_module":"not_imported","exc_type":"NoPermissionError","exc_message":["denied"]}),
+            serde_json::json!({"exc_module":"builtins","exc_type":"NoPermissionError","exc_message":["denied"]}),
+            serde_json::json!({"exc_module":"redis.exceptions","exc_type":"NoPermissionError","exc_message":[21,"denied"]}),
+            serde_json::json!({"exc_module":"builtins","exc_type":"IsADirectoryError","exc_message":[21.0,"Is a directory"]}),
+            serde_json::json!({"exc_module":"builtins","exc_type":"IsADirectoryError","exc_message":[13,"Is a directory"]}),
+        ] {
+            let mut metadata = original.clone();
+            metadata["result"] = descriptor;
+            assert_eq!(
+                decode(&serde_json::to_vec(&metadata).unwrap(), id),
+                Err(DecodeError::UnsupportedException)
+            );
+        }
+        let mut metadata = original.clone();
+        metadata["result"] = serde_json::json!({"exc_module":"redis.exceptions","exc_type":"NoPermissionError","exc_message":["x".repeat(8193)]});
+        assert_eq!(
+            decode(&serde_json::to_vec(&metadata).unwrap(), id),
+            Err(DecodeError::Capacity)
+        );
+    }
     #[test]
     fn actual_source_raw_metadata_shapes_decode_with_declared_normalization() {
         let values: Value =

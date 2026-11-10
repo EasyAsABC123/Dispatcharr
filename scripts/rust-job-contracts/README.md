@@ -93,3 +93,8 @@ classification through a test-only adapter, and physical failure-result resource
 gates. It supersedes the earlier pending statement for those named cases. Native
 diagnostic text explicitly differs from Python traceback frames; general failure
 classification, recovery and application attachment remain separate gates.
+
+The [bounded generic failure reader](INDEX-FAILURE-READER.md) additionally reads
+the known index exception descriptors as data while retaining their raw module,
+typed arguments and opaque diagnostic. Its actual Redis99-check proof does not
+provide Python exception imports, exception display or HTTP task-status wiring.
