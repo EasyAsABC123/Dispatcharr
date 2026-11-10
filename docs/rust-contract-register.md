@@ -12,6 +12,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | OpenAPI operations | 362 | Separate discovery view; do not add to route totals |
 | Static non-HTTP candidates | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
+| Operations with partial case bindings | 2 | 154 exact packaged GET comparisons; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
 
 Each operation has a contract ID, source handler/action, proposed milestone owner, explicit role-matrix state, fixture/assertion placeholders, coverage state and result. Module-associated test filenames are candidates only. An OpenAPI security declaration describes authentication, not authorization. Format variants and duplicate resolver occurrences keep separate IDs.
@@ -43,3 +44,10 @@ python3 scripts/rust-contracts/run_runtime_methods.py --output artifacts/rust/ru
 ```
 
 The generator uses the committed observation file as an additional hashed input when present. Raw runtime dispatch candidates remain separate from the original resolved ViewSet action maps. No role or method acceptance is inferred.
+
+
+## Captured case bindings
+
+The [reviewed binding input](../scripts/rust-contracts/case-bindings.json) maps 154 actual image36 GET comparisons to the exact unified list/detail operation IDs. Each case retains its Source index, path/query, role, status, raw body SHA and fresh-tie-authority flag. The binding fixes the packaged report hash and runtime identity, fixture and assertion scope. Six predeclared fresh Original tie authorities remain explicit; historical order is not substituted for their actual bodies. The generator rejects duplicate IDs, mismatched route/handler/method identity, changed report bytes and a different runtime.
+
+Another 34 passing observations use HEAD/OPTIONS/POST/PUT/PATCH/DELETE methods absent from the original ViewSet discovery map. They remain separate observations; the generator does not invent declared operations. The captured HTML200/native501 mismatch remains excluded. Both mapped operations retain `fully_verified=false`, incomplete role matrices and null whole-operation results. All 592 routes and 798 operation identities are preserved. This closes some case-mapping bookkeeping, not full M0/API acceptance.

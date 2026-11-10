@@ -1,0 +1,1951 @@
+{
+  "format_version": 1,
+  "scope": "Captured packaged unified GET cases only; not entire operations or full role/input grammar. Other observed HTTP methods remain separate from the discovery declarations.",
+  "credit": "Original Dispatcharr authors retain application/algorithm credit; AGPL retained.",
+  "bindings": [
+    {
+      "contract_id": "route-1798d412607eea1f93a7:GET",
+      "pattern_exact": "api/vod/^all/$",
+      "source_handler": "apps.vod.api_views.UnifiedContentViewSet",
+      "method": "GET",
+      "packaged_report": "scripts/rust-vod-api-contracts/verified-unified-image36-1.json",
+      "packaged_report_sha256": "3974bc5d1ddf0f6ef342d1bed7e086d7a01d09aed1dd22c7934613393f5f586d",
+      "runtime": {
+        "git_revision": "bce2b10632227a554d764e231e763003ed0773f4",
+        "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+        "tag": "dispatcharr-rust-candidate:unified-recovery-jobs-image36-1",
+        "source_tree_sha256": "d20d74e32a41829a8d2eaa61133f1c7d3ce08812b1ba9610c7e25e1428cee967",
+        "manifest_path": "artifacts/rust/candidate-build-unified-recovery-jobs-image36-1/build.json",
+        "manifest_sha256": "fd765252f9ee2ffa9ab33250954491fc7eb41496ba44285f2848267426f99735"
+      },
+      "comparison_report_sha256": "511aabc4697d6b78f400da19cea72c31f0f3a3b46bf22b3556ed40f0089db9ee",
+      "fixture": "Owned copied PostgreSQL catalogue; actual HTTP Source corpus with restored fingerprints and six predeclared fresh tie authorities; no provider requests.",
+      "assertions": [
+        "Exact actual Source/native status, raw body length/SHA, MIME and selected headers",
+        "Typed JSON/array ordering and metadata effects",
+        "Fresh tie authorities preserve every historical nonorder field"
+      ],
+      "cases": [
+        {
+          "source_index": 0,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": null,
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 1,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "admin",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 2,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 3,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "basic",
+          "status": 403,
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 4,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "inactive",
+          "status": 401,
+          "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 5,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "adult_hidden",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 6,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "movies_off",
+          "status": 200,
+          "body_sha256": "bfc609d7545fb030cf87d0eb6c7208270661442107356ac0f775af6ddd5a4708",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 7,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "series_off",
+          "status": 200,
+          "body_sha256": "5c716756101de4da51c90f2706cc241bad194fa2529abc0be6081b9e451872a7",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 8,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "both_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 9,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "zero_flags",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 10,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "admin_movies_off",
+          "status": 200,
+          "body_sha256": "bfc609d7545fb030cf87d0eb6c7208270661442107356ac0f775af6ddd5a4708",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 11,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 401,
+          "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 12,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 401,
+          "body_sha256": "776f3aed9154fded60f7c40d5f6945bde6d6e50056a602586f2c7f99bc2c364c",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 13,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 401,
+          "body_sha256": "776f3aed9154fded60f7c40d5f6945bde6d6e50056a602586f2c7f99bc2c364c",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 14,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 401,
+          "body_sha256": "115045de4a58f07f404f7d4116d714b3ee58ff414af9f6b646f8c891e0f976a4",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 15,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 16,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 21,
+          "path": "/api/vod/all/?page=1",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 22,
+          "path": "/api/vod/all/?page=2",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "6f548f137aaa36aca3582e85553c8f25a8525d6f595aedcb1ba02298d11e3901",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 23,
+          "path": "/api/vod/all/?page=last",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "0b9994e51f2a9688379809845bb12ac372363d835eae844f0a82662f19015941",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 24,
+          "path": "/api/vod/all/?page=",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "21436fe50b574baf550a1f29cf2aacb09d5cde5f215030b15fd6bdbd81d5b0a4",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 25,
+          "path": "/api/vod/all/?page=0",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "58cce47f4a652a02b43745b0f22a031a0a6f7f5f6f619cfc505c41910ac680ea",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 26,
+          "path": "/api/vod/all/?page=-1",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "58cce47f4a652a02b43745b0f22a031a0a6f7f5f6f619cfc505c41910ac680ea",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 27,
+          "path": "/api/vod/all/?page=bad",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "1b789ff4c681988828dc09351af33ac6ec8339c8196413015531850feee72a9a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 28,
+          "path": "/api/vod/all/?page=99999",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "e350ed360e2a2a1e1b3a2c5f49e738dcd992299c25fae830b0361af0dad773de",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 29,
+          "path": "/api/vod/all/?page=+2",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "6f548f137aaa36aca3582e85553c8f25a8525d6f595aedcb1ba02298d11e3901",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 30,
+          "path": "/api/vod/all/?page=%2B2",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "6f548f137aaa36aca3582e85553c8f25a8525d6f595aedcb1ba02298d11e3901",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 31,
+          "path": "/api/vod/all/?page=1_0",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "85c7c01d396cc7916e6e1360679912262b2407aa75249d6823a0f53684814b77",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 32,
+          "path": "/api/vod/all/?page=%D9%A1",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 33,
+          "path": "/api/vod/all/?page=1.0",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "85e5e1028274a09d518a2ee5390f2a2293623f2802e5ae930f3c8ffda1190f89",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 34,
+          "path": "/api/vod/all/?page=1e0",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "b781a88781506645c299e3c198fdce4be24167d5af6d652db61bf42fea9b6429",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 35,
+          "path": "/api/vod/all/?page=2&page=1",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 36,
+          "path": "/api/vod/all/?page=1&page=2",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "6f548f137aaa36aca3582e85553c8f25a8525d6f595aedcb1ba02298d11e3901",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 37,
+          "path": "/api/vod/all/?page_size=1",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "da206ad9cca6d2c1ed0819ba45935c8c28168e59191a12d699a67843a2934a19",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 38,
+          "path": "/api/vod/all/?page_size=24",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "c173937f49b964eff74e89dd0155f2fb644f4ae8e628850db36060c4f5e20bca",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 39,
+          "path": "/api/vod/all/?page_size=25",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "69726333481fce0e3c143cb72585a62ee6234a6b3b2cd12e0f29f155e9f1fee4",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 40,
+          "path": "/api/vod/all/?page_size=101",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "6bbd1b5b43b49a3a5485aeb4de7913bd2779e81d431da03c6acf58a5ded7e72a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 41,
+          "path": "/api/vod/all/?page_size=0",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "ccd068c064899cc95f44d769253a56fcc03bde45cbab847122acbfac042eefb7",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 42,
+          "path": "/api/vod/all/?page_size=-1",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "415e86690793a7c98d0dece5b9bed69592a6819e9d088febc2d78ac37ba8da24",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 43,
+          "path": "/api/vod/all/?page_size=bad",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "1b789ff4c681988828dc09351af33ac6ec8339c8196413015531850feee72a9a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 44,
+          "path": "/api/vod/all/?page_size=",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "21436fe50b574baf550a1f29cf2aacb09d5cde5f215030b15fd6bdbd81d5b0a4",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 45,
+          "path": "/api/vod/all/?page=0&page_size=0",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "60992bcd569b5fc7097be5c6eefef598267a74c30c399b6315c53d9eeb5990af",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 46,
+          "path": "/api/vod/all/?page=-1&page_size=-1",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "415e86690793a7c98d0dece5b9bed69592a6819e9d088febc2d78ac37ba8da24",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 47,
+          "path": "/api/vod/all/?page_size=1&page_size=2",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "32d15a4fd298dbd5f6a87e6296b4e530c50b4ec77a49556e8f76b51ab600960e",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 48,
+          "path": "/api/vod/all/?page_size=999999999999999999999999999999999",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "d38671d59894344d072e8079108407a57a35017e403cdb0dd4979a8471e6a9ee",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 49,
+          "path": "/api/vod/all/?page=999999999999999999999999999999999",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "d38671d59894344d072e8079108407a57a35017e403cdb0dd4979a8471e6a9ee",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 50,
+          "path": "/api/vod/all/?search=space",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 51,
+          "path": "/api/vod/all/?search=Space,drama",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 52,
+          "path": "/api/vod/all/?search=%25",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "ad1aaadb7d5fc41cebde78a527f79245dce78da911caa258fc931ce146b25fb9",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 53,
+          "path": "/api/vod/all/?search=_",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "562eb70bd09f2c2acc3d84b51ea0df8d7af4c3a345158defeada176c7a832531",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 54,
+          "path": "/api/vod/all/?search=",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "aeb8eb699ac64e95127a6401324e4e59ff4d0e36e7a490edbc85c9a6532995d5",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 55,
+          "path": "/api/vod/all/?search=SPACE&ordering=-name",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 56,
+          "path": "/api/vod/all/?search=Drama%5C%20News",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 57,
+          "path": "/api/vod/all/?search=%C4%B0",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 58,
+          "path": "/api/vod/all/?search=%CE%A3%CE%9F%CE%A3",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 59,
+          "path": "/api/vod/all/?search=%00",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "45cb54400f5fd6d637261cb02b69cd9ee1f85f138e39f29fb34c14c91955acee",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 60,
+          "path": "/api/vod/all/?search=a&search=SPACE",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 61,
+          "path": "/api/vod/all/?search=SPACE&search=a",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "e90ddfd114db9bb0bbf3f3f901f1f77753afcd8cc30a33932ba2eec8af63218e",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 62,
+          "path": "/api/vod/all/?page_size=1&z=&z=2&a=%2B%20~",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "ef57e32e56ad2dc0a96b250e0233144cceffe79b082fad48653a0055add548da",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 63,
+          "path": "/api/vod/all/?ordering=-year,name",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "bb70bedeac02591f44ba055d5dbfc125943515c5704f9cde3ac8b145318269ea",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 64,
+          "path": "/api/vod/all/?ordering=bad",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "f6135f3a7fc1bc7ceea4588a5a61d66ed1db860818448bffa89c1bb65b115b88",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 65,
+          "path": "/api/vod/all/?year=bad",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "67879ee5c92d18598f5970684931eaac93e4cbbcd4a8a18dcc860d9090cb879f",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 66,
+          "path": "/api/vod/all/?m3u_account=bad",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "04e1107b5e46aa39a809927fcb5ac141e6049a99818a2e5b46583cc168f89dc8",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 67,
+          "path": "/api/vod/all/?is_adult=false",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "6dbebd7f83ef0eebc9278ec1862ebec29f6f6d87fd868894d1d139784dc8a684",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 68,
+          "path": "/api/vod/all/?category_type=movie",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "288bdf44cfef085b245401f5cfd95c025f3ed0273ebc98a1cba2851ff1fa7ffa",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 69,
+          "path": "/api/vod/all/?name=Alpha",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "11047da85a9729028583bd010df888c06bbfdd623ba366b1740f295c80f8b155",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 70,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "e22cd2b49934b93f5a81f54283c42ee087fc5953c2312d01ec2fc7ff51d54f80",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 71,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama%7Cmovie",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "c2ccd609cfe41e95f08432380e82000d1b3ae9046796b79256f88e7da00a4dd9",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 72,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama%7Cseries",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "bfc609d7545fb030cf87d0eb6c7208270661442107356ac0f775af6ddd5a4708",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 73,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama%7Cinvalid",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 74,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-News%7CLive%7Cmovie",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "246a08bc98db2b1417644ef31ef6107fb87de85e338ee0e249e40837e0c34b75",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 75,
+          "path": "/api/vod/all/?category=%7Cmovie",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 76,
+          "path": "/api/vod/all/?category=+movie+",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 77,
+          "path": "/api/vod/all/?category=",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "d469a97fdf4a58cb567d2fa14f9c61e463da9f9ac0c65fc1ab8f29fb474f9606",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 78,
+          "path": "/api/vod/all/?category=Uncategorized",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 79,
+          "path": "/api/vod/all/?page=bad",
+          "method": "GET",
+          "role": "both_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 80,
+          "path": "/api/vod/all/?page_size=-1",
+          "method": "GET",
+          "role": "both_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 81,
+          "path": "/api/vod/all/?page_size=1",
+          "method": "GET",
+          "role": "both_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 82,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+          "method": "GET",
+          "role": "both_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 83,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+          "method": "GET",
+          "role": "both_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 84,
+          "path": "/api/vod/all/?page=bad",
+          "method": "GET",
+          "role": "movies_off",
+          "status": 500,
+          "body_sha256": "1b789ff4c681988828dc09351af33ac6ec8339c8196413015531850feee72a9a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 85,
+          "path": "/api/vod/all/?page_size=-1",
+          "method": "GET",
+          "role": "movies_off",
+          "status": 500,
+          "body_sha256": "415e86690793a7c98d0dece5b9bed69592a6819e9d088febc2d78ac37ba8da24",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 86,
+          "path": "/api/vod/all/?page_size=1",
+          "method": "GET",
+          "role": "movies_off",
+          "status": 200,
+          "body_sha256": "531a854fba1caebc41866da7a3e5a29716b58315a3de1391808de343aaa6c516",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 87,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+          "method": "GET",
+          "role": "movies_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 88,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+          "method": "GET",
+          "role": "movies_off",
+          "status": 200,
+          "body_sha256": "bfc609d7545fb030cf87d0eb6c7208270661442107356ac0f775af6ddd5a4708",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 89,
+          "path": "/api/vod/all/?page=bad",
+          "method": "GET",
+          "role": "series_off",
+          "status": 500,
+          "body_sha256": "1b789ff4c681988828dc09351af33ac6ec8339c8196413015531850feee72a9a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 90,
+          "path": "/api/vod/all/?page_size=-1",
+          "method": "GET",
+          "role": "series_off",
+          "status": 500,
+          "body_sha256": "415e86690793a7c98d0dece5b9bed69592a6819e9d088febc2d78ac37ba8da24",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 91,
+          "path": "/api/vod/all/?page_size=1",
+          "method": "GET",
+          "role": "series_off",
+          "status": 200,
+          "body_sha256": "e936e7bc05e394537110960f63726119ae1dd94bed57727dd5f5532b7bcdc531",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 92,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+          "method": "GET",
+          "role": "series_off",
+          "status": 200,
+          "body_sha256": "c2ccd609cfe41e95f08432380e82000d1b3ae9046796b79256f88e7da00a4dd9",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 93,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+          "method": "GET",
+          "role": "series_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 94,
+          "path": "/api/vod/all/?page=bad",
+          "method": "GET",
+          "role": "adult_hidden",
+          "status": 500,
+          "body_sha256": "1b789ff4c681988828dc09351af33ac6ec8339c8196413015531850feee72a9a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 95,
+          "path": "/api/vod/all/?page_size=-1",
+          "method": "GET",
+          "role": "adult_hidden",
+          "status": 500,
+          "body_sha256": "415e86690793a7c98d0dece5b9bed69592a6819e9d088febc2d78ac37ba8da24",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 96,
+          "path": "/api/vod/all/?page_size=1",
+          "method": "GET",
+          "role": "adult_hidden",
+          "status": 200,
+          "body_sha256": "da206ad9cca6d2c1ed0819ba45935c8c28168e59191a12d699a67843a2934a19",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 97,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+          "method": "GET",
+          "role": "adult_hidden",
+          "status": 200,
+          "body_sha256": "c2ccd609cfe41e95f08432380e82000d1b3ae9046796b79256f88e7da00a4dd9",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 98,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+          "method": "GET",
+          "role": "adult_hidden",
+          "status": 200,
+          "body_sha256": "bfc609d7545fb030cf87d0eb6c7208270661442107356ac0f775af6ddd5a4708",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 99,
+          "path": "/api/vod/all/?page=bad",
+          "method": "GET",
+          "role": "admin_movies_off",
+          "status": 500,
+          "body_sha256": "1b789ff4c681988828dc09351af33ac6ec8339c8196413015531850feee72a9a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 100,
+          "path": "/api/vod/all/?page_size=-1",
+          "method": "GET",
+          "role": "admin_movies_off",
+          "status": 500,
+          "body_sha256": "415e86690793a7c98d0dece5b9bed69592a6819e9d088febc2d78ac37ba8da24",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 101,
+          "path": "/api/vod/all/?page_size=1",
+          "method": "GET",
+          "role": "admin_movies_off",
+          "status": 200,
+          "body_sha256": "531a854fba1caebc41866da7a3e5a29716b58315a3de1391808de343aaa6c516",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 102,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|movie",
+          "method": "GET",
+          "role": "admin_movies_off",
+          "status": 200,
+          "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 103,
+          "path": "/api/vod/all/?category=rust-probe-vod-rest-Drama|series",
+          "method": "GET",
+          "role": "admin_movies_off",
+          "status": 200,
+          "body_sha256": "bfc609d7545fb030cf87d0eb6c7208270661442107356ac0f775af6ddd5a4708",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 128,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 406,
+          "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 129,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "b0fb943f8271695e79554582a1d8304b48992c795275b04346fc1a4e1559b5d8",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 130,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "b45f64f991a9ed069a63d71abd997a44bb1e770c7494990a63ad2e840bebf19e",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 131,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 133,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 134,
+          "path": "/api/vod/all/?format=json",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "0af8c766dd34a94b0cc8fb309d4314cd088ec978e4be1acbeebf3f06a5a267d8",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 135,
+          "path": "/api/vod/all/?format=json",
+          "method": "GET",
+          "role": "admin",
+          "status": 200,
+          "body_sha256": "0af8c766dd34a94b0cc8fb309d4314cd088ec978e4be1acbeebf3f06a5a267d8",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 136,
+          "path": "/api/vod/all/?format=json",
+          "method": "GET",
+          "role": null,
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 137,
+          "path": "/api/vod/all/?format=api",
+          "method": "GET",
+          "role": "standard",
+          "status": 406,
+          "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 138,
+          "path": "/api/vod/all/?format=api",
+          "method": "GET",
+          "role": "admin",
+          "status": 406,
+          "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 139,
+          "path": "/api/vod/all/?format=api",
+          "method": "GET",
+          "role": null,
+          "status": 406,
+          "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 143,
+          "path": "/api/vod/all/?format=bad",
+          "method": "GET",
+          "role": "standard",
+          "status": 404,
+          "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 144,
+          "path": "/api/vod/all/?format=bad",
+          "method": "GET",
+          "role": "admin",
+          "status": 404,
+          "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 145,
+          "path": "/api/vod/all/?format=bad",
+          "method": "GET",
+          "role": null,
+          "status": 404,
+          "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 155,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 156,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 157,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 158,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 159,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "e11d2f3f0a910299b0d456dcaf01eb79cae6c6d2597907662e4194a1d45b8aa2",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 160,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "2907690e634e860267db3ffe30c4d5dba28f30858c85f08f830f1f2de4347d8a",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 161,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "ba5490f0f27072e3c782cfe5ac7eb81c3e2c975a3f7a042ae7d4a60d3d98dffa",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 162,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 163,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4f1b283fe170ff4e621f230d12e13e764750007bd4ea8b6392ceb9df16a53568",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 164,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 166,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 168,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 169,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "ffd6b8acbd04d7c09975ef3e6b43a09882ce8196530955afd9c5af6104965afb",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 171,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 500,
+          "body_sha256": "c4de07a6868138b902d1704545295301f696802416a6c50eeb4515d1758b5dfc",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 172,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "8acf829c5227155ee82d9eb24b92716ace34ac22bf45285e92fdbcfd0a5470d8",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 173,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "cb7b9cae6dadc5dd5c16425566ec2e13f5bd54c7323b29b3be1d5dc23e1bcd29",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 174,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "3bcefbbedacd314b581fe58c825d3c4e2e035a998b62d26216df0deeb8156a53",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 175,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4027e84bfa61686a87659dc0686e74e94059783171d62dbf90d60fff62c8dc59",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 176,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "6a6dc608997f260a0c10e28f34b3d976d852b316e8ee7961e37aaa354fed32f3",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 177,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "74e1c950b35e90063ce1d27df7d122dd12e7c092ee00cc1777f675e7ef27a544",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 178,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "4ff44f69e00a9784d3efd3583232b5529870e480999dadd43ac1d7a68ef220ee",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 179,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "3d657ad61ab023958bc5375a3a40373ee8230be3a241a6919fdcda4cbe8b5f7d",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 180,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "b3e93c35e77a82252d269a41e8ca0e4e7aa650ed4d38c48f666da56d56df0181",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 181,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "35aa5d69b949ddf1a22791e17146bf4b919abc9e32e1b49a294a9eec8d5da2f4",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 182,
+          "path": "/api/vod/all/",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "438de33ce579384505eb720a86de5f4b05df2ff15ed76fa6c5f915f7350afa3d",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 183,
+          "path": "/api/vod/all/?page_size=1",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "da206ad9cca6d2c1ed0819ba45935c8c28168e59191a12d699a67843a2934a19",
+          "fresh_predeclared_Source_tie_authority": true,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 184,
+          "path": "/api/vod/all/?page_size=1&page=2",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "bc4557eadccd6961daf4592adf80399aa63c63d6bee245152ccf68f6e1641fce",
+          "fresh_predeclared_Source_tie_authority": true,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 185,
+          "path": "/api/vod/all/?page_size=2",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "e6e5110e37f910a2f1ce53042ca6cbcd60f14b7e48cf6834e3124780d282a3f7",
+          "fresh_predeclared_Source_tie_authority": true,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 186,
+          "path": "/api/vod/all/?page_size=3",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "18718de9160685eb2b41b5e859a13c7e49ce1ddbbcab392b879c8ffffe29eefe",
+          "fresh_predeclared_Source_tie_authority": true,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 187,
+          "path": "/api/vod/all/?page_size=1&page=3",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "26d96d43602bd59b3705b1cc33197ff5fa55cd16f74524af678f4472974e9366",
+          "fresh_predeclared_Source_tie_authority": true,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 188,
+          "path": "/api/vod/all/?page_size=101",
+          "method": "GET",
+          "role": "standard",
+          "status": 200,
+          "body_sha256": "2bf65c007f6199b757b63fce9acd1ec840f947038826fad5d461dac64c755887",
+          "fresh_predeclared_Source_tie_authority": true,
+          "result": "passed_exact_Source_native_comparison"
+        }
+      ],
+      "remaining": [
+        "Uncaptured input/role grammar",
+        "Browsable HTML200 excluded at Source index132",
+        "Other methods and format resolver occurrences"
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-30804de5ee9d1b9b7317:GET",
+      "pattern_exact": "api/vod/^all/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.vod.api_views.UnifiedContentViewSet",
+      "method": "GET",
+      "packaged_report": "scripts/rust-vod-api-contracts/verified-unified-image36-1.json",
+      "packaged_report_sha256": "3974bc5d1ddf0f6ef342d1bed7e086d7a01d09aed1dd22c7934613393f5f586d",
+      "runtime": {
+        "git_revision": "bce2b10632227a554d764e231e763003ed0773f4",
+        "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+        "tag": "dispatcharr-rust-candidate:unified-recovery-jobs-image36-1",
+        "source_tree_sha256": "d20d74e32a41829a8d2eaa61133f1c7d3ce08812b1ba9610c7e25e1428cee967",
+        "manifest_path": "artifacts/rust/candidate-build-unified-recovery-jobs-image36-1/build.json",
+        "manifest_sha256": "fd765252f9ee2ffa9ab33250954491fc7eb41496ba44285f2848267426f99735"
+      },
+      "comparison_report_sha256": "511aabc4697d6b78f400da19cea72c31f0f3a3b46bf22b3556ed40f0089db9ee",
+      "fixture": "Owned copied PostgreSQL catalogue; actual HTTP Source corpus with restored fingerprints and six predeclared fresh tie authorities; no provider requests.",
+      "assertions": [
+        "Exact actual Source/native status, raw body length/SHA, MIME and selected headers",
+        "Typed JSON/array ordering and metadata effects",
+        "Fresh tie authorities preserve every historical nonorder field"
+      ],
+      "cases": [
+        {
+          "source_index": 146,
+          "path": "/api/vod/all/1/",
+          "method": "GET",
+          "role": "standard",
+          "status": 404,
+          "body_sha256": "99f6ff4a403e6539c86f0a878f567a8a1caa3b2b5ac4b2d9a5f1aa56d41b3cd0",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 147,
+          "path": "/api/vod/all/1/",
+          "method": "GET",
+          "role": "admin",
+          "status": 404,
+          "body_sha256": "99f6ff4a403e6539c86f0a878f567a8a1caa3b2b5ac4b2d9a5f1aa56d41b3cd0",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 148,
+          "path": "/api/vod/all/1/",
+          "method": "GET",
+          "role": null,
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 149,
+          "path": "/api/vod/all/bad/",
+          "method": "GET",
+          "role": "standard",
+          "status": 404,
+          "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 150,
+          "path": "/api/vod/all/bad/",
+          "method": "GET",
+          "role": "admin",
+          "status": 404,
+          "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 151,
+          "path": "/api/vod/all/bad/",
+          "method": "GET",
+          "role": null,
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 152,
+          "path": "/api/vod/all/999999999999999999999999999999999/",
+          "method": "GET",
+          "role": "standard",
+          "status": 404,
+          "body_sha256": "99f6ff4a403e6539c86f0a878f567a8a1caa3b2b5ac4b2d9a5f1aa56d41b3cd0",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 153,
+          "path": "/api/vod/all/999999999999999999999999999999999/",
+          "method": "GET",
+          "role": "admin",
+          "status": 404,
+          "body_sha256": "99f6ff4a403e6539c86f0a878f567a8a1caa3b2b5ac4b2d9a5f1aa56d41b3cd0",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        },
+        {
+          "source_index": 154,
+          "path": "/api/vod/all/999999999999999999999999999999999/",
+          "method": "GET",
+          "role": null,
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "fresh_predeclared_Source_tie_authority": false,
+          "result": "passed_exact_Source_native_comparison"
+        }
+      ],
+      "remaining": [
+        "Uncaptured input/role grammar",
+        "Browsable HTML200 excluded at Source index132",
+        "Other methods and format resolver occurrences"
+      ],
+      "fully_verified": false
+    }
+  ],
+  "observations_for_methods_not_declared_in_discovery": [
+    {
+      "source_index": 17,
+      "path": "/api/vod/all/?page=bad",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 500,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 18,
+      "path": "/api/vod/all/?page_size=-1",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 500,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 19,
+      "path": "/api/vod/all/?page_size=0",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 200,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 20,
+      "path": "/api/vod/all/?page=2&page_size=1",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 200,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 104,
+      "path": "/api/vod/all/",
+      "method": "HEAD",
+      "role": null,
+      "status": 401,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 105,
+      "path": "/api/vod/all/",
+      "method": "HEAD",
+      "role": "basic",
+      "status": 403,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 106,
+      "path": "/api/vod/all/",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 200,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 107,
+      "path": "/api/vod/all/",
+      "method": "HEAD",
+      "role": "admin",
+      "status": 200,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 108,
+      "path": "/api/vod/all/",
+      "method": "OPTIONS",
+      "role": null,
+      "status": 401,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 109,
+      "path": "/api/vod/all/",
+      "method": "OPTIONS",
+      "role": "basic",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 110,
+      "path": "/api/vod/all/",
+      "method": "OPTIONS",
+      "role": "standard",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 111,
+      "path": "/api/vod/all/",
+      "method": "OPTIONS",
+      "role": "admin",
+      "status": 200,
+      "body_sha256": "b907f1b3130914d7874f9be248bf8996a8eb4ebae58b5c6a5e840ec5a097a1a1",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 112,
+      "path": "/api/vod/all/",
+      "method": "POST",
+      "role": null,
+      "status": 401,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 113,
+      "path": "/api/vod/all/",
+      "method": "POST",
+      "role": "basic",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 114,
+      "path": "/api/vod/all/",
+      "method": "POST",
+      "role": "standard",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 115,
+      "path": "/api/vod/all/",
+      "method": "POST",
+      "role": "admin",
+      "status": 405,
+      "body_sha256": "3986c0d4df30cfcf7db784ea02470c5776de9c1121b7306350b346bb695a752f",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 116,
+      "path": "/api/vod/all/",
+      "method": "PUT",
+      "role": null,
+      "status": 401,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 117,
+      "path": "/api/vod/all/",
+      "method": "PUT",
+      "role": "basic",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 118,
+      "path": "/api/vod/all/",
+      "method": "PUT",
+      "role": "standard",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 119,
+      "path": "/api/vod/all/",
+      "method": "PUT",
+      "role": "admin",
+      "status": 405,
+      "body_sha256": "a817fdc1bd7d8752c161e454c16ef0e7670cc29193d55f88ec5c80bb58bc7bd8",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 120,
+      "path": "/api/vod/all/",
+      "method": "PATCH",
+      "role": null,
+      "status": 401,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 121,
+      "path": "/api/vod/all/",
+      "method": "PATCH",
+      "role": "basic",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 122,
+      "path": "/api/vod/all/",
+      "method": "PATCH",
+      "role": "standard",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 123,
+      "path": "/api/vod/all/",
+      "method": "PATCH",
+      "role": "admin",
+      "status": 405,
+      "body_sha256": "3e91ddbaf795bc0c4cb6c99bb1c72d70181345f64bb214ecb667076ea95a19ad",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 124,
+      "path": "/api/vod/all/",
+      "method": "DELETE",
+      "role": null,
+      "status": 401,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 125,
+      "path": "/api/vod/all/",
+      "method": "DELETE",
+      "role": "basic",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 126,
+      "path": "/api/vod/all/",
+      "method": "DELETE",
+      "role": "standard",
+      "status": 403,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 127,
+      "path": "/api/vod/all/",
+      "method": "DELETE",
+      "role": "admin",
+      "status": 405,
+      "body_sha256": "e93f84a99b10c0f2863ac4a267ca519e5a57c85a9fe0b573c3e84688eb249e0b",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 140,
+      "path": "/api/vod/all/?format=api",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 406,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 141,
+      "path": "/api/vod/all/?format=api",
+      "method": "HEAD",
+      "role": "admin",
+      "status": 406,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 142,
+      "path": "/api/vod/all/?format=api",
+      "method": "HEAD",
+      "role": null,
+      "status": 406,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 165,
+      "path": "/api/vod/all/",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 500,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 167,
+      "path": "/api/vod/all/",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 500,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    },
+    {
+      "source_index": 170,
+      "path": "/api/vod/all/",
+      "method": "HEAD",
+      "role": "standard",
+      "status": 500,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fresh_predeclared_Source_tie_authority": false,
+      "result": "passed_exact_Source_native_comparison"
+    }
+  ]
+}

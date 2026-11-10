@@ -52,6 +52,23 @@ def build():
             'dynamic_permission_method':candidates['dynamic_permission_method']if candidates else None,
             'candidate_scope':'Static runtime attributes only; never executed HTTP or role acceptance',
             'operations':operations})
+    bindings_path=ROOT/'scripts/rust-contracts/case-bindings.json'
+    case_bindings=json.loads(bindings_path.read_text())if bindings_path.exists()else None
+    if case_bindings is not None:
+        indexed={op['contract_id']:(route,op)for route in rows for op in route['operations']}
+        bound=set()
+        for binding in case_bindings['bindings']:
+            contract=binding['contract_id'];assert contract not in bound;bound.add(contract)
+            route,op=indexed[contract]
+            assert binding['pattern_exact']==route['pattern_exact']and binding['source_handler']==route['source_handler']
+            assert binding['method']==op['method']and binding['fully_verified']is False
+            report_path=ROOT/binding['packaged_report'];report=json.loads(report_path.read_text())
+            assert hashlib.sha256(report_path.read_bytes()).hexdigest()==binding['packaged_report_sha256']
+            assert report['passed']is True and report['runtime']==binding['runtime']
+            assert binding['cases']and all(case['method']==op['method']and case['result']=='passed_exact_Source_native_comparison'for case in binding['cases'])
+            op['case_bindings']=binding
+            op['coverage_state']='partial_captured_cases_mapped'
+            op['role_matrix']={'state':'partial_captured_cases_only','observed_roles':sorted({case['role']or'anonymous'for case in binding['cases']}),'required_roles':[],'remaining':'Required role/input matrix is still incomplete.'}
     operations=[]
     for path,item in sorted(runtime['openapi']['paths'].items()):
         for method,op in sorted(item.items()):
@@ -72,7 +89,7 @@ def build():
     assert all(op['result']is None and not op['fully_verified']for r in rows for op in r['operations'])
     return {'format_version':1,'scope':'Contract work register linking runtime discovery and explicit mapping gaps; not executable parity acceptance',
         'credit':'All application/algorithm credit belongs to original Dispatcharr authors and contributors; AGPL retained.',
-        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[])]},
+        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[]),*([bindings_path]if case_bindings is not None else[])]},
         'runtime_discovery_metadata':runtime['metadata'],'limits':['Method/action is unresolved where original runtime discovery returned null; no GET/POST guesses.',
             'Schema authentication is not a role/permission proof; every role matrix still requires case mapping.',
             'Module-associated tests and related scoped reports never mark an entire route fully verified.',
@@ -81,7 +98,10 @@ def build():
         'counts':{'runtime_routes':len(rows),'routes_with_unresolved_methods':sum(not r['declared_methods_resolved']for r in rows),
             'methodless_routes_with_runtime_handler_candidates':sum(not r['declared_methods_resolved']and r['runtime_handler_candidates']is not None for r in rows),
             'runtime_operation_work_items':len(ids),'OpenAPI_operations':len(operations),'static_non_HTTP_candidates':len(non_http),
-            'fully_verified_route_operations':0,'scoped_evidence_requiring_case_mapping':sum(bool(op['related_evidence'])for r in rows for op in r['operations'])},
+            'fully_verified_route_operations':0,'scoped_evidence_requiring_case_mapping':sum(bool(op['related_evidence'])for r in rows for op in r['operations']),
+            'operations_with_partial_case_bindings':sum('case_bindings'in op for r in rows for op in r['operations']),
+            'mapped_packaged_case_observations':sum(len(op['case_bindings']['cases'])for r in rows for op in r['operations']if'case_bindings'in op)},
+        'observations_for_methods_not_declared_in_discovery':case_bindings.get('observations_for_methods_not_declared_in_discovery',[])if case_bindings is not None else[],
         'unrepresented_contract_families':['Environment defaults and precedence','Periodic schedule trigger/crash semantics','Plugin context/capability APIs','Admin workflows and CSRF/session behavior','Signals and background startup/shutdown hooks'],
         'runtime_routes':rows,'openapi_operations':operations,'non_HTTP_candidates':non_http}
 def main():
