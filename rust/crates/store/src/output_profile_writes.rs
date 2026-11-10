@@ -17,7 +17,10 @@ use serde_json::{json, Map, Value};
 use sqlx::{Acquire, Postgres, Transaction};
 use std::{
     net::SocketAddr,
-    sync::Arc,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 use tokio::{
@@ -38,29 +41,65 @@ pub struct OutputProfileWrites {
 }
 #[derive(Clone)]
 struct ProfileCache {
-    connection: MultiplexedConnection,
+    connection: Arc<tokio::sync::Mutex<CacheConnection>>,
     physical_operations: Arc<Semaphore>,
     driver: Arc<CacheDriver>,
 }
 struct CacheDriver {
-    handle: std::sync::Mutex<Option<tokio::task::JoinHandle<()>>>,
+    handles: std::sync::Mutex<Vec<tokio::task::JoinHandle<()>>>,
+    closed: AtomicBool,
+    stopping: tokio::sync::watch::Sender<bool>,
+}
+struct CacheGeneration {
+    number: u64,
+    connection: MultiplexedConnection,
+    ended: Arc<AtomicBool>,
+}
+struct CacheConnection {
+    client: redis::Client,
+    current: Option<CacheGeneration>,
+    next_generation: u64,
 }
 impl CacheDriver {
+    fn spawn(
+        &self,
+        driver: impl std::future::Future<Output = ()> + Send + 'static,
+    ) -> Result<Arc<AtomicBool>, StoreError> {
+        let mut handles = self.handles.lock().unwrap_or_else(|e| e.into_inner());
+        handles.retain(|handle| !handle.is_finished());
+        if self.closed.load(Ordering::Acquire) || handles.len() > MAX_COMMANDS {
+            return Err(unavailable());
+        }
+        let ended = Arc::new(AtomicBool::new(false));
+        let completed = ended.clone();
+        handles.push(tokio::spawn(async move {
+            driver.await;
+            completed.store(true, Ordering::Release);
+        }));
+        Ok(ended)
+    }
     async fn stop(&self) {
-        let handle = { self.handle.lock().unwrap_or_else(|e| e.into_inner()).take() };
-        if let Some(handle) = handle {
+        let handles = {
+            let mut handles = self.handles.lock().unwrap_or_else(|e| e.into_inner());
+            self.closed.store(true, Ordering::Release);
+            self.stopping.send_replace(true);
+            std::mem::take(&mut *handles)
+        };
+        for handle in &handles {
             handle.abort();
+        }
+        for handle in handles {
             let _ = handle.await;
         }
     }
 }
 impl Drop for CacheDriver {
     fn drop(&mut self) {
-        if let Some(handle) = self
-            .handle
+        for handle in self
+            .handles
             .get_mut()
             .unwrap_or_else(|e| e.into_inner())
-            .take()
+            .drain(..)
         {
             handle.abort();
         }
@@ -106,18 +145,99 @@ impl ProfileCache {
         let Ok(permit) = self.physical_operations.clone().try_acquire_owned() else {
             return Ok(None);
         };
-        let mut connection = self.connection.clone();
+        let state = self.connection.clone();
+        let driver = self.driver.clone();
+        // Mutex waiting and connection opening share one admission deadline.
+        let opening_deadline = tokio::time::Instant::now() + Duration::from_secs(5);
         let task = tokio::spawn(async move {
             let _permit = permit;
             let _writer = writer;
-            cmd.query_async::<T>(&mut connection).await
+            let mut stopping = driver.stopping.subscribe();
+            if *stopping.borrow() || tokio::time::Instant::now() >= opening_deadline {
+                return Ok(None);
+            }
+            let (mut connection, generation) = {
+                // There are at most MAX_COMMANDS admitted callers waiting here.
+                // Only connection creation is serialized, never Redis replies.
+                let mut state = tokio::select! {
+                    biased;
+                    _ = stopping.changed() => return Ok(None),
+                    state = tokio::time::timeout_at(opening_deadline, state.lock()) => {
+                        match state { Ok(state) => state, Err(_) => return Ok(None) }
+                    }
+                };
+                if driver.closed.load(Ordering::Acquire)
+                    || tokio::time::Instant::now() >= opening_deadline
+                {
+                    return Ok(None);
+                }
+                if state
+                    .current
+                    .as_ref()
+                    .is_some_and(|g| g.ended.load(Ordering::Acquire))
+                {
+                    state.current = None;
+                }
+                if state.current.is_none() {
+                    let opened = tokio::select! {
+                        biased;
+                        _ = stopping.changed() => return Ok(None),
+                        opened = tokio::time::timeout_at(
+                            opening_deadline, state.client.create_multiplexed_tokio_connection(),
+                        ) => opened,
+                    };
+                    let (connection, physical) = match opened {
+                        Err(_) => return Ok(None),
+                        Ok(Err(error)) if error.is_io_error() || error.is_timeout() => {
+                            return Ok(None)
+                        }
+                        Ok(Err(_)) => return Err(cache_error()),
+                        Ok(Ok(value)) => value,
+                    };
+                    if driver.closed.load(Ordering::Acquire)
+                        || tokio::time::Instant::now() >= opening_deadline
+                    {
+                        return Ok(None);
+                    }
+                    let number = state.next_generation;
+                    state.next_generation = number.checked_add(1).ok_or_else(cache_error)?;
+                    let ended = driver.spawn(physical)?;
+                    state.current = Some(CacheGeneration {
+                        number,
+                        connection,
+                        ended,
+                    });
+                }
+                let generation = state.current.as_ref().unwrap();
+                (generation.connection.clone(), generation.number)
+            };
+            if driver.closed.load(Ordering::Acquire)
+                || tokio::time::Instant::now() >= opening_deadline
+            {
+                return Ok(None);
+            }
+            match cmd.query_async::<T>(&mut connection).await {
+                Ok(value) => Ok(Some(value)),
+                Err(error) if error.is_io_error() || error.is_timeout() => {
+                    // Never replay an uncertain mutation. A later logical
+                    // command can reconnect; an old failure cannot evict it.
+                    let mut state = state.lock().await;
+                    if state
+                        .current
+                        .as_ref()
+                        .is_some_and(|g| g.number == generation)
+                    {
+                        state.current = None;
+                    }
+                    Ok(None)
+                }
+                Err(_) => Err(cache_error()),
+            }
         });
         match timeout(COMMAND_TIMEOUT, task).await {
             Err(_) => Ok(None),
             Ok(Err(_)) => Err(cache_error()),
-            Ok(Ok(Err(error))) if error.is_io_error() || error.is_timeout() => Ok(None),
-            Ok(Ok(Err(_))) => Err(cache_error()),
-            Ok(Ok(Ok(value))) => Ok(Some(value)),
+            Ok(Ok(result)) => result,
         }
     }
     async fn get(
@@ -192,12 +312,24 @@ impl OutputProfileWrites {
             .await
             .map_err(|_| unavailable())?
             .map_err(|_| unavailable())?;
+            let driver_owner = Arc::new(CacheDriver {
+                handles: std::sync::Mutex::new(Vec::new()),
+                closed: AtomicBool::new(false),
+                stopping: tokio::sync::watch::channel(false).0,
+            });
+            let ended = driver_owner.spawn(driver)?;
             Some(ProfileCache {
-                connection,
+                connection: Arc::new(tokio::sync::Mutex::new(CacheConnection {
+                    client,
+                    current: Some(CacheGeneration {
+                        number: 0,
+                        connection,
+                        ended,
+                    }),
+                    next_generation: 1,
+                })),
                 physical_operations: Arc::new(Semaphore::new(MAX_COMMANDS)),
-                driver: Arc::new(CacheDriver {
-                    handle: std::sync::Mutex::new(Some(tokio::spawn(driver))),
-                }),
+                driver: driver_owner,
             })
         } else {
             None
@@ -219,7 +351,7 @@ impl OutputProfileWrites {
     }
     /// Close admission, await logical and physical ownership, then close the
     /// actual Redis driver. A deadline forces the socket closed before waiting
-    /// for retained command/writer leases; false reports remaining SQL work.
+    /// for retained command/writer leases; false reports remaining SQL or connection work.
     pub async fn shutdown(&self, grace: Duration) -> bool {
         self.workers.close();
         let drained = || {

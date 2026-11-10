@@ -7,8 +7,9 @@ from pathlib import Path
 from run import IMAGE,ORIGINAL,ROOT,Peer
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--reuse-build-manifest',type=Path);p.add_argument('--resources',action='store_true');p.add_argument('--admit-resources',action='store_true');a=p.parse_args()
- if a.admit_resources and not a.resources:p.error('--admit-resources requires --resources')
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--reuse-build-manifest',type=Path);p.add_argument('--rust-file-overlay',action='append',default=[],metavar='TARGET=SOURCE');p.add_argument('--resources',action='store_true');p.add_argument('--admit-resources',action='store_true');p.add_argument('--cause-resources',action='store_true');p.add_argument('--lease-resources',action='store_true');a=p.parse_args()
+ if a.rust_file_overlay and a.reuse_build_manifest:p.error('overlays require a fresh source capture')
+ if (a.admit_resources or a.cause_resources or a.lease_resources)and not a.resources:p.error('extra resource gates require --resources')
  out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
  report={'passed':False,'execution_passed':False,'scope':'Remaining cached-owner read/state-loss component; no full application or constructor/lifecycle parity','original_revision':ORIGINAL,'image':IMAGE,'observations':[],'checks':[],'performance_verified':False};env=dict(os.environ);name='dispatcharr-remaining-redis-'+uuid.uuid4().hex[:12];peers=[];status=1
  tools=out/'tool-source';tools.mkdir(mode=0o755);tools.chmod(0o755);report['tool_sha256']={}
@@ -28,6 +29,11 @@ def main():
     source=Path(directory)/filename
     if source.is_symlink()or not source.is_file():raise ValueError('Regular snapshot files required')
     captured[str(source.relative_to(ROOT))]=source.read_bytes()
+  report['explicit_rust_overlays']=[]
+  for item in a.rust_file_overlay:
+   target,source=item.split('=',1)
+   if target not in captured:raise ValueError('Overlay target must be an existing captured Rust file')
+   raw=Path(source).read_bytes();report['explicit_rust_overlays'].append({'path':target,'source':str(Path(source).resolve()),'previous_sha256':hashlib.sha256(captured[target]).hexdigest(),'sha256':hashlib.sha256(raw).hexdigest()});captured[target]=raw
   with tarfile.open(out/'rust-source.tar','w')as archive:
    for path,data in sorted(captured.items()):
     item=tarfile.TarInfo(path);item.size=len(data);item.mode=0o644;item.mtime=0;archive.addfile(item,io.BytesIO(data))
@@ -51,8 +57,10 @@ def main():
     dest=binaries/kind;shutil.copyfile(executables[0],dest);dest.chmod(0o755);report['binaries'][kind]={'sha256':hashlib.sha256(dest.read_bytes()).hexdigest(),'test':test}
   if a.resources:
    report['resource_binaries']={}
-   for target in ['admission','era']:
-    built=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-clients','--test',target,'--no-run','--message-format=json','--locked','--offline'],env=dict(env,CARGO_TARGET_DIR=str(out/'cargo-target')),text=True,capture_output=True,timeout=600);(out/(target+'-build.jsonl')).write_text(built.stdout);(out/(target+'-build.log')).write_text(built.stderr);built.check_returncode()
+   resource_targets=[('dispatcharr-clients','admission'),('dispatcharr-clients','era')]
+   if a.lease_resources:resource_targets.append(('dispatcharr-coordination','lease_physical'))
+   for package,target in resource_targets:
+    built=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p',package,'--test',target,'--no-run','--message-format=json','--locked','--offline'],env=dict(env,CARGO_TARGET_DIR=str(out/'cargo-target')),text=True,capture_output=True,timeout=600);(out/(target+'-build.jsonl')).write_text(built.stdout);(out/(target+'-build.log')).write_text(built.stderr);built.check_returncode()
     executables=[json.loads(line)['executable']for line in built.stdout.splitlines()if line.startswith('{')and json.loads(line).get('reason')=='compiler-artifact'and json.loads(line).get('executable')];assert len(executables)==1
     dest=binaries/target;shutil.copyfile(executables[0],dest);dest.chmod(0o755);report['resource_binaries'][target]=hashlib.sha256(dest.read_bytes()).hexdigest()
   source=out/'original-source';source.mkdir(mode=0o755);source.chmod(0o755);archive=subprocess.check_output(['git','archive',ORIGINAL],cwd=ROOT);(out/'original-source.tar').write_bytes(archive);report['original_archive_sha256']=hashlib.sha256(archive).hexdigest();subprocess.run(['tar','--same-permissions','--no-same-owner','-xf','-','-C',str(source)],input=archive,check=True)
@@ -100,6 +108,8 @@ def main():
   if a.resources:
    resources=[('admission',None,10),('era',None,6),('cache','notifications::tests::cancelled_cache_command_retains_physical_slot_and_scope',1),('cache','notifications::tests::cache_logical_timeout_retains_pending_reply_and_composed_scopes',1),('cache','notifications::tests::cache_cancelled_burst_cannot_reuse_sixteen_pending_slots',1),('vod','sessions::session_restart_peer::physical_dropped_ticket_retains_request_and_session_until_actual_reply',1),('vod','sessions::session_restart_peer::physical_cancelled_setup_retains_request_and_session_until_actual_reply',1)];report['resource_tests']=[]
    if a.admit_resources:resources += [('vod','sessions::session_restart_peer::admit_reply::lost_admit_reply_retains_pending_cleanup_through_noscript_and_real_reply',1),('vod','sessions::session_restart_peer::admit_reply::delayed_admit_reply_retains_pending_cleanup_after_logical_timeout',1)]
+   if a.cause_resources:resources += [('vod','sessions::session_restart_peer::recovery_causes::'+name,1)for name in ['missing_metadata_alone_stops_live_ticket_and_reopen_has_free_request_slot','lost_coordination_alone_stops_even_with_matching_metadata','replaced_session_and_provider_survive_late_old_ticket_cleanup','explicit_stop_with_owned_metadata_is_terminal']]
+   if a.lease_resources:resources += [('lease_physical',None,13)]
    for i,(binary,selected,count)in enumerate(resources):
     args=['docker','exec','-e','NOTIFICATION_SCOPE_FIXTURE=playback-fixture-only',name,'/native-peers/'+binary,'--ignored','--nocapture','--test-threads=1']
     if selected:args+=['--exact',selected]

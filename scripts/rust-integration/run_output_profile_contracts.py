@@ -22,8 +22,10 @@ from tool_snapshot import snapshot_sources
 from run import BASELINE,fixture_source,candidate_overlay,validate_candidate_image
 ROOT=Path(__file__).resolve().parents[2]
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--candidate-build-manifest',type=Path);parser.add_argument('--source-only',action='store_true');parser.add_argument('--redis-restart',action='store_true',help='Actual same-service profile deletion/cache effects over owned Redis restart; requires candidate manifest');args=parser.parse_args();
-    if args.redis_restart and (not args.candidate_build_manifest or args.source_only):parser.error('--redis-restart requires candidate manifest and paired mode')
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--candidate-build-manifest',type=Path);parser.add_argument('--source-only',action='store_true');parser.add_argument('--frozen-rust',type=Path,help='Exact retained Rust tree for component replays');parser.add_argument('--redis-restart',action='store_true',help='Actual same-service profile deletion/cache effects over owned Redis restart; requires candidate manifest');args=parser.parse_args();
+    if args.redis_restart and (not (args.candidate_build_manifest or args.frozen_rust) or args.source_only):parser.error('--redis-restart requires candidate manifest and paired mode')
+    rust_root=ROOT if args.frozen_rust is None else args.frozen_rust.resolve()
+    if rust_root!=ROOT and (not rust_root.is_relative_to(ROOT/'artifacts/rust') or not (rust_root/'rust/Cargo.lock').is_file()):parser.error('Retained artifact Rust tree required')
     output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
     if any(output.iterdir()):parser.error('Output must be empty')
     tools=output/'tool-source';tool_hashes=snapshot_sources(ROOT,tools);project='dispatcharr-output-profiles-'+uuid.uuid4().hex[:10]
@@ -35,7 +37,7 @@ def main():
         temporary=Path(directory);source=temporary/'source';source.mkdir();source.chmod(0o755)
         env=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(output),DISPATCHARR_ENV='aio')
         archive=subprocess.check_output(['git','archive',BASELINE],cwd=ROOT);subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(source)],input=archive,check=True);(source/'media').mkdir(exist_ok=True)
-        overlay=output/'output-profile-fixture.yml';overlay.write_text('services:\n  baseline:\n    ports: ["127.0.0.1::5432", "127.0.0.1::6379"]\n  origin:\n    entrypoint: [/dispatcharrpy/bin/python, /ip-tools/logo_origin.py]\n    volumes:\n      - '+str(tools/'scripts/rust-integration')+':/ip-tools:ro\n')
+        overlay=output/'output-profile-fixture.yml';overlay.write_text('services:\n  baseline:\n    volumes: ["'+str(tools/'scripts/rust-integration')+':/integration:ro"]\n    ports: ["127.0.0.1::5432", "127.0.0.1::6379"]\n  origin:\n    entrypoint: [/dispatcharrpy/bin/python, /ip-tools/logo_origin.py]\n    volumes:\n      - '+str(tools/'scripts/rust-integration')+':/ip-tools:ro\n')
         ports=output/'fixture-ports.yml';report['fixture_ports']=write_port_overlay(ports,{'baseline':[5656,5432,6379],'origin':[8080],**({'candidate':[9192]}if manifest is not None else{})})
         compose=['docker','compose','-p',project,'-f',str(tools/'docker/compose.rust-playback.yml'),'-f',str(overlay),'-f',str(ports)]
         if manifest is not None:
@@ -43,7 +45,7 @@ def main():
         def command(arguments,timeout=180,body=None):return subprocess.check_output(arguments,env=env,input=body,text=True,stderr=subprocess.PIPE,timeout=timeout)
         try:
             if manifest is None and not args.source_only:
-                captured={str(path.relative_to(ROOT)):path.read_bytes() for path in (ROOT/'rust').rglob('*') if path.is_file() and not set(path.relative_to(ROOT/'rust').parts)&{'target','.git','__pycache__'}}
+                captured={str(path.relative_to(rust_root)):path.read_bytes() for path in (rust_root/'rust').rglob('*') if path.is_file() and not set(path.relative_to(rust_root/'rust').parts)&{'target','.git','__pycache__'}}
                 rust_hashes={name:hashlib.sha256(data).hexdigest() for name,data in captured.items()}
                 with tarfile.open(output/'rust-source.tar','w') as archive:
                     for relative,data in sorted(captured.items()):
@@ -81,7 +83,7 @@ def main():
                     inspected=json.loads(command(['docker','inspect',container]))[0];report['candidate_process_preserved']=inspected['Id']==container and inspected['RestartCount']==0;report['capture_complete']=actual['capture_complete'];report['migration_gate_passed']=actual['passed'];report['scope']='Actual original/native same-service output-profile deletion/cache effects after owned Redis restart; fixture peer rewarms named cache keys, not an active media continuity gate';report['passed'] &= report['candidate_process_preserved']
                 status=0 if report['passed']else 1
             else:
-                test_env=dict(env,CARGO_TARGET_DIR=str(ROOT/'rust/target'))
+                test_env=dict(env,CARGO_TARGET_DIR=str(output/'target'))
                 built=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-store','--lib','--no-run','--message-format=json','--locked','--offline'],env=test_env,capture_output=True,text=True,timeout=600)
                 (output/'rust-build.log').write_text(built.stderr)
                 if built.returncode:raise RuntimeError('Native fixture build failed')
@@ -90,7 +92,7 @@ def main():
                 import shutil
                 binary=output/'native-output-profile-probe';shutil.copy2(executable,binary);binary.chmod(0o755)
                 report['native_test_executable_sha256']=hashlib.sha256(binary.read_bytes()).hexdigest()
-                test_command=compose+['exec','-T','-e','DATABASE_TEST_URL=postgresql://dispatch:playback-fixture-only@127.0.0.1:5432/dispatcharr','-e','REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0','-e','OUTPUT_PROFILE_DISPOSABLE_FIXTURE=playback-fixture-only','-e','OUTPUT_PROFILE_FIXTURE=/evidence/output-profile-fixture.json','baseline','/evidence/native-output-profile-probe','output_profile_writes::tests::original_output_profile_serializer_delete_scrub_and_cache','--exact','--ignored','--nocapture']
+                test_command=compose+['exec','-T','-e','DATABASE_TEST_URL=postgresql://dispatch:playback-fixture-only@127.0.0.1:5432/dispatcharr','-e','REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0','-e','OUTPUT_PROFILE_DISPOSABLE_FIXTURE=playback-fixture-only','-e','OUTPUT_PROFILE_FIXTURE=/evidence/output-profile-fixture.json','baseline','/evidence/native-output-profile-probe',('output_profile_writes::tests::original_profile_delete_cache_survives_same_service_redis_restart' if args.redis_restart else 'output_profile_writes::tests::original_output_profile_serializer_delete_scrub_and_cache'),'--exact','--ignored','--nocapture']
                 with (output/'rust-tests.log').open('w') as log:check=subprocess.run(test_command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=600)
                 report.update(passed=check.returncode==0,rust_exit_code=check.returncode,source_cases=len(golden['cases']),source_sql_fault_cases=sum(bool((case.get('setup')or{}).get('sql_failure'))for case in golden['cases']),source_redis_wrongtype_cases=sum('wrongtype'in case['name']for case in golden['cases']),fixture_sha256=hashlib.sha256(fixture.read_bytes()).hexdigest(),rust_snapshot_manifest_sha256=hashlib.sha256(json.dumps({name:hashlib.sha256(data).hexdigest() for name,data in captured.items()},sort_keys=True,separators=(',',':')).encode()).hexdigest(),no_external_provider_requests=True)
                 status=check.returncode

@@ -1,6 +1,6 @@
 # Output-profile cache recovery: next gate
 
-All application and algorithm credit belongs to the original Dispatcharr authors and contributors; existing AGPL attribution is retained. This is an unimplemented plan, not a passing recovery claim.
+All application and algorithm credit belongs to the original Dispatcharr authors and contributors; existing AGPL attribution is retained. This records the original design and negative baseline. The bounded source implementation now has the component validation recorded below; packaged and whole-application recovery remain separate gates.
 
 Inventory165 identifies a seventh persistent Redis command owner: `OutputProfileWrites.ProfileCache` in `rust/crates/store/src/output_profile_writes.rs`. It retains a manually driven `MultiplexedConnection`. Connectivity failures are intentionally ignored by its cache helpers, so the SQL mutation can succeed while future invalidations still use the dead connection. The accepted six-owner component tests do not cover this object.
 
@@ -37,3 +37,12 @@ Run this matrix only after the category performance quiet window is explicitly r
 [Image34 comparison2](verified-profile-cache-restart-image34-2.json) is a valid failed recovery gate. The same writer services are warmed before their own owned Redis NOSAVE restart. An independent peer then recreates only the six named fixture cache keys, modeling cache rewarming without reconstructing the writer. Both backends return the same HTTP204 and commit the same profile/reference/settings changes. The original deletes the cached settings/default-agent entries and advances their persistent generation values; Rust retains the stale entries and old generation values on the first and two later logical deletions. This is six actual paired mutation observations, with unchanged Source worker PIDs and immutable candidate container binding. It establishes cache invalidation failure under this explicit peer-rewarm fixture, not an active-media or entire-application state-restoration claim.
 
 The first attempt remains an incomplete setup: Source-first restart invalidated the already-created candidate before its nominal warmup could match. The second attempt warms the candidate before either restart and captures both backend phases fully. Both owned projects were removed. The next implementation must retain the explicit physical-driver shutdown controls described above.
+
+
+## Validated source implementation
+
+[The combined owner checkpoint](verified-profile-lease-composite-1.json) passes strict workspace Clippy and 349 default tests. Its exact source passes all 127 original/native profile HTTP/SQL/cache cases, four SQL-fault cases and three WRONGTYPE cases, plus three same-service deletion/restart comparisons. The established-reply controls retain four writers and sixteen physical commands. Three additional real Redis AUTH-proxy controls prove stalled-opening shutdown, one five-second admission window for all queued openings, later logical recovery and refusal of an unsent mutation after closure. The original source2 opening defect is retained as a valid expected-negative run.
+
+Connection creation is singleflight, and shutdown cancels both waiting/opening operations before draining established drivers. Each generation executes an application command once; a later I/O failure cannot evict a newer generation. The implementation allows at most seventeen unfinished driver handles (the current/initial generation plus sixteen admitted physical operations), four writers and sixteen physical commands. The logical command observer remains two seconds; the five-second opening deadline includes mutex waiting. An already-sent uncertain command retains its leases until the actual reply or disconnection.
+
+These are host-router/source component gates, not a new packaged-image or performance claim. Image34's original failure remains historical. Active VOD continuity, realtime subscriptions, other cache-generation boundaries and complete Redis/application recovery remain open.

@@ -1,0 +1,209 @@
+{
+  "passed": true,
+  "scope": "Exact committed22744bb6 plus selected ProfileCache, lease170 and cause168 integration component; no packaged/appworker/performance/activeVOD continuity or complete migration acceptance",
+  "original_credit": "All application/algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "base_revision": "22744bb69680f55ae69d81c56b26cc19341cf7d8",
+  "runtime_files": 559,
+  "rust_changed_paths": [
+    "rust/crates/coordination/src/lib.rs",
+    "rust/crates/coordination/tests/lease_physical.rs",
+    "rust/crates/store/src/output_profile_writes.rs",
+    "rust/crates/store/src/output_profile_writes_tests.rs",
+    "rust/crates/vod-http/src/session_recovery_causes.rs",
+    "rust/crates/vod-http/src/session_restart_peer.rs"
+  ],
+  "input_manifest": "artifacts/rust/profile-lease-composite-inputs-1.json",
+  "input_manifest_sha256": "4329d7a2515f267d9a62d32b929544190f54d7b27d8ff7d42a971ee18369d183",
+  "workspace_validation": "artifacts/rust/profile-lease-composite-workspace-validation-1.json",
+  "workspace_validation_sha256": "dabf923d2483c5d4e3e3fdef77a0c70280e10c43e3ff6b024a51e5a8dcc9b477",
+  "default_tests_passed": 349,
+  "external_ignored": 359,
+  "strict_wholeworkspace_clippy": true,
+  "actual_gates": [
+    {
+      "name": "lease-2",
+      "passed": true,
+      "counts": {
+        "physical_resources": 40,
+        "resource_test_invocations": 14,
+        "protocol_checks": 28,
+        "active_vod_continuity_accepted": false
+      },
+      "evidence": "artifacts/rust/profile-lease-composite-lease-2/proof.json",
+      "evidence_sha256": "0f311f0d5a5dc3546f6c5e86dde7c4894fe9d62364e85c9c2fb84ae6b71b3cef",
+      "runtime_files": 559,
+      "runtime_matches_composite": true,
+      "runtime_archive_sha256": "1c2c104411206c220db766def71b8334f43b9ea2af64a1525401618bd63245a9",
+      "cleanup_scope": "dispatcharr-remaining-redis-e877131de84c",
+      "independent_remaining_resources": {
+        "containers": []
+      },
+      "tool_root": "artifacts/rust/profile-lease-composite-lease-2/tool-source"
+    },
+    {
+      "name": "full-profile-3",
+      "passed": true,
+      "counts": {
+        "actual_original_native_cases": 127,
+        "SQLfault_cases": 4,
+        "WRONGTYPE_cases": 3,
+        "writer_bound": 4,
+        "physical_reply_bound": 16
+      },
+      "evidence": "artifacts/rust/profile-lease-composite-full-profile-3/integration.json",
+      "evidence_sha256": "1c45697f0569703333d1fd950a9235f78e4f8c70ab3f49fcffa695b635604279",
+      "runtime_files": 559,
+      "runtime_matches_composite": true,
+      "runtime_archive_sha256": "1c2c104411206c220db766def71b8334f43b9ea2af64a1525401618bd63245a9",
+      "cleanup_scope": "dispatcharr-output-profiles-78e67327ef",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "tool_root": "artifacts/rust/profile-lease-composite-full-profile-3/tool-source"
+    },
+    {
+      "name": "restart-3",
+      "passed": true,
+      "counts": {
+        "selected_actual_original_native_restart_deletions": 3,
+        "opening_gates": 3,
+        "source_reference_cases": 127,
+        "source_reference_note": "Reference127 is not a second full127native replay",
+        "writer_bound": 4,
+        "physical_command_bound": 16,
+        "driver_handle_bound": 17
+      },
+      "evidence": "artifacts/rust/profile-lease-composite-restart-3/integration.json",
+      "evidence_sha256": "914dbf0d5f1b6ead22752412cd210139c7df19b312922bb5fd04227eef9a6959",
+      "runtime_files": 559,
+      "runtime_matches_composite": true,
+      "runtime_archive_sha256": "1c2c104411206c220db766def71b8334f43b9ea2af64a1525401618bd63245a9",
+      "cleanup_scope": "dispatcharr-output-profiles-8e875276c8",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "tool_root": "artifacts/rust/profile-lease-composite-restart-3/tool-source"
+    },
+    {
+      "name": "worker-2",
+      "passed": true,
+      "counts": {
+        "worker_checks": 76,
+        "physical_controls": 3,
+        "default_database_unchanged": true
+      },
+      "evidence": "artifacts/rust/profile-lease-composite-worker-2/integration.json",
+      "evidence_sha256": "71d4d687b2b16c8d5180e838ef99debb6afc465e38d408ff916e54c2b2a4ccfb",
+      "runtime_files": 559,
+      "runtime_matches_composite": true,
+      "runtime_archive_sha256": "1c2c104411206c220db766def71b8334f43b9ea2af64a1525401618bd63245a9",
+      "cleanup_scope": "dispatcharr-refresh-worker-f0bbfd95fa",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "tool_root": "artifacts/rust/profile-lease-composite-worker-2/tool-source"
+    },
+    {
+      "name": "fences-1",
+      "passed": true,
+      "counts": {
+        "provider_credential_fences": 10,
+        "acquire_cancel": 1
+      },
+      "evidence": "artifacts/rust/profile-lease-composite-fences-1/proof.json",
+      "evidence_sha256": "6fb82b523f11cc5704ddc1d3b7a2f678186ac43e63bfbb081fa79e5c0511ecaa",
+      "runtime_source_chain": "Exact passed lease2 proof; runner validates every559snapshot hash beforebuild",
+      "runtime_archive_sha256": "1c2c104411206c220db766def71b8334f43b9ea2af64a1525401618bd63245a9",
+      "cleanup_passed": true,
+      "cleanup_scope_note": "Runner removes exact UUIDcontainer and requires rm success; its report does not retain containername, so no independent exact-name absence claim."
+    }
+  ],
+  "setup_failures": {
+    "retained_cli_failures": "artifacts/rust/profile-lease-composite-profile-setup-failure-1.json",
+    "retained_archive_setup_failures": [
+      {
+        "name": "lease-1",
+        "setup_failure": true,
+        "runtime_contract_observations": 0,
+        "cause": "Pinned Original archive from private descendant cwd was empty/subtree; Source module/setup failed",
+        "evidence": "artifacts/rust/profile-lease-composite-lease-1/proof.json",
+        "sha256": "85ecaae78be142e415fc6e8b1b3bac14a83eede3c2bfd639fdbaa1568c093e4d",
+        "cleanup_scope": "dispatcharr-remaining-redis-9a1a79f876e6",
+        "independent_remaining_resources": {
+          "container": []
+        }
+      },
+      {
+        "name": "worker-1",
+        "setup_failure": true,
+        "runtime_contract_observations": 0,
+        "cause": "Pinned Original archive from private descendant cwd was empty/subtree; Source module/setup failed",
+        "evidence": "artifacts/rust/profile-lease-composite-worker-1/integration.json",
+        "sha256": "5a7c7dcb1e94cacb41114db15d6546ea153baf7d83a07093c5a8e893b4c954a9",
+        "cleanup_scope": "dispatcharr-refresh-worker-09b1b8b351",
+        "independent_remaining_resources": {
+          "container": [],
+          "network": [],
+          "volume": []
+        }
+      },
+      {
+        "name": "full-profile-2",
+        "setup_failure": true,
+        "runtime_contract_observations": 0,
+        "cause": "Pinned Original archive from private descendant cwd was empty/subtree; Source module/setup failed",
+        "evidence": "artifacts/rust/profile-lease-composite-full-profile-2/integration.json",
+        "sha256": "e961d0f13c0ede895da9ce86f3d226279ade234c270600e8024ada340ffa7392",
+        "cleanup_scope": "dispatcharr-output-profiles-8fe9c81427",
+        "independent_remaining_resources": {
+          "container": [],
+          "network": [],
+          "volume": []
+        }
+      },
+      {
+        "name": "restart-2",
+        "setup_failure": true,
+        "runtime_contract_observations": 0,
+        "cause": "Pinned Original archive from private descendant cwd was empty/subtree; Source module/setup failed",
+        "evidence": "artifacts/rust/profile-lease-composite-restart-2/integration.json",
+        "sha256": "ac9891943c43d425ad02e5acc61177d1193883b4d7e3ab523dc7c9215af93581",
+        "cleanup_scope": "dispatcharr-output-profiles-392257dae8",
+        "independent_remaining_resources": {
+          "container": [],
+          "network": [],
+          "volume": []
+        }
+      }
+    ],
+    "correction": "Execution env GIT_DIR actual repository .git; GIT_WORK_TREE exact immutable composite root. No tool/runtime bytes changed.",
+    "archive_proof": "artifacts/rust/profile-lease-composite-archive-cwd-diagnostic-1.json"
+  },
+  "Cargo_mutated": false,
+  "tool_code_edited": false,
+  "explicit_tool_overlay": [
+    {
+      "path": "scripts/rust-integration/run_output_profile_contracts.py",
+      "frozen_source": "artifacts/rust/profile-cache-opening-positive-1/tool-source/scripts/rust-integration/run_output_profile_contracts.py",
+      "base_sha256": "e5df8b580a6e5ac251e1c50e5ad3d751b1fc4a15ab304aaa2447de7c5b5c15f2",
+      "sha256": "d53e8978b785d403b834b6bc118f1d8125e9b8c9dc66e7adddca2e823d90397d"
+    },
+    {
+      "path": "scripts/rust-integration/output_profile_restart_probe.py",
+      "frozen_source": "artifacts/rust/profile-cache-opening-positive-1/tool-source/scripts/rust-integration/output_profile_restart_probe.py",
+      "base_sha256": "7273c8fd3bf6b094c117233634b3e2f8063ebb6cedbf51894169c44bd167f992",
+      "sha256": "5f4898d010391e71c131c7b26582aca314ee09b190c9ab621e174c05a62bcaa0"
+    }
+  ],
+  "full_Source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "performance_verified": false,
+  "packaged_application_verified": false,
+  "full_milestone_complete": false,
+  "runtime_mutated_after_freeze": false
+}

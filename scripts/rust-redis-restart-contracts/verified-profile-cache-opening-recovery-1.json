@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "scope": "Host-router actual Original/native selected three same-service Redis-restart OutputProfile deletions plus owned established-reply and reconnect-opening resource controls; not packaged/app/generalRedis/fullOutputProfile acceptance",
+  "original_credit": "All application/algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "prior_packaged_negative": "scripts/rust-redis-restart-contracts/verified-profile-cache-restart-image34-2.json",
+  "source2": "artifacts/rust/profile-cache-reviewed-source-2",
+  "negative_expected_reason": "After paired restart assertions and established physical controls pass, old production fails shutdown: stalled AUTH opening/writer remains after shutdown grace+2s drain. No setup/compile failure.",
+  "positive_controls": {
+    "selected_same_service_restart_deletions": 3,
+    "established_reply_physical_commands": 16,
+    "logical_writers": 4,
+    "opening_physical_commands": 16,
+    "intentional_driver_handle_bound": 17,
+    "opening_cases": [
+      "stalled actual AUTH reply: canceled/2s observer retains16physical/4writer; shutdown cancels socket and drains",
+      "sixteen queued callers expire within shared5s absolute admission window; no sequential80s openings; later new logical command succeeds",
+      "closure observed before releasing actual AUTH: no unsent SET or driver survives; already-sent uncertain mutations are not reclassified"
+    ],
+    "mutation_replay": false,
+    "new_test_runtime_seconds": 12.31
+  },
+  "negative_then_positive": [
+    {
+      "label": "negative",
+      "passed_as_expected": true,
+      "runtime_test_exit_code": 101,
+      "raw_passed": false,
+      "evidence": "artifacts/rust/profile-cache-opening-negative-1/integration.json",
+      "evidence_sha256": "c450e8d682365f2bde82856c55fae548787acf9c82b172b797ce3d273b8f6a63",
+      "tests_log_sha256": "a1cdec16273c4ff22099b626162d17951b40241faac8f0892e6f2e1acb49713a",
+      "source_reference_cases": 127,
+      "source_reference_SQLfault_cases": 4,
+      "source_reference_WRONGTYPE_cases": 3,
+      "source_reference_count_note": "127 Original reference cases captured; this restart peer compares selected three actual deletes, not all127nativeHTTP responses",
+      "rust_files": 557,
+      "changed_from_source2": [
+        "rust/crates/store/src/output_profile_writes_tests.rs"
+      ],
+      "source2_unchanged_entries": 556,
+      "selected_sha256": {
+        "rust/crates/store/src/output_profile_writes_tests.rs": "4a354b668a19cbc3c1b50672a94f0a6e11623d70648cd93bf8b503a18a49e1fe"
+      },
+      "rust_archive_sha256": "306690a6c249779247a23a66635a0b74f533b3f62192b95d8c6359e8dbb19660",
+      "project": "dispatcharr-output-profiles-983d34101e",
+      "cleanup": "project removed",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/profile-cache-opening-negative-1/tool-source",
+      "tool_map_sha256": "e90f775f36aa5cbee052d0127c5db38d3a554f2b1373042272d984da17e5c987"
+    },
+    {
+      "label": "positive",
+      "passed_as_expected": true,
+      "runtime_test_exit_code": 0,
+      "raw_passed": true,
+      "evidence": "artifacts/rust/profile-cache-opening-positive-1/integration.json",
+      "evidence_sha256": "9d05dbddf2d6b33510350c13c5bbd33541f692a15fadeb0a312135a726549690",
+      "tests_log_sha256": "d693881103b1f0e8572b4b39eff98c8a1ede55649f3902249874df3ce7a51c31",
+      "source_reference_cases": 127,
+      "source_reference_SQLfault_cases": 4,
+      "source_reference_WRONGTYPE_cases": 3,
+      "source_reference_count_note": "127 Original reference cases captured; this restart peer compares selected three actual deletes, not all127nativeHTTP responses",
+      "rust_files": 557,
+      "changed_from_source2": [
+        "rust/crates/store/src/output_profile_writes.rs",
+        "rust/crates/store/src/output_profile_writes_tests.rs"
+      ],
+      "source2_unchanged_entries": 555,
+      "selected_sha256": {
+        "rust/crates/store/src/output_profile_writes.rs": "8e516b3d6f53ec8cec6947f44755316396fad36f42b45896d97bc6132fca112c",
+        "rust/crates/store/src/output_profile_writes_tests.rs": "4a354b668a19cbc3c1b50672a94f0a6e11623d70648cd93bf8b503a18a49e1fe"
+      },
+      "rust_archive_sha256": "2dbe4ecdb15012c315cc41df492cb668e560b2495adca125a0f8ea3ba3127111",
+      "project": "dispatcharr-output-profiles-094807d69c",
+      "cleanup": "project removed",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/profile-cache-opening-positive-1/tool-source",
+      "tool_map_sha256": "ea12ba0a6043587ffd4239a58dc0feb40e3fa6c23658717a43ed73058c954afe"
+    }
+  ],
+  "strict_clippy": {
+    "negative_overlay": {
+      "passed": true,
+      "log": "artifacts/rust/profile-cache-opening-overlay-clippy-1.log",
+      "sha256": "fbfcadf4649c9ca6aba9373480e08b6f8d2ba44317c76acb7f6e9733c0629eae"
+    },
+    "positive_overlay": {
+      "passed": true,
+      "log": "artifacts/rust/profile-cache-opening-positive-clippy-1.log",
+      "sha256": "22aa222ace5ab240d9e86e3ba4865e66c5655926c83b2178ace74c0c1b169ca2"
+    }
+  },
+  "only_live_child_edit": "rust/crates/store/src/output_profile_writes_tests.rs",
+  "production_patch_author": "Parent agent; independently reviewed and tested",
+  "runtime_or_Cargo_modified_by_child": false,
+  "runner_modified": false,
+  "performance_verified": false,
+  "packaged_image_verified": false,
+  "full_milestone_complete": false
+}

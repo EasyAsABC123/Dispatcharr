@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "scope": "Current-state cause isolation and replacement safety; no recovery policy implementation",
+  "evidence": "artifacts/rust/m8-vod-current-recovery-causes-168",
+  "rust_source_archive_sha256": "0d75ea8b0c2fa62b7c5c222c1c60614aa1de4016562d4c7d65b5685eac919801",
+  "physical_tests": 27,
+  "new_cause_tests": [
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::recovery_causes::missing_metadata_alone_stops_live_ticket_and_reopen_has_free_request_slot",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-9-vod.log"
+    },
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::recovery_causes::lost_coordination_alone_stops_even_with_matching_metadata",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-10-vod.log"
+    },
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::recovery_causes::replaced_session_and_provider_survive_late_old_ticket_cleanup",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-11-vod.log"
+    },
+    {
+      "binary": "vod",
+      "selected": "sessions::session_restart_peer::recovery_causes::explicit_stop_with_owned_metadata_is_terminal",
+      "expected_count": 1,
+      "passed": true,
+      "log": "resource-12-vod.log"
+    }
+  ],
+  "production_runtime_changed": false,
+  "interpretation": [
+    "Missing metadata alone stops a healthy, non-lost lease and returns exact 503 on reopen despite free admission.",
+    "Lost coordination alone stops the session even when metadata matches.",
+    "An actual replacement session and its provider count survive late cleanup of the old ticket.",
+    "An explicit stop with valid owned metadata remains terminal."
+  ],
+  "cleanup_passed": true,
+  "active_session_recovery_verified": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application and algorithm credit."
+}

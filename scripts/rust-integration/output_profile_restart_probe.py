@@ -57,7 +57,7 @@ def seed_cache_only():
   if value is not None:cache.set(key,123456 if key.endswith(':ver')or ':groupver:'in key else value,timeout=None if key.endswith(':ver')or ':groupver:'in key else 300)
 report={'capture_complete':False,'passed':False,'scope':__doc__,'case':case['name'],'fixture_policy':'Only named original cache fixture keys re-warmed by an independent peer after each NOSAVE restart; same SQL rows, writer services and container generations remain','phases':[],'warmups':{},'performance_verified':False};initial_web=web_pids();assert initial_web,'Actual Original HTTP workers required'
 try:
- for backend,target in [('candidate','http://candidate:9192'),('source','http://127.0.0.1:5656')]:
+ for backend,target in [('candidate',os.environ.get('PROFILE_CACHE_NATIVE_BASE_URL','http://candidate:9192')),('source','http://127.0.0.1:5656')]:
   warm_attempts=[];report['warmups'][backend]=warm_attempts
   for ordinal in range(1,4):
    reset(case);warm=request(target);warm_attempts.append({'ordinal':ordinal,'matches_expected':canonical(warm)==canonical(case['expected']),'actual':warm})

@@ -617,3 +617,357 @@ async fn physical_reply_ownership(auth: AuthService, redis_url: &str) {
     let _ = bridge.await;
     eprintln!("NATIVE_OUTPUT_PROFILE_PHYSICAL physical16=pass canceled_observer_retains_writer=pass caller_deadline_retains_writer=pass overload503=pass reply_recovery=pass shutdown_closes_driver_and_drains=pass");
 }
+
+#[tokio::test]
+#[ignore = "requires explicit disposable Original HTTP/SQL fixture and owned Redis restart"]
+async fn original_profile_delete_cache_survives_same_service_redis_restart() {
+    assert_eq!(
+        std::env::var("OUTPUT_PROFILE_DISPOSABLE_FIXTURE").as_deref(),
+        Ok("playback-fixture-only")
+    );
+    let store = Store::connect(&std::env::var("DATABASE_TEST_URL").unwrap(), 6)
+        .await
+        .unwrap();
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let auth = AuthService::new(
+        store,
+        AuthConfig::new("playback-fixture-only".into()).unwrap(),
+    )
+    .with_notification_cache(crate::NotificationCache::connect(&redis_url).await.unwrap());
+    let service = OutputProfileWrites::new(auth.clone(), Some(&redis_url))
+        .await
+        .unwrap();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let router = service
+        .clone()
+        .router()
+        .merge(auth.clone().router())
+        .layer(axum::middleware::from_fn(selected_response_headers))
+        .layer(axum::Extension(ConnectInfo(
+            "127.0.0.1:12345".parse::<SocketAddr>().unwrap(),
+        )));
+    let server = tokio::spawn(async move { axum::serve(listener, router).await.unwrap() });
+    let observed = tokio::task::spawn_blocking(move || {
+        std::process::Command::new("/dispatcharrpy/bin/python")
+            .arg("/integration/output_profile_restart_probe.py")
+            .env("PROFILE_CACHE_NATIVE_BASE_URL", format!("http://{address}"))
+            .output()
+            .unwrap()
+    })
+    .await
+    .unwrap();
+    assert!(
+        observed.status.success(),
+        "Source restart controller failed: {}",
+        String::from_utf8_lossy(&observed.stderr)
+    );
+    let report: Value = serde_json::from_slice(
+        String::from_utf8_lossy(&observed.stdout)
+            .lines()
+            .last()
+            .unwrap()
+            .as_bytes(),
+    )
+    .unwrap();
+    assert_eq!(report["capture_complete"], true);
+    assert_eq!(report["passed"], true, "actual restart comparison differs");
+    assert!(service.shutdown(Duration::from_secs(2)).await);
+    server.abort();
+    let _ = server.await;
+    physical_reply_ownership(auth.clone(), &redis_url).await;
+    profile_cache_opening_ownership(auth, &redis_url).await;
+    eprintln!("NATIVE_PROFILE_CACHE_RESTART paired_deletions=3 response_sql_cache=exact same_services=pass retained_reply_shutdown=pass");
+}
+
+// Actual Redis AUTH replies are held by this proxy. No Redis implementation is
+// substituted: established I/O and reconnect setup both reach the owned server.
+struct OpeningProxy {
+    address: SocketAddr,
+    allow: tokio::sync::watch::Sender<bool>,
+    close_initial: tokio::sync::watch::Sender<bool>,
+    arrived: Arc<tokio::sync::Notify>,
+    accepted: Arc<std::sync::atomic::AtomicUsize>,
+    closed: Arc<std::sync::atomic::AtomicUsize>,
+    applications: Arc<std::sync::atomic::AtomicUsize>,
+    task: tokio::task::JoinHandle<()>,
+}
+impl Drop for OpeningProxy {
+    fn drop(&mut self) {
+        // Dropping the accept task also drops/aborts its JoinSet of connections.
+        self.task.abort();
+    }
+}
+async fn opening_proxy(redis_url: &str, marker: &[u8]) -> OpeningProxy {
+    use std::sync::atomic::AtomicUsize;
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
+    let target = url::Url::parse(redis_url).unwrap();
+    let backend = format!(
+        "{}:{}",
+        target.host_str().unwrap(),
+        target.port().unwrap_or(6379)
+    );
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let (allow, _) = tokio::sync::watch::channel(true);
+    let (close_initial, _) = tokio::sync::watch::channel(false);
+    let arrived = Arc::new(tokio::sync::Notify::new());
+    let accepted = Arc::new(AtomicUsize::new(0));
+    let closed = Arc::new(AtomicUsize::new(0));
+    let applications = Arc::new(AtomicUsize::new(0));
+    let (permits, closes, signal, total, ended, observed) = (
+        allow.clone(),
+        close_initial.clone(),
+        arrived.clone(),
+        accepted.clone(),
+        closed.clone(),
+        applications.clone(),
+    );
+    let marker = marker.to_vec();
+    let task = tokio::spawn(async move {
+        let mut children = tokio::task::JoinSet::new();
+        loop {
+            tokio::select! {
+                next = listener.accept() => {
+                    let Ok((front, _)) = next else { break };
+                    let ordinal = total.fetch_add(1, Ordering::AcqRel);
+                    let (mut permitted, mut closing) = (permits.subscribe(), closes.subscribe());
+                    let (signal, ended, observed, marker, backend) =
+                        (signal.clone(), ended.clone(), observed.clone(), marker.clone(), backend.clone());
+                    children.spawn(async move {
+                        struct Closed(Arc<AtomicUsize>);
+                        impl Drop for Closed {
+                            fn drop(&mut self) { self.0.fetch_add(1, Ordering::AcqRel); }
+                        }
+                        let _closed = Closed(ended);
+                        let Ok(back) = tokio::net::TcpStream::connect(backend).await else { return };
+                        let (mut front_read, mut front_write) = front.into_split();
+                        let (mut back_read, mut back_write) = back.into_split();
+                        let requests = async {
+                            let mut buffer = [0_u8; 8192];
+                            let mut suffix = Vec::new();
+                            loop {
+                                let count = front_read.read(&mut buffer).await?;
+                                if count == 0 { break; }
+                                suffix.extend_from_slice(&buffer[..count]);
+                                let matches = suffix.windows(marker.len()).filter(|w| *w == marker).count();
+                                observed.fetch_add(matches, Ordering::AcqRel);
+                                let keep = suffix.len().min(marker.len() - 1);
+                                suffix.drain(..suffix.len() - keep);
+                                back_write.write_all(&buffer[..count]).await?;
+                            }
+                            Ok::<_, std::io::Error>(())
+                        };
+                        let replies = async {
+                            let mut buffer = [0_u8; 8192];
+                            loop {
+                                let count = back_read.read(&mut buffer).await?;
+                                if count == 0 { break; }
+                                if !*permitted.borrow() { signal.notify_one(); }
+                                while !*permitted.borrow() {
+                                    if permitted.changed().await.is_err() { return Ok(()); }
+                                }
+                                front_write.write_all(&buffer[..count]).await?;
+                            }
+                            Ok::<_, std::io::Error>(())
+                        };
+                        let initial_stopped = async {
+                            if ordinal != 0 { std::future::pending::<()>().await; }
+                            while !*closing.borrow() { if closing.changed().await.is_err() { return; } }
+                        };
+                        tokio::select! { _ = requests => {}, _ = replies => {}, _ = initial_stopped => {} }
+                    });
+                }
+                _ = children.join_next(), if !children.is_empty() => {}
+            }
+        }
+    });
+    OpeningProxy {
+        address,
+        allow,
+        close_initial,
+        arrived,
+        accepted,
+        closed,
+        applications,
+        task,
+    }
+}
+async fn wait_opening_condition(mut predicate: impl FnMut() -> bool, description: &str) {
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(2);
+    while !predicate() {
+        assert!(tokio::time::Instant::now() < deadline, "{description}");
+        tokio::time::sleep(Duration::from_millis(5)).await;
+    }
+}
+async fn profile_cache_opening_ownership(auth: AuthService, redis_url: &str) {
+    for mode in ["shutdown", "deadline", "close-release"] {
+        let marker = format!("__profile_opening_probe_{mode}__");
+        let proxy = opening_proxy(redis_url, marker.as_bytes()).await;
+        let mut address = url::Url::parse(redis_url).unwrap();
+        address.set_host(Some("127.0.0.1")).unwrap();
+        address.set_port(Some(proxy.address.port())).unwrap();
+        let service = OutputProfileWrites::new(auth.clone(), Some(address.as_str()))
+            .await
+            .unwrap();
+        let cache = service.cache.as_ref().unwrap().clone();
+        proxy.allow.send_replace(false);
+        proxy.close_initial.send_replace(true);
+        timeout(Duration::from_secs(2), async {
+            loop {
+                let ended = cache
+                    .connection
+                    .lock()
+                    .await
+                    .current
+                    .as_ref()
+                    .is_some_and(|g| g.ended.load(Ordering::Acquire));
+                if ended {
+                    break;
+                }
+                tokio::time::sleep(Duration::from_millis(5)).await;
+            }
+        })
+        .await
+        .unwrap();
+        let key = format!(":1:rust_probe_{marker}:{}", proxy.address.port());
+        let writers = (0..MAX_WRITERS)
+            .map(|_| Arc::new(service.reserve().unwrap()))
+            .collect::<Vec<_>>();
+        let weak = Arc::downgrade(&writers[0]);
+        let started = tokio::time::Instant::now();
+        let mut observers = Vec::new();
+        for index in 0..MAX_COMMANDS {
+            let (cache, writer, key) = (
+                cache.clone(),
+                writers[index % MAX_WRITERS].clone(),
+                key.clone(),
+            );
+            observers.push(tokio::spawn(async move {
+                let mut command = redis::cmd("SET");
+                command.arg(key).arg(index);
+                cache.command::<()>(command, writer).await
+            }));
+        }
+        drop(writers);
+        timeout(Duration::from_secs(2), proxy.arrived.notified())
+            .await
+            .unwrap();
+        wait_opening_condition(
+            || cache.physical_operations.available_permits() == 0,
+            "sixteen openings not admitted",
+        )
+        .await;
+        let timed = observers.pop().unwrap();
+        for observer in observers {
+            observer.abort();
+            let _ = observer.await;
+        }
+        assert!(matches!(timed.await.unwrap(), Ok(None)));
+        assert_eq!(cache.physical_operations.available_permits(), 0);
+        assert_eq!(service.workers.available_permits(), 0);
+        assert!(weak.upgrade().is_some());
+        assert_eq!(
+            proxy.accepted.load(Ordering::Acquire),
+            2,
+            "reconnect must be singleflight"
+        );
+        assert_eq!(
+            proxy.applications.load(Ordering::Acquire),
+            0,
+            "application SET escaped held AUTH"
+        );
+        if mode == "deadline" {
+            timeout(Duration::from_secs(4), async {
+                while cache.physical_operations.available_permits() != MAX_COMMANDS
+                    || service.workers.available_permits() != MAX_WRITERS
+                {
+                    tokio::time::sleep(Duration::from_millis(5)).await;
+                }
+            })
+            .await
+            .expect("queued openings exceeded one admission5s window, not16 sequential windows");
+            assert!(started.elapsed() < Duration::from_secs(7));
+            assert!(weak.upgrade().is_none());
+            assert_eq!(
+                proxy.accepted.load(Ordering::Acquire),
+                2,
+                "expired queued calls opened new sockets"
+            );
+            wait_opening_condition(
+                || proxy.closed.load(Ordering::Acquire) == 2,
+                "timed-out AUTH socket survived",
+            )
+            .await;
+            proxy.allow.send_replace(true);
+            let mut command = redis::cmd("SET");
+            command.arg(&key).arg("later-logical-command");
+            assert!(matches!(
+                cache
+                    .command::<()>(command, Arc::new(service.reserve().unwrap()))
+                    .await,
+                Ok(Some(()))
+            ));
+            assert_eq!(
+                proxy.applications.load(Ordering::Acquire),
+                1,
+                "late unsent mutation or replay occurred"
+            );
+            assert!(service.shutdown(Duration::from_millis(50)).await);
+        } else {
+            let stopping = service.clone();
+            let shutdown =
+                tokio::spawn(async move { stopping.shutdown(Duration::from_millis(50)).await });
+            if mode == "close-release" {
+                wait_opening_condition(
+                    || cache.driver.closed.load(Ordering::Acquire),
+                    "shutdown close signal absent",
+                )
+                .await;
+                // AUTH becomes ready just after closure is visible. An opening
+                // must recheck closure before registering/querying a new driver.
+                proxy.allow.send_replace(true);
+            }
+            assert!(
+                timeout(Duration::from_secs(3), shutdown)
+                    .await
+                    .unwrap()
+                    .unwrap(),
+                "shutdown left a non-SQL opening/writer alive"
+            );
+            assert_eq!(cache.physical_operations.available_permits(), MAX_COMMANDS);
+            assert_eq!(service.workers.available_permits(), MAX_WRITERS);
+            assert!(weak.upgrade().is_none());
+            wait_opening_condition(
+                || proxy.closed.load(Ordering::Acquire) == 2,
+                "shutdown failed to close AUTH socket",
+            )
+            .await;
+            proxy.allow.send_replace(true);
+            assert_eq!(
+                proxy.applications.load(Ordering::Acquire),
+                0,
+                "closed opening sent a late application mutation"
+            );
+        }
+        // Verify server state through an independent real connection. No probe
+        // key may exist except the deliberate new command in the deadline case.
+        let mut independent = redis::Client::open(redis_url)
+            .unwrap()
+            .get_multiplexed_async_connection()
+            .await
+            .unwrap();
+        let actual: Option<String> = independent.get(&key).await.unwrap();
+        assert_eq!(
+            actual.as_deref(),
+            if mode == "deadline" {
+                Some("later-logical-command")
+            } else {
+                None
+            }
+        );
+        let _: i64 = independent.del(&key).await.unwrap();
+        assert!(service.reserve().is_err());
+        eprintln!("NATIVE_PROFILE_OPENING mode={mode} retained16=pass writer4=pass singleflight=pass no_replay=pass socket_shutdown=pass");
+    }
+}

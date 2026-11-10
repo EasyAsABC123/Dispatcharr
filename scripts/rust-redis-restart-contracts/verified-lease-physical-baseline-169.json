@@ -1,0 +1,24 @@
+{
+  "execution_passed": true,
+  "migration_gate_passed": false,
+  "scope": "Actual held/lost lease reply baseline on unchanged coordination production runtime",
+  "evidence": "artifacts/rust/m8-lease-physical-baseline-169",
+  "rust_source_archive_sha256": "600cc4c3abc8fa1bdb05fc17bc5569ffe79c73b3ea2aef1e12f6ceea2924a50c",
+  "prior_physical_cases_passed": 27,
+  "held_reply_cases_failed": 5,
+  "lost_reply_cases_passed": 4,
+  "selected_log": "artifacts/rust/m8-lease-physical-baseline-169/resource-13-lease_physical.log",
+  "selected_log_sha256": "6106470b693c19b32546882b897a3c93bc6917c461652e3fc1372bc6e1de9524",
+  "cause": "Command permits were released at the100ms observer timeout while a successful Redis mutation reply remained held. Ordinary Drop waited180ms before inspection.",
+  "not_yet_verified": [
+    "Replies held longer than2s",
+    "Caller cancellation",
+    "Lease-local physical settlement API",
+    "Active VOD state-loss recovery"
+  ],
+  "no_replay_verified": true,
+  "acquire_delivery_152_unchanged": true,
+  "cleanup_passed": true,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and redis-rs authors retain full application, algorithm and client credit."
+}

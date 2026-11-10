@@ -133,12 +133,41 @@ struct LeaseInner {
     stop: watch::Sender<bool>,
     lost: watch::Sender<bool>,
     release_started: AtomicBool,
+    physical_pending: watch::Sender<usize>,
 }
 
 /// One owner/provider reservation. Drop attempts async release; Redis TTL plus
 /// the persistent expiry ledger recover it if the process cannot finish cleanup.
 pub struct Lease {
     inner: Arc<LeaseInner>,
+}
+
+/// Physical completion observer for one immutable lease identity. This reports
+/// admitted operations only; callers must prevent new operations separately
+/// before using settlement as an ownership transition boundary. It carries no
+/// claim about whether an observer-timed-out mutation succeeded remotely.
+pub struct LeaseSettlement {
+    pending: watch::Receiver<usize>,
+}
+impl LeaseSettlement {
+    pub fn is_settled(&self) -> bool {
+        *self.pending.borrow() == 0
+    }
+
+    pub async fn wait(mut self) {
+        while !self.is_settled() {
+            if self.pending.changed().await.is_err() {
+                break;
+            }
+        }
+    }
+}
+
+struct PhysicalLeaseOperation(watch::Sender<usize>);
+impl Drop for PhysicalLeaseOperation {
+    fn drop(&mut self) {
+        self.0.send_modify(|count| *count -= 1);
+    }
 }
 
 // Created before ACQUIRE is queued. Its permit travels with the oneshot
@@ -393,6 +422,7 @@ impl Coordinator {
             stop,
             lost,
             release_started: AtomicBool::new(false),
+            physical_pending: watch::channel(0).0,
         });
         if let Some(interval) = self.inner.config.heartbeat_interval {
             let weak = Arc::downgrade(&inner);
@@ -447,6 +477,14 @@ impl Coordinator {
 }
 
 impl Lease {
+    /// Observe actual completion of this lease's admitted command tasks,
+    /// including tasks whose logical observers timed out or were canceled.
+    pub fn settlement(&self) -> LeaseSettlement {
+        LeaseSettlement {
+            pending: self.inner.physical_pending.subscribe(),
+        }
+    }
+
     pub fn token(&self) -> &str {
         &self.inner.token
     }
@@ -463,24 +501,7 @@ impl Lease {
         if self.inner.release_started.load(Ordering::Acquire) {
             return Err(Error::Lost);
         }
-        let inner = self.inner.coordinator.upgrade().ok_or(Error::Lost)?;
-        let coordinator = Coordinator { inner };
-        let _permit = coordinator.permit().await?;
-        let mut connection = coordinator.inner.connection.clone();
-        let result: i64 = time::timeout(
-            coordinator.inner.config.command_timeout,
-            coordinator
-                .inner
-                .clear_provider
-                .key(&self.inner.keys.owner)
-                .key(&self.inner.keys.ledger)
-                .key(&self.inner.keys.index)
-                .arg(&self.inner.token)
-                .invoke_async(&mut connection),
-        )
-        .await
-        .map_err(|_| Error::RedisUnavailable)?
-        .map_err(|_| Error::RedisUnavailable)?;
+        let result = lease_mutation(&self.inner, LeaseMutation::ClearProvider).await?;
         if result < 0 {
             self.inner.lost.send_replace(true);
             return Err(Error::Lost);
@@ -504,38 +525,7 @@ impl Lease {
         {
             return Err(Error::InvalidRequest);
         }
-        let inner = self.inner.coordinator.upgrade().ok_or(Error::Lost)?;
-        let coordinator = Coordinator { inner };
-        let _permit = coordinator.permit().await?;
-        let mut connection = coordinator.inner.connection.clone();
-        let profile = provider.profile_id.unwrap_or(0);
-        let credential_key = provider
-            .credential_pool
-            .as_ref()
-            .map_or("", |pool| pool.counter_key.as_str());
-        let credential_maximum = provider
-            .credential_pool
-            .as_ref()
-            .map_or(0, |pool| pool.max_streams);
-        let result: i64 = time::timeout(
-            coordinator.inner.config.command_timeout,
-            coordinator
-                .inner
-                .reserve_provider
-                .key(&self.inner.keys.owner)
-                .key(&self.inner.keys.ledger)
-                .key(&self.inner.keys.index)
-                .key(format!("profile_connections:{profile}"))
-                .key(credential_key)
-                .key(format!("profile_credential_release:{profile}"))
-                .arg(&self.inner.token)
-                .arg(provider.max_streams)
-                .arg(credential_maximum)
-                .invoke_async(&mut connection),
-        )
-        .await
-        .map_err(|_| Error::RedisUnavailable)?
-        .map_err(|_| Error::RedisUnavailable)?;
+        let result = lease_mutation(&self.inner, LeaseMutation::ReserveProvider(provider)).await?;
         match result {
             1 => Ok(()),
             -1 => {
@@ -585,47 +575,79 @@ impl Drop for Lease {
     }
 }
 
-async fn heartbeat_inner(lease: &LeaseInner) -> Result<bool, Error> {
+// Each invocation owns its immutable token/keys and the true command permit.
+// A caller deadline or cancellation drops only the oneshot observer. The permit
+// remains held until redis-rs returns the actual reply/disconnect; no mutation
+// is replayed after an ambiguous observer outcome.
+enum LeaseMutation {
+    Heartbeat,
+    Release,
+    ClearProvider,
+    ReserveProvider(ProviderReservation),
+}
+
+async fn lease_mutation(lease: &LeaseInner, operation: LeaseMutation) -> Result<i64, Error> {
     let inner = lease.coordinator.upgrade().ok_or(Error::Lost)?;
     let coordinator = Coordinator { inner };
-    let _permit = coordinator.permit().await?;
-    let mut connection = coordinator.inner.connection.clone();
-    let result: i64 = time::timeout(
-        coordinator.inner.config.command_timeout,
-        coordinator
-            .inner
-            .heartbeat
-            .key(&lease.keys.owner)
-            .key(&lease.keys.ledger)
-            .key(&lease.keys.index)
-            .arg(&lease.token)
-            .arg(coordinator.inner.config.ttl.as_millis() as u64)
-            .invoke_async(&mut connection),
-    )
-    .await
-    .map_err(|_| Error::RedisUnavailable)?
-    .map_err(|_| Error::RedisUnavailable)?;
-    Ok(result == 1)
+    let permit = coordinator.permit().await?;
+    let keys = lease.keys.clone();
+    let token = lease.token.clone();
+    let inner = coordinator.inner.clone();
+    lease.physical_pending.send_modify(|count| *count += 1);
+    let physical = PhysicalLeaseOperation(lease.physical_pending.clone());
+    let (sender, receiver) = tokio::sync::oneshot::channel();
+    tokio::spawn(async move {
+        let _physical_permit = permit;
+        let _physical_lease = physical;
+        let script = match &operation {
+            LeaseMutation::Heartbeat => &inner.heartbeat,
+            LeaseMutation::Release => &inner.release,
+            LeaseMutation::ClearProvider => &inner.clear_provider,
+            LeaseMutation::ReserveProvider(_) => &inner.reserve_provider,
+        };
+        let mut invocation = script.prepare_invoke();
+        invocation.key(keys.owner).key(keys.ledger).key(keys.index);
+        if let LeaseMutation::ReserveProvider(provider) = &operation {
+            let profile = provider.profile_id.unwrap_or(0);
+            invocation
+                .key(format!("profile_connections:{profile}"))
+                .key(
+                    provider
+                        .credential_pool
+                        .as_ref()
+                        .map_or("", |pool| pool.counter_key.as_str()),
+                )
+                .key(format!("profile_credential_release:{profile}"));
+        }
+        invocation.arg(token);
+        match &operation {
+            LeaseMutation::Heartbeat => {
+                invocation.arg(inner.config.ttl.as_millis() as u64);
+            }
+            LeaseMutation::ReserveProvider(provider) => {
+                invocation.arg(provider.max_streams).arg(
+                    provider
+                        .credential_pool
+                        .as_ref()
+                        .map_or(0, |pool| pool.max_streams),
+                );
+            }
+            LeaseMutation::Release | LeaseMutation::ClearProvider => {}
+        }
+        let mut connection = inner.connection.clone();
+        let result: Result<i64, redis::RedisError> = invocation.invoke_async(&mut connection).await;
+        let _ = sender.send(result.map_err(|_| Error::RedisUnavailable));
+    });
+    time::timeout(coordinator.inner.config.command_timeout, receiver)
+        .await
+        .map_err(|_| Error::RedisUnavailable)?
+        .map_err(|_| Error::RedisUnavailable)?
+}
+
+async fn heartbeat_inner(lease: &LeaseInner) -> Result<bool, Error> {
+    Ok(lease_mutation(lease, LeaseMutation::Heartbeat).await? == 1)
 }
 
 async fn release_inner(lease: &LeaseInner) -> Result<bool, Error> {
-    let inner = lease.coordinator.upgrade().ok_or(Error::Lost)?;
-    let coordinator = Coordinator { inner };
-    let _permit = coordinator.permit().await?;
-    let mut connection = coordinator.inner.connection.clone();
-    let result: i64 = time::timeout(
-        coordinator.inner.config.command_timeout,
-        coordinator
-            .inner
-            .release
-            .key(&lease.keys.owner)
-            .key(&lease.keys.ledger)
-            .key(&lease.keys.index)
-            .arg(&lease.token)
-            .invoke_async(&mut connection),
-    )
-    .await
-    .map_err(|_| Error::RedisUnavailable)?
-    .map_err(|_| Error::RedisUnavailable)?;
-    Ok(result == 1)
+    Ok(lease_mutation(lease, LeaseMutation::Release).await? == 1)
 }

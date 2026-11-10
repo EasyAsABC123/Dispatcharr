@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "scope": "Owned physical lease mutation completion, preserving public observer deadlines and immutable token fences",
+  "evidence": "artifacts/rust/m8-lease-physical-supervision-170",
+  "regression_evidence": "artifacts/rust/m8-lease-coordination-regressions-171",
+  "rust_source_archive_sha256": "4e8e3e25b7c7a56e631cdb1602841ebee849d25007f0f435f33899fca956fc96",
+  "baseline_negative": "scripts/rust-redis-restart-contracts/verified-lease-physical-baseline-169.json",
+  "physical_cases_passed": 40,
+  "new_lease_cases_passed": 13,
+  "provider_credential_fence_cases_passed": 10,
+  "initial_acquire_cancellation_cases_passed": 1,
+  "explicit_rust_overlays": [
+    {
+      "path": "rust/crates/store/src/output_profile_writes.rs",
+      "source": "/home/justin/github/Dispatcharr/artifacts/rust/lease-physical-170-accepted-profile-cache.rs",
+      "previous_sha256": "b8479b09169e38795ac008b434d4f3fceae2cbc8ebf9a070ce14bd6156ed11a3",
+      "sha256": "aa48d81f0175956ad30a004681704e928a68a54fe7473aaedb6e19e0f659d818"
+    }
+  ],
+  "controls": [
+    "Five successful held-reply cases and four canceled observers retain the real command permit and per-lease pending counter for more than 2.2 seconds.",
+    "LeaseSettlement remains unsettled until the actual Redis reply or disconnect; it does not report mutation success or exclude future operations.",
+    "A second command cannot acquire the sole occupied command slot.",
+    "Four lost replies execute the selected mutation once, with no replay.",
+    "Actual profile, credential, owner and unique-ledger effects settle and clean up.",
+    "Existing canceled ACQUIRE delivery retains its distinct fenced physical cleanup semantics."
+  ],
+  "cleanup_passed": true,
+  "active_vod_recovery_verified": false,
+  "application_recovery_verified": false,
+  "performance_verified": false,
+  "not_changed": [
+    "Redis scripts and provider/credential/ownership predicates",
+    "Public logical observer deadlines and sticky lost behavior",
+    "Background reaper wrapper",
+    "VOD state-loss recovery policy",
+    "Other cached Redis owners"
+  ],
+  "credit": "Original Dispatcharr and redis-rs authors retain full application, algorithm and client credit.",
+  "strict_frozen_all_target_clippy_passed": true,
+  "strict_clippy_log": {
+    "passed": true,
+    "log": "artifacts/rust/m8-lease-physical-supervision-170/frozen-coordination-clippy.log",
+    "sha256": "751a7649f9b377fef568739b5652b2893db2ea274a8d85f93cd0a4e8272afbf1"
+  }
+}

@@ -44,3 +44,6 @@ HLS/fMP4 and live statistics use persistent names alongside process-local handle
 Read-only package inspection is stored under `artifacts/rust/redis-lifecycle-inventory-165/`. It ran the pinned image unprivileged, read-only and with `--network none`; no Redis server, Django application, database or provider was started. Installed versions observed: redis-py6.4.0, channels-redis4.3.0 and Channels4.3.2. The extracted source is ignored evidence, not vendored implementation.
 
 The inventory adds no runtime changes.149/150/152/159/161 remain bounded component proofs, not full application, active-session, realtime, cache-generation, permissions/TLS, durability or performance acceptance. Actual image34 active HTTP166 is a valid mismatch, not an accepted active-recovery gate. Its raw evidence remains separate from this read-only source inventory.
+
+
+The [profile/lease owner checkpoint](../scripts/rust-redis-restart-contracts/verified-profile-lease-composite-1.json) now verifies bounded source recovery for the seventh ProfileCache connection and retained physical lease mutation ownership. Its known negative tests remain linked. The rest of this inventory continues to identify separate application/realtime/state-loss gates; this source checkpoint does not establish full Redis recovery.

@@ -222,3 +222,6 @@ async fn physical_cancelled_setup_retains_request_and_session_until_actual_reply
 
 #[path = "session_admit_reply.rs"]
 mod admit_reply;
+
+#[path = "session_recovery_causes.rs"]
+mod recovery_causes;
