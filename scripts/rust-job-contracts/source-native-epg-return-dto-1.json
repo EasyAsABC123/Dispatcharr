@@ -1,0 +1,1040 @@
+{
+  "format_version": 1,
+  "scope": "Explicit settled UPDATE0 and acknowledged NotOwner return semantics only for known exhaustion; legacy API unchanged",
+  "checks": [
+    {
+      "name": "actual-worker-blocked-status-UPDATE-delete_file",
+      "passed": true
+    },
+    {
+      "name": "index-invalidated-before-intervention-delete_file",
+      "passed": true
+    },
+    {
+      "name": "real-refresh-lock-acquired-delete_file",
+      "passed": true
+    },
+    {
+      "name": "exact-guarded-UPDATE-rowcount-delete_file",
+      "passed": true
+    },
+    {
+      "name": "actual-Original-normal-null-delete_file",
+      "passed": true
+    },
+    {
+      "name": "actual-publication-even-zero-UPDATE-delete_file",
+      "passed": true
+    },
+    {
+      "name": "Original-release-removes-current-or-missing-key-delete_file",
+      "passed": true
+    },
+    {
+      "name": "bounded-before-renewal-delete_file",
+      "passed": true
+    },
+    {
+      "name": "actual-source-and-index-deleted-delete_file",
+      "passed": true
+    },
+    {
+      "name": "native-real-blocked-status-update-delete_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-Source-AsyncResult-delete_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-exact-row-effects-delete_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-publication-call-delete_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-foreign-ownership-preserved-delete_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-owned-task-result-and-drain-delete_file",
+      "passed": true
+    },
+    {
+      "name": "actual-worker-blocked-status-UPDATE-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "index-invalidated-before-intervention-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "real-refresh-lock-acquired-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "exact-guarded-UPDATE-rowcount-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-Original-normal-null-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-publication-even-zero-UPDATE-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "Original-release-removes-current-or-missing-key-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "bounded-before-renewal-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-source-and-index-deleted-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "native-real-blocked-status-update-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-Source-AsyncResult-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-exact-row-effects-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-publication-call-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-foreign-ownership-preserved-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-owned-task-result-and-drain-delete_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-worker-blocked-status-UPDATE-replace_file",
+      "passed": true
+    },
+    {
+      "name": "index-invalidated-before-intervention-replace_file",
+      "passed": true
+    },
+    {
+      "name": "real-refresh-lock-acquired-replace_file",
+      "passed": true
+    },
+    {
+      "name": "exact-guarded-UPDATE-rowcount-replace_file",
+      "passed": true
+    },
+    {
+      "name": "actual-Original-normal-null-replace_file",
+      "passed": true
+    },
+    {
+      "name": "actual-publication-even-zero-UPDATE-replace_file",
+      "passed": true
+    },
+    {
+      "name": "Original-release-removes-current-or-missing-key-replace_file",
+      "passed": true
+    },
+    {
+      "name": "bounded-before-renewal-replace_file",
+      "passed": true
+    },
+    {
+      "name": "source-error-after-unblock-replace_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-Source-AsyncResult-replace_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-exact-row-effects-replace_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-publication-call-replace_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-foreign-ownership-preserved-replace_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-owned-task-result-and-drain-replace_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-no-domain-write-after-loss-replace_file",
+      "passed": true
+    },
+    {
+      "name": "actual-worker-blocked-status-UPDATE-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "index-invalidated-before-intervention-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "real-refresh-lock-acquired-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "exact-guarded-UPDATE-rowcount-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-Original-normal-null-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-publication-even-zero-UPDATE-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "Original-release-removes-current-or-missing-key-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "bounded-before-renewal-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "source-error-after-unblock-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-Source-AsyncResult-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-exact-row-effects-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-publication-call-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-foreign-ownership-preserved-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-owned-task-result-and-drain-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-aborted-waiter-unobserved-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-no-domain-write-after-loss-replace_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-worker-blocked-status-UPDATE-absent_file",
+      "passed": true
+    },
+    {
+      "name": "index-invalidated-before-intervention-absent_file",
+      "passed": true
+    },
+    {
+      "name": "real-refresh-lock-acquired-absent_file",
+      "passed": true
+    },
+    {
+      "name": "exact-guarded-UPDATE-rowcount-absent_file",
+      "passed": true
+    },
+    {
+      "name": "actual-Original-normal-null-absent_file",
+      "passed": true
+    },
+    {
+      "name": "actual-publication-even-zero-UPDATE-absent_file",
+      "passed": true
+    },
+    {
+      "name": "Original-release-removes-current-or-missing-key-absent_file",
+      "passed": true
+    },
+    {
+      "name": "bounded-before-renewal-absent_file",
+      "passed": true
+    },
+    {
+      "name": "source-error-after-unblock-absent_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-Source-AsyncResult-absent_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-exact-row-effects-absent_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-publication-call-absent_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-foreign-ownership-preserved-absent_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-owned-task-result-and-drain-absent_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-aborted-waiter-unobserved-absent_file",
+      "passed": true
+    },
+    {
+      "name": "native-race-no-domain-write-after-loss-absent_file",
+      "passed": true
+    },
+    {
+      "name": "actual-worker-blocked-status-UPDATE-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "index-invalidated-before-intervention-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "real-refresh-lock-acquired-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "exact-guarded-UPDATE-rowcount-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-Original-normal-null-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "actual-publication-even-zero-UPDATE-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "Original-release-removes-current-or-missing-key-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "bounded-before-renewal-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "source-error-after-unblock-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-Source-AsyncResult-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-exact-row-effects-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-actual-publication-call-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-foreign-ownership-preserved-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-owned-task-result-and-drain-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "native-race-no-domain-write-after-loss-absent_parser",
+      "passed": true
+    },
+    {
+      "name": "no-unexpected-executed-family",
+      "passed": true
+    }
+  ],
+  "source_reference_cases": [
+    {
+      "name": "delete_file",
+      "source_id": 11,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:08.918128+00:00",
+        "task_id": "ca0b5a52-7033-4ce4-840e-4305d00814ed"
+      },
+      "metadata_sha256": "8b2255fb8550da0c59627355d1f6f6a327871a2dd06dd0d6d186ff74f525dad0",
+      "result_ttl": 3598,
+      "intervention": {
+        "kind": "actual_Django_collector_delete_on_own_lock_connection",
+        "deleted": [
+          2,
+          {
+            "epg.EPGSourceIndex": 1,
+            "epg.EPGSource": 1
+          }
+        ]
+      },
+      "blocked_query_sha256": "eaf20556c82727bec50a3874e10e8b4da9d4b55e0ff8040681c98de88c0eb3c8",
+      "actual_UPDATE_affected": 0,
+      "actual_UPDATE_query_sha256": "eaf20556c82727bec50a3874e10e8b4da9d4b55e0ff8040681c98de88c0eb3c8",
+      "progress_messages": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 11,
+            "action": "refresh",
+            "status": "error",
+            "error": "EPG refresh blocked for too long (EPG file in use (index build)); retry later"
+          }
+        }
+      ],
+      "source_state": [],
+      "refresh_after": null,
+      "elapsed_seconds": 3.11170436500106,
+      "renewal_interval_seconds": 120
+    },
+    {
+      "name": "delete_parser",
+      "source_id": 12,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:12.411154+00:00",
+        "task_id": "e579159c-b9b3-455d-aa7a-9aa76a1a8068"
+      },
+      "metadata_sha256": "522ea3f481521ffbc40baacd611e07ef52ed986800915601c6b76f9442311223",
+      "result_ttl": 3598,
+      "intervention": {
+        "kind": "actual_Django_collector_delete_on_own_lock_connection",
+        "deleted": [
+          2,
+          {
+            "epg.EPGSourceIndex": 1,
+            "epg.EPGSource": 1
+          }
+        ]
+      },
+      "blocked_query_sha256": "3250624572a17fe35e1fde8d96810172c995654d4ea89746530181b237ca6ac5",
+      "actual_UPDATE_affected": 0,
+      "actual_UPDATE_query_sha256": "3250624572a17fe35e1fde8d96810172c995654d4ea89746530181b237ca6ac5",
+      "progress_messages": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 12,
+            "action": "refresh",
+            "status": "error",
+            "error": "EPG refresh blocked for too long (per-channel program parses in progress); retry later"
+          }
+        }
+      ],
+      "source_state": [],
+      "refresh_after": null,
+      "elapsed_seconds": 3.0926664539947524,
+      "renewal_interval_seconds": 120
+    },
+    {
+      "name": "replace_file",
+      "source_id": 13,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:15.807299+00:00",
+        "task_id": "f60dbdab-3b08-47a7-a306-39af3b646cdd"
+      },
+      "metadata_sha256": "237be6b31941c8856f343e660ef2f59c0f28dda52b71dbaa3c13686eb02cb181",
+      "result_ttl": 3598,
+      "intervention": {
+        "kind": "replace_only_owned_refresh_key",
+        "value": "owned-foreign-token",
+        "ttl": 300
+      },
+      "blocked_query_sha256": "9f870c8e5d87963bfe1d174ad7199ee7e149c91d962fb92beb25022f3c9f62e1",
+      "actual_UPDATE_affected": 1,
+      "actual_UPDATE_query_sha256": "9f870c8e5d87963bfe1d174ad7199ee7e149c91d962fb92beb25022f3c9f62e1",
+      "progress_messages": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 13,
+            "action": "refresh",
+            "status": "error",
+            "error": "EPG refresh blocked for too long (EPG file in use (index build)); retry later"
+          }
+        }
+      ],
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+          "custom_properties": {}
+        }
+      ],
+      "refresh_after": null,
+      "elapsed_seconds": 3.032076089999464,
+      "renewal_interval_seconds": 120
+    },
+    {
+      "name": "replace_parser",
+      "source_id": 14,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:19.271918+00:00",
+        "task_id": "e9b0f0cc-2a7f-457a-b14d-cfa475eb0c3f"
+      },
+      "metadata_sha256": "2f83a4db022d47555cbce95518bda8262bd4260361833e2f58706473e2829667",
+      "result_ttl": 3598,
+      "intervention": {
+        "kind": "replace_only_owned_refresh_key",
+        "value": "owned-foreign-token",
+        "ttl": 300
+      },
+      "blocked_query_sha256": "d65583ad5dbdca5dea536b8eced8a4fe079360d297eff1f2a95a9beac04a0402",
+      "actual_UPDATE_affected": 1,
+      "actual_UPDATE_query_sha256": "d65583ad5dbdca5dea536b8eced8a4fe079360d297eff1f2a95a9beac04a0402",
+      "progress_messages": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 14,
+            "action": "refresh",
+            "status": "error",
+            "error": "EPG refresh blocked for too long (per-channel program parses in progress); retry later"
+          }
+        }
+      ],
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+          "custom_properties": {}
+        }
+      ],
+      "refresh_after": null,
+      "elapsed_seconds": 3.1639764760038815,
+      "renewal_interval_seconds": 120
+    },
+    {
+      "name": "absent_file",
+      "source_id": 15,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:22.981084+00:00",
+        "task_id": "2b0acd7a-cc97-4e4d-9e78-4ca9cf06f993"
+      },
+      "metadata_sha256": "6721a0f78eb4126eb1e795d8f1fd7586760ef8b865d9d42a034782b331ef8652",
+      "result_ttl": 3598,
+      "intervention": {
+        "kind": "delete_only_owned_refresh_key",
+        "value": null,
+        "ttl": -2
+      },
+      "blocked_query_sha256": "18ac188f209cfc37508981415c11c040d6c963be6c3e523f33b6d5b0b19fb12b",
+      "actual_UPDATE_affected": 1,
+      "actual_UPDATE_query_sha256": "18ac188f209cfc37508981415c11c040d6c963be6c3e523f33b6d5b0b19fb12b",
+      "progress_messages": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 15,
+            "action": "refresh",
+            "status": "error",
+            "error": "EPG refresh blocked for too long (EPG file in use (index build)); retry later"
+          }
+        }
+      ],
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+          "custom_properties": {}
+        }
+      ],
+      "refresh_after": null,
+      "elapsed_seconds": 3.235627228998055,
+      "renewal_interval_seconds": 120
+    },
+    {
+      "name": "absent_parser",
+      "source_id": 16,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:26.686555+00:00",
+        "task_id": "22d53b1e-c3d3-4555-9bdf-931b5c00c905"
+      },
+      "metadata_sha256": "52b551a2a781f7f6bd083d87c0b8554a7c5c707c82eca6225f185486c8eb19f2",
+      "result_ttl": 3598,
+      "intervention": {
+        "kind": "delete_only_owned_refresh_key",
+        "value": null,
+        "ttl": -2
+      },
+      "blocked_query_sha256": "1d4b81ab7c6ab9368f07788eda6b0fb37e16952b90357a5a1b607082a33ee37d",
+      "actual_UPDATE_affected": 1,
+      "actual_UPDATE_query_sha256": "1d4b81ab7c6ab9368f07788eda6b0fb37e16952b90357a5a1b607082a33ee37d",
+      "progress_messages": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 16,
+            "action": "refresh",
+            "status": "error",
+            "error": "EPG refresh blocked for too long (per-channel program parses in progress); retry later"
+          }
+        }
+      ],
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+          "custom_properties": {}
+        }
+      ],
+      "refresh_after": null,
+      "elapsed_seconds": 3.2657126590056578,
+      "renewal_interval_seconds": 120
+    }
+  ],
+  "native_cases": [
+    {
+      "name": "delete_file",
+      "source_id": 11,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:10.986969+00:00",
+        "task_id": "77fd2992-3a26-44dd-b159-bca364f21151"
+      },
+      "metadata_sha256": "fc795739fe2902c951afb5dcde23b051d20346e7066905277d0c06abb11ad8c5",
+      "source_state": [],
+      "audit": {
+        "outcome": "Some(Ok(Completed(77fd2992-3a26-44dd-b159-bca364f21151)))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false,
+        "held_orphan_marker": false,
+        "logical_waiter_aborted": false,
+        "release_intervention": null,
+        "domain_writes_after_intervention": null,
+        "publications": [
+          {
+            "group": "updates",
+            "message": {
+              "type": "update",
+              "data": {
+                "progress": 100,
+                "type": "epg_refresh",
+                "source": 11,
+                "action": "refresh",
+                "status": "error",
+                "error": "EPG refresh blocked for too long (EPG file in use (index build)); retry later"
+              }
+            }
+          }
+        ]
+      },
+      "domain_write_order": [
+        [
+          "source_update",
+          0
+        ],
+        [
+          "core_event",
+          1
+        ]
+      ],
+      "refresh_after": null,
+      "fixture_control": "Native replacement occurs at actual RELEASE after all report/terminal writes, preserving foreign state; Source reference replacement was before status UPDATE. Compare scoped return/payload/final-row effects, not identical interleaving or foreign-key deletion."
+    },
+    {
+      "name": "delete_parser",
+      "source_id": 12,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:14.462712+00:00",
+        "task_id": "48bf43d4-8158-4d29-9aed-a21ec11151af"
+      },
+      "metadata_sha256": "f348958484de04c0c03fd2a779d7d841a8b43987d6faa68269370676be90de44",
+      "source_state": [],
+      "audit": {
+        "outcome": "Some(Ok(Completed(48bf43d4-8158-4d29-9aed-a21ec11151af)))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false,
+        "held_orphan_marker": false,
+        "logical_waiter_aborted": false,
+        "release_intervention": null,
+        "domain_writes_after_intervention": null,
+        "publications": [
+          {
+            "group": "updates",
+            "message": {
+              "type": "update",
+              "data": {
+                "progress": 100,
+                "type": "epg_refresh",
+                "source": 12,
+                "action": "refresh",
+                "status": "error",
+                "error": "EPG refresh blocked for too long (per-channel program parses in progress); retry later"
+              }
+            }
+          }
+        ]
+      },
+      "domain_write_order": [
+        [
+          "source_update",
+          0
+        ],
+        [
+          "core_event",
+          1
+        ]
+      ],
+      "refresh_after": null,
+      "fixture_control": "Native replacement occurs at actual RELEASE after all report/terminal writes, preserving foreign state; Source reference replacement was before status UPDATE. Compare scoped return/payload/final-row effects, not identical interleaving or foreign-key deletion."
+    },
+    {
+      "name": "replace_file",
+      "source_id": 13,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:17.863961+00:00",
+        "task_id": "fbbfbf64-1725-48e3-87f3-ffc627281e7e"
+      },
+      "metadata_sha256": "2983d60d776842fbaf7fd392b60c41fc2e7faf477d269e0b3451f7877577e878",
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+          "custom_properties": {}
+        }
+      ],
+      "audit": {
+        "outcome": "Some(Ok(Completed(fbbfbf64-1725-48e3-87f3-ffc627281e7e)))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false,
+        "held_orphan_marker": false,
+        "logical_waiter_aborted": false,
+        "release_intervention": "replace",
+        "domain_writes_after_intervention": 0,
+        "publications": [
+          {
+            "group": "updates",
+            "message": {
+              "type": "update",
+              "data": {
+                "progress": 100,
+                "type": "epg_refresh",
+                "source": 13,
+                "action": "refresh",
+                "status": "error",
+                "error": "EPG refresh blocked for too long (EPG file in use (index build)); retry later"
+              }
+            }
+          }
+        ]
+      },
+      "domain_write_order": [
+        [
+          "source_update",
+          1
+        ],
+        [
+          "core_event",
+          1
+        ],
+        [
+          "intervention",
+          null
+        ]
+      ],
+      "refresh_after": "owned-foreign-token",
+      "fixture_control": "Native replacement occurs at actual RELEASE after all report/terminal writes, preserving foreign state; Source reference replacement was before status UPDATE. Compare scoped return/payload/final-row effects, not identical interleaving or foreign-key deletion."
+    },
+    {
+      "name": "replace_parser",
+      "source_id": 14,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:21.426642+00:00",
+        "task_id": "57ad3459-f72d-46f0-b094-0a88b4062ffd"
+      },
+      "metadata_sha256": "5eda4ad6e9278fc220c0344cf6885517b7a0250e8df44049ccc4cd283d3e6e40",
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+          "custom_properties": {}
+        }
+      ],
+      "audit": {
+        "outcome": "None",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false,
+        "held_orphan_marker": false,
+        "logical_waiter_aborted": true,
+        "release_intervention": "replace",
+        "domain_writes_after_intervention": 0,
+        "publications": [
+          {
+            "group": "updates",
+            "message": {
+              "type": "update",
+              "data": {
+                "progress": 100,
+                "type": "epg_refresh",
+                "source": 14,
+                "action": "refresh",
+                "status": "error",
+                "error": "EPG refresh blocked for too long (per-channel program parses in progress); retry later"
+              }
+            }
+          }
+        ]
+      },
+      "domain_write_order": [
+        [
+          "source_update",
+          1
+        ],
+        [
+          "core_event",
+          1
+        ],
+        [
+          "intervention",
+          null
+        ]
+      ],
+      "refresh_after": "owned-foreign-token",
+      "fixture_control": "Native replacement occurs at actual RELEASE after all report/terminal writes, preserving foreign state; Source reference replacement was before status UPDATE. Compare scoped return/payload/final-row effects, not identical interleaving or foreign-key deletion."
+    },
+    {
+      "name": "absent_file",
+      "source_id": 15,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:25.098646+00:00",
+        "task_id": "e465f20d-6484-4940-bde9-4c1f7711ac50"
+      },
+      "metadata_sha256": "f7e434f2dad1304b000ec591ae2f2f8cefc5e27b0060ba8f5b203d104b54de3b",
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+          "custom_properties": {}
+        }
+      ],
+      "audit": {
+        "outcome": "None",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false,
+        "held_orphan_marker": false,
+        "logical_waiter_aborted": true,
+        "release_intervention": "absent",
+        "domain_writes_after_intervention": 0,
+        "publications": [
+          {
+            "group": "updates",
+            "message": {
+              "type": "update",
+              "data": {
+                "progress": 100,
+                "type": "epg_refresh",
+                "source": 15,
+                "action": "refresh",
+                "status": "error",
+                "error": "EPG refresh blocked for too long (EPG file in use (index build)); retry later"
+              }
+            }
+          }
+        ]
+      },
+      "domain_write_order": [
+        [
+          "source_update",
+          1
+        ],
+        [
+          "core_event",
+          1
+        ],
+        [
+          "intervention",
+          null
+        ]
+      ],
+      "refresh_after": null,
+      "fixture_control": "Native replacement occurs at actual RELEASE after all report/terminal writes, preserving foreign state; Source reference replacement was before status UPDATE. Compare scoped return/payload/final-row effects, not identical interleaving or foreign-key deletion."
+    },
+    {
+      "name": "absent_parser",
+      "source_id": 16,
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T19:45:28.796671+00:00",
+        "task_id": "3bc26118-610d-467c-8f9c-d3ef3eb5f4dd"
+      },
+      "metadata_sha256": "3d3935875b3e7c7ecb4842bd642ce6550465c4f83aff9b0dc0aec17303d725a3",
+      "source_state": [
+        {
+          "status": "error",
+          "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+          "custom_properties": {}
+        }
+      ],
+      "audit": {
+        "outcome": "Some(Ok(Completed(3bc26118-610d-467c-8f9c-d3ef3eb5f4dd)))",
+        "calls": 1,
+        "default_dispatch_calls": 0,
+        "caller_released": true,
+        "worker_drained": true,
+        "service_drained": true,
+        "transport_drained": true,
+        "physical_jobs": 0,
+        "head_unchanged": false,
+        "native_eta_consumer": false,
+        "held_orphan_marker": false,
+        "logical_waiter_aborted": false,
+        "release_intervention": "absent",
+        "domain_writes_after_intervention": 0,
+        "publications": [
+          {
+            "group": "updates",
+            "message": {
+              "type": "update",
+              "data": {
+                "progress": 100,
+                "type": "epg_refresh",
+                "source": 16,
+                "action": "refresh",
+                "status": "error",
+                "error": "EPG refresh blocked for too long (per-channel program parses in progress); retry later"
+              }
+            }
+          }
+        ]
+      },
+      "domain_write_order": [
+        [
+          "source_update",
+          1
+        ],
+        [
+          "core_event",
+          1
+        ],
+        [
+          "intervention",
+          null
+        ]
+      ],
+      "refresh_after": null,
+      "fixture_control": "Native replacement occurs at actual RELEASE after all report/terminal writes, preserving foreign state; Source reference replacement was before status UPDATE. Compare scoped return/payload/final-row effects, not identical interleaving or foreign-key deletion."
+    }
+  ],
+  "effect_difference": "Original deletes replacement token; native preserves it. Native replacement occurs at RELEASE after domain work, deliberately avoiding stale writes; same interleaving is not claimed.",
+  "publication_scope": "Native actual typed UpdateEventSink callback payload versus actual Original Channels Redis delivery; native bus transport is separately gated, not inferred here."
+}

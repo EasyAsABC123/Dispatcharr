@@ -6,8 +6,9 @@ use dispatcharr_ingest_epg::{
     cache_policy::CachedSwapPolicy,
     channels::{ChannelConfig, ChannelImporter},
     file_job::{
-        ChildTask, ExhaustionReason, ExhaustionReporting, FileJobConfig, FileJobOutcome,
-        FileJobReport, FileJobRequest, FileJobRunner, FileJobServices, GuideTaskDispatcher,
+        ChildTask, ExhaustionReason, ExhaustionRelease, ExhaustionReporting, FileJobConfig,
+        FileJobOutcome, FileJobReport, FileJobRequest, FileJobRunner, FileJobServices,
+        GuideTaskDispatcher,
     },
     reporter::GuideReporter,
     EpgImporter, ImportConfig, ImportError, SwapPolicyContext,
@@ -412,8 +413,8 @@ async fn native_file_job_exhaustion_resources() {
     proxy.hold.send_replace(false);
     bundle.close().await;
     assert_eq!(drops.load(Ordering::SeqCst), 1);
-    // Replacement fencing is not a successful release. Never return a typed
-    // normal report when physical RELEASE says NotOwner.
+    // Replacement fencing is not successful Released. The detailed typed
+    // report records actual NotOwner and preserves the replacement key.
     prepare(&store, &mut connection, file, parser).await;
     let bundle = Bundle::new(&store, cache, cache, 1).await;
     let gate = bundle.sink.arm(file);
@@ -428,12 +429,36 @@ async fn native_file_job_exhaustion_resources() {
         .await
         .unwrap();
     gate.open.add_permits(1);
-    assert!(matches!(call.await.unwrap(), Err(ImportError::Worker)));
+    let detailed = call.await.unwrap().unwrap();
+    assert_eq!(detailed.outcome, FileJobOutcome::Failed);
+    assert_eq!(
+        detailed.settled_exhaustion.as_ref().unwrap().release,
+        Some(ExhaustionRelease::NotOwnerForeignPreserved)
+    );
     bundle.close().await;
     assert_eq!(
         refresh(&mut connection, file).await.as_deref(),
         Some("owned-replacement")
     );
+    // Legacy run callers retain the prior NotOwner error, independently from
+    // the detailed API's known Source-normal return disposition.
+    prepare(&store, &mut connection, file, parser).await;
+    let bundle = Bundle::new(&store, cache, cache, 1).await;
+    let gate = bundle.sink.arm(file);
+    let runner = bundle.runner.clone();
+    let call = tokio::spawn(async move { runner.run(request(file), Arc::new(())).await });
+    entered(&gate).await;
+    let _: () = redis::cmd("SET")
+        .arg(format!("task_lock_refresh_epg_data_{file}"))
+        .arg("owned-replacement")
+        .arg("EX")
+        .arg(300)
+        .query_async(&mut connection)
+        .await
+        .unwrap();
+    gate.open.add_permits(1);
+    assert!(matches!(call.await.unwrap(), Err(ImportError::Worker)));
+    bundle.close().await;
     // Distinct guarded SERVER errors are normal authority at this exact stage,
     // independent of exception class/text; diagnostics remain bounded data.
     prepare(&store, &mut connection, file, parser).await;
@@ -492,6 +517,6 @@ async fn native_file_job_exhaustion_resources() {
     store.pool().close().await;
     println!(
         "NATIVE_EXHAUSTION_RESOURCE_JSON={}",
-        json!({"concurrent_reason_isolation":true,"old_run_outcome_preserved":true,"coarse_failed_stays_unclassified":true,"held_report_caller_abort":true,"held_physical_release_reply_abort":true,"replacement_release_no_typed_result":true,"guarded_server_SQL_observed":true,"reporter_stopping_no_typed_result":true,"terminal_pool_acquire_no_typed_result":true,"aborted_waiter_return_observed":false,"owned_jobs_drained":true})
+        json!({"concurrent_reason_isolation":true,"old_run_outcome_preserved":true,"coarse_failed_stays_unclassified":true,"held_report_caller_abort":true,"held_physical_release_reply_abort":true,"replacement_release_typed_notowner":true,"legacy_notowner_error_preserved":true,"guarded_server_SQL_observed":true,"reporter_stopping_no_typed_result":true,"terminal_pool_acquire_no_typed_result":true,"aborted_waiter_return_observed":false,"owned_jobs_drained":true})
     );
 }

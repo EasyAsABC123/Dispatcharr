@@ -5,7 +5,7 @@
 use crate::{
     cache_policy::{CachedSwapPolicy, PolicyClock},
     channels::{ChannelImporter, ChannelRequest},
-    file_lease::RetainedLease,
+    file_lease::{ReleaseOutcome, ReleaseWait, RetainedLease},
     orphan_cleanup::{CleanupConfig, OrphanCleanup},
     reporter::{
         guarded_pg_error, FailedImport, GuardedSqlDiagnostic, GuideReporter, ReportAction,
@@ -112,6 +112,9 @@ impl ExhaustionReason {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum ExhaustionReporting {
     StatusSaved,
+    /// Successful UPDATE0 followed by the actual publication/audit attempt;
+    /// no claim that an absent row was changed.
+    StatusUnmatchedPublished,
     CaughtGuardedStatusSql(GuardedSqlDiagnostic),
 }
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -120,17 +123,24 @@ pub enum ExhaustionTerminal {
     CaughtGuardedSelectSql(GuardedSqlDiagnostic),
     CaughtGuardedStatusSql(GuardedSqlDiagnostic),
 }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ExhaustionRelease {
+    Released,
+    NotOwnerForeignPreserved,
+}
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct SettledExhaustion {
     pub reason: ExhaustionReason,
     pub reporting: ExhaustionReporting,
     pub terminal: ExhaustionTerminal,
+    pub release: Option<ExhaustionRelease>,
 }
 #[derive(Debug, Eq, PartialEq)]
 pub struct FileJobReport {
     pub outcome: FileJobOutcome,
-    /// Returned only after physical reporter, terminal cleanup and refresh
-    /// Released have settled successfully. Each run owns its local reason.
+    /// Returned only after physical reporting, terminal handling and actual
+    /// release disposition settle. NotOwner is not successful Released; the
+    /// detailed field records that distinction. Each run owns its reason.
     pub settled_exhaustion: Option<SettledExhaustion>,
 }
 #[derive(Clone)]
@@ -281,9 +291,20 @@ impl FileJobRunner {
         caller: Arc<dyn Send + Sync>,
         dispatcher: Arc<dyn GuideTaskDispatcher>,
     ) -> Result<FileJobOutcome, ImportError> {
-        self.run_report_with_dispatcher(request, caller, dispatcher)
-            .await
-            .map(|report| report.outcome)
+        let report = self
+            .run_report_with_dispatcher(request, caller, dispatcher)
+            .await?;
+        // Legacy callers retain their old NotOwner error semantics. Only the
+        // detailed API carries the Source-normal settled return disposition.
+        if report
+            .settled_exhaustion
+            .as_ref()
+            .and_then(|value| value.release)
+            == Some(ExhaustionRelease::NotOwnerForeignPreserved)
+        {
+            return Err(ImportError::Worker);
+        }
+        Ok(report.outcome)
     }
     /// Additive detailed result. Old run APIs preserve their exact outcome.
     /// No reason survives an operational/report/release failure.
@@ -413,11 +434,15 @@ impl Inner {
         };
         let terminal = self.terminal(request.source_id, final_context).await;
         drop(context);
-        if !released.wait(self.config.release_timeout).await {
-            return Err(ImportError::Worker);
-        }
         let classified =
             settled_exhaustion.is_some() && matches!(&result, Ok(FileJobOutcome::Failed));
+        let release = match released.wait_detailed(self.config.release_timeout).await {
+            ReleaseWait::Complete(ReleaseOutcome::Released) => ExhaustionRelease::Released,
+            ReleaseWait::Complete(ReleaseOutcome::NotOwner) if classified => {
+                ExhaustionRelease::NotOwnerForeignPreserved
+            }
+            _ => return Err(ImportError::Worker),
+        };
         match terminal {
             Ok(TerminalObservation::Verified) => (),
             Ok(TerminalObservation::StatusFailure(ReportObservation::FailureStatusSqlCaught(
@@ -444,6 +469,11 @@ impl Inner {
             }
             Err(failure) => return Err(failure.into_import()),
         }
+        if let Some(value) = settled_exhaustion.as_mut() {
+            value.release = Some(release);
+        }
+        // No shared-domain writes follow actual NotOwner observation. A
+        // fixture worker may separately report this owned task's result.
         result
     }
     async fn source(&self, id: i64) -> Result<Option<Source>, ImportError> {
@@ -835,10 +865,14 @@ impl Inner {
                     context,
                 )
                 .await?;
-            // Source29 proves normal null even when the guarded UPDATE raises
-            // P0001. Other discarded/unknown causes are NOT inferred normal.
+            // Source guards and representative server-code captures prove normal
+            // null for settled server errors here. Other discarded/unknown
+            // acquisition, capacity and IO causes are NOT inferred normal.
             let reporting = match observation {
                 ReportObservation::FailureStatusSaved => Some(ExhaustionReporting::StatusSaved),
+                ReportObservation::FailureStatusUnmatched => {
+                    Some(ExhaustionReporting::StatusUnmatchedPublished)
+                }
                 ReportObservation::FailureStatusSqlCaught(cause) => {
                     guarded_pg_error(&cause).map(ExhaustionReporting::CaughtGuardedStatusSql)
                 }
@@ -848,6 +882,7 @@ impl Inner {
                 reason,
                 reporting,
                 terminal: ExhaustionTerminal::Verified,
+                release: None,
             });
             return Ok(FileJobOutcome::Failed);
         }

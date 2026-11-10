@@ -1,0 +1,119 @@
+{
+  "passed": true,
+  "scope": "Explicit settled UPDATE0 and acknowledged NotOwner return semantics only for known exhaustion; legacy API unchanged",
+  "race_checks": 93,
+  "actual_source_native_race_pairs": 6,
+  "replayed_guarded_checks": 131,
+  "replayed_refresh_regression_checks": 80,
+  "actual_held0reply_caller_abort_cases": 2,
+  "native_no_domain_writes_after_loss": true,
+  "foreign_state_preserved": true,
+  "legacy_NotOwner_error_preserved": true,
+  "frozen_default_units": {
+    "ingest-unit.log": {
+      "passed": 30,
+      "external_ignored": 1
+    },
+    "job-unit.log": {
+      "passed": 34,
+      "external_ignored": 17
+    }
+  },
+  "strict_ingest_job_all_targets_clippy": true,
+  "selected_runtime_and_test": {
+    "rust/crates/ingest-epg/src/file_job.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/frozen/rust/crates/ingest-epg/src/file_job.rs",
+      "sha256": "2cfdc71933a401fbaef8d564939fbe62991c2bdb110cbc79657ec26eca1c12e0"
+    },
+    "rust/crates/job-transport/src/refresh_worker.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/frozen/rust/crates/job-transport/src/refresh_worker.rs",
+      "sha256": "127b4fc5da9a4cb75ce27a50d0770229f30e94d8d870f8d31753e417b9b43d06"
+    },
+    "rust/crates/job-transport/src/refresh_worker_peer.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/frozen/rust/crates/job-transport/src/refresh_worker_peer.rs",
+      "sha256": "61220c3561d2c88d554c96ba66b739d0d0ec35947fa329c004536901d9e34651"
+    },
+    "rust/crates/job-transport/src/refresh_worker_release_peer.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/frozen/rust/crates/job-transport/src/refresh_worker_release_peer.rs",
+      "sha256": "8efe65d3ad22f549943c2737dd7b9d9ebe8e8ac4c202b78767c8758dd53ec7d1"
+    },
+    "rust/crates/ingest-epg/tests/file_job_exhaustion.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/frozen/rust/crates/ingest-epg/tests/file_job_exhaustion.rs",
+      "sha256": "0a6d3ebfed139c15021c3374213bde3ea516053a44122c46e99765746889e6fc"
+    }
+  },
+  "selected_tools": {
+    "scripts/rust-job-contracts/run_native_epg_exhaustion_returns.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/run_native_epg_exhaustion_returns.py",
+      "sha256": "7188077436236d0ac76c4c84bf14a9d659ec64d33c7317e28fb54138ce2077d3"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion_races.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion_races.py",
+      "sha256": "5902179440f75476070f791fc14c3a3d33557ea14f8541e64597a828f2813802"
+    },
+    "scripts/rust-job-contracts/exhaustion_race_native_compare.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/exhaustion_race_native_compare.py",
+      "sha256": "babca9d1ed37e82aa15228b90d1b443f77005335efbb10ca34ee5b6ce15ed1a7"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion.py",
+      "sha256": "67109d34e49ae0e6d6426513d0e65b77d025ee6eb3711c86c2ce696cea99197f"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion_p0002.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion_p0002.py",
+      "sha256": "76f7dc96d720c6ecfe0d52a46d1a780090f7cf466eafa351147451ff45c2d3ff"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion_terminal.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion_terminal.py",
+      "sha256": "d09672c5e182873bffa100b4a285c0c9363ba64cc0083c1962742ed5459f74c3"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion_servercode.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion_servercode.py",
+      "sha256": "0ca842eebe3a20478f813d49664ff2c64542c3f17b713c9c7229c37c24fcfaee"
+    },
+    "scripts/rust-job-contracts/exhaustion_native_compare.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/exhaustion_native_compare.py",
+      "sha256": "41aa389a98022aa7d7b82ac2d4b7dd42eb27c3138afc08d2085c5da37a8d446e"
+    },
+    "scripts/rust-job-contracts/source_native_refresh_worker_exhaustion.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/source_native_refresh_worker_exhaustion.py",
+      "sha256": "40a69f01b7bd2f92c3d97dfd25b07e3a4dd355ec03617604c477ef946ed2d520"
+    },
+    "scripts/rust-job-contracts/epg_refresh_observer.py": {
+      "path": "artifacts/rust/m6-source-native-epg-return-dto-1/tool-source/scripts/rust-job-contracts/epg_refresh_observer.py",
+      "sha256": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+    }
+  },
+  "base_input": "artifacts/rust/epg-return-dto-reviewed-input-1/input.json",
+  "base_input_sha256": "b5140273feab74a2ff5df00214fac1ddb7864474a4ddbf57b97d7917e9fe357e",
+  "cargo_graph_changes": false,
+  "lib_module_changes": false,
+  "dataset": "scripts/rust-job-contracts/source-native-epg-return-dto-1.json",
+  "dataset_sha256": "bba55fd1fc30ca1f1a0d32d9ab374852e6772855c1f2e1e8be445232792f3367",
+  "source_contract": "scripts/rust-job-contracts/verified-original-epg-exhaustion-races-1.json",
+  "rust_source_archive": "artifacts/rust/m6-source-native-epg-return-dto-1/rust-source.tar",
+  "rust_source_archive_sha256": "44f441abc64c77d9063a5becb774e74938cd30636e2fadb3f61172fa4cd5b0c1",
+  "raw_evidence_sha256": {
+    "integration.json": "af64090e56c479bb921433abfa6ab39bb90a1f5659bf7f2bddae4a1c4b07a417",
+    "source-native-epg-exhaustion-races-private.json": "5c73e1a83427c4f1d771e97a2d1ac68c2e4cbae82981b62524557d84b3e6aa12",
+    "native-exhaustion-race-private.log": "5539a5c83d49b2debb794cfcc716b420e6bd8596bbc79a381682c5ce46fd6fe1",
+    "native-exhaustion-resources.log": "efddd0e59fba7baf0b87ff56ef3526e4a6ecd1c8ccd0f88f79478e72b95f912b",
+    "native-refresh-worker-physical.log": "21a3c7253fa6cd10e392bdeeee411fd4fe8dccc24d36613dc69ffd0ea4ffca5c",
+    "clippy.log": "b642af958fd4b630cf7e61bdba4493ec88c3187e126de83328f26f4558bf9d40",
+    "ingest-unit.log": "55696b3c99b6d0ee9869aa9b3e01168d475ca5602b5c59549e02e19524dec8ae",
+    "job-unit.log": "1ff28d00d4da45ee15992f695dbdd4a1f3bee5fd6c0b9abc26d9f19a14c775f6"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "wholeworkspace_validation": false,
+  "application_consumer_status202_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "NotOwner is actual acknowledged0, not timeout/unknown/failed cleanup, and never claims Released.",
+    "No new shared-domain writes follow loss observation; owned task-result metadata is distinct reporting.",
+    "Replacement timing differs deliberately to preserve native fencing; same interleaving and Source foreign DEL are not reproduced.",
+    "Native publication payload callback is verified; no native Channels transport inference.",
+    "Coarse/unknown/unsettled/capacity/reset errors remain operational; broader races/renewal ticks unproved."
+  ],
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL; framework authors retain their respective credit/licenses."
+}

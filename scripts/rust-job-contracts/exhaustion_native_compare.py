@@ -34,7 +34,7 @@ def controls(context):
  resource=subprocess.run(['/evidence/native-exhaustion-resources','--ignored','--exact','native_file_job_exhaustion_resources','--nocapture'],input=json.dumps({'file_id':file_id,'parser_id':parser_id}),text=True,capture_output=True,timeout=60)
  Path('/evidence/native-exhaustion-resources.log').write_text(resource.stdout+resource.stderr);resource.check_returncode()
  audit=json.loads(next(line.split('NATIVE_EXHAUSTION_RESOURCE_JSON=',1)[1]for line in resource.stdout.splitlines()if 'NATIVE_EXHAUSTION_RESOURCE_JSON='in line))
- check('native-concurrent-reasons-and-physical-ownership-controls',audit['concurrent_reason_isolation']and audit['held_report_caller_abort']and audit['held_physical_release_reply_abort']and audit['replacement_release_no_typed_result']and audit['guarded_server_SQL_observed']and audit['reporter_stopping_no_typed_result']and audit['terminal_pool_acquire_no_typed_result']and not audit['aborted_waiter_return_observed']and audit['owned_jobs_drained'])
+ check('native-concurrent-reasons-and-physical-ownership-controls',audit['concurrent_reason_isolation']and audit['held_report_caller_abort']and audit['held_physical_release_reply_abort']and audit['replacement_release_typed_notowner']and audit['legacy_notowner_error_preserved']and audit['guarded_server_SQL_observed']and audit['reporter_stopping_no_typed_result']and audit['terminal_pool_acquire_no_typed_result']and not audit['aborted_waiter_return_observed']and audit['owned_jobs_drained'])
  context['report']['native_resources']=audit
  # Coarse failures and native stopped admission are not caught SQL authority.
  for label in ['coarse_counter','native_reporter_closed']:

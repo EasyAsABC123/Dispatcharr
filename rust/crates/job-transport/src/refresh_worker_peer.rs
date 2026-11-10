@@ -15,14 +15,32 @@ use std::{
     io::{self, Read},
     sync::atomic::AtomicUsize,
 };
-struct Sink;
+#[path = "refresh_worker_release_peer.rs"]
+mod release_peer;
+struct Sink {
+    publications: Arc<Mutex<Vec<Value>>>,
+}
 impl UpdateEventSink for Sink {
     fn send<'a>(
         &'a self,
-        _group: &'a str,
-        _message: Value,
+        group: &'a str,
+        message: Value,
     ) -> BoxFuture<'a, Result<(), UpdateEventError>> {
-        Box::pin(async { Ok(()) })
+        Box::pin(async move {
+            if serde_json::to_vec(&message)
+                .map_err(|_| UpdateEventError::InvalidMessage)?
+                .len()
+                > 65536
+            {
+                return Err(UpdateEventError::Capacity);
+            }
+            let mut messages = self.publications.lock().unwrap();
+            if messages.len() >= 64 {
+                return Err(UpdateEventError::Capacity);
+            }
+            messages.push(json!({"group":group,"message":message}));
+            Ok(())
+        })
     }
 }
 struct DefaultDispatcher(Arc<AtomicUsize>);
@@ -134,15 +152,49 @@ async fn native_refresh_worker_peer() {
     assert_eq!(envelope["headers"]["id"], id.to_string());
     let clock: Arc<dyn Fn() -> chrono::DateTime<chrono::Utc> + Send + Sync> =
         Arc::new(chrono::Utc::now);
-    let reporter =
-        GuideReporter::with_clock(store.clone(), cache, Arc::new(Sink), 2, clock.clone())
-            .await
-            .unwrap();
+    let publications = Arc::new(Mutex::new(Vec::new()));
+    let reporter = GuideReporter::with_clock(
+        store.clone(),
+        cache,
+        Arc::new(Sink {
+            publications: publications.clone(),
+        }),
+        2,
+        clock.clone(),
+    )
+    .await
+    .unwrap();
     let channels = ChannelImporter::new(store.clone(), ChannelConfig::default()).unwrap();
     let programmes = EpgImporter::new(store.clone(), ImportConfig::default()).unwrap();
-    let locks = TaskLocks::connect(cache, TaskLockConfig::default())
+    let mut release_proxy = if let Some(mode) = input["release_intervention"].as_str() {
+        Some(
+            release_peer::proxy(
+                store.clone(),
+                source,
+                mode,
+                input["abort_on_release"] == true,
+            )
+            .await,
+        )
+    } else {
+        None
+    };
+    let lock_url = release_proxy
+        .as_ref()
+        .map(|proxy| proxy.url.as_str())
+        .unwrap_or(cache);
+    let locks = TaskLocks::connect(lock_url, TaskLockConfig::default())
         .await
         .unwrap();
+    if release_proxy.is_some() {
+        locks
+            .acquire("rust_race_warm", source)
+            .await
+            .unwrap()
+            .release_owned()
+            .await
+            .unwrap();
+    }
     let default_calls = Arc::new(AtomicUsize::new(0));
     let runner = FileJobRunner::connect(
         FileJobServices {
@@ -185,7 +237,38 @@ async fn native_refresh_worker_peer() {
     let caller = Arc::new(());
     let weak = Arc::downgrade(&caller);
     let held_orphan_marker = input["hold_orphan_marker"] == true;
-    let outcome = if held_orphan_marker {
+    let abort_on_release = input["abort_on_release"] == true;
+    assert!(!(abort_on_release && held_orphan_marker));
+    let outcome = if abort_on_release {
+        let proxy = release_proxy.as_mut().unwrap();
+        let owned = worker.clone();
+        let waiter = tokio::spawn(async move { owned.run_once(caller).await });
+        tokio::time::timeout(
+            Duration::from_secs(3),
+            proxy.blocked.wait_for(|blocked| *blocked),
+        )
+        .await
+        .unwrap()
+        .unwrap();
+        assert!(proxy.intervened.load(Ordering::Acquire));
+        assert!(weak.upgrade().is_some());
+        assert_eq!(worker.available_slots(), 0);
+        assert_eq!(runner.physical_jobs(), 1);
+        waiter.abort();
+        let _ = waiter.await;
+        assert_eq!(
+            worker.shutdown(Duration::from_millis(20)).await,
+            Err(Error::DrainTimeout)
+        );
+        proxy.open.send_replace(true);
+        worker.shutdown(Duration::from_secs(5)).await.unwrap();
+        assert!(jobs
+            .read_refresh_fixture(id, source, Arc::new(()))
+            .await
+            .unwrap()
+            .is_some());
+        None
+    } else if held_orphan_marker {
         let control = sqlx::postgres::PgPoolOptions::new()
             .max_connections(1)
             .connect(db)
@@ -270,7 +353,7 @@ async fn native_refresh_worker_peer() {
     } else if input["expect_operational"] == true {
         assert_eq!(outcome, Some(Err(Error::Execution)));
         assert_eq!(calls.load(Ordering::SeqCst), 1)
-    } else if held_orphan_marker {
+    } else if held_orphan_marker || abort_on_release {
         // The logical waiter was aborted, so its return value is unobserved.
         // The actual normal result was independently read above; never invent
         // a Completed return for the abandoned JoinHandle.
@@ -292,9 +375,36 @@ async fn native_refresh_worker_peer() {
     assert_eq!(runner.physical_jobs(), 0);
     assert_eq!(jobs.available_slots(), 4);
     jobs.shutdown(Duration::from_secs(5)).await.unwrap();
+    let domain_writes_after_intervention = if let Some(proxy) = &release_proxy {
+        assert!(proxy.intervened.load(Ordering::Acquire));
+        let table = format!("rust_native_race_{source}");
+        let count:i64=sqlx::query_scalar(&format!("SELECT count(*) FROM {table} WHERE kind IN ('source_update','core_event') AND id>(SELECT id FROM {table} WHERE kind='intervention')")).fetch_one(store.pool()).await.unwrap();
+        assert_eq!(count, 0);
+        let mut cache_conn = redis::Client::open(cache)
+            .unwrap()
+            .get_multiplexed_async_connection()
+            .await
+            .unwrap();
+        let value: Option<String> = redis::cmd("GET")
+            .arg(format!("task_lock_refresh_epg_data_{source}"))
+            .query_async(&mut cache_conn)
+            .await
+            .unwrap();
+        assert_eq!(
+            value.as_deref(),
+            if input["release_intervention"] == "replace" {
+                Some("owned-foreign-token")
+            } else {
+                None
+            }
+        );
+        Some(count)
+    } else {
+        None
+    };
     store.pool().close().await;
     println!(
         "NATIVE_REFRESH_WORKER_JSON={}",
-        json!({"outcome":format!("{outcome:?}"),"calls":calls.load(Ordering::SeqCst),"default_dispatch_calls":default_calls.load(Ordering::SeqCst),"caller_released":weak.upgrade().is_none(),"worker_drained":true,"service_drained":true,"transport_drained":true,"physical_jobs":runner.physical_jobs(),"head_unchanged":input["action"]=="reject_head","native_eta_consumer":false,"held_orphan_marker":held_orphan_marker,"logical_waiter_aborted":held_orphan_marker})
+        json!({"outcome":format!("{outcome:?}"),"calls":calls.load(Ordering::SeqCst),"default_dispatch_calls":default_calls.load(Ordering::SeqCst),"caller_released":weak.upgrade().is_none(),"worker_drained":true,"service_drained":true,"transport_drained":true,"physical_jobs":runner.physical_jobs(),"head_unchanged":input["action"]=="reject_head","native_eta_consumer":false,"held_orphan_marker":held_orphan_marker,"logical_waiter_aborted":held_orphan_marker||abort_on_release,"release_intervention":input["release_intervention"],"domain_writes_after_intervention":domain_writes_after_intervention,"publications":publications.lock().unwrap().clone()})
     );
 }

@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "scope": "Actual unchanged Original knownbusy480 UPDATE0 publication and release-token race return semantics; no native parity",
+  "checks": 55,
+  "actual_worker_executions": 6,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "dataset": "scripts/rust-job-contracts/source-original-epg-exhaustion-races-1.json",
+  "dataset_sha256": "37ffe451935646c66f68c5a8cc2529a4972de3010fba7073119017b688fdec35",
+  "raw_report_sha256": "2e1201f5397201932060b4f234c6a48b2a66d6f6cb6701aaa9a299e784a1894a",
+  "integration_sha256": "a9c232430d95ffbd4e398539158c50615cf1ac46a27ced04c501f754049b97e0",
+  "private_release_implementation_sha256": "5efcbbd603c5009bdfb84e07bd30448161760cfe4fe22fe10f41c545e04c77eb",
+  "selected_tools": {
+    "scripts/rust-job-contracts/run_epg_exhaustion_races.py": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-races-1/tool-source/scripts/rust-job-contracts/run_epg_exhaustion_races.py",
+      "sha256": "a7551e53837dee228ddc1ff3ccf2c58c5d5b91960b1638b2b787d91f59f6eb94"
+    },
+    "scripts/rust-job-contracts/source_epg_exhaustion_races.py": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-races-1/tool-source/scripts/rust-job-contracts/source_epg_exhaustion_races.py",
+      "sha256": "f292df5b4d4ee298b0f412b70ee019ddee8d60cb898e8185f92ea77ca449df38"
+    },
+    "scripts/rust-job-contracts/epg_refresh_observer.py": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-races-1/tool-source/scripts/rust-job-contracts/epg_refresh_observer.py",
+      "sha256": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+    }
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_execution_verified": false,
+  "performance_verified": false,
+  "observations": [
+    "Concurrent actual Django collector deletion after witnessed blocked status UPDATE yields affected0, real progress publication1, SUCCESS/null.",
+    "Replacing refresh key before finally yields UPDATE1, publication1, SUCCESS/null; Original unconditional DEL removes replacement.",
+    "Deleting refresh key before finally yields UPDATE1, publication1, SUCCESS/null.",
+    "All cases complete before renewal interval120s; both file/parser reasons are captured."
+  ],
+  "limitations": [
+    "Native must preserve foreign ownership; Source deletion of a replacement is not authorization to remove a foreign key.",
+    "Native UPDATE0/NotOwner controls remain historical conservative outcomes until independently mapped/tested.",
+    "No unbounded concurrency/timing generalization or renewer-race authority."
+  ],
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL; framework authors retain their credit/licenses."
+}

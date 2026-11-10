@@ -1,0 +1,19 @@
+# Task-local EPG exhaustion result DTO
+
+Original Dispatcharr authors retain full application/algorithm credit and AGPL; all framework authors retain their respective credit and licenses. This extends the Source55 return boundary without changing historical component52 or guarded-server claims.
+
+The detailed API now records successful UPDATE0 followed by the actual publication/audit attempt, rather than pretending an absent source row changed. It also records the physical release disposition: actual Released or actual acknowledged NotOwner with foreign state preserved. Timeout, unknown or failed cleanup is neither disposition. A result DTO is returned only for the explicit known exhaustion branch after reporting, terminal handling and physical release settle.
+
+Existing run/run_with_dispatcher signatures and outcomes remain: legacy callers still receive their prior error for NotOwner. The fixture worker deliberately uses the detailed API to report Source-normal null for known exhausted file/parser cases. This does not promote general Failed/channel/SQL/runtime/capacity outcomes. No shared-domain write is added after loss observation; an owned task's result metadata is separate reporting and does not mutate a foreign lease.
+
+`verified-source-native-epg-return-dto-1.json` binds93 race checks and six actual Original producer/native worker/Original AsyncResult comparisons. Concurrent source deletion produces real native UPDATE0, matching typed publication payload and normal null. The publication comparison is an actual native UpdateEventSink callback against real Original Channels delivery; no new native bus-transport claim follows.
+
+For replacement/absence cases, a bounded fixture-only RESP proxy intercepts the actual warmed refresh RELEASE command after reporting and terminal SQL complete. It changes only the owned key before forwarding the original owner-checked command. A copied-DB probe orders source_update, core_event, intervention; no shared-domain write follows intervention. Native preserves a replacement token, unlike Source's unconditional foreign DEL. This deliberately safer timing/effect differs from the Source reference, which replaces before its status UPDATE. The proof concerns scoped return semantics, payload and final owned-row effects, not identical interleaving or reproducing foreign-key deletion.
+
+Two cases hold the real0 reply and abort the logical waiter. Caller/worker/service ownership remains until the reply is released and the actual normal result is written. Abandoned waiter returns are unobserved None, not invented Completed values. Default dispatcher isolation, exact own-task IDs, result TTL and actual drain are checked. Separate resource controls verify both the detailed NotOwner report and the legacy NotOwner error while retaining the replacement.
+
+The same immutable runtime replays131 guarded-server checks,80 refresh regressions and three additional Redis worker tests. Strict all-target ingest/job Clippy and64 default library units pass; eighteen ignored library tests are not counted as passes. The new bounded RESP command parser has a pure boundary test. Input is committed7bf71af2 plus exactly five owned overlays, excluding concurrent agents' work; no Cargo/lib graph change occurs.
+
+Before the frozen run, a release-proxy test closure had an async return-type compile error and then a type-complexity lint. Both were corrected before the successful frozen fixture. No native pass was claimed from those transient drafts. The Source55 and final DTO projects clean up and leave default databases unchanged.
+
+Remaining delivery is a reviewed production refresh constructor/consumer plus actual application attachment, successful import/result/status/202 and retained shutdown gates. Scheduler/default consumer/HTTP202 authority is not established by this component. No performance claim follows.
