@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "scope": "Final detailed service gates with direct post-native default-database audit",
+  "evidence": "artifacts/rust/m6-index-detailed-service-final-144",
+  "rust_source_archive_sha256": "ab2e988ea225984334150035db3d8ffb5ff217af49731ceb4ace3b6f8bb5164e",
+  "native_test_binary_sha256": {
+    "index_failure_detail_sql": "a1f83f9e4cc413d4ae86af2089e3b28b6c6bb0c1ac6da0d401b61bb7bda7b6bd"
+  },
+  "checks": [
+    "Eight Source case and three physical resource scenarios replay identically.",
+    "Default fixture database manifest explicitly compared after native execution."
+  ],
+  "cleanup": "project removed",
+  "default_database_unchanged": true,
+  "default_database_post_native_checked": true,
+  "application_wired": false,
+  "python_exception_classifier_attached": false,
+  "performance_verified": false,
+  "limitations": [
+    "Source-specific endpoint-dependent network arguments, initialization failures, arbitrary SQL exceptions and truthful traceback formatting are separate gates.",
+    "Raw release command error may have remote side effects; I/O reply loss must remain ambiguous to a future writer.",
+    "Source140 wrong-type code/detail assertion failure retained."
+  ],
+  "credit": "Original Dispatcharr authors retain application/algorithm credit and AGPL licensing."
+}

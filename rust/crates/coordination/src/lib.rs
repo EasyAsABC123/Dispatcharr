@@ -2,7 +2,10 @@
 //! Original application credit: upstream Dispatcharr authors and contributors.
 mod scripts;
 mod task_locks;
-pub use task_locks::{TaskLease, TaskLockConfig, TaskLockError, TaskLocks};
+pub use task_locks::{
+    TaskLease, TaskLockCleanupOutcome, TaskLockConfig, TaskLockDetailedError, TaskLockError,
+    TaskLockRedisCause, TaskLocks,
+};
 
 use redis::{aio::MultiplexedConnection, Script};
 use std::{

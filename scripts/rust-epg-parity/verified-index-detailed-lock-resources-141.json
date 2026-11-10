@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "scope": "Actual Redis detailed task-lock causes, cancellation, cleanup and fencing; no Python exception inference",
+  "evidence": "artifacts/rust/m6-index-detailed-lock-resources-141",
+  "rust_source_archive_sha256": "4aa10eff44ffd0e3bb03a574b065cfe3d9e914715bc5ddeae14b0355b8ea775f",
+  "native_test_binary_sha256": {
+    "task_lock_detailed": "c9632436dee41b7c6fb5faab402f14892d7a7ef1f64d01870c9cd627e25731a5"
+  },
+  "checks": [
+    "Cancelled SET and release retain caller and one lease budget through actual reply and cleanup.",
+    "SET ACL error preserves NOPERM while cleanup settles with one command slot; legacy maps RedisUnavailable.",
+    "Release wrong-type retains separate WRONGTYPE code/detail and never deletes replacement owner."
+  ],
+  "cleanup": "project removed",
+  "default_database_unchanged": true,
+  "default_database_post_native_checked": false,
+  "application_wired": false,
+  "python_exception_classifier_attached": false,
+  "performance_verified": false,
+  "limitations": [
+    "Source-specific endpoint-dependent network arguments, initialization failures, arbitrary SQL exceptions and truthful traceback formatting are separate gates.",
+    "Raw release command error may have remote side effects; I/O reply loss must remain ambiguous to a future writer.",
+    "Source140 wrong-type code/detail assertion failure retained."
+  ],
+  "credit": "Original Dispatcharr authors retain application/algorithm credit and AGPL licensing."
+}

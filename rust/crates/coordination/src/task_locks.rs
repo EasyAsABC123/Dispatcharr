@@ -45,6 +45,67 @@ impl fmt::Display for TaskLockError {
     }
 }
 impl std::error::Error for TaskLockError {}
+/// Bounded diagnostic cause from a physically completed Redis command.
+/// This is not a Python exception classifier; connector and task stages differ.
+#[derive(Clone, Debug)]
+pub struct TaskLockRedisCause {
+    pub kind: redis::ErrorKind,
+    pub code: Option<String>,
+    pub code_oversized: bool,
+    pub io_kind: Option<std::io::ErrorKind>,
+    pub raw_os_error: Option<i32>,
+    pub detail: Option<String>,
+    pub detail_oversized: bool,
+}
+impl TaskLockRedisCause {
+    fn capture(error: &redis::RedisError) -> Self {
+        let io = std::error::Error::source(error)
+            .and_then(|value| value.downcast_ref::<std::io::Error>());
+        let detail = error.detail();
+        let code = error.code();
+        Self {
+            kind: error.kind(),
+            code: code.filter(|value| value.len() <= 64).map(str::to_owned),
+            code_oversized: code.is_some_and(|value| value.len() > 64),
+            io_kind: io.map(std::io::Error::kind),
+            raw_os_error: io.and_then(std::io::Error::raw_os_error),
+            detail: detail
+                .filter(|value| value.len() <= 16 * 1024)
+                .map(str::to_owned),
+            detail_oversized: detail.is_some_and(|value| value.len() > 16 * 1024),
+        }
+    }
+}
+#[derive(Debug)]
+pub enum TaskLockDetailedError {
+    Operational(TaskLockError),
+    Redis(TaskLockRedisCause),
+    Acquisition {
+        cause: TaskLockRedisCause,
+        cleanup: TaskLockCleanupOutcome,
+    },
+}
+#[derive(Clone, Debug)]
+pub enum TaskLockCleanupOutcome {
+    Released,
+    NotOwner,
+    Failed(TaskLockRedisCause),
+    Unavailable,
+}
+impl TaskLockDetailedError {
+    fn coarse(self) -> TaskLockError {
+        match self {
+            Self::Operational(error) => error,
+            Self::Redis(_) | Self::Acquisition { .. } => TaskLockError::RedisUnavailable,
+        }
+    }
+}
+impl From<TaskLockError> for TaskLockDetailedError {
+    fn from(error: TaskLockError) -> Self {
+        Self::Operational(error)
+    }
+}
+
 struct Locks {
     connection: MultiplexedConnection,
     config: TaskLockConfig,
@@ -65,6 +126,7 @@ struct Held {
     // This physical reservation survives a cancelled acquisition receiver and
     // any asynchronous release until the actual Redis command has completed.
     _admission: OwnedSemaphorePermit,
+    _caller: Option<Arc<dyn Send + Sync>>,
 }
 pub struct TaskLease {
     inner: Arc<Held>,
@@ -99,11 +161,42 @@ impl TaskLocks {
         self.inner.leases.available_permits()
     }
     pub async fn acquire(&self, task: &str, id: i64) -> Result<TaskLease, TaskLockError> {
+        self.acquire_impl(task, id, None, false)
+            .await
+            .map_err(TaskLockDetailedError::coarse)
+    }
+    /// Same supervised physical acquisition as acquire, preserving its bounded
+    /// Redis cause. Cancellation still queues owner-checked cleanup after SET.
+    pub async fn acquire_detailed(
+        &self,
+        task: &str,
+        id: i64,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_impl(task, id, None, true).await
+    }
+    /// Retain the caller through SET, any ambiguous-acquisition cleanup, and
+    /// the successful lease's eventual physical release. No source exception
+    /// class is inferred from these transport diagnostics.
+    pub async fn acquire_retained_detailed(
+        &self,
+        task: &str,
+        id: i64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_impl(task, id, Some(caller), true).await
+    }
+    async fn acquire_impl(
+        &self,
+        task: &str,
+        id: i64,
+        caller: Option<Arc<dyn Send + Sync>>,
+        settle_failure: bool,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
         if task.is_empty()
             || task.len() > 128
             || !task.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_')
         {
-            return Err(TaskLockError::Invalid);
+            return Err(TaskLockError::Invalid.into());
         }
         let admission = self
             .inner
@@ -127,6 +220,7 @@ impl TaskLocks {
             lost,
             releasing: AtomicBool::new(false),
             _admission: admission,
+            _caller: caller,
         });
         let (sender, receiver) = oneshot::channel();
         tokio::spawn(async move {
@@ -149,35 +243,62 @@ impl TaskLocks {
                     let _ = sender.send(Ok(lease));
                 }
                 Ok(None) => {
-                    let _ = sender.send(Err(TaskLockError::Held));
+                    if settle_failure {
+                        // A definite NX miss never owned a token to clean up.
+                        lease.inner.releasing.store(true, Ordering::Release);
+                    }
+                    let _ = sender.send(Err(TaskLockError::Held.into()));
                     drop(lease);
                 }
-                Err(_) => {
-                    let _ = sender.send(Err(TaskLockError::RedisUnavailable));
+                Err(error) => {
+                    let cause = TaskLockRedisCause::capture(&error);
+                    if settle_failure {
+                        // An I/O error can hide a successful remote SET. Settle
+                        // owner-checked cleanup before reporting its outcome.
+                        lease.inner.releasing.store(true, Ordering::Release);
+                        drop(_command);
+                        let cleanup = match release_detailed(lease.inner.clone()).await {
+                            Ok(true) => TaskLockCleanupOutcome::Released,
+                            Ok(false) => TaskLockCleanupOutcome::NotOwner,
+                            Err(TaskLockDetailedError::Redis(error)) => {
+                                TaskLockCleanupOutcome::Failed(error)
+                            }
+                            Err(_) => TaskLockCleanupOutcome::Unavailable,
+                        };
+                        let _ =
+                            sender.send(Err(TaskLockDetailedError::Acquisition { cause, cleanup }));
+                    } else {
+                        let _ = sender.send(Err(TaskLockDetailedError::Redis(cause)));
+                    }
                     drop(lease);
                 }
             }
         });
         receiver
             .await
-            .map_err(|_| TaskLockError::RedisUnavailable)?
+            .map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?
     }
 }
 async fn release(held: Arc<Held>) -> Result<bool, TaskLockError> {
+    release_detailed(held)
+        .await
+        .map_err(TaskLockDetailedError::coarse)
+}
+async fn release_detailed(held: Arc<Held>) -> Result<bool, TaskLockDetailedError> {
     held.stop.send_replace(true);
     let _command = held
         .locks
         .commands
         .acquire()
         .await
-        .map_err(|_| TaskLockError::RedisUnavailable)?;
+        .map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?;
     let mut connection = held.locks.connection.clone();
     let removed: i64 = Script::new(RELEASE)
         .key(&held.key)
         .arg(&held.token)
         .invoke_async(&mut connection)
         .await
-        .map_err(|_| TaskLockError::RedisUnavailable)?;
+        .map_err(|error| TaskLockDetailedError::Redis(TaskLockRedisCause::capture(&error)))?;
     Ok(removed == 1)
 }
 impl TaskLease {
@@ -197,14 +318,21 @@ impl TaskLease {
     /// includes a missing/replaced owner; it cannot authorize successor work.
     /// The physical task/admission survives cancellation of this waiter.
     pub async fn release_owned(self) -> Result<bool, TaskLockError> {
+        self.release_owned_detailed()
+            .await
+            .map_err(TaskLockDetailedError::coarse)
+    }
+    /// Preserve actual Redis reply diagnostics while retaining the same owner
+    /// check and physical cleanup task through cancellation of its waiter.
+    pub async fn release_owned_detailed(self) -> Result<bool, TaskLockDetailedError> {
         if self.inner.releasing.swap(true, Ordering::AcqRel) {
             return Ok(false);
         }
         // Spawn before awaiting: cancelling this waiter cannot cancel cleanup.
         let inner = self.inner.clone();
-        tokio::spawn(release(inner))
+        tokio::spawn(release_detailed(inner))
             .await
-            .map_err(|_| TaskLockError::RedisUnavailable)?
+            .map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?
     }
 }
 impl Drop for TaskLease {
@@ -248,5 +376,30 @@ async fn renew(weak: Weak<Held>) {
             held.lost.send_replace(true);
             return;
         }
+    }
+}
+
+#[cfg(test)]
+mod detailed_cause_tests {
+    use super::*;
+    #[test]
+    fn detailed_server_error_does_not_retain_oversized_reply_text() {
+        let raw =
+            redis::RedisError::from((redis::ErrorKind::ResponseError, "owned", "x".repeat(16385)));
+        let cause = TaskLockRedisCause::capture(&raw);
+        assert_eq!(cause.kind, redis::ErrorKind::ResponseError);
+        assert!(cause.detail.is_none());
+        assert!(cause.detail_oversized);
+    }
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn detailed_io_cause_keeps_original_errno_without_inventing_python_exception() {
+        let raw = redis::RedisError::from(std::io::Error::from_raw_os_error(111));
+        let cause = TaskLockRedisCause::capture(&raw);
+        assert_eq!(cause.kind, redis::ErrorKind::IoError);
+        assert_eq!(cause.io_kind, Some(std::io::ErrorKind::ConnectionRefused));
+        assert_eq!(cause.raw_os_error, Some(111));
+        assert!(cause.detail.is_none());
+        assert!(!cause.detail_oversized);
     }
 }

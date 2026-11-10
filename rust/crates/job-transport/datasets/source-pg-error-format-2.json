@@ -1,0 +1,995 @@
+{
+  "passed": true,
+  "scope": "Pinned Original P0001 message/DETAIL/HINT/CONTEXT rendering, copiedDB only; no native formatter/error classification",
+  "cases": [
+    {
+      "name": "plain",
+      "function": "owned_pg_error_plain",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned primary",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_plain() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned primary\nCONTEXT:  PL/pgSQL function owned_pg_error_plain() line 2 at RAISE"
+      ],
+      "rendered": "owned primary\nCONTEXT:  PL/pgSQL function owned_pg_error_plain() line 2 at RAISE"
+    },
+    {
+      "name": "detail",
+      "function": "owned_pg_error_detail",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned primary",
+        "message_detail": "owned detail",
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_detail() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned primary\nDETAIL:  owned detail\nCONTEXT:  PL/pgSQL function owned_pg_error_detail() line 2 at RAISE"
+      ],
+      "rendered": "owned primary\nDETAIL:  owned detail\nCONTEXT:  PL/pgSQL function owned_pg_error_detail() line 2 at RAISE"
+    },
+    {
+      "name": "hint",
+      "function": "owned_pg_error_hint",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned primary",
+        "message_detail": null,
+        "message_hint": "owned hint",
+        "context": "PL/pgSQL function owned_pg_error_hint() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned primary\nHINT:  owned hint\nCONTEXT:  PL/pgSQL function owned_pg_error_hint() line 2 at RAISE"
+      ],
+      "rendered": "owned primary\nHINT:  owned hint\nCONTEXT:  PL/pgSQL function owned_pg_error_hint() line 2 at RAISE"
+    },
+    {
+      "name": "both",
+      "function": "owned_pg_error_both",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned primary",
+        "message_detail": "owned detail",
+        "message_hint": "owned hint",
+        "context": "PL/pgSQL function owned_pg_error_both() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned primary\nDETAIL:  owned detail\nHINT:  owned hint\nCONTEXT:  PL/pgSQL function owned_pg_error_both() line 2 at RAISE"
+      ],
+      "rendered": "owned primary\nDETAIL:  owned detail\nHINT:  owned hint\nCONTEXT:  PL/pgSQL function owned_pg_error_both() line 2 at RAISE"
+    },
+    {
+      "name": "empty_detail",
+      "function": "owned_pg_error_empty_detail",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned primary",
+        "message_detail": "",
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_empty_detail() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned primary\nDETAIL:  \nCONTEXT:  PL/pgSQL function owned_pg_error_empty_detail() line 2 at RAISE"
+      ],
+      "rendered": "owned primary\nDETAIL:  \nCONTEXT:  PL/pgSQL function owned_pg_error_empty_detail() line 2 at RAISE"
+    },
+    {
+      "name": "empty_hint",
+      "function": "owned_pg_error_empty_hint",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned primary",
+        "message_detail": null,
+        "message_hint": "",
+        "context": "PL/pgSQL function owned_pg_error_empty_hint() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned primary\nHINT:  \nCONTEXT:  PL/pgSQL function owned_pg_error_empty_hint() line 2 at RAISE"
+      ],
+      "rendered": "owned primary\nHINT:  \nCONTEXT:  PL/pgSQL function owned_pg_error_empty_hint() line 2 at RAISE"
+    },
+    {
+      "name": "trailing_newline",
+      "function": "owned_pg_error_trailing_newline",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned primary\n",
+        "message_detail": "owned detail\n",
+        "message_hint": "owned hint\n",
+        "context": "PL/pgSQL function owned_pg_error_trailing_newline() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned primary\n\nDETAIL:  owned detail\n\nHINT:  owned hint\n\nCONTEXT:  PL/pgSQL function owned_pg_error_trailing_newline() line 2 at RAISE"
+      ],
+      "rendered": "owned primary\n\nDETAIL:  owned detail\n\nHINT:  owned hint\n\nCONTEXT:  PL/pgSQL function owned_pg_error_trailing_newline() line 2 at RAISE"
+    },
+    {
+      "name": "leading_space",
+      "function": "owned_pg_error_leading_space",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "  owned primary  ",
+        "message_detail": "  detail  ",
+        "message_hint": "  hint  ",
+        "context": "PL/pgSQL function owned_pg_error_leading_space() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned primary  \nDETAIL:    detail  \nHINT:    hint  \nCONTEXT:  PL/pgSQL function owned_pg_error_leading_space() line 2 at RAISE"
+      ],
+      "rendered": "owned primary  \nDETAIL:    detail  \nHINT:    hint  \nCONTEXT:  PL/pgSQL function owned_pg_error_leading_space() line 2 at RAISE"
+    },
+    {
+      "name": "multiline",
+      "function": "owned_pg_error_multiline",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned\nmessage",
+        "message_detail": "detail\nsecond",
+        "message_hint": "hint\nsecond",
+        "context": "PL/pgSQL function owned_pg_error_multiline() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned\nmessage\nDETAIL:  detail\nsecond\nHINT:  hint\nsecond\nCONTEXT:  PL/pgSQL function owned_pg_error_multiline() line 2 at RAISE"
+      ],
+      "rendered": "owned\nmessage\nDETAIL:  detail\nsecond\nHINT:  hint\nsecond\nCONTEXT:  PL/pgSQL function owned_pg_error_multiline() line 2 at RAISE"
+    },
+    {
+      "name": "unicode",
+      "function": "owned_pg_error_unicode",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned á🦀",
+        "message_detail": "détail Русский",
+        "message_hint": "提示",
+        "context": "PL/pgSQL function owned_pg_error_unicode() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned á🦀\nDETAIL:  détail Русский\nHINT:  提示\nCONTEXT:  PL/pgSQL function owned_pg_error_unicode() line 2 at RAISE"
+      ],
+      "rendered": "owned á🦀\nDETAIL:  détail Русский\nHINT:  提示\nCONTEXT:  PL/pgSQL function owned_pg_error_unicode() line 2 at RAISE"
+    },
+    {
+      "name": "empty_message",
+      "function": "owned_pg_error_empty_message",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_empty_message() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "CONTEXT:  PL/pgSQL function owned_pg_error_empty_message() line 2 at RAISE"
+      ],
+      "rendered": "CONTEXT:  PL/pgSQL function owned_pg_error_empty_message() line 2 at RAISE"
+    },
+    {
+      "name": "whitespace",
+      "function": "owned_pg_error_whitespace",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " \n\t",
+        "message_detail": " \t",
+        "message_hint": "\n",
+        "context": "PL/pgSQL function owned_pg_error_whitespace() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "DETAIL:   \t\nHINT:  \n\nCONTEXT:  PL/pgSQL function owned_pg_error_whitespace() line 2 at RAISE"
+      ],
+      "rendered": "DETAIL:   \t\nHINT:  \n\nCONTEXT:  PL/pgSQL function owned_pg_error_whitespace() line 2 at RAISE"
+    },
+    {
+      "name": "nested",
+      "function": "owned_pg_error_nested_outer",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned nested",
+        "message_detail": "nested detail",
+        "message_hint": "nested hint",
+        "context": "PL/pgSQL function owned_pg_error_nested() line 2 at RAISE\nSQL statement \"SELECT \"owned_pg_error_nested\"()\"\nPL/pgSQL function owned_pg_error_nested_outer() line 2 at PERFORM",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned nested\nDETAIL:  nested detail\nHINT:  nested hint\nCONTEXT:  PL/pgSQL function owned_pg_error_nested() line 2 at RAISE\nSQL statement \"SELECT \"owned_pg_error_nested\"()\"\nPL/pgSQL function owned_pg_error_nested_outer() line 2 at PERFORM"
+      ],
+      "rendered": "owned nested\nDETAIL:  nested detail\nHINT:  nested hint\nCONTEXT:  PL/pgSQL function owned_pg_error_nested() line 2 at RAISE\nSQL statement \"SELECT \"owned_pg_error_nested\"()\"\nPL/pgSQL function owned_pg_error_nested_outer() line 2 at PERFORM"
+    },
+    {
+      "name": "ws_9",
+      "function": "owned_pg_error_ws_9",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\towned boundary\t",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_9() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\t\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_9() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\t\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_9() line 2 at RAISE"
+    },
+    {
+      "name": "ws_a",
+      "function": "owned_pg_error_ws_a",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\nowned boundary\n",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_a() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\n\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_a() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\n\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_a() line 2 at RAISE"
+    },
+    {
+      "name": "ws_b",
+      "function": "owned_pg_error_ws_b",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\u000bowned boundary\u000b",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_b() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\u000b\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_b() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\u000b\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_b() line 2 at RAISE"
+    },
+    {
+      "name": "ws_c",
+      "function": "owned_pg_error_ws_c",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\fowned boundary\f",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_c() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\f\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_c() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\f\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_c() line 2 at RAISE"
+    },
+    {
+      "name": "ws_d",
+      "function": "owned_pg_error_ws_d",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\rowned boundary\r",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_d() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\r\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_d() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\r\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_d() line 2 at RAISE"
+    },
+    {
+      "name": "ws_1c",
+      "function": "owned_pg_error_ws_1c",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\u001cowned boundary\u001c",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_1c() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\u001c\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1c() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\u001c\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1c() line 2 at RAISE"
+    },
+    {
+      "name": "ws_1d",
+      "function": "owned_pg_error_ws_1d",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\u001downed boundary\u001d",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_1d() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\u001d\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1d() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\u001d\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1d() line 2 at RAISE"
+    },
+    {
+      "name": "ws_1e",
+      "function": "owned_pg_error_ws_1e",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\u001eowned boundary\u001e",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_1e() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\u001e\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1e() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\u001e\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1e() line 2 at RAISE"
+    },
+    {
+      "name": "ws_1f",
+      "function": "owned_pg_error_ws_1f",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "\u001fowned boundary\u001f",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_1f() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\u001f\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1f() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\u001f\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1f() line 2 at RAISE"
+    },
+    {
+      "name": "ws_20",
+      "function": "owned_pg_error_ws_20",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_20() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_20() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_20() line 2 at RAISE"
+    },
+    {
+      "name": "ws_85",
+      "function": "owned_pg_error_ws_85",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "owned boundary",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_85() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_85() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_85() line 2 at RAISE"
+    },
+    {
+      "name": "ws_a0",
+      "function": "owned_pg_error_ws_a0",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_a0() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_a0() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_a0() line 2 at RAISE"
+    },
+    {
+      "name": "ws_1680",
+      "function": "owned_pg_error_ws_1680",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_1680() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1680() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_1680() line 2 at RAISE"
+    },
+    {
+      "name": "ws_180e",
+      "function": "owned_pg_error_ws_180e",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "᠎owned boundary᠎",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_180e() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "᠎owned boundary᠎\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_180e() line 2 at RAISE"
+      ],
+      "rendered": "᠎owned boundary᠎\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_180e() line 2 at RAISE"
+    },
+    {
+      "name": "ws_2000",
+      "function": "owned_pg_error_ws_2000",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_2000() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_2000() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_2000() line 2 at RAISE"
+    },
+    {
+      "name": "ws_2007",
+      "function": "owned_pg_error_ws_2007",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_2007() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_2007() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_2007() line 2 at RAISE"
+    },
+    {
+      "name": "ws_2028",
+      "function": "owned_pg_error_ws_2028",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_2028() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_2028() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_2028() line 2 at RAISE"
+    },
+    {
+      "name": "ws_2029",
+      "function": "owned_pg_error_ws_2029",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_2029() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_2029() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_2029() line 2 at RAISE"
+    },
+    {
+      "name": "ws_202f",
+      "function": "owned_pg_error_ws_202f",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_202f() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_202f() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_202f() line 2 at RAISE"
+    },
+    {
+      "name": "ws_205f",
+      "function": "owned_pg_error_ws_205f",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": " owned boundary ",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_205f() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_205f() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary \nCONTEXT:  PL/pgSQL function owned_pg_error_ws_205f() line 2 at RAISE"
+    },
+    {
+      "name": "ws_3000",
+      "function": "owned_pg_error_ws_3000",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "　owned boundary　",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_3000() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "owned boundary　\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_3000() line 2 at RAISE"
+      ],
+      "rendered": "owned boundary　\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_3000() line 2 at RAISE"
+    },
+    {
+      "name": "ws_feff",
+      "function": "owned_pg_error_ws_feff",
+      "fields": {
+        "sqlstate": "P0001",
+        "message_primary": "﻿owned boundary﻿",
+        "message_detail": null,
+        "message_hint": null,
+        "context": "PL/pgSQL function owned_pg_error_ws_feff() line 2 at RAISE",
+        "statement_position": null,
+        "internal_position": null,
+        "internal_query": null
+      },
+      "exception_module": "django.db.utils",
+      "exception_class": "ProgrammingError",
+      "arguments": [
+        "﻿owned boundary﻿\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_feff() line 2 at RAISE"
+      ],
+      "rendered": "﻿owned boundary﻿\nCONTEXT:  PL/pgSQL function owned_pg_error_ws_feff() line 2 at RAISE"
+    }
+  ],
+  "checks": [
+    {
+      "name": "actual-programming-error-plain",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-plain",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-detail",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-detail",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-hint",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-hint",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-both",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-both",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-empty_detail",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-empty_detail",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-empty_hint",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-empty_hint",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-trailing_newline",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-trailing_newline",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-leading_space",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-leading_space",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-multiline",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-multiline",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-unicode",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-unicode",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-empty_message",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-empty_message",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-whitespace",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-whitespace",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-nested",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-nested",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_9",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_9",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_a",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_a",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_b",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_b",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_c",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_c",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_d",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_d",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1c",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1c",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1d",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1d",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1e",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1e",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1f",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1f",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_20",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_20",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_85",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_85",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_a0",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_a0",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1680",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1680",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_180e",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_180e",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_2000",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_2000",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_2007",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_2007",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_2028",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_2028",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_2029",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_2029",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_202f",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_202f",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_205f",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_205f",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_3000",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_3000",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_feff",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_feff",
+      "passed": true
+    }
+  ],
+  "versions": {
+    "Django": "6.0.9",
+    "psycopg": "3.3.6"
+  },
+  "functions_created": 36,
+  "postgresql": "17.11 (Ubuntu 17.11-1.pgdg26.04+2)",
+  "functions_removed": 36
+}

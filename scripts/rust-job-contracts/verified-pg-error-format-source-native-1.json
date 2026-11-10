@@ -1,0 +1,652 @@
+{
+  "passed": true,
+  "scope": "Source-first bounded P0001/no-position PostgreSQL message renderer; actual Django/psycopg vsSQLx35case comparison, no genericSQLSTATE/nativeclassifier/worker/traceback claim",
+  "native_pg_formatter_verified": true,
+  "production_module_registered": false,
+  "generic_sqlstate_classification_verified": false,
+  "native_worker_failure_attachment_verified": false,
+  "native_traceback_equivalence_verified": false,
+  "performance_verified": false,
+  "report": "artifacts/rust/m6-native-pg-error-format-1/integration.json",
+  "report_sha256": "8a3f7355c669822908c00e84e61fb479937da22d6f70923a226d9c72ff2139b0",
+  "private_observation_sha256": "6f71dbff174d139f9446cfb724e3455ccac08e2f4f9ae83eedcc67fdc6e8d939",
+  "cases": 35,
+  "actual_source_native_checks": 140,
+  "checks_projection": [
+    {
+      "name": "actual-programming-error-plain",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-plain",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-plain",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-plain",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-detail",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-detail",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-detail",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-detail",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-hint",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-hint",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-hint",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-hint",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-both",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-both",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-both",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-both",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-empty_detail",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-empty_detail",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-empty_detail",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-empty_detail",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-empty_hint",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-empty_hint",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-empty_hint",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-empty_hint",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-trailing_newline",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-trailing_newline",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-trailing_newline",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-trailing_newline",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-leading_space",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-leading_space",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-leading_space",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-leading_space",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-multiline",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-multiline",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-multiline",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-multiline",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-unicode",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-unicode",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-unicode",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-unicode",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-empty_message",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-empty_message",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-empty_message",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-empty_message",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-whitespace",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-whitespace",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-whitespace",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-whitespace",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-nested",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-nested",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-nested",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-nested",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_9",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_9",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_9",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_9",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_a",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_a",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_a",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_a",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_b",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_b",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_b",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_b",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_c",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_c",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_c",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_c",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_d",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_d",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_d",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_d",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1c",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1c",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_1c",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_1c",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1d",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1d",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_1d",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_1d",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1e",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1e",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_1e",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_1e",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1f",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1f",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_1f",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_1f",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_20",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_20",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_20",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_20",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_85",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_85",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_85",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_85",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_a0",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_a0",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_a0",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_a0",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_1680",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_1680",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_1680",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_1680",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_180e",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_180e",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_180e",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_180e",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_2000",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_2000",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_2000",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_2000",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_2007",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_2007",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_2007",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_2007",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_2028",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_2028",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_2028",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_2028",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_2029",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_2029",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_2029",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_2029",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_202f",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_202f",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_202f",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_202f",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_205f",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_205f",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_205f",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_205f",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_3000",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_3000",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_3000",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_3000",
+      "passed": true
+    },
+    {
+      "name": "actual-programming-error-ws_feff",
+      "passed": true
+    },
+    {
+      "name": "single-string-argument-ws_feff",
+      "passed": true
+    },
+    {
+      "name": "actual-native-sqlx-fields-ws_feff",
+      "passed": true
+    },
+    {
+      "name": "actual-native-rendered-args-ws_feff",
+      "passed": true
+    }
+  ],
+  "versions": {
+    "Django": "6.0.9",
+    "psycopg": "3.3.6"
+  },
+  "postgresql": "17.11 (Ubuntu 17.11-1.pgdg26.04+2)",
+  "source_archive": "artifacts/rust/m6-native-pg-error-format-1/rust-source.tar",
+  "source_archive_sha256": "ab2e988ea225984334150035db3d8ffb5ff217af49731ceb4ace3b6f8bb5164e",
+  "owned_file_closure": [
+    {
+      "path": "rust/crates/job-transport/src/pg_failure_format.rs",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native-pg-error-format-1/frozen/rust/crates/job-transport/src/pg_failure_format.rs",
+      "sha256": "89bb4efc4b40117f3150aede364e9c78bbe063cb45c6f7594ddad01ca78e06cb"
+    },
+    {
+      "path": "rust/crates/job-transport/datasets/source-pg-error-format-2.json",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native-pg-error-format-1/frozen/rust/crates/job-transport/datasets/source-pg-error-format-2.json",
+      "sha256": "8a71a39caffe8ffbcbc6420798309db1a07ad6608cce468fc9b1b019f93c1d5c"
+    },
+    {
+      "path": "rust/crates/job-transport/src/lib.rs",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native-pg-error-format-1/frozen/rust/crates/job-transport/src/lib.rs",
+      "sha256": "58b2ea058edfac607d79abe08a61c2422009e6cb2420206ae788b885fe31fb31"
+    }
+  ],
+  "selected_tools": [
+    {
+      "path": "scripts/rust-job-contracts/source_pg_failure_format.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native-pg-error-format-1/tool-source/scripts/rust-job-contracts/source_pg_failure_format.py",
+      "sha256": "f3abf1a0b5bc0f6a3657010f606136252adf957da6f114cb1fb342a36ef95f59"
+    },
+    {
+      "path": "scripts/rust-job-contracts/run_pg_failure_format_native.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-native-pg-error-format-1/tool-source/scripts/rust-job-contracts/run_pg_failure_format_native.py",
+      "sha256": "35e5f87b3e3b03a9bc1156911804ff9828ccee2bd2301a5d4058a4d955cc6afc"
+    }
+  ],
+  "source_first_captures": [
+    {
+      "report": "artifacts/rust/m6-original-pg-error-format-1/integration.json",
+      "sha256": "c40b415c431cf1fc028e6eae1473d1ac96385f3847e40c0b871acbfe6a7d3840",
+      "cases": 13,
+      "source_only": true
+    },
+    {
+      "report": "artifacts/rust/m6-original-pg-error-format-2/integration.json",
+      "sha256": "111c7417378dc24abbe82615fa73df653cf28532d080c75d3c68e5ad0ab76034",
+      "cases": 35,
+      "source_only": true
+    }
+  ],
+  "frozen_validation": {
+    "report": "artifacts/rust/m6-native-pg-error-format-1/validation.json",
+    "sha256": "45c900ae83c95f6d8863622bcc37851ecfe47b7b15ba7d50fa8cb7dbc7fb4ae6",
+    "library_tests": 16,
+    "default_external_ignored": 7,
+    "strict_all_targets_clippy": true
+  },
+  "scope_details": [
+    "Actual Original Django/psycopg and native SQLx invoke the same owned copiedDB functions. SQLSTATE/message/detail/hint/context/position fields and rendered exception argument strings compare exactly for35cases.",
+    "P0001 only, cursor/internal positions rejected, each diagnostic field/output bounded8KiB. No mapping of everyDatabaseError to ProgrammingError.",
+    "Source spacing is two spaces after diagnostic labels. Present empty DETAIL/HINT remains a label; absent fields are omitted. Nested/multiline context and interior whitespace remain exact.",
+    "Final stripping uses the observed Python3.13 whitespace set:22 control/Unicode boundaries include U+001C\u2013001F while U+180E/U+FEFF remain. This formats existing diagnostic data; it does not generate Python stack frames.",
+    "No service/cause changes were required: caller can borrow SQLxPgDatabaseError from the preserved owned StoreError. No new graph edge was needed; module is cfgtest only."
+  ],
+  "remaining_gates": [
+    "Adopt bounded formatter in separately tested known-raised classifier after detailed stage/commit/physical release API/resource gates.",
+    "No generic SQLSTATEs, cursor/caret/internalQUERY rendering, otherlocale/PostgreSQL/driver versions or arbitrary oversized errors are accepted.",
+    "Native diagnostic traceback policy, terminal-result worker attachment, exact type/args/state/TTL/lock effects and parented/ETA exceptions remain separate gates."
+  ],
+  "copied_nonempty_tables": 26,
+  "functions_created": 36,
+  "functions_removed": 36,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL licensing; PostgreSQL/Django/psycopg/SQLx authors retain framework code/credit/licenses."
+}

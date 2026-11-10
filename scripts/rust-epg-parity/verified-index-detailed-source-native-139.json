@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "scope": "Additive detailed native IndexService operation/commit/release observations for eight Original136 cases; no task exception writer/class inference",
+  "evidence": "artifacts/rust/m6-index-detailed-source-native-139",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "native_test_functions": 1,
+  "cases": [
+    "missing-source",
+    "missing-file",
+    "malformed-xml",
+    "invalid-encoding",
+    "empty-file",
+    "directory",
+    "sql-write",
+    "duplicate-later-directory-error"
+  ],
+  "checks": [
+    "Five normal outcomes retain exact Source missing/partial/lossy/empty SQL effects.",
+    "Directory failure preserves FileOpen phase, IsADirectory IO kind and Linux errno21.",
+    "Copied SQL trigger preserves Write phase and PostgreSQL P0001/message in StoreError::Database.",
+    "Commit observation distinguishes Written and NotWritten; existing index remains after later directory failure.",
+    "All eight physical releases settle, caller ownership and task-lock admission drain with Store pool1."
+  ],
+  "rust_source_archive_sha256": "57a6e67d0ddcfe0dcf68cddaa730bb22849b73abed02c0d458f430b427f09613",
+  "runtime_sha256": {
+    "rust/crates/coordination/src/task_locks.rs": "6e90bba633f7b7d333d254f55ce7f31d86eb794f1573fa03119b1d3c3e223e30",
+    "rust/crates/coordination/src/lib.rs": "e749eab0301c99e1039a154a013137a08bb390b713d590d95d487c82931ff8cb",
+    "rust/crates/ingest-epg/src/file_lease.rs": "9a84a6a60980fec77af72951cec9c8c7521fd54b8c530ec8074529ace82d32a0",
+    "rust/crates/ingest-epg/src/index_service.rs": "4b8c25f344f72615cd8d6f1a007cba1f1196351cea6cba78e088730240039b27"
+  },
+  "test_sha256": "91a8ca1887305a9f5d4e277b7c6808aa04e3a6d6da810853fdb0a1e7ecbe30d1",
+  "native_test_binary_sha256": {
+    "index_failure_detail_sql": "0d90e3b533070fdbde7338f5ed034d8ede163d6b5e28b4eb0c7b418c41b78681"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "application_wired": false,
+  "native_exception_writer_attached": false,
+  "performance_verified": false,
+  "limitations": [
+    "Actual Redis network/auth/release fault report retention requires separate resource gates.",
+    "No generic native-error to Python-exception mapping; startup NoneType and child-publication failures remain Source138 observations.",
+    "Physical timeout, admission, cancellation, CAS-not-owner and ambiguous commit/release remain explicit operational evidence."
+  ],
+  "credit": "Original Dispatcharr authors retain all application/algorithm credit and AGPL licensing."
+}

@@ -1,8 +1,9 @@
 //! Fixture-only immediate index execution and retained child publication.
 //! Original Dispatcharr authors retain task/algorithm credit and AGPL licensing.
-//! ETA reservation consumption, exceptions and application202 are NOT provided.
+//! Typed terminal results are supported; application202 remains separately gated.
 use crate::{
     index_protocol::{IndexMessage, IndexTask},
+    index_terminal::Terminal,
     transport::{Error as TransportError, Jobs},
 };
 use std::{
@@ -27,6 +28,7 @@ pub enum Error {
     DrainTimeout,
 }
 pub type ExecuteFuture<'a> = Pin<Box<dyn Future<Output = Result<(), Error>> + Send + 'a>>;
+pub type TerminalFuture<'a> = Pin<Box<dyn Future<Output = Result<Terminal, Error>> + Send + 'a>>;
 /// Implementations must retain owner through actual parser/SQL/file-lock and
 /// publisher I/O; a successful result means the original normal null outcome.
 pub trait IndexExecutor: Send + Sync + 'static {
@@ -36,6 +38,20 @@ pub trait IndexExecutor: Send + Sync + 'static {
         publisher: ChildPublisher,
         owner: Arc<dyn Send + Sync>,
     ) -> ExecuteFuture<'a>;
+    /// Existing executors preserve their normal null/control-error behavior.
+    /// A classified adapter may explicitly return a known raised terminal value;
+    /// an operational error never becomes a fabricated Source exception.
+    fn execute_terminal<'a>(
+        &'a self,
+        message: IndexMessage,
+        publisher: ChildPublisher,
+        owner: Arc<dyn Send + Sync>,
+    ) -> TerminalFuture<'a> {
+        Box::pin(async move {
+            self.execute(message, publisher, owner).await?;
+            Ok(Terminal::NullSuccess)
+        })
+    }
 }
 #[derive(Clone, Copy)]
 enum ChildState {
@@ -184,14 +200,14 @@ impl IndexWorker {
                 owner: owner.clone(),
                 state: Arc::new(Mutex::new(ChildState::Empty)),
             };
-            inner
+            let terminal = inner
                 .executor
-                .execute(message.clone(), publisher.clone(), owner.clone())
+                .execute_terminal(message.clone(), publisher.clone(), owner.clone())
                 .await?;
             let children = publisher.completed_children()?;
             match inner
                 .jobs
-                .write_index_success(message.task_id, message.parent, children, owner)
+                .write_index_terminal(message.task_id, message.parent, children, terminal, owner)
                 .await
                 .map_err(Error::Transport)?
             {

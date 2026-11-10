@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "scope": "Real native IndexService scanner/SQL effects for Original malformed XML, lossy UTF8 and empty file; no failure writer",
+  "evidence": "artifacts/rust/m6-index-failure-scan-source-native-137",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "native_test_functions": 1,
+  "native_cases": [
+    {
+      "name": "malformed-xml",
+      "index": {
+        "channels": {
+          "broken": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      }
+    },
+    {
+      "name": "invalid-encoding",
+      "index": {
+        "channels": {
+          "bad\ufffd&one": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      }
+    },
+    {
+      "name": "empty-file",
+      "index": {
+        "channels": {},
+        "interleaved_channels": []
+      }
+    }
+  ],
+  "rust_source_archive_sha256": "1ad3b4accd08da00132458662ceb15308d69b6fcf587105ffb709cab3c92f4f3",
+  "test_sha256": "ac731c84c661b5756167246f37e7ab283365adfd6ee690f28b789f8241d4af1f",
+  "index_service_sha256": "baa150a373de92d407483c479bc5a1dc85e138aea7f9dbf65c48c308eda957b1",
+  "native_test_binary_sha256": {
+    "index_failure_scan_sql": "0840cfc845693e9722cfeff3bc016cf787c24c337461c409e72f208df7a707a7"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "application_wired": false,
+  "failure_writer_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain all application and algorithm credit and AGPL licensing."
+}

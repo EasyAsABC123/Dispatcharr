@@ -252,16 +252,17 @@ async fn run_active(inner: &Inner, entry: &Arc<Entry>) -> Result<Outcome, Error>
         .map_err(Error::Transport)?;
     let message = entry.reservation.message().clone();
     let publisher = ChildPublisher::context(inner.jobs.clone(), message.clone(), entry.clone());
-    inner
+    let terminal = inner
         .executor
-        .execute(message.clone(), publisher.clone(), entry.clone())
+        .execute_terminal(message.clone(), publisher.clone(), entry.clone())
         .await?;
     match inner
         .jobs
-        .write_index_success(
+        .write_index_terminal(
             message.task_id,
             message.parent,
             publisher.completed_children()?,
+            terminal,
             entry.clone(),
         )
         .await

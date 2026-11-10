@@ -46,3 +46,50 @@ The status component was additionally retested from a precise480-file Rust/licen
 Raw Source result/exception extension2 passes67 actual observations and24 complete bounded metadata captures; `verified-original-job-results-2.json` binds private raw JSON and public `source-result-goldens.json`. Application backup/invalidZIP handlers remain distinct from neutral builtin exception/Kombu date/datetime/Decimal/bytes/base64/UUID probes.
 
 Native publication/result interoperability1 passes65 observations with the real Sourceworker on copiedDB (`verified-native-source-interop-1.json`). The separate physical gate passes2 actualRedis TCP reply-proxy tests (`verified-native-job-resources-1.json`): accepted LPUSH before withheld reply, ambiguous caller timeout, retained caller/admission leases, rejection/recovery and shutdown waiting through canceled result requests. Both were run from exact frozen source/binaries with defaultDB unchanged and project removed. No nativeworker, public202, productionconstructor, scheduler or restore quiescence is enabled. Earlier reports retain their original narrower remaining-gate statements; these later proofs are independently bound.
+
+The final index component closure is
+[verified-final-index-worker-closure-3.json](verified-final-index-worker-closure-3.json).
+It binds retained compiler inputs, selected successful tools and coupled ingest
+all-target test inputs. Constructor19/ETA20 and14 physical tests were replayed on
+one tree; the final checked-count guard has11 unit tests and strict Clippy. An
+actual24-check Source/native repeated-ID witness verifies real SQL reexecution
+with preserved existing SUCCESS metadata/TTL for immediate and ETA handlers.
+`AlreadySucceeded` is a result-write outcome, not an execution skip. The standalone
+16-check Original authority is
+[verified-original-index-duplicate-2.json](verified-original-index-duplicate-2.json).
+Earlier failed fixture assumptions and resource-isolation attempts remain bound
+in the manifests. App attachment, autonomous visibility restoration, exception
+writing, public202, successful restore and periodic scheduling remain open.
+
+The test-only bounded visibility component has3 actual Redis gates,12 library
+tests and strict Clippy in
+[verified-index-visibility-resources-1.json](verified-index-visibility-resources-1.json).
+It restores one batch of at most10 index reservations with score/tuple/mutex
+fences, preserves foreign/fresh reservations, and retains owners through an
+actual delayed restore reply after its server-side effect. It has no production
+registration, polling loop or application hook. The captured Original worker
+passes `unacked_restore_limit=None` (full eligible sweep), unlike the helper's
+num10 default; see
+[verified-original-visibility-static-1.json](verified-original-visibility-static-1.json).
+Elapsed polling cadence, visibility expiration and full-sweep equivalence remain
+unproved.
+
+The separate [failure codec draft](INDEX-FAILURE-CODEC-DRAFT.md) was written during
+the performance quiet window. It is unregistered and unexecuted. No exception
+classifier, writer or traceback generator is promoted by that draft.
+
+The test-only failure payload component now passes36 actual Original-reader
+checks,2 physical Redis tests,14 library tests and strict Clippy; see
+[verified-index-failure-payload-writer-2.json](verified-index-failure-payload-writer-2.json).
+It relays the known Source136 exception data and opaque supplied traceback text,
+preserves existing SUCCESS bytes/TTL and verifies actual Source exception
+reconstruction. It does not classify or execute native errors, generate Python
+frames or attach a worker/API. The earlier quiet-window draft note is superseded
+by this bounded component evidence; native failure behavior remains pending.
+
+The later [native terminal result checkpoint](INDEX-TERMINAL-RESULTS.md) adds typed
+terminal handling to both worker paths, actual Directory/P0001 IndexService
+classification through a test-only adapter, and physical failure-result resource
+gates. It supersedes the earlier pending statement for those named cases. Native
+diagnostic text explicitly differs from Python traceback frames; general failure
+classification, recovery and application attachment remain separate gates.

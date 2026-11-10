@@ -1,0 +1,746 @@
+{
+  "passed": true,
+  "scope": "Typed terminal handling for immediate/scheduled index workers; test-only actual IndexService Directory/P0001 classifier, no application consumer or Python frame equivalence",
+  "credit": "All application/algorithm credit belongs to original Dispatcharr authors and contributors; original framework credits and licenses retained",
+  "report": {
+    "path": "artifacts/rust/m6-index-terminal-reviewed-final-9/integration.json",
+    "sha256": "b9093f8d289460759062d2988ce0497468d60b685b4f86fe087c7136df41ddfd"
+  },
+  "observations": {
+    "path": "artifacts/rust/m6-index-terminal-reviewed-final-9/source-index-terminal.json",
+    "sha256": "66c1e5f873d94bd2a560f183b62a1efb64f4066babe154438a67e4f3924dbc10"
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "rust_source_archive_sha256": "3ff8c16fb749b8267f12fdd39ba078369d940067462c64fd7a4d3a5b7e69ab3b",
+  "source_native_checks": 159,
+  "controlled_terminal_checks": 109,
+  "actual_index_service_checks": 50,
+  "physical_resource_tests": 3,
+  "checks_projection": [
+    {
+      "name": "controlled-executor-invoked-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-programming",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-cache_connection",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-immediate-cache-network",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-immediate-cache-network",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-immediate-cache-network",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-immediate-cache-network",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-immediate-cache-network",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-cache_authentication",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-immediate-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-immediate-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-immediate-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-immediate-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-immediate-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-cache_connection",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-immediate-release-network",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-immediate-release-network",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-immediate-release-network",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-immediate-release-network",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-immediate-release-network",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-uninitialized_cache",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-immediate-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-immediate-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-immediate-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-immediate-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-immediate-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-uninitialized_cache",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-immediate-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-immediate-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-immediate-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-immediate-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-immediate-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-child_publication",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-immediate-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-immediate-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-immediate-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-immediate-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-immediate-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "existing-success-unchanged-immediate",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-operational",
+      "passed": true
+    },
+    {
+      "name": "operational-is-not-fabricated-failure-immediate",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-immediate-normal",
+      "passed": true
+    },
+    {
+      "name": "legacy-null-success-immediate",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-programming",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-cache_connection",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-scheduled-cache-network",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-scheduled-cache-network",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-scheduled-cache-network",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-scheduled-cache-network",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-scheduled-cache-network",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-cache_authentication",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-scheduled-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-scheduled-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-scheduled-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-scheduled-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-scheduled-cache-auth",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-cache_connection",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-scheduled-release-network",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-scheduled-release-network",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-scheduled-release-network",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-scheduled-release-network",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-scheduled-release-network",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-uninitialized_cache",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-scheduled-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-scheduled-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-scheduled-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-scheduled-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-scheduled-cache-init-url",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-uninitialized_cache",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-scheduled-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-scheduled-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-scheduled-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-scheduled-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-scheduled-cache-init-network",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-child_publication",
+      "passed": true
+    },
+    {
+      "name": "recorded-terminal-scheduled-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "typed-original-exception-scheduled-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "actual-source-reader-scheduled-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "native-diagnostic-and-date-scheduled-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "expiry-and-event-scheduled-busy-defer-publish",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "existing-success-unchanged-scheduled",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-operational",
+      "passed": true
+    },
+    {
+      "name": "operational-is-not-fabricated-failure-scheduled",
+      "passed": true
+    },
+    {
+      "name": "controlled-executor-invoked-scheduled-normal",
+      "passed": true
+    },
+    {
+      "name": "legacy-null-success-scheduled",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-immediate-1",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-immediate-malformed-xml",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-immediate-malformed-xml",
+      "passed": true
+    },
+    {
+      "name": "actual-service-null-and-exact-index-immediate-malformed-xml",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-immediate-malformed-xml",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-immediate-2",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-immediate-invalid-encoding",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-immediate-invalid-encoding",
+      "passed": true
+    },
+    {
+      "name": "actual-service-null-and-exact-index-immediate-invalid-encoding",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-immediate-invalid-encoding",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-immediate-3",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-immediate-empty-file",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-immediate-empty-file",
+      "passed": true
+    },
+    {
+      "name": "actual-service-null-and-exact-index-immediate-empty-file",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-immediate-empty-file",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-immediate-4",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-exception-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-immediate-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-immediate-5",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-exception-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-immediate-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-scheduled-1",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-scheduled-malformed-xml",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-scheduled-malformed-xml",
+      "passed": true
+    },
+    {
+      "name": "actual-service-null-and-exact-index-scheduled-malformed-xml",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-scheduled-malformed-xml",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-scheduled-2",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-scheduled-invalid-encoding",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-scheduled-invalid-encoding",
+      "passed": true
+    },
+    {
+      "name": "actual-service-null-and-exact-index-scheduled-invalid-encoding",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-scheduled-invalid-encoding",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-scheduled-3",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-scheduled-empty-file",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-scheduled-empty-file",
+      "passed": true
+    },
+    {
+      "name": "actual-service-null-and-exact-index-scheduled-empty-file",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-scheduled-empty-file",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-scheduled-4",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-exception-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-scheduled-directory",
+      "passed": true
+    },
+    {
+      "name": "actual-service-drains-scheduled-5",
+      "passed": true
+    },
+    {
+      "name": "actual-service-recorded-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-terminal-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-service-original-exception-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "actual-service-no-file-lock-scheduled-sql-write",
+      "passed": true
+    },
+    {
+      "name": "all-inputs-acked-no-reservations",
+      "passed": true
+    }
+  ],
+  "physical_resource_log": {
+    "path": "artifacts/rust/m6-index-terminal-reviewed-final-9/resources.log",
+    "sha256": "9e3752f1f4ac4de45995dc163f73983543963d3387ec368d21ff2b294381f62a"
+  },
+  "native_classifier_production_registered": false,
+  "native_worker_application_verified": false,
+  "python_traceback_equivalence_verified": false,
+  "traceback_policy": "Truthful bounded native diagnostic; no executed Python frame/content equivalence claim",
+  "performance_verified": false,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "selected_rust_sha256": {
+    "rust/crates/coordination/src/lib.rs": "91865d4fc5faa408614550abb970bc14a78c0006196f32ea148fb4e8d2b7b91a",
+    "rust/crates/coordination/src/task_locks.rs": "32538f650b5b2d432a25643395fe337f4693bde7e7334daedb0d531715e3c95d",
+    "rust/crates/coordination/tests/task_lock_detailed.rs": "7488380a80d30dcf85f3d212c9d4569efdb15231c6bef95007152eee0c765193",
+    "rust/crates/ingest-epg/src/file_lease.rs": "9a84a6a60980fec77af72951cec9c8c7521fd54b8c530ec8074529ace82d32a0",
+    "rust/crates/ingest-epg/src/index_service.rs": "4b8c25f344f72615cd8d6f1a007cba1f1196351cea6cba78e088730240039b27",
+    "rust/crates/ingest-epg/tests/index_failure_scan_sql.rs": "ac731c84c661b5756167246f37e7ab283365adfd6ee690f28b789f8241d4af1f",
+    "rust/crates/ingest-epg/tests/index_failure_detail_sql.rs": "b519c1aa60876b876b1a92a085c710b159eb09f2c3d71f06dee6c44e5a6d1358",
+    "rust/crates/ingest-epg/INDEX-EXECUTION-REPORT.md": "15561b5304a04cf006051334f890faed2688466c4c231de8279e3b52fb94b72a",
+    "rust/crates/job-transport/src/lib.rs": "7411d0c3bb049b13ce5bc0bcc4e8d18a0b44463ad1c737ad02085e6b86752da5",
+    "rust/crates/job-transport/src/index_worker.rs": "954c7b3e4e2e1f159490331127e16e00811a7355c8c6af10cedda827330afcc6",
+    "rust/crates/job-transport/src/scheduled_index.rs": "c390119f7daab40a7a61346b7bb1e7266f816616bfcd7530b78bc01cd8df70d0",
+    "rust/crates/job-transport/src/transport.rs": "ddd8727a70e7e47596b6a7d0a58a81635e4e19ae37932c6847cb33d8fef9718e",
+    "rust/crates/job-transport/src/index_terminal.rs": "1227320a9406edd53659039f47798004dbb25383e124625b14c5dd25ee59c3a3",
+    "rust/crates/job-transport/src/index_classifier.rs": "f43cd3670b84ab29b1554795aa211b6059ae03f9e8224ef56b631ff43e8a858c",
+    "rust/crates/job-transport/src/pg_failure_format.rs": "89bb4efc4b40117f3150aede364e9c78bbe063cb45c6f7594ddad01ca78e06cb",
+    "rust/crates/job-transport/datasets/source-pg-error-format-2.json": "8a71a39caffe8ffbcbc6420798309db1a07ad6608cce468fc9b1b019f93c1d5c",
+    "rust/crates/job-transport/examples/index_terminal_fixture.rs": "2bbb26ee3f5fdb4be67d38fb4274d68e0a4b39fbc105373616350b70c98c152b",
+    "rust/crates/job-transport/tests/index_terminal_resources.rs": "ba71af065cb85e04e1520aacdee6dbe3c4b7c14e5cae21abe8b8845b4eaa127e"
+  },
+  "selected_terminal_tools_sha256": {
+    "scripts/rust-job-contracts/run_index_terminal.py": "d9eb9467589a16e3ddaf63f15e6b3f7dbc9513dc5e13900699a133207517f476",
+    "scripts/rust-job-contracts/source_index_terminal.py": "9d17f748c2aeef19ac586cf5439051bbbbf4283c589e1591186019c566d69dc1"
+  },
+  "failed_attempts": [
+    {
+      "path": "artifacts/rust/m6-index-terminal-controlled-1/integration.json",
+      "sha256": "a667b1191fbd7d0d3c782b8e6fae318bb8a9229f223d9c48ef9606954d73e472",
+      "passed": false,
+      "reason": "Setup database-name variable shadowing; no accepted native comparison",
+      "cleanup": "project removed",
+      "default_database_unchanged": true
+    },
+    {
+      "path": "artifacts/rust/m6-index-terminal-classified-3/integration.json",
+      "sha256": "f606a347ca26cd3aa76a919bb5a92b9b35063c2d77e722d6ad844b324a2c41ff",
+      "passed": false,
+      "reason": "Controller selected raw metadata corpus lacking index effects; corrected corpus selection",
+      "cleanup": "project removed",
+      "default_database_unchanged": true
+    },
+    {
+      "path": "artifacts/rust/m6-index-terminal-classified-resources-5/integration.json",
+      "sha256": "b8f40f711ba3ba8587bb5ae3527ca495409f65ae48e2632d0ba08d782eda0ec3",
+      "passed": false,
+      "reason": "Missing explicit disposable fixture guard prevented resource tests",
+      "cleanup": "project removed",
+      "default_database_unchanged": true
+    },
+    {
+      "path": "artifacts/rust/m6-index-terminal-classified-resources-6/integration.json",
+      "sha256": "abffe2b7d95788b03086bac74568635766f64b82b7dd6e043b4f4563dc2b9cf1",
+      "passed": false,
+      "reason": "Physical probes used unprefixed result key and non-ETA message",
+      "cleanup": "project removed",
+      "default_database_unchanged": true
+    },
+    {
+      "path": "artifacts/rust/m6-index-terminal-classified-resources-7/integration.json",
+      "sha256": "2e95f4767e2b25b65b400aaaaa187fa981fc1009be9f7314fa5b15cf260fb4f2",
+      "passed": false,
+      "reason": "Namespace reset alone did not fix the incorrect probe key/message",
+      "cleanup": "project removed",
+      "default_database_unchanged": true
+    }
+  ],
+  "earlier_passed_physical_gate": {
+    "path": "artifacts/rust/m6-index-terminal-classified-resources-8/integration.json",
+    "sha256": "b4a3be513aaa48dcbd6f31d4f8b58aa328a8e37c14090a5ccb0ab00b8c159c3f"
+  },
+  "remaining_gates": [
+    "General failure classification and combined failure precedence",
+    "Redis disconnection/restart recovery",
+    "Application attachment and mixed-family intake",
+    "Automatic visibility polling, public202 and periodic scheduling",
+    "Whole-backend parity, soak, cutover and performance"
+  ]
+}

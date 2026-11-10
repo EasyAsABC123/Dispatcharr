@@ -816,6 +816,29 @@ impl Jobs {
         self.write_result(id, result, None, Vec::new(), caller)
             .await
     }
+    pub(crate) async fn write_index_terminal(
+        &self,
+        id: Uuid,
+        parent: Option<Uuid>,
+        children: Vec<Uuid>,
+        terminal: crate::index_terminal::Terminal,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        match terminal {
+            crate::index_terminal::Terminal::NullSuccess => {
+                self.write_index_success(id, parent, children, caller).await
+            }
+            crate::index_terminal::Terminal::Raised(failure) => {
+                let date = chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.6f+00:00")
+                    .to_string();
+                let bytes = failure
+                    .metadata(id, parent, &children, &date)
+                    .map_err(|_| Error::Protocol)?;
+                self.write_metadata(id, bytes, caller).await
+            }
+        }
+    }
     async fn write_result(
         &self,
         id: Uuid,
