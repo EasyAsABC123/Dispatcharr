@@ -1,0 +1,118 @@
+{
+  "scope": "Actual original VOD REST metadata Source corpus; no native/provider-refresh/performance acceptance",
+  "passed": true,
+  "evidence": "artifacts/rust/m5-vod-rest-source-1",
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "native_verified": false,
+  "provider_refresh_verified": false,
+  "performance_verified": false,
+  "modes": {
+    "factory": {
+      "passed": true,
+      "cases": 465,
+      "metadata_cases_excluding_forced_fixture_blocks": 463,
+      "status_counts": {
+        "200": 256,
+        "401": 51,
+        "403": 68,
+        "404": 51,
+        "400": 10,
+        "405": 20,
+        "500": 8,
+        "unhandled_exception": 1
+      },
+      "head_cases": 20,
+      "provider_trap_attempts": 0,
+      "provider_refresh_rows_unchanged": true,
+      "lazy_category_global_rows": [
+        0,
+        2
+      ],
+      "lazy_category_owned_relations": [
+        9,
+        13
+      ],
+      "private_corpus": "artifacts/rust/m5-vod-rest-source-1/factory/source-corpus.json",
+      "private_corpus_sha256": "2f86b7fa3056653c45dbb65ccadb9198e9463e67de5dc249af912b5cbea54f57",
+      "successful_tool_source": "artifacts/rust/m5-vod-rest-source-1/factory/tools",
+      "tool_sha256": {
+        "scripts/rust-vod-api-contracts/run.py": "43115319c9171a9252de0d764cbb6faab0f9f576c9107bcbeac9919cf1f52c8a",
+        "scripts/rust-vod-api-contracts/source.py": "28cfead07faf770dd60224699cf5b51832327aad4c300e53d708e1ea46a9bdde",
+        "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+        "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+        "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+        "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+        "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+        "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+        "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+        "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+        "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+        "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+      },
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "cleanup": "owned Compose project removed"
+    },
+    "http": {
+      "passed": true,
+      "cases": 463,
+      "metadata_cases_excluding_forced_fixture_blocks": 463,
+      "status_counts": {
+        "200": 256,
+        "401": 51,
+        "403": 68,
+        "404": 51,
+        "400": 10,
+        "405": 20,
+        "500": 7
+      },
+      "head_cases": 20,
+      "provider_trap_attempts": 0,
+      "provider_refresh_rows_unchanged": true,
+      "lazy_category_global_rows": [
+        0,
+        2
+      ],
+      "lazy_category_owned_relations": [
+        9,
+        13
+      ],
+      "private_corpus": "artifacts/rust/m5-vod-rest-source-1/http/source-corpus.json",
+      "private_corpus_sha256": "d3e3c16eb1f1350ba2fe9379fe703067a81b999a7a997eeccd49596c1c30a89b",
+      "successful_tool_source": "artifacts/rust/m5-vod-rest-source-1/http/tools",
+      "tool_sha256": {
+        "scripts/rust-vod-api-contracts/run.py": "43115319c9171a9252de0d764cbb6faab0f9f576c9107bcbeac9919cf1f52c8a",
+        "scripts/rust-vod-api-contracts/source.py": "28cfead07faf770dd60224699cf5b51832327aad4c300e53d708e1ea46a9bdde",
+        "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+        "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+        "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+        "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+        "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+        "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+        "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+        "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+        "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+        "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+      },
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "cleanup": "owned Compose project removed"
+    }
+  },
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors; existing AGPL licensing is preserved.",
+  "limits": [
+    "Factory forced-refresh cases were intercepted and excluded; their artificial errors are not provider-refresh behavior.",
+    "Factory rendered HEAD bodies are not wire HEAD behavior; actualHTTP captures20HEAD cases independently.",
+    "Provider-info rows were fresh and fetched; zero trap contacts proves metadata-only/no-remote boundary, not stale/forced refresh correctness.",
+    "No native VOD REST routes, DTOs, pagination, resource guards or performance are accepted from this Source-only corpus.",
+    "Case bodies and counters are exact owned-fixture observations; future native snapshots need clock/ID normalization rules explicitly justified."
+  ],
+  "sanitized_dataset": "scripts/rust-vod-api-contracts/source-vod-rest-1.json",
+  "sanitized_dataset_sha256": "70980c8e7b8935735bdd0c699202e106ae869becba833c864be8459cbf58a3b6",
+  "sanitized_dataset_bytes": 1371663,
+  "original_source_sha256": {
+    "apps/vod/api_views.py": "4c71de8a00619f4ad93d26e5891bda6a4f7597afcca22703a34e80cb8494bea2",
+    "apps/vod/serializers.py": "fc8e1555e5e331b5bd5a00924bff607e8fd2acbd46ab04bb5e8dd21534ecd7f1",
+    "apps/vod/utils.py": "6d69aa8b2ad67dc3fb7ef0d006ca783f39b2b9e15cc93a7416c23e40e7f9f3f8",
+    "apps/vod/api_urls.py": "db21752903db6113e59bc70c2ba19da9f3af92bd73e41c78ca5d19106f01a9d9",
+    "apps/vod/models.py": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6"
+  }
+}
