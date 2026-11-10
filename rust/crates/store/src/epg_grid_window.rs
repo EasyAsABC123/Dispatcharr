@@ -58,12 +58,6 @@ impl GridTimestamp {
         value
     }
 }
-static STRICT: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(concat!(
-    r"\A(?P<date>[0-9]{4}-[0-9]{2}-[0-9]{2}|[0-9]{8}|[0-9]{4}-W[0-9]{2}(?:-[1-7])?|[0-9]{4}W[0-9]{2}[1-7]?)",
-    r"(?:.(?P<clock>[0-9]{2}(?:(?::[0-9]{2})(?::[0-9]{2})?|(?:[0-9]{2})(?:[0-9]{2})?)?(?:[.,][0-9]+)?)(?P<zone>Z|[+-][0-9]{2}(?:(?::[0-9]{2})(?::[0-9]{2})?|(?:[0-9]{2})(?:[0-9]{2})?)?(?:[.,][0-9]+)?)?)?\z"
-)).unwrap()
-});
 static FALLBACK: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(concat!(
     r"\A(?P<date>[0-9]{4}-[0-9]{1,2}-[0-9]{1,2})",
@@ -89,6 +83,9 @@ fn date(raw: &str) -> Result<NaiveDate, GridWindowError> {
     if raw.contains('W') {
         let digits = raw.replace('-', "");
         let year = digits[..4].parse().unwrap();
+        if !(1..=9999).contains(&year) {
+            return Err(error("ValueError", "Invalid ISO year"));
+        }
         let week = digits[5..7].parse().unwrap();
         let weekday = digits.get(7..8).unwrap_or("1").parse::<usize>().unwrap();
         return NaiveDate::from_isoywd_opt(
@@ -104,6 +101,7 @@ fn date(raw: &str) -> Result<NaiveDate, GridWindowError> {
                 Weekday::Sun,
             ][weekday - 1],
         )
+        .filter(|value| (1..=9999).contains(&value.year()))
         .ok_or_else(|| error("ValueError", "Invalid week"));
     }
     let parts: Vec<i32> = if raw.contains('-') {
@@ -126,7 +124,14 @@ fn date(raw: &str) -> Result<NaiveDate, GridWindowError> {
         .ok_or_else(|| error("ValueError", "day is out of range for month"))
 }
 pub fn grid_parse_datetime(raw: &str, name: &str) -> Result<GridTimestamp, GridWindowError> {
-    let strict = STRICT.captures(raw);
+    // Django first tries datetime.fromisoformat and catches every ValueError.
+    // Only a matched fallback regex exposes constructor ValueError to callers.
+    if let Some(value) = crate::epg_grid_iso::datetime(raw) {
+        return Ok(value);
+    }
+    if let Some(value) = crate::epg_grid_iso::date(raw) {
+        return Ok(value);
+    }
     let normalized: String = raw
         .chars()
         .map(|c| {
@@ -140,13 +145,15 @@ pub fn grid_parse_datetime(raw: &str, name: &str) -> Result<GridTimestamp, GridW
             }
         })
         .collect();
-    let captures =
-        strict
-            .or_else(|| FALLBACK.captures(&normalized))
-            .ok_or_else(|| {
-                error("GridWindowError",
-        format!("Invalid datetime for {name}: {raw}. Use ISO 8601 (e.g. 2026-02-14T18:00:00Z)."))
-            })?;
+    if let Some(captures) = FALLBACK.captures(&normalized) {
+        return captured_timestamp(&captures);
+    }
+    Err(error(
+        "GridWindowError",
+        format!("Invalid datetime for {name}: {raw}. Use ISO 8601 (e.g. 2026-02-14T18:00:00Z)."),
+    ))
+}
+fn captured_timestamp(captures: &regex::Captures<'_>) -> Result<GridTimestamp, GridWindowError> {
     let day = date(&captures["date"])?;
     let (h, m, s, micro) = if let Some(raw) = captures.name("clock") {
         clock(raw.as_str()).unwrap()
@@ -180,7 +187,20 @@ pub fn grid_parse_datetime(raw: &str, name: &str) -> Result<GridTimestamp, GridW
             offset_micros = -offset_micros;
         }
         if offset_micros.abs() >= 86_400_000_000 {
-            return Err(error("ValueError", "offset must be a timedelta strictly between -timedelta(hours=24) and timedelta(hours=24), not datetime.timedelta(days=1)."));
+            let days = offset_micros.div_euclid(86_400_000_000);
+            let seconds = offset_micros.rem_euclid(86_400_000_000) / 1_000_000;
+            let micros = offset_micros.rem_euclid(1_000_000);
+            let mut parts = Vec::new();
+            if days != 0 {
+                parts.push(format!("days={days}"));
+            }
+            if seconds != 0 {
+                parts.push(format!("seconds={seconds}"));
+            }
+            if micros != 0 {
+                parts.push(format!("microseconds={micros}"));
+            }
+            return Err(error("ValueError",format!("offset must be a timedelta strictly between -timedelta(hours=24) and timedelta(hours=24), not datetime.timedelta({}).",parts.join(", "))));
         }
     }
     Ok(GridTimestamp {
@@ -266,6 +286,27 @@ pub fn grid_resolve_window(
 mod tests {
     use super::*;
     use serde_json::{json, Value};
+    #[test]
+    fn original_compiled_python_and_django_iso_grammar() {
+        let corpus: Value =
+            serde_json::from_str(include_str!("../datasets/source-grid-datetime-fuzz.json"))
+                .unwrap();
+        let cases = corpus["cases"].as_array().unwrap();
+        assert_eq!(cases.len(), 7189);
+        for case in cases {
+            let actual = match grid_parse_datetime(
+                case["raw"].as_str().unwrap(),
+                case["name"].as_str().unwrap(),
+            ) {
+                Ok(value) => json!({"value":value.source_isoformat()}),
+                Err(error) => json!({"error":error.class,"message":error.message}),
+            };
+            let mut expected = case.as_object().unwrap().clone();
+            expected.remove("raw");
+            expected.remove("name");
+            assert_eq!(actual, Value::Object(expected), "raw={:?}", case["raw"]);
+        }
+    }
     #[test]
     fn original_grid_window_corpus() {
         let corpus: Value =

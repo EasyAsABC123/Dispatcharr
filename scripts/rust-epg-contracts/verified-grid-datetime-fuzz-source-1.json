@@ -1,0 +1,39 @@
+{
+  "scope": "Additional actual original Django/Python ISO datetime grammar audit; native mismatches retained for parent-owned fixes",
+  "source_capture_passed": true,
+  "native_matched": false,
+  "cases": 2878,
+  "differences": 962,
+  "difference_classes": [
+    {
+      "source": "GridWindowError",
+      "native": "ValueError",
+      "count": 863
+    },
+    {
+      "source": "GridWindowError",
+      "native": "value",
+      "count": 33
+    },
+    {
+      "source": "value",
+      "native": "GridWindowError",
+      "count": 60
+    },
+    {
+      "source": "ValueError",
+      "native": "ValueError",
+      "count": 6
+    }
+  ],
+  "native_parser_sha256": "531d724fdf1ef532f9b3569941d9575afce81d0f1eda45b6444d951cc5bdb22c",
+  "source_sha256": "068666f94e188a8c6badda0130070a7ee9f37c8535709348a697ce5b122b0e8d",
+  "django_dateparse_sha256": "cda1f1532ce76924a73125945b57108c5552b1b64f842eb721ca33b92fe7510d",
+  "evidence": "artifacts/rust/m7-grid-datetime-fuzz-source-1/comparison.json",
+  "source_corpus": "artifacts/rust/m7-grid-datetime-fuzz-source-1/grid-datetime-source.json",
+  "tool_source": "artifacts/rust/m7-grid-datetime-fuzz-source-1/tools",
+  "native_probe": "rust/crates/store/examples/grid_datetime_fuzz.rs",
+  "cleanup": "owned Compose project removed",
+  "native_parser_modified_by_auditor": false,
+  "original_credit": "Original Dispatcharr and Django authors retain full algorithm/application credit."
+}

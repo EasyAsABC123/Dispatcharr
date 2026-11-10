@@ -1,0 +1,42 @@
+{
+  "scope": "Expanded actual C datetime/date ISO trailing-byte and numeric-week separator audit; parent-owned native fixes pending",
+  "source_capture_passed": true,
+  "native_matched": false,
+  "cases": 7189,
+  "differences": 768,
+  "difference_classes": [
+    {
+      "source": "value",
+      "native": "GridWindowError",
+      "count": 670
+    },
+    {
+      "source": "value",
+      "native": "value",
+      "count": 97
+    },
+    {
+      "source": "GridWindowError",
+      "native": "value",
+      "count": 1
+    }
+  ],
+  "native_parser_sha256": "6fbdb3f500cbc4633bb66de394d0818ec32ff2ddab16409f29a2c17cb13b1226",
+  "source_sha256": "068666f94e188a8c6badda0130070a7ee9f37c8535709348a697ce5b122b0e8d",
+  "django_dateparse_sha256": "cda1f1532ce76924a73125945b57108c5552b1b64f842eb721ca33b92fe7510d",
+  "evidence": "artifacts/rust/m7-grid-datetime-fuzz-source-2/comparison.json",
+  "source_corpus": "artifacts/rust/m7-grid-datetime-fuzz-source-2/grid-datetime-source.json",
+  "tool_source": "artifacts/rust/m7-grid-datetime-fuzz-source-2/tools",
+  "native_probe": "rust/crates/store/examples/grid_datetime_fuzz.rs",
+  "cleanup": "owned Compose project removed",
+  "native_parser_modified_by_auditor": false,
+  "original_credit": "Original Dispatcharr and Django authors retain full algorithm/application credit.",
+  "follow_up": {
+    "owner": "parent native parser implementation",
+    "result": "Inspected parent native output:7189 cases and zero differences",
+    "evidence_prefix": "artifacts/rust/grid-datetime-fuzz-expanded-fixed-1",
+    "original_failing_snapshot_preserved": true,
+    "native_output": "artifacts/rust/grid-datetime-fuzz-expanded-fixed-1.json",
+    "differences": "artifacts/rust/grid-datetime-fuzz-expanded-fixed-1-differences.json"
+  }
+}

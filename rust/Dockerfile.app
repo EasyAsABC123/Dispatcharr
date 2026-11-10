@@ -37,6 +37,7 @@ COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-rs /usr/local/bin/
 COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
 COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
 COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE
+COPY rust/crates/store/third-party/PYTHON-COPYRIGHT /usr/share/doc/dispatcharr/Python-COPYRIGHT
 COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
 COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
 RUN mkdir -p /data/logos && chown 65532:65532 /data /data/logos

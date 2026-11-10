@@ -1,0 +1,41 @@
+{
+  "scope": "Original compiled Python/Django guide datetime behavior; frozen native component only",
+  "passed": true,
+  "datetime_vectors": 7189,
+  "original_helper_cases_regressed": 861,
+  "native_tests_passed": 4,
+  "strict_store_all_targets_clippy": true,
+  "evidence_directory": "artifacts/rust/m5-grid-iso-frozen-25",
+  "source_corpus": "artifacts/rust/m7-grid-datetime-fuzz-source-2/grid-datetime-source.json",
+  "source_corpus_sha256": "a2b2b82801503d9a59554d073ab6a00abb36ae420b983e748e4919614a2fbe72",
+  "artifact_sha256": {
+    "source-sha256.json": "cd17350033edb3a945ad8f3bd970a9f7bf7ef9b084d60456c0f9da8a25c19d42",
+    "tests.log": "d782a553f3653fbcc1dacc7a31fa5cbab354328e493ba94c8ecac19fa949c2c4",
+    "clippy.log": "792befc818ff1840ffc912bcc1d249c5e89047662ead754781a282c3c62aa9fb",
+    "results.json": "d30f87a42cb4290dd16b4f831a6d5868de481d953fb462ed1a82d86a0f3e0db8",
+    "packaging-addendum.json": "c1da73f54c92ebd585d001f34c76019a19eb3d4c4b4069e1c022f675fe5bc962"
+  },
+  "retained_findings": [
+    "Original861-case subset missed additional grammar. Initial expanded2878-case audit found962 differences; generic error-catching/newline/year/offset fixes left7.",
+    "The compiled parser differs from Python _pydatetime.py. Native primary parsing now preserves compiled separator selection, compact numeric fractions and bare-date UTF8-length/trailing-byte behavior. All7189 expanded Source vectors match without normalization."
+  ],
+  "python_upstream_reference": "https://github.com/python/cpython/blob/v3.13.9/Modules/_datetimemodule.c",
+  "original_licenses": [
+    "rust/crates/store/third-party/DJANGO-LICENSE",
+    "rust/crates/store/third-party/PYTHON-COPYRIGHT"
+  ],
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "packaged_image_verified": false,
+  "limitations": [
+    "This is an expanded captured grammar proof, not exhaustive acceptance of every Python input.",
+    "This correction is after immutable image24; no image24 runtime claim is relabeled.",
+    "Guide HTTP, custom dummy rules, offset-sensitive generation and packaged integration have separate gates."
+  ],
+  "packaging_addendum": {
+    "path": "rust/Dockerfile.app",
+    "sha256": "43116f0d27ea56df6ee65531de7b4bbd365de0b5cd9d02ee06b3b8850a6aea6e",
+    "scope": "Include retained Python copyright in future app packaging; Store component code/checks unchanged",
+    "docker_rebuild_verified": false
+  }
+}
