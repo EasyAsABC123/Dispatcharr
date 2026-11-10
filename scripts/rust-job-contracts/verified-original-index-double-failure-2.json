@@ -1,0 +1,144 @@
+{
+  "passed": true,
+  "scope": "Actual Original finally-release override/DEL-ACL precedence; Source-only, no nativeclassifier/writer/apphook",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_report": "artifacts/rust/m6-original-index-double-failure-2/source-index-worker-private.json",
+  "source_report_sha256": "b28f38611d4cbe740c6603da5666770c3f2f4431b8ec146b8f099b2fa0680b01",
+  "report": "artifacts/rust/m6-original-index-double-failure-2/integration.json",
+  "report_sha256": "eadfdfc5dc1694b064965aab044f1fc79b8196b49ef885ae8c06eca25a4c7032",
+  "total_checks": 46,
+  "base_worker_reference_checks": 17,
+  "new_precedence_checks": 29,
+  "cases": 5,
+  "case_projection": [
+    {
+      "name": "directory_release_network",
+      "status": "FAILURE",
+      "exception_module": "redis.exceptions",
+      "exception_class": "ConnectionError",
+      "argument_types": [
+        "str"
+      ],
+      "index_written": false,
+      "lock_retained": true,
+      "lock_ttl_seconds": 300,
+      "result_ttl_seconds": 3600,
+      "primary_trace_context_present": true
+    },
+    {
+      "name": "sql_release_network",
+      "status": "FAILURE",
+      "exception_module": "redis.exceptions",
+      "exception_class": "ConnectionError",
+      "argument_types": [
+        "str"
+      ],
+      "index_written": false,
+      "lock_retained": true,
+      "lock_ttl_seconds": 300,
+      "result_ttl_seconds": 3600,
+      "primary_trace_context_present": true
+    },
+    {
+      "name": "written_release_noperm",
+      "status": "FAILURE",
+      "exception_module": "redis.exceptions",
+      "exception_class": "NoPermissionError",
+      "argument_types": [
+        "str"
+      ],
+      "index_written": true,
+      "lock_retained": true,
+      "lock_ttl_seconds": 300,
+      "result_ttl_seconds": 3600,
+      "primary_trace_context_present": true
+    },
+    {
+      "name": "directory_release_noperm",
+      "status": "FAILURE",
+      "exception_module": "redis.exceptions",
+      "exception_class": "NoPermissionError",
+      "argument_types": [
+        "str"
+      ],
+      "index_written": false,
+      "lock_retained": true,
+      "lock_ttl_seconds": 300,
+      "result_ttl_seconds": 3600,
+      "primary_trace_context_present": true
+    },
+    {
+      "name": "sql_release_noperm",
+      "status": "FAILURE",
+      "exception_module": "redis.exceptions",
+      "exception_class": "NoPermissionError",
+      "argument_types": [
+        "str"
+      ],
+      "index_written": false,
+      "lock_retained": true,
+      "lock_ttl_seconds": 300,
+      "result_ttl_seconds": 3600,
+      "primary_trace_context_present": true
+    }
+  ],
+  "selected_tools": [
+    {
+      "path": "scripts/rust-job-contracts/run_index_double_failure.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-double-failure-2/tool-source/scripts/rust-job-contracts/run_index_double_failure.py",
+      "sha256": "9633ffa76a691732500fa73d236b271ad90285bbe72ab4c0a44b4cf8e1ffd8f7"
+    },
+    {
+      "path": "scripts/rust-job-contracts/source_index_double_failure.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-double-failure-2/tool-source/scripts/rust-job-contracts/source_index_double_failure.py",
+      "sha256": "ccda119854d932f502fe0d7f75e423d25b67d020d7957fa0b593e2a0baf62edc"
+    },
+    {
+      "path": "scripts/rust-job-contracts/index_double_failure_observer.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-double-failure-2/tool-source/scripts/rust-job-contracts/index_double_failure_observer.py",
+      "sha256": "f04bf2307d8f7f6c5c2d69afbf761608aa419f656f1f673ce3e29f5d3ade22e8"
+    },
+    {
+      "path": "scripts/rust-epg-parity/source_index_worker.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-double-failure-2/tool-source/scripts/rust-epg-parity/source_index_worker.py",
+      "sha256": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba"
+    },
+    {
+      "path": "scripts/rust-epg-parity/index_worker_observer.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-double-failure-2/tool-source/scripts/rust-epg-parity/index_worker_observer.py",
+      "sha256": "8effb86fd4bb06e0c83c09d15fe02b3cc1f2e1013768fef39377ae590ecc9eef"
+    }
+  ],
+  "dataset": {
+    "path": "scripts/rust-job-contracts/source-index-double-failure-results-2.json",
+    "sha256": "e0d7f6a840f9d3b219e6cfa88c0444c54c67d3ef5ec121d6c140384fbedabcd2",
+    "metadata_exact": true,
+    "synthetic_only": true
+  },
+  "facts": [
+    "Actual Original finally release errors replace the primary operation exception in backend FAILURE: directory+network andSQL+network report redis.ConnectionError; directory+NOPERM andSQL+NOPERM report redis.NoPermissionError.",
+    "The original directory or DjangoProgrammingError remains in traceback context. This preserves cause information but does not make it the terminal metadata exception.",
+    "A normalWritten index remains committed after release NOPERM. Failed directory/SQL executions have no index; all five file locks remain locked with observedTTL300.",
+    "NOPERM uses actual owned Redis ACL users with DEL denied; error argument includes the authenticated username and denied del command. It is not AuthenticationError.",
+    "Only cached-client delete dependency was switched; original task/acquire/build/finally helper/Celery tracing remain unchanged. No rollback of an already committed index occurs."
+  ],
+  "owned_acl_users_removed": 3,
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_classification_verified": false,
+  "native_reconnect_or_release_permission_equivalence_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Connection error args include the controlled closed endpoint. Native endpoint/reconnect behavior must be independently proved, not guessed from errno or a coarse RedisUnavailable.",
+    "Native owner-fenced release uses Lua and may encounter EVAL/command ACL behavior different from Original plainDEL. No broad ACL/message mapping is accepted.",
+    "CAS-not-owner, timeout and ambiguous physical release remain operational; no fake Pythonframes or generic releaseerror payload follows."
+  ],
+  "failed_attempt": {
+    "report": "artifacts/rust/m6-original-index-double-failure-1/integration.json",
+    "sha256": "e811449af22751fffbdfb9e9ab619d60e379458cf4a5bda99ee95d7a940d7b50",
+    "reason": "Setup-only missing/index-tools import path in/job-tools controller before any taskcases. Fresh2 fixes path only; defaultDBunchanged andprojectremoved inboth."
+  },
+  "credit": "Original Dispatcharr authors/contributors retain full application/algorithm credit and AGPL licensing; Celery/redis-py/Redis/PostgreSQL/Django authors retain framework credit/licenses."
+}

@@ -32,6 +32,15 @@ result ownership for both worker paths. Its classifier is test-only and native
 diagnostics differ from Python traceback frames. This is M6 component progress;
 it does not close the M6 application, recovery or performance gates.
 
+The [cached Redis restart comparison](../scripts/rust-redis-restart-contracts/verified-cached-redis-restart-147.json)
+completed successfully as an experiment but **failed the recovery gate**: the
+Original cached client recovered, while existing native connections did not.
+Reconstructed native connections succeeded. Bounded recovery remains required.
+The [Original double-failure capture](../scripts/rust-job-contracts/INDEX-DOUBLE-FAILURE.md)
+also establishes that a release failure overrides a directory/SQL failure and
+does not undo a committed index. Neither observation is a native compatibility
+pass or a performance claim.
+
 Current evidence is described in the [local verification guide](rust-local-verification.md).
 The separate [image14 API characterization](../scripts/rust-integration/verified-api-resources-image14-1.json) passes three paired resource trials at identical40successfulrequests/second, with14,400 exact JSON responses and zero errors. Median paired CPU and sampled working-memory ratios are0.10483and0.62949. This read-only synthetic API subset does not close browser, authentication, realtime, background-job or full M5/application acceptance.
 The unchanged original React suite passed 6,567 tests in pinned Docker packaging,

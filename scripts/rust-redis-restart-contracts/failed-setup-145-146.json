@@ -1,0 +1,26 @@
+{
+  "attempts": [
+    {
+      "attempt": 145,
+      "evidence": "artifacts/rust/m8-cached-redis-restart-145",
+      "passed": false,
+      "execution_passed": false,
+      "error_type": "RuntimeError",
+      "error_message": null,
+      "cleanup_passed": true,
+      "scope": "Fixture setup/protocol failure before recovery comparison; no native behavior conclusion"
+    },
+    {
+      "attempt": 146,
+      "evidence": "artifacts/rust/m8-cached-redis-restart-146",
+      "passed": false,
+      "execution_passed": false,
+      "error_type": "TimeoutError",
+      "error_message": "Bounded peer command deadline",
+      "cleanup_passed": true,
+      "scope": "Fixture setup/protocol failure before recovery comparison; no native behavior conclusion"
+    }
+  ],
+  "diagnosis": "146 private stdout shows missing Original core.apps TRACE registration; TextIO/select buffering delayed an already buffered JSON reply.147 imports the actual bootstrap module without app readiness and uses bounded unbuffered binary pipes.",
+  "runtime_modified": false
+}

@@ -1,0 +1,214 @@
+{
+  "passed": false,
+  "execution_passed": true,
+  "migration_gate_passed": false,
+  "known_mismatch_detected": true,
+  "scope": "Isolated cached-client loss/restart component; no application or reconnect fix",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "actual_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "redis_run_ids": [
+    "c803ecc47c4243aab027f8832ba15456f9f7cb8b",
+    "9f33cc8f1a3d869c05a119d0fb91ac708c08dcff"
+  ],
+  "source_recovery_verified": true,
+  "native_cached_transport_recovered": false,
+  "native_cached_tasklocks_recovered": false,
+  "native_rebuild_positive_control": true,
+  "observed_retry_delays": [
+    0,
+    0.1,
+    1
+  ],
+  "original_apps_initialized": false,
+  "application_hook_verified": false,
+  "reconnect_runtime_modified": false,
+  "performance_verified": false,
+  "cleanup": "owned container removed",
+  "cleanup_passed": true,
+  "rust_source_archive_sha256": "a23b6c8f5ae1e038fb030581f619fc4c39088cf797df2b3ad2216083770547b3",
+  "native_binary_sha256": "59312cb08ab59411b4fc5244b81cdf36b13a36773f847db42293db90b8fae195",
+  "source_snapshot_origin": {
+    "manifest": "artifacts/rust/m8-cached-redis-restart-145/proof.json",
+    "sha256": "76b78147d7c3be33a80732f3dda6b4cf2f9a7ea31b63301b7a18116b48ee779c",
+    "previous_execution_passed": false,
+    "scope": "Exact successfully compiled source/binary reused; prior fixture setup failure retained"
+  },
+  "evidence": "artifacts/rust/m8-cached-redis-restart-147",
+  "observed_errors": [
+    {
+      "peer": "original",
+      "command": {
+        "action": "release",
+        "id": 1
+      },
+      "result": {
+        "action": "release",
+        "pid": 36,
+        "error": {
+          "module": "redis.exceptions",
+          "type": "ConnectionError",
+          "args": [
+            "Error 111 connecting to 127.0.0.1:6379. Connection refused."
+          ]
+        },
+        "elapsed_seconds": 0.0005338549963198602,
+        "same_client": true,
+        "apps_ready": false
+      }
+    },
+    {
+      "peer": "original",
+      "command": {
+        "action": "acquire",
+        "id": 2
+      },
+      "result": {
+        "action": "acquire",
+        "pid": 36,
+        "error": {
+          "module": "redis.exceptions",
+          "type": "ConnectionError",
+          "args": [
+            "Error 111 connecting to 127.0.0.1:6379. Connection refused."
+          ]
+        },
+        "elapsed_seconds": 0.0003191290015820414,
+        "same_client": true,
+        "apps_ready": false
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "release"
+      },
+      "result": {
+        "action": "release",
+        "pid": 42,
+        "error": "Redis(TaskLockRedisCause { kind: IoError, code: None, code_oversized: false, io_kind: Some(BrokenPipe), raw_os_error: None, detail: None, detail_oversized: false })",
+        "available_leases": 1,
+        "elapsed_seconds": 0.000393721
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "ping"
+      },
+      "result": {
+        "action": "ping",
+        "pid": 42,
+        "error": "Backend",
+        "available_leases": 1,
+        "elapsed_seconds": 0.000154725
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "acquire",
+        "id": 1002
+      },
+      "result": {
+        "action": "acquire",
+        "pid": 42,
+        "error": "RedisUnavailable",
+        "available_leases": 1,
+        "elapsed_seconds": 0.000256758
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "ping"
+      },
+      "result": {
+        "action": "ping",
+        "pid": 42,
+        "error": "Backend",
+        "available_leases": 1,
+        "elapsed_seconds": 0.000233067
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "acquire",
+        "id": 1003
+      },
+      "result": {
+        "action": "acquire",
+        "pid": 42,
+        "error": "RedisUnavailable",
+        "available_leases": 1,
+        "elapsed_seconds": 0.000180045
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "ping"
+      },
+      "result": {
+        "action": "ping",
+        "pid": 42,
+        "error": "Backend",
+        "available_leases": 1,
+        "elapsed_seconds": 0.000171225
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "acquire",
+        "id": 1003
+      },
+      "result": {
+        "action": "acquire",
+        "pid": 42,
+        "error": "RedisUnavailable",
+        "available_leases": 1,
+        "elapsed_seconds": 9.0782e-05
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "ping"
+      },
+      "result": {
+        "action": "ping",
+        "pid": 42,
+        "error": "Backend",
+        "available_leases": 1,
+        "elapsed_seconds": 0.000168634
+      }
+    },
+    {
+      "peer": "native",
+      "command": {
+        "action": "acquire",
+        "id": 1003
+      },
+      "result": {
+        "action": "acquire",
+        "pid": 42,
+        "error": "RedisUnavailable",
+        "available_leases": 1,
+        "elapsed_seconds": 9.7682e-05
+      }
+    }
+  ],
+  "native_source_paths": [
+    "rust/crates/coordination/src/task_locks.rs",
+    "rust/crates/output-store/src/transport.rs"
+  ],
+  "limitations": [
+    "Three declared post-restart attempts establish the observed mismatch; no long-term recovery timing guarantee.",
+    "Component binary runs in the pinned Original OS for ABI compatibility, not a rebuilt native application.",
+    "Original TRACE bootstrap imports core.apps without invoking AppConfig.ready; no Django application/provider initialization.",
+    "145 initial protocol/setup failure and146 missing TRACE bootstrap/TextIO buffering failure are retained;147 reuses their exact successfully compiled native binary."
+  ],
+  "credit": "Original Dispatcharr authors retain application/algorithm credit and AGPL licensing; Redis/redis-py/redis-rs retain server/client credit."
+}
