@@ -1,4 +1,4 @@
-# Current-file paths and Source working directory: unimplemented compatibility gate
+# Current-file paths and Source working directory: component and migration gates
 
 Original Dispatcharr authors and contributors retain all application and algorithm credit. This plan is based on the pinned Source files; no new fixtures or runtime changes were made while resource preflight was pending. Frozen100/106/107 remain component proofs with an explicit relative-path gap.
 
@@ -34,3 +34,13 @@ Do not change the native image's global WORKDIR solely for this helper before au
 7. Rehearse existing-data restart/cutover with absolute `/app/media/...`, relative `media/...` and `/data/...` stored paths. Capture original image-layer cache handling and rollback. No production files may be changed as part of these fixtures.
 
 Application attachment and durable missing-index task publication remain separate requirements. Passing these path cases would not accept the complete operational milestone or a performance gain.
+
+## Scoped Source111 / native114 completion
+
+The pinned original helper and unchanged real Celery worker now confirm `/app` CWD and `/app/media` in the disposable fixture. `/app/media` is an ordinary directory, not a symlink. Twenty owned path observations cover first-truthy precedence, missing preferred files, null/empty fallback, literal Unicode/space/percent/tilde/dollar names, filesystem symlink-parent traversal, fresh clock/index ordering and relative two-open replacement/deletion. Source UID0 can read an owned mode000 file; the same original helper under UID65534 raises `PermissionError`. This fixture does not establish production UID policy or a migrated media volume.
+
+`SourcePathContext::new(source_cwd, media_root)` is an optional immutable `CurrentLookupConfig.path_context`. Its roots must be absolute and bounded. It resolves relative selected paths against the supplied CWD without canonicalization or process-wide `chdir`; configured fallback uses `media_root/cached_epg/<source-id>.tmp`. Stored database strings remain unchanged. Default `None` preserves the existing absolute-only component API and supplied cache path. No environment default, application builder, Dockerfile WORKDIR, mount or Store business query was changed.
+
+Frozen114 passes 18 literal SQL/file cases under a one-connection Store and two controlled relative two-open cases through the same public physical file helper. Final Bytes clones retain allocation credits; clock sampling and fresh-index observation match the original corpus. The native executable runs inside the original isolated container as UID0, on the internal network against copied PostgreSQL. Source111's unprivileged denial is recorded separately; outer HTTP exception/body and deployment-UID parity are not accepted. Initial112/113 fixture setup failures are retained. See `scripts/rust-epg-parity/verified-index-paths-source-native-114.json`.
+
+Packaged volume compatibility, a real Store callback with configured relative paths, existing-data cache cutover/rollback, Source serializer trimming, directory error classes, production missing-index publication and broader malformed/large-index limits remain open. The default107 physical bridge replay also passes as frozen116: nineteen literal outcomes, six explicit unsupported shapes, real Store/lookup pool-one execution and retained SQL/file/byte ownership. See `scripts/rust-epg-parity/verified-current-bridge-path-default-116.json`; no functional proof here establishes a performance gain.
