@@ -283,3 +283,11 @@ Redis container from the pinned original image. The original helper peer checks
 mutual exclusion and reacquisition; Rust checks renewal, replacement ownership
 and cancellation while actual Redis write replies are delayed. The report does
 not accept mixed old/new long-running workers or a complete refresh job.
+
+The read-only candidate and clean-install services set `TMPDIR=/data` on their
+managed writable data volume. Backup uploads stream to private owned scratch
+files; a read-only root filesystem without writable temporary storage rejects
+those uploads. Image23's first backup fixture retained that configuration
+failure, then replayed the unchanged image with the explicit volume-backed
+spool setting. These are temporary files, separate from `/data/backups`; normal
+completion and cancellation cleanup have independent ownership tests.

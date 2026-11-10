@@ -24,6 +24,8 @@ services:
       DJANGO_SECRET_KEY: playback-fixture-only
       REDIS_URL: redis://:playback-fixture-only@baseline:6379/0
       RUST_BIND: 0.0.0.0:9192
+      # Private upload spools must use the managed volume with a read-only root.
+      TMPDIR: /data
       RUST_DATABASE_POOL_SIZE: "8"
       RUST_MAX_CHANNELS: "32"
       RUST_MAX_VIEWERS_PER_CHANNEL: "400"

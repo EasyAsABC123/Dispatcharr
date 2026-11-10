@@ -27,6 +27,25 @@ def load(path, name):
     return value
 
 
+def freeze_current_rust(output):
+    frozen = output/'current-frozen-source'
+    hashes = {}
+    with tarfile.open(output/'current-rust-source.tar', 'w') as archive:
+        for base, directories, names in os.walk(ROOT/'rust'):
+            directories[:] = sorted(d for d in directories if d not in {'target','.git','__pycache__'})
+            for name in sorted(names):
+                path = Path(base)/name
+                relative = path.relative_to(ROOT)
+                data = path.read_bytes()
+                destination = frozen/relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data)
+                hashes[str(relative)] = hashlib.sha256(data).hexdigest()
+                entry=tarfile.TarInfo(str(relative));entry.size=len(data);entry.mode=0o644;entry.mtime=0
+                archive.addfile(entry,io.BytesIO(data))
+    return frozen, hashes
+
+
 def main():
     import sys
     sys.path.insert(0, str(ROOT/'scripts/rust-integration'))
@@ -39,7 +58,15 @@ def main():
     parser.add_argument('--native-http', action='store_true', help='Also run original programme JSON/HEAD HTTP and capacity ownership comparisons')
     parser.add_argument('--candidate-image', help='Optional immutable packaged app programme read gate')
     parser.add_argument('--build-manifest', type=Path)
+    parser.add_argument('--guide-source', action='store_true', help='Capture original current-programme and streamed guide-grid contracts on owned rows')
+    parser.add_argument('--native-current', action='store_true', help='Run frozen current-programme parser/DB selection against original guide capture')
+    parser.add_argument('--candidate-current', action='store_true', help='Compare actual Source/native real-clock current-programme wire instead of programme list reads')
     args = parser.parse_args()
+    if args.native_current:
+        args.guide_source = True
+    if args.candidate_current:
+        if not args.candidate_image:parser.error('candidate-current requires candidate-image and build-manifest')
+        args.guide_source = True
     if bool(args.candidate_image) != bool(args.build_manifest):
         parser.error('candidate-image and build-manifest must be supplied together')
     if args.native_http:
@@ -52,6 +79,9 @@ def main():
                      'scripts/rust-epg-contracts/source_reads.py',
                      'scripts/rust-epg-contracts/window_source.py',
                      'scripts/rust-epg-contracts/probe_programs.py',
+                     'scripts/rust-epg-contracts/guide_source.py',
+                     'scripts/rust-epg-contracts/current_wire_source.py',
+                     'scripts/rust-epg-contracts/probe_current.py',
                      'scripts/rust-epg-parity/extract_source.py']:
         source_tool = ROOT/relative
         target = tools/relative
@@ -122,6 +152,28 @@ def main():
             fixture_path.write_text(json.dumps(fixture, indent=2)+'\n')
             report.update(passed=True, source_cases=len(fixture['cases']),
                           fixture_sha256=hashlib.sha256(fixture_path.read_bytes()).hexdigest())
+            if args.guide_source:
+                guide = command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-'],
+                                timeout=180,body=(tools/'scripts/rust-epg-contracts/guide_source.py').read_text())
+                (output/'guide-source-worker.log').write_text(guide.stderr)
+                guide_data=json.loads(guide.stdout.splitlines()[-1])
+                (output/'guide-source.json').write_text(json.dumps(guide_data,indent=2)+'\n')
+                report['original_guide_http_cases']=len(guide_data['cases'])
+                report['native_guide_http_verified']=False
+                if args.native_current:
+                    frozen, hashes = freeze_current_rust(output)
+                    report['current_rust_source_sha256']=hashes
+                    postgres=command(compose+['port','baseline','5432']).stdout.strip()
+                    native_env=dict(env,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+postgres+'/dispatcharr',
+                        EPG_READ_DISPOSABLE_FIXTURE='playback-fixture-only',GUIDE_READ_FIXTURE=str(output/'guide-source.json'),
+                        CARGO_TARGET_DIR=str(output/'current-cargo-target'))
+                    native=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),
+                        '-p','dispatcharr-store','--test','epg_current_sql','--locked','--offline',
+                        '--','--ignored','--nocapture','--test-threads=1'],env=native_env,
+                        capture_output=True,text=True,timeout=600)
+                    (output/'native-current.log').write_text(native.stdout+'\n'+native.stderr)
+                    native.check_returncode()
+                    report['native_current_db_selection_verified']=True
             if args.native:
                 frozen = output/'frozen-source'
                 source_hashes = {}
@@ -190,6 +242,12 @@ def main():
                     raise RuntimeError('Native XMLTV format component mismatches')
                 report['native_format_verified'] = True
             if args.candidate_image:
+                if args.candidate_current:
+                    wire=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-'],timeout=180,
+                                 body=(tools/'scripts/rust-epg-contracts/current_wire_source.py').read_text())
+                    (output/'current-wire-source-worker.log').write_text(wire.stderr)
+                    current_fixture=json.loads(wire.stdout.splitlines()[-1])
+                    (output/'current-wire-source.json').write_text(json.dumps(current_fixture,indent=2)+'\n')
                 command(compose+['up','-d','--no-build','candidate'])
                 candidate_id=command(compose+['ps','-q','candidate']).stdout.strip()
                 inspected=json.loads(command(['docker','inspect',candidate_id]).stdout)[0]
@@ -208,11 +266,11 @@ def main():
                     except OSError:
                         if time.monotonic()>deadline:raise RuntimeError('Packaged guide API readiness deadline')
                         time.sleep(.1)
-                probe=load(tools/'scripts/rust-epg-contracts/probe_programs.py','packaged_programme_probe')
-                packaged=probe.capture(candidate,fixture)
-                (output/'packaged-programmes.json').write_text(json.dumps(packaged,indent=2)+'\n')
+                probe=load(tools/'scripts/rust-epg-contracts'/('probe_current.py' if args.candidate_current else 'probe_programs.py'),'packaged_programme_probe')
+                packaged=probe.capture(candidate,current_fixture if args.candidate_current else fixture)
+                (output/('packaged-current.json' if args.candidate_current else 'packaged-programmes.json')).write_text(json.dumps(packaged,indent=2)+'\n')
                 if not packaged['passed']:raise RuntimeError('Packaged programme response differences')
-                report['native_program_packaged_image_verified']=True
+                report['native_current_packaged_image_verified' if args.candidate_current else 'native_program_packaged_image_verified']=True
                 command(compose+['stop','--timeout','12','candidate'])
                 stopped=json.loads(command(['docker','inspect',candidate_id]).stdout)[0]
                 report['candidate_shutdown']={k:stopped['State'][k] for k in ['ExitCode','OOMKilled']}

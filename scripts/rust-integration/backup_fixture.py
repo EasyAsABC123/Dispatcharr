@@ -82,6 +82,29 @@ elif kind=='source_restore':
     result=restore_backup_task.run(filename)
     if result.get('status')!='completed':raise RuntimeError('Original restore task did not complete')
     result={'completed':True,'manifest':manifest()}
+elif kind=='source_restore_boundary':
+    from apps.backups import services
+    filename=action['filename']
+    if Path(filename).name!=filename or'..'in filename:raise RuntimeError('Only owned filename allowed')
+    try:
+        services.restore_backup(Path(settings.BACKUP_ROOT)/filename)
+        result={'failed':False}
+    except Exception as error:result={'failed':True,'exception':type(error).__name__}
+    result['manifest']=manifest()
+elif kind=='source_dump_fault':
+    from apps.backups import services
+    target=Path('/evidence/source-dump-fault.dump')
+    # The source fixture's Unix socket is trust-authenticated; use its configured TCP password boundary.
+    settings.DATABASES['default']['HOST']='127.0.0.1'
+    if action['fault']=='password':settings.DATABASES['default']['PASSWORD']='deliberately-invalid-fixture-password'
+    elif action['fault']=='privilege':settings.DATABASES['default'].update(USER=database+'_denied',PASSWORD='denied-fixture-password')
+    else:raise RuntimeError('Unknown owned fault')
+    try:
+        services._dump_postgresql(target)
+        result={'failed':False}
+    except Exception as error:
+        result={'failed':True,'exception':type(error).__name__}
+    finally:target.unlink(missing_ok=True)
 elif kind=='credentials':
     from apps.accounts.models import User
     admin=User.objects.get(username='rust-probe-backup-admin');viewer=User.objects.get(username='rust-probe-backup-viewer')

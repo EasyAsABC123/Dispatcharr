@@ -1,0 +1,28 @@
+{
+  "scope": "Actual original current-programme and streamed guide-grid view/database corpus with pinned clock; native acceptance pending",
+  "passed": true,
+  "source_cases": 104,
+  "current_cases": 64,
+  "grid_cases": 40,
+  "unhandled_view_exceptions": {
+    "ValidationError": 4,
+    "AttributeError": 5
+  },
+  "outer_django_500_http_body_observed": false,
+  "evidence_directory": "artifacts/rust/m5-current-grid-source-9",
+  "artifact_sha256": {
+    "result.json": "856db1375f7dbcc0ca5f8747ae4bfd9b0cdbddc9b2d7de1da7e8a4f859e117c6",
+    "guide-source.json": "f42eee55db0d1b8af42077c30f4cdc90cd1405c75d51ad7e9c564638da2097cb",
+    "guide-source-worker.log": "3398de3d69a5799241dab04e8ef2e54d11d8d57e5410fe2202b5d851a3b49b8b"
+  },
+  "native_verified": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "findings": [
+    "Current-programme POST uses original admin-only method policy, including auth-before-malformed-JSON failures.",
+    "Channel branch picks lowest matching programme primary key; EPG-id branch uses first encountered programme in unordered results.",
+    "Shared and override-only EPG assignments are returned; current channel query intentionally does not apply grid hidden/profile/adult filters.",
+    "EPG-id conversion validates the entire array before retaining its first50 values.",
+    "Guide grid streams Django JSON with its separate visibility and datetime/chunk semantics."
+  ]
+}

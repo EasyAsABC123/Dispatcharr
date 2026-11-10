@@ -2,6 +2,9 @@
 //! projection and staged-swap algorithms. Original authors retain full credit.
 //! Application scheduling/status/cache/event wiring remains a separate gate.
 pub mod cache_policy;
+pub mod channel_core;
+mod channel_sql;
+pub mod channels;
 pub mod reporter;
 use chrono::{DateTime, Utc};
 use dispatcharr_ingest_core::{

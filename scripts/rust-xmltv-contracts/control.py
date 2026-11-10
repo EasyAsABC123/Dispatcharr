@@ -34,6 +34,18 @@ def command(request):
         public={'guide':guide.pk,'programs':programs,'clock':at.isoformat(),'seed_hour':at.hour}
         state.update(public=public,guide=guide.pk,programs=programs)
         return {**seeded,**public}
+    if op=='window_vectors':
+        from window_source import capture
+        return capture()
+    if op=='content_vectors':
+        from content_source import capture
+        return capture(xc.state['users'])
+    if op=='xc_epg_vectors':
+        from epg_source import capture
+        return capture(xc.state['users'],xc.state['channels'],state['public']['clock'],request.get('start',0),request.get('count',32))
+    if op=='xc_epg_hash':
+        from epg_source import hash_characterization
+        return hash_characterization()
     if op=='cache_vectors':
         from cache_source import capture
         return capture()
@@ -47,14 +59,31 @@ def command(request):
             name=key.decode();kind=redis.type(key).decode();entry={'key':name,'kind':kind,'ttl':redis.ttl(key)}
             if kind=='string':entry['value']=redis.get(key).decode()
             elif kind=='list':
-                length=redis.llen(key);assert length<=1000;chunks=redis.lrange(key,0,-1);assert sum(map(len,chunks))<=8*1024*1024;entry.update(chunks=length,body_bytes=sum(map(len,chunks)),body_sha256=hashlib.sha256(b''.join(chunks)).hexdigest())
+                length=redis.llen(key);assert length<=65536;chunks=redis.lrange(key,0,-1);assert sum(map(len,chunks))<=8*1024*1024;entry.update(chunks=length,body_bytes=sum(map(len,chunks)),body_sha256=hashlib.sha256(b''.join(chunks)).hexdigest())
             rows.append(entry)
         return {'generation':(redis.get('epg_content_generation') or b'0').decode(),'rows':rows,'epg_download_events':SystemEvent.objects.filter(event_type='epg_download').count(),'epg_blocked_events':SystemEvent.objects.filter(event_type='epg_blocked').count()}
     if op=='invalidate':
         from apps.output.streaming_chunk_cache import invalidate_epg_chunk_cache
         invalidate_epg_chunk_cache();return {'invalidated':True}
+    if op=='clear_anon_download_dedup':
+        # Original download auditing has a two-second wall-clock cooldown.
+        # Make the subsequent cold rebuild checkpoint independent of how fast
+        # either backend completed the preceding captured HTTP cases.
+        redis=get_redis_connection('default')
+        keys=list(redis.scan_iter(match=':1:epg_download:anonymous:all:*',count=100))
+        if len(keys)>100:raise RuntimeError('Owned audit fixture unexpectedly large')
+        ttls=[redis.pttl(key) for key in keys]
+        if keys:redis.delete(*keys)
+        return {'owned_keys_deleted':len(keys),'prior_ttl_ms':ttls}
     if op=='mutate_program':
         ProgramData.objects.filter(pk=state['programs'][0]).update(title=request['title']);return {'updated':True}
+    if op=='reset_phase':
+        ProgramData.objects.filter(pk=state['programs'][0]).update(title='Long overlapping')
+        redis=get_redis_connection('default');redis.incr('epg_content_generation')
+        keys=list(redis.scan_iter(match=':1:epg_download:*',count=100));assert len(keys)<500
+        if keys:redis.delete(*keys)
+        SystemEvent.objects.filter(event_type__in=['epg_download','epg_blocked']).delete()
+        return {'reset':'only owned fixture XMLTV title/generation/event dedup/history'}
     if op=='epg_settings':xc.settings('epg_settings',request['values']);return {'updated':True}
     return xc.command(request)
 if __name__=='__main__':

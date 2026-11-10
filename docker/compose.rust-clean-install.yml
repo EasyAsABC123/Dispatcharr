@@ -45,6 +45,7 @@ services:
       DISPATCHARR_TRUSTED_PROXIES: none
       RUST_INITIALIZE_EMPTY_DATABASE: "1"
       RUST_BIND: 0.0.0.0:9192
+      TMPDIR: /data
       RUST_DATABASE_POOL_SIZE: "4"
       RUST_LOG: info
     depends_on:

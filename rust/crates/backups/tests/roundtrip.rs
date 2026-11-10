@@ -188,6 +188,107 @@ fn original_native_copied_database_cross_restore() {
         helper(&names[2], json!({"action":"credentials"})),
         credential
     );
+    // Actual original archive errors and permissive legacy metadata, including
+    // warning-only invalid pg_restore input after destructive schema cleanup.
+    for (label, metadata, include_dump, invalid_dump, expected_failure) in [
+        ("missing-metadata", None, true, false, true),
+        (
+            "missing-dump",
+            Some(json!({"database_file":"absent.dump"})),
+            false,
+            false,
+            true,
+        ),
+        (
+            "engine-mismatch",
+            Some(json!({"database_type":"sqlite"})),
+            true,
+            false,
+            true,
+        ),
+        ("nonobject", Some(json!([])), true, false, true),
+        (
+            "ignored-format-version",
+            Some(json!({"format":"ignored","version":"ignored"})),
+            true,
+            false,
+            false,
+        ),
+        (
+            "missing-default-fields",
+            Some(json!({})),
+            true,
+            false,
+            false,
+        ),
+        (
+            "warning-only-invalid-dump",
+            Some(json!({})),
+            true,
+            true,
+            false,
+        ),
+    ] {
+        let path = Path::new("/evidence/native-backups").join(format!("boundary-{label}.zip"));
+        let mut writer = zip::ZipWriter::new(std::fs::File::create(&path).unwrap());
+        if include_dump {
+            writer
+                .start_file(
+                    "database.dump",
+                    zip::write::SimpleFileOptions::default()
+                        .compression_method(zip::CompressionMethod::Deflated),
+                )
+                .unwrap();
+            if invalid_dump {
+                writer.write_all(b"not a PostgreSQL archive").unwrap();
+            } else {
+                let mut archive =
+                    zip::ZipArchive::new(std::fs::File::open(&original).unwrap()).unwrap();
+                std::io::copy(&mut archive.by_name("database.dump").unwrap(), &mut writer).unwrap();
+            }
+        }
+        if let Some(metadata) = metadata {
+            writer
+                .start_file("metadata.json", zip::write::SimpleFileOptions::default())
+                .unwrap();
+            writer.write_all(metadata.to_string().as_bytes()).unwrap();
+        }
+        writer.finish().unwrap();
+        let source_boundary = helper(
+            &names[1],
+            json!({"action":"source_restore_boundary","filename":path.file_name().unwrap().to_str().unwrap()}),
+        );
+        assert_eq!(
+            source_boundary["failed"], expected_failure,
+            "Original boundary {label}"
+        );
+        // Restore the known nonempty copy before native destructive boundary.
+        restore_fixture(
+            &cfg,
+            &runtime,
+            &original,
+            scratch,
+            &limits,
+            &Cancellation::default(),
+            &DisposableRestore::authorize(&names[1]).unwrap(),
+        )
+        .unwrap();
+        let result = restore_fixture(
+            &cfg,
+            &runtime,
+            &path,
+            scratch,
+            &limits,
+            &Cancellation::default(),
+            &DisposableRestore::authorize(&names[1]).unwrap(),
+        );
+        assert_eq!(result.is_err(), expected_failure, "Native boundary {label}");
+        assert_eq!(
+            helper(&names[1], json!({"action":"manifest"}))["manifest"],
+            source_boundary["manifest"],
+            "Original/native physical database boundary {label}"
+        );
+    }
     assert!(matches!(
         DisposableRestore::authorize("dispatcharr"),
         Err(Error::FixtureAuthorization)
@@ -224,5 +325,5 @@ fn original_native_copied_database_cross_restore() {
         std::fs::read_dir(scratch).unwrap().next().is_none(),
         "Owned scratch leaked"
     );
-    println!("BACKUP_CROSS_RESTORE_CHECKS {{\"source_to_native\":true,\"native_to_source\":true,\"exact_schema_rows_sequences\":true,\"credentials\":true,\"metadata\":true,\"cancelled_before_start\":true,\"archive_cap\":true,\"scratch_cleanup\":true,\"actual_failed_authentication\":true,\"actual_denied_role\":true}}");
+    println!("BACKUP_CROSS_RESTORE_CHECKS {{\"source_to_native\":true,\"native_to_source\":true,\"exact_schema_rows_sequences\":true,\"credentials\":true,\"metadata\":true,\"cancelled_before_start\":true,\"archive_cap\":true,\"scratch_cleanup\":true,\"actual_failed_authentication\":true,\"actual_denied_role\":true,\"actual_archive_boundaries\":7}}");
 }

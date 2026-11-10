@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "scope": "original/native database-only v2 ZIP cross-load on three owned copied PostgreSQL17 databases",
+  "cleanup": "project removed",
+  "copied_databases": 3,
+  "nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "component_image_id": "sha256:11b52f37e484bca8037047d461d0c2212b6170df46fc9f62b4d0acb41ebc18bd",
+  "component_source_tree_sha256": "8dd638198a0712baaed52167cc78d31765eba9c47ec957c3d9fed126bae52da1",
+  "packaged_component_cross_restore": true,
+  "python_runtime_absent": true,
+  "runtime_manifest_sha256": "5ab8db66040d3d731da1ed58a83099a2cf2bbf3e98c3e9221d66166e407d167f",
+  "report": "artifacts/rust/m8-backup-pg-runtime-compose-1/backup-contracts.json",
+  "report_sha256": "c2516db7d9eebd6372e94da16465f150ff1b7c8274feea7761262d6312edb398",
+  "tool_source": "artifacts/rust/m8-backup-pg-runtime-compose-1/tool-source",
+  "component_build_manifest": "artifacts/rust/m8-backup-pg-runtime-build-2/build.json",
+  "component_build_manifest_sha256": "0b142157b1faac7b34aeb75cbd9cb15e710743b9cbce606bcebc0c0aa1f84b36",
+  "component_build_tool": "artifacts/rust/m8-backup-pg-runtime-build-2/build-tool.py",
+  "component_build_tool_sha256": "a76546effd1af298722c3ef45093b3fdd91fc7d2fa34bacd8106563c967b9d5f",
+  "versions": {
+    "pg_dump": "pg_dump (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)",
+    "pg_restore": "pg_restore (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)",
+    "psql": "psql (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)"
+  },
+  "application_image_verified": false,
+  "job_api_verified": false,
+  "performance_verified": false,
+  "remaining": [
+    "TLS/GSS/LDAP and deployment environment variants",
+    "Application backup route/job/status/restore lifecycle",
+    "SQLite, old-schema upgrades, timezone adapter, schedule/retention"
+  ],
+  "credit": "Original Dispatcharr authors retain full application credit and AGPL license."
+}

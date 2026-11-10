@@ -43,6 +43,7 @@ pub struct EpgProgramReads {
     auth: AuthService,
     limits: EpgProgramReadLimits,
     workers: Arc<Semaphore>,
+    current_clock: Arc<dyn Fn() -> chrono::DateTime<chrono::Utc> + Send + Sync>,
 }
 fn unavailable() -> StoreError {
     StoreError::StatusBody(503, json!({"detail":"Guide read capacity unavailable."}))
@@ -56,9 +57,20 @@ impl AsRef<[u8]> for OwnedJson {
         &self.data
     }
 }
-struct BoundedJson {
+pub(crate) struct BoundedJson {
     data: Vec<u8>,
     maximum: usize,
+}
+impl BoundedJson {
+    pub(crate) fn new(maximum: usize) -> Self {
+        Self {
+            data: Vec::new(),
+            maximum,
+        }
+    }
+    pub(crate) fn into_data(self) -> Vec<u8> {
+        self.data
+    }
 }
 impl Write for BoundedJson {
     fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
@@ -82,6 +94,52 @@ impl Write for BoundedJson {
     }
 }
 impl EpgProgramReads {
+    /// Current-programme DB-only component using the same physical admission
+    /// and retained response allocation as ordinary programme reads. HTTP and
+    /// byte-index fallback are separate gates; this method adds no route.
+    pub async fn read_current_db(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        body: serde_json::Value,
+        now: chrono::DateTime<chrono::Utc>,
+    ) -> Result<Bytes, StoreError> {
+        self.auth.account_user(peer, headers, true).await?;
+        let selection = crate::CurrentProgramSelection::from_json(&body)?;
+        self.read_current_selected(selection, now).await
+    }
+    pub(crate) async fn read_current_selected(
+        &self,
+        selection: crate::CurrentProgramSelection,
+        now: chrono::DateTime<chrono::Utc>,
+    ) -> Result<Bytes, StoreError> {
+        let lease = Arc::new(
+            self.workers
+                .clone()
+                .try_acquire_owned()
+                .map_err(|_| unavailable())?,
+        );
+        let state = self.clone();
+        let (sender, receiver) = oneshot::channel();
+        tokio::spawn(async move {
+            let result = state
+                .auth
+                .store
+                .current_programmes_db(selection, now, 50000, state.limits.response_bytes)
+                .await
+                .map(|data| {
+                    Bytes::from_owner(OwnedJson {
+                        data,
+                        _lease: lease,
+                    })
+                });
+            let _ = sender.send(result);
+        });
+        tokio::time::timeout(self.limits.deadline, receiver)
+            .await
+            .map_err(|_| unavailable())?
+            .map_err(|_| unavailable())?
+    }
     pub fn new(auth: AuthService, limits: EpgProgramReadLimits) -> Result<Self, StoreError> {
         if !(1..=16).contains(&limits.concurrent_responses)
             || !(128..=128 * 1024 * 1024).contains(&limits.response_bytes)
@@ -94,7 +152,25 @@ impl EpgProgramReads {
             auth,
             limits,
             workers: Arc::new(Semaphore::new(limits.concurrent_responses)),
+            current_clock: Arc::new(chrono::Utc::now),
         })
+    }
+    pub fn with_current_clock(
+        mut self,
+        clock: impl Fn() -> chrono::DateTime<chrono::Utc> + Send + Sync + 'static,
+    ) -> Self {
+        self.current_clock = Arc::new(clock);
+        self
+    }
+    pub(crate) fn auth(&self) -> &AuthService {
+        &self.auth
+    }
+    pub(crate) fn current_now(&self) -> chrono::DateTime<chrono::Utc> {
+        (self.current_clock)()
+    }
+    /// Separate current-programme adapter; attach only after its HTTP gates.
+    pub fn current_router(self) -> Router {
+        crate::epg_current_http::router(self)
     }
     /// Counts physical SQL workers and response allocations, including Bytes clones.
     pub fn physical_operations(&self) -> usize {
@@ -263,13 +339,7 @@ fn origin(auth: &AuthService, peer: SocketAddr, headers: &HeaderMap) -> String {
         .filter(|v| !v.is_empty());
     format(&host, port.as_deref())
 }
-async fn respond(
-    state: EpgProgramReads,
-    peer: SocketAddr,
-    headers: HeaderMap,
-    id: Option<String>,
-    uri: Uri,
-) -> Result<Response, StoreError> {
+pub(crate) fn json_negotiation(headers: &HeaderMap, uri: &Uri) -> Result<(), StoreError> {
     // Full browsable-API HTML remains an explicit gate. Do not pass it off as
     // a JSON representation. The original rejects unsupported JSON formats
     // and Accept values before authentication during initial negotiation.
@@ -305,6 +375,16 @@ async fn respond(
             ));
         }
     }
+    Ok(())
+}
+async fn respond(
+    state: EpgProgramReads,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    id: Option<String>,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    json_negotiation(&headers, &uri)?;
     let origin = origin(&state.auth, peer, &headers);
     let data = state.read(peer, headers, id.as_deref(), origin).await?;
     Ok(Response::builder()

@@ -54,12 +54,24 @@ pub enum ReportAction {
     },
     Committed(CompletedImport),
     Failed(FailedImport),
+    ChannelProgress {
+        source_id: i64,
+        progress: u8,
+        processed: Option<u64>,
+        total: Option<u64>,
+        total_channels: Option<u64>,
+    },
+    ChannelsComplete {
+        source_id: i64,
+        processed: u64,
+    },
+    ChannelFailed(FailedImport),
 }
 impl ReportAction {
     fn charge(&self) -> usize {
         match self {
             Self::Committed(v) => v.source_name.capacity(),
-            Self::Failed(v) => v
+            Self::Failed(v) | Self::ChannelFailed(v) => v
                 .source_name
                 .capacity()
                 .saturating_add(v.last_message.capacity())
@@ -303,32 +315,70 @@ impl Inner {
                 data["updated_at"] = json!(source_timestamp(now));
                 self.send(data, context).await;
             }
-            ReportAction::Failed(value) => {
-                // Pooled SQL is separate from the private staging session, so a
-                // failed/rolled-back staging transaction cannot poison status.
-                if sqlx::query(
-                    "UPDATE epg_epgsource SET status='error',last_message=$2 WHERE id=$1",
-                )
-                .bind(value.source_id)
-                .bind(value.last_message)
-                .execute(self.store.pool())
-                .await
-                .is_ok()
-                {
-                    let mut data = progress_data(value.source_id, 100);
-                    data["status"] = json!("error");
-                    data["error"] = json!(value.publication_error);
-                    self.send(data, context).await;
-                    self.audit(
-                        "epg_error",
-                        json!({"source_name":value.source_name,"message":value.publication_error}),
-                        context,
-                    )
-                    .await;
+            ReportAction::Failed(value) => self.failure(value, "parsing_programs", context).await,
+            ReportAction::ChannelFailed(value) => {
+                self.failure(value, "parsing_channels", context).await
+            }
+            ReportAction::ChannelProgress {
+                source_id,
+                progress,
+                processed,
+                total,
+                total_channels,
+            } => {
+                let mut data = stage_progress_data(source_id, "parsing_channels", progress);
+                if let Some(value) = processed {
+                    data["processed"] = json!(value);
                 }
+                if let Some(value) = total {
+                    data["total"] = json!(value);
+                }
+                if let Some(value) = total_channels {
+                    data["total_channels"] = json!(value);
+                }
+                self.send(data, context).await;
+            }
+            ReportAction::ChannelsComplete {
+                source_id,
+                processed,
+            } => {
+                let saved = sqlx::query(
+                    "UPDATE epg_epgsource SET status='success',last_message=$2 WHERE id=$1",
+                )
+                .bind(source_id)
+                .bind(format!("Successfully parsed {processed} channels"))
+                .execute(self.store.pool())
+                .await?;
+                saved_source(saved.rows_affected())?;
+                let mut data = stage_progress_data(source_id, "parsing_channels", 100);
+                data["status"] = json!("success");
+                data["channels_count"] = json!(processed);
+                self.send(data, context).await;
             }
         }
         Ok(())
+    }
+    async fn failure(&self, value: FailedImport, action: &str, context: &SwapPolicyContext) {
+        // Pooled SQL is separate from the private staging session, so a
+        // failed/rolled-back staging transaction cannot poison status.
+        if sqlx::query("UPDATE epg_epgsource SET status='error',last_message=$2 WHERE id=$1")
+            .bind(value.source_id)
+            .bind(value.last_message)
+            .execute(self.store.pool())
+            .await
+            .is_ok()
+        {
+            let mut data = stage_progress_data(value.source_id, action, 100);
+            data["status"] = json!("error");
+            data["error"] = json!(value.publication_error);
+            self.send(data, context).await;
+            self.audit(
+                "epg_error",
+                json!({"source_name":value.source_name,"message":value.publication_error}),
+                context,
+            )
+            .await;
+        }
     }
     async fn audit(&self, kind: &str, details: Value, context: &SwapPolicyContext) {
         if sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)").bind(kind).bind(details).bind(source_clock(&self.clock)).execute(self.store.pool()).await.is_err(){return;}
@@ -370,8 +420,11 @@ fn saved_source(affected: u64) -> Result<(), ImportError> {
 pub fn staging_progress(processed: u64) -> u8 {
     85.min(10 + ((processed as f64 / (processed as f64 + 10000.0)) * 75.0) as u8)
 }
+fn stage_progress_data(source_id: i64, action: &str, progress: u8) -> Value {
+    json!({"progress":progress,"type":"epg_refresh","source":source_id,"action":action})
+}
 fn progress_data(source_id: i64, progress: u8) -> Value {
-    let mut data = json!({"progress":progress,"type":"epg_refresh","source":source_id,"action":"parsing_programs"});
+    let mut data = stage_progress_data(source_id, "parsing_programs", progress);
     if progress == 10 {
         data["message"] = json!("Parsing programs...");
     }

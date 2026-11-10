@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "scope": "job-free original/native backup HTTP and filesystem effects; raw equality plus four explicitly declared Source-invalid204 Content-Length deltas; no application or jobs wiring",
+  "cleanup": "project removed",
+  "source_cases": 96,
+  "raw_exact_wire_parity": false,
+  "secondary_contract_acceptance": true,
+  "declared_source_invalid_204_content_length_deltas": 4,
+  "exact_wire_cases": 92,
+  "physical_resources": {
+    "unread_download_retains_lease": true,
+    "drop_releases_download": true,
+    "canceled_observer_retains_physical_worker": true,
+    "capacity_503": true,
+    "shutdown_waits_physical_reply": true
+  },
+  "report": "artifacts/rust/m8-backup-api-source-native-2/integration.json",
+  "report_sha256": "54ecb4c61c8ca3900caadbdd1f8a79497832368866932d401f8d6862e7f49f3b",
+  "tool_source": "artifacts/rust/m8-backup-api-source-native-2/tool-source",
+  "rust_source_archive_sha256": "549c442593462c8bda0410c7c0c6078017d77ceebde701902e29ce26881971fd",
+  "raw_oracle_unchanged": true,
+  "known_protocol_delta": "Only four specifically named Source204 empty-body deletes carry invalid Content-Length40; Hyper omits that forbidden header. Status, empty body, other captured headers and filesystem effects must match; any other mismatch fails secondary acceptance.",
+  "application_image_verified": false,
+  "app_router_wired": false,
+  "performance_verified": false,
+  "remaining": [
+    "Initial upload cap8MiB; large streaming upload/header/admission work is next",
+    "Job/status/restart/restore quiescence and schedule mutations remain unported",
+    "Legacy malformed schedules, symlink/bad filesystem/parser families and deployment environment variants",
+    "Canonical packaged HTTP regression before any app wiring claim"
+  ],
+  "credit": "Original Dispatcharr authors retain full application credit and AGPL license."
+}

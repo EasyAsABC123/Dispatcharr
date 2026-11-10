@@ -38,7 +38,12 @@ def main():
 
     parser.add_argument('--native',action='store_true',help='Run frozen native reported-import component tests')
     parser.add_argument('--native-test-manifest',type=Path,help='Run compiled bounded component image instead of host Cargo')
+    parser.add_argument('--runtime-source-manifest',type=Path,help='Use an existing hash-bound coherent runtime snapshot')
     args = parser.parse_args()
+    if args.runtime_source_manifest and args.native_test_manifest:
+        parser.error('Choose frozen source or compiled component image')
+    if args.runtime_source_manifest:
+        args.native=True
     if args.native_test_manifest:
         args.native=True
     output = args.output.resolve()
@@ -48,6 +53,7 @@ def main():
     for relative in ['scripts/rust-epg-parity/run_reporter.py',
                      'scripts/rust-epg-parity/reporter_source.py',
                      'scripts/rust-epg-parity/component_container.py',
+                     'scripts/rust-epg-parity/frozen_runtime.py',
                      'scripts/rust-epg-contracts/source_reads.py',
                      'scripts/rust-epg-contracts/window_source.py',
                      'scripts/rust-epg-contracts/query_order_source.py',
@@ -63,7 +69,14 @@ def main():
               'project':project, 'tool_source_sha256':hashes}
     status = 1
     if args.native and not args.native_test_manifest:
-        captured={str(path.relative_to(ROOT)):path.read_bytes() for path in (ROOT/'rust').rglob('*') if path.is_file() and not set(path.relative_to(ROOT/'rust').parts)&{'target','.git','__pycache__'}}
+        if args.runtime_source_manifest:
+            runtime_spec=importlib.util.spec_from_file_location('captured_reporter_runtime',tools/'scripts/rust-epg-parity/frozen_runtime.py')
+            runtime_module=importlib.util.module_from_spec(runtime_spec);runtime_spec.loader.exec_module(runtime_module)
+            captured,_,base_archive,base_hash=runtime_module.load_manifest(args.runtime_source_manifest)
+            report['runtime_base_manifest_sha256']=base_hash
+            report['runtime_base_archive_sha256']=hashlib.sha256(base_archive.read_bytes()).hexdigest()
+        else:
+            captured={str(path.relative_to(ROOT)):path.read_bytes() for path in (ROOT/'rust').rglob('*') if path.is_file() and not set(path.relative_to(ROOT/'rust').parts)&{'target','.git','__pycache__'}}
         rust_hashes={name:hashlib.sha256(data).hexdigest() for name,data in captured.items()}
         with tarfile.open(output/'rust-source.tar','w') as archive:
             for relative,data_bytes in sorted(captured.items()):

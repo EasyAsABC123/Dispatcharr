@@ -1,6 +1,8 @@
-# Unregistered native backup component draft
+# Historical native backup component draft
 
-Original Dispatcharr authors and contributors retain full application credit and AGPL licensing. These files were written during a performance quiet window. **They have not been registered, compiled, formatted, executed or accepted.** No Cargo manifest, lockfile, application route, durable worker or Docker recipe was changed.
+Original Dispatcharr authors and contributors retain full application credit and AGPL licensing.
+
+The original draft below is retained as an audit artifact. The subsequent registered component and scoped real original/native evidence are documented in [the backups crate](../../crates/backups/README.md); the collector here remains unexecuted and app/jobs remain unwired. These files were written during a performance quiet window. **They have not been registered, compiled, formatted, executed or accepted.** No Cargo manifest, lockfile, application route, durable worker or Docker recipe was changed.
 
 - `backup.rs`: standalone synchronous component using a single owned admitted worker, bounded subprocess diagnostics and file streaming. Intended cached dependencies on later registration: serde/serde_json, zip9.5.0 with existing deflate feature, uuid/v4 and libc. It needs no Python or Tokio runtime. A caller supplies the Source-compatible system/pytz/ZIP clock conversions; it does not approximate them using the host timezone.
 - `collect_pg.py`: guarded build-stage draft collecting the **actual** `/usr/lib/postgresql/17/bin/{pg_dump,pg_restore,psql}` ELF files from the pinned original image into `/opt/dispatcharr-postgres`, their loader/library closure, optional NSS/OpenSSL providers, public PG support data and available copyright/common-license notices. It deliberately bypasses Debian's possible Perl `/usr/bin/pg_*` wrapper. No interpreter, credential, deployment secret, database directory or private key is copied. Nothing has been collected or built yet.

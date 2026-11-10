@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "scope": "job-free original/native backup HTTP and filesystem effects; raw equality plus four explicitly declared Source-invalid204 Content-Length deltas; no application or jobs wiring",
+  "cleanup": "project removed",
+  "source_cases": 102,
+  "large_upload_cases": 3,
+  "raw_exact_wire_parity": false,
+  "secondary_contract_acceptance": true,
+  "declared_source_invalid_204_content_length_deltas": 4,
+  "exact_wire_cases": 101,
+  "physical_resources": {
+    "unread_download_retains_lease": true,
+    "drop_releases_download": true,
+    "canceled_observer_retains_physical_worker": true,
+    "capacity_503": true,
+    "shutdown_waits_physical_reply": true,
+    "canceled_upload_spool_cleanup": true
+  },
+  "report": "artifacts/rust/m8-backup-api-source-native-4/integration.json",
+  "report_sha256": "35dad6e548e8f999014fe100fe18a1c15b5a7dfdad10fddc9aad0628ab847f08",
+  "tool_source": "artifacts/rust/m8-backup-api-source-native-4/tool-source",
+  "rust_source_archive_sha256": "769a353574a09fa082c1e21a5d0d8622c3c6da313b124a10fd4fe60bc018da60",
+  "actual_comparison_cases": 105,
+  "raw_oracle_unchanged": true,
+  "known_protocol_delta": "Only four specifically named Source204 empty-body deletes carry invalid Content-Length40; Hyper omits it. All statuses, empty bodies, other captured headers and filesystem effects must match. Any other difference fails secondary acceptance.",
+  "application_image_verified": false,
+  "app_router_wired": false,
+  "performance_verified": false,
+  "large_upload_scope": [
+    "8MiB+1 generated stream",
+    "32MiB generated stream",
+    "Ignored32MiB other-file field followed by small selected file",
+    "Headers1021/1022 accepted,1023/1024/1025/2048 rejected as actual Source"
+  ],
+  "remaining": [
+    "Post4 schedule independence and UTF8-token failure vectors queued in native5",
+    "Additional malformed multipart/filesystem failures, schedules and deployment variants",
+    "Cross-replica collision semantics and complete UI/packaged-route gates",
+    "Durable job/status/restart/restore lifecycle and schedule writes"
+  ],
+  "credit": "Original Dispatcharr authors retain full application credit and AGPL license."
+}

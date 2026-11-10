@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "scope": "original/native database-only v2 ZIP cross-load on three owned copied PostgreSQL17 databases",
+  "application_image_verified": false,
+  "job_api_verified": false,
+  "cleanup": "project removed",
+  "copied_databases": 3,
+  "nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "binary_sha256": "4ac9d83c87f8e06c1ae704b3751b4bd1ea5de960fc795aa695873645516e1e8b",
+  "source_archive_sha256": "22a55ce8987ff8ed648917c1261b57cf256d4a45a8a432ed4b440e33b80486b0",
+  "native_checks_sha256": "49cb5da704835f31519be8bc4367728cb94d7a44459bbe810b690539c9b8cc00",
+  "evidence": "artifacts/rust/m8-backup-cross-restore-5",
+  "raw_report_sha256": "40e45458b857a06671f95a5edf52292a094ab94ae3368e8c92012ac5b1fab9f3",
+  "rust_source_archive_sha256": "7ce025c4daae02d71e9d759007efbab3a048fdb686975720d42a75364ccf1599",
+  "tool_source_snapshot": "artifacts/rust/m8-backup-cross-restore-5/tool-source",
+  "checks": [
+    "Source ZIP to native restore: exact rows/schema/indexes/constraints/sequences",
+    "Native ZIP to original restore task and migrate: exact rows/schema/indexes/constraints/sequences",
+    "Password/API-key/group/profile preservation verified by original ORM",
+    "Original default fixture database unchanged",
+    "Database-only two-member v2 ZIP metadata",
+    "Cancelled before start, archive cap, private scratch cleanup",
+    "Actual original/native PostgreSQL TCP password rejection",
+    "Actual original/native PostgreSQL role with no table privileges fails dump",
+    "Failed dump preserves copied source schema/data/sequences"
+  ],
+  "remaining": [
+    "Runtime PG17 ELF closure and notices in canonical app image",
+    "Durable jobs, task token/status, browser backup UI, scheduling and retention",
+    "Timezone integration, PostgreSQL TLS, concurrent live application quiescence",
+    "SQLite and old-schema upgrades",
+    "Malformed/unsafe ZIP compatibility policy and full resource performance comparison"
+  ],
+  "credit": "Original Dispatcharr authors retain full application credit and AGPL license.",
+  "failed_attempts": [
+    {
+      "evidence": "artifacts/rust/m8-backup-cross-restore-1",
+      "reason": "Runner omitted disposable psql password; no copied DB created; cleaned"
+    },
+    {
+      "evidence": "artifacts/rust/m8-backup-cross-restore-2",
+      "reason": "Fixture duplicated original automatic profile membership; cleaned"
+    },
+    {
+      "evidence": "artifacts/rust/m8-backup-cross-restore-4",
+      "reason": "Unix-socket trust correctly ignored invalid password; TCP auth fixture required; cleaned"
+    }
+  ]
+}

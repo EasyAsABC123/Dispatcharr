@@ -26,6 +26,9 @@ mod epg_reads;
 pub use epg_reads::EpgReadResource;
 mod epg_program_http;
 pub use epg_program_http::{EpgProgramReadLimits, EpgProgramReads};
+mod epg_current;
+mod epg_current_http;
+pub use epg_current::CurrentProgramSelection;
 mod ip_lookup;
 mod notifications;
 mod python_action;
@@ -298,3 +301,10 @@ mod tests {
         assert!(cidrs_allow("::1", "::1".parse().unwrap()));
     }
 }
+
+// Job-free file APIs only; durable backup/restore jobs remain unsupported.
+mod backup_files;
+pub use backup_files::BackupFiles;
+
+#[cfg(test)]
+extern crate self as dispatcharr_store;

@@ -1,0 +1,13 @@
+{
+  "name": "Current Programs Api",
+  "description": "Lightweight endpoint that returns currently playing programs for specified channel IDs.\nAccepts POST with JSON body containing channel_ids array, or null/empty to fetch all channels.",
+  "renders": [
+    "application/json",
+    "text/html"
+  ],
+  "parses": [
+    "application/json",
+    "application/x-www-form-urlencoded",
+    "multipart/form-data"
+  ]
+}

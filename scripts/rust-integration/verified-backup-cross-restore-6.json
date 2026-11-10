@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "scope": "original/native database-only v2 ZIP cross-load on three owned copied PostgreSQL17 databases",
+  "application_image_verified": false,
+  "job_api_verified": false,
+  "cleanup": "project removed",
+  "copied_databases": 3,
+  "nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "binary_sha256": "38fa818a175d15522c7f3dff6d306b2a01325886df2bf1d4e90d8cccf5ed2854",
+  "source_archive_sha256": "bbacc27200cb1e4df3e63ba4532582e984ba887c44ef115ddc730e9268adfebe",
+  "native_checks_sha256": "2bbead925568a5a4154cf5d1f14338c377eacbac21ad5d47eced471b4f68cf7b",
+  "evidence": "artifacts/rust/m8-backup-cross-restore-6",
+  "raw_report_sha256": "a4486d9ae38a1f900ddb02342414b5f9307c915c8cf37ff0ff21768c6e29fe6c",
+  "rust_source_archive_sha256": "c59360184eabed7559b6c4698b70e90fa59463094166e044552f2a962308db1c",
+  "tool_source_snapshot": "artifacts/rust/m8-backup-cross-restore-6/tool-source",
+  "checks": [
+    "Source ZIP to native restore: exact rows/schema/indexes/constraints/sequences",
+    "Native ZIP to original restore task and migrate: exact rows/schema/indexes/constraints/sequences",
+    "Password/API-key/group/profile preservation verified by original ORM",
+    "Original default fixture database unchanged",
+    "Database-only two-member v2 ZIP metadata",
+    "Cancelled before start, archive cap, private scratch cleanup",
+    "Actual original/native PostgreSQL TCP password rejection",
+    "Actual original/native PostgreSQL role with no table privileges fails dump",
+    "Failed dump preserves copied source schema/data/sequences",
+    "Seven actual original/native archive and physical database failure boundaries"
+  ],
+  "remaining": [
+    "Runtime PG17 ELF closure and notices in canonical app image",
+    "Durable jobs, task token/status, browser backup UI, scheduling and retention",
+    "Timezone integration, PostgreSQL TLS, concurrent live application quiescence",
+    "SQLite and old-schema upgrades",
+    "Malformed/unsafe ZIP compatibility policy and full resource performance comparison"
+  ],
+  "credit": "Original Dispatcharr authors retain full application credit and AGPL license.",
+  "failed_attempts": [
+    {
+      "evidence": "artifacts/rust/m8-backup-cross-restore-1",
+      "reason": "Runner omitted disposable psql password; no copied DB created; cleaned"
+    },
+    {
+      "evidence": "artifacts/rust/m8-backup-cross-restore-2",
+      "reason": "Fixture duplicated original automatic profile membership; cleaned"
+    },
+    {
+      "evidence": "artifacts/rust/m8-backup-cross-restore-4",
+      "reason": "Unix-socket trust correctly ignored invalid password; TCP auth fixture required; cleaned"
+    }
+  ],
+  "archive_boundary_cases": [
+    "missing metadata",
+    "missing selected dump",
+    "engine mismatch",
+    "nonobject metadata",
+    "ignored format/version",
+    "missing type/file default fields",
+    "warning-only invalid pg_restore dump after cleanup"
+  ],
+  "warning_only_restore_behavior": "Both original service and Rust component return success for invalid pg_restore input without fatal/could-not-connect stderr, after dropping public schema. The isolated target is empty afterward; this is preserved failure behavior, not data-restoration success."
+}

@@ -5,6 +5,35 @@ pub enum RenderError {
     Capacity,
     InvalidMetadata,
 }
+pub fn channel(id: &str, name: &str, logo: &str, limit: usize) -> Result<String, RenderError> {
+    let mut out = Xml::new(limit);
+    out.raw("  <channel id=\"")?;
+    out.escape(id)?;
+    out.raw("\">\n    <display-name>")?;
+    out.escape(name)?;
+    out.raw("</display-name>\n    <icon src=\"")?;
+    out.escape(logo)?;
+    out.raw("\" />\n  </channel>\n")?;
+    Ok(out.value)
+}
+pub fn standard_dummy(
+    input: &crate::dummy::DummyProgramme,
+    limit: usize,
+) -> Result<String, RenderError> {
+    let mut out = Xml::new(limit);
+    out.raw("  <programme start=\"")?;
+    out.raw(&input.start_time.format("%Y%m%d%H%M%S +0000").to_string())?;
+    out.raw("\" stop=\"")?;
+    out.raw(&input.end_time.format("%Y%m%d%H%M%S +0000").to_string())?;
+    out.raw("\" channel=\"")?;
+    out.escape(&input.channel_id)?;
+    out.raw("\">\n    <title>")?;
+    out.escape(&input.title)?;
+    out.raw("</title>\n    <desc>")?;
+    out.escape(&input.description)?;
+    out.raw("</desc>\n  </programme>\n")?;
+    Ok(out.value)
+}
 pub struct Programme<'a> {
     pub id: i64,
     pub channel: &'a str,

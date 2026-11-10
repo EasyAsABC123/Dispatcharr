@@ -1,0 +1,155 @@
+{
+  "scope": "Application-unwired original/native XMLTV HTTP/cache/generator component gate; original Dispatcharr author credit retained",
+  "passed": true,
+  "app_wired": false,
+  "packaged_verified": false,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "native_source_manifest_sha256": "d7d90a17e80109c533a0f96c81cc358b25cfb2f478553c4461f09d41c4ae8a38",
+  "original_native_http_cases": 47,
+  "http_differences": [],
+  "actual_source_window_cases": 1664,
+  "complete_original_native_xml_documents": 36,
+  "native_real_redis_cache_delivery_tests": 7,
+  "native_real_pg_generator_tests": 1,
+  "native_real_pg_redis_resource_tests": 4,
+  "resource_cases": [
+    "unpolled bodies retain admission and drain on shutdown",
+    "final cloned body frame retains only its memory budget",
+    "ready cache replay completes while channel table has exclusive lock",
+    "fresh unsupported custom source properties return501 before XML headers"
+  ],
+  "python_cache_interop": {
+    "status": 200,
+    "body_sha256": "ba5ce5e9a694628ce18ac11254f534b0a3468bb8f96571682ce52c3de91da5c0",
+    "expected_sha256": "ba5ce5e9a694628ce18ac11254f534b0a3468bb8f96571682ce52c3de91da5c0",
+    "actual_python_endpoint_primed_current_generation": true,
+    "events_unchanged": true
+  },
+  "event_count_checkpoints": [
+    {
+      "after": "seed",
+      "source": [
+        0,
+        0
+      ],
+      "native": [
+        0,
+        0
+      ]
+    },
+    {
+      "after": "normal HEAD cold",
+      "source": [
+        0,
+        0
+      ],
+      "native": [
+        0,
+        0
+      ]
+    },
+    {
+      "after": "normal first",
+      "source": [
+        1,
+        0
+      ],
+      "native": [
+        1,
+        0
+      ]
+    },
+    {
+      "after": "normal replay",
+      "source": [
+        1,
+        0
+      ],
+      "native": [
+        1,
+        0
+      ]
+    },
+    {
+      "after": "XC HEAD cold days2",
+      "source": [
+        7,
+        0
+      ],
+      "native": [
+        7,
+        0
+      ]
+    },
+    {
+      "after": "XC HEAD",
+      "source": [
+        7,
+        0
+      ],
+      "native": [
+        7,
+        0
+      ]
+    },
+    {
+      "after": "mutation before invalidation",
+      "source": [
+        7,
+        1
+      ],
+      "native": [
+        7,
+        1
+      ]
+    },
+    {
+      "after": "mutation after invalidation",
+      "source": [
+        7,
+        1
+      ],
+      "native": [
+        7,
+        1
+      ]
+    },
+    {
+      "after": "finished",
+      "source": [
+        7,
+        4
+      ],
+      "native": [
+        7,
+        4
+      ]
+    }
+  ],
+  "native_shutdown": {
+    "closed": true,
+    "drained": true,
+    "active_requests": 0,
+    "available_bytes": 536870912
+  },
+  "cleanup": "owned Compose project removed",
+  "evidence": "artifacts/rust/m7-xmltv-http-native-6/xmltv-source.json",
+  "native_log": "artifacts/rust/m7-xmltv-http-native-6/native-cache-tests.log",
+  "tool_source": "artifacts/rust/m7-xmltv-http-native-6/tools",
+  "excluded": [
+    "Packaged app routes and middleware not yet verified",
+    "Custom source-property/third-party regex dummy guides explicitly501",
+    "Mixed Python stale producers ignore Rust fencing; captured orphan/stale bugs are intentionally fixed internally",
+    "No XMLTV or whole-application performance gains accepted",
+    "Current row Vec allocation-only change after frozen6 will be bound by next packaged gate"
+  ],
+  "preserved_runs": {
+    "content-native-1": "Fixture PostgreSQL username was incorrect; cleanup passed",
+    "delivery-native-1": "Cargo graph snapshot raced cached Store multer edge; --locked rejected; cleanup passed",
+    "http-native-1": "Fixture cache snapshot count1000 rejected native smaller UTF8 chunks; raised to configured65536; cleanup passed",
+    "http-native-2": "Four wire mismatches fixed: partial response transport closure and ordinary Django JSON separators",
+    "http-native-4": "Test Body::to_bytes retained first frame then requested next; corrected to copy-and-drop streaming collector; timeout cleanup passed",
+    "http-native-5": "Component test advanced owned generation; interop assertion mistakenly used obsolete Python generation. Prime actual Python current generation before check; cleanup passed"
+  }
+}

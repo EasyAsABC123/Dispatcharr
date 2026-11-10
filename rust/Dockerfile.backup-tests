@@ -1,0 +1,17 @@
+# Standalone disposable backup component. Original authors retain AGPL credit.
+FROM rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f AS build
+WORKDIR /workspace
+ENV CARGO_TARGET_DIR=/tmp/dispatcharr-backup-target
+COPY rust/ ./rust/
+RUN mkdir -p "$CARGO_TARGET_DIR" && cargo build --manifest-path rust/Cargo.toml --locked --release -p dispatcharr-backups --example backup_fixture
+FROM ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f AS postgres
+COPY rust/runtime/collect_postgres.py /tmp/collect_postgres.py
+RUN COLLECT_PINNED_PG_RUNTIME=draft-build-stage-only /dispatcharrpy/bin/python /tmp/collect_postgres.py
+FROM debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+COPY --from=postgres /pg-client-runtime/ /
+COPY --from=build /tmp/dispatcharr-backup-target/release/examples/backup_fixture /usr/local/bin/dispatcharr-backup-fixture
+COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
+RUN mkdir -p /fixture && chown 65532:65532 /fixture
+USER 65532:65532
+ENV BACKUP_DISPOSABLE_FIXTURE=playback-fixture-only
+ENTRYPOINT ["/usr/local/bin/dispatcharr-backup-fixture"]

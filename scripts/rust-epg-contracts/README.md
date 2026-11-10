@@ -36,3 +36,5 @@ The prepared-plan cause was isolated separately: the optional-ID predicate chang
 The [strict row/order/format replay](verified-row-order-format-components-6.json) now passes all53 native SQL row and collection-order cases without sorting or order normalization, plus399 format decisions using the supplied Source MIME hints. The104 captured Source HTTP cases are not104 native HTTP passes. Host MIME lookup, extraction, resource-bounded HTTP delivery and application refresh scheduling remain separate gates.
 
 The [stored-programme JSON/HEAD component](PROGRAM-READS.md) now has37 actual HTTP comparisons, four physical-capacity scenarios and retained body ownership. Its explicit HTML/CRUD/poster/grid guards and larger guide workloads remain open. The generic row-projection helper remains HTTP-unwired; the independent programme gateway adds its own SQL, admission, transaction and response bounds.
+
+[Current programmes](CURRENT-PROGRAMMES.md) now have64 native host HTTP comparisons plus retained SQL/response ownership checks. The separate guide grid, current file-index fallback and full input/rendering grammars remain unfinished.

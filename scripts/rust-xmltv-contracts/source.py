@@ -62,6 +62,7 @@ def exercise(base,control,out):
     control.call({'op':'preferences','user':'standard','values':{}})
     control.call({'op':'mutate_program','title':'Mutated guide title'})
     cached=request('mutation before invalidation');assert cached['body_sha256']==first['body_sha256'];snapshot('mutation before invalidation')
+    snapshots[-1]['event_dedup_reset']=control.call({'op':'clear_anon_download_dedup'})
     control.call({'op':'invalidate'});fresh=request('mutation after invalidation');assert fresh['body_sha256']!=first['body_sha256'];snapshot('mutation after invalidation')
     control.call({'op':'network','values':{'M3U_EPG':'192.0.2.0/24'}})
     request('normal network deny');request('normal HEAD network deny',method='HEAD');request('XC bypasses M3U_EPG',path='/xmltv.php',role='standard')
@@ -71,15 +72,20 @@ def exercise(base,control,out):
     return rows,snapshots
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args();docker=shutil.which('docker');assert docker
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--native-cache',action='store_true');parser.add_argument('--native-content',action='store_true');parser.add_argument('--native-http',action='store_true');parser.add_argument('--xc-epg-source',action='store_true');args=parser.parse_args();docker=shutil.which('docker');assert docker
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=True);assert not any(out.iterdir())
     report={'scope':'actual original XMLTV HTTP/cache/real+defaultdummy characterization only','passed':False,'native_verified':False,'baseline_commit':BASELINE,'baseline_image':IMAGE,'commands':[]}
-    tools=[Path(__file__).resolve(),Path(__file__).with_name('control.py'),Path(__file__).with_name('render_source.py'),Path(__file__).with_name('cache_source.py'),ROOT/'scripts/rust-xc-contracts/control.py',ROOT/'scripts/rust-realtime-contracts/interop.py',ROOT/'scripts/rust-integration/shared_ts.py',ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'docker/compose.rust-playback.yml',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
+    tools=[Path(__file__).resolve(),Path(__file__).with_name('control.py'),Path(__file__).with_name('render_source.py'),Path(__file__).with_name('cache_source.py'),Path(__file__).with_name('window_source.py'),Path(__file__).with_name('content_source.py'),ROOT/'scripts/rust-xc-contracts/control.py',ROOT/'scripts/rust-xc-contracts/epg_source.py',ROOT/'scripts/rust-realtime-contracts/interop.py',ROOT/'scripts/rust-integration/shared_ts.py',ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'docker/compose.rust-playback.yml',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
     copies=out/'tools'
     for path in tools:target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
+    if args.native_cache or args.native_content or args.native_http:
+        for path in (ROOT/'rust').rglob('*'):
+            if path.is_file() and not set(path.relative_to(ROOT/'rust').parts)&{'target','.git','__pycache__'}:
+                target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
+        report['native_source_manifest_sha256']=hashlib.sha256(json.dumps({str(path.relative_to(copies/'rust')):hashlib.sha256(path.read_bytes()).hexdigest() for path in (copies/'rust').rglob('*') if path.is_file()},sort_keys=True,separators=(',',':')).encode()).hexdigest()
     report['tool_sha256']={str(path.relative_to(ROOT)):hashlib.sha256((copies/path.relative_to(ROOT)).read_bytes()).hexdigest() for path in tools}
-    project='dispatcharr-xmltv-'+uuid.uuid4().hex[:12];report['project']=project;control=None
-    overlay=out/'overlay.json';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[str(copies/'scripts/rust-xmltv-contracts')+':/xmltv-probe:ro',str(copies/'scripts/rust-xc-contracts')+':/xc-probe:ro']}}}));ports=out/'ports.yml';report['ports']=write_port_overlay(ports,{'baseline':[5656],'origin':[8080]})
+    project='dispatcharr-xmltv-'+uuid.uuid4().hex[:12];report['project']=project;control=None;native=None
+    overlay=out/'overlay.json';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[str(copies/'scripts/rust-xmltv-contracts')+':/xmltv-probe:ro',str(copies/'scripts/rust-xc-contracts')+':/xc-probe:ro']}}}));ports=out/'ports.yml';report['ports']=write_port_overlay(ports,{'baseline':[5656,6379,5432],'origin':[8080]})
     with fixture_source(report,out,'xmltv-source.json') as temporary:
         source=Path(temporary)/'source';source.mkdir();archive=Path(temporary)/'source.tar'
         with archive.open('wb') as file:subprocess.run(['git','archive',BASELINE],cwd=ROOT,stdout=file,check=True,timeout=30)
@@ -89,9 +95,49 @@ def main():
         def command(values,timeout=120):report['commands'].append(values);return subprocess.run(values,cwd=ROOT,env=env,text=True,capture_output=True,check=True,timeout=timeout).stdout
         try:
             command(compose+['up','-d','baseline','origin'],180);base='http://'+command(compose+['port','baseline','5656']).strip();wait(lambda:(out/'seed.json').exists() and ready_http(base+'/proxy/ts/stream/missing')[0]==404,300,'original ready')
-            control=Peer(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/xmltv-probe/control.py'],env,out/'control.log');report['cases'],report['cache_snapshots']=exercise(base,control,out);report['render_vectors']=control.call({'op':'render_vectors'});report['cache_vectors']=control.call({'op':'cache_vectors'});report['passed']=True
-        except Exception as error:report.update(failure=type(error).__name__,failure_message=str(error))
+            control=Peer(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/xmltv-probe/control.py'],env,out/'control.log');report['cases'],report['cache_snapshots']=exercise(base,control,out);report['render_vectors']=control.call({'op':'render_vectors'});report['cache_vectors']=control.call({'op':'cache_vectors'});report['window_vectors']=control.call({'op':'window_vectors'});report['content_vectors']=control.call({'op':'content_vectors'});(out/'content-source.json').write_text(json.dumps(report['content_vectors'],ensure_ascii=False));report['passed']=True
+            if args.xc_epg_source:
+                captured=control.call({'op':'xc_epg_vectors','start':0,'count':32});total=captured['total']
+                for start in range(32,total,32):captured['cases'].extend(control.call({'op':'xc_epg_vectors','start':start,'count':32})['cases'])
+                captured['hash_characterization']=control.call({'op':'xc_epg_hash'});(out/'xc-epg-source.json').write_text(json.dumps(captured,ensure_ascii=False));report['xc_epg_source']={'cases':len(captured['cases']),'source_sha256':captured['source_sha256'],'hash_characterization':captured['hash_characterization'],'native_verified':False}
+            if args.native_cache or args.native_content or args.native_http:
+                env_test=dict(env,CARGO_HOME='/tmp/dispatcharr-cargo',RUSTUP_HOME='/tmp/dispatcharr-rustup',RUSTUP_TOOLCHAIN='1.90.0',REDIS_TEST_URL='redis://:playback-fixture-only@'+command(compose+['port','baseline','6379']).strip()+'/0')
+                env_test.update(DATABASE_TEST_URL='postgres://dispatch:playback-fixture-only@'+command(compose+['port','baseline','5432']).strip()+'/dispatcharr',XMLTV_CONTENT_SOURCE=str(out/'content-source.json'))
+                cmd=['/tmp/dispatcharr-cargo/bin/cargo','test','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xmltv-http','--lib','--','--ignored','--test-threads=1'];report['native_command']=cmd
+                with (out/'native-cache-tests.log').open('w') as native_log:tested=subprocess.run(cmd,env=env_test,text=True,stdout=native_log,stderr=subprocess.STDOUT,timeout=180)
+                report['native_cache_component_verified']=tested.returncode==0;assert tested.returncode==0,'native cache component tests failed'
+                if args.native_http:
+                    build=cmd[:cmd.index('test')]+['build','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xmltv-http','--example','peer']
+                    built=subprocess.run(build,env=env_test,text=True,capture_output=True,timeout=180);(out/'native-peer-build.log').write_text(built.stdout+built.stderr);assert built.returncode==0,'native peer build'
+                    native=Peer([str(ROOT/'rust/target/debug/examples/peer')],dict(env_test,SECRET_KEY='playback-fixture-only'),out/'native-peer.log')
+                    # The component generation-isolation test intentionally advances
+                    # the owned global counter. Prime the CURRENT generation with
+                    # the actual Python endpoint before checking native cache reads.
+                    conn=http.client.HTTPConnection(base.removeprefix('http://'),timeout=10);conn.request('GET','/output/epg',headers={'Host':'xmltv.fixture.invalid:8088'});primed=conn.getresponse();primed_body=primed.read(8*1024*1024);conn.close();assert primed.status==200
+                    before=control.call({'op':'cache'})
+                    conn=http.client.HTTPConnection('127.0.0.1',native.ready['port'],timeout=10);conn.request('GET','/output/epg',headers={'Host':'xmltv.fixture.invalid:8088'});legacy=conn.getresponse();legacy_body=legacy.read(8*1024*1024);conn.close()
+                    after=control.call({'op':'cache'})
+                    report['python_cache_interop']={'status':legacy.status,'body_sha256':hashlib.sha256(legacy_body).hexdigest(),'expected_sha256':hashlib.sha256(primed_body).hexdigest(),'actual_python_endpoint_primed_current_generation':True,'events_unchanged':before['epg_download_events']==after['epg_download_events']}
+                    assert legacy.status==200 and report['python_cache_interop']['body_sha256']==report['python_cache_interop']['expected_sha256'] and report['python_cache_interop']['events_unchanged'],'Python-written cache interoperability'
+                    report['phase_reset']=control.call({'op':'reset_phase'})
+                    target=out/'native';target.mkdir()
+                    report['native_cases'],report['native_cache_snapshots']=exercise('http://127.0.0.1:'+str(native.ready['port']),control,target)
+                    differences=[]
+                    for source_case,native_case in zip(report['cases'],report['native_cases'],strict=True):
+                        keys=['case','status','headers','body_sha256','body_bytes','xml_complete','json','read_error']
+                        changes={key:{'source':source_case.get(key),'native':native_case.get(key)}for key in keys if source_case.get(key)!=native_case.get(key)}
+                        if changes:differences.append({'case':source_case['case'],'changes':changes})
+                    report['event_count_comparison']=[{'after':source['after'],'source':[source['epg_download_events'],source['epg_blocked_events']],'native':[native_row['epg_download_events'],native_row['epg_blocked_events']]}for source,native_row in zip(report['cache_snapshots'],report['native_cache_snapshots'],strict=True)]
+                    assert all(row['source']==row['native']for row in report['event_count_comparison']),'Source audit/dedup event counts'
+                    report['native_http_differences']=differences
+                    report['native_shutdown']=native.call({'op':'close'});native.close();native=None
+                    assert report['native_shutdown']['drained'] and report['native_shutdown']['active_requests']==0,'native shutdown'
+                    assert not differences,'native HTTP contract mismatch'
+                    report['native_http_component_verified']=True
+
+        except Exception as error:report.update(passed=False,failure=type(error).__name__,failure_message=str(error))
         finally:
+            if native:native.close()
             if control:control.close()
             try:command(compose+['down','--volumes','--remove-orphans','--timeout','5'],60);report['cleanup']='owned Compose project removed'
             except Exception:report['cleanup_error']=True;report['passed']=False

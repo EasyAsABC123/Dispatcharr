@@ -114,7 +114,7 @@ async fn run() -> Result<(), String> {
         .map_err(|_| "Invalid RUST_BIND")?;
     let secret = env::var("DJANGO_SECRET_KEY").map_err(|_| "DJANGO_SECRET_KEY is required")?;
     let mut auth_config =
-        AuthConfig::new(secret).map_err(|_| "Invalid authentication configuration")?;
+        AuthConfig::new(secret.clone()).map_err(|_| "Invalid authentication configuration")?;
     auth_config.trusted_proxies = env::var("DISPATCHARR_TRUSTED_PROXIES").ok();
     let database_url = database_url()?;
     match env::var("RUST_INITIALIZE_EMPTY_DATABASE").as_deref() {
@@ -425,6 +425,60 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
+    let xmltv = if let Ok(redis_url) = env::var("REDIS_URL") {
+        Some(
+            dispatcharr_xmltv_http::gateway::Gateway::new(
+                store.clone(),
+                auth.clone(),
+                &redis_url,
+                dispatcharr_xmltv_http::gateway::Config {
+                    max_requests: positive("RUST_MAX_XMLTV_REQUESTS", 64)?,
+                    max_builds: positive("RUST_MAX_XMLTV_BUILDS", 2)?,
+                    max_memory_bytes: positive("RUST_XMLTV_MEMORY_BYTES", 512 * 1024 * 1024)?,
+                    max_body_bytes: positive("RUST_XMLTV_BODY_BYTES", 64 * 1024)?,
+                    max_frame_bytes: positive("RUST_XMLTV_FRAME_BYTES", 1024 * 1024)?,
+                    max_number_bytes: positive("RUST_XMLTV_NUMBER_BYTES", 104 * 1024 * 1024)?,
+                    setup_deadline: Duration::from_secs(positive(
+                        "RUST_XMLTV_SETUP_TIMEOUT_SECONDS",
+                        15,
+                    )? as u64),
+                    stream_deadline: Duration::from_secs(positive(
+                        "RUST_XMLTV_STREAM_TIMEOUT_SECONDS",
+                        600,
+                    )? as u64),
+                    rows: dispatcharr_xmltv_http::rows::Limits {
+                        max_channels: positive("RUST_MAX_XMLTV_CHANNELS", 50000)?,
+                        max_metadata_bytes: positive(
+                            "RUST_XMLTV_METADATA_BYTES",
+                            16 * 1024 * 1024,
+                        )?,
+                        max_programme_metadata_bytes: positive(
+                            "RUST_XMLTV_PROGRAMME_METADATA_BYTES",
+                            1024 * 1024,
+                        )?,
+                        max_programmes: positive("RUST_MAX_XMLTV_PROGRAMMES", 2_000_000)?,
+                    },
+                    cache: dispatcharr_xmltv_http::cache::CacheConfig {
+                        max_entries: positive("RUST_XMLTV_CACHE_ENTRIES", 128)?,
+                        max_cache_bytes: positive("RUST_XMLTV_CACHE_BYTES", 512 * 1024 * 1024)?,
+                        max_export_bytes: positive("RUST_XMLTV_EXPORT_BYTES", 256 * 1024 * 1024)?,
+                        max_chunks: positive("RUST_XMLTV_CACHE_CHUNKS", 65536)?,
+                        chunk_bytes: positive("RUST_XMLTV_CHUNK_BYTES", 64 * 1024)?,
+                        max_read_bytes: positive("RUST_XMLTV_IO_BYTES", 64 * 1024 * 1024)?,
+                        max_legacy_chunk_bytes: positive(
+                            "RUST_XMLTV_LEGACY_CHUNK_BYTES",
+                            8 * 1024 * 1024,
+                        )?,
+                        ..Default::default()
+                    },
+                },
+            )
+            .await
+            .map_err(|_| "XMLTV initialization failed (credentials omitted)")?,
+        )
+    } else {
+        None
+    };
     let xc = if let Ok(redis_url) = env::var("REDIS_URL") {
         let counts = dispatcharr_xc_http::counts::ConnectionCounts::connect_source(&redis_url)
             .await
@@ -475,6 +529,15 @@ async fn run() -> Result<(), String> {
         dispatcharr_store::OutputProfileWrites::new(auth.clone(), profile_redis.as_deref())
             .await
             .map_err(|_| "Output profile initialization failed (credentials omitted)")?;
+    // Original BACKUP_ROOT semantics; no production restore authority or job queue.
+    let backup_files = dispatcharr_store::BackupFiles::new(
+        auth.clone(),
+        std::path::PathBuf::from(
+            env::var("BACKUP_ROOT").unwrap_or_else(|_| "/data/backups".into()),
+        ),
+        secret,
+    )
+    .map_err(|_| "Invalid backup file API configuration")?;
     let epg_programs = dispatcharr_store::EpgProgramReads::new(
         auth.clone(),
         dispatcharr_store::EpgProgramReadLimits {
@@ -500,7 +563,9 @@ async fn run() -> Result<(), String> {
         .with_state(store)
         .merge(auth.clone().router())
         .merge(output_profiles.clone().router())
+        .merge(backup_files.clone().router())
         .merge(epg_programs.clone().router())
+        .merge(epg_programs.clone().current_router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))
         .merge(playback::router(
@@ -532,6 +597,9 @@ async fn run() -> Result<(), String> {
     }
     if let Some(output) = &output {
         app = app.merge(output.clone().router());
+    }
+    if let Some(xmltv) = &xmltv {
+        app = app.merge(xmltv.clone().router());
     }
     // Source bare-profile redirects duplicate the profile and render React.
     app = app
@@ -588,8 +656,10 @@ async fn run() -> Result<(), String> {
         catchup_management,
         realtime,
         output,
+        xmltv,
         xc,
         output_profiles,
+        backup_files,
         epg_programs,
         hdhr,
         live_statistics,
@@ -656,8 +726,10 @@ struct ShutdownServices {
     catchup_management: Option<dispatcharr_timeshift_http::CatchupManagement>,
     realtime: Option<dispatcharr_realtime::RealtimeGateway>,
     output: Option<dispatcharr_output_http::OutputGateway>,
+    xmltv: Option<dispatcharr_xmltv_http::gateway::Gateway>,
     xc: Option<dispatcharr_xc_http::XcGateway>,
     output_profiles: dispatcharr_store::OutputProfileWrites,
+    backup_files: dispatcharr_store::BackupFiles,
     epg_programs: dispatcharr_store::EpgProgramReads,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
     live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
@@ -673,14 +745,31 @@ async fn shutdown_components(services: ShutdownServices) {
         catchup_management,
         realtime,
         output,
+        xmltv,
         xc,
         output_profiles,
+        backup_files,
         epg_programs,
         hdhr,
         live_statistics,
     } = services;
     engine.shutdown();
-    let (live, _, _, vod, catchup, management, realtime, output, xc, profiles, programs, hdhr) = tokio::join!(
+    let (
+        live,
+        _,
+        _,
+        vod,
+        catchup,
+        management,
+        realtime,
+        output,
+        xmltv,
+        xc,
+        profiles,
+        backups,
+        programs,
+        hdhr,
+    ) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
             if let Some(hls) = hls {
@@ -728,6 +817,13 @@ async fn shutdown_components(services: ShutdownServices) {
             }
         },
         async {
+            if let Some(xmltv) = xmltv {
+                xmltv.shutdown().await
+            } else {
+                true
+            }
+        },
+        async {
             if let Some(xc) = xc {
                 xc.shutdown().await
             } else {
@@ -735,10 +831,22 @@ async fn shutdown_components(services: ShutdownServices) {
             }
         },
         output_profiles.shutdown(Duration::from_secs(8)),
+        backup_files.shutdown(Duration::from_secs(8)),
         epg_programs.shutdown(Duration::from_secs(8)),
         hdhr.shutdown(),
     );
-    if !live || !vod || !catchup || !management || !realtime || !output || !xc || !profiles || !programs || !hdhr
+    if !live
+        || !vod
+        || !catchup
+        || !management
+        || !realtime
+        || !output
+        || !xmltv
+        || !xc
+        || !profiles
+        || !backups
+        || !programs
+        || !hdhr
     {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }

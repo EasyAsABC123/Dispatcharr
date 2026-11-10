@@ -2,6 +2,8 @@
 
 Original Dispatcharr authors and contributors retain full application credit and AGPL licensing. This is a read-only source inventory prepared during the coordinated performance quiet window. No original process, Cargo test, Docker stack, backup, restore or database command was executed. Nothing here is an accepted migration milestone or a new passing test report.
 
+Following this historical inventory, a standalone, app-unwired PostgreSQL archive component and a real copied-database cross-restore were implemented. [The scoped component evidence](../rust-integration/verified-backup-cross-restore-5.json) records original→Rust and Rust→original restore success, exact logical data/schema/sequences, credentials and real failed-auth/privilege cases. Jobs, HTTP backup flows, SQLite and upgrades remain open; the inventory below describes the original audit rather than claiming those gates are complete.
+
 The inspected contracts are `apps/backups/{services,api_views,api_urls,tasks,scheduler,apps}.py`, `apps/backups/tests/test_backups.py`, `core/{models,signals,scheduling}.py`, `core/management/commands/`, `apps/proxy/management/commands/proxy.py`, `dispatcharr/settings.py`, `docker/entrypoint.sh` and `docker/init/03-init-dispatcharr.sh` at the migration's pinned original source revision. HTTP routes are included under `/api/backups/` by `apps/api/urls.py`.
 
 ## Actual archive contract
