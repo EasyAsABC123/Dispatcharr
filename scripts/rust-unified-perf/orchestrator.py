@@ -24,6 +24,20 @@ def normalize(load,counters,workload,period,duration,checks,api):
  'cache_state_verified':True,'fixture_unchanged':checks,'limits_verified':True}
  return value,per_endpoint
 
+def compare_endpoints(endpoint_phases):
+ expected={str(index)for index in range(len(protocol.PATHS))}
+ if set(endpoint_phases)!={'source','candidate'}or any(set(rows)!=expected for rows in endpoint_phases.values()):raise ValueError('Exact declared endpoint set required')
+ result={};budget=protocol.POLICY['budgets']
+ for index in sorted(expected):
+  old=endpoint_phases['source'][index];new=endpoint_phases['candidate'][index];fail=[]
+  if not old['completed']or not new['completed']:fail.append('empty_endpoint')
+  else:
+   if new['completion_p95_ms']>old['completion_p95_ms']*budget['max_completion_p95_ratio']:fail.append('completion')
+   if new['ttfb_p95_ms']>max(old['ttfb_p95_ms'],budget['ttfb_floor_ms'])*budget['max_ttfb_p95_ratio']:fail.append('ttfb')
+   if new['throughput_per_second']<old['throughput_per_second']*budget['min_throughput_ratio']:fail.append('throughput')
+  result[index]={'source':old,'candidate':new,'passed':not fail,'failures':fail}
+ return result
+
 def execute(*,output,manifest,tools,reference,start,stop,helper,select_services,reader,quiet,measurement_cue):
  # Called only after independent functional gates; still reject missing cue
  # before opening an observer or starting any measured/qualification phase.
@@ -82,15 +96,7 @@ def execute(*,output,manifest,tools,reference,start,stop,helper,select_services,
    for backend in order:
     value,endpoints,_=phase(backend,work,plan['selected_periods'][work['name']],60,15,output/f"matrix-{work['name']}-{trial}-{backend}")
     phases[backend]=value;endpoint_phases[backend]=endpoints
-   result=acceptance.compare(phases['source'],phases['candidate']);endpoint_results={}
-   for index in ['0','1']:
-    old=endpoint_phases['source'][index];new=endpoint_phases['candidate'][index];fail=[]
-    if not old['completed']or not new['completed']:fail.append('empty_endpoint')
-    else:
-     if new['completion_p95_ms']>old['completion_p95_ms']*1.10:fail.append('completion')
-     if new['ttfb_p95_ms']>max(old['ttfb_p95_ms'],50)*1.10:fail.append('ttfb')
-     if new['throughput_per_second']<old['throughput_per_second']*.95:fail.append('throughput')
-    endpoint_results[index]={'source':old,'candidate':new,'passed':not fail,'failures':fail}
+   result=acceptance.compare(phases['source'],phases['candidate']);endpoint_results=compare_endpoints(endpoint_phases)
    pair={'workload':work['name'],'trial':trial,'order':order,'phases':phases,'acceptance':result,'per_endpoint':endpoint_results,'passed':result['passed']and all(v['passed']for v in endpoint_results.values())};pairs.append(pair);save(output/'matrix.json',{'passed':len(pairs)==6 and all(p['passed']for p in pairs),'pairs':pairs})
    print(json.dumps({'state':'pair-complete','workload':work['name'],'trial':trial,'passed':pair['passed']}),flush=True)
    if not pair['passed']:return {'passed':False,'pairs':pairs,'performance_verified':False}

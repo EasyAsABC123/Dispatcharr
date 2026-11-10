@@ -13,3 +13,5 @@ python3 scripts/rust-unified-perf/run.py --action functional \
   --build-manifest artifacts/rust/candidate-build-unified-recovery-jobs-image36-1/build.json \
   --output artifacts/rust/unified-functional-NEW
 ```
+
+The first qualification attempt completed its eight Original-only phases, but parent review refused measurement authorization after finding a remaining two-endpoint comparison loop. No paired measurement started; the owned project was removed. The corrected comparison derives its exact endpoint set from the declared policy and rejects missing or extra endpoints. Five controller/reader safety controls pass. A new attempt must repeat qualification with fresh cues; policy, fixture, pacing choices and budgets are unchanged.

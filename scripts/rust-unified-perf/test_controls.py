@@ -26,6 +26,17 @@ class Control(unittest.TestCase):
    with self.assertRaises(ValueError):protocol.validate_plan(altered,qualification,manifest,fixture)
    cue['expires_utc']='2000-01-01T00:00:00+00:00';path.write_text(json.dumps(cue))
    with self.assertRaises(ValueError):protocol.authorize(path,manifest,'vod-resource-measurement',plan['plan_sha256'])
+ def test_single_endpoint_comparison_requires_exact_endpoint_set(self):
+  import orchestrator
+  row={'completed':60,'completion_p95_ms':10,'ttfb_p95_ms':5,'throughput_per_second':1}
+  phases={'source':{'0':dict(row)},'candidate':{'0':dict(row)}}
+  self.assertTrue(orchestrator.compare_endpoints(phases)['0']['passed'])
+  phases['candidate']['0']['completion_p95_ms']=12
+  self.assertIn('completion',orchestrator.compare_endpoints(phases)['0']['failures'])
+  phases['candidate']['1']=dict(row)
+  with self.assertRaises(ValueError):orchestrator.compare_endpoints(phases)
+  del phases['candidate']['1'];del phases['candidate']['0']
+  with self.assertRaises(ValueError):orchestrator.compare_endpoints(phases)
  def test_measured_late_and_fewer_than_sixty_samples_fail(self):
   value=dict(cpu_percent_mean=1,peak_working_memory_bytes=1,ttfb_p95_ms=1,completion_p95_ms=1,throughput_per_second=1,pacing_fraction=1,samples=60,errors=0,sample_errors=0,late_completed=0,oom_kills=0,counter_resets=0,correct_responses=True,cache_state_verified=True,fixture_unchanged=True,limits_verified=True)
   self.assertEqual(acceptance.phase(value),[]);value['late_completed']=1;self.assertIn('late_completed',acceptance.phase(value));value['samples']=59;self.assertIn('insufficient_samples',acceptance.phase(value))
