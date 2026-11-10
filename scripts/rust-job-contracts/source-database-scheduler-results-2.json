@@ -1,0 +1,160 @@
+{
+  "scope": "Actual Original ModelEntry and lazy DatabaseScheduler tick/sync/reconstruction; no workers/native scheduler/default schedule installation or crash guarantee",
+  "versions": {
+    "celery": "5.6.3",
+    "django-celery-beat": "2.9.0",
+    "Django": "6.0.9"
+  },
+  "cases": [
+    {
+      "name": "due",
+      "due": true,
+      "next_seconds": 3600.0,
+      "enabled_after": true,
+      "total_run_count_after": 0,
+      "last_run_at": "2026-11-10T12:46:06.528157+00:00"
+    },
+    {
+      "name": "not_due",
+      "due": false,
+      "next_seconds": 3599.991858,
+      "enabled_after": true,
+      "total_run_count_after": 0,
+      "last_run_at": "2026-11-10T14:46:06.528146+00:00"
+    },
+    {
+      "name": "disabled",
+      "due": false,
+      "next_seconds": 5.0,
+      "enabled_after": false,
+      "total_run_count_after": 0,
+      "last_run_at": null
+    },
+    {
+      "name": "future_start",
+      "due": false,
+      "next_seconds": 3600,
+      "enabled_after": true,
+      "total_run_count_after": 0,
+      "last_run_at": "2026-11-10T12:46:06.543446+00:00"
+    },
+    {
+      "name": "expired",
+      "due": false,
+      "next_seconds": 100000000,
+      "enabled_after": false,
+      "total_run_count_after": 0,
+      "last_run_at": null
+    },
+    {
+      "name": "one_off_done",
+      "due": false,
+      "next_seconds": 100000000,
+      "enabled_after": false,
+      "total_run_count_after": 0,
+      "last_run_at": null
+    },
+    {
+      "name": "one_off_first",
+      "due": true,
+      "next_seconds": 3600.0,
+      "enabled_after": true,
+      "total_run_count_after": 0,
+      "last_run_at": "2026-11-10T12:46:06.559145+00:00"
+    },
+    {
+      "name": "bad_args",
+      "due": false,
+      "next_seconds": 5.0,
+      "enabled_after": false,
+      "total_run_count_after": 0,
+      "last_run_at": null
+    },
+    {
+      "name": "bad_kwargs",
+      "due": false,
+      "next_seconds": 5.0,
+      "enabled_after": false,
+      "total_run_count_after": 0,
+      "last_run_at": null
+    }
+  ],
+  "publication": {
+    "envelope": {
+      "body": "W1tdLCB7InJldGVudGlvbl9jb3VudCI6IDJ9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+      "content-encoding": "utf-8",
+      "content-type": "application/json",
+      "headers": {
+        "lang": "py",
+        "task": "apps.backups.tasks.scheduled_backup_task",
+        "id": "749390a6-849d-43cf-acd6-75f56cbe26c2",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          null,
+          null
+        ],
+        "root_id": "749390a6-849d-43cf-acd6-75f56cbe26c2",
+        "parent_id": null,
+        "argsrepr": "()",
+        "kwargsrepr": "{'retention_count': 2}",
+        "origin": "gen361@6d21cd5b7ad9",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {},
+        "owned_scope": "scheduler_probe",
+        "periodic_task_name": "rust-owned-scheduler-actual_publication"
+      },
+      "properties": {
+        "correlation_id": "749390a6-849d-43cf-acd6-75f56cbe26c2",
+        "reply_to": "2689893b-1808-3c07-b1e8-a23bdb50b156",
+        "delivery_mode": 2,
+        "delivery_info": {
+          "exchange": "",
+          "routing_key": "celery"
+        },
+        "priority": 0,
+        "body_encoding": "base64",
+        "delivery_tag": "7e63a79a-13bd-41ce-a16b-01c68ae6bfc0"
+      }
+    },
+    "payload": [
+      [],
+      {
+        "retention_count": 2
+      },
+      {
+        "callbacks": null,
+        "errbacks": null,
+        "chain": null,
+        "chord": null
+      }
+    ],
+    "raw_sha256": "b01a4eba25243bf87d1d89faae40ec3fdbd0db89a07105e7c521d49144725fd7",
+    "tick_delay": 0,
+    "last_run_at": "2026-11-10T14:46:06.579941+00:00",
+    "total_run_count": 1
+  },
+  "overlap": {
+    "publications": 2,
+    "distinct_task_ids": 2,
+    "total_run_count": 1,
+    "scope": "Controlled preloaded scheduler overlap, not an OS process/crash/soak test"
+  },
+  "publication_failure": {
+    "module": "celery.beat",
+    "class": "SchedulingError",
+    "args": [
+      "Couldn't apply scheduled task rust-owned-scheduler-publish_rejected: invalid username-password pair or user is disabled."
+    ],
+    "total_run_count": 1,
+    "last_run_at": "2026-11-10T14:46:06.634951+00:00"
+  },
+  "scheduler_source_sha256": "e710af762a9704592a89a589fad34b91eb72d376d7bdc3d1f2ca1ebfe125f2fe",
+  "synthetic_only": true
+}

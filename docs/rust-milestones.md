@@ -41,6 +41,12 @@ also establishes that a release failure overrides a directory/SQL failure and
 does not undo a committed index. Neither observation is a native compatibility
 pass or a performance claim.
 
+The [Original database scheduler reference](../scripts/rust-job-contracts/DATABASE-SCHEDULER.md)
+passes30 copied-database checks for due state, actual publication, persisted run
+counts, reconstruction, preloaded scheduler overlap and rejected publication.
+Native scheduling, calendar/timezone boundaries, crash windows, packaging and
+performance remain open.
+
 Current evidence is described in the [local verification guide](rust-local-verification.md).
 The separate [image14 API characterization](../scripts/rust-integration/verified-api-resources-image14-1.json) passes three paired resource trials at identical40successfulrequests/second, with14,400 exact JSON responses and zero errors. Median paired CPU and sampled working-memory ratios are0.10483and0.62949. This read-only synthetic API subset does not close browser, authentication, realtime, background-job or full M5/application acceptance.
 The unchanged original React suite passed 6,567 tests in pinned Docker packaging,

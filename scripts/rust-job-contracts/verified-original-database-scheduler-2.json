@@ -1,0 +1,170 @@
+{
+  "passed": true,
+  "scope": "Actual Original ModelEntry and lazy DatabaseScheduler tick/sync/reconstruction; no workers/native scheduler/default schedule installation or crash guarantee",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "report": {
+    "path": "artifacts/rust/m6-original-database-scheduler-2/integration.json",
+    "sha256": "4562d7989c2f7a3208309af41187c217a855f469550186e78f167fd5609ac585"
+  },
+  "observations": {
+    "path": "artifacts/rust/m6-original-database-scheduler-2/source-scheduler-private.json",
+    "sha256": "2af0f88324593ffcafd388b1b4887ccb4cf429e3f16483ba751e7fe6fe149c72"
+  },
+  "checks": 30,
+  "checks_projection": [
+    {
+      "name": "model-entry-due-due",
+      "passed": true
+    },
+    {
+      "name": "model-entry-due-not_due",
+      "passed": true
+    },
+    {
+      "name": "model-entry-due-disabled",
+      "passed": true
+    },
+    {
+      "name": "model-entry-due-future_start",
+      "passed": true
+    },
+    {
+      "name": "model-entry-due-expired",
+      "passed": true
+    },
+    {
+      "name": "model-entry-disables-expired",
+      "passed": true
+    },
+    {
+      "name": "model-entry-due-one_off_done",
+      "passed": true
+    },
+    {
+      "name": "model-entry-disables-one_off_done",
+      "passed": true
+    },
+    {
+      "name": "one-off-resets-count",
+      "passed": true
+    },
+    {
+      "name": "model-entry-due-one_off_first",
+      "passed": true
+    },
+    {
+      "name": "model-entry-due-bad_args",
+      "passed": true
+    },
+    {
+      "name": "model-entry-disables-bad_args",
+      "passed": true
+    },
+    {
+      "name": "model-entry-due-bad_kwargs",
+      "passed": true
+    },
+    {
+      "name": "model-entry-disables-bad_kwargs",
+      "passed": true
+    },
+    {
+      "name": "only-owned-due-entry-loaded",
+      "passed": true
+    },
+    {
+      "name": "exactly-one-actual-publication",
+      "passed": true
+    },
+    {
+      "name": "actual-scheduled-backup-task",
+      "passed": true
+    },
+    {
+      "name": "actual-scheduled-backup-kwargs",
+      "passed": true
+    },
+    {
+      "name": "periodic-header-preserved",
+      "passed": true
+    },
+    {
+      "name": "database-sync-records-one-run",
+      "passed": true
+    },
+    {
+      "name": "second-immediate-tick-no-publication",
+      "passed": true
+    },
+    {
+      "name": "reconstructed-scheduler-sees-committed-run",
+      "passed": true
+    },
+    {
+      "name": "reconstructed-scheduler-no-duplicate-before-due",
+      "passed": true
+    },
+    {
+      "name": "no-worker-results",
+      "passed": true
+    },
+    {
+      "name": "overlap-preloads-same-due-row",
+      "passed": true
+    },
+    {
+      "name": "two-preloaded-schedulers-publish-twice",
+      "passed": true
+    },
+    {
+      "name": "overlap-row-count-is-stale-last-writer",
+      "passed": true
+    },
+    {
+      "name": "rejected-publication-does-not-enqueue",
+      "passed": true
+    },
+    {
+      "name": "rejected-publication-still-persists-reservation",
+      "passed": true
+    },
+    {
+      "name": "rejected-publication-not-immediately-due",
+      "passed": true
+    }
+  ],
+  "versions": {
+    "celery": "5.6.3",
+    "django-celery-beat": "2.9.0",
+    "Django": "6.0.9"
+  },
+  "scheduler_source_sha256": "e710af762a9704592a89a589fad34b91eb72d376d7bdc3d1f2ca1ebfe125f2fe",
+  "dataset": {
+    "path": "scripts/rust-job-contracts/source-database-scheduler-results-2.json",
+    "sha256": "56ab6ede64a0670d858cc216fd9d472081b2acaaf08d0e5bb3cb9e216dbb0110",
+    "synthetic_only": true
+  },
+  "selected_tools_sha256": {
+    "scripts/rust-job-contracts/run_scheduler.py": "8c12c248cc9952b536dcaf1686c7fe6fed7535deaecabdd89fd86cd709683bef",
+    "scripts/rust-job-contracts/source_scheduler.py": "00146b07ded08b6ab87e0e91718534409227ed8811d2810c12a81e990cf59027"
+  },
+  "earlier_pass": {
+    "path": "artifacts/rust/m6-original-database-scheduler-1/integration.json",
+    "sha256": "d17556131587fe8ceb78111f7aa14062572094bb41dcd95ff36a20862d324e50"
+  },
+  "facts": [
+    "Two actual preloaded scheduler objects publish distinct messages for the same due row; last-writer saved count is1. This is not a process/distributed ownership test.",
+    "Actual broker AUTH rejection enqueues nothing but reserve/sync still persists count1 and advances last_run_at.",
+    "Reconstruction means another scheduler object in the same process, not OS process restart.",
+    "Lazy scheduler construction omits setup/default schedule installation. No worker runs the published task."
+  ],
+  "default_database_unchanged": true,
+  "owned_rows_removed": true,
+  "cleanup": "project removed",
+  "native_scheduler_verified": false,
+  "calendar_timezone_boundaries_verified": false,
+  "os_process_crash_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "All application credit belongs to original Dispatcharr authors and contributors; Celery/django-celery-beat authors retain framework credit and licenses."
+}

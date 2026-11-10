@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "scope": "Actual Original cached-user SET/DEL/key ACL and plain-command success without Lua; Source only",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "report": "artifacts/rust/m6-original-index-cache-acl-1/integration.json",
+  "report_sha256": "12835ed8f710f9dfdc2cc9b3595a5f582f07c25396754af132641c4d1bdc01bd",
+  "private_observation_sha256": "08b061b9a56f7d2d38160137d4c31802c1007b6bd1219cd0d03077762131cc5a",
+  "cases": 6,
+  "script_probes": 2,
+  "total_checks": 48,
+  "base_worker_reference_checks": 17,
+  "new_acl_checks": 31,
+  "case_projection": [
+    {
+      "name": "set_denied",
+      "status": "FAILURE",
+      "class": "NoPermissionError",
+      "module": "redis.exceptions",
+      "index_written": false,
+      "lock_retained": false,
+      "lock_ttl": -2,
+      "result_ttl": 3600
+    },
+    {
+      "name": "set_denied_directory",
+      "status": "FAILURE",
+      "class": "NoPermissionError",
+      "module": "redis.exceptions",
+      "index_written": false,
+      "lock_retained": false,
+      "lock_ttl": -2,
+      "result_ttl": 3600
+    },
+    {
+      "name": "del_denied",
+      "status": "FAILURE",
+      "class": "NoPermissionError",
+      "module": "redis.exceptions",
+      "index_written": true,
+      "lock_retained": true,
+      "lock_ttl": 300,
+      "result_ttl": 3600
+    },
+    {
+      "name": "key_denied",
+      "status": "FAILURE",
+      "class": "NoPermissionError",
+      "module": "redis.exceptions",
+      "index_written": false,
+      "lock_retained": false,
+      "lock_ttl": -2,
+      "result_ttl": 3600
+    },
+    {
+      "name": "plain_without_eval",
+      "status": "SUCCESS",
+      "class": null,
+      "module": null,
+      "index_written": true,
+      "lock_retained": false,
+      "lock_ttl": -2,
+      "result_ttl": 3600
+    },
+    {
+      "name": "del_denied_eval_allowed",
+      "status": "FAILURE",
+      "class": "NoPermissionError",
+      "module": "redis.exceptions",
+      "index_written": true,
+      "lock_retained": true,
+      "lock_ttl": 300,
+      "result_ttl": 3600
+    }
+  ],
+  "dataset": {
+    "path": "scripts/rust-job-contracts/source-index-cache-acl-results-1.json",
+    "sha256": "ff81ad0d09cb1bd19b2390d674de00938eaf96f6a5a0b40f3858953c3d5f7590",
+    "metadata_exact": true,
+    "synthetic_only": true
+  },
+  "selected_tools": [
+    {
+      "path": "scripts/rust-job-contracts/run_index_acl.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-cache-acl-1/tool-source/scripts/rust-job-contracts/run_index_acl.py",
+      "sha256": "911a2a3503414bbc53971eed32329d5d89d30c151ce737c7c45b83c183398201"
+    },
+    {
+      "path": "scripts/rust-job-contracts/source_index_acl.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-cache-acl-1/tool-source/scripts/rust-job-contracts/source_index_acl.py",
+      "sha256": "4b6b857cdd3d8a01db9cfcc3147406b0671b48ed49822d0091abe2b5efe19282"
+    },
+    {
+      "path": "scripts/rust-job-contracts/index_acl_observer.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-cache-acl-1/tool-source/scripts/rust-job-contracts/index_acl_observer.py",
+      "sha256": "5b6797a9ab55802f4c10d187ceaf9d5d616ad2e3d7ddffbbe784bbce605cad81"
+    },
+    {
+      "path": "scripts/rust-epg-parity/source_index_worker.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-cache-acl-1/tool-source/scripts/rust-epg-parity/source_index_worker.py",
+      "sha256": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba"
+    },
+    {
+      "path": "scripts/rust-epg-parity/index_worker_observer.py",
+      "frozen_path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-original-index-cache-acl-1/tool-source/scripts/rust-epg-parity/index_worker_observer.py",
+      "sha256": "8effb86fd4bb06e0c83c09d15fe02b3cc1f2e1013768fef39377ae590ecc9eef"
+    }
+  ],
+  "facts": [
+    "Denied SET on the cached client raises redis.exceptions.NoPermissionError before file open/build/finally; no index/file lock is created. A directory path does not contribute IsADirectoryError to the traceback because acquire failed first.",
+    "Denied plainDEL after normalWritten raises NoPermissionError, leaves committed index and locked key. Message contains actual ACL username and denied del command.",
+    "Denied key access raises NoPermissionError with argument No permissions to access a key, no index/lock. It is not an authentication failure or an invented errno.",
+    "Original index task succeeds with only connection/GET/SET/DEL/EXPIRE permissions and no EVAL: actual probe EVAL is denied while unchanged task produces SUCCESS/null, index and releasedlock.",
+    "With EVAL permitted but DEL denied, actual LuaDEL probe raises redis.exceptions.ResponseError with ACL failure in script/user_script/SHA context, unlike Original plainDEL NoPermissionError; its probevalue remains.",
+    "Safe endpoint context captures only host,port,database,authenticated username, never password/credential-bearing URL."
+  ],
+  "owned_acl_users_removed": 6,
+  "default_database_unchanged": true,
+  "copied_nonempty_tables": 26,
+  "cleanup": "project removed",
+  "native_permission_message_mapping_verified": false,
+  "native_plain_command_acl_compatibility_verified": false,
+  "native_reconnect_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Native owner-fenced acquire/release rawcauses and actual same-ACL differential after bounded reconnect fix.",
+    "Preserve script-vs-plain-command ACL differences; do not strip script context/invent NoPermission payload without a supported compatibilitypolicy.",
+    "No fallback to unsafe unfenced deletion, no generic AuthenticationError/ConnectionError mapping from server permissionerrors.",
+    "Only after physical settled stage/commit/release/errorcode/detail evidence may known mappings be added; timeout/ambiguity/CAS-not-owner remain operational."
+  ],
+  "failed_attempts": [],
+  "credit": "Original Dispatcharr authors/contributors retain full application/algorithm credit and AGPL licensing; Redis/redis-py/Celery/PostgreSQL/Django authors retain framework credit/licenses."
+}

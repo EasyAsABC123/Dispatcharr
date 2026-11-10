@@ -1,0 +1,280 @@
+{
+  "scope": "Exact synthetic Original cached Redis ACL result data and safeendpoint/usercontext, no credentials/tokens/production data",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "configuration": {
+    "task_protocol": 2,
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "worker_prefetch_multiplier": 4,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    },
+    "result_expires": 3600
+  },
+  "cases": [
+    {
+      "name": "set_denied",
+      "safe_endpoint": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "database": 0,
+        "username": "owned_acl_8798a44d7d25"
+      },
+      "commands": [
+        "+@connection",
+        "+get",
+        "+del",
+        "+expire"
+      ],
+      "key_access_denied": false,
+      "result": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_8798a44d7d25 has no permissions to run the 'set' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 2305, in set\n    return self.execute_command(\"SET\", *pieces, **options)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: User owned_acl_8798a44d7d25 has no permissions to run the 'set' command\n",
+        "children": [],
+        "date_done": "2026-11-10T14:41:44.268864+00:00",
+        "task_id": "f765c129-a73a-4fc2-be58-3eaf7defb195"
+      },
+      "raw_result_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIk5vUGVybWlzc2lvbkVycm9yIiwgImV4Y19tZXNzYWdlIjogWyJVc2VyIG93bmVkX2FjbF84Nzk4YTQ0ZDdkMjUgaGFzIG5vIHBlcm1pc3Npb25zIHRvIHJ1biB0aGUgJ3NldCcgY29tbWFuZCJdLCAiZXhjX21vZHVsZSI6ICJyZWRpcy5leGNlcHRpb25zIn0sICJ0cmFjZWJhY2siOiAiVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9jZWxlcnkvYXBwL3RyYWNlLnB5XCIsIGxpbmUgNTg1LCBpbiB0cmFjZV90YXNrXG4gICAgUiA9IHJldHZhbCA9IGZ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgICAgICAgIH5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2NlbGVyeS9hcHAvdHJhY2UucHlcIiwgbGluZSA4NTgsIGluIF9fcHJvdGVjdGVkX2NhbGxfX1xuICAgIHJldHVybiBzZWxmLnJ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgIH5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9hcHAvYXBwcy9lcGcvdGFza3MucHlcIiwgbGluZSAzNDU3LCBpbiBidWlsZF9wcm9ncmFtbWVfaW5kZXhfdGFza1xuICAgIGlmIG5vdCBhY3F1aXJlX3Rhc2tfbG9jayhfRVBHX1NPVVJDRV9GSUxFX0xPQ0ssIHNvdXJjZV9pZCk6XG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2FwcC9jb3JlL3V0aWxzLnB5XCIsIGxpbmUgMzU1LCBpbiBhY3F1aXJlX3Rhc2tfbG9ja1xuICAgIGxvY2tfYWNxdWlyZWQgPSByZWRpc19jbGllbnQuc2V0KGxvY2tfaWQsIFwibG9ja2VkXCIsIGV4PTMwMCwgbng9VHJ1ZSlcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY29tbWFuZHMvY29yZS5weVwiLCBsaW5lIDIzMDUsIGluIHNldFxuICAgIHJldHVybiBzZWxmLmV4ZWN1dGVfY29tbWFuZChcIlNFVFwiLCAqcGllY2VzLCAqKm9wdGlvbnMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDYyMSwgaW4gZXhlY3V0ZV9jb21tYW5kXG4gICAgcmV0dXJuIHNlbGYuX2V4ZWN1dGVfY29tbWFuZCgqYXJncywgKipvcHRpb25zKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY2xpZW50LnB5XCIsIGxpbmUgNjMyLCBpbiBfZXhlY3V0ZV9jb21tYW5kXG4gICAgcmV0dXJuIGNvbm4ucmV0cnkuY2FsbF93aXRoX3JldHJ5KFxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl5cbiAgICAgICAgbGFtYmRhOiBzZWxmLl9zZW5kX2NvbW1hbmRfcGFyc2VfcmVzcG9uc2UoXG4gICAgICAgIF5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIC4uLjwyIGxpbmVzPi4uLlxuICAgICAgICBsYW1iZGEgXzogc2VsZi5fY2xvc2VfY29ubmVjdGlvbihjb25uKSxcbiAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXG4gICAgKVxuICAgIF5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvcmV0cnkucHlcIiwgbGluZSAxMDUsIGluIGNhbGxfd2l0aF9yZXRyeVxuICAgIHJldHVybiBkbygpXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDYzMywgaW4gPGxhbWJkYT5cbiAgICBsYW1iZGE6IHNlbGYuX3NlbmRfY29tbWFuZF9wYXJzZV9yZXNwb25zZShcbiAgICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl5cbiAgICAgICAgY29ubiwgY29tbWFuZF9uYW1lLCAqYXJncywgKipvcHRpb25zXG4gICAgICAgIF5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgICksXG4gICAgXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9yZWRpcy9jbGllbnQucHlcIiwgbGluZSA2MDQsIGluIF9zZW5kX2NvbW1hbmRfcGFyc2VfcmVzcG9uc2VcbiAgICByZXR1cm4gc2VsZi5wYXJzZV9yZXNwb25zZShjb25uLCBjb21tYW5kX25hbWUsICoqb3B0aW9ucylcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY2xpZW50LnB5XCIsIGxpbmUgNjUxLCBpbiBwYXJzZV9yZXNwb25zZVxuICAgIHJlc3BvbnNlID0gY29ubmVjdGlvbi5yZWFkX3Jlc3BvbnNlKClcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY29ubmVjdGlvbi5weVwiLCBsaW5lIDY3MiwgaW4gcmVhZF9yZXNwb25zZVxuICAgIHJhaXNlIHJlc3BvbnNlXG5yZWRpcy5leGNlcHRpb25zLk5vUGVybWlzc2lvbkVycm9yOiBVc2VyIG93bmVkX2FjbF84Nzk4YTQ0ZDdkMjUgaGFzIG5vIHBlcm1pc3Npb25zIHRvIHJ1biB0aGUgJ3NldCcgY29tbWFuZFxuIiwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xMFQxNDo0MTo0NC4yNjg4NjQrMDA6MDAiLCAidGFza19pZCI6ICJmNzY1YzEyOS1hNzNhLTRmYzItYmU1OC0zZWFmN2RlZmIxOTUifQ==",
+      "raw_result_sha256": "a569ea666a1d2711c5072e752835a43956672fdb1b31df315b90c723d66e44cb",
+      "result_ttl": 3600,
+      "index": null,
+      "lock_value": null,
+      "lock_ttl": -2,
+      "postrun_state": "FAILURE"
+    },
+    {
+      "name": "set_denied_directory",
+      "safe_endpoint": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "database": 0,
+        "username": "owned_acl_28b026473fd8"
+      },
+      "commands": [
+        "+@connection",
+        "+get",
+        "+del",
+        "+expire"
+      ],
+      "key_access_denied": false,
+      "result": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_28b026473fd8 has no permissions to run the 'set' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 2305, in set\n    return self.execute_command(\"SET\", *pieces, **options)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: User owned_acl_28b026473fd8 has no permissions to run the 'set' command\n",
+        "children": [],
+        "date_done": "2026-11-10T14:41:44.341353+00:00",
+        "task_id": "55ca8b21-8e7b-4f0d-a51e-4ee144c630eb"
+      },
+      "raw_result_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIk5vUGVybWlzc2lvbkVycm9yIiwgImV4Y19tZXNzYWdlIjogWyJVc2VyIG93bmVkX2FjbF8yOGIwMjY0NzNmZDggaGFzIG5vIHBlcm1pc3Npb25zIHRvIHJ1biB0aGUgJ3NldCcgY29tbWFuZCJdLCAiZXhjX21vZHVsZSI6ICJyZWRpcy5leGNlcHRpb25zIn0sICJ0cmFjZWJhY2siOiAiVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9jZWxlcnkvYXBwL3RyYWNlLnB5XCIsIGxpbmUgNTg1LCBpbiB0cmFjZV90YXNrXG4gICAgUiA9IHJldHZhbCA9IGZ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgICAgICAgIH5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2NlbGVyeS9hcHAvdHJhY2UucHlcIiwgbGluZSA4NTgsIGluIF9fcHJvdGVjdGVkX2NhbGxfX1xuICAgIHJldHVybiBzZWxmLnJ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgIH5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9hcHAvYXBwcy9lcGcvdGFza3MucHlcIiwgbGluZSAzNDU3LCBpbiBidWlsZF9wcm9ncmFtbWVfaW5kZXhfdGFza1xuICAgIGlmIG5vdCBhY3F1aXJlX3Rhc2tfbG9jayhfRVBHX1NPVVJDRV9GSUxFX0xPQ0ssIHNvdXJjZV9pZCk6XG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2FwcC9jb3JlL3V0aWxzLnB5XCIsIGxpbmUgMzU1LCBpbiBhY3F1aXJlX3Rhc2tfbG9ja1xuICAgIGxvY2tfYWNxdWlyZWQgPSByZWRpc19jbGllbnQuc2V0KGxvY2tfaWQsIFwibG9ja2VkXCIsIGV4PTMwMCwgbng9VHJ1ZSlcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY29tbWFuZHMvY29yZS5weVwiLCBsaW5lIDIzMDUsIGluIHNldFxuICAgIHJldHVybiBzZWxmLmV4ZWN1dGVfY29tbWFuZChcIlNFVFwiLCAqcGllY2VzLCAqKm9wdGlvbnMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDYyMSwgaW4gZXhlY3V0ZV9jb21tYW5kXG4gICAgcmV0dXJuIHNlbGYuX2V4ZWN1dGVfY29tbWFuZCgqYXJncywgKipvcHRpb25zKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY2xpZW50LnB5XCIsIGxpbmUgNjMyLCBpbiBfZXhlY3V0ZV9jb21tYW5kXG4gICAgcmV0dXJuIGNvbm4ucmV0cnkuY2FsbF93aXRoX3JldHJ5KFxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl5cbiAgICAgICAgbGFtYmRhOiBzZWxmLl9zZW5kX2NvbW1hbmRfcGFyc2VfcmVzcG9uc2UoXG4gICAgICAgIF5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIC4uLjwyIGxpbmVzPi4uLlxuICAgICAgICBsYW1iZGEgXzogc2VsZi5fY2xvc2VfY29ubmVjdGlvbihjb25uKSxcbiAgICAgICAgXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXG4gICAgKVxuICAgIF5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvcmV0cnkucHlcIiwgbGluZSAxMDUsIGluIGNhbGxfd2l0aF9yZXRyeVxuICAgIHJldHVybiBkbygpXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDYzMywgaW4gPGxhbWJkYT5cbiAgICBsYW1iZGE6IHNlbGYuX3NlbmRfY29tbWFuZF9wYXJzZV9yZXNwb25zZShcbiAgICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl5cbiAgICAgICAgY29ubiwgY29tbWFuZF9uYW1lLCAqYXJncywgKipvcHRpb25zXG4gICAgICAgIF5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgICksXG4gICAgXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9yZWRpcy9jbGllbnQucHlcIiwgbGluZSA2MDQsIGluIF9zZW5kX2NvbW1hbmRfcGFyc2VfcmVzcG9uc2VcbiAgICByZXR1cm4gc2VsZi5wYXJzZV9yZXNwb25zZShjb25uLCBjb21tYW5kX25hbWUsICoqb3B0aW9ucylcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY2xpZW50LnB5XCIsIGxpbmUgNjUxLCBpbiBwYXJzZV9yZXNwb25zZVxuICAgIHJlc3BvbnNlID0gY29ubmVjdGlvbi5yZWFkX3Jlc3BvbnNlKClcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY29ubmVjdGlvbi5weVwiLCBsaW5lIDY3MiwgaW4gcmVhZF9yZXNwb25zZVxuICAgIHJhaXNlIHJlc3BvbnNlXG5yZWRpcy5leGNlcHRpb25zLk5vUGVybWlzc2lvbkVycm9yOiBVc2VyIG93bmVkX2FjbF8yOGIwMjY0NzNmZDggaGFzIG5vIHBlcm1pc3Npb25zIHRvIHJ1biB0aGUgJ3NldCcgY29tbWFuZFxuIiwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xMFQxNDo0MTo0NC4zNDEzNTMrMDA6MDAiLCAidGFza19pZCI6ICI1NWNhOGIyMS04ZTdiLTRmMGQtYTUxZS00ZWUxNDRjNjMwZWIifQ==",
+      "raw_result_sha256": "c307b0db2cd2379e793f0b5a42e8a7698693e459a0555f5216d9b518aa6437ed",
+      "result_ttl": 3600,
+      "index": null,
+      "lock_value": null,
+      "lock_ttl": -2,
+      "postrun_state": "FAILURE"
+    },
+    {
+      "name": "del_denied",
+      "safe_endpoint": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "database": 0,
+        "username": "owned_acl_32655dab6dc9"
+      },
+      "commands": [
+        "+@connection",
+        "+get",
+        "+set",
+        "+expire"
+      ],
+      "key_access_denied": false,
+      "result": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_32655dab6dc9 has no permissions to run the 'del' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3480, in build_programme_index_task\n    release_task_lock(_EPG_SOURCE_FILE_LOCK, source_id)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 368, in release_task_lock\n    redis_client.delete(lock_id)\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 1712, in delete\n    return self.execute_command(\"DEL\", *names)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: User owned_acl_32655dab6dc9 has no permissions to run the 'del' command\n",
+        "children": [],
+        "date_done": "2026-11-10T14:41:44.399062+00:00",
+        "task_id": "d48bef0a-ba75-4826-be99-6bdf7bda35a9"
+      },
+      "raw_result_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIk5vUGVybWlzc2lvbkVycm9yIiwgImV4Y19tZXNzYWdlIjogWyJVc2VyIG93bmVkX2FjbF8zMjY1NWRhYjZkYzkgaGFzIG5vIHBlcm1pc3Npb25zIHRvIHJ1biB0aGUgJ2RlbCcgY29tbWFuZCJdLCAiZXhjX21vZHVsZSI6ICJyZWRpcy5leGNlcHRpb25zIn0sICJ0cmFjZWJhY2siOiAiVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9jZWxlcnkvYXBwL3RyYWNlLnB5XCIsIGxpbmUgNTg1LCBpbiB0cmFjZV90YXNrXG4gICAgUiA9IHJldHZhbCA9IGZ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgICAgICAgIH5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2NlbGVyeS9hcHAvdHJhY2UucHlcIiwgbGluZSA4NTgsIGluIF9fcHJvdGVjdGVkX2NhbGxfX1xuICAgIHJldHVybiBzZWxmLnJ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgIH5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9hcHAvYXBwcy9lcGcvdGFza3MucHlcIiwgbGluZSAzNDgwLCBpbiBidWlsZF9wcm9ncmFtbWVfaW5kZXhfdGFza1xuICAgIHJlbGVhc2VfdGFza19sb2NrKF9FUEdfU09VUkNFX0ZJTEVfTE9DSywgc291cmNlX2lkKVxuICAgIH5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2FwcC9jb3JlL3V0aWxzLnB5XCIsIGxpbmUgMzY4LCBpbiByZWxlYXNlX3Rhc2tfbG9ja1xuICAgIHJlZGlzX2NsaWVudC5kZWxldGUobG9ja19pZClcbiAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NvbW1hbmRzL2NvcmUucHlcIiwgbGluZSAxNzEyLCBpbiBkZWxldGVcbiAgICByZXR1cm4gc2VsZi5leGVjdXRlX2NvbW1hbmQoXCJERUxcIiwgKm5hbWVzKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9yZWRpcy9jbGllbnQucHlcIiwgbGluZSA2MjEsIGluIGV4ZWN1dGVfY29tbWFuZFxuICAgIHJldHVybiBzZWxmLl9leGVjdXRlX2NvbW1hbmQoKmFyZ3MsICoqb3B0aW9ucylcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDYzMiwgaW4gX2V4ZWN1dGVfY29tbWFuZFxuICAgIHJldHVybiBjb25uLnJldHJ5LmNhbGxfd2l0aF9yZXRyeShcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXG4gICAgICAgIGxhbWJkYTogc2VsZi5fc2VuZF9jb21tYW5kX3BhcnNlX3Jlc3BvbnNlKFxuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgICAuLi48MiBsaW5lcz4uLi5cbiAgICAgICAgbGFtYmRhIF86IHNlbGYuX2Nsb3NlX2Nvbm5lY3Rpb24oY29ubiksXG4gICAgICAgIF5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIClcbiAgICBeXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL3JldHJ5LnB5XCIsIGxpbmUgMTA1LCBpbiBjYWxsX3dpdGhfcmV0cnlcbiAgICByZXR1cm4gZG8oKVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9yZWRpcy9jbGllbnQucHlcIiwgbGluZSA2MzMsIGluIDxsYW1iZGE+XG4gICAgbGFtYmRhOiBzZWxmLl9zZW5kX2NvbW1hbmRfcGFyc2VfcmVzcG9uc2UoXG4gICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXG4gICAgICAgIGNvbm4sIGNvbW1hbmRfbmFtZSwgKmFyZ3MsICoqb3B0aW9uc1xuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgICApLFxuICAgIF5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY2xpZW50LnB5XCIsIGxpbmUgNjA0LCBpbiBfc2VuZF9jb21tYW5kX3BhcnNlX3Jlc3BvbnNlXG4gICAgcmV0dXJuIHNlbGYucGFyc2VfcmVzcG9uc2UoY29ubiwgY29tbWFuZF9uYW1lLCAqKm9wdGlvbnMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDY1MSwgaW4gcGFyc2VfcmVzcG9uc2VcbiAgICByZXNwb25zZSA9IGNvbm5lY3Rpb24ucmVhZF9yZXNwb25zZSgpXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2Nvbm5lY3Rpb24ucHlcIiwgbGluZSA2NzIsIGluIHJlYWRfcmVzcG9uc2VcbiAgICByYWlzZSByZXNwb25zZVxucmVkaXMuZXhjZXB0aW9ucy5Ob1Blcm1pc3Npb25FcnJvcjogVXNlciBvd25lZF9hY2xfMzI2NTVkYWI2ZGM5IGhhcyBubyBwZXJtaXNzaW9ucyB0byBydW4gdGhlICdkZWwnIGNvbW1hbmRcbiIsICJjaGlsZHJlbiI6IFtdLCAiZGF0ZV9kb25lIjogIjIwMjYtMTEtMTBUMTQ6NDE6NDQuMzk5MDYyKzAwOjAwIiwgInRhc2tfaWQiOiAiZDQ4YmVmMGEtYmE3NS00ODI2LWJlOTktNmJkZjdiZGEzNWE5In0=",
+      "raw_result_sha256": "acd73fa30065c1da1f997ead6c5cf10f491844405b9898275a2ccfd9c24d24be",
+      "result_ttl": 3600,
+      "index": {
+        "channels": {
+          "fixture&one": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "lock_value": "locked",
+      "lock_ttl": 300,
+      "postrun_state": "FAILURE"
+    },
+    {
+      "name": "key_denied",
+      "safe_endpoint": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "database": 0,
+        "username": "owned_acl_19fd90c47c42"
+      },
+      "commands": [
+        "+@connection",
+        "+get",
+        "+set",
+        "+del",
+        "+expire"
+      ],
+      "key_access_denied": true,
+      "result": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "No permissions to access a key"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3457, in build_programme_index_task\n    if not acquire_task_lock(_EPG_SOURCE_FILE_LOCK, source_id):\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 355, in acquire_task_lock\n    lock_acquired = redis_client.set(lock_id, \"locked\", ex=300, nx=True)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 2305, in set\n    return self.execute_command(\"SET\", *pieces, **options)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: No permissions to access a key\n",
+        "children": [],
+        "date_done": "2026-11-10T14:41:44.445294+00:00",
+        "task_id": "1cd7fef1-b3d7-4de5-9e7e-6c9cdef6cd9b"
+      },
+      "raw_result_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIk5vUGVybWlzc2lvbkVycm9yIiwgImV4Y19tZXNzYWdlIjogWyJObyBwZXJtaXNzaW9ucyB0byBhY2Nlc3MgYSBrZXkiXSwgImV4Y19tb2R1bGUiOiAicmVkaXMuZXhjZXB0aW9ucyJ9LCAidHJhY2ViYWNrIjogIlRyYWNlYmFjayAobW9zdCByZWNlbnQgY2FsbCBsYXN0KTpcbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvY2VsZXJ5L2FwcC90cmFjZS5weVwiLCBsaW5lIDU4NSwgaW4gdHJhY2VfdGFza1xuICAgIFIgPSByZXR2YWwgPSBmdW4oKmFyZ3MsICoqa3dhcmdzKVxuICAgICAgICAgICAgICAgICB+fn5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9jZWxlcnkvYXBwL3RyYWNlLnB5XCIsIGxpbmUgODU4LCBpbiBfX3Byb3RlY3RlZF9jYWxsX19cbiAgICByZXR1cm4gc2VsZi5ydW4oKmFyZ3MsICoqa3dhcmdzKVxuICAgICAgICAgICB+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvYXBwL2FwcHMvZXBnL3Rhc2tzLnB5XCIsIGxpbmUgMzQ1NywgaW4gYnVpbGRfcHJvZ3JhbW1lX2luZGV4X3Rhc2tcbiAgICBpZiBub3QgYWNxdWlyZV90YXNrX2xvY2soX0VQR19TT1VSQ0VfRklMRV9MT0NLLCBzb3VyY2VfaWQpOlxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9hcHAvY29yZS91dGlscy5weVwiLCBsaW5lIDM1NSwgaW4gYWNxdWlyZV90YXNrX2xvY2tcbiAgICBsb2NrX2FjcXVpcmVkID0gcmVkaXNfY2xpZW50LnNldChsb2NrX2lkLCBcImxvY2tlZFwiLCBleD0zMDAsIG54PVRydWUpXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NvbW1hbmRzL2NvcmUucHlcIiwgbGluZSAyMzA1LCBpbiBzZXRcbiAgICByZXR1cm4gc2VsZi5leGVjdXRlX2NvbW1hbmQoXCJTRVRcIiwgKnBpZWNlcywgKipvcHRpb25zKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9yZWRpcy9jbGllbnQucHlcIiwgbGluZSA2MjEsIGluIGV4ZWN1dGVfY29tbWFuZFxuICAgIHJldHVybiBzZWxmLl9leGVjdXRlX2NvbW1hbmQoKmFyZ3MsICoqb3B0aW9ucylcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDYzMiwgaW4gX2V4ZWN1dGVfY29tbWFuZFxuICAgIHJldHVybiBjb25uLnJldHJ5LmNhbGxfd2l0aF9yZXRyeShcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXG4gICAgICAgIGxhbWJkYTogc2VsZi5fc2VuZF9jb21tYW5kX3BhcnNlX3Jlc3BvbnNlKFxuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgICAuLi48MiBsaW5lcz4uLi5cbiAgICAgICAgbGFtYmRhIF86IHNlbGYuX2Nsb3NlX2Nvbm5lY3Rpb24oY29ubiksXG4gICAgICAgIF5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIClcbiAgICBeXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL3JldHJ5LnB5XCIsIGxpbmUgMTA1LCBpbiBjYWxsX3dpdGhfcmV0cnlcbiAgICByZXR1cm4gZG8oKVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9yZWRpcy9jbGllbnQucHlcIiwgbGluZSA2MzMsIGluIDxsYW1iZGE+XG4gICAgbGFtYmRhOiBzZWxmLl9zZW5kX2NvbW1hbmRfcGFyc2VfcmVzcG9uc2UoXG4gICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXG4gICAgICAgIGNvbm4sIGNvbW1hbmRfbmFtZSwgKmFyZ3MsICoqb3B0aW9uc1xuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgICApLFxuICAgIF5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY2xpZW50LnB5XCIsIGxpbmUgNjA0LCBpbiBfc2VuZF9jb21tYW5kX3BhcnNlX3Jlc3BvbnNlXG4gICAgcmV0dXJuIHNlbGYucGFyc2VfcmVzcG9uc2UoY29ubiwgY29tbWFuZF9uYW1lLCAqKm9wdGlvbnMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDY1MSwgaW4gcGFyc2VfcmVzcG9uc2VcbiAgICByZXNwb25zZSA9IGNvbm5lY3Rpb24ucmVhZF9yZXNwb25zZSgpXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2Nvbm5lY3Rpb24ucHlcIiwgbGluZSA2NzIsIGluIHJlYWRfcmVzcG9uc2VcbiAgICByYWlzZSByZXNwb25zZVxucmVkaXMuZXhjZXB0aW9ucy5Ob1Blcm1pc3Npb25FcnJvcjogTm8gcGVybWlzc2lvbnMgdG8gYWNjZXNzIGEga2V5XG4iLCAiY2hpbGRyZW4iOiBbXSwgImRhdGVfZG9uZSI6ICIyMDI2LTExLTEwVDE0OjQxOjQ0LjQ0NTI5NCswMDowMCIsICJ0YXNrX2lkIjogIjFjZDdmZWYxLWIzZDctNGRlNS05ZTdlLTZjOWNkZWY2Y2Q5YiJ9",
+      "raw_result_sha256": "255f773492940173cb66998cdc20e7cd4f8e740e23f1c4ab8f481f4d94ae9c4a",
+      "result_ttl": 3600,
+      "index": null,
+      "lock_value": null,
+      "lock_ttl": -2,
+      "postrun_state": "FAILURE"
+    },
+    {
+      "name": "plain_without_eval",
+      "safe_endpoint": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "database": 0,
+        "username": "owned_acl_b2135a93f49f"
+      },
+      "commands": [
+        "+@connection",
+        "+get",
+        "+set",
+        "+del",
+        "+expire"
+      ],
+      "key_access_denied": false,
+      "result": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-10T14:41:44.500642+00:00",
+        "task_id": "741799af-02b8-4247-b520-26c4fea7fc6a"
+      },
+      "raw_result_base64": "eyJzdGF0dXMiOiAiU1VDQ0VTUyIsICJyZXN1bHQiOiBudWxsLCAidHJhY2ViYWNrIjogbnVsbCwgImNoaWxkcmVuIjogW10sICJkYXRlX2RvbmUiOiAiMjAyNi0xMS0xMFQxNDo0MTo0NC41MDA2NDIrMDA6MDAiLCAidGFza19pZCI6ICI3NDE3OTlhZi0wMmI4LTQyNDctYjUyMC0yNmM0ZmVhN2ZjNmEifQ==",
+      "raw_result_sha256": "c53e5ae35b68e1e05cd5b901a96ac47dab433228944e2f2a692b28ca0627e357",
+      "result_ttl": 3600,
+      "index": {
+        "channels": {
+          "fixture&one": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "lock_value": null,
+      "lock_ttl": -2,
+      "postrun_state": "SUCCESS"
+    },
+    {
+      "name": "del_denied_eval_allowed",
+      "safe_endpoint": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "database": 0,
+        "username": "owned_acl_e6c8480e1a2b"
+      },
+      "commands": [
+        "+@all",
+        "-del"
+      ],
+      "key_access_denied": false,
+      "result": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "NoPermissionError",
+          "exc_message": [
+            "User owned_acl_e6c8480e1a2b has no permissions to run the 'del' command"
+          ],
+          "exc_module": "redis.exceptions"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/epg/tasks.py\", line 3480, in build_programme_index_task\n    release_task_lock(_EPG_SOURCE_FILE_LOCK, source_id)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/core/utils.py\", line 368, in release_task_lock\n    redis_client.delete(lock_id)\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/commands/core.py\", line 1712, in delete\n    return self.execute_command(\"DEL\", *names)\n           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 621, in execute_command\n    return self._execute_command(*args, **options)\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 632, in _execute_command\n    return conn.retry.call_with_retry(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        lambda: self._send_command_parse_response(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n        lambda _: self._close_connection(conn),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py\", line 105, in call_with_retry\n    return do()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 633, in <lambda>\n    lambda: self._send_command_parse_response(\n            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        conn, command_name, *args, **options\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ),\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 604, in _send_command_parse_response\n    return self.parse_response(conn, command_name, **options)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/client.py\", line 651, in parse_response\n    response = connection.read_response()\n  File \"/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py\", line 672, in read_response\n    raise response\nredis.exceptions.NoPermissionError: User owned_acl_e6c8480e1a2b has no permissions to run the 'del' command\n",
+        "children": [],
+        "date_done": "2026-11-10T14:41:44.553939+00:00",
+        "task_id": "e4b2a426-2e44-4181-a143-2388995c1016"
+      },
+      "raw_result_base64": "eyJzdGF0dXMiOiAiRkFJTFVSRSIsICJyZXN1bHQiOiB7ImV4Y190eXBlIjogIk5vUGVybWlzc2lvbkVycm9yIiwgImV4Y19tZXNzYWdlIjogWyJVc2VyIG93bmVkX2FjbF9lNmM4NDgwZTFhMmIgaGFzIG5vIHBlcm1pc3Npb25zIHRvIHJ1biB0aGUgJ2RlbCcgY29tbWFuZCJdLCAiZXhjX21vZHVsZSI6ICJyZWRpcy5leGNlcHRpb25zIn0sICJ0cmFjZWJhY2siOiAiVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9jZWxlcnkvYXBwL3RyYWNlLnB5XCIsIGxpbmUgNTg1LCBpbiB0cmFjZV90YXNrXG4gICAgUiA9IHJldHZhbCA9IGZ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgICAgICAgIH5+fl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL2NlbGVyeS9hcHAvdHJhY2UucHlcIiwgbGluZSA4NTgsIGluIF9fcHJvdGVjdGVkX2NhbGxfX1xuICAgIHJldHVybiBzZWxmLnJ1bigqYXJncywgKiprd2FyZ3MpXG4gICAgICAgICAgIH5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5cbiAgRmlsZSBcIi9hcHAvYXBwcy9lcGcvdGFza3MucHlcIiwgbGluZSAzNDgwLCBpbiBidWlsZF9wcm9ncmFtbWVfaW5kZXhfdGFza1xuICAgIHJlbGVhc2VfdGFza19sb2NrKF9FUEdfU09VUkNFX0ZJTEVfTE9DSywgc291cmNlX2lkKVxuICAgIH5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2FwcC9jb3JlL3V0aWxzLnB5XCIsIGxpbmUgMzY4LCBpbiByZWxlYXNlX3Rhc2tfbG9ja1xuICAgIHJlZGlzX2NsaWVudC5kZWxldGUobG9ja19pZClcbiAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NvbW1hbmRzL2NvcmUucHlcIiwgbGluZSAxNzEyLCBpbiBkZWxldGVcbiAgICByZXR1cm4gc2VsZi5leGVjdXRlX2NvbW1hbmQoXCJERUxcIiwgKm5hbWVzKVxuICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fl5eXl5eXl5eXl5eXl5eXlxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9yZWRpcy9jbGllbnQucHlcIiwgbGluZSA2MjEsIGluIGV4ZWN1dGVfY29tbWFuZFxuICAgIHJldHVybiBzZWxmLl9leGVjdXRlX2NvbW1hbmQoKmFyZ3MsICoqb3B0aW9ucylcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+Xl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDYzMiwgaW4gX2V4ZWN1dGVfY29tbWFuZFxuICAgIHJldHVybiBjb25uLnJldHJ5LmNhbGxfd2l0aF9yZXRyeShcbiAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXG4gICAgICAgIGxhbWJkYTogc2VsZi5fc2VuZF9jb21tYW5kX3BhcnNlX3Jlc3BvbnNlKFxuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgICAuLi48MiBsaW5lcz4uLi5cbiAgICAgICAgbGFtYmRhIF86IHNlbGYuX2Nsb3NlX2Nvbm5lY3Rpb24oY29ubiksXG4gICAgICAgIF5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXlxuICAgIClcbiAgICBeXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL3JldHJ5LnB5XCIsIGxpbmUgMTA1LCBpbiBjYWxsX3dpdGhfcmV0cnlcbiAgICByZXR1cm4gZG8oKVxuICBGaWxlIFwiL2Rpc3BhdGNoYXJycHkvbGliL3B5dGhvbjMuMTMvc2l0ZS1wYWNrYWdlcy9yZWRpcy9jbGllbnQucHlcIiwgbGluZSA2MzMsIGluIDxsYW1iZGE+XG4gICAgbGFtYmRhOiBzZWxmLl9zZW5kX2NvbW1hbmRfcGFyc2VfcmVzcG9uc2UoXG4gICAgICAgICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5eXG4gICAgICAgIGNvbm4sIGNvbW1hbmRfbmFtZSwgKmFyZ3MsICoqb3B0aW9uc1xuICAgICAgICBeXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5cbiAgICApLFxuICAgIF5cbiAgRmlsZSBcIi9kaXNwYXRjaGFycnB5L2xpYi9weXRob24zLjEzL3NpdGUtcGFja2FnZXMvcmVkaXMvY2xpZW50LnB5XCIsIGxpbmUgNjA0LCBpbiBfc2VuZF9jb21tYW5kX3BhcnNlX3Jlc3BvbnNlXG4gICAgcmV0dXJuIHNlbGYucGFyc2VfcmVzcG9uc2UoY29ubiwgY29tbWFuZF9uYW1lLCAqKm9wdGlvbnMpXG4gICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2NsaWVudC5weVwiLCBsaW5lIDY1MSwgaW4gcGFyc2VfcmVzcG9uc2VcbiAgICByZXNwb25zZSA9IGNvbm5lY3Rpb24ucmVhZF9yZXNwb25zZSgpXG4gIEZpbGUgXCIvZGlzcGF0Y2hhcnJweS9saWIvcHl0aG9uMy4xMy9zaXRlLXBhY2thZ2VzL3JlZGlzL2Nvbm5lY3Rpb24ucHlcIiwgbGluZSA2NzIsIGluIHJlYWRfcmVzcG9uc2VcbiAgICByYWlzZSByZXNwb25zZVxucmVkaXMuZXhjZXB0aW9ucy5Ob1Blcm1pc3Npb25FcnJvcjogVXNlciBvd25lZF9hY2xfZTZjODQ4MGUxYTJiIGhhcyBubyBwZXJtaXNzaW9ucyB0byBydW4gdGhlICdkZWwnIGNvbW1hbmRcbiIsICJjaGlsZHJlbiI6IFtdLCAiZGF0ZV9kb25lIjogIjIwMjYtMTEtMTBUMTQ6NDE6NDQuNTUzOTM5KzAwOjAwIiwgInRhc2tfaWQiOiAiZTRiMmE0MjYtMmU0NC00MTgxLWExNDMtMjM4ODk5NWMxMDE2In0=",
+      "raw_result_sha256": "497a1363f58f2aa26d635da3764346cec9a3a2e1531a9be312bc92fd36cb6387",
+      "result_ttl": 3600,
+      "index": {
+        "channels": {
+          "fixture&one": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "lock_value": "locked",
+      "lock_ttl": 300,
+      "postrun_state": "FAILURE"
+    }
+  ],
+  "script_probes": [
+    {
+      "name": "plain_without_eval",
+      "username": "owned_acl_b2135a93f49f",
+      "module": "redis.exceptions",
+      "class": "NoPermissionError",
+      "arguments": [
+        "User owned_acl_b2135a93f49f has no permissions to run the 'eval' command"
+      ],
+      "probe_value": "owned-script-probe"
+    },
+    {
+      "name": "del_denied_eval_allowed",
+      "username": "owned_acl_e6c8480e1a2b",
+      "module": "redis.exceptions",
+      "class": "ResponseError",
+      "arguments": [
+        "ACL failure in script: User owned_acl_e6c8480e1a2b has no permissions to run the 'del' command script: 71923a30a2cad96b7271cad5b0fdb4d5a1dd868c, on @user_script:1."
+      ],
+      "probe_value": "owned-script-probe"
+    }
+  ],
+  "normalization": "None; taskUUIDs/ACL usernames are owned synthetic fixture values. No passwords or credential-bearing URLs retained."
+}
