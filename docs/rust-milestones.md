@@ -423,3 +423,6 @@ The bounded index intake/ETA worker supports retained physical command ownership
 
 
 [The actual HTTP-to-index-driver gate](../scripts/rust-epg-parity/verified-current-http-index-driver-134.json) now passes against the same runtime modules as `d1329a65`: the first authenticated request returns Original's Parsing JSON and durably publishes the initial job; the supervised native worker builds the PostgreSQL byte-offset index; the second request matches Original's programme JSON. Queue, unacked reservations, file locks and owned lookup resources drain to zero. This adds a tested component path with isolated broker/result databases; it does not enable a default consumer or close mixed-family, visibility-recovery, failure-result or production-volume gates. The earlier133 copied-database fixture setup failure remains recorded.
+
+
+[Image32](../scripts/rust-integration/verified-checkpoint-image32-1.json) is built from committed `d1329a65`; all 521 Rust source files match the exact workspace that passed strict Clippy and 325 default tests. Its unchanged default stored-Current path passes 64 actual original/native network comparisons. The optional file/index callback remains app-unwired. This is a packaged regression checkpoint, with no transferred image28/image30 gains and no full migration acceptance.
