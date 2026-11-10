@@ -1,0 +1,243 @@
+{
+  "passed": true,
+  "performance_verified": true,
+  "scope": "Stored React guide GRID JSON only; separate from Current/XMLTV and full migration acceptance",
+  "whole_application_performance_verified": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "candidate_image": "sha256:56c2d22e0f347230a7e009ae982af2ce354166c560b422be2abf0dcb57a0e3ef",
+  "candidate_source_tree": "38919c0c2a59ce7f9fb3746d9332c69b81b2f417ce4e712a4ff61a2509dc989c",
+  "candidate_source_archive_sha256": "220183084b0b7f9d526f8979b738b82b6983ccfddabf25e0ad964e2a2069d62a",
+  "candidate_git_revision": "916e4e5072f53c99710f8281b352bbcd28560838",
+  "build_manifest_sha256": "069baedff4b95c7301177e8884c77f1ead04cd895c5d50954cd19cb59c6ad6ad",
+  "evidence": "artifacts/rust/m5-grid-experiment-image30-1",
+  "report_sha256": "e30c893c2a3e2f61b9f44df674dfd41753361e6553ebb1cab511c3817191634d",
+  "matrix_report_sha256": "33264cb78132ef3ca3f1fcab73b0e262726b55be1d007a4d3d75ef9bf3956ddd",
+  "qualification_report_sha256": "0d5a3644c41038277ff2033d9d37f72881b81726a0a7a5f77a86fee6cdc14f1e",
+  "policy_sha256": "19851d15ee2625758b206cafd4bc17357fdd5c1fab78f8bb50d96fa4531fe930",
+  "qualification_seal": "0f9bba7bc858bb545a62dd125dfa92c1ad9b5195dec56a2394b0c4fd9031260d",
+  "selected_periods_seconds": {
+    "grid-2250-shared50-1": 1,
+    "grid-2250-shared50-10": 2
+  },
+  "measurement_pairs": 6,
+  "measured_phases": 12,
+  "qualification_phases": 8,
+  "total_retained_resource_samples": 840,
+  "total_retained_request_traces": 2445,
+  "verified_late_completions": 10,
+  "measured_phase_samples": 60,
+  "all_phase_errors": 0,
+  "all_sample_errors": 0,
+  "all_oom_kills": 0,
+  "all_counter_resets": 0,
+  "paired_acceptance": {
+    "passed": true,
+    "pairs": [
+      {
+        "workload": "grid-2250-shared50-1",
+        "trial": 1,
+        "passed": true,
+        "failures": [],
+        "ratios": {
+          "cpu_percent_mean": 0.28297597989336165,
+          "peak_working_memory_bytes": 0.39966204106713094,
+          "completion_p95_ms": 0.4902819639692813,
+          "throughput_per_second": 1.0
+        },
+        "ttfb_p95_ceiling_ms": 55.00000000000001
+      },
+      {
+        "workload": "grid-2250-shared50-1",
+        "trial": 2,
+        "passed": true,
+        "failures": [],
+        "ratios": {
+          "cpu_percent_mean": 0.284344884332401,
+          "peak_working_memory_bytes": 0.3954427121420423,
+          "completion_p95_ms": 0.48854293718536623,
+          "throughput_per_second": 1.0
+        },
+        "ttfb_p95_ceiling_ms": 55.00000000000001
+      },
+      {
+        "workload": "grid-2250-shared50-1",
+        "trial": 3,
+        "passed": true,
+        "failures": [],
+        "ratios": {
+          "cpu_percent_mean": 0.28575321722276054,
+          "peak_working_memory_bytes": 0.4028373345779489,
+          "completion_p95_ms": 0.4803789633815409,
+          "throughput_per_second": 1.0
+        },
+        "ttfb_p95_ceiling_ms": 55.00000000000001
+      },
+      {
+        "workload": "grid-2250-shared50-10",
+        "trial": 1,
+        "passed": true,
+        "failures": [],
+        "ratios": {
+          "cpu_percent_mean": 0.2706550817620562,
+          "peak_working_memory_bytes": 0.404048504758684,
+          "completion_p95_ms": 0.4840381037720864,
+          "throughput_per_second": 1.0
+        },
+        "ttfb_p95_ceiling_ms": 55.00000000000001
+      },
+      {
+        "workload": "grid-2250-shared50-10",
+        "trial": 2,
+        "passed": true,
+        "failures": [],
+        "ratios": {
+          "cpu_percent_mean": 0.2672262887920527,
+          "peak_working_memory_bytes": 0.40429010971999146,
+          "completion_p95_ms": 0.47395906995778614,
+          "throughput_per_second": 1.0
+        },
+        "ttfb_p95_ceiling_ms": 55.00000000000001
+      },
+      {
+        "workload": "grid-2250-shared50-10",
+        "trial": 3,
+        "passed": true,
+        "failures": [],
+        "ratios": {
+          "cpu_percent_mean": 0.26727546479154574,
+          "peak_working_memory_bytes": 0.4051898905257467,
+          "completion_p95_ms": 0.47875834331272477,
+          "throughput_per_second": 1.0
+        },
+        "ttfb_p95_ceiling_ms": 55.00000000000001
+      }
+    ],
+    "scope": "Stored React guide GRID JSON only; separate from Current/XMLTV and full migration acceptance"
+  },
+  "workload_medians": [
+    {
+      "workload": "grid-2250-shared50-1",
+      "ratios": {
+        "cpu_percent_mean": 0.284344884332401,
+        "peak_working_memory_bytes": 0.39966204106713094,
+        "completion_p95_ms": 0.48854293718536623,
+        "throughput_per_second": 1.0
+      },
+      "source_medians": {
+        "cpu_percent_mean": 12.80500290645607,
+        "peak_working_memory_bytes": 420089856,
+        "completion_p95_ms": 80.8136010018643,
+        "ttfb_p95_ms": 25.180150998494355,
+        "throughput_per_second": 1.0
+      },
+      "native_medians": {
+        "cpu_percent_mean": 3.6410370703123096,
+        "peak_working_memory_bytes": 166121472,
+        "completion_p95_ms": 39.48091399797704,
+        "ttfb_p95_ms": 25.0373769995349,
+        "throughput_per_second": 1.0
+      },
+      "users": 1,
+      "period_seconds": 1
+    },
+    {
+      "workload": "grid-2250-shared50-10",
+      "ratios": {
+        "cpu_percent_mean": 0.26727546479154574,
+        "peak_working_memory_bytes": 0.40429010971999146,
+        "completion_p95_ms": 0.47875834331272477,
+        "throughput_per_second": 1.0
+      },
+      "source_medians": {
+        "cpu_percent_mean": 63.99239307712248,
+        "peak_working_memory_bytes": 423915520,
+        "completion_p95_ms": 84.93574800013448,
+        "ttfb_p95_ms": 28.024401999573456,
+        "throughput_per_second": 5.0
+      },
+      "native_medians": {
+        "cpu_percent_mean": 17.170470112411998,
+        "peak_working_memory_bytes": 171282432,
+        "completion_p95_ms": 40.79394200016395,
+        "ttfb_p95_ms": 24.65990599739598,
+        "throughput_per_second": 5.0
+      },
+      "users": 10,
+      "period_seconds": 2
+    }
+  ],
+  "numerical_projection": "scripts/rust-guide-perf/evidence-grid-experiment-image30-1.json",
+  "numerical_projection_sha256": "ca8c3875178e63f3dc228da4e8477fa5be762bb0f896d5f2393ef47a75bf06c8",
+  "fixture": {
+    "channels": 500,
+    "shared_epg_data": 50,
+    "channels_per_epg": 10,
+    "current_duration_hours": 4,
+    "future_half_hour_programmes_per_epg": 44,
+    "stored_programmes": 2250,
+    "window_days": 1,
+    "window_prev_days": 0,
+    "source_kind": "xmltv",
+    "dummy_sources": 0,
+    "remote_fetches": 0,
+    "fixture_max_age_seconds": 3600,
+    "expected_grid_rows": 2250,
+    "stored_tvg_identifiers": 50,
+    "grid_window_start_hours": -1,
+    "grid_window_end_hours": 24
+  },
+  "budgets": {
+    "max_cpu_ratio": 1.0,
+    "max_memory_ratio": 1.0,
+    "max_ttfb_p95_ratio": 1.1,
+    "ttfb_floor_ms": 50,
+    "max_completion_p95_ratio": 1.1,
+    "min_throughput_ratio": 0.95,
+    "min_pacing_fraction": 0.95,
+    "max_errors": 0,
+    "minimum_samples": 50,
+    "max_oom_kills": 0,
+    "max_counter_resets": 0
+  },
+  "service_limits": {
+    "backend": {
+      "memory_bytes": 536870912,
+      "nano_cpus": 2000000000
+    },
+    "infrastructure": {
+      "memory_bytes": 1073741824,
+      "nano_cpus": 1000000000
+    },
+    "origin": {
+      "memory_bytes": 1073741824,
+      "nano_cpus": 2000000000
+    }
+  },
+  "quiet_qualification_cue_sha256": "883f2963100bca01f799250b555c4e246d8c94ab1343ae05c1af7a7b1d69b23b",
+  "quiet_measurement_cue_sha256": "8269fa864665049927e2548cfce83044d1e97ae90e3beb891aeb2e402370ce24",
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "independent_post_cleanup_docker_ps": "empty",
+  "functional_burst": "scripts/rust-guide-perf/verified-grid-functional-image30-1.json",
+  "retained_failure": "scripts/rust-guide-perf/verified-grid-functional-image29-4.json",
+  "limitations": [
+    "Stored GRID JSON GET only, using actual owned admin JWTs and fixed explicit one-day window.",
+    "500 channels/50 shared guides/2250 stored programmes; no dummy generation, file fallback, ingestion, provider refresh, media decoder, background worker or plugin workload.",
+    "Paced1/10 consumers are not a100+viewer or full React browser workflow/soak test. Unstaggered10-request correctness is separately verified.",
+    "Combined backend/infrastructure/origin CPU and sampled peak working memory; not PostgreSQL-specific PSS, allocator peaks or all-host processes.",
+    "All individual pairs passed; medians are supplemental and no cross-workload gain is aggregated.",
+    "Later Index/VOD/cache drafts and full operational migration have different source bindings."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit, branding, AGPL license and history.",
+  "qualification_verified_late_completions": 10,
+  "measured_verified_late_completions": 0,
+  "qualification_infeasible_rates_retained": [
+    {
+      "workload": "grid-2250-shared50-10",
+      "period_seconds": 1,
+      "pacing_fraction": 0.8466666666666667,
+      "reason": "Source failed predeclared0.95 pacing minimum; fixed two-second rate selected before any candidate resource measurement."
+    }
+  ]
+}

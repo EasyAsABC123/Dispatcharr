@@ -130,7 +130,7 @@ def project(value):
 
 def publish(base, output):
     base, output = Path(base), Path(output)
-    report = {'scope': 'Sanitized numerical projection of stopped experiment phase evidence',
+    report = {'scope': 'Sanitized numerical projection of retained experiment phase evidence',
               'performance_verified': False,
               'projection': 'Explicit numeric whitelist; container IDs become service names, monotonic clocks relative to first before-counter. Bodies, headers, paths, credentials and exception text excluded.',
               'phases': [], 'credit': 'Original Dispatcharr authors and contributors retain full application credit and AGPL licensing.'}
