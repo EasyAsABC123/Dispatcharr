@@ -10,7 +10,7 @@ from fixture_ports import write_port_overlay
 from tool_snapshot import snapshot_sources
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--controller',choices=['source_index_worker.py','source_index_paths.py','source_index_eta.py','source_index_eta_order.py','source_current_dispatch_failure.py','source_index_path_task.py','source_current_http_driver.py'],default='source_index_worker.py');p.add_argument('--native-http-driver',action='store_true');p.add_argument('--native-paths',action='store_true');p.add_argument('--native-dispatch-failure',action='store_true');p.add_argument('--native-eta-limits',action='store_true');a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--controller',choices=['source_index_worker.py','source_index_paths.py','source_index_eta.py','source_index_eta_order.py','source_current_dispatch_failure.py','source_index_path_task.py','source_current_http_driver.py','source_index_failures.py','source_index_initialization.py'],default='source_index_worker.py');p.add_argument('--native-failure-scan',action='store_true');p.add_argument('--native-http-driver',action='store_true');p.add_argument('--native-paths',action='store_true');p.add_argument('--native-dispatch-failure',action='store_true');p.add_argument('--native-eta-limits',action='store_true');a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
  if any(out.iterdir()):p.error('Empty output required')
  tools=out/'tool-source';hashes=snapshot_sources(ROOT,tools)
  for path in(ROOT/'scripts/rust-epg-parity').glob('*'):
@@ -18,8 +18,9 @@ def main():
    data=path.read_bytes();target=tools/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);hashes[str(path.relative_to(ROOT))]=hashlib.sha256(data).hexdigest()
  nonce=uuid.uuid4().hex[:10];database_name='rust_probe_backup_jobs_'+nonce;project='dispatcharr-index-worker-'+nonce
  report={'passed':False,'scope':'Original-only real index producer/worker; no native worker','project':project,'copied_database':database_name,'original_revision':BASELINE,'tool_source_sha256':hashes,'native_jobs_verified':False,'performance_verified':False};status=1
- if a.native_paths or a.native_dispatch_failure or a.native_eta_limits or a.native_http_driver:
-  if sum([a.native_paths,a.native_dispatch_failure,a.native_eta_limits,a.native_http_driver])>1:p.error('Choose one native component gate')
+ if a.native_paths or a.native_dispatch_failure or a.native_eta_limits or a.native_http_driver or a.native_failure_scan:
+  if sum([a.native_paths,a.native_dispatch_failure,a.native_eta_limits,a.native_http_driver,a.native_failure_scan])>1:p.error('Choose one native component gate')
+  if a.native_failure_scan and a.controller!='source_index_failures.py':p.error('Failure scan requires actualOriginal worker corpus')
   if a.native_http_driver and a.controller!='source_current_http_driver.py':p.error('HTTP driver requires its actual Original reference')
   if a.native_eta_limits and a.controller!='source_index_worker.py':p.error('ETA limit gate uses the owned original base fixture')
   if a.native_paths and a.controller!='source_index_paths.py':p.error('Native path gate requires owned path controller')
@@ -61,11 +62,11 @@ def main():
    args=compose+['exec','-T','-e','POSTGRES_DB='+database_name,'-e','BACKUP_ROOT=/evidence/jobs-backups','-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','-e','CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8','-e','CELERY_RESULT_BACKEND=redis://:playback-fixture-only@localhost:6379/9','baseline','/dispatcharrpy/bin/python','/index-tools/'+a.controller]
    result=subprocess.run(args,env=env,text=True,capture_output=True,timeout=480);(out/'source-controller-private.log').write_text(result.stdout+result.stderr);result.check_returncode()
    actual=json.loads((out/'source-index-worker-private.json').read_text());after=helper('dispatcharr','baseline_manifest');assert before==after,'Default fixtureDB changed'
-   if a.native_paths or a.native_dispatch_failure or a.native_eta_limits or a.native_http_driver:
+   if a.native_paths or a.native_dispatch_failure or a.native_eta_limits or a.native_http_driver or a.native_failure_scan:
     frozen=out/'native-source';frozen.mkdir()
     with tarfile.open(out/'rust-source.tar')as archive:archive.extractall(frozen,filter='data')
     native_env=dict(env,CARGO_TARGET_DIR=str(out/'cargo-target'))
-    targets=['current_paths_sql','index_dispatcher_sql']if a.native_paths else['current_http_driver']if a.native_http_driver else['eta_limits']if a.native_eta_limits else['current_dispatch_sql']
+    targets=['current_paths_sql','index_dispatcher_sql']if a.native_paths else['index_failure_scan_sql']if a.native_failure_scan else['current_http_driver']if a.native_http_driver else['eta_limits']if a.native_eta_limits else['current_dispatch_sql']
     build_command=['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p',('dispatcharr-job-transport'if a.native_eta_limits or a.native_http_driver else'dispatcharr-ingest-epg'),'--no-run','--message-format=json','--locked','--offline']
     for target in targets:build_command+=['--test',target]
     built=subprocess.run(build_command,env=native_env,text=True,capture_output=True,timeout=600)
@@ -79,7 +80,7 @@ def main():
      binary=out/('native-'+target);shutil.copyfile(executable,binary);binary.chmod(0o755);report['native_test_binary_sha256'][target]=hashlib.sha256(binary.read_bytes()).hexdigest()
      native=subprocess.run(compose+['exec','-T','-e','POSTGRES_DB='+database_name,'-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','-e','JOB_REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0','-e','DATABASE_TEST_URL=postgresql://dispatch:playback-fixture-only@127.0.0.1:5432/'+database_name,'-e','REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0','-e','EPG_PATH_DISPOSABLE_FIXTURE=playback-fixture-only','-e','EPG_PATH_FIXTURE=/evidence/source-index-worker-private.json','baseline','/evidence/native-'+target,'--ignored','--nocapture','--test-threads=1'],env=env,text=True,capture_output=True,timeout=180)
      (out/(target+'-tests.log')).write_text(native.stdout+native.stderr);native.check_returncode()
-    report['native_path_component_verified']=a.native_paths;report['native_dispatcher_override_verified']=a.native_paths;report['native_current_dispatch_failure_verified']=a.native_dispatch_failure;report['native_eta_limits_verified']=a.native_eta_limits;report['native_http_index_driver_verified']=a.native_http_driver
+    report['native_path_component_verified']=a.native_paths;report['native_dispatcher_override_verified']=a.native_paths;report['native_current_dispatch_failure_verified']=a.native_dispatch_failure;report['native_eta_limits_verified']=a.native_eta_limits;report['native_http_index_driver_verified']=a.native_http_driver;report['native_failure_scan_verified']=a.native_failure_scan
    report.update(passed=actual['passed'],checks=len(actual['checks']),default_database_unchanged=True,source_report_sha256=hashlib.sha256((out/'source-index-worker-private.json').read_bytes()).hexdigest(),captures=len(actual['captures']),worker_started=actual['worker_started']);status=0 if report['passed']else 1
   except(OSError,ValueError,RuntimeError,AssertionError,subprocess.SubprocessError)as error:
    report['error_type']=type(error).__name__

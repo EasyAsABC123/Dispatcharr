@@ -1,0 +1,431 @@
+{
+  "passed": true,
+  "scope": "Pinned Original actual index-worker execution/result/error contracts; native exception writer not accepted",
+  "evidence": "artifacts/rust/m6-index-failure-original-136",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "checks": 42,
+  "cases": [
+    {
+      "name": "missing-source",
+      "backend_status": "SUCCESS",
+      "last_execution_state": "SUCCESS",
+      "result": null,
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": true,
+      "traceback_bytes": 0,
+      "traceback_sha256": null,
+      "observed_ttl_seconds": 3600,
+      "index": null,
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "8e22ae8516eb5b0ad72a734012a920a8148b2add794a1f4a11fd9a2a824818c1"
+    },
+    {
+      "name": "missing-file",
+      "backend_status": "SUCCESS",
+      "last_execution_state": "SUCCESS",
+      "result": null,
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": true,
+      "traceback_bytes": 0,
+      "traceback_sha256": null,
+      "observed_ttl_seconds": 3600,
+      "index": null,
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "defef56da4ef5925abcd958fa090fa6128e55c072429a7e280a7044b7bdbcd16"
+    },
+    {
+      "name": "malformed-xml",
+      "backend_status": "SUCCESS",
+      "last_execution_state": "SUCCESS",
+      "result": null,
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": true,
+      "traceback_bytes": 0,
+      "traceback_sha256": null,
+      "observed_ttl_seconds": 3600,
+      "index": {
+        "channels": {
+          "broken": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "46c2c40be6338a5b41e73be4f4c395091e447b83410044ad759c2bfc66ee3438"
+    },
+    {
+      "name": "invalid-encoding",
+      "backend_status": "SUCCESS",
+      "last_execution_state": "SUCCESS",
+      "result": null,
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": true,
+      "traceback_bytes": 0,
+      "traceback_sha256": null,
+      "observed_ttl_seconds": 3600,
+      "index": {
+        "channels": {
+          "bad\ufffd&one": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "8396e85204a3f34f15605c9098f20f02f9b39beea8ca39f361c4059e1d9d6e94"
+    },
+    {
+      "name": "empty-file",
+      "backend_status": "SUCCESS",
+      "last_execution_state": "SUCCESS",
+      "result": null,
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": true,
+      "traceback_bytes": 0,
+      "traceback_sha256": null,
+      "observed_ttl_seconds": 3600,
+      "index": {
+        "channels": {},
+        "interleaved_channels": []
+      },
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "26f254904b1badcabec09e992244c0618df74e38d1c2aca450e50aacb439eecf"
+    },
+    {
+      "name": "directory",
+      "backend_status": "FAILURE",
+      "last_execution_state": "FAILURE",
+      "result": {
+        "exc_type": "IsADirectoryError",
+        "exc_message": [
+          21,
+          "Is a directory"
+        ],
+        "exc_module": "builtins"
+      },
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": false,
+      "traceback_bytes": 753,
+      "traceback_sha256": "44bbd4521d6fa3c59682044f31551cb969553b78522799ce24749d8ce556eab8",
+      "observed_ttl_seconds": 3600,
+      "index": null,
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "ad2865c1707713e7f35ee5788c93a99b3636f80a0e206dc02303526f8010a6ca"
+    },
+    {
+      "name": "sql-write",
+      "backend_status": "FAILURE",
+      "last_execution_state": "FAILURE",
+      "result": {
+        "exc_type": "ProgrammingError",
+        "exc_message": [
+          "owned-index-sql-write-failure\nCONTEXT:  PL/pgSQL function owned_index_failure() line 1 at RAISE"
+        ],
+        "exc_module": "django.db.utils"
+      },
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": false,
+      "traceback_bytes": 5741,
+      "traceback_sha256": "b5ab154aff97622f863c230a7183a9a28fe969b4267ee3af7128e452d536c22e",
+      "observed_ttl_seconds": 3600,
+      "index": null,
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "50bc392e583fc5b4455cbd2c5cb3dd4111e4fdd0bc3e35b0f9e27edb173aa617"
+    },
+    {
+      "name": "cache-network",
+      "backend_status": "FAILURE",
+      "last_execution_state": "FAILURE",
+      "result": {
+        "exc_type": "ConnectionError",
+        "exc_message": [
+          "Error 111 connecting to 127.0.0.1:32999. Connection refused."
+        ],
+        "exc_module": "redis.exceptions"
+      },
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": false,
+      "traceback_bytes": 3022,
+      "traceback_sha256": "ee4bf0a52a954ef6156a046b157459ced0128c40cb99666fc6ca25232791d0bf",
+      "observed_ttl_seconds": 3600,
+      "index": null,
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "da3d9c436423941e2437ff7f8636e87201b14a29f766e4032f13c669490d6f89"
+    },
+    {
+      "name": "cache-auth",
+      "backend_status": "FAILURE",
+      "last_execution_state": "FAILURE",
+      "result": {
+        "exc_type": "AuthenticationError",
+        "exc_message": [
+          "invalid username-password pair or user is disabled."
+        ],
+        "exc_module": "redis.exceptions"
+      },
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": false,
+      "traceback_bytes": 2751,
+      "traceback_sha256": "b3ad739651ef1ed1e4b21ba05192445cbec06518bdfe023a0dbf3404cdc41869",
+      "observed_ttl_seconds": 3600,
+      "index": null,
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "5d9e5c4460b361c1c2686d743c904f1191ac1db5d7f7b949d3419f0430086e5b"
+    },
+    {
+      "name": "release-network",
+      "backend_status": "FAILURE",
+      "last_execution_state": "FAILURE",
+      "result": {
+        "exc_type": "ConnectionError",
+        "exc_message": [
+          "Error 111 connecting to 127.0.0.1:32999. Connection refused."
+        ],
+        "exc_module": "redis.exceptions"
+      },
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": false,
+      "traceback_bytes": 3203,
+      "traceback_sha256": "7c262a4db2f85049a1ef51b4d8f101d9d14b378265fa17edb69b016dd2f852e0",
+      "observed_ttl_seconds": 3600,
+      "index": {
+        "channels": {
+          "fixture&one": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "file_lock_value": "locked",
+      "file_lock_ttl": 300,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "6c7f866819e9236ad6172c8b41c233bb9b367003397cd1ad784e7b19933c05f3"
+    },
+    {
+      "name": "duplicate-success-then-error",
+      "backend_status": "SUCCESS",
+      "last_execution_state": "SUCCESS",
+      "result": null,
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": true,
+      "traceback_bytes": 0,
+      "traceback_sha256": null,
+      "observed_ttl_seconds": 3600,
+      "index": {
+        "channels": {
+          "fixture&one": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "762da92d535a3d67a096b888581be86bdb68b0b1d4b89e730b2e89cfd00a49ea"
+    },
+    {
+      "name": "duplicate-later-directory-error",
+      "backend_status": "SUCCESS",
+      "last_execution_state": "FAILURE",
+      "result": null,
+      "metadata_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "traceback_null": true,
+      "traceback_bytes": 0,
+      "traceback_sha256": null,
+      "observed_ttl_seconds": 3600,
+      "index": {
+        "channels": {
+          "fixture&one": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "file_lock_value": null,
+      "file_lock_ttl": -2,
+      "queued_tasks": 0,
+      "unacked": 0,
+      "raw_result_sha256": "762da92d535a3d67a096b888581be86bdb68b0b1d4b89e730b2e89cfd00a49ea"
+    }
+  ],
+  "configuration": {
+    "task_protocol": 2,
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "worker_prefetch_multiplier": 4,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    },
+    "result_expires": 3600
+  },
+  "fault_scope": {
+    "implementation": "RedisClient cached dependency only; original task/helpers/tracing unchanged",
+    "loopback_closed_port_held": true,
+    "sql_trigger_matching_owned_source_only": true
+  },
+  "duplicate_contract": "SameUUID second actual execution postrunFAILURE; prior backendSUCCESS bytes and TTL unchanged.",
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "forced_worker_cleanup": false,
+  "performance_verified": false,
+  "native_exception_writer_verified": false,
+  "source_tools": {
+    "scripts/rust-epg-parity/run_index_worker.py": "1399f96aa0fc6bfa79c6163055809999de68f43f849d500c88cdd2823e08dc0c",
+    "scripts/rust-epg-parity/source_index_failures.py": "4d679a75c20be6b4326d00113707673fbe6a2b88129dfc21d9495df0d8975ea7",
+    "scripts/rust-epg-parity/index_failure_observer.py": "c9787f9476426706fdad8ab771f5b370fc587624a35a4d66b0704806d4fe42f7",
+    "scripts/rust-epg-parity/source_index_worker.py": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba",
+    "scripts/rust-epg-parity/index_worker_observer.py": "8effb86fd4bb06e0c83c09d15fe02b3cc1f2e1013768fef39377ae590ecc9eef"
+  },
+  "limitations": [
+    "RedisClient cached dependency fault only; original task/locks/tracing unchanged, broker/result backend remain healthy.",
+    "Loopback connection error embeds owned temporary port; failure strings are exact fixture observations, not universal endpoint-independent literals.",
+    "SQL trigger matches one owned source in copied database; no general PostgreSQL failure normalization claim.",
+    "Result expires3600 is the explicit observed fixture configuration; do not infer arbitrary deployment defaults.",
+    "Parented/ETA failure metadata, backend-write failure/restart ambiguity and native exception writer remain separate gates.",
+    "135 queue-observer assumption failure preserved; normal actualtask.delay in136 avoids queue-location race."
+  ],
+  "credit": "Original Dispatcharr authors retain application/algorithm credit and AGPL licensing; Celery/Kombu/Django/redis-py retain framework/transport credit."
+}

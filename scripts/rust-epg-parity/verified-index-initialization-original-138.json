@@ -1,0 +1,134 @@
+{
+  "passed": true,
+  "scope": "Actual Original RedisClient initialization returningNone and busy-defer producer failure, no native exception classifier",
+  "evidence": "artifacts/rust/m6-index-initialization-original-138",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "checks": 49,
+  "cases": [
+    {
+      "name": "cache-init-url",
+      "elapsed_seconds": 0.12776039699383546,
+      "status": "FAILURE",
+      "result": {
+        "exc_type": "AttributeError",
+        "exc_message": [
+          "'NoneType' object has no attribute 'set'"
+        ],
+        "exc_module": "builtins"
+      },
+      "result_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "date_done": "2026-11-10T13:17:33.460075+00:00",
+      "traceback_bytes": 817,
+      "traceback_sha256": "8a143e1563c36e01c7c71860a7c9feb67b514e44ca335ae2ab3b99f41fe0f1d4",
+      "result_ttl": 3600,
+      "index_exists": false,
+      "file_lock_value": null,
+      "raw_result_sha256": "7cc857a21ae57820e2ee58da554291b35dca8e64fdb2b95f99fde8bf7cacf523"
+    },
+    {
+      "name": "cache-init-network",
+      "elapsed_seconds": 15.086560487005045,
+      "status": "FAILURE",
+      "result": {
+        "exc_type": "AttributeError",
+        "exc_message": [
+          "'NoneType' object has no attribute 'set'"
+        ],
+        "exc_module": "builtins"
+      },
+      "result_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "date_done": "2026-11-10T13:17:48.585446+00:00",
+      "traceback_bytes": 817,
+      "traceback_sha256": "8a143e1563c36e01c7c71860a7c9feb67b514e44ca335ae2ab3b99f41fe0f1d4",
+      "result_ttl": 3600,
+      "index_exists": false,
+      "file_lock_value": null,
+      "raw_result_sha256": "23edf6b299d12a05299203886e5c18c1c71abc2a2b23779a35bcea43ec430ef1"
+    },
+    {
+      "name": "busy-defer-publish",
+      "elapsed_seconds": 0.3027122449930175,
+      "status": "FAILURE",
+      "result": {
+        "exc_type": "OperationalError",
+        "exc_message": [
+          "Error 111 connecting to 127.0.0.1:60871. Connection refused."
+        ],
+        "exc_module": "kombu.exceptions"
+      },
+      "result_keys": [
+        "status",
+        "result",
+        "traceback",
+        "children",
+        "date_done",
+        "task_id"
+      ],
+      "children": [],
+      "parent_present": false,
+      "date_done": "2026-11-10T13:17:48.908729+00:00",
+      "traceback_bytes": 7967,
+      "traceback_sha256": "cd838717e004df86405b77d3bdbc7a7bf8402b769ca92b31087ec5827636fda6",
+      "result_ttl": 3600,
+      "index_exists": false,
+      "file_lock_value": "owned-initialization-busy",
+      "raw_result_sha256": "d18c385ab40036f56f79251242b1a4297a650ec386ef0d8b267f353ed8f55f72"
+    }
+  ],
+  "fault_scope": {
+    "cached_client_cleared": true,
+    "original_init_function_unchanged": true,
+    "original_retry_defaults_unchanged": true,
+    "child_producer_pool_only_changed": true,
+    "consumer_result_backend_unchanged": true,
+    "producer_retry_policy": {
+      "max_retries": 3,
+      "interval_start": 0,
+      "interval_max": 1,
+      "interval_step": 0.2
+    }
+  },
+  "configuration": {
+    "task_protocol": 2,
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "worker_prefetch_multiplier": 4,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    },
+    "result_expires": 3600
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_classifier_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "AlreadycachedRedisClient authentication/connection faults are distinct136cases; do not inferstartupclassfromthem.",
+    "NativeTaskLocks eagerconstructor failure happens before taskacceptance; Source NoneType taskfailure needs a separately verified lifecycleadapter.",
+    "Child producer pool fault is isolated; actual worker consumer/result Redis remainhealthy.",
+    "Endpoint-specific message andelapsedtime are fixtureobservations, notuniversalstrings orlatencyguarantees."
+  ],
+  "credit": "Original Dispatcharr authors retain application/algorithm credit and AGPL licensing; Celery/Kombu/Django/redis-py retain framework/transport credit."
+}
