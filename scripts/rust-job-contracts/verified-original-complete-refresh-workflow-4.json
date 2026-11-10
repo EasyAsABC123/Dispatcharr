@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "scope": "Actual Original HTTP\u2192refresh+Index+Series0\u2192second import\u2192Current/programme APIs; no descendant route override",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "checks": 40,
+  "imports": [
+    {
+      "iteration": 1,
+      "http": {
+        "status": 202,
+        "body": {
+          "success": true,
+          "message": "EPG data refresh initiated."
+        }
+      },
+      "tasks": [
+        "apps.channels.tasks.evaluate_series_rules",
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.epg.tasks.refresh_epg_data"
+      ],
+      "children": 2,
+      "current_titles": [
+        "Owned first import"
+      ],
+      "guide_titles": [
+        "Owned first import"
+      ],
+      "index_channel_count": 1,
+      "update_count": 11,
+      "file_sha256": "5c60ff426c19fd1efe0a6cdbe2da57aca2badce3e43598cbbfc115bc22909c91",
+      "file_mode": "0o644",
+      "source_status": "success"
+    },
+    {
+      "iteration": 2,
+      "http": {
+        "status": 202,
+        "body": {
+          "success": true,
+          "message": "EPG data refresh initiated."
+        }
+      },
+      "tasks": [
+        "apps.channels.tasks.evaluate_series_rules",
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.epg.tasks.refresh_epg_data"
+      ],
+      "children": 2,
+      "current_titles": [
+        "Owned second import"
+      ],
+      "guide_titles": [
+        "Owned second import"
+      ],
+      "index_channel_count": 1,
+      "update_count": 11,
+      "file_sha256": "79227641cee416df74f27c4a2dc3b7dcba0e0c3dc7cc2d8b1500a6243355d10b",
+      "file_mode": "0o644",
+      "source_status": "success"
+    }
+  ],
+  "copied_nonempty_tables": 26,
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "integration_sha256": "1c3510586cef7012b381a4ec166ff1dc43704183b46823e9b7a203f00b83062f",
+  "private_report_sha256": "2b66a0cb2cf98ed2e5708325d12da577c323e4b1560a7a1a3c08df7ba7e976d7",
+  "tool_source_sha256": {
+    "scripts/rust-job-contracts/refresh_workflow_observer.py": "691a5cbb2e5bcab10a4808eb7324ddf57b660852bbef10b34ff1c0482c8747f5",
+    "scripts/rust-job-contracts/source_refresh_workflow.py": "b02cd1477317cb733fddddf280ab5d35b4f77b4904012c059a22915452351a81",
+    "scripts/rust-job-contracts/run_refresh_workflow.py": "7ad01b09712cd2fa460059494b8dc3a6542ac1290c018ef2d589c54f427b33b4"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "queue_and_results_after_cleanup": [
+    0,
+    0
+  ],
+  "descendants_quarantined": false,
+  "task_functions_replaced": false,
+  "native_application_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL licensing; framework authors retain respective licenses."
+}

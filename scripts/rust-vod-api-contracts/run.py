@@ -49,7 +49,7 @@ def main():
     parser.add_argument('--category-browser',action='store_true',help='Actual unchanged React category selection for movie-only/series-only Standard users; requires packaged-categories')
     parser.add_argument('--unified-browser-source',action='store_true',help='Original-only unchangedReactAll proof with exactcompiledfrontend donor; no candidate')
     parser.add_argument('--frontend-build-manifest',type=Path,help='Successful immutableimage frontend donor for Source-only browser')
-    parser.add_argument('--packaged-unified',action='store_true',help='Manifest-bound unifiedJSON182/4HTMLopen plusordinary393; no host peer build')
+    parser.add_argument('--packaged-unified',action='store_true',help='Manifest-bound unified188exact/1HTMLopen plusordinary393; no host peer build')
     parser.add_argument('--unified-browser',action='store_true',help='Actual unchangedReact defaultBoth/All andcategory workflow; requires packaged-unified')
     parser.add_argument('--packaged-categories',action='store_true',help='Manifest-bound category+ordinary app replay, mixed burst and initial fault; no host peer build')
     parser.add_argument('--build-manifest','--candidate-build-manifest',dest='build_manifest',type=Path,help='Successful immutable app manifest for packaged replay; skips native peer compilation')

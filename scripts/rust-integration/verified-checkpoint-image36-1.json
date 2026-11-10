@@ -1,0 +1,185 @@
+{
+  "passed": true,
+  "scope": "Image36 eleven packaged regression groups; separate opt-in import and Unified React proofs linked. No full migration or performance acceptance.",
+  "credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors; AGPL retained.",
+  "git_revision": "bce2b10632227a554d764e231e763003ed0773f4",
+  "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+  "source_tree_sha256": "d20d74e32a41829a8d2eaa61133f1c7d3ce08812b1ba9610c7e25e1428cee967",
+  "build_manifest": {
+    "path": "artifacts/rust/candidate-build-unified-recovery-jobs-image36-1/build.json",
+    "sha256": "fd765252f9ee2ffa9ab33250954491fc7eb41496ba44285f2848267426f99735"
+  },
+  "compiled_Rust_inputs_verified_against_commit": 600,
+  "default_workspace_tests": 362,
+  "external_fixture_tests_ignored": 461,
+  "strict_wholeworkspace_clippy": true,
+  "gates": [
+    {
+      "name": "integration-full",
+      "passed": true,
+      "evidence": "artifacts/rust/integration-full-image36-1/integration.json",
+      "evidence_sha256": "050f79f3830bb469ce3c6ca34bfd94a33fb40fec738ebdd40043483a60f1b560",
+      "project": "dispatcharr-rust-probe-c4b25a5c8f",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+      "checks": 1024
+    },
+    {
+      "name": "proxy-auth",
+      "passed": true,
+      "evidence": "artifacts/rust/proxy-auth-image36-1/integration.json",
+      "evidence_sha256": "7c24aecad6f4d11a95d65de0b661cbeb5cc2774ad8567f9b6ec1f2400ea7bbd0",
+      "project": "dispatcharr-rust-probe-cb705d5c46",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+      "checks": 38
+    },
+    {
+      "name": "auth-hash",
+      "passed": true,
+      "evidence": "artifacts/rust/auth-hash-image36-1/integration.json",
+      "evidence_sha256": "6c45f65668b1602d6372eb0bb40d138795351af1450e386b9969eeaf8f7de673",
+      "project": "dispatcharr-rust-probe-a8de9502de",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+      "checks": 34
+    },
+    {
+      "name": "user-agent",
+      "passed": true,
+      "evidence": "artifacts/rust/user-agent-image36-1/integration.json",
+      "evidence_sha256": "b22d6239535d2d2b45cb773e88559f3a93eac8e5bbd842f93845524fa1cef3b4",
+      "project": "dispatcharr-user-agents-a6ca3d69d3",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+      "Source_case_count": 79
+    },
+    {
+      "name": "output-profile",
+      "passed": true,
+      "evidence": "artifacts/rust/output-profile-image36-1/integration.json",
+      "evidence_sha256": "c2424a9eac9955e7e60d5e64c135f08d640d2ad31344f115371684a33b9a81f1",
+      "project": "dispatcharr-output-profiles-3a37b03436",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+      "Source_case_count": 127
+    },
+    {
+      "name": "profile-restart",
+      "passed": true,
+      "evidence": "artifacts/rust/profile-restart-image36-1/integration.json",
+      "evidence_sha256": "b688dc24139e12878ce33bb1daec7f33e4e0b7344ee2c7212f8d13b357dd3bc3",
+      "project": "dispatcharr-output-profiles-c51b6b0d11",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539"
+    },
+    {
+      "name": "guide-grid-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/guide-grid-packaged-image36-1/integration.json",
+      "evidence_sha256": "8277c7a58e51c44160b3961d3c131a3147502d85b01acafc050b06b85a60b174",
+      "project": "dispatcharr-epg-reads-9310a5fdfa",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+      "Original_helper_reference_cases": 104
+    },
+    {
+      "name": "current-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/current-packaged-image36-1/integration.json",
+      "evidence_sha256": "c5487394ee71c259faebc3b4b3053b2df1ad4322d3950f130ef43abef3d57732",
+      "project": "dispatcharr-epg-reads-cd8598a699",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+      "Original_helper_reference_cases": 104
+    },
+    {
+      "name": "m4-functional",
+      "passed": true,
+      "evidence": "artifacts/rust/m4-functional-image36-1/result.json",
+      "evidence_sha256": "12c420c5a99b72f7ebc6ed0405e23db07859a7541dfdc40e244f61c374c96833",
+      "project": "dispatcharr-m4-perf-2b6897aa8f",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539"
+    },
+    {
+      "name": "clean-install",
+      "passed": true,
+      "evidence": "artifacts/rust/clean-install-image36-1/integration.json",
+      "evidence_sha256": "37b297e56b15a7313ee59b0affb10a83142cddbe4089e7253604abd3ca242f82",
+      "project": "dispatcharr-native-install-a7af72a1a1",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+      "checks": 16
+    },
+    {
+      "name": "category-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/category-browser-image36-1/http/source-run.json",
+      "evidence_sha256": "a5126c9f6bc8d324b39bf281d04d0c8c1930e79de14e980d2be372077afb4eee",
+      "project": "dispatcharr-vod-api-http-ac971969ab",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539"
+    }
+  ],
+  "additional_evidence": [
+    "scripts/rust-vod-api-contracts/verified-unified-image36-1.json",
+    "scripts/rust-job-contracts/verified-complete-refresh-workflow-image36-5.json"
+  ],
+  "experimental_flags_default_off": [
+    "RUST_EPG_REFRESH_ENABLED",
+    "RUST_VOD_REDIS_RECOVERY_ENABLED"
+  ],
+  "known_failed_gates": [
+    "Capped-user active VOD Redis restart (207)",
+    "Immediate active VOD reopen after Redis restart (208); isolated fix212 requires a new packaged image"
+  ],
+  "performance_verified": false,
+  "whole_application_verified": false,
+  "full_milestone_complete": false,
+  "additional_owned_Docker_projects_independently_absent": true
+}
