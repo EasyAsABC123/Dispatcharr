@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "scope": "Original-only owned relative path/Source current-file and original index-worker lifecycle oracle; native path context pending",
+  "evidence": "artifacts/rust/m6-index-paths-source-111",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "path_cases": 20,
+  "worker_lifecycle_checks": 17,
+  "cwd": "/app",
+  "media_root": "/app/media",
+  "media_is_symlink": false,
+  "media_realpath": "/app/media",
+  "worker_cwd_verified": true,
+  "worker_uids": [
+    0
+  ],
+  "permission_observation": {
+    "failure_type": "PermissionError",
+    "uid": 65534
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "native_verified": false,
+  "packaged_volume_migration_verified": false,
+  "performance_verified": false,
+  "source_report_sha256": "5078341149c05d3d1d7a344f85971b137714e1375df29c37e907e5550f662909",
+  "tool_source_sha256": {
+    "scripts/rust-epg-parity/index_worker_observer.py": "8effb86fd4bb06e0c83c09d15fe02b3cc1f2e1013768fef39377ae590ecc9eef",
+    "scripts/rust-epg-parity/index_worker_publish.py": "8e85c49270682cbf2ab749b6b8dbdc408cd9b873134fb90d945cabf30f545727",
+    "scripts/rust-epg-parity/source_index_worker.py": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba",
+    "scripts/rust-epg-parity/run_index_worker.py": "9a7c104201bc5f63acd37a01751e300f62eb07a72c7723d52a3e7bc03210d691",
+    "scripts/rust-epg-parity/source_index_paths.py": "46e82e29adf8d188573ef2f1a3f97b8606922231fe2af045ef266559ebe26860"
+  },
+  "observed_rules": [
+    "Selected first-truthy extracted/file/cache path; missing selected extracted path does not fall back.",
+    "Relative paths resolve against actual /app CWD; MEDIA_ROOT /app/media is an ordinary directory in this fixture.",
+    "Symlink/../ traverses actual target parent; no lexical path simplification or variable/tilde expansion.",
+    "File absence precedes clock/index; normal path clock precedes fresh index, then file open.",
+    "Interleaved current lookup independently opens twice; controlled atomic replacement is observed by forward open; deletion raises FileNotFoundError.",
+    "Root chmod000 still reads, while uid65534 original helper raises PermissionError on same owned file."
+  ],
+  "limitations": [
+    "No existing-volume/cutover/restart migration or native app path wiring.",
+    "Original worker ran as UID0 in controlled fixture; production UID policy needs packaged migration rehearsal.",
+    "Source paths are not artificially contained; future native configured resource limits are separate compatibility boundaries."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}

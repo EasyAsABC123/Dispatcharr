@@ -1,0 +1,178 @@
+{
+  "passed": true,
+  "scope": "Original-only real index producer/worker; no native consumer or production dispatcher",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": "artifacts/rust/m6-index-worker-source-109",
+  "previous_passing_evidence": "artifacts/rust/m6-index-worker-source-108",
+  "task": {
+    "name": "apps.epg.tasks.build_programme_index_task",
+    "attrs": {
+      "acks_late": false,
+      "ignore_result": false,
+      "track_started": false,
+      "max_retries": 3,
+      "serializer": "json",
+      "rate_limit": null,
+      "reject_on_worker_lost": null,
+      "acks_on_failure_or_timeout": true,
+      "time_limit": null,
+      "soft_time_limit": null
+    },
+    "route": "{'queue': <unbound Queue celery -> <unbound Exchange celery(direct)> -> celery>}"
+  },
+  "configuration": {
+    "task_protocol": 2,
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "worker_prefetch_multiplier": 4,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    },
+    "result_expires": 3600
+  },
+  "checks": [
+    {
+      "name": "producer-exit-restart-keeps-publication",
+      "passed": true
+    },
+    {
+      "name": "busy-file-new-child-not-retry",
+      "passed": true
+    },
+    {
+      "name": "busy-child-countdown-five",
+      "passed": true
+    },
+    {
+      "name": "graceful-worker-restores-eta",
+      "passed": true
+    },
+    {
+      "name": "restarted-worker-retains-lineage",
+      "passed": true
+    },
+    {
+      "name": "fixture-still-owns-file-lock",
+      "passed": true
+    },
+    {
+      "name": "actual-index-inactive-source-built",
+      "passed": true
+    },
+    {
+      "name": "running-specific-task-early-acked",
+      "passed": true
+    },
+    {
+      "name": "blocked-source-resumes-and-releases",
+      "passed": true
+    },
+    {
+      "name": "hard-loss-task-already-acked",
+      "passed": true
+    },
+    {
+      "name": "hard-loss-leaves-original-file-lease",
+      "passed": true
+    },
+    {
+      "name": "hard-restart-no-immediate-replay",
+      "passed": true
+    },
+    {
+      "name": "replacement-worker-missing-file-normal-result",
+      "passed": true
+    },
+    {
+      "name": "hard-loss-cleanup-key-still-original",
+      "passed": true
+    },
+    {
+      "name": "missing-source-normal-result",
+      "passed": true
+    },
+    {
+      "name": "retry-limit-normal-return-no-child",
+      "passed": true
+    },
+    {
+      "name": "no-unrelated-task-executed",
+      "passed": true
+    }
+  ],
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "worker_started": true,
+  "native_worker_verified": false,
+  "native_publisher_verified": false,
+  "production_dispatch_verified": false,
+  "visibility_timeout_expiry_verified": false,
+  "relative_path_compatibility_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Hard-loss non-replay observed for one second after a fresh missing-file task completed; no 3600-second visibility-expiry claim.",
+    "Owned FIFO blocks unchanged original file I/O for ACK observation; native file service supports regular files and is not claimed FIFO-compatible.",
+    "Missing-index production dispatcher and durable queue integration remain unimplemented.",
+    "Original per-source lock remains after hard worker loss; synthetic-key cleanup after worker-group death is fixture cleanup.",
+    "Native global job admission and ownership-fencing behavior need separate component gates."
+  ],
+  "source_report_sha256": "cdf69b54ae4a2bbd786fa9d44fb4b1109daaa9e4238b8fb48b3b4703a1c832b7",
+  "integration_sha256": "27613d686b76a489d9c605d5dae7ef49853030ed7ff9c084c7ece0fe75af358e",
+  "tool_source_sha256": {
+    "scripts/rust-epg-parity/index_worker_observer.py": "4c2543a06c3b80c4f890c2c1cb875dea0045f7baef38df5af8295d3c1ef1d038",
+    "scripts/rust-epg-parity/index_worker_publish.py": "8e85c49270682cbf2ab749b6b8dbdc408cd9b873134fb90d945cabf30f545727",
+    "scripts/rust-epg-parity/source_index_worker.py": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba",
+    "scripts/rust-epg-parity/run_index_worker.py": "36e225b194b2560b169673f5441bd62653536c0b64022874fb9924b013654614"
+  },
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing.",
+  "protocol": {
+    "version": 2,
+    "task_name": "apps.epg.tasks.build_programme_index_task",
+    "content_type": "application/json",
+    "content_encoding": "utf-8",
+    "delivery_info": {
+      "exchange": "",
+      "routing_key": "celery"
+    },
+    "delivery_mode": 2,
+    "priority": 0,
+    "body_encoding": "base64",
+    "initial_args_shape": "[source_id]",
+    "initial_kwargs": {},
+    "initial_root": "own task ID",
+    "initial_parent": null,
+    "initial_argsrepr": "(source_id,)",
+    "child_args_shape": "[source_id]",
+    "child_kwargs": {
+      "_defer_retry": 1
+    },
+    "child_argsrepr": "[source_id]",
+    "child_retries_header": 0,
+    "child_root": "original task ID",
+    "child_parent": "immediate executing task ID",
+    "child_countdown_seconds": 5,
+    "defer_limit": 480,
+    "success_result": null,
+    "result_children_shape": "[[[child_task_id, null], null]]",
+    "initial_result_fields": [
+      "children",
+      "date_done",
+      "result",
+      "status",
+      "task_id",
+      "traceback"
+    ],
+    "descendant_result_additional_field": "parent_id",
+    "stored_result_expires_seconds": 3600
+  },
+  "actual_controller_context": {
+    "cwd": "/app",
+    "media_root": "/app/media",
+    "worker_cwd_verified": false,
+    "volume_cutover_verified": false
+  }
+}

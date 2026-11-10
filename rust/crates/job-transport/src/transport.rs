@@ -23,6 +23,10 @@ pub enum Error {
     Corrupt,
     Decode(decode::DecodeError),
     Protocol,
+    UnsupportedTask,
+    ClaimRace,
+    AmbiguousClaim(Uuid),
+    AmbiguousResult(Uuid),
     AmbiguousPublication(Uuid),
     DrainTimeout,
 }
@@ -209,6 +213,68 @@ impl Jobs {
             _ => Err(Error::Corrupt),
         }
     }
+    pub(crate) async fn claim_create(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Uuid>, Error> {
+        let lease = self.lease(caller.clone())?;
+        let keys = vec!["celery".to_owned()];
+        let (reply, held) = self
+            .inner
+            .broker
+            .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        if reply.0 == 0 {
+            return Ok(None);
+        }
+        if reply.0 != 1 {
+            return Err(Error::Corrupt);
+        }
+        let id = crate::worker::create_identity(&reply.1).map_err(|_| Error::UnsupportedTask)?;
+        drop(held);
+        let lease = self.lease(caller)?;
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(CLAIM_CREATE, &keys, &[&reply.1], lease)
+            .await
+        {
+            Ok((1, _)) => Ok(Some(id)),
+            Ok((0, _)) => Err(Error::ClaimRace),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousClaim(id)),
+            Err(e) => Err(map(e)),
+        }
+    }
+    pub(crate) async fn write_success(
+        &self,
+        id: Uuid,
+        result: serde_json::Value,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        let lease = self.lease(caller)?;
+        let meta = serde_json::json!({"status":"SUCCESS", "result":result, "traceback":null,
+            "children":[], "date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),
+            "task_id":id.to_string()});
+        let bytes = serde_json::to_vec(&meta).map_err(|_| Error::Protocol)?;
+        if bytes.len() > decode::MAX_RESULT_BYTES {
+            return Err(Error::Protocol);
+        }
+        let keys = vec![format!("celery-tasks:celery-task-meta-{id}")];
+        match self
+            .inner
+            .result
+            .command_classified::<i64, _>(WRITE_SUCCESS, &keys, &[&bytes], lease)
+            .await
+        {
+            Ok((1, _)) => Ok(true),
+            Ok((0, _)) => Ok(false),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousResult(id)),
+            Err(e) => Err(map(e)),
+        }
+    }
     /// A deadline is an explicit failed drain, never proof that physical owners
     /// have been released. Detached commands retain their Lease until reply/drop.
     pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
@@ -246,4 +312,33 @@ local t=redis.call('TYPE',KEYS[1]).ok
 if t=='none'then return{0,''}end
 if t~='string'or redis.call('STRLEN',KEYS[1])>262144 then return{-1,''}end
 return{1,redis.call('GET',KEYS[1])}
+"#;
+
+// Peek never reserves/reorders another task family; compare/pop is the fixture
+// early-ACK boundary. General Kombu unacked recovery is intentionally absent.
+const PEEK_CREATE: &str = r#"
+local t=redis.call('TYPE',KEYS[1]).ok
+if t=='none'then return{0,''}end
+if t~='list'or redis.call('LLEN',KEYS[1])>10000 then return{-1,''}end
+local raw=redis.call('LINDEX',KEYS[1],-1)
+if not raw then return{0,''}end
+if #raw>65536 then return{-1,''}end
+return{1,raw}
+"#;
+const CLAIM_CREATE: &str = r#"
+if redis.call('TYPE',KEYS[1]).ok~='list'then return 0 end
+if redis.call('LINDEX',KEYS[1],-1)~=ARGV[1]then return 0 end
+redis.call('RPOP',KEYS[1]);return 1
+"#;
+const WRITE_SUCCESS: &str = r#"
+local t=redis.call('TYPE',KEYS[1]).ok
+if t~='none'and t~='string'then return -1 end
+if #ARGV[1]>262144 then return -1 end
+if t=='string'then
+ if redis.call('STRLEN',KEYS[1])>262144 then return -1 end
+ local ok,old=pcall(cjson.decode,redis.call('GET',KEYS[1]))
+ if not ok or type(old)~='table'then return -1 end
+ if old.status=='SUCCESS'then return 0 end
+end
+redis.call('SETEX',KEYS[1],3600,ARGV[1]);redis.call('PUBLISH',KEYS[1],ARGV[1]);return 1
 "#;

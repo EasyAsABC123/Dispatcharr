@@ -1,0 +1,198 @@
+{
+  "passed": true,
+  "scope": "Native Create-only worker component on copiedDB; no application202/scheduler/restore",
+  "fixture_create_worker_execution_verified": true,
+  "fixture_create_worker_physical_verified": false,
+  "native_application_dispatch_verified": false,
+  "native_worker_production_verified": false,
+  "performance_verified": false,
+  "report": "artifacts/rust/m8-native-create-worker-2/integration.json",
+  "report_sha256": "c1886a36d85f9e4f0f502b69d589d45aa9592c5c67020040fc10e94b0ad2212b",
+  "rust_source_archive": "artifacts/rust/m8-native-create-worker-2/rust-source.tar",
+  "rust_source_archive_sha256": "0ce78e9a7a38446fb1abaf2937ffb5dee60d68a187a72937ae4b7096c89976a5",
+  "component_module_sha256": {
+    "rust/Cargo.toml": "29654811e31104d99146a16b6418d2990d089274a75b35f0c10c9240891b9800",
+    "rust/Cargo.lock": "7d3124d4a1c490a06df06f99e525beda357dc7c88c3aeb0569821c29455d11ea",
+    "rust/crates/output-store/Cargo.toml": "641b618c529a771d78c7b41941ce317f1101398f2a410729d165f788782ad61e",
+    "rust/crates/output-store/README.md": "425ea48a314d854d2c3d3063755f3d4d1c10edb7626150e877e130ab7567ae09",
+    "rust/crates/backups/Cargo.toml": "6abe5ec8be0dce9d93b6a14af7f762971d03404c451563594b52aec0d7fa4403",
+    "rust/crates/backups/README.md": "3f7d13098fa8b9fc677990dd300f43c390178d39a76b2fb00ee746f38a374561",
+    "rust/crates/job-transport/Cargo.toml": "32d286c18eeea9a70327f194ea83ad32cd947916bdd45a0ef5426aa5953f926a",
+    "rust/crates/job-transport/README.md": "cce0526f2384ca6e199fa3d6857e29e1182ce7cedb3ec36f50919c9361b5b780",
+    "rust/crates/job-transport/src/protocol.rs": "2d1b308a0bbbc2a2f2bfa75de68711682c96228a879255ee96977ae7d0899099",
+    "rust/crates/job-transport/src/decode.rs": "2e295cef12ef2b4cee4ef0058c1dc7afc0539a5c693e811484f2c2cdf456b785",
+    "rust/crates/job-transport/src/lib.rs": "e80bfeb771cc13cf2bb51bd88f3ce202af6b23c78d8fae2b6a92cbbc26fb363e",
+    "rust/crates/job-transport/src/transport.rs": "8fa35e1c51e367e5f424cc6a6c31b720891f4298d0c2b2893430842a645b29c2",
+    "rust/crates/job-transport/src/worker.rs": "520e7a30cbb3bee902f5c562f13e81924d4be9f7022e2187bcff83a85e650d83",
+    "rust/crates/job-transport/datasets/source-results.json": "1deac8212c544d830de8d06560e7f6d70efe29c8235daa9ac780a4d95af0d0cb",
+    "rust/crates/job-transport/examples/job_fixture.rs": "60ccb006a5dfb19284125a9f78d6e5b202dafbc647ffc19ebed57ccdbce3a04f",
+    "rust/crates/job-transport/examples/create_worker_fixture.rs": "bbc204356d29c6480f9f0fd5f7919ab99f5bc3f23baa06d0a78ed9ae9305528e",
+    "rust/crates/job-transport/tests/resources.rs": "2ac9b839640fc2d7426c4e66f2233733d21951191f63ad7fa0394b469b54b7eb",
+    "rust/crates/backups/src/lib.rs": "3f34534f69bb1da91d1212fffe62d9cc51e159ec9e50bfe0efb93364b733f6e9",
+    "rust/crates/backups/tests/roundtrip.rs": "64d9ee6ebf4f257d23dcb006da103556aee098eb71e9fd9440421267f330fe44",
+    "rust/crates/backups/examples/backup_fixture.rs": "7c4fcdb3a22760fd31bf15427a7e47853df0d7a47ea506edb19c430feb6e7e45",
+    "rust/crates/output-store/src/lib.rs": "500349bd767b2001962bc641d96d62fa77682a352a85103c5849541ef6122ffa",
+    "rust/crates/output-store/src/transport.rs": "f896d4927d475c71616c6a43d07c9fdf83c78459737fae94330e4db64da5b316",
+    "rust/crates/output-store/tests/redis.rs": "bd77f6d30c6cd2779722dc9e649138714b9b698b0dc99670dcd2e67d8dfd01db"
+  },
+  "component_module_map_canonical_sha256": "30adc4933687ed183486476dcf97f749542611feb64f5370519dcbf7450785ce",
+  "binary_sha256": "5f68ece732567327229e5a82da5f2b4f538b847828613975867de8af5af11b2c",
+  "tool_source": "artifacts/rust/m8-native-create-worker-2/tool-source",
+  "tool_map_canonical_sha256": "9063401939f5f50bed05980b8d7cf85e2ee9177e040978b453ecd5b27e6427d6",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "application202_verified": false,
+  "restore_executed": false,
+  "scheduler_verified": false,
+  "credit": "Original Dispatcharr authors and contributors retain full application and handler credit and AGPL licensing.",
+  "checks": 24,
+  "source_report_sha256": "51638732998ed56dcc602e68f7bde77db93c0606d6f4dd1dd7eca036a550baac",
+  "checks_projection": [
+    {
+      "name": "startup-quarantine-known-plugin-only",
+      "passed": true
+    },
+    {
+      "name": "unsupported-head-retained-without-result",
+      "passed": true
+    },
+    {
+      "name": "source-created-queued-before-native",
+      "passed": true
+    },
+    {
+      "name": "early-ack-before-handler-pending",
+      "passed": true
+    },
+    {
+      "name": "source-pending-status-before-result",
+      "passed": true
+    },
+    {
+      "name": "native-process-exit",
+      "passed": true
+    },
+    {
+      "name": "source-ready-success-after-native-result",
+      "passed": true
+    },
+    {
+      "name": "source-status-completed-native-result",
+      "passed": true
+    },
+    {
+      "name": "source-result-key-fields-and-expiry",
+      "passed": true
+    },
+    {
+      "name": "native-result-size-actual-archive",
+      "passed": true
+    },
+    {
+      "name": "zip-db-only-schema",
+      "passed": true
+    },
+    {
+      "name": "pg17-read-both-archive-dumps",
+      "passed": true
+    },
+    {
+      "name": "zip-db-only-schema",
+      "passed": true
+    },
+    {
+      "name": "pg17-read-both-archive-dumps",
+      "passed": true
+    },
+    {
+      "name": "source-native-archive-metadata-contract",
+      "passed": true
+    },
+    {
+      "name": "source-list-sees-native-archive",
+      "passed": true
+    },
+    {
+      "name": "native-process-exit",
+      "passed": true
+    },
+    {
+      "name": "returned-handler-failure-is-celery-success",
+      "passed": true
+    },
+    {
+      "name": "source-status-returned-failure",
+      "passed": true
+    },
+    {
+      "name": "worker-crash-after-earlyack-no-result",
+      "passed": true
+    },
+    {
+      "name": "native-process-exit",
+      "passed": true
+    },
+    {
+      "name": "replacement-does-not-immediately-replay-earlyack",
+      "passed": true
+    },
+    {
+      "name": "expired-result-source-pending",
+      "passed": true
+    },
+    {
+      "name": "broker-result-separation",
+      "passed": true
+    }
+  ],
+  "source_pg_dump_version": "pg_dump (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)",
+  "startup_quarantine": [
+    {
+      "task": "apps.plugins.tasks.refresh_plugin_repos",
+      "sha256": "edb61c44212dc8292b37391b7a662d88cffac1b1a4b0cf63f03c27a34adbded3"
+    }
+  ],
+  "source_result_signature": {
+    "status": "completed",
+    "filename_type": "str",
+    "size_type": "int",
+    "error": null
+  },
+  "archive_diagnostic_message_parity": false,
+  "scope_details": [
+    "Actual original Create producer envelope is consumed only after complete supported validation, with byte-identical unsupported Restore head retained. No native Restore executes.",
+    "Actual native archive uses copied nonempty PostgreSQL DB and original PG17 client tools; Source reads metadata/result/status, pg_restore lists both Source/native dump archives without restoring either. Compressed ZIP bytes are not claimed identical.",
+    "Worker process killed after earlyACK but before archive handler work loses that task/result; replacement does not immediately replay it. This is bounded earlyACK loss evidence, not one-hour visibility recovery.",
+    "Result metadata SUCCESS dictionary, key namespace,3600TTL and Source status completed are genuine readback; fixture-only short expiry is separately labeled.",
+    "Injected handler failure matches original wrapper returned failure dictionary under SUCCESS; this does not establish actual PG/OS failure diagnostic strings.",
+    "UTC fixture clock, one worker slot and owned broker8/result9 do not establish production routing, priority/ETA, unacked reservation, broader timezones, child-kill/spool recovery, scheduler or application202."
+  ],
+  "failed_attempts": [
+    {
+      "report": "artifacts/rust/m8-native-create-worker-1/integration.json",
+      "report_sha256": "7266f2744abef57d7fea84c1867697515cffbdd3435c50802644d1bc406375a7",
+      "reason": "Fixture oracle expected wrong plugin startup name; failed before native execution, defaultDB unchanged and project removed. Corrected fresh fixture2 also uses Source state field in status assertions."
+    }
+  ],
+  "runtime_files_sha256": {
+    "rust/Cargo.toml": "29654811e31104d99146a16b6418d2990d089274a75b35f0c10c9240891b9800",
+    "rust/Cargo.lock": "7d3124d4a1c490a06df06f99e525beda357dc7c88c3aeb0569821c29455d11ea",
+    "rust/crates/output-store/Cargo.toml": "641b618c529a771d78c7b41941ce317f1101398f2a410729d165f788782ad61e",
+    "rust/crates/backups/Cargo.toml": "6abe5ec8be0dce9d93b6a14af7f762971d03404c451563594b52aec0d7fa4403",
+    "rust/crates/job-transport/Cargo.toml": "32d286c18eeea9a70327f194ea83ad32cd947916bdd45a0ef5426aa5953f926a",
+    "rust/crates/job-transport/src/protocol.rs": "2d1b308a0bbbc2a2f2bfa75de68711682c96228a879255ee96977ae7d0899099",
+    "rust/crates/job-transport/src/decode.rs": "2e295cef12ef2b4cee4ef0058c1dc7afc0539a5c693e811484f2c2cdf456b785",
+    "rust/crates/job-transport/src/lib.rs": "e80bfeb771cc13cf2bb51bd88f3ce202af6b23c78d8fae2b6a92cbbc26fb363e",
+    "rust/crates/job-transport/src/transport.rs": "8fa35e1c51e367e5f424cc6a6c31b720891f4298d0c2b2893430842a645b29c2",
+    "rust/crates/job-transport/src/worker.rs": "520e7a30cbb3bee902f5c562f13e81924d4be9f7022e2187bcff83a85e650d83",
+    "rust/crates/job-transport/examples/create_worker_fixture.rs": "bbc204356d29c6480f9f0fd5f7919ab99f5bc3f23baa06d0a78ed9ae9305528e",
+    "rust/crates/backups/src/lib.rs": "3f34534f69bb1da91d1212fffe62d9cc51e159ec9e50bfe0efb93364b733f6e9",
+    "rust/crates/output-store/src/lib.rs": "500349bd767b2001962bc641d96d62fa77682a352a85103c5849541ef6122ffa",
+    "rust/crates/output-store/src/transport.rs": "f896d4927d475c71616c6a43d07c9fdf83c78459737fae94330e4db64da5b316"
+  },
+  "runtime_files_canonical_sha256": "022826ac8edf260bbadac1a2a07f67866b10ff9e278eaeda6451c6116e0d4c25"
+}

@@ -205,3 +205,156 @@ async fn canceled_result_caller_keeps_physical_guard_until_reply_and_shutdown_wa
     wait_free(&jobs, &weak).await;
     assert_eq!(draining.await.unwrap(), Ok(()));
 }
+
+struct HeldCreate {
+    entered: Arc<std::sync::atomic::AtomicBool>,
+    gate: Arc<(std::sync::Mutex<bool>, std::sync::Condvar)>,
+}
+impl dispatcharr_job_transport::worker::CreateHandler for HeldCreate {
+    fn create(&self) -> Result<dispatcharr_job_transport::worker::Completed, String> {
+        self.entered
+            .store(true, std::sync::atomic::Ordering::Release);
+        let (lock, ready) = self.gate.as_ref();
+        let guard = lock.lock().unwrap();
+        drop(ready.wait_while(guard, |open| !*open).unwrap());
+        Ok(dispatcharr_job_transport::worker::Completed {
+            filename: "fixture-physical-only.zip".into(),
+            size: 1,
+        })
+    }
+}
+fn held_create(open: bool) -> Arc<HeldCreate> {
+    Arc::new(HeldCreate {
+        entered: Arc::new(std::sync::atomic::AtomicBool::new(false)),
+        gate: Arc::new((std::sync::Mutex::new(open), std::sync::Condvar::new())),
+    })
+}
+fn release_create(handler: &HeldCreate) {
+    *handler.gate.0.lock().unwrap() = true;
+    handler.gate.1.notify_all();
+}
+async fn entered_create(handler: &HeldCreate) {
+    tokio::time::timeout(Duration::from_secs(3), async {
+        while !handler.entered.load(std::sync::atomic::Ordering::Acquire) {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+}
+async fn direct_result(id: Uuid) -> Option<String> {
+    let raw = std::env::var("JOB_REDIS_TEST_URL").unwrap();
+    let mut info = redis::Client::open(raw)
+        .unwrap()
+        .get_connection_info()
+        .clone();
+    info.redis.db = 9;
+    let mut conn = redis::Client::open(info)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    redis::cmd("GET")
+        .arg(format!("celery-tasks:celery-task-meta-{id}"))
+        .query_async(&mut conn)
+        .await
+        .unwrap()
+}
+#[tokio::test]
+#[ignore = "Requires owned copied DB and actual Redis; fixture Create physical result reply only."]
+async fn worker_result_reply_timeout_retains_task_owner_admission_and_shutdown() {
+    use dispatcharr_job_transport::worker::{Error as WorkerError, Worker};
+    let proxy = proxy().await;
+    let jobs = jobs(&proxy).await;
+    // Warm all three scripts, then hold the actual result reply rather than a
+    // harmless SCRIPT LOAD/NOSCRIPT exchange or the early-ACK reply.
+    let warm = Worker::new_fixture(jobs.clone(), held_create(true));
+    jobs.publish(&Task::CreateBackup, Uuid::new_v4(), Arc::new(()))
+        .await
+        .unwrap();
+    warm.run_once(Arc::new(())).await.unwrap();
+    let handler = held_create(false);
+    let worker = Worker::new_fixture(jobs.clone(), handler.clone());
+    let id = Uuid::new_v4();
+    jobs.publish(&Task::CreateBackup, id, Arc::new(()))
+        .await
+        .unwrap();
+    let caller = Arc::new(Caller);
+    let weak = Arc::downgrade(&caller);
+    let clone = worker.clone();
+    let task = tokio::spawn(async move { clone.run_once(caller).await });
+    entered_create(&handler).await;
+    proxy.hold.send_replace(true);
+    release_create(&handler);
+    tokio::time::timeout(Duration::from_secs(3), async {
+        while direct_result(id).await.is_none() {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert_eq!(
+        task.await.unwrap(),
+        Err(WorkerError::Transport(Error::AmbiguousResult(id)))
+    );
+    assert!(weak.upgrade().is_some());
+    assert_eq!(worker.available_slots(), 0);
+    assert_eq!(
+        worker.run_once(Arc::new(())).await,
+        Err(WorkerError::Capacity)
+    );
+    assert_eq!(
+        worker.shutdown(Duration::from_millis(30)).await,
+        Err(WorkerError::DrainTimeout)
+    );
+    assert_eq!(
+        worker.run_once(Arc::new(())).await,
+        Err(WorkerError::Closed)
+    );
+    proxy.hold.send_replace(false);
+    tokio::time::timeout(Duration::from_secs(3), async {
+        while weak.upgrade().is_some() || worker.available_slots() != 1 {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+    worker.shutdown(Duration::from_secs(2)).await.unwrap();
+}
+#[tokio::test]
+#[ignore = "Requires owned copied DB and actual Redis; fixture Create blocking-handler lifecycle only."]
+async fn worker_canceled_caller_keeps_handler_owner_until_result_and_warm_drain() {
+    use dispatcharr_job_transport::worker::{Error as WorkerError, Worker};
+    let proxy = proxy().await;
+    let jobs = jobs(&proxy).await;
+    let handler = held_create(false);
+    let worker = Worker::new_fixture(jobs.clone(), handler.clone());
+    let id = Uuid::new_v4();
+    jobs.publish(&Task::CreateBackup, id, Arc::new(()))
+        .await
+        .unwrap();
+    let caller = Arc::new(Caller);
+    let weak = Arc::downgrade(&caller);
+    let clone = worker.clone();
+    let task = tokio::spawn(async move { clone.run_once(caller).await });
+    entered_create(&handler).await;
+    task.abort();
+    let _ = task.await;
+    assert!(weak.upgrade().is_some());
+    assert_eq!(worker.available_slots(), 0);
+    assert_eq!(
+        worker.run_once(Arc::new(())).await,
+        Err(WorkerError::Capacity)
+    );
+    assert_eq!(
+        worker.shutdown(Duration::from_millis(30)).await,
+        Err(WorkerError::DrainTimeout)
+    );
+    assert!(direct_result(id).await.is_none());
+    release_create(&handler);
+    worker.shutdown(Duration::from_secs(3)).await.unwrap();
+    assert!(weak.upgrade().is_none());
+    let meta: serde_json::Value = serde_json::from_str(&direct_result(id).await.unwrap()).unwrap();
+    assert_eq!(meta["status"], "SUCCESS");
+    assert_eq!(meta["result"]["status"], "completed");
+}
