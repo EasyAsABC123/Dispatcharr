@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "scope": "Original-only owned plugin manifest/trust/settings/actions/stop/ORM and Factory control surface",
+  "evidence": "artifacts/rust/m8-plugin-source-2",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "cases": 31,
+  "actual_connection_cleanup_calls": 5,
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "source_dataset": "scripts/rust-plugin-contracts/source-plugin-control-2.json",
+  "source_dataset_sha256": "e58d79a270cd1785bfa55809a9b566400e7d2f9d7389bb5627853bcd2f4369bc",
+  "report_sha256": "5e86392fb4fee6946fc81564e6aac2812cf90a7a3d2e08bac2d803e7b05cd72f",
+  "tool_source_sha256": {
+    "scripts/rust-plugin-contracts/run.py": "f4a0a9660dfbe2f4eed1d708338c20b0683a03f7def65b6d0e7c384a3451d1b1",
+    "scripts/rust-plugin-contracts/source.py": "1432de0bef4b0308286292ceef2770c6f72a39df7a92f494e3f6a39bba784099",
+    "scripts/rust-integration/backup_fixture.py": "21afad77d557a15ef365c12b0757df8838f69708ef03cfee7b324514b5154d58",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9"
+  },
+  "native_verified": false,
+  "python_compatibility_executor_implemented": false,
+  "performance_verified": false,
+  "failed_attempts": [
+    {
+      "evidence": "artifacts/rust/m8-plugin-source-1",
+      "reason": "Backup helper mount pointed at wrong captured scripts folder; corrected mount before plugin/copy execution. Project removed; failed log retained."
+    }
+  ],
+  "limitations": [
+    "APIRequestFactory forced-role responses, not network HEAD/error middleware or cached-auth acceptance.",
+    "No remote repo, managed ZIP/signature install, periodic-task ownership, concurrency or native interpreter/executor acceptance."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}

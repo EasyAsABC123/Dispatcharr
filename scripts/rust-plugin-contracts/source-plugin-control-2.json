@@ -1,0 +1,1457 @@
+{
+  "passed": true,
+  "scope": "Original-only owned plugin manifest/trust/settings/actions/stop/ORM and Factory control surface",
+  "cases": [
+    {
+      "name": "list-never-enabled-anonymous",
+      "method": "GET",
+      "path": "/api/plugins/plugins/",
+      "role": "anonymous",
+      "status": 401,
+      "headers": {
+        "Content-Type": "application/json",
+        "WWW-Authenticate": "Bearer realm=\"api\"",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "list-never-enabled-standard",
+      "method": "GET",
+      "path": "/api/plugins/plugins/",
+      "role": "standard",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 856,
+      "body_sha256": "8eccfb74dd6b709015478369a763bc235908857286c25260365eedbc082a75e3",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "plugins": [
+          {
+            "key": "owned_contract",
+            "name": "Manifest fixture plugin",
+            "version": "1.0",
+            "description": "Owned original probe",
+            "author": "Manifest fixture author",
+            "help_url": "",
+            "enabled": false,
+            "ever_enabled": false,
+            "fields": [
+              {
+                "id": "prefix",
+                "label": "Prefix",
+                "type": "string",
+                "default": "default-prefix"
+              },
+              {
+                "id": "counter",
+                "label": "Counter",
+                "type": "number",
+                "default": 3
+              }
+            ],
+            "settings": {},
+            "actions": [
+              {
+                "id": "echo",
+                "label": "Echo"
+              },
+              {
+                "id": "scalar",
+                "label": "Scalar"
+              },
+              {
+                "id": "fail",
+                "label": "Fail"
+              },
+              {
+                "id": "orm",
+                "label": "Orm"
+              }
+            ],
+            "missing": false,
+            "trusted": false,
+            "loaded": false,
+            "legacy": false,
+            "logo_url": "http://plugin-fixture.invalid:8088/api/plugins/plugins/owned_contract/logo/",
+            "source_repo": null,
+            "source_repo_name": null,
+            "is_official_repo": false,
+            "slug": "",
+            "is_managed": false,
+            "installed_version_is_prerelease": false,
+            "update_available": false,
+            "latest_version": "",
+            "deprecated": false
+          }
+        ]
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "list-never-enabled-admin",
+      "method": "GET",
+      "path": "/api/plugins/plugins/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 856,
+      "body_sha256": "8eccfb74dd6b709015478369a763bc235908857286c25260365eedbc082a75e3",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "plugins": [
+          {
+            "key": "owned_contract",
+            "name": "Manifest fixture plugin",
+            "version": "1.0",
+            "description": "Owned original probe",
+            "author": "Manifest fixture author",
+            "help_url": "",
+            "enabled": false,
+            "ever_enabled": false,
+            "fields": [
+              {
+                "id": "prefix",
+                "label": "Prefix",
+                "type": "string",
+                "default": "default-prefix"
+              },
+              {
+                "id": "counter",
+                "label": "Counter",
+                "type": "number",
+                "default": 3
+              }
+            ],
+            "settings": {},
+            "actions": [
+              {
+                "id": "echo",
+                "label": "Echo"
+              },
+              {
+                "id": "scalar",
+                "label": "Scalar"
+              },
+              {
+                "id": "fail",
+                "label": "Fail"
+              },
+              {
+                "id": "orm",
+                "label": "Orm"
+              }
+            ],
+            "missing": false,
+            "trusted": false,
+            "loaded": false,
+            "legacy": false,
+            "logo_url": "http://plugin-fixture.invalid:8088/api/plugins/plugins/owned_contract/logo/",
+            "source_repo": null,
+            "source_repo_name": null,
+            "is_official_repo": false,
+            "slug": "",
+            "is_managed": false,
+            "installed_version_is_prerelease": false,
+            "update_available": false,
+            "latest_version": "",
+            "deprecated": false
+          }
+        ]
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "head-factory-list",
+      "method": "HEAD",
+      "path": "/api/plugins/plugins/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 856,
+      "body_sha256": "8eccfb74dd6b709015478369a763bc235908857286c25260365eedbc082a75e3",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "plugins": [
+          {
+            "key": "owned_contract",
+            "name": "Manifest fixture plugin",
+            "version": "1.0",
+            "description": "Owned original probe",
+            "author": "Manifest fixture author",
+            "help_url": "",
+            "enabled": false,
+            "ever_enabled": false,
+            "fields": [
+              {
+                "id": "prefix",
+                "label": "Prefix",
+                "type": "string",
+                "default": "default-prefix"
+              },
+              {
+                "id": "counter",
+                "label": "Counter",
+                "type": "number",
+                "default": 3
+              }
+            ],
+            "settings": {},
+            "actions": [
+              {
+                "id": "echo",
+                "label": "Echo"
+              },
+              {
+                "id": "scalar",
+                "label": "Scalar"
+              },
+              {
+                "id": "fail",
+                "label": "Fail"
+              },
+              {
+                "id": "orm",
+                "label": "Orm"
+              }
+            ],
+            "missing": false,
+            "trusted": false,
+            "loaded": false,
+            "legacy": false,
+            "logo_url": "http://plugin-fixture.invalid:8088/api/plugins/plugins/owned_contract/logo/",
+            "source_repo": null,
+            "source_repo_name": null,
+            "is_official_repo": false,
+            "slug": "",
+            "is_managed": false,
+            "installed_version_is_prerelease": false,
+            "update_available": false,
+            "latest_version": "",
+            "deprecated": false
+          }
+        ]
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "options-standard",
+      "method": "OPTIONS",
+      "path": "/api/plugins/plugins/",
+      "role": "standard",
+      "status": 403,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "options-admin",
+      "method": "OPTIONS",
+      "path": "/api/plugins/plugins/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 175,
+      "body_sha256": "e8dde54e38a6325adf255294985be431fb14a28682bad81e15ec73bc78b0ac04",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "name": "Plugins List Api",
+        "description": "",
+        "renders": [
+          "application/json",
+          "text/html"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "run-disabled",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/run/",
+      "role": "admin",
+      "status": 403,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 46,
+      "body_sha256": "48bb0d104bab03893a4f7f02e4bbff7a39c7b965da1295910af39bf20be2fa2f",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Plugin is disabled"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "run-missing-action",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/run/",
+      "role": "admin",
+      "status": 400,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 44,
+      "body_sha256": "9ab722d99ddabb63cfb39c0891077075baf514c5003293dd4417f6f850495b25",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Missing 'action'"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "run-unknown-plugin",
+      "method": "POST",
+      "path": "/api/plugins/plugins/missing/run/",
+      "role": "admin",
+      "status": 404,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 44,
+      "body_sha256": "df76f0b10457a4c70af8703681e95558782f8ace64216219ccbbf8b1a7d45e97",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Plugin not found"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "settings-standard",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/settings/",
+      "role": "standard",
+      "status": 403,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {},
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "settings-owned",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/settings/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 68,
+      "body_sha256": "1c4e86eb84ee1743ddb448ae18188b26323bd5341f89f7215d151c69fd97ec7d",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        }
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "enabled-invalid-NoneType",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/enabled/",
+      "role": "admin",
+      "status": 400,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 53,
+      "body_sha256": "d64c0285fae69c1eee0b904998daeb23c3b7182e573d382374400ea9081f74a6",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Missing 'enabled' boolean"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "enabled-invalid-str",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/enabled/",
+      "role": "admin",
+      "status": 400,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 53,
+      "body_sha256": "4aa834f4bd581de8a536b5aa78b0b50cab02ccc64051eb95b860b2c149b9192d",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Invalid 'enabled' boolean"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "enabled-invalid-list",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/enabled/",
+      "role": "admin",
+      "status": 400,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 53,
+      "body_sha256": "4aa834f4bd581de8a536b5aa78b0b50cab02ccc64051eb95b860b2c149b9192d",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Invalid 'enabled' boolean"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "enabled-invalid-dict",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/enabled/",
+      "role": "admin",
+      "status": 400,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 53,
+      "body_sha256": "4aa834f4bd581de8a536b5aa78b0b50cab02ccc64051eb95b860b2c149b9192d",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Invalid 'enabled' boolean"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "enabled-invalid-int",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/enabled/",
+      "role": "admin",
+      "status": 400,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 53,
+      "body_sha256": "4aa834f4bd581de8a536b5aa78b0b50cab02ccc64051eb95b860b2c149b9192d",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Invalid 'enabled' boolean"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": false,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 0
+    },
+    {
+      "name": "enable",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/enabled/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 932,
+      "body_sha256": "099f09602b54a0d7d6a66152929655b5a6892e691335ac2179a5bc39149039ff",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "enabled": true,
+        "ever_enabled": true,
+        "plugin": {
+          "key": "owned_contract",
+          "name": "Live fixture plugin",
+          "version": "live-1",
+          "description": "Owned original probe",
+          "author": "Live fixture author",
+          "help_url": "",
+          "enabled": true,
+          "ever_enabled": true,
+          "fields": [
+            {
+              "id": "prefix",
+              "label": "Prefix",
+              "type": "string",
+              "default": "default-prefix"
+            },
+            {
+              "id": "counter",
+              "label": "Counter",
+              "type": "number",
+              "default": 3
+            }
+          ],
+          "settings": {
+            "prefix": "saved",
+            "unknown": "preserved"
+          },
+          "actions": [
+            {
+              "id": "echo",
+              "label": "Echo"
+            },
+            {
+              "id": "scalar",
+              "label": "Scalar"
+            },
+            {
+              "id": "fail",
+              "label": "Fail"
+            },
+            {
+              "id": "orm",
+              "label": "Orm"
+            }
+          ],
+          "missing": false,
+          "trusted": true,
+          "loaded": true,
+          "legacy": false,
+          "logo_url": "http://plugin-fixture.invalid:8088/api/plugins/plugins/owned_contract/logo/",
+          "source_repo": null,
+          "source_repo_name": null,
+          "is_official_repo": false,
+          "slug": "",
+          "is_managed": false,
+          "installed_version_is_prerelease": false,
+          "update_available": false,
+          "latest_version": "",
+          "deprecated": false
+        }
+      },
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 1
+    },
+    {
+      "name": "run-enabled-echo",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/run/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 232,
+      "body_sha256": "d4716e737546391b9391b9cc72530a9e1d570ed9c8d987441141f9bbbdafc67c",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "result": {
+          "status": "ok",
+          "action": "echo",
+          "params": {
+            "value": "\u65e5\u672c\u8a9e"
+          },
+          "settings": {
+            "prefix": "saved",
+            "unknown": "preserved",
+            "counter": 3
+          },
+          "action_ids": [
+            "echo",
+            "scalar",
+            "fail",
+            "orm"
+          ],
+          "logger_name": "apps.plugins.loader"
+        }
+      },
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 1,
+      "actual_connection_cleanup_calls": 1
+    },
+    {
+      "name": "run-enabled-scalar",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/run/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 62,
+      "body_sha256": "2e5f6edd43f5fb815cda0dde4c5adf58e80356506b6e1429ac5518689c49c9fc",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "result": {
+          "status": "ok",
+          "result": [
+            "owned",
+            7
+          ]
+        }
+      },
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved"
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 1,
+      "actual_connection_cleanup_calls": 1
+    },
+    {
+      "name": "run-enabled-orm",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/run/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 58,
+      "body_sha256": "d823fe02bb199bfe96387c0507a627af291dd842f17316b1b9a825d1c4a99c97",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "result": {
+          "status": "ok",
+          "owned_effect": 1
+        }
+      },
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 1,
+      "actual_connection_cleanup_calls": 1
+    },
+    {
+      "name": "run-enabled-fail",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/run/",
+      "role": "admin",
+      "status": 500,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 48,
+      "body_sha256": "d60b5e3911d177d3469b66f9b4936f6805f47d31310408a576cf1bbfdb76e2f1",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "owned plugin failure"
+      },
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 1,
+      "actual_connection_cleanup_calls": 1
+    },
+    {
+      "name": "run-enabled-undeclared",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/run/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 255,
+      "body_sha256": "03f82eaa53cab6537a8f41fb73c5c67c3c70796a80b6c1f965cdd1cb77816b24",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "result": {
+          "status": "ok",
+          "action": "undeclared",
+          "params": {
+            "value": "\u65e5\u672c\u8a9e"
+          },
+          "settings": {
+            "prefix": "saved",
+            "unknown": "preserved",
+            "owned_effect": 1,
+            "counter": 3
+          },
+          "action_ids": [
+            "echo",
+            "scalar",
+            "fail",
+            "orm"
+          ],
+          "logger_name": "apps.plugins.loader"
+        }
+      },
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 1,
+      "actual_connection_cleanup_calls": 1
+    },
+    {
+      "name": "logo-admin",
+      "method": "GET",
+      "path": "/api/plugins/plugins/owned_contract/logo/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "image/png",
+        "Content-Length": "68",
+        "Content-Disposition": "inline; filename=\"logo.png\"",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 68,
+      "body_sha256": "f3ec9e14b9c085b55edc96155f7bd26b6fdeda2462f02af4e0279d8319b365e3",
+      "factory_rendered_not_network_body": true,
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 1
+    },
+    {
+      "name": "logo-anonymous",
+      "method": "GET",
+      "path": "/api/plugins/plugins/owned_contract/logo/",
+      "role": "anonymous",
+      "status": 200,
+      "headers": {
+        "Content-Type": "image/png",
+        "Content-Length": "68",
+        "Content-Disposition": "inline; filename=\"logo.png\"",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 68,
+      "body_sha256": "f3ec9e14b9c085b55edc96155f7bd26b6fdeda2462f02af4e0279d8319b365e3",
+      "factory_rendered_not_network_body": true,
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 1
+    },
+    {
+      "name": "reload",
+      "method": "POST",
+      "path": "/api/plugins/plugins/reload/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 26,
+      "body_sha256": "095e5ffcdbd9e7fccc940bdc21c5fd8e684fe51c55645e21d3c237cfd9994b6d",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "count": 1
+      },
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 2
+    },
+    {
+      "name": "disable",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/enabled/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 957,
+      "body_sha256": "9128ce98a9a45c43454372e5a792a6f5b369ada01989ebe2b82c3bcc8cce213f",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "enabled": false,
+        "ever_enabled": true,
+        "plugin": {
+          "key": "owned_contract",
+          "name": "Manifest fixture plugin",
+          "version": "1.0",
+          "description": "Owned original probe",
+          "author": "Manifest fixture author",
+          "help_url": "",
+          "enabled": false,
+          "ever_enabled": true,
+          "fields": [
+            {
+              "id": "prefix",
+              "label": "Prefix",
+              "type": "string",
+              "default": "default-prefix"
+            },
+            {
+              "id": "counter",
+              "label": "Counter",
+              "type": "number",
+              "default": 3
+            }
+          ],
+          "settings": {
+            "prefix": "saved",
+            "unknown": "preserved",
+            "owned_effect": 1
+          },
+          "actions": [
+            {
+              "id": "echo",
+              "label": "Echo"
+            },
+            {
+              "id": "scalar",
+              "label": "Scalar"
+            },
+            {
+              "id": "fail",
+              "label": "Fail"
+            },
+            {
+              "id": "orm",
+              "label": "Orm"
+            }
+          ],
+          "missing": false,
+          "trusted": true,
+          "loaded": false,
+          "legacy": false,
+          "logo_url": "http://plugin-fixture.invalid:8088/api/plugins/plugins/owned_contract/logo/",
+          "source_repo": null,
+          "source_repo_name": null,
+          "is_official_repo": false,
+          "slug": "",
+          "is_managed": false,
+          "installed_version_is_prerelease": false,
+          "update_available": false,
+          "latest_version": "",
+          "deprecated": false
+        }
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 2
+    },
+    {
+      "name": "list-ever-enabled-disabled",
+      "method": "GET",
+      "path": "/api/plugins/plugins/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 909,
+      "body_sha256": "d86fbfbfd3ffb501703830fa98eea958289b4bf2cc070ef3ed998965d1a43cd5",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "plugins": [
+          {
+            "key": "owned_contract",
+            "name": "Manifest fixture plugin",
+            "version": "1.0",
+            "description": "Owned original probe",
+            "author": "Manifest fixture author",
+            "help_url": "",
+            "enabled": false,
+            "ever_enabled": true,
+            "fields": [
+              {
+                "id": "prefix",
+                "label": "Prefix",
+                "type": "string",
+                "default": "default-prefix"
+              },
+              {
+                "id": "counter",
+                "label": "Counter",
+                "type": "number",
+                "default": 3
+              }
+            ],
+            "settings": {
+              "prefix": "saved",
+              "unknown": "preserved",
+              "owned_effect": 1
+            },
+            "actions": [
+              {
+                "id": "echo",
+                "label": "Echo"
+              },
+              {
+                "id": "scalar",
+                "label": "Scalar"
+              },
+              {
+                "id": "fail",
+                "label": "Fail"
+              },
+              {
+                "id": "orm",
+                "label": "Orm"
+              }
+            ],
+            "missing": false,
+            "trusted": true,
+            "loaded": false,
+            "legacy": false,
+            "logo_url": "http://plugin-fixture.invalid:8088/api/plugins/plugins/owned_contract/logo/",
+            "source_repo": null,
+            "source_repo_name": null,
+            "is_official_repo": false,
+            "slug": "",
+            "is_managed": false,
+            "installed_version_is_prerelease": false,
+            "update_available": false,
+            "latest_version": "",
+            "deprecated": false
+          }
+        ]
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 2
+    },
+    {
+      "name": "run-disabled-again",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/run/",
+      "role": "admin",
+      "status": 403,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 46,
+      "body_sha256": "48bb0d104bab03893a4f7f02e4bbff7a39c7b965da1295910af39bf20be2fa2f",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": false,
+        "error": "Plugin is disabled"
+      },
+      "owned_state": {
+        "enabled": false,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 2
+    },
+    {
+      "name": "re-enable",
+      "method": "POST",
+      "path": "/api/plugins/plugins/owned_contract/enabled/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "POST, OPTIONS"
+      },
+      "body_bytes": 949,
+      "body_sha256": "3856cb773570a3f47f17a153aaa60003767d752f4893bc32b1441cb5961ae9ce",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true,
+        "enabled": true,
+        "ever_enabled": true,
+        "plugin": {
+          "key": "owned_contract",
+          "name": "Live fixture plugin",
+          "version": "live-1",
+          "description": "Owned original probe",
+          "author": "Live fixture author",
+          "help_url": "",
+          "enabled": true,
+          "ever_enabled": true,
+          "fields": [
+            {
+              "id": "prefix",
+              "label": "Prefix",
+              "type": "string",
+              "default": "default-prefix"
+            },
+            {
+              "id": "counter",
+              "label": "Counter",
+              "type": "number",
+              "default": 3
+            }
+          ],
+          "settings": {
+            "prefix": "saved",
+            "unknown": "preserved",
+            "owned_effect": 1
+          },
+          "actions": [
+            {
+              "id": "echo",
+              "label": "Echo"
+            },
+            {
+              "id": "scalar",
+              "label": "Scalar"
+            },
+            {
+              "id": "fail",
+              "label": "Fail"
+            },
+            {
+              "id": "orm",
+              "label": "Orm"
+            }
+          ],
+          "missing": false,
+          "trusted": true,
+          "loaded": true,
+          "legacy": false,
+          "logo_url": "http://plugin-fixture.invalid:8088/api/plugins/plugins/owned_contract/logo/",
+          "source_repo": null,
+          "source_repo_name": null,
+          "is_official_repo": false,
+          "slug": "",
+          "is_managed": false,
+          "installed_version_is_prerelease": false,
+          "update_available": false,
+          "latest_version": "",
+          "deprecated": false
+        }
+      },
+      "owned_state": {
+        "enabled": true,
+        "ever_enabled": true,
+        "settings": {
+          "prefix": "saved",
+          "unknown": "preserved",
+          "owned_effect": 1
+        },
+        "owned_tasks": [],
+        "suspended_schedules": []
+      },
+      "import_count": 3
+    },
+    {
+      "name": "delete",
+      "method": "DELETE",
+      "path": "/api/plugins/plugins/owned_contract/delete/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "DELETE, OPTIONS"
+      },
+      "body_bytes": 16,
+      "body_sha256": "c955e57777ec0d73639dca6748560d00aa5eb8e12f13ebb2ed9656add3908f97",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "success": true
+      },
+      "import_count": 3
+    },
+    {
+      "name": "list-after-delete",
+      "method": "GET",
+      "path": "/api/plugins/plugins/",
+      "role": "admin",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Vary": "Accept",
+        "Allow": "GET, HEAD, OPTIONS"
+      },
+      "body_bytes": 14,
+      "body_sha256": "ca220a4fef7f7c73305ba5cdb0ecc7cc3ba6ebf98c66990085183850438b5e3c",
+      "factory_rendered_not_network_body": true,
+      "json": {
+        "plugins": []
+      },
+      "import_count": 3
+    }
+  ],
+  "events": [
+    {
+      "event": "import",
+      "version": "live-1"
+    },
+    {
+      "event": "run",
+      "action": "echo",
+      "params": {
+        "value": "\u65e5\u672c\u8a9e"
+      }
+    },
+    {
+      "event": "run",
+      "action": "scalar",
+      "params": {
+        "value": "\u65e5\u672c\u8a9e"
+      }
+    },
+    {
+      "event": "run",
+      "action": "orm",
+      "params": {
+        "value": "\u65e5\u672c\u8a9e"
+      }
+    },
+    {
+      "event": "run",
+      "action": "fail",
+      "params": {
+        "value": "\u65e5\u672c\u8a9e"
+      }
+    },
+    {
+      "event": "run",
+      "action": "undeclared",
+      "params": {
+        "value": "\u65e5\u672c\u8a9e"
+      }
+    },
+    {
+      "event": "stop",
+      "reason": "reload",
+      "settings": {
+        "prefix": "saved",
+        "unknown": "preserved",
+        "owned_effect": 1,
+        "counter": 3
+      }
+    },
+    {
+      "event": "import",
+      "version": "live-1"
+    },
+    {
+      "event": "stop",
+      "reason": "disable",
+      "settings": {
+        "prefix": "saved",
+        "unknown": "preserved",
+        "owned_effect": 1,
+        "counter": 3
+      }
+    },
+    {
+      "event": "import",
+      "version": "live-1"
+    },
+    {
+      "event": "stop",
+      "reason": "delete",
+      "settings": {
+        "prefix": "saved",
+        "unknown": "preserved",
+        "owned_effect": 1,
+        "counter": 3
+      }
+    }
+  ],
+  "actual_close_connection_calls": 5,
+  "plugin_code_sha256": "2e766b773707e41638e5b44a87b4fe54d0c5d0d85d47d150fba0004fda8bd3a8",
+  "all_plugin_files_and_database_rows_removed": true,
+  "native_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "APIRequestFactory forced-role responses, not network HEAD/error middleware or cached-auth acceptance.",
+    "No remote repo, managed ZIP/signature install, periodic-task ownership, concurrency or native interpreter/executor acceptance."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}
