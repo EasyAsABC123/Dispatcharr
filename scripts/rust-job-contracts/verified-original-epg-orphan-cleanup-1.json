@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "scope": "Pinned Original helper SQL and real missing-source worker; no native helper acceptance",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "checks": 79,
+  "direct_cases": 11,
+  "worker_cases": 9,
+  "versions": {
+    "Django": "6.0.9",
+    "django-celery-beat": "2.9.0",
+    "psycopg": "3.3.6"
+  },
+  "dataset": "scripts/rust-job-contracts/source-epg-orphan-cleanup-1.json",
+  "dataset_sha256": "27ed54f787e8b644f48d57a79f578b32a5f8a243f540504e24dca59628d41edc",
+  "raw_report": "artifacts/rust/m6-original-epg-orphan-marker-1/source-epg-orphan-marker-private.json",
+  "raw_report_sha256": "58a2c6302d7f2ce23d023776539154b261f54175c2904998d7eaed0bad7d08f4",
+  "integration_sha256": "4c0fbfe685cd349d5b4ef1ea4658f6353870655010e38189adf3bc957d763676",
+  "collector_proof": "artifacts/rust/m6-original-epg-orphan-collector-1/proof.json",
+  "collector_proof_sha256": "dde746ea48c45508ca618f03fca36b73881b26c8ebf940c5688be98e0763b3e6",
+  "collector_implementation_sha256": "22f35a2b33f9019294786157159760ec50c73f4ff3373fe006bb8962115763f3",
+  "selected_tools": {
+    "scripts/rust-job-contracts/source_epg_orphan_marker.py": {
+      "path": "artifacts/rust/m6-original-epg-orphan-marker-1/tool-source/scripts/rust-job-contracts/source_epg_orphan_marker.py",
+      "sha256": "4078d30c2687da16d30a1c294d9ceb64988fe33387691d16fbbe65fbd9577acd"
+    },
+    "scripts/rust-job-contracts/run_epg_orphan_marker.py": {
+      "path": "artifacts/rust/m6-original-epg-orphan-marker-1/tool-source/scripts/rust-job-contracts/run_epg_orphan_marker.py",
+      "sha256": "50e37ae49228e810989d4ae6588137b45c70d22cdd2dbd97ff304d7b6e692e1b"
+    },
+    "scripts/rust-job-contracts/epg_orphan_worker_observer.py": {
+      "path": "artifacts/rust/m6-original-epg-orphan-marker-1/tool-source/scripts/rust-job-contracts/epg_orphan_worker_observer.py",
+      "sha256": "5bd54146fedc180d1f10a3da49859dad4896d55f9c46a92e70af52273fdb476f"
+    }
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "worker_sql_trace_observed": false,
+  "native_orphan_helper_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Worker query observer is empty after Source resets its DB connection; direct helper is the SQL authority.",
+    "No concurrent insert/delete or native cancellation/transaction ambiguity proof.",
+    "Worker success string does not assert that helper cleanup succeeded."
+  ],
+  "credit": "Original Dispatcharr authors retain full application and algorithm credit/AGPL; Django and django-celery-beat authors retain framework credit/licenses."
+}
