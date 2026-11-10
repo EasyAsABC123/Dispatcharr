@@ -505,3 +505,6 @@ The [actual active-VOD Redis state-loss comparison](../scripts/rust-redis-restar
 
 
 [Original orphan-schedule cleanup](../scripts/rust-job-contracts/verified-original-epg-orphan-cleanup-1.json) now has 79 copied-database checks across eleven direct-helper cases and nine actual worker cases, with pinned Django/django-celery-beat implementation capture. It establishes three separate commit boundaries, SET_NULL references, marker failure effects and the normal missing-source result even when cleanup fails. Worker SQL tracing is explicitly unavailable after the Source resets its connection; direct-helper queries establish SQL order. This is an Original reference checkpoint, with native FileJob integration and operational gates tracked separately.
+
+
+[The additional Source VOD identity observation172](../scripts/rust-redis-restart-contracts/verified-active-vod-source-identity-172.json) proves that the old body continues after state loss while same-ID reopen creates a second provider response and fresh public metadata with active/request/provider counts of one. Both bodies then deliver their expected bytes concurrently. Recovery therefore needs separate old/new local generations; eager reconstruction or recounting all old bodies would change observed behavior. This adds Original reference evidence, not a native recovery pass.

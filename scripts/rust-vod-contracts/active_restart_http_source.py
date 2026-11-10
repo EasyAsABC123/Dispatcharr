@@ -42,6 +42,10 @@ def state(name):
  try:
   row=client.hgetall(key);value.update(metadata=dict(row),provider_count=client.get('profile_connections:'+str(profile.pk)),ttl=client.ttl(key))
  except Exception as error:value['error']=error_info(error)
+ try:
+  with urllib.request.urlopen('http://origin:8080/stats',timeout=2)as response:
+   value['origin_vod']=json.load(response)['vod']
+ except Exception as error:value['origin_error']=error_info(error)
  report['observations'].append(value);return value
 base='http://127.0.0.1:5656'
 class WireResponse:
@@ -91,12 +95,27 @@ try:
    first=next(iter(sibling.streaming_content));report['same_id_reopen']['first_bytes']=len(first);report['same_id_reopen']['first_sha256']=hashlib.sha256(first).hexdigest()
   except StopIteration:report['same_id_reopen']['ended_without_bytes']=True
   except Exception as error:report['same_id_reopen']['error']=error_info(error)
- state('same-id-reopen-before-close');sibling.close();sibling.close();state('sibling-closed-old-body-held');response.close();response.close();time.sleep(1.5);state('all-bodies-closed-after-grace')
+ state('same-id-reopen-before-close')
+ # Distinguish both still-open provider bodies; a recreated public session hash
+ # must not be mistaken for adoption of the pre-restart body.
+ try:
+  following=next(iterator)
+  report['old_body_after_reopen']={'offset':len(payload),'bytes':len(following),'sha256':hashlib.sha256(following).hexdigest()}
+ except StopIteration:report['old_body_after_reopen']={'ended':True}
+ except Exception as error:report['old_body_after_reopen']={'error':error_info(error)}
+ state('both-bodies-held-after-extra-old-read');sibling.close();sibling.close();state('sibling-closed-old-body-held');response.close();response.close();time.sleep(1.5);state('all-bodies-closed-after-grace')
  # Reference only the sampled prefix; this is not a full-file/EOF gate.
  request=urllib.request.Request('http://origin:8080/vod.mp4',headers={'Range':'bytes=0-'+str(len(payload)-1)})
  with urllib.request.urlopen(request,timeout=10)as reference:
   expected=reference.read(report['body_sample_limit']+1);report['reference_status']=reference.status
  report['body_prefix_matches_origin']=expected==payload
+ report['reopened_body_starts_at_prefix']=report['same_id_reopen'].get('first_sha256')==hashlib.sha256(payload[:8192]).hexdigest()
+ extra=report.get('old_body_after_reopen',{})
+ if extra.get('bytes'):
+  request=urllib.request.Request('http://origin:8080/vod.mp4',headers={'Range':'bytes='+str(extra['offset'])+'-'+str(extra['offset']+extra['bytes']-1)})
+  with urllib.request.urlopen(request,timeout=10)as reference:
+   sampled=reference.read(8193);report['old_body_after_reopen_matches_offset']=len(sampled)==extra['bytes']and hashlib.sha256(sampled).hexdigest()==extra['sha256']
+
  report['events']=list(SystemEvent.objects.filter(id__gt=event_start).order_by('id').values('event_type','details'))
  if len(report['events'])>64:raise RuntimeError('Owned audit bound')
  report['same_process']=os.getpid()==report['pid'];report['capture_complete']=True

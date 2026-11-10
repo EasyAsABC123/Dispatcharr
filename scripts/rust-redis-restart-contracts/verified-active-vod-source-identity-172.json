@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "scope": "Actual Original HTTP same-ID reopen body identity, origin request counts and public metadata after no-persistence Redis restart",
+  "evidence": "artifacts/rust/m4-active-vod-source-identity-172",
+  "private_report_sha256": "e4b06a6011064ce839879a52317a101f59c95f9a26d490747dfddd973c0dd3fb",
+  "origin_observations": [
+    {
+      "name": "active-before-loss",
+      "get_requests": 1,
+      "head_requests": 0,
+      "active_streams": "1",
+      "request_count": "1",
+      "provider_count": "1"
+    },
+    {
+      "name": "server-down-body-held",
+      "get_requests": 1,
+      "head_requests": 0,
+      "active_streams": null,
+      "request_count": null,
+      "provider_count": null
+    },
+    {
+      "name": "server-restarted-no-reseed",
+      "get_requests": 1,
+      "head_requests": 0,
+      "active_streams": null,
+      "request_count": null,
+      "provider_count": null
+    },
+    {
+      "name": "old-body-after-loss-sampling",
+      "get_requests": 1,
+      "head_requests": 0,
+      "active_streams": null,
+      "request_count": null,
+      "provider_count": null
+    },
+    {
+      "name": "same-id-reopen-before-close",
+      "get_requests": 2,
+      "head_requests": 0,
+      "active_streams": "1",
+      "request_count": "1",
+      "provider_count": "1"
+    },
+    {
+      "name": "both-bodies-held-after-extra-old-read",
+      "get_requests": 2,
+      "head_requests": 0,
+      "active_streams": "1",
+      "request_count": "1",
+      "provider_count": "1"
+    },
+    {
+      "name": "sibling-closed-old-body-held",
+      "get_requests": 2,
+      "head_requests": 0,
+      "active_streams": "1",
+      "request_count": "1",
+      "provider_count": "1"
+    },
+    {
+      "name": "all-bodies-closed-after-grace",
+      "get_requests": 2,
+      "head_requests": 0,
+      "active_streams": "1",
+      "request_count": "1",
+      "provider_count": "1"
+    }
+  ],
+  "old_body_continues_at_original_offset": true,
+  "new_body_starts_at_prefix": true,
+  "event_order": [
+    "vod_start",
+    "vod_start",
+    "vod_stop"
+  ],
+  "interpretation": [
+    "The old response remains alive while public session metadata and provider count are absent.",
+    "Same-ID reopen makes a second provider GET and recreates public metadata for one body, rather than adopting the old provider response.",
+    "Two simultaneous response bodies coexist with public active_streams=1, request_count=1 and provider_count=1.",
+    "Eager metadata recreation or rebuilding active_streams from both local bodies would change this observed contract.",
+    "The1.5-second post-close sample does not prove permanent metadata leakage or complete server-side generator cleanup."
+  ],
+  "cleanup_passed": true,
+  "native_recovery_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application and algorithm credit."
+}
