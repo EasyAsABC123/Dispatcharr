@@ -16,6 +16,9 @@ use std::{convert::Infallible, net::SocketAddr, sync::Arc, time::Duration};
 use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 const WORK_BYTES: usize = 96 * 1024 * 1024;
 const MAX_INPUT_BYTES: usize = 64 * 1024;
+// Bound retained inputs independently of the unchanged active workspaces.
+// Ten callers cover the measured startup burst without admitting unlimited work.
+const MAX_OWNED_READS: usize = 10;
 #[derive(Clone, Copy)]
 pub struct GridReadLimits {
     pub concurrent_responses: usize,
@@ -48,6 +51,7 @@ struct Inner {
     auth: AuthService,
     limits: GridReadLimits,
     requests: Arc<Semaphore>,
+    owned: Arc<Semaphore>,
     memory: Arc<Semaphore>,
     clock: Arc<dyn Fn() -> chrono::DateTime<chrono::Utc> + Send + Sync>,
 }
@@ -90,6 +94,7 @@ impl GridGateway {
                 auth,
                 limits,
                 requests: Arc::new(Semaphore::new(limits.concurrent_responses)),
+                owned: Arc::new(Semaphore::new(MAX_OWNED_READS)),
                 memory: Arc::new(Semaphore::new(limits.memory_bytes)),
                 clock: Arc::new(chrono::Utc::now),
             }),
@@ -107,21 +112,27 @@ impl GridGateway {
             .route("/api/epg/grid/", any(handle))
             .with_state(self)
     }
-    /// Counts physical authentication/SQL/rollback work, not detached HTTP frames.
+    /// Counts admitted waiting/authentication/SQL/rollback work, not detached frames.
     pub fn physical_operations(&self) -> usize {
-        self.inner.limits.concurrent_responses - self.inner.requests.available_permits()
+        MAX_OWNED_READS - self.inner.owned.available_permits()
     }
     pub fn available_memory_bytes(&self) -> usize {
         self.inner.memory.available_permits()
     }
     pub async fn shutdown(&self, grace: Duration) -> bool {
-        self.inner.requests.close();
-        self.inner.memory.close();
+        // Accepted waiters retain their bounded inputs and may finish during
+        // the grace period. Closing work permits here would discard them.
+        self.inner.owned.close();
         let until = tokio::time::Instant::now() + grace;
         while self.physical_operations() != 0 && tokio::time::Instant::now() < until {
             tokio::time::sleep(Duration::from_millis(5)).await;
         }
-        self.physical_operations() == 0
+        let drained = self.physical_operations() == 0;
+        if drained {
+            self.inner.requests.close();
+            self.inner.memory.close();
+        }
+        drained
     }
     pub async fn read(
         &self,
@@ -130,9 +141,16 @@ impl GridGateway {
         params: Vec<(String, String)>,
     ) -> Result<Vec<Bytes>, StoreError> {
         Ok(self
-            .owned(peer, headers, params, Mode::Frames)
+            .owned(peer, headers, params, Mode::Frames, self.admit()?)
             .await?
             .frames)
+    }
+    fn admit(&self) -> Result<OwnedSemaphorePermit, StoreError> {
+        self.inner
+            .owned
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| unavailable())
     }
     async fn owned(
         &self,
@@ -140,6 +158,7 @@ impl GridGateway {
         headers: HeaderMap,
         params: Vec<(String, String)>,
         mode: Mode,
+        owner: OwnedSemaphorePermit,
     ) -> Result<Finished, StoreError> {
         let input = params
             .iter()
@@ -148,28 +167,46 @@ impl GridGateway {
             n.checked_add(k.as_str().len() + v.as_bytes().len())
         });
         if params.len() > 4096
+            || headers.len() > 256
             || input.is_none_or(|n| n > MAX_INPUT_BYTES)
             || header_bytes.is_none_or(|n| n > MAX_INPUT_BYTES)
         {
             return Err(unavailable());
         }
-        // Admission precedes all auth/cache/SQL; the owned worker retains it
-        // until the physical operation and rollback finish after caller loss.
-        let request_permit = self
-            .inner
-            .requests
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| unavailable())?;
-        let workspace = self
-            .inner
-            .memory
-            .clone()
-            .try_acquire_many_owned(WORK_BYTES as u32)
-            .map_err(|_| unavailable())?;
+        // A bounded input owner precedes auth/cache/SQL. Waiting does not
+        // reserve an active96MiB workspace or start physical database work.
+        let expires = tokio::time::Instant::now() + self.inner.limits.deadline;
         let state = self.clone();
-        let (tx, rx) = oneshot::channel();
+        let (mut tx, rx) = oneshot::channel();
         tokio::spawn(async move {
+            let request_permit = tokio::select! {
+                _ = tx.closed() => return,
+                permit = tokio::time::timeout_at(expires, state.inner.requests.clone().acquire_owned()) => permit,
+            };
+            let request_permit = match request_permit {
+                Ok(Ok(permit)) => permit,
+                _ => {
+                    drop(owner);
+                    let _ = tx.send(Err(unavailable()));
+                    return;
+                }
+            };
+            let workspace = tokio::select! {
+                _ = tx.closed() => return,
+                permit = tokio::time::timeout_at(expires, state.inner.memory.clone().acquire_many_owned(WORK_BYTES as u32)) => permit,
+            };
+            let workspace = match workspace {
+                Ok(Ok(permit)) => permit,
+                _ => {
+                    drop(request_permit);
+                    drop(owner);
+                    let _ = tx.send(Err(unavailable()));
+                    return;
+                }
+            };
+            if tx.is_closed() || tokio::time::Instant::now() >= expires {
+                return;
+            }
             let is_http = matches!(mode, Mode::Http(_));
             let html = html_renderer(&headers, &params);
             let indent = json_indent(&headers);
@@ -222,9 +259,10 @@ impl GridGateway {
             };
             let result = prepared.and_then(|prepared| finish(prepared, workspace));
             drop(request_permit);
+            drop(owner);
             let _ = tx.send(result);
         });
-        tokio::time::timeout(self.inner.limits.deadline, rx)
+        tokio::time::timeout_at(expires, rx)
             .await
             .map_err(|_| unavailable())?
             .map_err(|_| unavailable())?
@@ -446,6 +484,7 @@ async fn handle(
 ) -> Response {
     // Check bytes before percent-decoding/copying query/header values.
     if request.uri().path().len() > 8192
+        || request.headers().len() > 256
         || request
             .uri()
             .query()
@@ -460,13 +499,18 @@ async fn handle(
     {
         return unavailable().into_response();
     }
+    let owner = match state.admit() {
+        Ok(owner) => owner,
+        Err(error) => return error.into_response(),
+    };
     let params = url::form_urlencoded::parse(request.uri().query().unwrap_or("").as_bytes())
         .into_owned()
+        .take(4097)
         .collect();
     let headers = request.headers().clone();
     let mode = Mode::Http(request.method().clone());
     drop(request);
-    match state.owned(peer, headers, params, mode).await {
+    match state.owned(peer, headers, params, mode, owner).await {
         Ok(mut output) => {
             output
                 .headers

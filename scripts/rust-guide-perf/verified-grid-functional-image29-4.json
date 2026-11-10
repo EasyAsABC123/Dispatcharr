@@ -1,0 +1,92 @@
+{
+  "passed": false,
+  "evidence_capture_passed": true,
+  "scope": "Source/native GRID functional startup-burst mismatch; not performance acceptance",
+  "evidence": "artifacts/rust/m5-grid-functional-image29-4",
+  "candidate_image": "sha256:b3e4ffd48bc1b9cdbb50aef70d8731f5415076b9b91b159d1fb41105e7a3f4a3",
+  "policy_sha256": "7fa25dfca391cf3bbb41f776deff1a45ec4ce9a821043c0973c261a42ca8a4c6",
+  "source_rows": 2250,
+  "source_tvg_identifiers": 50,
+  "source_ten_viewers": {
+    "responses_200": 10,
+    "typed_order_match": true
+  },
+  "candidate_ten_viewers": {
+    "responses_200": 2,
+    "responses_503": 8,
+    "error_mime": "application/json",
+    "error_body_class": "dict",
+    "error_body_keys": [
+      "detail"
+    ],
+    "successful_responses_match_source": true
+  },
+  "tool_controls": {
+    "tests": 29,
+    "passed": true,
+    "source_sha256": {
+      "scripts/rust-guide-perf/plan.py": "6ebb705cb509becd2585c17eae0d7c7eeb5f2909a02b01bc2c7544a140adc665",
+      "scripts/rust-guide-perf/README.md": "64121c9ea5c10ac438b1daac8edd3184b9afcedf47a1b5917d9cba08c1b2bd0c",
+      "scripts/rust-guide-perf/reader.py": "03aa8ca5e9327bc62dd36e8ae0a870e5a875a9f51c98d44e02f8aedb1ac16664",
+      "scripts/rust-guide-perf/fixture.py": "634905821d77b2077fa6a51ef80f8e5f020b31e8f9ce0c77353e5beaf1e340f6",
+      "scripts/rust-guide-perf/test_scaffold.py": "ff5866bdafcb60d25e9b0b2985f8799abe606991a16c80eac4eeefecc041b47c",
+      "scripts/rust-guide-perf/verified-functional-smoke23-recovery-1.json": "184b6a28d5371c903e02da249c5eeef14486d74082a48a39439943aaf140c5e7",
+      "scripts/rust-guide-perf/load.py": "9cc36ed7677aa8d52bd6a3e88844dfd65fbdde819fa4b41f3a8ffe48097942b0",
+      "scripts/rust-guide-perf/cgroup.py": "83221c96647611c22367fc37859431bba1533334a33b1415c631e039bad0a401",
+      "scripts/rust-guide-perf/acceptance.py": "937d6d732e11cc511fe362464044e6161747d3abde1a5068b96cf45dd2aeefcc",
+      "scripts/rust-guide-perf/test_acceptance.py": "b46afb734c008d861c2460fcef951bed9ff5b2aeb05b7f5ad4d5ddba82e49982",
+      "scripts/rust-guide-perf/qualification.py": "79a12e5865491cdad111099109176557fab3e5ab1c3f146482e0f9838018ba15",
+      "scripts/rust-guide-perf/test_qualification.py": "3abb4d154e990c60125377ddd3c31a7f33445c697d5f0636ec4122d3fc698415",
+      "scripts/rust-guide-perf/observer.py": "c1ee76ae1b5bd3836a6698ca55c9f02b88623228fc28609dfe87fe6e3c8bd671",
+      "scripts/rust-guide-perf/orchestrator.py": "338fcbd5e318b2b6071563963122453eab22fe77508461b5b4dca8f46b2f48fd",
+      "scripts/rust-guide-perf/cache.py": "3a378d5ff714d6ef5ee94b3a7b49e547e534a055cba471f6cba9306dc64dd2f9",
+      "scripts/rust-guide-perf/smoke.py": "6e7f26d67d206537061a05c611360aa04dc77be581cd0158fda1667aa8eeb8d5",
+      "scripts/rust-guide-perf/test_runtime.py": "1ddbc28fc51307461dbdb416d5ad22b99a893f34ee30338a28d7d577645d9d0c",
+      "scripts/rust-guide-perf/verified-observer-smoke23-recovery-1.json": "37dec3430e81beadd3754016e730e7ed9fafde2004d50802db465be760a35cdf",
+      "scripts/rust-guide-perf/test_orchestrator.py": "68464a573345afb386e79d7b3e50769b3804975819055f4d3e6c0a62469ff727",
+      "scripts/rust-guide-perf/verified-observer-smoke23-recovery-2.json": "444d6cd6fc541db71471a4634128f3741c7946a0b1e191a22507aebe9cd4803e",
+      "scripts/rust-guide-perf/docker_stats.py": "bc554c7c30ba004dc5b8a6e78758ca1431696d0ce94302180b6cc5aa693ddb25",
+      "scripts/rust-guide-perf/test_docker_stats.py": "9de9025b188a7f49a2fcadcc3eee2666fa45b28590ff5586a8e0e54757238ce0",
+      "scripts/rust-guide-perf/verified-observer-cadence23-recovery-1.json": "c231139f073e1c6bb7988aebaaac6495a700e9064d27cf87a9b9878b96e22bff",
+      "scripts/rust-guide-perf/verified-guide-experiment23-recovery-1.json": "bbcdd85fa26f88cdedd0dba20ea2240a1b9e96bdf40efd276d198276a82c1657",
+      "scripts/rust-guide-perf/verified-trace-functional23-recovery-1.json": "ceaa9b52ca1848709de0f6619285095f5c7cd221ad5459bd0ac4e132b1969faf",
+      "scripts/rust-guide-perf/publish.py": "12680147f6244721af1a722fb9d49da2758dffa9a6bbe5a388f296944e5205a2",
+      "scripts/rust-guide-perf/evidence-guide-experiment23-recovery-1.json": "86129a0d7da3046fe49f660c7eabd56a56524062f9254f39c8c24be9c24e427d",
+      "scripts/rust-guide-perf/test_publish.py": "e764a28621378e7ec01eaedafc8f3da75157320e537810b634ecd144e4b9598b",
+      "scripts/rust-guide-perf/verified-trace-functional-image25-1.json": "22fa09395f2b93b33e8a9d75d2c307b0d9c3197b6cb6784f3ae58de2a6039cb5",
+      "scripts/rust-guide-perf/evidence-guide-experiment-image25-1.json": "1c89183d4dee58030ed98de363b73d7ebaf42b32b5ec3cb05e250dca574640b0",
+      "scripts/rust-guide-perf/verified-guide-experiment-image25-1.json": "b5cdbfbf89cdb91ede3b4a3058d53cb94613d9baab780ab0941a88b6c72a5d9f",
+      "scripts/rust-guide-perf/verified-fail-fast-1.json": "7856d555719be5ba4b3b45bc9c1cf1887fa47bfd5cf918a8e6081f82939f1d8a",
+      "scripts/rust-guide-perf/verified-trace-projection-1.json": "98af7919fb2660b8986e9bdee30c11240618a3c1d5f15aa0a07e767a120d8a7a",
+      "scripts/rust-guide-perf/evidence-cold-preflight-image27-1.json": "d93516de3763fd2c7c8ed85a26f8dbe29d5f37efbd8e88539e202c7aa3fe35a3",
+      "scripts/rust-guide-perf/verified-cold-preflight-image27-1.json": "d54b731c7721d906425d28e29ddd043936c1a8d8a9bbfa42d76327123544e414",
+      "scripts/rust-guide-perf/evidence-cold-preflight-image28-1.json": "84406022a1c1c82e1062de194ea4a60409533218220861c833e90d8092a5f3be",
+      "scripts/rust-guide-perf/verified-cold-preflight-image28-1.json": "a286b71cbeb20193c4722b523b8a33abe26e843dc80780b038ccf6d03393c05b",
+      "scripts/rust-guide-perf/evidence-guide-experiment-image28-1.json": "f2cb9fee7c2cced0809e467910c5788aa6791588876657e8ff095e5d234894c8",
+      "scripts/rust-guide-perf/verified-guide-experiment-image28-1.json": "0f2353bc6fa07727672f1ab9cd530ea1bfe65f4bb0b024da37e20d588379e9b4",
+      "scripts/rust-guide-perf/plot.py": "bcc78bc2940d26aadfa43fdb84868325e1106aa421de6f6cb55ca1ccbf506952",
+      "scripts/rust-guide-perf/grid_plan.py": "e29f4368af6ff43ae205c9e31ae85ebd4c721392667ce505f6f45f85f58bb372",
+      "scripts/rust-guide-perf/grid_qualification.py": "af71253b14e70e5b2748d49d967588454365e626c02fd570ebf1d38399f1a809",
+      "scripts/rust-guide-perf/grid_acceptance.py": "62ddd63c37e8357fed63b71afa84ac1ccc43bc65500e4d7079bb12866dc1e461",
+      "scripts/rust-guide-perf/test_grid_plan.py": "8f6cd338e369ed8870724b3baaa5568997d2d9e43b42554f41463b6f22d810f1",
+      "artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-hot-1-trial-1-source.json": "2776bbe81f974e56bfda366b67f73311bc96a1aa823289328abf7c587cecd6a0"
+    },
+    "initial_controls_capture_failure": "First copied only Python files; publication control needed its checked-in JSON and one bounded historical raw file. Original failure log retained; complete snapshot rerun passes29 without skips."
+  },
+  "cleanup": "project removed",
+  "measurements_started": false,
+  "performance_verified": false,
+  "native_resource_values_consulted": false,
+  "retained_attempts": {
+    "1": "Source-only fixture assertion: stored Programme TVG links omitted by old shared fixture; corrected for GRID only.",
+    "2": "Source and native one-viewer match; native simultaneous-ten fails without status diagnostics.",
+    "3": "Source10x200; native2x200/8x503.",
+    "4": "Same mismatch with bounded status/MIME/bodyclass capture."
+  },
+  "next_steps": [
+    "Bounded queued admission under unchanged response/memory limits.",
+    "Repeat identical full functional burst against a new immutable candidate.",
+    "Source-only pacing qualification and six paired trials require root-coordinated quiet authorization."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}

@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "scope": "Bounded GRID waiting admission component against original guide fixture; packaged startup-burst replay still pending",
+  "evidence": "artifacts/rust/m5-grid-queue-regression-2",
+  "report_sha256": "5d31e26a3f65b95f57cf3dd6fb1692243ec0d7879424a40d0280462b8867e0b4",
+  "source_manifest": "artifacts/rust/grid-queue-source-2/manifest.json",
+  "source_manifest_sha256": "30aaf7fe11f4661ab307bcb22686e275dea677cbae7100edf4af2b9240de9806",
+  "base_git_revision": "a1470522420fc4abf9e6f48f6482b8e98a6e5d59",
+  "rust_source_archive_sha256": "3a5d94bbff7fc627045007e7a653e10df13d42c4d7370cefb568b489617f2115",
+  "runtime_and_test_overrides_sha256": {
+    "rust/crates/output-http/src/epg_grid_http.rs": "dbd13c5346233862c56e6257d92a66ea8373b97d8fbd2c1ce30d191726f3c538",
+    "rust/crates/output-http/tests/epg_grid_http.rs": "15805003318e60135b4d2339acaefb825570237f14a0900d3402eb39633e37c3"
+  },
+  "unchanged_limits": {
+    "default_active_operations": 2,
+    "default_workspace_memory_bytes": 201326592,
+    "workspace_per_active_operation_bytes": 100663296,
+    "default_logical_deadline_seconds": 5
+  },
+  "new_input_owner_bound": {
+    "waiting_plus_active": 10,
+    "max_query_bytes": 65536,
+    "max_header_bytes": 65536,
+    "max_header_entries": 256,
+    "max_parameter_entries": 4096,
+    "conservative_input_allocation_bound_per_owner_bytes": 1048576,
+    "note": "Separate bounded request inputs; active workspace limit and Docker512MiB backend limit are unchanged."
+  },
+  "checks": {
+    "metadata_stored_cases": 22,
+    "complete_entity_cases": 22,
+    "factory_http_cases": 40,
+    "actual_original_head": 1,
+    "actual_pg_http_resource_tests": 4,
+    "library_tests": 6,
+    "library_external_ignored": 5,
+    "strict_all_targets_output_clippy": true
+  },
+  "resource_observations": [
+    "All10 admitted requests return identical complete entities after actual PostgreSQL lock release, with exactly2 SQL queries blocked and full192MiB active workspace reservation.",
+    "An11th owner is refused. Warm shutdown closes new admission while all10 accepted owners finish after lock release.",
+    "Queued caller abort/150ms expiry releases its input owner without starting late SQL; an already blocked physical query remains retained until real rollback/reply.",
+    "Existing physical abort/timeout and detached finalBytes clone memory checks pass."
+  ],
+  "logs_sha256": {
+    "artifacts/rust/m5-grid-queue-regression-2/native-grid.log": "5d6d18904b0c9285d2c0ffd6fed54ded9f1cce0395520bd4aff3d4e27ad659cb",
+    "artifacts/rust/m5-grid-queue-regression-2/native-grid-entity.log": "77656fd9a83bedfe97b9d5e7699a7b35567c724e0c3ac3a6ad67e03e4ed0e787",
+    "artifacts/rust/m5-grid-queue-regression-2/native-grid-http.log": "1b15a5e5a2ac68448a758f6378b0dede82ae6e58a566af83154fae4e7c4c9fe1",
+    "artifacts/rust/m5-grid-queue-regression-2/output-clippy.log": "d77354d14a4c3e9b2830ff61286d93dceab024524104af0235bd82fe3d26be04",
+    "artifacts/rust/m5-grid-queue-regression-2/output-unit.log": "d6b5397617bc30f87a14b79cc1f5d0856e9c969bec51d6a2a2f1a07d8977887e"
+  },
+  "failed_predecessors": [
+    {
+      "evidence": "artifacts/rust/m5-grid-queue-regression-1",
+      "reason": "Reference Vec<Bytes> shadowing retained a small output allocation, intentionally preventing two full96MiB workspaces. Explicit reference_frames drop corrected test setup; runtime bytes unchanged. Three other HTTP/resource tests passed; failed log retained."
+    },
+    {
+      "evidence": "artifacts/rust/grid-queue-draft-check-1.log",
+      "reason": "Initial compile used into_owned after generic Iterator.take; moved Parse.into_owned before take. Failed compile retained."
+    }
+  ],
+  "source_burst_mismatch": "scripts/rust-guide-perf/verified-grid-functional-image29-4.json",
+  "packaged_application_verified": false,
+  "performance_verified": false,
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}

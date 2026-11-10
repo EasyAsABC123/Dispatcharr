@@ -282,3 +282,127 @@ async fn physical_admission_survives_abort_timeout_and_detached_frames() {
     );
     println!("GRID_SQL_ABORT_TIMEOUT_REJECT_SHUTDOWN_AND_FINAL_CLONE=PASS");
 }
+
+async fn admitted(gateway: &GridGateway, count: usize) {
+    tokio::time::timeout(Duration::from_secs(1), async {
+        while gateway.physical_operations() != count {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .expect("admitted grid owners did not reach expected count");
+}
+async fn blocked_programmes(store: &Store, count: i64) {
+    tokio::time::timeout(Duration::from_secs(1), async {
+        loop {
+            let waiting: i64 = sqlx::query_scalar("SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT p.id::bigint AS id,p.start_time%'").fetch_one(store.pool()).await.unwrap();
+            if waiting == count { break; }
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    }).await.expect("grid SQL did not physically block at configured concurrency");
+}
+#[tokio::test]
+#[ignore = "requires disposable original grid fixture and actual PostgreSQL"]
+async fn ten_callers_queue_without_raising_active_work_or_memory_limits() {
+    let (store, gateway, fixture) = setup(GridReadLimits::default()).await;
+    let peer = "127.0.0.1:12345".parse().unwrap();
+    let reference_frames = gateway
+        .read(peer, admin_headers(&fixture), Vec::new())
+        .await
+        .unwrap();
+    let expected: Vec<u8> = reference_frames
+        .iter()
+        .flat_map(|frame| frame.iter().copied())
+        .collect();
+    drop(reference_frames);
+    let mut actor = sqlx::PgConnection::connect(&std::env::var("DATABASE_TEST_URL").unwrap())
+        .await
+        .unwrap();
+    let mut lock = actor.begin().await.unwrap();
+    lock.execute("LOCK TABLE epg_programdata IN ACCESS EXCLUSIVE MODE")
+        .await
+        .unwrap();
+    let mut tasks = Vec::new();
+    for _ in 0..10 {
+        let reader = gateway.clone();
+        let auth = admin_headers(&fixture);
+        tasks.push(tokio::spawn(async move {
+            reader.read(peer, auth, Vec::new()).await
+        }));
+    }
+    admitted(&gateway, 10).await;
+    blocked_programmes(&store, 2).await;
+    // The input-owner budget is separate from the unchanged two active jobs.
+    assert!(gateway
+        .read(peer, admin_headers(&fixture), Vec::new())
+        .await
+        .is_err());
+    assert_eq!(gateway.available_memory_bytes(), 0);
+    assert!(!gateway.shutdown(Duration::from_millis(20)).await);
+    assert!(gateway
+        .read(peer, admin_headers(&fixture), Vec::new())
+        .await
+        .is_err());
+    lock.rollback().await.unwrap();
+    for task in tasks {
+        let frames = task.await.unwrap().unwrap();
+        let body: Vec<u8> = frames
+            .iter()
+            .flat_map(|frame| frame.iter().copied())
+            .collect();
+        assert_eq!(body, expected);
+    }
+    drained(&gateway).await;
+    assert_eq!(
+        gateway.available_memory_bytes(),
+        GridReadLimits::default().memory_bytes
+    );
+    assert!(gateway.shutdown(Duration::from_secs(1)).await);
+    println!("GRID_TEN_QUEUED_TWO_ACTIVE_UNCHANGED_MEMORY_EXACT_ENTITIES=PASS");
+}
+#[tokio::test]
+#[ignore = "requires disposable original grid fixture and actual PostgreSQL"]
+async fn queued_abort_expiry_and_shutdown_never_start_late_sql() {
+    let limits = GridReadLimits {
+        concurrent_responses: 1,
+        memory_bytes: 96 * 1024 * 1024,
+        deadline: Duration::from_millis(150),
+    };
+    let (store, gateway, fixture) = setup(limits).await;
+    let peer = "127.0.0.1:12345".parse().unwrap();
+    let mut actor = sqlx::PgConnection::connect(&std::env::var("DATABASE_TEST_URL").unwrap())
+        .await
+        .unwrap();
+    let mut lock = actor.begin().await.unwrap();
+    lock.execute("LOCK TABLE epg_programdata IN ACCESS EXCLUSIVE MODE")
+        .await
+        .unwrap();
+    let reader = gateway.clone();
+    let auth = admin_headers(&fixture);
+    let physical = tokio::spawn(async move { reader.read(peer, auth, Vec::new()).await });
+    blocked_programmes(&store, 1).await;
+    let reader = gateway.clone();
+    let auth = admin_headers(&fixture);
+    let canceled = tokio::spawn(async move { reader.read(peer, auth, Vec::new()).await });
+    admitted(&gateway, 2).await;
+    canceled.abort();
+    let _ = canceled.await;
+    admitted(&gateway, 1).await;
+    assert!(gateway
+        .read(peer, admin_headers(&fixture), Vec::new())
+        .await
+        .is_err());
+    admitted(&gateway, 1).await;
+    blocked_programmes(&store, 1).await;
+    assert!(!gateway.shutdown(Duration::from_millis(20)).await);
+    assert!(gateway
+        .read(peer, admin_headers(&fixture), Vec::new())
+        .await
+        .is_err());
+    lock.rollback().await.unwrap();
+    assert!(physical.await.unwrap().is_err());
+    drained(&gateway).await;
+    assert_eq!(gateway.available_memory_bytes(), limits.memory_bytes);
+    assert!(gateway.shutdown(Duration::from_secs(1)).await);
+    println!("GRID_QUEUED_CANCEL_EXPIRE_NO_LATE_SQL_PHYSICAL_DRAIN=PASS");
+}
