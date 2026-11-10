@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "scope": "Functional-only image36 large Both/All JSON catalogue; performance matrix predeclared but no qualification or measurements started.",
+  "credit": "Original Dispatcharr authors and contributors retain full application and algorithm credit; AGPL preserved.",
+  "candidate_binding": {
+    "image_id": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+    "source_tree_sha256": "d20d74e32a41829a8d2eaa61133f1c7d3ce08812b1ba9610c7e25e1428cee967",
+    "manifest_verified": true
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "independent_original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "checks": [
+    {
+      "backend": "source",
+      "path_index": 0,
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 13987,
+      "body_sha256": "d9d56ad447ac203bb14d904ca66688fcdef7ec59f90fe3ff10d28f4b28c0e09a"
+    },
+    {
+      "backend": "source",
+      "path_index": 0,
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 13987,
+      "body_sha256": "d9d56ad447ac203bb14d904ca66688fcdef7ec59f90fe3ff10d28f4b28c0e09a"
+    },
+    {
+      "backend": "candidate",
+      "path_index": 0,
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 13987,
+      "body_sha256": "d9d56ad447ac203bb14d904ca66688fcdef7ec59f90fe3ff10d28f4b28c0e09a"
+    },
+    {
+      "backend": "candidate",
+      "path_index": 0,
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 13987,
+      "body_sha256": "d9d56ad447ac203bb14d904ca66688fcdef7ec59f90fe3ff10d28f4b28c0e09a"
+    }
+  ],
+  "fixture": {
+    "movies": 5000,
+    "series": 5000,
+    "episodes": 50000,
+    "active_movies": 4500,
+    "active_series": 4500,
+    "fixture_sha256": "1be0791795422018f5fec8b8beef338b843c7a4850f1496b61869717a83f1e30",
+    "schema_sha256": "7d14f257d439eb858b4609c5aca6bac6d1ad187c7a455f393712256e457e4606"
+  },
+  "tool_source_sha256": {
+    "scripts/rust-unified-perf/protocol.py": "f072ae0b7f0c4fad5df67b999914243529da00de79750d6b93390d4af8ae667c",
+    "scripts/rust-unified-perf/reader.py": "ceaada1a37a7cf12e77f011860d8cff43b52c5a2cdb1edb926200bd79d02d266",
+    "scripts/rust-unified-perf/fixture.py": "4473255d1133f6410c129aa55433091b66a3435f0870067c6afc8bf2bec8cb49",
+    "scripts/rust-unified-perf/acceptance.py": "8157e442cdfa93573eeec2e2a0b4cfec2607e0bd2757589a53d4f027a68366e4",
+    "scripts/rust-unified-perf/orchestrator.py": "816a9fe3abc4ad3e81fdeedcea7c4275a368c9df3b0f8f3a51d7826740d2984a",
+    "scripts/rust-unified-perf/run.py": "f75a38c1c6fa3b71c44273a2055e0d0bb3f4d9da3cac1559cc9a5b5875ae9e1f",
+    "scripts/rust-unified-perf/test_controls.py": "c985a99ad6ae2fb52c62d538a7c238e845d96aa45e047a8edc62edc94e804878",
+    "scripts/rust-unified-perf/policy.json": "644fb89bc0a4f0a1c7b9674b01f7fb7a8483e59c5888d6d6fd64d503a1317dc9",
+    "scripts/rust-unified-perf/README.md": "5b7b9399c1da90b233f4bacb7cd87029f147a182327fc92af5328f8829e99405"
+  },
+  "functional_report_sha256": "92503f2e95b11b6ce0790aa03f7a19240fd434a1b093cdd4f7237f0f3c9fe5c7",
+  "independent_owned_Docker_cleanup_verified": true,
+  "pure_safety_controls_passed": 4,
+  "initial_sandbox_socket_control_failure_retained": true,
+  "measurements_started": false,
+  "performance_verified": false,
+  "full_milestone_complete": false
+}
