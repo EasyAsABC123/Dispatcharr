@@ -1,0 +1,149 @@
+{
+  "format_version": 1,
+  "scope": "Bounded native file-to-PostgreSQL guide import vs actual original parse_programs_for_source; application-unwired component only",
+  "passed": true,
+  "cleanup": "project removed",
+  "evidence": "artifacts/rust/m6-file-guide-import-source-native-42/integration.json",
+  "evidence_sha256": "19f02a814684784358f2098e20ffc437dadaf442eb4a827939778656e9a00780",
+  "native_sql_log": "artifacts/rust/m6-file-guide-import-source-native-42/rust-tests.log",
+  "native_sql_log_sha256": "e1902b294ff28590671da05ebfa3b1abaa4a327d1425ef5f2631b6fdac5ecb66",
+  "fixture_sha256": "b4c22b8aede4805e6f5e6a1b9b9164a6a2760ad8ed1ded0058df2b0bf177876b",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_cases": [
+    {
+      "name": "valid",
+      "original_success": true,
+      "original_parsed": 2,
+      "original_channels": 2,
+      "original_unmapped_skips": 0
+    },
+    {
+      "name": "unmapped-invalid",
+      "original_success": true,
+      "original_parsed": 1,
+      "original_channels": 1,
+      "original_unmapped_skips": 1
+    },
+    {
+      "name": "metadata-unicode-title",
+      "original_success": true,
+      "original_parsed": 1,
+      "original_channels": 1,
+      "original_unmapped_skips": 0
+    },
+    {
+      "name": "malformed-recovery",
+      "original_success": true,
+      "original_parsed": 1,
+      "original_channels": 1,
+      "original_unmapped_skips": 0
+    },
+    {
+      "name": "invalid-all",
+      "original_success": true,
+      "original_parsed": 0,
+      "original_channels": 0,
+      "original_unmapped_skips": 0
+    },
+    {
+      "name": "retention-future-boundary",
+      "original_success": true,
+      "original_parsed": 2,
+      "original_channels": 1,
+      "original_unmapped_skips": 0
+    },
+    {
+      "name": "retention-catchup-override",
+      "original_success": true,
+      "original_parsed": 2,
+      "original_channels": 2,
+      "original_unmapped_skips": 0
+    },
+    {
+      "name": "no-mappings-no-file",
+      "original_success": true,
+      "original_parsed": null,
+      "original_channels": null,
+      "original_unmapped_skips": null
+    },
+    {
+      "name": "mapped-null-empty",
+      "original_success": true,
+      "original_parsed": 0,
+      "original_channels": 0,
+      "original_unmapped_skips": 2
+    },
+    {
+      "name": "incomplete",
+      "original_success": false,
+      "original_parsed": null,
+      "original_channels": null,
+      "original_unmapped_skips": null
+    },
+    {
+      "name": "missing-file",
+      "original_success": false,
+      "original_parsed": null,
+      "original_channels": null,
+      "original_unmapped_skips": null
+    },
+    {
+      "name": "empty-complete",
+      "original_success": true,
+      "original_parsed": 0,
+      "original_channels": 0,
+      "original_unmapped_skips": 0
+    },
+    {
+      "name": "many-batches",
+      "original_success": true,
+      "original_parsed": 23,
+      "original_channels": 1,
+      "original_unmapped_skips": 0
+    },
+    {
+      "name": "policy-clock-change",
+      "original_success": true,
+      "original_parsed": 7,
+      "original_channels": 1,
+      "original_unmapped_skips": 0
+    }
+  ],
+  "physical_fault_scenarios": [
+    "Change already validated file while a private PostgreSQL staging INSERT is physically blocked; no live swap.",
+    "Exceed parser accepted-row capacity after staging starts; no live swap.",
+    "Abort caller while SQL is physically blocked; cancel flag is set by future drop, extra job refused, shutdown stays incomplete and guard stays retained until actual reply.",
+    "Change cutoff clock/history policy after first original/native staging work; provider resolves only after parsing and all staging replies, resulting live rows match Source.",
+    "Abort caller while async provider is held; no live swap and no guard/admission release before provider drains."
+  ],
+  "additional_native_checks": {
+    "component_fault_tests": 5,
+    "strict_all_target_clippy": true,
+    "no_policy_calls_for_failed_empty_or_unmapped_catalogues": true
+  },
+  "failed_attempt": {
+    "evidence": "artifacts/rust/m6-file-guide-import-source-native-41/integration.json",
+    "reason": "Original14-case oracle succeeded; initial shared EPG read-module Cow coercion prevented native compilation. Corrected before fresh snapshot42."
+  },
+  "native_source_archive_sha256": "24dc702b3ce1c4d3e31d42d28dcfce87a83074f84f63979af91ae0c9071fa0ea",
+  "native_source_sha256": {
+    "rust/Cargo.lock": "a618c4647b801649fdb427ac1222ff43c1269953480cf93d01d58afc9a9a3a8f",
+    "rust/crates/ingest-epg/Cargo.toml": "6cb753d1b5477024dc4dd068ccc800418f9eacb02257ac0939118aecf9e16fde",
+    "rust/crates/ingest-epg/README.md": "e7a92371fb23c2e647dff50a994fe43dd25a30f0da88ef8843e83a33cbffc67b",
+    "rust/crates/ingest-epg/src/lib.rs": "f6b18ad64c5a56e169b68a5ead0b49b54776c52af2ae37699152aa4a318aecc4",
+    "rust/crates/ingest-epg/src/tests.rs": "37c411b17292ad66cf8f91142e5c89eed13f7592c5b4b87c6d8c6bff818702f9",
+    "rust/crates/ingest-epg/tests/source_sql.rs": "c3ceb8eab6064b17a9d1cf45f8be596cfcd87b1b031cf1a981c4fb62fa448595",
+    "rust/crates/ingest-core/src/lib.rs": "305d6b4ff34069b3a6a91531e5e43fb0b8a736b3f782aa391baf4f02a2421c44",
+    "rust/crates/ingest-core/src/xmltv.rs": "56705fff5c7abdc8ce1e24f687aa06153a34dee1e2c5959b9e35b1283b6bbf9e",
+    "rust/crates/store/src/epg_staging.rs": "803f72aba462faeef7dd50d91e446cb993cdb5f92a728fc402b5daf3c63630fc"
+  },
+  "remaining_gates": [
+    "Actual cached policy provider and delayed physical cache reply lifetime.",
+    "HTTP refresh dispatch, fetch/extract/cache ownership and first/late mapping orchestration.",
+    "Persisted source status/timestamps/progress/audit/cache invalidation and task retry/completion semantics.",
+    "Complete job/app integration, Docker app execution and paired resource acceptance."
+  ],
+  "full_refresh_job_verified": false,
+  "application_image_verified": false,
+  "performance_verified": false
+}

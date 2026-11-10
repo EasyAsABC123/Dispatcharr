@@ -155,6 +155,166 @@ impl Store {
     }
 }
 
+impl AuthService {
+    /// Resolve playback after the XC entry adapter authenticated its query/path
+    /// credentials. The original XC policy replaces the global STREAMS check;
+    /// this does not authenticate an arbitrary User supplied by an HTTP client.
+    pub async fn resolve_xc_authorized(
+        &self,
+        mut request: PlaybackRequest,
+        user: User,
+        channel_id: &str,
+        forced: Option<OutputFormat>,
+    ) -> Result<PlaybackSource, PlaybackError> {
+        let invalid = || PlaybackError {
+            status: 404,
+            body: serde_json::json!({"error":"Not found"}),
+        };
+        let literal =
+            dispatcharr_ingest_core::source_integer_literal(channel_id).ok_or_else(invalid)?;
+        let channel = match literal.parse::<i64>() {
+            Ok(pk) => self
+                .store
+                .channel_for_xc_user_by_id(&user, pk)
+                .await
+                .map_err(playback_error)?,
+            Err(_) => None,
+        };
+        let channel = channel.ok_or_else(|| {
+            if user.user_level >= 10 {
+                PlaybackError {
+                    status: 404,
+                    body: serde_json::json!({"detail":"Not found."}),
+                }
+            } else {
+                invalid()
+            }
+        })?;
+        request.channel_id = channel.uuid.to_string();
+        self.build_playback_source(request, Some(user), forced)
+            .await
+    }
+
+    async fn build_playback_source(
+        &self,
+        request: PlaybackRequest,
+        user: Option<User>,
+        forced: Option<OutputFormat>,
+    ) -> Result<PlaybackSource, PlaybackError> {
+        if request
+            .channel_id
+            .rsplit_once(".p")
+            .is_some_and(|(head, tail)| {
+                !head.is_empty()
+                    && !tail.is_empty()
+                    && tail.bytes().all(|value| value.is_ascii_digit())
+            })
+        {
+            return Err(PlaybackError::new(404, "Not found"));
+        }
+        let channel = self
+            .store
+            .resolve_channel(&request.channel_id)
+            .await
+            .map_err(playback_error)?;
+        let stream_settings = self
+            .store
+            .setting("stream_settings")
+            .await
+            .map_err(playback_error)?;
+        let output = match forced {
+            Some(OutputFormat::MpegTs) => "mpegts".to_owned(),
+            Some(OutputFormat::Fmp4) => "fmp4".to_owned(),
+            Some(OutputFormat::Hls) => "hls".to_owned(),
+            None => resolve_output_format(&request, user.as_ref(), &stream_settings),
+        };
+        if let Some(profile) = resolve_output_profile_id(&request, user.as_ref()) {
+            let active: bool = sqlx::query_scalar(
+                "SELECT EXISTS(SELECT 1 FROM core_outputprofile WHERE id=$1 AND is_active)",
+            )
+            .bind(profile)
+            .fetch_one(self.store.pool())
+            .await
+            .map_err(StoreError::from)
+            .map_err(playback_error)?;
+            if active {
+                return Err(PlaybackError::new(
+                    501,
+                    "Output profile transcoding is not implemented",
+                ));
+            }
+        }
+        let limits = self
+            .store
+            .setting("user_limit_settings")
+            .await
+            .map_err(playback_error)?;
+        let defaults = UserLimitPolicy::default();
+        let viewer = PlaybackViewer {
+            user_id: user.as_ref().map(|user| user.id),
+            username: user.as_ref().map(|user| user.username.clone()),
+            ip_address: self.source_client_ip(&request),
+            user_agent: request.header("user-agent").unwrap_or("").to_string(),
+            stream_limit: user
+                .as_ref()
+                .map_or(0, |user| user.stream_limit.max(0) as u32),
+            limit_policy: UserLimitPolicy {
+                terminate_on_limit_exceeded: limits
+                    .get("terminate_on_limit_exceeded")
+                    .and_then(serde_json::Value::as_bool)
+                    .unwrap_or(defaults.terminate_on_limit_exceeded),
+                prioritize_single_client_channels: limits
+                    .get("prioritize_single_client_channels")
+                    .and_then(serde_json::Value::as_bool)
+                    .unwrap_or(defaults.prioritize_single_client_channels),
+                ignore_same_channel_connections: limits
+                    .get("ignore_same_channel_connections")
+                    .and_then(serde_json::Value::as_bool)
+                    .unwrap_or(defaults.ignore_same_channel_connections),
+                terminate_oldest: limits
+                    .get("terminate_oldest")
+                    .and_then(serde_json::Value::as_bool)
+                    .unwrap_or(defaults.terminate_oldest),
+            },
+        };
+        let mut streams = channel.streams.into_iter();
+        let stream = streams
+            .next()
+            .ok_or_else(|| PlaybackError::new(503, "No active stream available"))?;
+        Ok(PlaybackSource {
+            channel_id: channel.id,
+            channel_name: channel.name,
+            stream_id: stream.stream_id,
+            profile_id: channel.profile_id,
+            provider_profile_id: Some(stream.provider_profile_id),
+            provider_max_streams: stream.provider_max_streams,
+            url: stream.url,
+            user_agent: stream.user_agent,
+            headers: Vec::new(),
+            metadata: stream.metadata,
+            output_format: match output.as_str() {
+                "fmp4" => OutputFormat::Fmp4,
+                "hls" => OutputFormat::Hls,
+                _ => OutputFormat::MpegTs,
+            },
+            shutdown_delay: channel.shutdown_delay,
+            startup_behind: channel.startup_behind,
+            alternates: streams
+                .map(|stream| PlaybackCandidate {
+                    stream_id: stream.stream_id,
+                    provider_profile_id: Some(stream.provider_profile_id),
+                    provider_max_streams: stream.provider_max_streams,
+                    url: stream.url,
+                    user_agent: stream.user_agent,
+                    headers: Vec::new(),
+                    metadata: stream.metadata,
+                })
+                .collect(),
+            viewer: Some(viewer),
+        })
+    }
+}
+
 impl PlaybackResolver for AuthService {
     fn authenticate_optional(
         &self,
@@ -183,112 +343,7 @@ impl PlaybackResolver for AuthService {
             {
                 return Err(PlaybackError::new(403, "Forbidden"));
             }
-            if request
-                .channel_id
-                .rsplit_once(".p")
-                .is_some_and(|(head, tail)| {
-                    !head.is_empty()
-                        && !tail.is_empty()
-                        && tail.bytes().all(|value| value.is_ascii_digit())
-                })
-            {
-                return Err(PlaybackError::new(404, "Not found"));
-            }
-            let channel = self
-                .store
-                .resolve_channel(&request.channel_id)
-                .await
-                .map_err(playback_error)?;
-            let stream_settings = self
-                .store
-                .setting("stream_settings")
-                .await
-                .map_err(playback_error)?;
-            let output = resolve_output_format(&request, user.as_ref(), &stream_settings);
-            if let Some(profile) = resolve_output_profile_id(&request, user.as_ref()) {
-                let active: bool = sqlx::query_scalar(
-                    "SELECT EXISTS(SELECT 1 FROM core_outputprofile WHERE id=$1 AND is_active)",
-                )
-                .bind(profile)
-                .fetch_one(self.store.pool())
-                .await
-                .map_err(StoreError::from)
-                .map_err(playback_error)?;
-                if active {
-                    return Err(PlaybackError::new(
-                        501,
-                        "Output profile transcoding is not implemented",
-                    ));
-                }
-            }
-            let limits = self
-                .store
-                .setting("user_limit_settings")
-                .await
-                .map_err(playback_error)?;
-            let defaults = UserLimitPolicy::default();
-            let viewer = PlaybackViewer {
-                user_id: user.as_ref().map(|user| user.id),
-                username: user.as_ref().map(|user| user.username.clone()),
-                ip_address: self.source_client_ip(&request),
-                user_agent: request.header("user-agent").unwrap_or("").to_string(),
-                stream_limit: user
-                    .as_ref()
-                    .map_or(0, |user| user.stream_limit.max(0) as u32),
-                limit_policy: UserLimitPolicy {
-                    terminate_on_limit_exceeded: limits
-                        .get("terminate_on_limit_exceeded")
-                        .and_then(serde_json::Value::as_bool)
-                        .unwrap_or(defaults.terminate_on_limit_exceeded),
-                    prioritize_single_client_channels: limits
-                        .get("prioritize_single_client_channels")
-                        .and_then(serde_json::Value::as_bool)
-                        .unwrap_or(defaults.prioritize_single_client_channels),
-                    ignore_same_channel_connections: limits
-                        .get("ignore_same_channel_connections")
-                        .and_then(serde_json::Value::as_bool)
-                        .unwrap_or(defaults.ignore_same_channel_connections),
-                    terminate_oldest: limits
-                        .get("terminate_oldest")
-                        .and_then(serde_json::Value::as_bool)
-                        .unwrap_or(defaults.terminate_oldest),
-                },
-            };
-            let mut streams = channel.streams.into_iter();
-            let stream = streams
-                .next()
-                .ok_or_else(|| PlaybackError::new(503, "No active stream available"))?;
-            Ok(PlaybackSource {
-                channel_id: channel.id,
-                channel_name: channel.name,
-                stream_id: stream.stream_id,
-                profile_id: channel.profile_id,
-                provider_profile_id: Some(stream.provider_profile_id),
-                provider_max_streams: stream.provider_max_streams,
-                url: stream.url,
-                user_agent: stream.user_agent,
-                headers: Vec::new(),
-                metadata: stream.metadata,
-                output_format: match output.as_str() {
-                    "fmp4" => OutputFormat::Fmp4,
-                    "hls" => OutputFormat::Hls,
-                    _ => OutputFormat::MpegTs,
-                },
-                shutdown_delay: channel.shutdown_delay,
-                startup_behind: channel.startup_behind,
-                alternates: streams
-                    .map(|stream| PlaybackCandidate {
-                        stream_id: stream.stream_id,
-                        provider_profile_id: Some(stream.provider_profile_id),
-                        provider_max_streams: stream.provider_max_streams,
-                        url: stream.url,
-                        user_agent: stream.user_agent,
-                        headers: Vec::new(),
-                        metadata: stream.metadata,
-                    })
-                    .collect(),
-                viewer: Some(viewer),
-            })
+            self.build_playback_source(request, user, None).await
         })
     }
 

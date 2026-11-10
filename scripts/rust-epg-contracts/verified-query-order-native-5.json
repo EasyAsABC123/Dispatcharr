@@ -1,0 +1,64 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Stored EPG source query fields/order on original same-database fixture, prepared custom/generic/auto modes. No HTTP/full-job/performance claim.",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application credit.",
+  "before_evidence": "artifacts/rust/m5-epg-query-order-diagnosis-3",
+  "candidate_evidence": "artifacts/rust/m5-epg-query-order-native-5",
+  "original_ids": [
+    3,
+    2,
+    1
+  ],
+  "before_generic_ids": [
+    2,
+    3,
+    1
+  ],
+  "fixed_ids": {
+    "source": [
+      3,
+      2,
+      1
+    ],
+    "native_literal": [
+      3,
+      2,
+      1
+    ],
+    "native_force_custom_plan": [
+      3,
+      2,
+      1
+    ],
+    "native_force_generic_plan": [
+      3,
+      2,
+      1
+    ],
+    "native_auto": [
+      3,
+      2,
+      1
+    ]
+  },
+  "native_full_body_comparisons": 144,
+  "missing_id_probes": 36,
+  "cleanup": "project removed",
+  "source_sha256": {
+    "rust/crates/store/src/provider_reads.rs": "f524bd8cd0ea2d077b9d5cecf65a92c6319f5c280db407ad77784b1c69c8efaf",
+    "rust/crates/store/tests/epg_order_sql.rs": "f02b2559b9968e66324dddb3a7fbe30c56afafdc008e32620a579b9aec3c4c00"
+  },
+  "evidence_sha256": {
+    "integration.json": "47ec0c78b801aa78ec3e4398cc1ed456ac157bfb8c783e7f38a3a5d8e2211f1d",
+    "query-plans.json": "dbf80a190437cb9be483f5f11bdc78aecbc98a00cfdc99a2c2aad982d4af4c90",
+    "native-order.log": "992d6d95139e6e13ac0dd4dea3bda6190df36b0e696c51f8ca6a87d59bcba80a",
+    "clippy.log": "10c23369e268690fc1e1a7fc23dc32c4e4fd65e292e95d345a366c363c03d9f8"
+  },
+  "limitations": [
+    "Source has no explicit SQL ordering; compatibility is tied to captured data/planner fixture, not every PostgreSQL version/statistics distribution.",
+    "Other optional-ID provider queries require their own witness.",
+    "No HTTP/permissions/rendering/resource or complete job acceptance."
+  ],
+  "strict_clippy_passed": true
+}

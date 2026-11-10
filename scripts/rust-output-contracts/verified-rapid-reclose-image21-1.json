@@ -1,0 +1,35 @@
+{
+  "scope": "Exact frozen image21 Rust VOD runtime host test with actual original timers, PostgreSQL, Redis and upstream; in-memory native event sink",
+  "passed": true,
+  "image21_rust_source_manifest": "scripts/rust-integration/verified-checkpoint-image21-1.json",
+  "evidence_directory": "artifacts/rust/m4-rapid-reclose-source-native-image21-3",
+  "source_event_counts": {
+    "vod_started": 1,
+    "vod_stats": 3,
+    "vod_stopped": 2
+  },
+  "source_audit_events": [
+    "vod_start",
+    "vod_stop",
+    "vod_stop"
+  ],
+  "native_rapid_reclose_tests_passed": 2,
+  "ordinary_lifecycle_cases_passed": 6,
+  "native_transport_verified": false,
+  "source_timer_interleaving_normalized": true,
+  "normalization": "Independent original timer threads may emit StopStopStatsStats or StopStatsStopStats; compare multiplicity, transition payloads and start/stop/stop audits; statistics checked for finite values and valid active counts.",
+  "cleanup_passed": true,
+  "artifact_sha256": {
+    "vod-contracts.json": "29e1ab634525c16e56a0011b1b29906f2f35b1913938641fae9e44082f72af23",
+    "vod-rapid-reclose-source.json": "74595134b6b40d8071e7b8db6086c84cfb7abd2ecb40bfc14a1773ce7439ff24",
+    "rust-vod-rapid-reclose.log": "b3e6e11fb6c35167eef11f66ebddbf905463098bc2e74624a1ce5808cdf432ba",
+    "rust-vod-lifecycle.log": "976dad80411958bfa5bff1ed5aaf1b0049ba2ec39c8bedb0a7fdadca7a659c55"
+  },
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Actual packaged rapid-reclose WebSocket transport",
+    "Expanded malformed and delayed Redis reply families",
+    "Versioned extra owner-fence test overlay; local4-test replay passed separately"
+  ]
+}

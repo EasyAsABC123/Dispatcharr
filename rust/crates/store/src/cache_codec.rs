@@ -21,6 +21,12 @@ pub fn decode_source_cache(raw: &[u8]) -> Option<Value> {
     crate::notifications::decode_cache(raw)
 }
 
+/// Compare primitive cache-version values with the original Python equality
+/// rules, including numeric/bool and nested-container equality.
+pub fn source_cache_values_equal(left: &Value, right: &Value) -> bool {
+    crate::json_compat::python_equal(left, right)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -1,0 +1,16 @@
+{
+  "format_version": 1,
+  "scope": "Original15-caseactualGuideStagingSQLregression+blockedSQLcancellationrollback/retainedphysicalguard",
+  "passed": true,
+  "cleanup": "project removed",
+  "evidence": "artifacts/rust/m6-guide-cancellable-final-source-native-43/integration.json",
+  "evidence_sha256": "33b571f1d1cb582cbde9a863a4596846402203c94745c602df57fb204228ad44",
+  "rust_tests_log": "artifacts/rust/m6-guide-cancellable-final-source-native-43/rust-tests.log",
+  "rust_tests_log_sha256": "f33cc655a3664e5e208c815df03a7cbae68581bb1ee3136df487faf489383c67",
+  "source_cases": 15,
+  "rust_test_functions": 2,
+  "commit_boundary": "Cancellation checked before transaction creation, after BEGIN and immediately before COMMIT; retain physical guard through actual reply/rollback. Not cross-Redis/PostgreSQL fencing.",
+  "runtime_sha256": "803f72aba462faeef7dd50d91e446cb993cdb5f92a728fc402b5daf3c63630fc",
+  "full_guide_jobs_verified": false,
+  "application_performance_verified": false
+}

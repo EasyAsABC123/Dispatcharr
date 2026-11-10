@@ -1,0 +1,58 @@
+{
+  "scope": "Actual original127 OutputProfile HTTP/SQL/cache/parser/rollback cases versus frozen native full-auth router, with owned SQL/physical Redis/cancellation/deadline/shutdown gates.",
+  "passed": true,
+  "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "report": "artifacts/rust/m5-output-profile-source-native-9/integration.json",
+  "report_sha256": "6ed9f0d4765dc60bd2b4ad006ffcba723acf76a70a5ec89cdce05ce4753af5a4",
+  "tool_source": "artifacts/rust/m5-output-profile-source-native-9/tool-source",
+  "rust_source_archive_sha256": "d17880768828766008b07a28489b62da17241751f153076ce61d84b9140c315d",
+  "native_test_executable_sha256": "1f1a9993bd9c78ef2d70a777d5deacce9dade091dd42daa839f11435d97a506c",
+  "native_test_log_sha256": "0e2b4df6e734c5b893c49158698b3f2fe86ecfe2310c973feeffb3784c76f614",
+  "source_cases": 127,
+  "real_redis_wrongtype_cases": 3,
+  "real_sql_fault_cases": 4,
+  "source_files": {
+    "rust/crates/store/src/output_profile_writes.rs": "aa48d81f0175956ad30a004681704e928a68a54fe7473aaedb6e19e0f659d818",
+    "rust/crates/store/src/output_profile_writes_tests.rs": "e714ce55d41d5454e5cb8af85c337ed47a9c7f81eb7121c970c00fa069f0e03d",
+    "rust/crates/store/src/cache_codec.rs": "c75330a07fa482d6a610c7db960dd3b522dfc5044c412a71d139e4ad2d25551e",
+    "rust/crates/store/src/lib.rs": "d9a525daeab3f4ca4327cb49fda295c74e6a7e9a73d32dde51035375d1bc0439",
+    "rust/crates/app/src/main.rs": "d0fec159101ba067198642dc62323d4e91d75f56ddab06428456a8eacc160fc3"
+  },
+  "cleanup": "project removed",
+  "application_image_verified": false,
+  "performance_verified": false,
+  "verified": [
+    "Admin/above-admin versus Standard/basic/inactive/anonymous/invalid token; exact required, unique, trim, length, JSON/form/multipart, boolean, locked-model order, malformed JSON/MIME, nonobject/null and UTF8 behavior.",
+    "Exact settings/profile IDs and both sequence states; SQLNULL distinguished from JSON null; matching canonical integer/string/numeric user references removed with unrelated properties preserved.",
+    "Cached/live/missing/nonobject settings and Python ID coercions; persistent group/default-UA invalidation and original wrongtype partial effects.",
+    "Real PostgreSQL callback faults: existing-user/stream/DVR failures return204 with outer rollback; failed missing-group INSERT leaves earlier deletion/user scrub committed through a nested savepoint.",
+    "Four owned mutations block at real PostgreSQL INSERT, fifth rejects503; all four survive aborted HTTP clients, complete after unlock and service recovers.",
+    "Sixteen physical Redis operations plus their writer Arc leases survive canceled observers and an actual command deadline; overload rejects503, replies restore capacity, shutdown closes admission and aborts/joins the driver before reporting drained ownership.",
+    "Six actual cache miss/default/absent/empty-map/nonobject cases preserve full DVR/stream defaults, cached-empty authority, IDs and sequences.",
+    "Actual Source BIGINT rows at2^53,2^53+1,+2 and BIGINT_MAX verify finite-float truncation followed by exact integer comparison, plus huge integer/string/numeric user references. Neither target IDs nor exact integers are rounded through f64."
+  ],
+  "normalization": [
+    "JSON field order canonicalized with numeric/string/boolean types preserved. No row ID, sequence or business-value normalization.",
+    "Generated cache versions witnessed by exact type, changed-vs-old and persistence properties instead of comparing wall-clock nanoseconds."
+  ],
+  "retained_attempts": [
+    {
+      "artifact": "artifacts/rust/m5-output-profile-source-1",
+      "reason": "Fixture used illegal SQLNULL for nonnullable CoreSettings; fixed JSON-null seeding; project cleaned."
+    },
+    {
+      "artifact": "artifacts/rust/m5-output-profile-source-native-3",
+      "reason": "Frozen graph Cargo.lock was stale; native execution did not run; project cleaned."
+    },
+    {
+      "artifact": "artifacts/rust/m5-output-profile-source-native-5",
+      "reason": "Source104 captured; frozen graph Cargo.lock stale prevented native execution; project cleaned."
+    }
+  ],
+  "remaining": [
+    "Packaged immutable127-case application-image replay and actual React profile CRUD remain separate gates.",
+    "Concurrent uniqueness/delete-update/user-property races, Redis ACL/fatal SET response families, oversized/malformed surrogate/NUL/file fields, OPTIONS/CORS and deployment-level SQL/body shutdown faults remain additional coverage.",
+    "Active profile transcoding, native jobs, SQLite, migration upgrades and backup drafts are independent incomplete milestones. No new performance improvement is inferred."
+  ],
+  "huge_id_cases": 9
+}

@@ -8,5 +8,24 @@ pub mod render;
 mod string_cache;
 pub use gateway::{OutputConfig, OutputGateway};
 
+/// Reuse the original output endpoint's trusted-forwarding URL rules.
+/// Account/server-info scheme handling is a different Source contract.
+pub fn source_output_origin(
+    auth: &dispatcharr_store::AuthService,
+    request: &dispatcharr_contracts::PlaybackRequest,
+) -> String {
+    gateway::origin(auth, request, &axum::http::HeaderMap::new())
+}
+
+/// Original output CSRF failure page, if the shared check rejects a request.
+/// This does not perform query authentication or enable an additional route.
+pub fn source_csrf_failure(
+    method: &axum::http::Method,
+    headers: &axum::http::HeaderMap,
+    body: &[u8],
+) -> Option<&'static str> {
+    csrf::check(method, headers, body).err().map(|error| error.body())
+}
+
 #[cfg(test)]
 mod test_proxy;

@@ -215,3 +215,96 @@ async fn original_atomic_swap_and_cancelled_waiter_keep_physical_guards() {
     .await
     .unwrap();
 }
+
+/// Cancellation while PostgreSQL holds the command must roll back the whole
+/// swap, while the detached waiter still owns its physical guard and session.
+#[tokio::test]
+#[ignore = "requires original disposable PostgreSQL EPG staging oracle"]
+async fn cancelled_blocked_swap_rolls_back_without_releasing_physical_guard_early() {
+    assert_eq!(
+        std::env::var("EPG_STAGING_DISPOSABLE_FIXTURE").unwrap(),
+        "playback-fixture-only"
+    );
+    let fixture: Fixture = serde_json::from_slice(
+        &std::fs::read(std::env::var("EPG_STAGING_FIXTURE").unwrap()).unwrap(),
+    )
+    .unwrap();
+    let case = &fixture.cases[0];
+    let url = std::env::var("DATABASE_TEST_URL").unwrap();
+    let pool = sqlx::PgPool::connect(&url).await.unwrap();
+    let store = Store::connect(&url, 8).await.unwrap();
+    // Clone actual schema rows with fresh identities, so this test cannot race
+    // the original fifteen cases even when Cargo schedules both tests together.
+    let source:i64=sqlx::query_scalar("INSERT INTO epg_epgsource SELECT (jsonb_populate_record(NULL::epg_epgsource,to_jsonb(s)||jsonb_build_object('id',nextval(pg_get_serial_sequence('epg_epgsource','id')),'name','rust-cancelled-guide-'||txid_current()::text))).* FROM epg_epgsource s WHERE id=$1 RETURNING id")
+        .bind(case.source_id).fetch_one(&pool).await.unwrap();
+    let epg:i64=sqlx::query_scalar("INSERT INTO epg_epgdata SELECT (jsonb_populate_record(NULL::epg_epgdata,to_jsonb(e)||jsonb_build_object('id',nextval(pg_get_serial_sequence('epg_epgdata','id')),'epg_source_id',$2::bigint))).* FROM epg_epgdata e WHERE id=$1 RETURNING id")
+        .bind(case.epg_ids[0]).bind(source).fetch_one(&pool).await.unwrap();
+    sqlx::query("INSERT INTO epg_programdata SELECT (jsonb_populate_record(NULL::epg_programdata,to_jsonb(p)||jsonb_build_object('id',nextval(pg_get_serial_sequence('epg_programdata','id')),'epg_id',$2::bigint))).* FROM epg_programdata p WHERE epg_id=$1 LIMIT 1")
+        .bind(case.epg_ids[0]).bind(epg).execute(&pool).await.unwrap();
+    let before = rows(&pool, &[epg]).await;
+    assert!(!before.is_empty());
+    let dropped = Arc::new(AtomicBool::new(false));
+    let witness: Arc<dyn Send + Sync> = Arc::new(DropWitness(dropped.clone()));
+    let session = store.begin_guide_staging(source, witness).await.unwrap();
+    let pid = session.backend_pid();
+    let mut row = input(&case.staged[0]);
+    row.epg_id = epg;
+    let session = session.push(vec![row]).await.unwrap();
+    let mut blocker = pool.begin().await.unwrap();
+    sqlx::query("LOCK TABLE epg_programdata IN ACCESS EXCLUSIVE MODE")
+        .execute(&mut *blocker)
+        .await
+        .unwrap();
+    let cancelled = Arc::new(AtomicBool::new(false));
+    let flag = cancelled.clone();
+    let now = case.now;
+    let policy = case.policy;
+    let waiter = tokio::spawn(async move {
+        session
+            .swap_cancellable(vec![epg], now, policy, 100, flag)
+            .await
+    });
+    tokio::time::timeout(Duration::from_secs(5),async{
+        loop{
+            let waiting:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE pid=$1 AND wait_event_type='Lock')")
+                .bind(pid).fetch_one(&pool).await.unwrap();
+            if waiting{break;}tokio::time::sleep(Duration::from_millis(20)).await;
+        }
+    }).await.unwrap();
+    cancelled.store(true, Ordering::Release);
+    waiter.abort();
+    let _ = waiter.await;
+    tokio::time::sleep(Duration::from_millis(50)).await;
+    assert!(
+        !dropped.load(Ordering::Acquire),
+        "guard dropped before physical SQL reply"
+    );
+    blocker.rollback().await.unwrap();
+    tokio::time::timeout(Duration::from_secs(5), async {
+        while !dropped.load(Ordering::Acquire) {
+            tokio::time::sleep(Duration::from_millis(20)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert_eq!(
+        rows(&pool, &[epg]).await,
+        before,
+        "cancelled swap changed live guide rows"
+    );
+    sqlx::query("DELETE FROM epg_programdata WHERE epg_id=$1")
+        .bind(epg)
+        .execute(&pool)
+        .await
+        .unwrap();
+    sqlx::query("DELETE FROM epg_epgdata WHERE id=$1")
+        .bind(epg)
+        .execute(&pool)
+        .await
+        .unwrap();
+    sqlx::query("DELETE FROM epg_epgsource WHERE id=$1")
+        .bind(source)
+        .execute(&pool)
+        .await
+        .unwrap();
+}

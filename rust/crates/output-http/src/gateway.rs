@@ -532,7 +532,7 @@ fn percent_path(value: &str) -> String {
     String::from_utf8_lossy(&output).into_owned()
 }
 
-fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) -> String {
+pub(crate) fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) -> String {
     let header = |key| identity.header(key);
     let trusted = auth.is_trusted_proxy(identity.peer_ip);
     let scheme = if trusted {

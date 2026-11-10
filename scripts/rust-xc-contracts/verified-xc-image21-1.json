@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "candidate_image": "dispatcharr-rust-candidate:m5-output-m7-xc-live-image21-1",
+  "candidate_image_id": "sha256:ee6f333be03e869862a226a759567228e61a0b1e648f2f3662f13fbb6a2c6cba",
+  "candidate_source_tree_sha256": "65766866485842378fc29d89258a169f2e8685259dd2f33f4f338692c5e88382",
+  "candidate_build_manifest_sha256": "b2fdc6ed82078769162cd367aeb955e2812236d40bade9630be337ae2e3a3aa1",
+  "decode": {
+    "frames": 74,
+    "video_and_audio": true,
+    "stderr_bytes": 0,
+    "sample_sha256": "b3aed96f66233d6ff3f105f1bf542f286160a8acb15cf15c1d9c7bfdf4a4c03e"
+  },
+  "nested_static": {
+    "status": 404,
+    "body_bytes": 0
+  },
+  "shutdown_seconds": 0.20733889899565838,
+  "candidate_shutdown": {
+    "ExitCode": 0,
+    "OOMKilled": false
+  },
+  "cleanup": "isolated Compose project removed",
+  "scope": "Exact image21 XC account/live HTTP and catalog-derived native TS playback only",
+  "http_cases": 112,
+  "http_differences": 0,
+  "media_codecs": [
+    "h264",
+    "aac"
+  ],
+  "media_reader": {
+    "bytes": 1792204,
+    "media_bytes": 1165788,
+    "packets": 9533,
+    "sync_errors": 0,
+    "partial_bytes": 0,
+    "ended": true,
+    "errors": [],
+    "http_status": 200,
+    "content_type": "video/mp2t"
+  },
+  "generated_live": {
+    "path_shape": "/live/<username>/<password>/<stream_id>.ts",
+    "catalog_stream_id": 1,
+    "credentials_persisted": false
+  },
+  "artifact": "artifacts/rust/m7-xc-image21-4/xc-image.json",
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "excluded": [
+    "positive XC HLS/fMP4 suffix playback matrix and user-quota/ACL positive-case expansion",
+    "advanced VOD/series/EPG actions and XMLTV",
+    "uncaptured path grammars and HTML negotiation",
+    "whole application performance"
+  ]
+}

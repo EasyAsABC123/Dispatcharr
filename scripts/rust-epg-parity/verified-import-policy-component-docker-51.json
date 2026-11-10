@@ -1,0 +1,104 @@
+{
+  "format_version": 1,
+  "scope": "Docker execution of bounded file-to-guide importer/cache components; not application refresh integration",
+  "passed": true,
+  "component_image": {
+    "image_id": "sha256:1a48119b0a7dbf32e5bd7e7bca2592a128328ff8e73f92cafd18d5389e6c40a4",
+    "build_manifest": "artifacts/rust/m6-ingest-epg-component-image-48/build.json",
+    "build_manifest_sha256": "63a387a6409e964257f0245f3112b0b5b2ea5aae2c96d3d98afec8ef2dc0972c",
+    "source_tree_sha256": "a4e5dd91e80c70324698ecf0ef1ab29ab30019afeec7a3915da9639193823cd9"
+  },
+  "runtime_byte_binding": {
+    "base_evidence": "artifacts/rust/m6-file-guide-cached-clock-source-native-46/integration.json",
+    "base_evidence_sha256": "911dcbc58dc4d6bcaf4251d2a7715d6ba2418b0704a962312c36433dd827246f",
+    "base_archive_sha256": "208d81aa99b5b41e6351f9545150460d70c23cd51c432e7e037645d9e3382fb6",
+    "accepted_runtime_files_preserved": 367,
+    "only_packaging_additions": {
+      "rust/Dockerfile.ingest-epg-tests": "5a306bc8cd5cde98b58c15ef39922bcce01eaba1a81d6ee89527fcf5f7d2521f",
+      "rust/runtime/ingest_epg_test.sh": "e3147b111917b3b9176abbcf63a57a1b8daa5ae175c9f22b2285b5d7cc985485",
+      "LICENSE": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+      "ATTRIBUTION.md": "44dafbead10ed6def886b0bd0c27e106d9a2025c4fa24700f66803c328b1997a"
+    },
+    "derived_source_manifest": "artifacts/rust/m6-ingest-epg-component-source-48/build.json",
+    "derived_source_manifest_sha256": "679ffec3832dc792e7aa43ccd8d6331399f2d99265100d31d6c22f301deb9806",
+    "derived_source_archive_sha256": "7061b6c27214f7fef1d5d53362d3fcf113b1aa18a7522b2dedf65a4b9a48741d"
+  },
+  "runs": [
+    {
+      "evidence": "artifacts/rust/m6-file-guide-import-component-docker-51/integration.json",
+      "evidence_sha256": "6394817fca3a2113a4ddab07b7034527209637d8850dce687ffa9903396f3d4c",
+      "passed": true,
+      "cleanup": "project removed",
+      "source_cases": 15,
+      "runtime": {
+        "image_id": "sha256:1a48119b0a7dbf32e5bd7e7bca2592a128328ff8e73f92cafd18d5389e6c40a4",
+        "source_tree_sha256": "a4e5dd91e80c70324698ecf0ef1ab29ab30019afeec7a3915da9639193823cd9",
+        "source_archive_sha256": "7061b6c27214f7fef1d5d53362d3fcf113b1aa18a7522b2dedf65a4b9a48741d",
+        "manifest_sha256": "63a387a6409e964257f0245f3112b0b5b2ea5aae2c96d3d98afec8ef2dc0972c",
+        "compose_sha256": "0f579eeae751ad0b16bec6b6c2a421248efef414d168f17eaee3c64913f9da61",
+        "runtime_user": "65532:65532",
+        "limits": {
+          "memory_bytes": 536870912,
+          "cpus": 2,
+          "pids": 128
+        },
+        "scope": "Native parser/SQL/cache component execution; application refresh routes remain unwired"
+      },
+      "original_decode_verification": null,
+      "native_log": "artifacts/rust/m6-file-guide-import-component-docker-51/native-container-tests.log",
+      "native_log_sha256": "60ec10c2ce5c78d96f0851b2240348aaaedbbb6c467e85f478b205976641fe64"
+    },
+    {
+      "evidence": "artifacts/rust/m6-retained-policy-component-docker-52/integration.json",
+      "evidence_sha256": "e065abe674850fee433c55bb36c7b36ea2a51d4737fc6cbf04215fec4479cea0",
+      "passed": true,
+      "cleanup": "project removed",
+      "source_cases": 18,
+      "runtime": {
+        "image_id": "sha256:1a48119b0a7dbf32e5bd7e7bca2592a128328ff8e73f92cafd18d5389e6c40a4",
+        "source_tree_sha256": "a4e5dd91e80c70324698ecf0ef1ab29ab30019afeec7a3915da9639193823cd9",
+        "source_archive_sha256": "7061b6c27214f7fef1d5d53362d3fcf113b1aa18a7522b2dedf65a4b9a48741d",
+        "manifest_sha256": "63a387a6409e964257f0245f3112b0b5b2ea5aae2c96d3d98afec8ef2dc0972c",
+        "compose_sha256": "b17299de322dc6f95764c7e5eba1d5c9ea76fa989d92391255743ff94c3720ae",
+        "runtime_user": "65532:65532",
+        "limits": {
+          "memory_bytes": 536870912,
+          "cpus": 2,
+          "pids": 128
+        },
+        "scope": "Native parser/SQL/cache component execution; application refresh routes remain unwired"
+      },
+      "original_decode_verification": {
+        "original_django_decoded_native_cache_values": 12,
+        "passed": true
+      },
+      "native_log": "artifacts/rust/m6-retained-policy-component-docker-52/native-container-tests.log",
+      "native_log_sha256": "d0d4f445c19793cf07fcb35863882a5db9385414689ea7a66102fb0163ece5c3"
+    }
+  ],
+  "import_physical_scenarios": 6,
+  "policy_physical_guard_scenarios": 2,
+  "failed_setup_evidence": [
+    {
+      "directory": "artifacts/rust/m6-ingest-epg-component-image-47",
+      "reason": "Rootless Cargo target-directory creation EXDEV; fixed packaging with explicit mkdir before Cargo."
+    },
+    {
+      "directory": "artifacts/rust/m6-file-guide-import-component-docker-49",
+      "reason": "Private evidence directory not readable by nonroot test UID; expose only synthetic fixture copy via dedicated read-only input mount."
+    },
+    {
+      "directory": "artifacts/rust/m6-retained-policy-component-docker-50",
+      "reason": "Same synthetic fixture permission setup issue; same runtime image reused after runner correction."
+    }
+  ],
+  "remaining_gates": [
+    "Complete source fetch/extract/cache ownership and refresh dispatch.",
+    "Persisted source status/progress/audit/cache invalidation and first/late mappings.",
+    "Task retry/completion and application shutdown/fencing integration.",
+    "Full application execution and paired guide refresh resource acceptance."
+  ],
+  "application_image_verified": false,
+  "full_refresh_job_verified": false,
+  "performance_verified": false
+}

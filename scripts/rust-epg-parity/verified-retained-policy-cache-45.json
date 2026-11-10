@@ -1,0 +1,49 @@
+{
+  "format_version": 1,
+  "scope": "Actual Source cached EPG policy/version/error interoperability plus retained physical cache/SQL operations; application-unwired component only",
+  "passed": true,
+  "cleanup": "project removed",
+  "evidence": "artifacts/rust/m6-retained-policy-cache-physical-source-native-45/integration.json",
+  "evidence_sha256": "73091a13a1fa5562877c9ff5bd1e83b75858679c7858d5edcd760c4695cf538b",
+  "native_sql_log": "artifacts/rust/m6-retained-policy-cache-physical-source-native-45/rust-tests.log",
+  "native_sql_log_sha256": "35d214a67b48e5fb2f37881e454f5175e90cdd4638a68b108fede270ccd66e2a",
+  "source_cases": 18,
+  "fixture_sha256": "06c2757f5b0c9d9c1932c44eb5eb52c4666d2d526a4fc755fcc0a45962a7db5b",
+  "native_source_archive_sha256": "208d81aa99b5b41e6351f9545150460d70c23cd51c432e7e037645d9e3382fb6",
+  "native_source_sha256": {
+    "rust/Cargo.lock": "33dc65f9c9f44f70034e819b8b8800ff24d5fd154ce372222f30c05450264eed",
+    "rust/crates/ingest-epg/Cargo.toml": "d773a9c51345ad9022cd47ac38e347c7c7288476cea9d498ece8ec707a4af848",
+    "rust/crates/ingest-epg/README.md": "2923222b620f4b758ff68d50beb862416f19926bf0c3bb58eafdbb550984deee",
+    "rust/crates/ingest-epg/src/lib.rs": "a42198e270920fba85e0b4dfcf80796000a3a2df2e71a063cb42d5cbc147bdfb",
+    "rust/crates/ingest-epg/src/tests.rs": "37c411b17292ad66cf8f91142e5c89eed13f7592c5b4b87c6d8c6bff818702f9",
+    "rust/crates/ingest-epg/src/cache_policy.rs": "532b398ef4dd855ed8f56c012b82c9fa052a8350cd37a45644bfe3896a0d9f79",
+    "rust/crates/ingest-epg/tests/source_sql.rs": "e60dea302f91b94b7a15d3320eaaaab356536ec54f40385dc8648a91a22a8e06",
+    "rust/crates/ingest-epg/tests/policy_cache_sql.rs": "e0a01e60bc9716644a97f7040fefacb37eeea7c20f78d63b26bc884488994855",
+    "rust/crates/output-store/src/transport.rs": "f896d4927d475c71616c6a43d07c9fdf83c78459737fae94330e4db64da5b316",
+    "rust/crates/store/src/cache_codec.rs": "c75330a07fa482d6a610c7db960dd3b522dfc5044c412a71d139e4ad2d25551e",
+    "rust/crates/store/src/epg_staging.rs": "803f72aba462faeef7dd50d91e446cb993cdb5f92a728fc402b5daf3c63630fc"
+  },
+  "application_image_verified": false,
+  "full_refresh_job_verified": false,
+  "performance_verified": false,
+  "original_decode_verification": {
+    "original_django_decoded_native_cache_values": 12,
+    "passed": true
+  },
+  "physical_scenarios": [
+    "Timed-out Redis GET falls back to SQL while retaining caller guard/physical slot until actual reply.",
+    "After backend recovery, reconnect and read unchanged shared cache.",
+    "Abort blocked SQL fallback waiter: retain caller guard/physical slot until real PostgreSQL reply."
+  ],
+  "source_semantics": [
+    "Cold/warm/empty/scalar/missing/default groups and complete Django cache-map interoperability.",
+    "Version unchanged/changed and Python True==1 fence semantics.",
+    "Wrong Redis types, malformed pickle and bad authentication propagate; connectivity failure bypasses fill and falls back to SQL.",
+    "Explicit cache bypass preserves existing cached data."
+  ],
+  "remaining_gates": [
+    "HTTP refresh dispatch and source fetch/extract/cache ownership integration.",
+    "Persisted source status/timestamps/progress/audit/cache invalidation and task retry/completion semantics.",
+    "Complete app/Docker execution and paired resource acceptance for refresh jobs."
+  ]
+}

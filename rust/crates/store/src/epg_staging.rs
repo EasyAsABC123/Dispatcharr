@@ -8,7 +8,10 @@ use sqlx::{Connection, PgConnection, Postgres, QueryBuilder, Row};
 use std::{
     collections::HashMap,
     future::Future,
-    sync::{Arc, OnceLock},
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, OnceLock,
+    },
 };
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 
@@ -150,6 +153,28 @@ impl GuideStaging {
         policy: EpgHistoryPolicy,
         insert_batch: usize,
     ) -> Result<GuideSwapCounts, StoreError> {
+        self.swap_cancellable(
+            mapped,
+            now,
+            policy,
+            insert_batch,
+            Arc::new(AtomicBool::new(false)),
+        )
+        .await
+    }
+    /// Cancellation is checked on the private transaction before commit. This
+    /// boundary is not a cross-Redis/PostgreSQL fencing guarantee.
+    pub async fn swap_cancellable(
+        self,
+        mapped: Vec<i64>,
+        now: DateTime<Utc>,
+        policy: EpgHistoryPolicy,
+        insert_batch: usize,
+        cancelled: Arc<AtomicBool>,
+    ) -> Result<GuideSwapCounts, StoreError> {
+        if cancelled.load(Ordering::Acquire) {
+            return Err(StoreError::Unsupported("EPG staging swap cancelled"));
+        }
         if mapped.len() > MAX_MAPPED_IDS
             || !(1..=5000).contains(&insert_batch)
             || policy.min_days < 0
@@ -160,6 +185,10 @@ impl GuideStaging {
         }
         owned(async move{
             let mut this=self;let mut transaction=this.connection.begin().await?;
+            if cancelled.load(Ordering::Acquire) {
+                transaction.rollback().await?;
+                return Err(StoreError::Unsupported("EPG staging swap cancelled"));
+            }
             sqlx::query("SET LOCAL statement_timeout = '10min'").execute(&mut *transaction).await?;
             let ids:Vec<i64>=sqlx::query_scalar("SELECT DISTINCT epg_id FROM epg_program_staging WHERE epg_id=ANY($1)")
                 .bind(&mapped).fetch_all(&mut *transaction).await?;
@@ -188,6 +217,10 @@ impl GuideStaging {
                 let moved=sqlx::query("WITH moved AS (DELETE FROM epg_program_staging WHERE ctid IN (SELECT ctid FROM epg_program_staging LIMIT $1) RETURNING epg_id,start_time,end_time,title,sub_title,description,tvg_id,custom_properties) INSERT INTO epg_programdata (epg_id,start_time,end_time,title,sub_title,description,tvg_id,custom_properties) SELECT epg_id,start_time,end_time,title,sub_title,description,tvg_id,custom_properties FROM moved")
                     .bind(insert_batch as i64).execute(&mut *transaction).await?.rows_affected();
                 if moved==0{break;}counts.inserted+=moved;
+            }
+            if cancelled.load(Ordering::Acquire) {
+                transaction.rollback().await?;
+                return Err(StoreError::Unsupported("EPG staging swap cancelled"));
             }
             transaction.commit().await?;Ok(counts)
         }).await

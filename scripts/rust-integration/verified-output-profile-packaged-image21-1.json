@@ -1,0 +1,33 @@
+{
+  "scope": "Actual original127 OutputProfile HTTP/SQL/cache/parser/rollback cases against exact immutable21 app; original authors retain full application credit.",
+  "passed": true,
+  "report": "artifacts/rust/m5-output-profile-packaged-image21-1/integration.json",
+  "report_sha256": "77572344fe4092d96695860fb16c57ba21c025a07603f1f26bccacdb26179be9",
+  "tool_source": "artifacts/rust/m5-output-profile-packaged-image21-1/tool-source",
+  "build_manifest_sha256": "b2fdc6ed82078769162cd367aeb955e2812236d40bade9630be337ae2e3a3aa1",
+  "candidate_image_binding": {
+    "image_id": "sha256:ee6f333be03e869862a226a759567228e61a0b1e648f2f3662f13fbb6a2c6cba",
+    "source_tree_sha256": "65766866485842378fc29d89258a169f2e8685259dd2f33f4f338692c5e88382",
+    "manifest_verified": true
+  },
+  "packaged_checks_sha256": "563963af071f3bf50f0566b45cbcfde77d3e78731765ad330268a834a8c77dd0",
+  "source_cases": 127,
+  "huge_id_cases": 9,
+  "sql_fault_cases": 4,
+  "packaged_resource_checks": 3,
+  "total_checks": 130,
+  "cleanup": "project removed",
+  "performance_verified": false,
+  "verified": [
+    "Exact request bytes,status,selected headers,typed JSON,settings/profile row IDs,sequences,SQLNULL-versus-JSON-null and cache state.",
+    "Full Source defaults/cache miss/empty/nonobject maps, real Redis server errors and real SQL rollback/nested-savepoint behavior.",
+    "Actual >2^53 and BIGINT_MAX rows preserve exact integer/string/numeric references; float truncation never rounds target IDs.",
+    "Four actual packaged owned SQL mutations survive timed-out HTTP callers, fifth rejects503, all four complete after unlock and service recovers."
+  ],
+  "component_resource_scope": "Deeper physical Redis/canceled-observer/actual deadline/retained-writer/driver-shutdown gates are bound to frozen host component summary verified-output-profile-source-native-9.json; packaged gates do not silently stand in for them.",
+  "remaining": [
+    "New Source generic whole-null/nonobject family discovery is post21 and does not change accepted21 behavior.",
+    "Full UI profile CRUD, untested concurrency/cache/parser/deployment families and active transcoding remain separate gates.",
+    "Other M4/M6/M7/operations scopes and performance measurements have independent evidence; full migration is incomplete."
+  ]
+}

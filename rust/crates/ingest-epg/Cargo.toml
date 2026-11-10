@@ -10,3 +10,8 @@ dispatcharr-store = { path = "../store" }
 chrono = { version = "0.4", default-features = false, features = ["std"] }
 serde_json = { version = "1", features = ["arbitrary_precision"] }
 tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
+dispatcharr-output-store = { path = "../output-store" }
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres", "json", "chrono"] }
+[dev-dependencies]
+base64 = "0.22"
+redis = { version = "0.32", features = ["tokio-comp"] }

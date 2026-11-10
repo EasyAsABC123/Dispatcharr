@@ -1,0 +1,45 @@
+{
+  "scope": "XC canonical account/live categories/live streams and panel frozen-host component only",
+  "passed": true,
+  "http_cases": 76,
+  "differences": 0,
+  "real_redis_postgresql_tests": 7,
+  "source_numbering_cases": 392,
+  "source_connection_count_cases": 67,
+  "source_float_cases": 2827,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "native_binary_sha256": "ca04408e21cf745b4a592222ccbb60a81c3736b1722075b36fd301a6b07866db",
+  "artifact": "artifacts/rust/m7-xc-native-6/xc-source.json",
+  "resource_log": "artifacts/rust/m7-xc-native-6/resource-tests.log",
+  "cleanup": "isolated Compose project removed",
+  "native_exit_code": 0,
+  "packaged_app_verified": false,
+  "performance_verified": false,
+  "whole_milestone_complete": false,
+  "excluded": [
+    "unusual regex URL aliases and multipart CSRF",
+    "advanced VOD/series/EPG actions return501 pending side effects",
+    "XMLTV and regex-driven dummy generation",
+    "packaged generated-XC playback and shutdown",
+    "generated XC live media aliases are not yet implemented"
+  ],
+  "native_source_manifest_sha256": "e1e0a6c57878de00eb421e3ce34b45d10b795084f268f92af828d19fad7a256d",
+  "default_group_source_helper": {
+    "missing_before": true,
+    "repeated_get_same_id": true,
+    "group_name": "Default Group",
+    "matching_groups": 1,
+    "matching_custom_relations": 1,
+    "relation": {
+      "custom_properties": {},
+      "enabled": true,
+      "auto_channel_sync": false,
+      "auto_sync_channel_start": null,
+      "auto_sync_channel_end": null,
+      "is_stale": false,
+      "last_seen_present": true
+    }
+  },
+  "default_group_native_creation_and_8_concurrent_callers_verified": true
+}

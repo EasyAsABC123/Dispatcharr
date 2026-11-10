@@ -16,6 +16,14 @@ pub use projection::{project_entry, ProjectedStream, ProjectionContext, Projecti
 pub fn source_integer_literal(value: &str) -> Option<String> {
     projection::integer_literal(value)
 }
+/// Python float(string) conversion using the existing Source Unicode15.1
+/// numeric decoder. Callers supply their input/operation byte limits. Includes
+/// infinities and NaN; None means the original parser raises ValueError.
+pub fn source_float_literal(value: &str) -> Option<f64> {
+    projection::decimal(value)
+}
+#[cfg(test)]
+mod source_numeric_tests;
 mod cache;
 pub use cache::{CacheDownload, CacheError, DownloadStats};
 mod uploads;
@@ -33,6 +41,8 @@ mod xmltv_metadata;
 pub use xmltv_metadata::{extract_xmltv_properties, XmltvElement, XmltvMetadataError};
 mod xmltv_programme;
 pub use xmltv_programme::{project_xmltv_programme, XmltvProgramme, XmltvProgrammeError};
+mod xmltv_extract;
+pub use xmltv_extract::{detect_xmltv_format, XmltvFormat};
 #[derive(Clone, Debug, PartialEq)]
 pub struct ImportedCacheGroup {
     pub name: String,

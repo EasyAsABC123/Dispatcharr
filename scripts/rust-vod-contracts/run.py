@@ -2,6 +2,7 @@
 """Run isolated Compose native VOD Python characterization, then clean up."""
 import argparse
 import hashlib
+import io
 import importlib.util
 import json
 import os
@@ -10,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import tarfile
 import time
 import urllib.request
 import urllib.parse
@@ -35,6 +37,7 @@ def main():
     parser.add_argument('--m3u-rust-http', action='store_true', help='Compare actual native M3U HTTP/auth/cache with original source')
     parser.add_argument('--m3u-rust-renderer', action='store_true', help='Compare native SQL/renderer positive export bytes with original source')
     parser.add_argument('--vod-rapid-reclose-source', action='store_true', help='Characterize actual original rapid-reclose duplicate-stop timer race separately')
+    parser.add_argument('--vod-rapid-reclose-rust', action='store_true', help='Compare original rapid-reclose event multiplicity, native fenced cleanup and retained timer admission')
     parser.add_argument('--vod-progress-source', action='store_true', help='Capture original finalpartial/full100thchunk consumed-byte telemetry boundaries')
     parser.add_argument('--vod-progress-rust', action='store_true', help='Compare native finalpartial100thchunk telemetry with actual original provider/Redis')
     parser.add_argument('--timeshift-playback-ws', action='store_true', help='Capture actual original/native WebSocket fullstats during six decoded archive media/lifecycle cases')
@@ -70,6 +73,8 @@ def main():
     parser.add_argument('--rust-resolver-test', action='store_true', help='Run the actual-schema Rust resolver test against this disposable database')
     parser.add_argument('--rust-ingest-test', action='store_true', help='Compare the native M3U batch sink to original Django writes in this disposable database')
     args = parser.parse_args()
+    if args.vod_rapid_reclose_rust:
+        args.vod_rapid_reclose_source = True
     if args.vod_progress_rust:
         args.vod_progress_source = True
     if args.timeshift_playback_ws:
@@ -180,7 +185,14 @@ def main():
     def address(service, port):
         return 'http://'+command(compose+['port',service,str(port)]).strip()
     try:
-        archive = subprocess.run(['git','archive',BASELINE],cwd=ROOT,check=True,capture_output=True).stdout
+        # A frozen contract tree can sit below the actual Git worktree. Archive
+        # from its Git top level so Git's subdirectory prefix cannot produce an
+        # empty baseline tree when ROOT is that frozen nested directory.
+        git_root=subprocess.check_output(['git','rev-parse','--show-toplevel'],cwd=ROOT,text=True).strip()
+        archive = subprocess.run(['git','archive',BASELINE],cwd=git_root,check=True,capture_output=True).stdout
+        with tarfile.open(fileobj=io.BytesIO(archive),mode='r:') as baseline_tar:
+            if 'pyproject.toml' not in baseline_tar.getnames():
+                raise RuntimeError('Baseline archive missing repository root')
         subprocess.run(['tar','-x','--same-permissions','-C',str(source)],input=archive,check=True)
         (source/'media').mkdir(exist_ok=True)
         if args.source_frontend_from_candidate:
@@ -221,6 +233,15 @@ def main():
             (output/'vod-rapid-reclose-source.json').write_text(json.dumps(rapid,indent=2)+'\n')
             report['vod_rapid_reclose_source']=rapid
             if not rapid['within_original_grace'] or rapid['remaining_metadata'] or rapid['provider_connections']!=0:raise RuntimeError('Rapid source race capture incomplete')
+            if args.vod_rapid_reclose_rust:
+                database_address=command(compose+['port','baseline','5432']).strip()
+                redis_address=command(compose+['port','baseline','6379']).strip()
+                origin_address=command(compose+['port','origin','8080']).strip()
+                test_environment=dict(environment,DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+database_address+'/dispatcharr',REDIS_TEST_URL='redis://:playback-fixture-only@'+redis_address+'/0',VOD_DISPOSABLE_FIXTURE='playback-fixture-only',VOD_RAPID_RECLOSE_ORACLE=str(output/'vod-rapid-reclose-source.json'),VOD_ORIGIN_TEST_URL='http://'+origin_address)
+                result=subprocess.run(['cargo','test','--manifest-path',str(ROOT/'rust/Cargo.toml'),'-p','dispatcharr-vod-http','--test','rapid_reclose_sql','--locked','--offline','--','--ignored','--nocapture','--test-threads=1'],env=test_environment,capture_output=True,text=True,timeout=360)
+                (output/'rust-vod-rapid-reclose.log').write_text(result.stdout+result.stderr)
+                report['vod_rapid_reclose_rust']={'passed':result.returncode==0,'native_transport_verified':False,'source_bound_candidate_image':False,'timer_interleaving_normalized':True}
+                result.check_returncode()
         if args.vod_progress_source:
             progress=json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/output-verification/vod_progress_fixture.py'],timeout=60).splitlines()[-1])
             (output/'vod-progress-source.json').write_text(json.dumps(progress,indent=2)+'\n')

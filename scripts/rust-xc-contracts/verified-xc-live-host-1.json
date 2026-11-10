@@ -1,0 +1,28 @@
+{
+  "scope": "XC live-entry auth/method/missing-channel wire and existing resource component only",
+  "passed": true,
+  "http_cases": 36,
+  "differences": 0,
+  "real_redis_postgresql_tests": 7,
+  "artifact": "artifacts/rust/m7-xc-live-native-2/xc-source.json",
+  "resource_log": "artifacts/rust/m7-xc-live-native-2/resource-tests.log",
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "native_binary_sha256": "5a981a781a829356a40d16a4f4de0112ed20e17b0e6a63a69669503c2874efd7",
+  "native_source_manifest_sha256": "bdf5085d599a57f2b917a28fcac90476ab59503c1949dacd4905633cdb0b92ea",
+  "cleanup": "isolated Compose project removed",
+  "native_exit_code": 0,
+  "normalization": [
+    "Allow header token order (Source uses process-random set ordering)"
+  ],
+  "positive_media_verified": false,
+  "packaged_app_verified": false,
+  "performance_verified": false,
+  "whole_milestone_complete": false,
+  "excluded": [
+    "positive generated-live media playback",
+    "positive channel visibility and forced output format matrix",
+    "packaged static-route precedence and shutdown",
+    "uncaptured Accept/error renderers and encoded path grammars"
+  ]
+}

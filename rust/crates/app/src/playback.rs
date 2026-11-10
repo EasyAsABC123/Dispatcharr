@@ -6,7 +6,9 @@ use axum::{
     routing::get,
     Extension, Json, Router,
 };
-use dispatcharr_contracts::{OutputFormat, PlaybackError, PlaybackRequest, PlaybackResolver};
+use dispatcharr_contracts::{
+    OutputFormat, PlaybackError, PlaybackRequest, PlaybackResolver, PlaybackSource,
+};
 use dispatcharr_fmp4_http::Fmp4Gateway;
 use dispatcharr_hls_http::HlsGateway;
 use dispatcharr_stream_http::StreamEngine;
@@ -95,19 +97,39 @@ async fn stream(
         Ok(source) => source,
         Err(reason) => return error(reason),
     };
-    let response = match source.output_format {
-        OutputFormat::MpegTs => app.engine.play(source).await,
-        OutputFormat::Hls => match app.hls {
-            Some(gateway) => gateway.mint(source).await,
-            None => Err(PlaybackError::new(503, "Redis HLS sessions unavailable")),
-        },
-        OutputFormat::Fmp4 => match app.fmp4 {
-            Some(gateway) => gateway.play(source).await,
-            None => Err(PlaybackError::new(503, "Redis fMP4 output unavailable")),
-        },
-    };
+    let response = dispatch_source(app.engine, app.hls, app.fmp4, source).await;
     match response {
         Ok(response) => response,
         Err(reason) => error(reason),
+    }
+}
+pub fn dispatcher(
+    engine: StreamEngine,
+    hls: Option<HlsGateway>,
+    fmp4: Option<Fmp4Gateway>,
+) -> dispatcharr_xc_http::LiveDispatcher {
+    Arc::new(move |source| {
+        let engine = engine.clone();
+        let hls = hls.clone();
+        let fmp4 = fmp4.clone();
+        Box::pin(async move { dispatch_source(engine, hls, fmp4, source).await })
+    })
+}
+async fn dispatch_source(
+    engine: StreamEngine,
+    hls: Option<HlsGateway>,
+    fmp4: Option<Fmp4Gateway>,
+    source: PlaybackSource,
+) -> Result<Response, PlaybackError> {
+    match source.output_format {
+        OutputFormat::MpegTs => engine.play(source).await,
+        OutputFormat::Hls => match hls {
+            Some(gateway) => gateway.mint(source).await,
+            None => Err(PlaybackError::new(503, "Redis HLS sessions unavailable")),
+        },
+        OutputFormat::Fmp4 => match fmp4 {
+            Some(gateway) => gateway.play(source).await,
+            None => Err(PlaybackError::new(503, "Redis fMP4 output unavailable")),
+        },
     }
 }

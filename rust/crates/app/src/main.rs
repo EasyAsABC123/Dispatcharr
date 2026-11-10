@@ -425,6 +425,34 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
+    let xc = if let Ok(redis_url) = env::var("REDIS_URL") {
+        let counts = dispatcharr_xc_http::counts::ConnectionCounts::connect_source(&redis_url)
+            .await
+            .map_err(|_| "XC counter initialization failed (credentials omitted)")?;
+        Some(
+            dispatcharr_xc_http::XcGateway::new(
+                store.clone(),
+                auth.clone(),
+                counts,
+                dispatcharr_xc_http::XcConfig {
+                    max_requests: positive("RUST_MAX_XC_REQUESTS", 32)?,
+                    max_rows: positive("RUST_MAX_XC_CHANNELS", 50000)?,
+                    max_body_bytes: positive("RUST_XC_BODY_BYTES", 64 * 1024)?,
+                    max_metadata_bytes: positive("RUST_XC_METADATA_BYTES", 8 * 1024 * 1024)?,
+                    max_response_bytes: positive("RUST_XC_RESPONSE_BYTES", 16 * 1024 * 1024)?,
+                    max_number_bytes: positive("RUST_XC_NUMBER_BYTES", 128 * 1024 * 1024)?,
+                    max_memory_bytes: positive("RUST_XC_MEMORY_BYTES", 192 * 1024 * 1024)?,
+                    request_deadline: Duration::from_secs(positive(
+                        "RUST_XC_REQUEST_TIMEOUT_SECONDS",
+                        15,
+                    )? as u64),
+                },
+            )
+            .map_err(|_| "XC initialization failed (credentials omitted)")?,
+        )
+    } else {
+        None
+    };
     let hdhr = dispatcharr_hdhr_http::HdhrGateway::new(
         store.clone(),
         auth.clone(),
@@ -442,10 +470,26 @@ async fn run() -> Result<(), String> {
         },
     )
     .map_err(|_| "HDHR initialization failed (credentials omitted)")?;
+    let profile_redis = env::var("REDIS_URL").ok();
+    let output_profiles =
+        dispatcharr_store::OutputProfileWrites::new(auth.clone(), profile_redis.as_deref())
+            .await
+            .map_err(|_| "Output profile initialization failed (credentials omitted)")?;
+    let xc = xc
+        .map(|gateway| {
+            gateway.with_live(playback::dispatcher(
+                engine.clone(),
+                hls.clone(),
+                fmp4.clone(),
+            ))
+        })
+        .transpose()
+        .map_err(|_| "XC live dispatcher initialization failed")?;
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(store)
         .merge(auth.clone().router())
+        .merge(output_profiles.clone().router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))
         .merge(playback::router(
@@ -456,6 +500,9 @@ async fn run() -> Result<(), String> {
         ));
     if let Some(gateway) = &realtime {
         app = app.merge(gateway.router());
+    }
+    if let Some(gateway) = &xc {
+        app = app.merge(gateway.router()).merge(gateway.live_router());
     }
     if let Some(gateway) = &hls {
         app = app.merge(gateway.router());
@@ -497,6 +544,17 @@ async fn run() -> Result<(), String> {
         if !index.is_file() {
             return Err("RUST_FRONTEND_DIR must contain index.html".into());
         }
+        // Actual static directories take precedence over the original short
+        // three-component XC credential alias, including nested font assets.
+        for prefix in ["assets", "static"] {
+            let directory = std::path::Path::new(&path).join(prefix);
+            if directory.is_dir() {
+                app = app.nest_service(
+                    &format!("/{prefix}"),
+                    tower_http::services::ServeDir::new(directory),
+                );
+            }
+        }
         app = app.fallback_service(
             tower_http::services::ServeDir::new(path)
                 .fallback(tower_http::services::ServeFile::new(index)),
@@ -519,6 +577,8 @@ async fn run() -> Result<(), String> {
         catchup_management,
         realtime,
         output,
+        xc,
+        output_profiles,
         hdhr,
         live_statistics,
     };
@@ -584,6 +644,8 @@ struct ShutdownServices {
     catchup_management: Option<dispatcharr_timeshift_http::CatchupManagement>,
     realtime: Option<dispatcharr_realtime::RealtimeGateway>,
     output: Option<dispatcharr_output_http::OutputGateway>,
+    xc: Option<dispatcharr_xc_http::XcGateway>,
+    output_profiles: dispatcharr_store::OutputProfileWrites,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
     live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
 }
@@ -598,11 +660,13 @@ async fn shutdown_components(services: ShutdownServices) {
         catchup_management,
         realtime,
         output,
+        xc,
+        output_profiles,
         hdhr,
         live_statistics,
     } = services;
     engine.shutdown();
-    let (live, _, _, vod, catchup, management, realtime, output, hdhr) = tokio::join!(
+    let (live, _, _, vod, catchup, management, realtime, output, xc, profiles, hdhr) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
             if let Some(hls) = hls {
@@ -649,9 +713,18 @@ async fn shutdown_components(services: ShutdownServices) {
                 true
             }
         },
+        async {
+            if let Some(xc) = xc {
+                xc.shutdown().await
+            } else {
+                true
+            }
+        },
+        output_profiles.shutdown(Duration::from_secs(8)),
         hdhr.shutdown(),
     );
-    if !live || !vod || !catchup || !management || !realtime || !output || !hdhr {
+    if !live || !vod || !catchup || !management || !realtime || !output || !xc || !profiles || !hdhr
+    {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }
     if let Some(clients) = clients {

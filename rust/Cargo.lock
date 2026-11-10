@@ -601,11 +601,15 @@ dependencies = [
 name = "dispatcharr-ingest-epg"
 version = "0.1.0"
 dependencies = [
+ "base64 0.22.1",
  "chrono",
  "dispatcharr-ingest-core",
+ "dispatcharr-output-store",
  "dispatcharr-store",
  "dispatcharr-xmltv-parser",
+ "redis",
  "serde_json",
+ "sqlx",
  "tokio",
 ]
 
@@ -706,6 +710,7 @@ dependencies = [
  "dispatcharr-stream-http",
  "dispatcharr-timeshift-http",
  "dispatcharr-vod-http",
+ "dispatcharr-xc-http",
  "serde_json",
  "tokio",
  "tower-http",
@@ -842,6 +847,7 @@ dependencies = [
  "dispatcharr-clients",
  "dispatcharr-contracts",
  "dispatcharr-coordination",
+ "dispatcharr-ingest-core",
  "dispatcharr-output-store",
  "dispatcharr-store",
  "futures-util",
@@ -854,6 +860,26 @@ dependencies = [
  "tokio",
  "url",
  "uuid",
+]
+
+[[package]]
+name = "dispatcharr-xc-http"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "bytes",
+ "chrono",
+ "dispatcharr-contracts",
+ "dispatcharr-ingest-core",
+ "dispatcharr-output-http",
+ "dispatcharr-output-store",
+ "dispatcharr-store",
+ "futures-util",
+ "http-body-util",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "url",
 ]
 
 [[package]]

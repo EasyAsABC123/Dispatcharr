@@ -142,7 +142,7 @@ impl Progress {
 pub(crate) struct Ticket {
     pub session: Arc<Session>,
     pool: Weak<Inner>,
-    _request: OwnedSemaphorePermit,
+    _request: Option<OwnedSemaphorePermit>,
     is_new: bool,
     body_started: AtomicBool,
 }
@@ -390,7 +390,7 @@ impl SessionPool {
             let ticket = Ticket {
                 session,
                 pool: Arc::downgrade(&self.inner),
-                _request: request_permit,
+                _request: Some(request_permit),
                 is_new: false,
                 body_started: AtomicBool::new(false),
             };
@@ -571,7 +571,7 @@ impl SessionPool {
         Ok(Ticket {
             session,
             pool: Arc::downgrade(&self.inner),
-            _request: request_permit,
+            _request: Some(request_permit),
             is_new: true,
             body_started: AtomicBool::new(false),
         })
@@ -607,6 +607,20 @@ impl SessionPool {
 
 fn key(id: &str) -> String {
     format!("vod_persistent_connection:{id}")
+}
+// The original delayed timer checks the current global session ID, not the
+// timer's former local owner. Missing, malformed and failed reads are inactive.
+async fn source_has_active_streams(connection: &mut MultiplexedConnection, id: &str) -> bool {
+    let value: Result<Option<String>, _> = redis::cmd("HGET")
+        .arg(key(id))
+        .arg("active_streams")
+        .query_async(connection)
+        .await;
+    value
+        .ok()
+        .flatten()
+        .and_then(|value| dispatcharr_ingest_core::source_integer_literal(&value))
+        .is_some_and(|value| value != "0" && !value.starts_with('-'))
 }
 async fn update(
     inner: &Inner,
@@ -710,12 +724,16 @@ impl Drop for Ticket {
     fn drop(&mut self) {
         let session = self.session.clone();
         let emit_stop = !self.is_new || self.body_started.load(Ordering::Acquire);
+        let request_permit = self._request.take();
         let Some(pool) = self.pool.upgrade() else {
             return;
         };
         if let Ok(runtime) = tokio::runtime::Handle::try_current() {
             pool.pending_cleanups.fetch_add(1, Ordering::AcqRel);
             runtime.spawn(async move {
+                // Bound delayed timers and retain physical admission through
+                // their Redis reply and event queue work after body drop.
+                let _request_permit = request_permit;
                 let _finished=CleanupFinished(pool.clone());
                 let mut state = session.state.lock().await;
                 if state.active == 0 {
@@ -744,6 +762,16 @@ impl Drop for Ticket {
                 drop(state);
                 let mut shutdown=pool.stopped.subscribe();
                 if !*shutdown.borrow(){tokio::select!{_=tokio::time::sleep(pool.idle_grace)=>{},_=shutdown.changed()=>{}}}
+                // Every eligible Source timer can announce the stop. Do this
+                // outside state/pool locks: a statistics read must not form a
+                // cycle with the lifecycle actor. Physical cleanup remains
+                // independently epoch/token fenced below.
+                if count == 0 && emit_stop && !source_has_active_streams(&mut connection, &session.id).await {
+                    let events = pool.events.lock().unwrap().clone();
+                    if let Some(events) = events {
+                        let _ = events.emit(transition(&session, false)).await;
+                    }
+                }
                 let mut state = session.state.lock().await;
                 if state.active != 0 || state.epoch != epoch {
                     return;
@@ -765,10 +793,6 @@ impl Drop for Ticket {
                     sessions.remove(&session.id);
                 }
                 drop(sessions);drop(state);
-                if deleted==1 && emit_stop {
-                    let events=pool.events.lock().unwrap().clone();
-                    if let Some(events)=events{let _=events.emit(transition(&session,false)).await;}
-                }
             });
         }
     }

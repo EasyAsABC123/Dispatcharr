@@ -101,7 +101,7 @@ pub(crate) fn integer(value: &str) -> Result<Option<i64>, ProjectionError> {
         .map(|value| value.parse().map_err(|_| ProjectionError::IntegerRange))
         .transpose()
 }
-fn decimal(value: &str) -> Option<f64> {
+pub(crate) fn decimal(value: &str) -> Option<f64> {
     numeric_ascii(value)?.parse().ok()
 }
 

@@ -103,7 +103,16 @@ def main():
         record('restart-preserves-existing-schema-and-admin',before==sql(fingerprint_query)and sql('SELECT count(*) FROM accounts_user')=='1'and json.loads(sql(query))==row)
         record('setup-closed-after-browser-create',http(url+'/api/accounts/initialize-superuser/')[1]=={'superuser_exists':True})
         status=0 if all(check['passed']for check in report['checks'])else 1;report['passed']=status==0
-    except (OSError,ValueError,RuntimeError,TimeoutError,subprocess.SubprocessError)as error:report.update(error_type=type(error).__name__,error_stage=stage);status=1
+    except (OSError,ValueError,RuntimeError,TimeoutError,subprocess.SubprocessError)as error:
+        report.update(error_type=type(error).__name__,error_stage=stage);status=1
+        if isinstance(error,subprocess.CalledProcessError):
+            # Private ignored diagnostics only; summaries retain category/hash.
+            detail=error.stderr or error.stdout or ''
+            if isinstance(detail,bytes):detail=detail.decode('utf-8',errors='replace')
+            (output/'failed-command.log').write_text(detail[:32768])
+        try:
+            (output/'failed-services.log').write_text(command(base+['logs','--no-color','--tail','40'],timeout=10)[-65536:])
+        except (OSError,subprocess.SubprocessError):pass
     finally:
         if browser:browser.close()
         try:command(base+['down','--volumes','--remove-orphans']);report['cleanup']='project removed'

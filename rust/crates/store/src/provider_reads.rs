@@ -48,7 +48,11 @@ impl Resource {
         Self::Filters=>"SELECT to_jsonb(f) AS raw FROM m3u_m3ufilter f WHERE f.m3u_account_id=$2 AND ($1::bigint IS NULL OR f.id=$1)",
         Self::ServerGroups=>"SELECT to_jsonb(g) AS raw FROM m3u_servergroup g WHERE ($1::bigint IS NULL OR g.id=$1) AND $2::bigint IS NULL",
         Self::EpgData=>"SELECT to_jsonb(e) AS raw FROM epg_epgdata e WHERE ($1::bigint IS NULL OR e.id=$1) AND $2::bigint IS NULL",
-        Self::EpgSources=>"SELECT to_jsonb(e) AS raw,to_jsonb(t) AS task_data,to_jsonb(i) AS interval_data,to_jsonb(ct) AS crontab_data,CASE WHEN ct.id IS NULL THEN '' ELSE concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week) END AS cron,(SELECT count(*) FROM epg_epgdata d WHERE d.epg_source_id=e.id) AS data_count,EXISTS(SELECT 1 FROM dispatcharr_channels_channel c JOIN epg_epgdata d ON d.id=c.epg_data_id WHERE d.epg_source_id=e.id) AS has_channels FROM epg_epgsource e LEFT JOIN django_celery_beat_periodictask t ON t.id=e.refresh_task_id LEFT JOIN django_celery_beat_intervalschedule i ON i.id=t.interval_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE ($1::bigint IS NULL OR e.id=$1) AND $2::bigint IS NULL",
+        // Keep list and detail as disjoint branches. A generic prepared plan for
+        // (id = $1 OR $1 IS NULL) estimates a selective list filter and changes
+        // the original select_related join order. A one-time NULL guard keeps
+        // the list relation unfiltered; UNION ALL adds no invented ID ordering.
+        Self::EpgSources=>"SELECT to_jsonb(e) AS raw,to_jsonb(t) AS task_data,to_jsonb(i) AS interval_data,to_jsonb(ct) AS crontab_data,CASE WHEN ct.id IS NULL THEN '' ELSE concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week) END AS cron,(SELECT count(*) FROM epg_epgdata d WHERE d.epg_source_id=e.id) AS data_count,EXISTS(SELECT 1 FROM dispatcharr_channels_channel c JOIN epg_epgdata d ON d.id=c.epg_data_id WHERE d.epg_source_id=e.id) AS has_channels FROM epg_epgsource e LEFT JOIN django_celery_beat_periodictask t ON t.id=e.refresh_task_id LEFT JOIN django_celery_beat_intervalschedule i ON i.id=t.interval_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE $1::bigint IS NULL AND $2::bigint IS NULL UNION ALL SELECT to_jsonb(e) AS raw,to_jsonb(t) AS task_data,to_jsonb(i) AS interval_data,to_jsonb(ct) AS crontab_data,CASE WHEN ct.id IS NULL THEN '' ELSE concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week) END AS cron,(SELECT count(*) FROM epg_epgdata d WHERE d.epg_source_id=e.id) AS data_count,EXISTS(SELECT 1 FROM dispatcharr_channels_channel c JOIN epg_epgdata d ON d.id=c.epg_data_id WHERE d.epg_source_id=e.id) AS has_channels FROM epg_epgsource e LEFT JOIN django_celery_beat_periodictask t ON t.id=e.refresh_task_id LEFT JOIN django_celery_beat_intervalschedule i ON i.id=t.interval_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE e.id=$1::bigint AND $2::bigint IS NULL",
     }
     }
 }
@@ -305,6 +309,27 @@ fn serialize(resource: Resource, row: PgRow, admin: bool) -> Result<Value, Store
             value
         }
     })
+}
+// Shared row projection for the incremental EPG component; the established
+// API query and serializer remain authoritative for source/data fields.
+pub(crate) fn epg_read_query(source: bool) -> &'static str {
+    (if source {
+        Resource::EpgSources
+    } else {
+        Resource::EpgData
+    })
+    .query()
+}
+pub(crate) fn epg_read_projection(row: PgRow, source: bool) -> Result<Value, StoreError> {
+    serialize(
+        if source {
+            Resource::EpgSources
+        } else {
+            Resource::EpgData
+        },
+        row,
+        false,
+    )
 }
 async fn read(
     auth: AuthService,
