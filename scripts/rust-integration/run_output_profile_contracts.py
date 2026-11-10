@@ -22,7 +22,9 @@ from tool_snapshot import snapshot_sources
 from run import BASELINE,fixture_source,candidate_overlay,validate_candidate_image
 ROOT=Path(__file__).resolve().parents[2]
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--candidate-build-manifest',type=Path);parser.add_argument('--source-only',action='store_true');args=parser.parse_args();output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--candidate-build-manifest',type=Path);parser.add_argument('--source-only',action='store_true');parser.add_argument('--redis-restart',action='store_true',help='Actual same-service profile deletion/cache effects over owned Redis restart; requires candidate manifest');args=parser.parse_args();
+    if args.redis_restart and (not args.candidate_build_manifest or args.source_only):parser.error('--redis-restart requires candidate manifest and paired mode')
+    output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
     if any(output.iterdir()):parser.error('Output must be empty')
     tools=output/'tool-source';tool_hashes=snapshot_sources(ROOT,tools);project='dispatcharr-output-profiles-'+uuid.uuid4().hex[:10]
     manifest=json.loads(args.candidate_build_manifest.read_text())if args.candidate_build_manifest else None
@@ -74,7 +76,10 @@ def main():
                     except OSError:
                         if time.monotonic()>deadline:raise RuntimeError('Candidate readiness failed')
                         time.sleep(.2)
-                probe=(tools/'scripts/rust-integration/output_profile_packaged_probe.py').read_text();completed=subprocess.run(compose+['exec','-T','-e','OUTPUT_PROFILE_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','-'],env=env,input=probe,text=True,capture_output=True,timeout=180);(output/'packaged-probe.log').write_text(completed.stderr);completed.check_returncode();actual=json.loads(completed.stdout.splitlines()[-1]);(output/'packaged-checks.json').write_text(json.dumps(actual,indent=2)+'\n');report.update(passed=actual['passed'],application_image_verified=True,source_cases=actual['source_cases'],sql_fault_cases=actual['sql_fault_cases'],resource_checks=actual['resource_checks'],packaged_checks_sha256=hashlib.sha256((output/'packaged-checks.json').read_bytes()).hexdigest());status=0 if actual['passed']else 1
+                probe=(tools/('scripts/rust-integration/output_profile_restart_probe.py' if args.redis_restart else 'scripts/rust-integration/output_profile_packaged_probe.py')).read_text();completed=subprocess.run(compose+['exec','-T','-e','OUTPUT_PROFILE_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','-'],env=env,input=probe,text=True,capture_output=True,timeout=180);(output/'packaged-probe.log').write_text(completed.stderr);completed.check_returncode();actual=json.loads(completed.stdout.splitlines()[-1]);(output/'packaged-checks.json').write_text(json.dumps(actual,indent=2)+'\n');report.update(passed=actual['passed'],application_image_verified=True,source_cases=actual.get('source_cases'),sql_fault_cases=actual.get('sql_fault_cases'),resource_checks=actual.get('resource_checks'),packaged_checks_sha256=hashlib.sha256((output/'packaged-checks.json').read_bytes()).hexdigest());
+                if args.redis_restart:
+                    inspected=json.loads(command(['docker','inspect',container]))[0];report['candidate_process_preserved']=inspected['Id']==container and inspected['RestartCount']==0;report['capture_complete']=actual['capture_complete'];report['migration_gate_passed']=actual['passed'];report['scope']='Actual original/native same-service output-profile deletion/cache effects after owned Redis restart; fixture peer rewarms named cache keys, not an active media continuity gate';report['passed'] &= report['candidate_process_preserved']
+                status=0 if report['passed']else 1
             else:
                 test_env=dict(env,CARGO_TARGET_DIR=str(ROOT/'rust/target'))
                 built=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-store','--lib','--no-run','--message-format=json','--locked','--offline'],env=test_env,capture_output=True,text=True,timeout=600)

@@ -1,0 +1,254 @@
+{
+  "passed": false,
+  "execution_passed": true,
+  "migration_gate_passed": false,
+  "scope": "Valid immutable image34 same-service profile DELETE/cache failure over owned Redis restart and explicit independent-peer cache rewarm; no runtime fix or active-media recovery proof",
+  "credit": "All application and algorithm credit belongs to original Dispatcharr authors and contributors; AGPL retained.",
+  "candidate": {
+    "image_id": "sha256:b0034daea0add637f63f01702be047a02d32d78c9f03089ed093065e2a0c92c9",
+    "source_tree_sha256": "01977eb04b0e1ba70e75a6b0230a986f5ba9a3245b51fa1853e10a7e7ed5fc11",
+    "manifest_verified": true
+  },
+  "build_manifest_sha256": "ec229ae670e1fe377d2d7778d94c69df04f1b36106f65dbc6ace03bbbf213712",
+  "candidate_container_generation_preserved": true,
+  "case": "role-DELETE-above_admin",
+  "source_cases_previously_characterized_in_this_fixture": 127,
+  "fixture_policy": "Only named original cache fixture keys re-warmed by an independent peer after each NOSAVE restart; same SQL rows, writer services and container generations remain",
+  "same_source_http_workers": true,
+  "redis_run_ids_changed": true,
+  "checks": [
+    {
+      "backend": "candidate",
+      "logical_attempt_after_restart": 1,
+      "status": 204,
+      "response_matches": true,
+      "database_matches": true,
+      "cache_matches": false,
+      "cache_effects": {
+        "coresettings:group:stream_settings": {
+          "hdhr_output_profile_id": 91001,
+          "keep": "stream"
+        },
+        "coresettings:group:dvr_settings": {
+          "output_profile_id": 91001,
+          "keep": "dvr"
+        },
+        "coresettings:groupver:stream_settings": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        },
+        "coresettings:groupver:dvr_settings": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        },
+        "coresettings:default_user_agent": "Rust-Probe/output-stale",
+        "coresettings:default_user_agent:ver": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        }
+      }
+    },
+    {
+      "backend": "candidate",
+      "logical_attempt_after_restart": 2,
+      "status": 204,
+      "response_matches": true,
+      "database_matches": true,
+      "cache_matches": false,
+      "cache_effects": {
+        "coresettings:group:stream_settings": {
+          "hdhr_output_profile_id": 91001,
+          "keep": "stream"
+        },
+        "coresettings:group:dvr_settings": {
+          "output_profile_id": 91001,
+          "keep": "dvr"
+        },
+        "coresettings:groupver:stream_settings": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        },
+        "coresettings:groupver:dvr_settings": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        },
+        "coresettings:default_user_agent": "Rust-Probe/output-stale",
+        "coresettings:default_user_agent:ver": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        }
+      }
+    },
+    {
+      "backend": "candidate",
+      "logical_attempt_after_restart": 3,
+      "status": 204,
+      "response_matches": true,
+      "database_matches": true,
+      "cache_matches": false,
+      "cache_effects": {
+        "coresettings:group:stream_settings": {
+          "hdhr_output_profile_id": 91001,
+          "keep": "stream"
+        },
+        "coresettings:group:dvr_settings": {
+          "output_profile_id": 91001,
+          "keep": "dvr"
+        },
+        "coresettings:groupver:stream_settings": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        },
+        "coresettings:groupver:dvr_settings": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        },
+        "coresettings:default_user_agent": "Rust-Probe/output-stale",
+        "coresettings:default_user_agent:ver": {
+          "type": "int",
+          "old": true,
+          "advanced": false,
+          "persistent": true
+        }
+      }
+    },
+    {
+      "backend": "source",
+      "logical_attempt_after_restart": 1,
+      "status": 204,
+      "response_matches": true,
+      "database_matches": true,
+      "cache_matches": true,
+      "cache_effects": {
+        "coresettings:group:stream_settings": null,
+        "coresettings:group:dvr_settings": null,
+        "coresettings:groupver:stream_settings": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        },
+        "coresettings:groupver:dvr_settings": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        },
+        "coresettings:default_user_agent": null,
+        "coresettings:default_user_agent:ver": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        }
+      }
+    },
+    {
+      "backend": "source",
+      "logical_attempt_after_restart": 2,
+      "status": 204,
+      "response_matches": true,
+      "database_matches": true,
+      "cache_matches": true,
+      "cache_effects": {
+        "coresettings:group:stream_settings": null,
+        "coresettings:group:dvr_settings": null,
+        "coresettings:groupver:stream_settings": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        },
+        "coresettings:groupver:dvr_settings": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        },
+        "coresettings:default_user_agent": null,
+        "coresettings:default_user_agent:ver": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        }
+      }
+    },
+    {
+      "backend": "source",
+      "logical_attempt_after_restart": 3,
+      "status": 204,
+      "response_matches": true,
+      "database_matches": true,
+      "cache_matches": true,
+      "cache_effects": {
+        "coresettings:group:stream_settings": null,
+        "coresettings:group:dvr_settings": null,
+        "coresettings:groupver:stream_settings": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        },
+        "coresettings:groupver:dvr_settings": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        },
+        "coresettings:default_user_agent": null,
+        "coresettings:default_user_agent:ver": {
+          "type": "int",
+          "old": false,
+          "advanced": true,
+          "persistent": true
+        }
+      }
+    }
+  ],
+  "source_cache_invalidates_and_versions_advance": true,
+  "native_response_and_SQL_match_but_cache_stays_stale": true,
+  "native_later_attempts_recover": false,
+  "tools": [
+    {
+      "path": "scripts/rust-integration/run_output_profile_contracts.py",
+      "sha256": "e5df8b580a6e5ac251e1c50e5ad3d751b1fc4a15ab304aaa2447de7c5b5c15f2"
+    },
+    {
+      "path": "scripts/rust-integration/output_profile_restart_probe.py",
+      "sha256": "7273c8fd3bf6b094c117233634b3e2f8063ebb6cedbf51894169c44bd167f992"
+    }
+  ],
+  "private_evidence": "artifacts/rust/profile-cache-restart-image34-2",
+  "evidence_sha256": {
+    "integration.json": "524832da84452b944b2a70e8e23b6b587a75a4fddfa6705cf0504ccd80456de2",
+    "output-profile-restart.json": "df50016b34f6c1c3ed3b0ad6a99c08a33811ec8a7038386d705f1550cd0af7ff"
+  },
+  "cleanup": "owned Compose project removed",
+  "retained_prior_setup_failure": {
+    "path": "artifacts/rust/profile-cache-restart-image34-1",
+    "capture_complete": false,
+    "cleanup": "project removed",
+    "reason": "Source-first restart killed the already-created candidate connection before nominal candidate warmup; candidate-first order isolates warmup before its own restart. No paired migration pass inferred."
+  },
+  "performance_verified": false,
+  "application_recovery_verified": false,
+  "mutation_observations": 6,
+  "paired_logical_attempts": 3
+}

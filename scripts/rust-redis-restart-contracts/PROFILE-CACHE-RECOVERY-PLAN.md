@@ -30,3 +30,10 @@ Close reconnect admission before shutdown drains work. Prevent a connecting oper
 6. Existing output-profile HTTP/SQL/error contracts, cache permission controls and complete strict workspace checks on the selected final source.
 
 Run this matrix only after the category performance quiet window is explicitly released. No performance gains or application-wide Redis recovery follow from this plan.
+
+
+## Captured unchanged baseline
+
+[Image34 comparison2](verified-profile-cache-restart-image34-2.json) is a valid failed recovery gate. The same writer services are warmed before their own owned Redis NOSAVE restart. An independent peer then recreates only the six named fixture cache keys, modeling cache rewarming without reconstructing the writer. Both backends return the same HTTP204 and commit the same profile/reference/settings changes. The original deletes the cached settings/default-agent entries and advances their persistent generation values; Rust retains the stale entries and old generation values on the first and two later logical deletions. This is six actual paired mutation observations, with unchanged Source worker PIDs and immutable candidate container binding. It establishes cache invalidation failure under this explicit peer-rewarm fixture, not an active-media or entire-application state-restoration claim.
+
+The first attempt remains an incomplete setup: Source-first restart invalidated the already-created candidate before its nominal warmup could match. The second attempt warms the candidate before either restart and captures both backend phases fully. Both owned projects were removed. The next implementation must retain the explicit physical-driver shutdown controls described above.
