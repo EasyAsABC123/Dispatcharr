@@ -12,7 +12,7 @@ use dispatcharr_ingest_epg::{
     reporter::GuideReporter,
     EpgImporter, ImportConfig, ImportError, SwapPolicyContext,
 };
-use dispatcharr_store::Store;
+use dispatcharr_store::{Store, StoreError};
 use serde_json::{json, Value};
 use std::{
     collections::HashMap,
@@ -244,7 +244,7 @@ async fn refresh(connection: &mut redis::aio::MultiplexedConnection, id: i64) ->
 }
 fn reason(report: &FileJobReport, expected: ExhaustionReason) {
     assert_eq!(report.outcome, FileJobOutcome::Failed);
-    let settled = report.settled_exhaustion.unwrap();
+    let settled = report.settled_exhaustion.as_ref().unwrap();
     assert_eq!(settled.reason, expected);
     assert_eq!(settled.reporting, ExhaustionReporting::StatusSaved);
 }
@@ -434,8 +434,8 @@ async fn native_file_job_exhaustion_resources() {
         refresh(&mut connection, file).await.as_deref(),
         Some("owned-replacement")
     );
-    // Unknown guarded SQL errors are physically settled but not fabricated as
-    // supported Source normal results; no exhaustion reason leaks from before.
+    // Distinct guarded SERVER errors are normal authority at this exact stage,
+    // independent of exception class/text; diagnostics remain bounded data.
     prepare(&store, &mut connection, file, parser).await;
     let function = format!("rust_exhaust_unproved_{file}");
     sqlx::query(&format!("CREATE FUNCTION {function}() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'owned unproved status' USING ERRCODE='P0002'; END; $$")).execute(store.pool()).await.unwrap();
@@ -443,12 +443,43 @@ async fn native_file_job_exhaustion_resources() {
     let bundle = Bundle::new(&store, cache, cache, 1).await;
     let unknown = bundle.run(file, Arc::new(())).await.unwrap().unwrap();
     assert_eq!(unknown.outcome, FileJobOutcome::Failed);
-    assert!(unknown.settled_exhaustion.is_none());
+    let known = unknown.settled_exhaustion.as_ref().unwrap();
+    assert_eq!(known.reason, ExhaustionReason::FileBusy);
+    match &known.reporting {
+        ExhaustionReporting::CaughtGuardedStatusSql(diag) => assert_eq!(diag.sqlstate, "P0002"),
+        _ => panic!("guarded physical SQL cause required"),
+    };
     bundle.close().await;
     sqlx::query(&format!("DROP FUNCTION {function}() CASCADE"))
         .execute(store.pool())
         .await
         .unwrap();
+    // Native stopped admission is not a caught Source server exception.
+    prepare(&store, &mut connection, file, parser).await;
+    let bundle = Bundle::new(&store, cache, cache, 1).await;
+    assert!(bundle.reporter.shutdown(Duration::from_secs(1)).await);
+    assert!(matches!(
+        bundle.run(file, Arc::new(())).await.unwrap(),
+        Err(ImportError::Stopping)
+    ));
+    bundle.close().await;
+    // Closing an independent pool after actual reporting cannot be relabeled
+    // as a caught SELECT error. This fails at native acquisition, before SQL.
+    prepare(&store, &mut connection, file, parser).await;
+    let terminal_store = Store::connect(&url, 2).await.unwrap();
+    let bundle = Bundle::new(&terminal_store, cache, cache, 1).await;
+    let gate = bundle.sink.arm(file);
+    let call = bundle.run(file, Arc::new(()));
+    entered(&gate).await;
+    terminal_store.pool().close().await;
+    gate.open.add_permits(1);
+    assert!(matches!(
+        call.await.unwrap(),
+        Err(ImportError::Store(StoreError::Database(
+            sqlx::Error::PoolClosed
+        )))
+    ));
+    bundle.close().await;
     for id in [file, parser] {
         let _: i64 = redis::cmd("DEL")
             .arg(format!("task_lock_refresh_epg_data_{id}"))
@@ -461,6 +492,6 @@ async fn native_file_job_exhaustion_resources() {
     store.pool().close().await;
     println!(
         "NATIVE_EXHAUSTION_RESOURCE_JSON={}",
-        json!({"concurrent_reason_isolation":true,"old_run_outcome_preserved":true,"coarse_failed_stays_unclassified":true,"held_report_caller_abort":true,"held_physical_release_reply_abort":true,"replacement_release_no_typed_result":true,"unknown_SQL_no_typed_result":true,"aborted_waiter_return_observed":false,"owned_jobs_drained":true})
+        json!({"concurrent_reason_isolation":true,"old_run_outcome_preserved":true,"coarse_failed_stays_unclassified":true,"held_report_caller_abort":true,"held_physical_release_reply_abort":true,"replacement_release_no_typed_result":true,"guarded_server_SQL_observed":true,"reporter_stopping_no_typed_result":true,"terminal_pool_acquire_no_typed_result":true,"aborted_waiter_return_observed":false,"owned_jobs_drained":true})
     );
 }

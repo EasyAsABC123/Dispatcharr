@@ -7,7 +7,10 @@ use crate::{
     channels::{ChannelImporter, ChannelRequest},
     file_lease::RetainedLease,
     orphan_cleanup::{CleanupConfig, OrphanCleanup},
-    reporter::{FailedImport, GuideReporter, ReportAction, ReportObservation},
+    reporter::{
+        guarded_pg_error, FailedImport, GuardedSqlDiagnostic, GuideReporter, ReportAction,
+        ReportObservation,
+    },
     EpgImporter, ImportError, ImportReporting, ImportRequest, SwapPolicyContext,
     SwapPolicyProvider,
 };
@@ -106,15 +109,22 @@ impl ExhaustionReason {
         }
     }
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum ExhaustionReporting {
     StatusSaved,
-    CaughtStatusP0001,
+    CaughtGuardedStatusSql(GuardedSqlDiagnostic),
 }
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ExhaustionTerminal {
+    Verified,
+    CaughtGuardedSelectSql(GuardedSqlDiagnostic),
+    CaughtGuardedStatusSql(GuardedSqlDiagnostic),
+}
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct SettledExhaustion {
     pub reason: ExhaustionReason,
     pub reporting: ExhaustionReporting,
+    pub terminal: ExhaustionTerminal,
 }
 #[derive(Debug, Eq, PartialEq)]
 pub struct FileJobReport {
@@ -406,7 +416,34 @@ impl Inner {
         if !released.wait(self.config.release_timeout).await {
             return Err(ImportError::Worker);
         }
-        terminal?;
+        let classified =
+            settled_exhaustion.is_some() && matches!(&result, Ok(FileJobOutcome::Failed));
+        match terminal {
+            Ok(TerminalObservation::Verified) => (),
+            Ok(TerminalObservation::StatusFailure(ReportObservation::FailureStatusSqlCaught(
+                cause,
+            ))) if classified => {
+                let Some(diagnostic) = guarded_pg_error(&cause) else {
+                    return Err(ImportError::Worker);
+                };
+                settled_exhaustion.as_mut().unwrap().terminal =
+                    ExhaustionTerminal::CaughtGuardedStatusSql(diagnostic);
+            }
+            Ok(TerminalObservation::StatusFailure(_)) if classified => {
+                return Err(ImportError::Worker)
+            }
+            // Preserve the existing execute() guarded-error behavior for
+            // nonclassified runs; no new normal Failed authority is granted.
+            Ok(TerminalObservation::StatusFailure(_)) => (),
+            Err(TerminalFailure::Read(cause)) if classified => {
+                let Some(diagnostic) = guarded_pg_error(&cause) else {
+                    return Err(cause.into());
+                };
+                settled_exhaustion.as_mut().unwrap().terminal =
+                    ExhaustionTerminal::CaughtGuardedSelectSql(diagnostic);
+            }
+            Err(failure) => return Err(failure.into_import()),
+        }
         result
     }
     async fn source(&self, id: i64) -> Result<Option<Source>, ImportError> {
@@ -802,16 +839,16 @@ impl Inner {
             // P0001. Other discarded/unknown causes are NOT inferred normal.
             let reporting = match observation {
                 ReportObservation::FailureStatusSaved => Some(ExhaustionReporting::StatusSaved),
-                ReportObservation::FailureStatusSqlCaught(cause)
-                    if cause.as_database_error().and_then(|e| e.code()).as_deref()
-                        == Some("P0001") =>
-                {
-                    Some(ExhaustionReporting::CaughtStatusP0001)
+                ReportObservation::FailureStatusSqlCaught(cause) => {
+                    guarded_pg_error(&cause).map(ExhaustionReporting::CaughtGuardedStatusSql)
                 }
                 _ => None,
             };
-            *settled_exhaustion =
-                reporting.map(|reporting| SettledExhaustion { reason, reporting });
+            *settled_exhaustion = reporting.map(|reporting| SettledExhaustion {
+                reason,
+                reporting,
+                terminal: ExhaustionTerminal::Verified,
+            });
             return Ok(FileJobOutcome::Failed);
         }
         dispatcher
@@ -827,18 +864,45 @@ impl Inner {
             .await?;
         Ok(FileJobOutcome::Deferred)
     }
-    async fn terminal(&self, id: i64, context: SwapPolicyContext) -> Result<(), ImportError> {
-        let row = sqlx::query(
-            "SELECT name FROM epg_epgsource WHERE id=$1 AND status IN ('fetching','parsing')",
-        )
-        .bind(id)
-        .fetch_optional(self.services.store.pool())
-        .await?;
+    async fn terminal(
+        &self,
+        id: i64,
+        context: SwapPolicyContext,
+    ) -> Result<TerminalObservation, TerminalFailure> {
+        // Source reads status/name inside its guard, then checks status. Keep
+        // pool acquisition separate: a startup/reset/capacity failure is not an
+        // observed server exception from this guarded SELECT.
+        let mut connection = self
+            .services
+            .store
+            .pool()
+            .acquire()
+            .await
+            .map_err(TerminalFailure::Acquire)?;
+        let row=match sqlx::query("SELECT status,CASE WHEN octet_length(name)<=65536 THEN name END AS name,octet_length(name)>65536 AS oversized FROM epg_epgsource WHERE id=$1")
+            .bind(id).fetch_optional(&mut *connection).await {
+                Ok(row)=>row,
+                Err(cause)=>{
+                    if connection.close().await.is_err(){return Err(TerminalFailure::Other(ImportError::Worker));}
+                    return Err(TerminalFailure::Read(cause));
+                }
+            };
+        drop(connection);
         if let Some(row) = row {
+            let status: String = row.get("status");
+            if !matches!(status.as_str(), "fetching" | "parsing") {
+                return Ok(TerminalObservation::Verified);
+            }
+            if row.get::<bool, _>("oversized") {
+                return Err(TerminalFailure::Other(ImportError::Capacity(
+                    "terminal source name",
+                )));
+            }
             let msg = "Refresh did not complete successfully".to_string();
-            self.services
+            let observation = self
+                .services
                 .reporter
-                .execute(
+                .execute_observed(
                     ReportAction::RefreshFailed(FailedImport {
                         source_id: id,
                         source_name: row.get("name"),
@@ -847,8 +911,32 @@ impl Inner {
                     }),
                     context,
                 )
-                .await?;
+                .await
+                .map_err(TerminalFailure::Other)?;
+            if !matches!(observation, ReportObservation::FailureStatusSaved) {
+                return Ok(TerminalObservation::StatusFailure(observation));
+            }
         }
-        Ok(())
+        Ok(TerminalObservation::Verified)
+    }
+}
+
+enum TerminalObservation {
+    Verified,
+    StatusFailure(ReportObservation),
+}
+
+// A guarded server read is distinct from native pool acquisition and reporting.
+enum TerminalFailure {
+    Acquire(sqlx::Error),
+    Read(sqlx::Error),
+    Other(ImportError),
+}
+impl TerminalFailure {
+    fn into_import(self) -> ImportError {
+        match self {
+            Self::Acquire(cause) | Self::Read(cause) => cause.into(),
+            Self::Other(cause) => cause,
+        }
     }
 }

@@ -292,13 +292,21 @@ impl RefreshExecutor for ServiceExecutor {
                 .map_err(|_| Error::Execution)?;
             publisher.completed_children()?;
             if let Some(settled) = report.settled_exhaustion {
-                use dispatcharr_ingest_epg::file_job::{ExhaustionReason, ExhaustionReporting};
+                use dispatcharr_ingest_epg::file_job::{
+                    ExhaustionReason, ExhaustionReporting, ExhaustionTerminal,
+                };
                 let known = matches!(
-                    (settled.reason, settled.reporting),
-                    (
-                        ExhaustionReason::FileBusy | ExhaustionReason::ParserBusy,
-                        ExhaustionReporting::StatusSaved | ExhaustionReporting::CaughtStatusP0001
-                    )
+                    settled.reason,
+                    ExhaustionReason::FileBusy | ExhaustionReason::ParserBusy
+                ) && matches!(
+                    settled.reporting,
+                    ExhaustionReporting::StatusSaved
+                        | ExhaustionReporting::CaughtGuardedStatusSql(_)
+                ) && matches!(
+                    settled.terminal,
+                    ExhaustionTerminal::Verified
+                        | ExhaustionTerminal::CaughtGuardedSelectSql(_)
+                        | ExhaustionTerminal::CaughtGuardedStatusSql(_)
                 );
                 return if known && report.outcome == FileJobOutcome::Failed {
                     Ok(NormalReturn::Null)

@@ -122,7 +122,66 @@ pub enum ReportObservation {
     FailureStatusSaved,
     FailureStatusUnmatched,
     FailureStatusSqlCaught(sqlx::Error),
+    FailureStatusAcquireFailed(sqlx::Error),
+    FailureStatusUnsettled(sqlx::Error),
 }
+/// Bounded PostgreSQL diagnostic data, never Python exception frames.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct GuardedSqlDiagnostic {
+    pub sqlstate: String,
+    pub message: String,
+    pub detail: Option<String>,
+    pub hint: Option<String>,
+    pub context: Option<String>,
+}
+pub(crate) fn guarded_pg_error(cause: &sqlx::Error) -> Option<GuardedSqlDiagnostic> {
+    let pg = cause
+        .as_database_error()?
+        .try_downcast_ref::<sqlx::postgres::PgDatabaseError>()?;
+    if pg.severity() != sqlx::postgres::PgSeverity::Error {
+        return None;
+    }
+    bounded_guarded_fields(
+        pg.code(),
+        pg.message(),
+        pg.detail(),
+        pg.hint(),
+        pg.r#where(),
+    )
+}
+fn bounded_guarded_fields(
+    code: &str,
+    message: &str,
+    detail: Option<&str>,
+    hint: Option<&str>,
+    context: Option<&str>,
+) -> Option<GuardedSqlDiagnostic> {
+    if code.len() != 5
+        || !code
+            .bytes()
+            .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit())
+    {
+        return None;
+    }
+    let mut total = code.len();
+    for field in [Some(message), detail, hint, context].into_iter().flatten() {
+        if field.len() > 4096 {
+            return None;
+        }
+        total = total.checked_add(field.len())?;
+    }
+    if total > 8192 {
+        return None;
+    }
+    Some(GuardedSqlDiagnostic {
+        sqlstate: code.into(),
+        message: message.into(),
+        detail: detail.map(str::to_owned),
+        hint: hint.map(str::to_owned),
+        context: context.map(str::to_owned),
+    })
+}
+
 #[derive(Clone)]
 pub struct GuideReporter {
     inner: Arc<Inner>,
@@ -410,17 +469,30 @@ impl Inner {
     ) -> ReportObservation {
         // Pooled SQL is separate from the private staging session, so a
         // failed/rolled-back staging transaction cannot poison status.
+        let mut connection = match self.store.pool().acquire().await {
+            Ok(connection) => connection,
+            Err(cause) => return ReportObservation::FailureStatusAcquireFailed(cause),
+        };
         let saved = match sqlx::query(
             "UPDATE epg_epgsource SET status='error',last_message=$2 WHERE id=$1",
         )
         .bind(value.source_id)
         .bind(value.last_message)
-        .execute(self.store.pool())
+        .execute(&mut *connection)
         .await
         {
             Ok(saved) => saved,
-            Err(cause) => return ReportObservation::FailureStatusSqlCaught(cause),
+            Err(cause) => {
+                // ERROR may precede ReadyForQuery. Await physical close before
+                // publishing caught authority or releasing the retained owner.
+                return if connection.close().await.is_ok() {
+                    ReportObservation::FailureStatusSqlCaught(cause)
+                } else {
+                    ReportObservation::FailureStatusUnsettled(cause)
+                };
+            }
         };
+        drop(connection);
         {
             let mut data = stage_progress_data(value.source_id, action, 100);
             data["status"] = json!("error");
@@ -591,5 +663,32 @@ mod tests {
         ] {
             assert_eq!(max_system_events(Some(&value)), Some(expected));
         }
+    }
+    #[test]
+    fn guarded_sql_diagnostics_are_not_a_sqlstate_allowlist() {
+        for code in ["P0001", "P0002", "23514", "22012"] {
+            let value = bounded_guarded_fields(
+                code,
+                "actual server text",
+                Some("detail"),
+                None,
+                Some("server context"),
+            )
+            .unwrap();
+            assert_eq!(value.sqlstate, code);
+            assert_eq!(value.message, "actual server text");
+            assert_eq!(value.context.as_deref(), Some("server context"));
+        }
+        assert!(bounded_guarded_fields("p0001", "text", None, None, None).is_none());
+    }
+    #[test]
+    fn guarded_sql_diagnostic_bounds_reject_without_truncation() {
+        assert!(bounded_guarded_fields("P0001", &"é".repeat(2049), None, None, None).is_none());
+        let message = "x".repeat(4096);
+        let detail = "x".repeat(4091);
+        assert!(bounded_guarded_fields("P0001", &message, Some(&detail), None, None).is_some());
+        assert!(
+            bounded_guarded_fields("P0001", &message, Some(&detail), Some("x"), None).is_none()
+        );
     }
 }

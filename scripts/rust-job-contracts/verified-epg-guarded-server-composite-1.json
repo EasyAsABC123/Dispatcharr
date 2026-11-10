@@ -1,0 +1,142 @@
+{
+  "passed": true,
+  "scope": "Known file/parser busy exhaustion only: physically settled guarded PostgreSQL ERROR status writes and terminal reads. No default application consumer acceptance.",
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors; AGPL and framework attribution retained.",
+  "runtime_files": 561,
+  "runtime_changed_paths": [
+    "rust/crates/job-transport/src/refresh_worker.rs",
+    "rust/crates/job-transport/src/refresh_worker_peer.rs",
+    "rust/crates/ingest-epg/src/file_job.rs",
+    "rust/crates/ingest-epg/src/reporter.rs",
+    "rust/crates/ingest-epg/tests/file_job_exhaustion.rs"
+  ],
+  "runtime_input_manifest": "artifacts/rust/epg-guarded-server-composite-inputs-1.json",
+  "runtime_input_manifest_sha256": "805913b51a1ac4c8ce6f76193add13355aa849bea96eb721c916fb30f24e2bc3",
+  "workspace_validation": {
+    "passed": 353,
+    "failed": 0,
+    "external_ignored": 361,
+    "suites": 163,
+    "strict_clippy": true,
+    "tests_sha256": "207e13d6aa393cfbbb8763417d6ab6617cfecdf60a3956cc50b335e3617eb7e3",
+    "clippy_sha256": "47d7c980842a2f6a96498747e1a980a50b4c151d9dbc8712572fc9d07dca11ff"
+  },
+  "actual_runs": [
+    {
+      "name": "native",
+      "passed": true,
+      "checks": 52,
+      "guarded_reports": {
+        "status_p0002": {
+          "checks": 25,
+          "native_cases": 2
+        },
+        "terminal": {
+          "checks": 29,
+          "native_cases": 2
+        },
+        "status_23514": {
+          "checks": 25,
+          "native_cases": 2
+        }
+      },
+      "regression_checks": 80,
+      "evidence": "artifacts/rust/epg-guarded-server-composite-native-1/integration.json",
+      "evidence_sha256": "d417bcba7f88ff0ac12369fa74f6c9d05416b82f62e4df109345c9906627b580",
+      "runtime_exact_composite_match": true,
+      "runtime_files": 561,
+      "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "rust_archive_sha256": "65454bff210894b3398ccef52c02d359ae3eb6059beb61fbe9261bdcc3cd08f8",
+      "default_database_unchanged": true,
+      "project": "dispatcharr-guarded-exhaustion-8991524395",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "name": "constructor",
+      "passed": true,
+      "checks": 19,
+      "guarded_reports": null,
+      "regression_checks": null,
+      "evidence": "artifacts/rust/epg-guarded-server-composite-constructor-1/integration.json",
+      "evidence_sha256": "dad273f8ed38e04f5608381303f2bc60df456a00070e467135a8b660aac18b7c",
+      "runtime_exact_composite_match": true,
+      "runtime_files": 561,
+      "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "rust_archive_sha256": "65454bff210894b3398ccef52c02d359ae3eb6059beb61fbe9261bdcc3cd08f8",
+      "default_database_unchanged": true,
+      "project": "dispatcharr-index-constructor-32a1706415",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "name": "eta",
+      "passed": true,
+      "checks": 20,
+      "guarded_reports": null,
+      "regression_checks": null,
+      "evidence": "artifacts/rust/epg-guarded-server-composite-eta-1/integration.json",
+      "evidence_sha256": "32ff216047644898f0eca5186c7882b4cbcd004d60833b19218093268b22f706",
+      "runtime_exact_composite_match": true,
+      "runtime_files": 561,
+      "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "rust_archive_sha256": "65454bff210894b3398ccef52c02d359ae3eb6059beb61fbe9261bdcc3cd08f8",
+      "default_database_unchanged": true,
+      "project": "dispatcharr-native-eta-b4005ad217",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "name": "duplicate",
+      "passed": true,
+      "checks": 24,
+      "guarded_reports": null,
+      "regression_checks": null,
+      "evidence": "artifacts/rust/epg-guarded-server-composite-duplicate-1/integration.json",
+      "evidence_sha256": "1a72c9ff474d651d5a338798a62575b24a92312cab5b846e6c25ea4c8294a729",
+      "runtime_exact_composite_match": true,
+      "runtime_files": 561,
+      "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "rust_archive_sha256": "65454bff210894b3398ccef52c02d359ae3eb6059beb61fbe9261bdcc3cd08f8",
+      "default_database_unchanged": true,
+      "project": "dispatcharr-index-constructor-0dbdb7a2f0",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    }
+  ],
+  "component_counts": {
+    "guarded_checks": 131,
+    "targeted_refresh_regressions": 80,
+    "actual_original_native_pairs": 10,
+    "constructor_checks": 19,
+    "ETA_checks": 20,
+    "duplicate_checks": 24
+  },
+  "boundaries": [
+    "ERROR severity from an actual guarded statement; separate pool acquisition and physical close settlement",
+    "Diagnostic bounds 4096 bytes per field / 8192 bytes total; reject overflow, no truncation",
+    "Unknown I/O, FATAL/PANIC, pool capacity/reset-before-try and coarse Failed are not promoted to normal null",
+    "Guarded status error does not claim successful status write",
+    "UPDATE0 and NotOwner remain separate unaccepted race semantics in this checkpoint",
+    "Legacy run outcomes retained; task-local metadata only after settled terminal and release"
+  ],
+  "new_image_built": false,
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "runtime_mutated_after_freeze": false,
+  "live_mutable_Rust_used": false,
+  "setup_failure_retained": "Child scratch-directory collision occurred before the second controller; fixed tooling only, same runtime. No parent replay failures.",
+  "commit_handoff": "Only selected frozen files plus this report and ledger paragraph; concurrent agent drafts preserved."
+}

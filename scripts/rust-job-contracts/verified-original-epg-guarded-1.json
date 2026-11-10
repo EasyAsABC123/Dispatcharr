@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "scope": "Actual unchanged Original guarded exhaustion status UPDATE P0002/23514; Source only",
+  "checks": 30,
+  "actual_worker_executions": 4,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "dataset": "scripts/rust-job-contracts/source-original-epg-guarded-1.json",
+  "dataset_sha256": "1fe81fe619250b8f80b6f8bc12938741d868a94233acae417e95f8e1831a9cae",
+  "evidence": {
+    "P0002": {
+      "artifact": "artifacts/rust/m6-original-epg-exhaustion-p0002-1",
+      "raw_report_sha256": "68ac9e63f77cfb7ac31b24aa21dc9e995db4a3aed9ba1888b8a963c79f0c7c1e",
+      "integration_sha256": "f29e480e23f66aa1a5e672d7420301cf8372f18c646aecc24471e3f0d3afaabb",
+      "checks": 15,
+      "cleanup": "project removed",
+      "default_database_unchanged": true
+    },
+    "23514": {
+      "artifact": "artifacts/rust/m6-original-epg-exhaustion-servercode-1",
+      "raw_report_sha256": "e1796bdc31555151bb2ea6ce5b11c6592816419d2aa4b59795480aae667d4143",
+      "integration_sha256": "0fcb2ff22eddd676dd952f7f24deb34a05a522e7647df8dbd366ee7af46f4641",
+      "checks": 15,
+      "cleanup": "project removed",
+      "default_database_unchanged": true
+    }
+  },
+  "selected_tools": {
+    "scripts/rust-job-contracts/run_epg_exhaustion_p0002.py": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-p0002-1/tool-source/scripts/rust-job-contracts/run_epg_exhaustion_p0002.py",
+      "sha256": "6391032d484d6c5b8f0f39b65f48518a0c57ab2fefb98caf8cb42f1cd6158d14"
+    },
+    "scripts/rust-job-contracts/source_epg_exhaustion_p0002.py": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-p0002-1/tool-source/scripts/rust-job-contracts/source_epg_exhaustion_p0002.py",
+      "sha256": "50e1b7cbc419763bb8b9a9e1b18239cd8927ab2b5fc3733d0f11e983c8337a82"
+    },
+    "scripts/rust-job-contracts/epg_refresh_observer.py": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-p0002-1/tool-source/scripts/rust-job-contracts/epg_refresh_observer.py",
+      "sha256": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+    },
+    "scripts/rust-job-contracts/run_epg_exhaustion_servercode.py": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-servercode-1/tool-source/scripts/rust-job-contracts/run_epg_exhaustion_servercode.py",
+      "sha256": "97d13dd2ea204d3c7725142c9c4ac4c6cdeb2dfdd092a275feb4ebe06d2fe889"
+    },
+    "scripts/rust-job-contracts/source_epg_exhaustion_servercode.py": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-servercode-1/tool-source/scripts/rust-job-contracts/source_epg_exhaustion_servercode.py",
+      "sha256": "fc6f933baecc612de5eaae4f1065cc4b3e5650f01550eac2d4064bda771e65b1"
+    }
+  },
+  "earlier_guard_and_terminal_contract": "scripts/rust-job-contracts/verified-original-epg-exhaustion-1.json",
+  "native_execution_verified": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL; framework authors retain their credit/licenses."
+}

@@ -1,0 +1,132 @@
+{
+  "passed": true,
+  "scope": "Physically settled guarded PostgreSQL ERROR in typed file/parser exhaustion only",
+  "guarded_component_checks": 131,
+  "targeted_refresh_regression_checks": 80,
+  "actual_source_native_worker_pairs": 10,
+  "terminal_select_native_fault_hits": [
+    1,
+    1
+  ],
+  "resource_scenario_groups": 7,
+  "additional_worker_redis_resource_tests": 3,
+  "frozen_default_units": {
+    "ingest-unit.log": {
+      "passed": 30,
+      "external_ignored": 1
+    },
+    "job-unit.log": {
+      "passed": 33,
+      "external_ignored": 17
+    }
+  },
+  "strict_ingest_job_all_targets_clippy": true,
+  "selected_runtime_and_test": {
+    "rust/crates/ingest-epg/src/file_job.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/frozen/rust/crates/ingest-epg/src/file_job.rs",
+      "sha256": "f2724409814dd87ec49c6c8f06c629becd221440808692648ef2ba33755cb456"
+    },
+    "rust/crates/ingest-epg/src/reporter.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/frozen/rust/crates/ingest-epg/src/reporter.rs",
+      "sha256": "d0774a191124246658e2fe91e4ee5ca42ad7149c467388b6af5b6ede7d582e91"
+    },
+    "rust/crates/job-transport/src/refresh_worker.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/frozen/rust/crates/job-transport/src/refresh_worker.rs",
+      "sha256": "e1f0a885b4b3ec2aaf6b02e8d828eb1162951d1ef07a056c0486cfbaf0c1ce19"
+    },
+    "rust/crates/job-transport/src/refresh_worker_peer.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/frozen/rust/crates/job-transport/src/refresh_worker_peer.rs",
+      "sha256": "e24c96a7e3aaaf4831bcff6845d40ed104dd67af59b697792fcdd06f087d0c94"
+    },
+    "rust/crates/ingest-epg/tests/file_job_exhaustion.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/frozen/rust/crates/ingest-epg/tests/file_job_exhaustion.rs",
+      "sha256": "a42435dda557c3127682a37baffd1a089d03028da57f9f2ccabd48fabdd340ef"
+    }
+  },
+  "selected_tools": {
+    "scripts/rust-job-contracts/run_native_epg_guarded.py": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/tool-source/scripts/rust-job-contracts/run_native_epg_guarded.py",
+      "sha256": "d9370bbb7d7e8549c02278f58fdc526c795116a5dc70fa616e8868905d8e0048"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion.py": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion.py",
+      "sha256": "67109d34e49ae0e6d6426513d0e65b77d025ee6eb3711c86c2ce696cea99197f"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion_p0002.py": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion_p0002.py",
+      "sha256": "76f7dc96d720c6ecfe0d52a46d1a780090f7cf466eafa351147451ff45c2d3ff"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion_terminal.py": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion_terminal.py",
+      "sha256": "d09672c5e182873bffa100b4a285c0c9363ba64cc0083c1962742ed5459f74c3"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion_servercode.py": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion_servercode.py",
+      "sha256": "0ca842eebe3a20478f813d49664ff2c64542c3f17b713c9c7229c37c24fcfaee"
+    },
+    "scripts/rust-job-contracts/exhaustion_native_compare.py": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/tool-source/scripts/rust-job-contracts/exhaustion_native_compare.py",
+      "sha256": "53c7399536e98568afcee66f2492cb4f52538e19c7eba378dc4c88572b1f9a0d"
+    },
+    "scripts/rust-job-contracts/source_native_refresh_worker_exhaustion.py": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/tool-source/scripts/rust-job-contracts/source_native_refresh_worker_exhaustion.py",
+      "sha256": "40a69f01b7bd2f92c3d97dfd25b07e3a4dd355ec03617604c477ef946ed2d520"
+    },
+    "scripts/rust-job-contracts/epg_refresh_observer.py": {
+      "path": "artifacts/rust/m6-source-native-epg-guarded-2/tool-source/scripts/rust-job-contracts/epg_refresh_observer.py",
+      "sha256": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+    }
+  },
+  "cargo_graph_changes": false,
+  "lib_module_changes": false,
+  "dataset": "scripts/rust-job-contracts/source-native-epg-guarded-1.json",
+  "dataset_sha256": "f5c0b943e2336f565d80d3a793e45c17f5ba9886430dff933d62a57ff29718f8",
+  "rust_source_archive": "artifacts/rust/m6-source-native-epg-guarded-2/rust-source.tar",
+  "rust_source_archive_sha256": "a770edc2203e62f72b5273a321cf331c3d3983af39a8c34ec436c5c1f5b36e2e",
+  "raw_evidence_sha256": {
+    "integration.json": "1049c1d5b24ead76dc29420131bd3ca1be86ba2fdedae92a7639e692384eb13e",
+    "source-native-epg-exhaustion-private.json": "f44d6d8ee59fa44dcfb57b758e18e6ae0671c8e55fa4ee5b9fd7ed551f42b8ac",
+    "source-native-epg-exhaustion-p0002-private.json": "d0762ca909dc0f762c68b6bfcc3ecfb870f20259b98c786673f54c13018025a0",
+    "source-native-epg-exhaustion-terminal-private.json": "b5f819137784e39ed89f11f0db78163fb51119800ce1376b89be36651418bf6d",
+    "source-native-epg-exhaustion-servercode-private.json": "efeff60069dde90f1fe36528c263890a48aceb13517597e0fc9c47435e1ccda9",
+    "source-native-refresh-worker-exhaustion-private.json": "23b8dad9d158792a0e9b5c275074a2727902d7b8cd6c043bab1a8a5470c3f066",
+    "native-exhaustion-resources.log": "3d818da48030ac890f981038fe968c60a1e59c8da25b14c90e5b8ef82c321e04",
+    "native-refresh-worker-physical.log": "ff5ad6fcc873fd6d0342c4ecf3d9e3287bed09eb8d7f3691a34462f5e88104c2",
+    "clippy.log": "4ab5c4a8b0b863cf72cd94092976e5b79ef2791374220b01db8d4f1f7757f077",
+    "ingest-unit.log": "18103a65748a1b8e58c2d7e9ba86ebb9de3238a4e4d2b1c0d81291eaf368c171",
+    "job-unit.log": "1a25df7866b48734b53e0462e08ca0b54c0045bfea3944856a7a43fc7225a85e"
+  },
+  "server_error_boundary": {
+    "stage": [
+      "guarded_status_UPDATE",
+      "guarded_terminal_SELECT",
+      "guarded_terminal_status_UPDATE"
+    ],
+    "severity": "PostgreSQL ERROR only",
+    "failed_query_connection_close": "awaited before caught authority",
+    "lease": "actual Released required",
+    "diagnostic_field_max_bytes": 4096,
+    "diagnostic_total_max_bytes": 8192,
+    "sqlstate_allowlist": false,
+    "diagnostics_are_python_exception_frames": false
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "app_scheduler_default_consumer_202_verified": false,
+  "wholeworkspace_validation": false,
+  "performance_verified": false,
+  "historical_scope_preserved": "Component52 remains immutable; its terminal and P0002 boundaries are not retrospectively reclassified.",
+  "failed_attempt": {
+    "path": "artifacts/rust/m6-source-native-epg-guarded-1",
+    "cause": "Second controller reused scratch-directory name and failed before P0002 execution; baseline52 and resource peer passed. Preserved/cleaned, exact same Rust reused."
+  },
+  "limitations": [
+    "FATAL/PANIC, native pool/admission/capacity/reset-before-try, unclassified decoding, oversized diagnostic and IO/close ambiguity remain operational.",
+    "Coarse Failed outside explicit file/parser exhaustion is not promoted.",
+    "UPDATE0 and releaseNotOwner/PENDING remain conservative native controls pending independent Original race capture.",
+    "Aborted waiter return is unobserved.",
+    "Guarded terminal-status-update reuses verified reporter boundary; no separate actual in-progress double-update worker fault is claimed here.",
+    "No generic exception module/args/traceback rendering or unrelated frozen sibling acceptance."
+  ],
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL; framework authors retain their credit/licenses."
+}

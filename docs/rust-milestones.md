@@ -529,3 +529,6 @@ Source restart observations [176](../scripts/rust-redis-restart-contracts/verifi
 
 
 [Read-only runtime method inspection](rust-contract-register.md#runtime-handler-candidates) adds handler candidates for 166 of the 322 method-unresolved route entries, preserving all 592 original resolver identities and their exact order. Inspection executed no views or SQL; the owned setup used its normal readiness request and was removed. Default permission attributes and dynamic policy references remain candidate evidence only, not authorization or parity acceptance. M0's explicit case/role mapping work remains open.
+
+
+[The guarded EPG exhaustion checkpoint](../scripts/rust-job-contracts/verified-epg-guarded-server-composite-1.json) passes 353 default workspace tests, strict all-target Clippy, 131 guarded checks plus 80 targeted refresh regressions, and constructor/ETA/duplicate replays (19/20/24 checks). All four copied-database runs bind the same 561 Rust inputs and pinned Original archive; default databases are unchanged and owned Compose resources independently absent. Normal null mapping is limited to known file/parser exhaustion after physically settled guarded PostgreSQL ERROR and release. UPDATE0, NotOwner, general workers/schedulers, HTTP202, packaged-image acceptance and performance remain separate work. M6 remains in progress.

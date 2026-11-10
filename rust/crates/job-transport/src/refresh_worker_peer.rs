@@ -85,9 +85,13 @@ async fn native_refresh_worker_peer() {
     let id = Uuid::parse_str(input["task_id"].as_str().unwrap()).unwrap();
     let source = input["source_id"].as_i64().filter(|v| *v > 0).unwrap();
     let db = input["database_url"].as_str().unwrap();
+    let database_role = input["database_role"].as_str().unwrap_or("dispatch");
+    if database_role != "dispatch" {
+        assert_eq!(database_role, format!("rust_exhaust_role_{source}"));
+    }
     assert_eq!(
         db,
-        format!("postgres://dispatch:playback-fixture-only@127.0.0.1:5432/{database}")
+        format!("postgres://{database_role}:playback-fixture-only@127.0.0.1:5432/{database}")
     );
     let cache = input["cache_url"].as_str().unwrap();
     assert_eq!(cache, "redis://:playback-fixture-only@127.0.0.1:6379/0");
@@ -175,6 +179,9 @@ async fn native_refresh_worker_peer() {
         }),
     )
     .unwrap();
+    if input["close_reporter_before_run"] == true {
+        assert!(reporter.shutdown(Duration::from_secs(1)).await);
+    }
     let caller = Arc::new(());
     let weak = Arc::downgrade(&caller);
     let held_orphan_marker = input["hold_orphan_marker"] == true;

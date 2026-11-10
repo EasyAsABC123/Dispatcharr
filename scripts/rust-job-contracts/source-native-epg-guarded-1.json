@@ -1,0 +1,1913 @@
+{
+  "format_version": 1,
+  "scope": "Physically settled guarded PostgreSQL ERROR in typed file/parser exhaustion only",
+  "groups": {
+    "baseline": {
+      "checks": [
+        {
+          "name": "bounded-result-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "caught-status-fault-preserves-idle",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "caught-status-fault-preserves-idle",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-concurrent-reasons-and-physical-ownership-controls",
+          "passed": true
+        },
+        {
+          "name": "native-operational-control-no-fake-success-coarse_counter",
+          "passed": true
+        },
+        {
+          "name": "native-operational-control-no-fake-success-native_reporter_closed",
+          "passed": true
+        },
+        {
+          "name": "no-unexpected-executed-family",
+          "passed": true
+        }
+      ],
+      "source_cases": [
+        {
+          "name": "exhausted_file",
+          "source_id": 1,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:38.508204+00:00",
+            "task_id": "b0502a08-6506-480a-8b7a-8c76115367b3"
+          },
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "result_ttl": 3598
+        },
+        {
+          "name": "exhausted_parser",
+          "source_id": 2,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:41.363167+00:00",
+            "task_id": "ca090cc9-838b-42c0-a82a-37d740c23aec"
+          },
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "result_ttl": 3598
+        },
+        {
+          "name": "exhausted_file_status_fault",
+          "source_id": 3,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:44.269731+00:00",
+            "task_id": "e721e8a9-b062-497d-9485-b665958b1a54"
+          },
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "result_ttl": 3598
+        },
+        {
+          "name": "exhausted_parser_status_fault",
+          "source_id": 4,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:47.229377+00:00",
+            "task_id": "7761288e-d346-4396-9766-3a7c9dc17f33"
+          },
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "result_ttl": 3598
+        }
+      ],
+      "native_cases": [
+        {
+          "name": "exhausted_file",
+          "source_id": 1,
+          "source_task_id": "b0502a08-6506-480a-8b7a-8c76115367b3",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:40.176768+00:00",
+            "task_id": "cf35dc0c-87de-4e6b-9f0c-eac5e7a44cf9"
+          },
+          "metadata_sha256": "69e8763c7ff2472f29292756f254e42046701d92149e1e3e4412680d60263d9e",
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(cf35dc0c-87de-4e6b-9f0c-eac5e7a44cf9)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          }
+        },
+        {
+          "name": "exhausted_parser",
+          "source_id": 2,
+          "source_task_id": "ca090cc9-838b-42c0-a82a-37d740c23aec",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:43.084684+00:00",
+            "task_id": "3eab461d-cf3d-4aa5-9410-ac30e4a6ffab"
+          },
+          "metadata_sha256": "128e86a6c4cb50f2ce4e6b99d8b46ea29973dc1d3ed368e9f0ef5c4e2d7c69c2",
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(3eab461d-cf3d-4aa5-9410-ac30e4a6ffab)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          }
+        },
+        {
+          "name": "exhausted_file_status_fault",
+          "source_id": 3,
+          "source_task_id": "e721e8a9-b062-497d-9485-b665958b1a54",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:46.042261+00:00",
+            "task_id": "82fba87f-4bd5-412f-b1ab-47f1396db5e0"
+          },
+          "metadata_sha256": "75977c00699b3593ca70fb20f9c0b3a2333d912af71578296bead8f576bd3e88",
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(82fba87f-4bd5-412f-b1ab-47f1396db5e0)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          }
+        },
+        {
+          "name": "exhausted_parser_status_fault",
+          "source_id": 4,
+          "source_task_id": "7761288e-d346-4396-9766-3a7c9dc17f33",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:48.924207+00:00",
+            "task_id": "ec8c5bc5-db12-458a-9145-2c29a1a3d860"
+          },
+          "metadata_sha256": "7600b5df39826e426c6b86e6599dbcc0ad77636bf2cc5fe8128983242af8ca81",
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(ec8c5bc5-db12-458a-9145-2c29a1a3d860)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          }
+        }
+      ],
+      "resources": {
+        "concurrent_reason_isolation": true,
+        "old_run_outcome_preserved": true,
+        "coarse_failed_stays_unclassified": true,
+        "held_report_caller_abort": true,
+        "held_physical_release_reply_abort": true,
+        "replacement_release_no_typed_result": true,
+        "guarded_server_SQL_observed": true,
+        "reporter_stopping_no_typed_result": true,
+        "terminal_pool_acquire_no_typed_result": true,
+        "aborted_waiter_return_observed": false,
+        "owned_jobs_drained": true
+      },
+      "operational_controls": [
+        {
+          "name": "coarse_counter",
+          "audit": {
+            "outcome": "Some(Err(Execution))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          },
+          "result_state": "PENDING",
+          "source_id": 1
+        },
+        {
+          "name": "native_reporter_closed",
+          "audit": {
+            "outcome": "Some(Err(Execution))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          },
+          "result_state": "PENDING",
+          "source_id": 1
+        }
+      ]
+    },
+    "status_p0002": {
+      "checks": [
+        {
+          "name": "bounded-result-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "caught-status-fault-preserves-idle",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "caught-status-fault-preserves-idle",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-unexpected-executed-family",
+          "passed": true
+        }
+      ],
+      "source_cases": [
+        {
+          "name": "exhausted_file_status_fault",
+          "source_id": 5,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:51.193357+00:00",
+            "task_id": "d165abf9-cd15-4370-8bea-f67cba47c9e5"
+          },
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "result_ttl": 3598
+        },
+        {
+          "name": "exhausted_parser_status_fault",
+          "source_id": 6,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:54.122958+00:00",
+            "task_id": "6acd6138-914d-41df-8496-360da52318aa"
+          },
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "result_ttl": 3598
+        }
+      ],
+      "native_cases": [
+        {
+          "name": "exhausted_file_status_fault",
+          "source_id": 5,
+          "source_task_id": "d165abf9-cd15-4370-8bea-f67cba47c9e5",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:52.933892+00:00",
+            "task_id": "cf46c96f-8b16-46dd-8a46-cff0ccb94f1a"
+          },
+          "metadata_sha256": "34c4d4413d9c759c7b0a7b858a7a372fd8bd8c99c376b1450c392c3ac3815518",
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(cf46c96f-8b16-46dd-8a46-cff0ccb94f1a)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          }
+        },
+        {
+          "name": "exhausted_parser_status_fault",
+          "source_id": 6,
+          "source_task_id": "6acd6138-914d-41df-8496-360da52318aa",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:55.844961+00:00",
+            "task_id": "67c09b38-ba4f-4deb-965d-bc4158d4d72f"
+          },
+          "metadata_sha256": "e68c99ae2dfdc51aed483f7305c8c067f680d8993d968924d7b0a0e587a53f66",
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(67c09b38-ba4f-4deb-965d-bc4158d4d72f)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          }
+        }
+      ]
+    },
+    "terminal": {
+      "checks": [
+        {
+          "name": "bounded-result-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "actual-terminal-SELECT-fault-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "actual-native-terminal-SELECT-fault-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "actual-terminal-SELECT-fault-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "actual-native-terminal-SELECT-fault-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "no-unexpected-executed-family",
+          "passed": true
+        }
+      ],
+      "source_cases": [
+        {
+          "name": "exhausted_file_terminal_fault",
+          "source_id": 7,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:57.829476+00:00",
+            "task_id": "7d52ed33-ed15-4a05-ba02-99de6fa22331"
+          },
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "result_ttl": 3598,
+          "terminal_fault_hits": 1,
+          "fixture_control": "Owned low-privilege PostgreSQL role/RLS function raises P0001 only for actual status,name terminal SELECT; unchanged application/helper functions."
+        },
+        {
+          "name": "exhausted_parser_terminal_fault",
+          "source_id": 8,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:06:00.698215+00:00",
+            "task_id": "14de2165-41f9-4224-8805-1d0effeb578d"
+          },
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "result_ttl": 3598,
+          "terminal_fault_hits": 1,
+          "fixture_control": "Owned low-privilege PostgreSQL role/RLS function raises P0001 only for actual status,name terminal SELECT; unchanged application/helper functions."
+        }
+      ],
+      "native_cases": [
+        {
+          "name": "exhausted_file_terminal_fault",
+          "source_id": 7,
+          "source_task_id": "7d52ed33-ed15-4a05-ba02-99de6fa22331",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:05:59.502007+00:00",
+            "task_id": "77a5746e-5fee-416e-b414-8e7232013b0b"
+          },
+          "metadata_sha256": "6fe4d693bc37e02d27281adc800dd0791cf540579f0cc47e453a6473bad37942",
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(77a5746e-5fee-416e-b414-8e7232013b0b)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          },
+          "terminal_fault_hits": 1
+        },
+        {
+          "name": "exhausted_parser_terminal_fault",
+          "source_id": 8,
+          "source_task_id": "14de2165-41f9-4224-8805-1d0effeb578d",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:06:02.344161+00:00",
+            "task_id": "a4e88979-ea27-4b0a-b45e-f4fe086df501"
+          },
+          "metadata_sha256": "2de502dcf1f1e9078f9a585e3219055a895d7b4201174feaf1de0216088f6568",
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(a4e88979-ea27-4b0a-b45e-f4fe086df501)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          },
+          "terminal_fault_hits": 1
+        }
+      ]
+    },
+    "status_23514": {
+      "checks": [
+        {
+          "name": "bounded-result-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "caught-status-fault-preserves-idle",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "caught-status-fault-preserves-idle",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-Source-AsyncResult-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-exact-row-effects-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-original-busy-state-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-owner-drain-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "native-exhaustion-result-identity-TTL-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-unexpected-executed-family",
+          "passed": true
+        }
+      ],
+      "source_cases": [
+        {
+          "name": "exhausted_file_status_fault",
+          "source_id": 9,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:06:04.287684+00:00",
+            "task_id": "0baf0d77-1296-4a05-b1cd-950a813ff46d"
+          },
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "result_ttl": 3598
+        },
+        {
+          "name": "exhausted_parser_status_fault",
+          "source_id": 10,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:06:07.228357+00:00",
+            "task_id": "b0794bf0-0bf8-4f3b-9bd1-b1edd12d4456"
+          },
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "result_ttl": 3598
+        }
+      ],
+      "native_cases": [
+        {
+          "name": "exhausted_file_status_fault",
+          "source_id": 9,
+          "source_task_id": "0baf0d77-1296-4a05-b1cd-950a813ff46d",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:06:06.057990+00:00",
+            "task_id": "47266df0-13dd-4c1f-bd16-01711facec1f"
+          },
+          "metadata_sha256": "853676c90f2e503c6e7b7bfa8cf651f8f22f473627def7ab59a4c73fcff37001",
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(47266df0-13dd-4c1f-bd16-01711facec1f)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          }
+        },
+        {
+          "name": "exhausted_parser_status_fault",
+          "source_id": 10,
+          "source_task_id": "b0794bf0-0bf8-4f3b-9bd1-b1edd12d4456",
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T19:06:09.016230+00:00",
+            "task_id": "45c8bf3d-2d79-4452-8f00-5ce0758ce0bf"
+          },
+          "metadata_sha256": "efa1618d84ecd9e64c0558b195ef58adf8dec4dfe126429c6358b5907f4a441b",
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ],
+          "audit": {
+            "outcome": "Some(Ok(Completed(45c8bf3d-2d79-4452-8f00-5ce0758ce0bf)))",
+            "calls": 1,
+            "default_dispatch_calls": 0,
+            "caller_released": true,
+            "worker_drained": true,
+            "service_drained": true,
+            "transport_drained": true,
+            "physical_jobs": 0,
+            "head_unchanged": false,
+            "native_eta_consumer": false,
+            "held_orphan_marker": false,
+            "logical_waiter_aborted": false
+          }
+        }
+      ]
+    }
+  },
+  "regression": {
+    "checks": [
+      {
+        "name": "real-executor-default-ownership-inactive",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-inactive",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-inactive",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-inactive",
+        "passed": true
+      },
+      {
+        "name": "normal-no-child-inactive",
+        "passed": true
+      },
+      {
+        "name": "native-skipped-index-preserved-inactive",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-inactive",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-dummy",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-dummy",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-dummy",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-dummy",
+        "passed": true
+      },
+      {
+        "name": "normal-no-child-dummy",
+        "passed": true
+      },
+      {
+        "name": "native-skipped-index-preserved-dummy",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-dummy",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-refresh_busy",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-refresh_busy",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-refresh_busy",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-refresh_busy",
+        "passed": true
+      },
+      {
+        "name": "normal-no-child-refresh_busy",
+        "passed": true
+      },
+      {
+        "name": "native-skipped-index-preserved-refresh_busy",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-refresh_busy",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-file_busy",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-file_busy",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-file_busy",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-file_busy",
+        "passed": true
+      },
+      {
+        "name": "native-deferral-child-file_busy",
+        "passed": true
+      },
+      {
+        "name": "native-deferral-effects-file_busy",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-file_busy",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-parser_busy",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-parser_busy",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-parser_busy",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-parser_busy",
+        "passed": true
+      },
+      {
+        "name": "native-deferral-child-parser_busy",
+        "passed": true
+      },
+      {
+        "name": "native-deferral-effects-parser_busy",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-parser_busy",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-missing_no_orphan",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-missing_no_orphan",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-missing_no_orphan",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-missing_no_orphan",
+        "passed": true
+      },
+      {
+        "name": "normal-no-child-missing_no_orphan",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-missing_no_orphan",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-imported",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-imported",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-imported",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-imported",
+        "passed": true
+      },
+      {
+        "name": "native-import-child-families-imported",
+        "passed": true
+      },
+      {
+        "name": "native-import-lineage-imported",
+        "passed": true
+      },
+      {
+        "name": "native-import-sql-imported",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-imported",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-unmapped",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-unmapped",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-unmapped",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-unmapped",
+        "passed": true
+      },
+      {
+        "name": "native-import-child-families-unmapped",
+        "passed": true
+      },
+      {
+        "name": "native-import-lineage-unmapped",
+        "passed": true
+      },
+      {
+        "name": "native-import-sql-unmapped",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-unmapped",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-repeat",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-repeat",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-repeat",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-repeat",
+        "passed": true
+      },
+      {
+        "name": "normal-no-child-repeat",
+        "passed": true
+      },
+      {
+        "name": "native-skipped-index-preserved-repeat",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-repeat",
+        "passed": true
+      },
+      {
+        "name": "repeat-handler-reexecutes-before-success-write-guard",
+        "passed": true
+      },
+      {
+        "name": "repeat-preserves-result-bytes-and-ttl",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-coarse_failed_operational",
+        "passed": true
+      },
+      {
+        "name": "unproved-outcome-no-fabricated-success-coarse_failed_operational",
+        "passed": true
+      },
+      {
+        "name": "coarse-failed-cleanup-is-settled",
+        "passed": true
+      },
+      {
+        "name": "real-executor-default-ownership-missing_orphan",
+        "passed": true
+      },
+      {
+        "name": "bounded-native-terminal-missing_orphan",
+        "passed": true
+      },
+      {
+        "name": "actual-source-asyncresult-missing_orphan",
+        "passed": true
+      },
+      {
+        "name": "normal-metadata-geometry-missing_orphan",
+        "passed": true
+      },
+      {
+        "name": "orphan-helper-now-proven",
+        "passed": true
+      },
+      {
+        "name": "normal-no-child-missing_orphan",
+        "passed": true
+      },
+      {
+        "name": "native-refresh-lock-effect-missing_orphan",
+        "passed": true
+      },
+      {
+        "name": "unsupported-head-preserved-foreign_index",
+        "passed": true
+      },
+      {
+        "name": "unsupported-head-preserved-eta",
+        "passed": true
+      },
+      {
+        "name": "unsupported-head-preserved-parented",
+        "passed": true
+      },
+      {
+        "name": "three-controlled-real-redis-worker-resource-tests",
+        "passed": true
+      }
+    ],
+    "cases": [
+      {
+        "name": "inactive",
+        "scope": "supported-normal",
+        "source_id": 11,
+        "audit": {
+          "outcome": "Some(Ok(Completed(361784f5-e5a0-4e3c-bf64-d4e25cab43dd)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-10T19:06:09.786026+00:00",
+          "task_id": "361784f5-e5a0-4e3c-bf64-d4e25cab43dd"
+        },
+        "metadata_sha256": "2a2e8f181019698855b213c713494c1d813efcec13b45e2c78c2d492d52b64c8",
+        "repeat": null
+      },
+      {
+        "name": "dummy",
+        "scope": "supported-normal",
+        "source_id": 12,
+        "audit": {
+          "outcome": "Some(Ok(Completed(61c28a8e-b850-47e2-8b29-ecb1392237a4)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-10T19:06:09.822631+00:00",
+          "task_id": "61c28a8e-b850-47e2-8b29-ecb1392237a4"
+        },
+        "metadata_sha256": "7e19ef054e16d4de56a1d30ed72c454df9d98e7176ffdaf9af5464af291a8fdd",
+        "repeat": null
+      },
+      {
+        "name": "refresh_busy",
+        "scope": "supported-normal",
+        "source_id": 13,
+        "audit": {
+          "outcome": "Some(Ok(Completed(b98b80ed-6e12-44c7-bb9c-9126ea167ee1)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-10T19:06:09.860189+00:00",
+          "task_id": "b98b80ed-6e12-44c7-bb9c-9126ea167ee1"
+        },
+        "metadata_sha256": "c03e888e5f7123918dd43373f7c1004759924c594744727c433e12d8abf76800",
+        "repeat": null
+      },
+      {
+        "name": "file_busy",
+        "scope": "supported-normal",
+        "source_id": 14,
+        "audit": {
+          "outcome": "Some(Ok(Completed(66ad9e06-a43f-4d2b-9d8a-fbafc7ac68d8)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [
+            [
+              [
+                "2734709a-c3e7-4b70-8728-e02c3819cc8f",
+                null
+              ],
+              null
+            ]
+          ],
+          "date_done": "2026-11-10T19:06:09.899365+00:00",
+          "task_id": "66ad9e06-a43f-4d2b-9d8a-fbafc7ac68d8"
+        },
+        "metadata_sha256": "f71699d658f89e6c18fb36de9ae1ead4796042a9ea1128cda56c3747135ac37d",
+        "repeat": null
+      },
+      {
+        "name": "parser_busy",
+        "scope": "supported-normal",
+        "source_id": 15,
+        "audit": {
+          "outcome": "Some(Ok(Completed(3e71799b-7b4e-4f5f-8d65-607c395da489)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [
+            [
+              [
+                "bb62c53e-5735-4f9b-b2dc-cbf4c7de9b94",
+                null
+              ],
+              null
+            ]
+          ],
+          "date_done": "2026-11-10T19:06:09.937620+00:00",
+          "task_id": "3e71799b-7b4e-4f5f-8d65-607c395da489"
+        },
+        "metadata_sha256": "9ea09eecc5e212ccab98122a1b1a91c0faa7a732db33d1be2fbfef31e202a814",
+        "repeat": null
+      },
+      {
+        "name": "missing_no_orphan",
+        "scope": "supported-normal",
+        "source_id": 16,
+        "audit": {
+          "outcome": "Some(Ok(Completed(77dd2600-380a-4de0-ad29-4b9407b7f7d4)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": "EPG source 16 does not exist, task cleaned up",
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-10T19:06:09.981484+00:00",
+          "task_id": "77dd2600-380a-4de0-ad29-4b9407b7f7d4"
+        },
+        "metadata_sha256": "98659e31e090886d781c4e1c81e49d389d7172dd31bd2e1b486ca13ae73227b1",
+        "repeat": null
+      },
+      {
+        "name": "imported",
+        "scope": "supported-normal",
+        "source_id": 17,
+        "audit": {
+          "outcome": "Some(Ok(Completed(7c7a19fc-0dfb-4012-a727-1a82b383061b)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [
+            [
+              [
+                "b44cd4c5-bad5-4e40-8806-24fbc06ed06c",
+                null
+              ],
+              null
+            ],
+            [
+              [
+                "cf9b53ba-d44d-454b-baba-20210ee4a997",
+                null
+              ],
+              null
+            ]
+          ],
+          "date_done": "2026-11-10T19:06:10.103017+00:00",
+          "task_id": "7c7a19fc-0dfb-4012-a727-1a82b383061b"
+        },
+        "metadata_sha256": "e95ea506a5b978ffb556f8be3f3c2ad21da8c227cb62e126ee1db24c4b56ecd8",
+        "repeat": null
+      },
+      {
+        "name": "unmapped",
+        "scope": "supported-normal",
+        "source_id": 18,
+        "audit": {
+          "outcome": "Some(Ok(Completed(f100a8e2-0b39-41df-a4c4-f9916185e28e)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [
+            [
+              [
+                "6bc2d361-9117-462f-9a81-8928cf29b1eb",
+                null
+              ],
+              null
+            ],
+            [
+              [
+                "04c72c14-e876-4680-bbe0-bed9d7bf9244",
+                null
+              ],
+              null
+            ]
+          ],
+          "date_done": "2026-11-10T19:06:10.224166+00:00",
+          "task_id": "f100a8e2-0b39-41df-a4c4-f9916185e28e"
+        },
+        "metadata_sha256": "ff41d45fbb0eb5c6893908afa79ccbc12a3c73035657eb6f42c3376f9e82902a",
+        "repeat": null
+      },
+      {
+        "name": "repeat",
+        "scope": "supported-normal",
+        "source_id": 19,
+        "audit": {
+          "outcome": "Some(Ok(Completed(c56e8988-ac30-4d47-b62f-04a5d6609844)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-10T19:06:10.270808+00:00",
+          "task_id": "c56e8988-ac30-4d47-b62f-04a5d6609844"
+        },
+        "metadata_sha256": "2cc2c4ba86c5e97e22f1346738010b6fd6fccb3b612dc5857442654ede4c84ec",
+        "repeat": {
+          "outcome": "Some(Ok(ResultAlreadySucceeded(c56e8988-ac30-4d47-b62f-04a5d6609844)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        }
+      },
+      {
+        "name": "coarse_failed_operational",
+        "scope": "operational-safety-gap",
+        "source_id": 20,
+        "audit": {
+          "outcome": "Some(Err(Execution))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": null,
+        "metadata_sha256": null,
+        "repeat": null
+      },
+      {
+        "name": "missing_orphan",
+        "scope": "supported-normal",
+        "source_id": 21,
+        "audit": {
+          "outcome": "Some(Ok(Completed(a885aa24-7097-4a07-b03b-cc2dc5331256)))",
+          "calls": 1,
+          "default_dispatch_calls": 0,
+          "caller_released": true,
+          "worker_drained": true,
+          "service_drained": true,
+          "transport_drained": true,
+          "physical_jobs": 0,
+          "head_unchanged": false,
+          "native_eta_consumer": false,
+          "held_orphan_marker": false,
+          "logical_waiter_aborted": false
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": "EPG source 21 does not exist, task cleaned up",
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-10T19:06:11.524140+00:00",
+          "task_id": "a885aa24-7097-4a07-b03b-cc2dc5331256"
+        },
+        "metadata_sha256": "b698f7b129c7d1bbf880052a9794d2bee313e604cb90825dec1b8fd0e7b624f2",
+        "repeat": null
+      }
+    ]
+  },
+  "normalizations": [
+    "Source/native task UUIDs are separate publications and each result must match its own ID.",
+    "date_done is volatile; both result TTLs checked in [3590,3600].",
+    "Owned row IDs/status/message/properties/index/busy-key values match without normalization."
+  ]
+}
