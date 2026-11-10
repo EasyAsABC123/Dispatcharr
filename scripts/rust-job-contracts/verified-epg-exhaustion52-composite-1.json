@@ -1,0 +1,168 @@
+{
+  "passed": true,
+  "scope": "Immutable accepted560base plus selected component52 typed physically settled file/parser480 exhaustion and guarded statusP0001 only; no app/default consumer/fullmigration/performance acceptance",
+  "original_credit": "All application/algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained. Celery/Django/framework credit retained.",
+  "input_manifest": "artifacts/rust/epg-exhaustion52-composite-inputs-1.json",
+  "input_manifest_sha256": "c2d1a11eb9ae745688d8f223a6a0b1909cd7cb225abf67a93026119a244f8a2c",
+  "runtime_files": 561,
+  "only_changed_Rust_paths": [
+    "rust/crates/ingest-epg/src/file_job.rs",
+    "rust/crates/ingest-epg/src/reporter.rs",
+    "rust/crates/ingest-epg/tests/file_job_exhaustion.rs",
+    "rust/crates/job-transport/src/refresh_worker.rs"
+  ],
+  "ProfileCache_coordination_Cargo_and_lib_registration_unchanged": true,
+  "workspace_validation": "artifacts/rust/epg-exhaustion52-workspace-validation-1.json",
+  "workspace_validation_sha256": "bed46045c508a90fa0bf6ac6fa1df602a73e27830428d8e7774c0d6f01abe91b",
+  "strict_wholeworkspace_clippy": true,
+  "default_passed": 351,
+  "external_ignored": 361,
+  "suites": 152,
+  "actual_runs": [
+    {
+      "name": "native",
+      "passed": true,
+      "counts": {
+        "checks": 52,
+        "actual_original_native_exhaustion_cases": 4,
+        "exhaustion_names": [
+          "exhausted_file",
+          "exhausted_parser",
+          "exhausted_file_status_fault",
+          "exhausted_parser_status_fault"
+        ],
+        "targeted_refresh_checks": 80,
+        "resource_observations": {
+          "concurrent_reason_isolation": true,
+          "old_run_outcome_preserved": true,
+          "coarse_failed_stays_unclassified": true,
+          "held_report_caller_abort": true,
+          "held_physical_release_reply_abort": true,
+          "replacement_release_no_typed_result": true,
+          "unknown_SQL_no_typed_result": true,
+          "aborted_waiter_return_observed": false,
+          "owned_jobs_drained": true
+        },
+        "operational_controls": [
+          {
+            "name": "coarse_counter",
+            "result_state": "PENDING",
+            "Original_parity_pass": false
+          },
+          {
+            "name": "unproved_status_sql",
+            "result_state": "PENDING",
+            "Original_parity_pass": false
+          }
+        ]
+      },
+      "evidence": "artifacts/rust/epg-exhaustion52-composite-native-1/integration.json",
+      "evidence_sha256": "a6c2012bf3f8f52898bdbc64008318dabf47af8261ea44d29443f8a1d4ff1ce6",
+      "runtime_files": 561,
+      "runtime_exact_composite_match": true,
+      "rust_archive_sha256": "94d80e7e809a4ba29572c730620cac0bbb7715563076babfc0346498c280ff5d",
+      "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "default_database_unchanged": true,
+      "cleanup_project": "dispatcharr-exhaustion-native-266420f4d0",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/epg-exhaustion52-composite-native-1/tool-source",
+      "tool_map_sha256": "bbb159939c0c3740104b44e00eeedca0b96087d5fd58aee99f6761bc7adf32cb"
+    },
+    {
+      "name": "constructor",
+      "passed": true,
+      "counts": {
+        "checks": 19
+      },
+      "evidence": "artifacts/rust/epg-exhaustion52-composite-constructor-1/integration.json",
+      "evidence_sha256": "54d0109027f525a13e756a5b5b2bbbd71e7737d26438086e22d5274dfa88ddcc",
+      "runtime_files": 561,
+      "runtime_exact_composite_match": true,
+      "rust_archive_sha256": "94d80e7e809a4ba29572c730620cac0bbb7715563076babfc0346498c280ff5d",
+      "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "default_database_unchanged": true,
+      "cleanup_project": "dispatcharr-index-constructor-b4c6dd6b6c",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/epg-exhaustion52-composite-constructor-1/tool-source",
+      "tool_map_sha256": "ce25410dafa5b3ddc2dff54348452a5c7e1f738926ce72789b50af1d3b28a8fe"
+    },
+    {
+      "name": "eta",
+      "passed": true,
+      "counts": {
+        "checks": 20
+      },
+      "evidence": "artifacts/rust/epg-exhaustion52-composite-eta-1/integration.json",
+      "evidence_sha256": "d801bbe09ad29708f3e1e1b8b0eec5a17161b7ffa8f1fc7440c28a08442af4db",
+      "runtime_files": 561,
+      "runtime_exact_composite_match": true,
+      "rust_archive_sha256": "94d80e7e809a4ba29572c730620cac0bbb7715563076babfc0346498c280ff5d",
+      "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "default_database_unchanged": true,
+      "cleanup_project": "dispatcharr-native-eta-93cc9bf68e",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/epg-exhaustion52-composite-eta-1/tool-source",
+      "tool_map_sha256": "ce25410dafa5b3ddc2dff54348452a5c7e1f738926ce72789b50af1d3b28a8fe"
+    },
+    {
+      "name": "duplicate",
+      "passed": true,
+      "counts": {
+        "checks": 24
+      },
+      "evidence": "artifacts/rust/epg-exhaustion52-composite-duplicate-1/integration.json",
+      "evidence_sha256": "72c906b5e545860fbe5af7f6d890600fbc5f88509c2b55cc365706d72fde0aaa",
+      "runtime_files": 561,
+      "runtime_exact_composite_match": true,
+      "rust_archive_sha256": "94d80e7e809a4ba29572c730620cac0bbb7715563076babfc0346498c280ff5d",
+      "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "default_database_unchanged": true,
+      "cleanup_project": "dispatcharr-index-constructor-477fd212e4",
+      "independent_remaining_resources": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "successful_tools": "artifacts/rust/epg-exhaustion52-composite-duplicate-1/tool-source",
+      "tool_map_sha256": "ce25410dafa5b3ddc2dff54348452a5c7e1f738926ce72789b50af1d3b28a8fe"
+    }
+  ],
+  "Source_archive_environment_binding": "artifacts/rust/epg-exhaustion52-archive-binding-1.json",
+  "new_setup_or_runtime_failures": [],
+  "authority": {
+    "normal_file_parser_exhaustion": true,
+    "guarded_status_P0001_settled_catch": true,
+    "status_fault_does_not_mean_status_write_succeeded": true,
+    "old_run_API_failed_outcome_preserved": true,
+    "Source17_terminal_SELECT_parity": false,
+    "terminal_delta": "Original catches terminalSELECT fault and returnsnull; selected native component52 leavesit operational. Futureextension excluded.",
+    "P0002_status_Original_parity": false,
+    "P0002_control": "PENDING operational coverage only; no Originalcounterpart authority inthis component",
+    "arbitrary_reset_channel_SQL_runtime_capacity_or_unknown_failed": false,
+    "unsettled_outcomes_cannot_forge_normal_result": true
+  },
+  "private_metadata_caveat": {
+    "scope_text_preserved": "Actual Original EPG refresh producer/worker wrapper for inactive/dummy/missing/busy/deferral/exhaustion; no imported/local/remote/native acceptance",
+    "explanation": "Inner Source-template scope text predates native_cases4/native_resources; outer paired52assertions establish only the limited nativecomponent. Raw privateartifact not rewritten.",
+    "aborted_waiter_return_observed": false
+  },
+  "runtime_mutated_after_freeze": false,
+  "live_mutable_files_used": false,
+  "Cargo_modified": false,
+  "new_image_built": false,
+  "performance_run": false,
+  "full_milestone_complete": false,
+  "commit_handoff": "Exact selected artifacts ready for parent scopedreview/commit; childdidnotstageorpush perassignment."
+}

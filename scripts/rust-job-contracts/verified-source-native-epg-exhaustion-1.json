@@ -1,0 +1,97 @@
+{
+  "passed": true,
+  "scope": "Typed physically settled file/parser480 exhaustion and guarded status P0001 only; no app/default consumer",
+  "component_checks": 52,
+  "targeted_regression_checks": 80,
+  "actual_source_native_worker_pairs": 4,
+  "operational_no_result_controls": 2,
+  "resource_scenario_groups": 5,
+  "additional_worker_redis_tests": 3,
+  "default_units": {
+    "ingest-unit.log": {
+      "passed": 28,
+      "external_ignored": 1
+    },
+    "job-unit.log": {
+      "passed": 33,
+      "external_ignored": 17
+    }
+  },
+  "strict_ingest_job_all_targets_clippy": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_contract": "scripts/rust-job-contracts/verified-original-epg-exhaustion-1.json",
+  "selected_runtime_and_test": {
+    "rust/crates/ingest-epg/src/file_job.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/frozen/rust/crates/ingest-epg/src/file_job.rs",
+      "sha256": "11a4187bf2efbeba3aef61bd5fa34d56b322683651fc9f956dcf7a6a69ce5381"
+    },
+    "rust/crates/ingest-epg/src/reporter.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/frozen/rust/crates/ingest-epg/src/reporter.rs",
+      "sha256": "39c8a18ff89dfe56f2da55eb8bfa34d858148b27584df61404e8d371c6f0bbfa"
+    },
+    "rust/crates/job-transport/src/refresh_worker.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/frozen/rust/crates/job-transport/src/refresh_worker.rs",
+      "sha256": "9455be9f595f11f105377ca0b8beef82925f196f255d8a8cdfd76ae9b65db50c"
+    },
+    "rust/crates/ingest-epg/tests/file_job_exhaustion.rs": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/frozen/rust/crates/ingest-epg/tests/file_job_exhaustion.rs",
+      "sha256": "ae072d71b66cbeb32015dec27eb5c0385a421b8b06ab23375ac2c39269af0a44"
+    }
+  },
+  "selected_tools": {
+    "scripts/rust-job-contracts/run_native_epg_exhaustion.py": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/tool-source/scripts/rust-job-contracts/run_native_epg_exhaustion.py",
+      "sha256": "30dc326e995f9cc297e6797a898b84e480de0342d673cf9afd096c71290d75e5"
+    },
+    "scripts/rust-job-contracts/source_native_epg_exhaustion.py": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/tool-source/scripts/rust-job-contracts/source_native_epg_exhaustion.py",
+      "sha256": "67109d34e49ae0e6d6426513d0e65b77d025ee6eb3711c86c2ce696cea99197f"
+    },
+    "scripts/rust-job-contracts/exhaustion_native_compare.py": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/tool-source/scripts/rust-job-contracts/exhaustion_native_compare.py",
+      "sha256": "13191354674c5532de588be8fbbfc6e8fa4aaf9abc8d725ab0ce78374961cade"
+    },
+    "scripts/rust-job-contracts/source_native_refresh_worker_exhaustion.py": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/tool-source/scripts/rust-job-contracts/source_native_refresh_worker_exhaustion.py",
+      "sha256": "40a69f01b7bd2f92c3d97dfd25b07e3a4dd355ec03617604c477ef946ed2d520"
+    },
+    "scripts/rust-job-contracts/epg_refresh_observer.py": {
+      "path": "artifacts/rust/m6-source-native-epg-exhaustion-2/tool-source/scripts/rust-job-contracts/epg_refresh_observer.py",
+      "sha256": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+    }
+  },
+  "cargo_graph_changes": false,
+  "lib_module_changes": false,
+  "dataset": "scripts/rust-job-contracts/source-native-epg-exhaustion-1.json",
+  "dataset_sha256": "6b5cbbbba0c8b1bcbaa9b349a6176b85acfe690c9488eff9372920b9eae7fa81",
+  "rust_source_archive": "artifacts/rust/m6-source-native-epg-exhaustion-2/rust-source.tar",
+  "rust_source_archive_sha256": "bab59d760bad7dc2599497f0c3664bc8daf4ff6089aad77e330f9b3df24d5dbf",
+  "raw_evidence_sha256": {
+    "integration.json": "b734d1b6ef735f849d5daca245bd0b4a4485af45105364ddc388d682ee8c6217",
+    "source-native-epg-exhaustion-private.json": "682ae08152d2842e782307e01ad35facd0709eebb30cdb550d3602d1fd801851",
+    "source-native-refresh-worker-exhaustion-private.json": "4f8b58b9b566e8171a6c761b716c1ddbbdbc0f16e72b7b3322e28db4ac9e5e33",
+    "native-exhaustion-resources.log": "0890ebfb78f5f6e54ebcfad135ba642675ba6d7603fdaa00b1cf73b0abcdaa49",
+    "native-refresh-worker-physical.log": "ff5ad6fcc873fd6d0342c4ecf3d9e3287bed09eb8d7f3691a34462f5e88104c2",
+    "clippy.log": "24c2ded8a8b49d70bcbef52064820fe0d011bbd4097bb7948292c177e68200ce",
+    "ingest-unit.log": "875e73758ed13e2eaef927a588c520bd19fac015efd5f7b36954601ce6f38918",
+    "job-unit.log": "9764c0669d3285487e7aaeb7efc84f1144291fc6e178f0e3de68f6f27c17226a"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "wholeworkspace_validation": false,
+  "app_default_consumer_scheduler_202_verified": false,
+  "performance_verified": false,
+  "prior_failed_attempt": {
+    "path": "artifacts/rust/m6-source-native-epg-exhaustion-1",
+    "cause": "Test sink observed source_id instead of Source wire field source; four actual worker pairs passed before resource observer panic. Preserved/cleaned. Runtime unchanged; final test-only overlay fixes field."
+  },
+  "limitations": [
+    "Source17 proves terminal SELECT P0001 still normal null; this historical native component leaves terminal SQL errors operational.",
+    "P0002 is a deliberate PENDING control here; actual Original counterpart and later guarded-stage mapping remain separate work.",
+    "Unclassified coarse Failed/channel/SQL/runtime/unsettled outcomes are not promoted.",
+    "Reset-before-try and native capacity failures are not treated as Source guarded errors.",
+    "Aborted logical waiter return is unobserved; ownership/drain evidence does not invent a return value.",
+    "Unrelated frozen sibling bytes receive no wholeworkspace acceptance."
+  ],
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL; framework authors retain their credit/licenses."
+}

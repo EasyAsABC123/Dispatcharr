@@ -114,6 +114,15 @@ struct Inner {
     clock: PolicyClock,
     state: Arc<WorkState>,
 }
+/// Physical observation for the guarded failure-status helper. Existing
+/// execute() still discards this observation, preserving Source sideeffects.
+#[derive(Debug)]
+pub enum ReportObservation {
+    Ordinary,
+    FailureStatusSaved,
+    FailureStatusUnmatched,
+    FailureStatusSqlCaught(sqlx::Error),
+}
 #[derive(Clone)]
 pub struct GuideReporter {
     inner: Arc<Inner>,
@@ -173,6 +182,15 @@ impl GuideReporter {
         action: ReportAction,
         context: SwapPolicyContext,
     ) -> Result<(), ImportError> {
+        self.execute_observed(action, context).await.map(|_| ())
+    }
+    /// The owner, admission and physical work are identical to execute(). A
+    /// caught error is returned as data only after its actual SQL reply settles.
+    pub async fn execute_observed(
+        &self,
+        action: ReportAction,
+        context: SwapPolicyContext,
+    ) -> Result<ReportObservation, ImportError> {
         match &action {
             ReportAction::Committed(v)
                 if v.total_epg_entries < 0
@@ -264,7 +282,7 @@ impl Inner {
         &self,
         action: ReportAction,
         context: &SwapPolicyContext,
-    ) -> Result<(), ImportError> {
+    ) -> Result<ReportObservation, ImportError> {
         match action {
             ReportAction::Progress {
                 source_id,
@@ -323,13 +341,17 @@ impl Inner {
                 data["updated_at"] = json!(source_timestamp(now));
                 self.send(data, context).await;
             }
-            ReportAction::Failed(value) => self.failure(value, "parsing_programs", context).await,
-            ReportAction::ChannelFailed(value) => {
-                self.failure(value, "parsing_channels", context).await
+            ReportAction::Failed(value) => {
+                return Ok(self.failure(value, "parsing_programs", context).await)
             }
-            ReportAction::RefreshFailed(value) => self.failure(value, "refresh", context).await,
+            ReportAction::ChannelFailed(value) => {
+                return Ok(self.failure(value, "parsing_channels", context).await)
+            }
+            ReportAction::RefreshFailed(value) => {
+                return Ok(self.failure(value, "refresh", context).await)
+            }
             ReportAction::DownloadFailed(value) => {
-                self.failure(value, "downloading", context).await
+                return Ok(self.failure(value, "downloading", context).await)
             }
             ReportAction::LocalDownloadComplete { source_id } => {
                 let saved = sqlx::query("UPDATE epg_epgsource SET status='success' WHERE id=$1")
@@ -378,17 +400,27 @@ impl Inner {
                 self.send(data, context).await;
             }
         }
-        Ok(())
+        Ok(ReportObservation::Ordinary)
     }
-    async fn failure(&self, value: FailedImport, action: &str, context: &SwapPolicyContext) {
+    async fn failure(
+        &self,
+        value: FailedImport,
+        action: &str,
+        context: &SwapPolicyContext,
+    ) -> ReportObservation {
         // Pooled SQL is separate from the private staging session, so a
         // failed/rolled-back staging transaction cannot poison status.
-        if sqlx::query("UPDATE epg_epgsource SET status='error',last_message=$2 WHERE id=$1")
-            .bind(value.source_id)
-            .bind(value.last_message)
-            .execute(self.store.pool())
-            .await
-            .is_ok()
+        let saved = match sqlx::query(
+            "UPDATE epg_epgsource SET status='error',last_message=$2 WHERE id=$1",
+        )
+        .bind(value.source_id)
+        .bind(value.last_message)
+        .execute(self.store.pool())
+        .await
+        {
+            Ok(saved) => saved,
+            Err(cause) => return ReportObservation::FailureStatusSqlCaught(cause),
+        };
         {
             let mut data = stage_progress_data(value.source_id, action, 100);
             data["status"] = json!("error");
@@ -400,6 +432,11 @@ impl Inner {
                 context,
             )
             .await;
+        }
+        if saved.rows_affected() == 1 {
+            ReportObservation::FailureStatusSaved
+        } else {
+            ReportObservation::FailureStatusUnmatched
         }
     }
     async fn audit(&self, kind: &str, details: Value, context: &SwapPolicyContext) {

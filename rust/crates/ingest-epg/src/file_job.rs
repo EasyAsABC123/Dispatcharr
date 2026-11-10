@@ -7,7 +7,7 @@ use crate::{
     channels::{ChannelImporter, ChannelRequest},
     file_lease::RetainedLease,
     orphan_cleanup::{CleanupConfig, OrphanCleanup},
-    reporter::{FailedImport, GuideReporter, ReportAction},
+    reporter::{FailedImport, GuideReporter, ReportAction, ReportObservation},
     EpgImporter, ImportError, ImportReporting, ImportRequest, SwapPolicyContext,
     SwapPolicyProvider,
 };
@@ -90,6 +90,38 @@ pub enum FileJobOutcome {
     MissingSource(String),
     Failed,
     Unsupported(&'static str),
+}
+/// A reason known from the exact busy/exhaustion branches. This is not a
+/// classification of the coarse Failed outcome or of channel/SQL errors.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ExhaustionReason {
+    FileBusy,
+    ParserBusy,
+}
+impl ExhaustionReason {
+    fn source_reason(self) -> &'static str {
+        match self {
+            Self::FileBusy => "EPG file in use (index build)",
+            Self::ParserBusy => "per-channel program parses in progress",
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ExhaustionReporting {
+    StatusSaved,
+    CaughtStatusP0001,
+}
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct SettledExhaustion {
+    pub reason: ExhaustionReason,
+    pub reporting: ExhaustionReporting,
+}
+#[derive(Debug, Eq, PartialEq)]
+pub struct FileJobReport {
+    pub outcome: FileJobOutcome,
+    /// Returned only after physical reporter, terminal cleanup and refresh
+    /// Released have settled successfully. Each run owns its local reason.
+    pub settled_exhaustion: Option<SettledExhaustion>,
 }
 #[derive(Clone)]
 pub struct FileJobRunner {
@@ -239,6 +271,18 @@ impl FileJobRunner {
         caller: Arc<dyn Send + Sync>,
         dispatcher: Arc<dyn GuideTaskDispatcher>,
     ) -> Result<FileJobOutcome, ImportError> {
+        self.run_report_with_dispatcher(request, caller, dispatcher)
+            .await
+            .map(|report| report.outcome)
+    }
+    /// Additive detailed result. Old run APIs preserve their exact outcome.
+    /// No reason survives an operational/report/release failure.
+    pub async fn run_report_with_dispatcher(
+        &self,
+        request: FileJobRequest,
+        caller: Arc<dyn Send + Sync>,
+        dispatcher: Arc<dyn GuideTaskDispatcher>,
+    ) -> Result<FileJobReport, ImportError> {
         if self.inner.stopping.load(Ordering::Acquire) {
             return Err(ImportError::Stopping);
         }
@@ -268,9 +312,18 @@ impl FileJobRunner {
             armed: true,
         };
         let inner = self.inner.clone();
-        let result = tokio::spawn(async move { inner.run_owned(request, job, dispatcher).await })
-            .await
-            .map_err(|_| ImportError::Worker)?;
+        let result = tokio::spawn(async move {
+            let mut settled_exhaustion = None;
+            let outcome = inner
+                .run_owned(request, job, dispatcher, &mut settled_exhaustion)
+                .await?;
+            Ok::<_, ImportError>(FileJobReport {
+                outcome,
+                settled_exhaustion,
+            })
+        })
+        .await
+        .map_err(|_| ImportError::Worker)?;
         cancel.armed = false;
         result
     }
@@ -313,6 +366,7 @@ impl Inner {
         request: FileJobRequest,
         job: Arc<Job>,
         dispatcher: Arc<dyn GuideTaskDispatcher>,
+        settled_exhaustion: &mut Option<SettledExhaustion>,
     ) -> Result<FileJobOutcome, ImportError> {
         let lease = match self
             .services
@@ -334,7 +388,12 @@ impl Inner {
             }),
         };
         let result = self
-            .refresh(&request, context.clone(), dispatcher.as_ref())
+            .refresh(
+                &request,
+                context.clone(),
+                dispatcher.as_ref(),
+                settled_exhaustion,
+            )
             .await;
         // Source performs terminal-state cleanup while refresh lease is held.
         // Cancellation does not suppress this final best-effort error effect.
@@ -378,6 +437,7 @@ impl Inner {
         request: &FileJobRequest,
         context: SwapPolicyContext,
         dispatcher: &dyn GuideTaskDispatcher,
+        settled_exhaustion: &mut Option<SettledExhaustion>,
     ) -> Result<FileJobOutcome, ImportError> {
         context.ensure_active()?;
         let Some(source) = self.source(request.source_id).await? else {
@@ -422,9 +482,10 @@ impl Inner {
                     .defer(
                         &source,
                         request,
-                        "per-channel program parses in progress",
+                        ExhaustionReason::ParserBusy,
                         context,
                         dispatcher,
+                        settled_exhaustion,
                     )
                     .await;
             }
@@ -441,9 +502,10 @@ impl Inner {
                     .defer(
                         &source,
                         request,
-                        "EPG file in use (index build)",
+                        ExhaustionReason::FileBusy,
                         context,
                         dispatcher,
+                        settled_exhaustion,
                     )
                     .await
             }
@@ -713,14 +775,43 @@ impl Inner {
         &self,
         source: &Source,
         request: &FileJobRequest,
-        reason: &str,
+        reason: ExhaustionReason,
         context: SwapPolicyContext,
         dispatcher: &dyn GuideTaskDispatcher,
+        settled_exhaustion: &mut Option<SettledExhaustion>,
     ) -> Result<FileJobOutcome, ImportError> {
         if request.defer_retry >= 480 {
-            let msg = format!("EPG refresh blocked for too long ({reason}); retry later");
-            self.failure(source, msg.clone(), msg, false, context)
+            let msg = format!(
+                "EPG refresh blocked for too long ({}); retry later",
+                reason.source_reason()
+            );
+            let observation = self
+                .services
+                .reporter
+                .execute_observed(
+                    ReportAction::RefreshFailed(FailedImport {
+                        source_id: source.id,
+                        source_name: source.name.clone(),
+                        last_message: msg.clone(),
+                        publication_error: msg,
+                    }),
+                    context,
+                )
                 .await?;
+            // Source29 proves normal null even when the guarded UPDATE raises
+            // P0001. Other discarded/unknown causes are NOT inferred normal.
+            let reporting = match observation {
+                ReportObservation::FailureStatusSaved => Some(ExhaustionReporting::StatusSaved),
+                ReportObservation::FailureStatusSqlCaught(cause)
+                    if cause.as_database_error().and_then(|e| e.code()).as_deref()
+                        == Some("P0001") =>
+                {
+                    Some(ExhaustionReporting::CaughtStatusP0001)
+                }
+                _ => None,
+            };
+            *settled_exhaustion =
+                reporting.map(|reporting| SettledExhaustion { reason, reporting });
             return Ok(FileJobOutcome::Failed);
         }
         dispatcher

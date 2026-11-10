@@ -276,9 +276,9 @@ impl RefreshExecutor for ServiceExecutor {
                 self.store.clone(),
                 self.clock.clone(),
             ));
-            let outcome = self
+            let report = self
                 .runner
-                .run_with_dispatcher(
+                .run_report_with_dispatcher(
                     FileJobRequest {
                         source_id: message.source_id,
                         force: message.force,
@@ -291,7 +291,22 @@ impl RefreshExecutor for ServiceExecutor {
                 .await
                 .map_err(|_| Error::Execution)?;
             publisher.completed_children()?;
-            match outcome {
+            if let Some(settled) = report.settled_exhaustion {
+                use dispatcharr_ingest_epg::file_job::{ExhaustionReason, ExhaustionReporting};
+                let known = matches!(
+                    (settled.reason, settled.reporting),
+                    (
+                        ExhaustionReason::FileBusy | ExhaustionReason::ParserBusy,
+                        ExhaustionReporting::StatusSaved | ExhaustionReporting::CaughtStatusP0001
+                    )
+                );
+                return if known && report.outcome == FileJobOutcome::Failed {
+                    Ok(NormalReturn::Null)
+                } else {
+                    Err(Error::Execution)
+                };
+            }
+            match report.outcome {
                 FileJobOutcome::Imported
                 | FileJobOutcome::Skipped
                 | FileJobOutcome::Deferred

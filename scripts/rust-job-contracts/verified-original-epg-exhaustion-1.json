@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "scope": "Actual pinned Original file/parser exhaustion at480, guarded status P0001 and terminal SELECT P0001; Source only",
+  "checks": 61,
+  "actual_worker_executions": 8,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "dataset": "scripts/rust-job-contracts/source-epg-exhaustion-1.json",
+  "dataset_sha256": "b92cd24155f581424fca01dd7488aa3f2c9080bfe25cdaf71e1241afa48c890d",
+  "evidence": {
+    "normal": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-1",
+      "integration_sha256": "4a7439963d16d3b395f902600d82f9d9938a9aa7b0c61e51446f28b4147276a4",
+      "raw_report_sha256": "9658d4e1749dff0c6a587883094d54a594641f1042c208f729805a1d186b63ea",
+      "checks": 15,
+      "default_database_unchanged": true,
+      "cleanup": "project removed"
+    },
+    "status_fault": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-fault-1",
+      "integration_sha256": "a80d6ad7fe950c11e1ce8e3f54fb475aa48c5c09e1f45b59eacab2e99409b00f",
+      "raw_report_sha256": "b5d8907f78824a65d131d1f6c81dc84efb1598d79ddf939e874606ef106e1d1a",
+      "checks": 29,
+      "default_database_unchanged": true,
+      "cleanup": "project removed"
+    },
+    "terminal_fault": {
+      "path": "artifacts/rust/m6-original-epg-exhaustion-terminal-1",
+      "integration_sha256": "494a71618ca2878273e4aa54f3d7b60ae30698ba5d7e5d3307b9987e557598ea",
+      "raw_report_sha256": "9b2fa8858d6c605761f1d04a943937186a7e7816139fb9e9a17712602e102a72",
+      "checks": 17,
+      "default_database_unchanged": true,
+      "cleanup": "project removed"
+    }
+  },
+  "selected_tools": {
+    "normal:scripts/rust-job-contracts/run_epg_exhaustion.py": {
+      "target": "scripts/rust-job-contracts/run_epg_exhaustion.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-1/tool-source/scripts/rust-job-contracts/run_epg_exhaustion.py",
+      "sha256": "3d7e1f721d6095f2867dc6daa2568eacf7d605ebba4e733b8e672ec7843dbafc"
+    },
+    "normal:scripts/rust-job-contracts/source_epg_exhaustion.py": {
+      "target": "scripts/rust-job-contracts/source_epg_exhaustion.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-1/tool-source/scripts/rust-job-contracts/source_epg_exhaustion.py",
+      "sha256": "07e96a245d8024dad0544bbff16f60d6a96c9b038031d2b0e5d7ed1ecdeb4166"
+    },
+    "normal:scripts/rust-job-contracts/epg_refresh_observer.py": {
+      "target": "scripts/rust-job-contracts/epg_refresh_observer.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-1/tool-source/scripts/rust-job-contracts/epg_refresh_observer.py",
+      "sha256": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+    },
+    "status_fault:scripts/rust-job-contracts/run_epg_exhaustion_fault.py": {
+      "target": "scripts/rust-job-contracts/run_epg_exhaustion_fault.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-fault-1/tool-source/scripts/rust-job-contracts/run_epg_exhaustion_fault.py",
+      "sha256": "92728ebf9a618d5e473ceac05101ad68377d14774aa64f79b3a170bfc329747f"
+    },
+    "status_fault:scripts/rust-job-contracts/source_epg_exhaustion_fault.py": {
+      "target": "scripts/rust-job-contracts/source_epg_exhaustion_fault.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-fault-1/tool-source/scripts/rust-job-contracts/source_epg_exhaustion_fault.py",
+      "sha256": "dda24709cdc2bc682c8da98f2288e54d38ac85e60045d57dc0d5b1fc43142a91"
+    },
+    "status_fault:scripts/rust-job-contracts/epg_refresh_observer.py": {
+      "target": "scripts/rust-job-contracts/epg_refresh_observer.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-fault-1/tool-source/scripts/rust-job-contracts/epg_refresh_observer.py",
+      "sha256": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+    },
+    "terminal_fault:scripts/rust-job-contracts/run_epg_exhaustion_terminal.py": {
+      "target": "scripts/rust-job-contracts/run_epg_exhaustion_terminal.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-terminal-1/tool-source/scripts/rust-job-contracts/run_epg_exhaustion_terminal.py",
+      "sha256": "0296a1acb714ba64aadbbed4575721fb38c633a30310a41704776c28538e5e6d"
+    },
+    "terminal_fault:scripts/rust-job-contracts/source_epg_exhaustion_terminal.py": {
+      "target": "scripts/rust-job-contracts/source_epg_exhaustion_terminal.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-terminal-1/tool-source/scripts/rust-job-contracts/source_epg_exhaustion_terminal.py",
+      "sha256": "2fc54d4329b3f5ace3191e944c533b9878f9bdb285442bbc46e25e930c08033f"
+    },
+    "terminal_fault:scripts/rust-job-contracts/epg_refresh_observer.py": {
+      "target": "scripts/rust-job-contracts/epg_refresh_observer.py",
+      "path": "artifacts/rust/m6-original-epg-exhaustion-terminal-1/tool-source/scripts/rust-job-contracts/epg_refresh_observer.py",
+      "sha256": "39df1b34bb1f266609aca87b405642c802c272545c67ea233d1d4150a954eead"
+    }
+  },
+  "native_execution_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Normal/error/idle states and result are actual Source observations, not implications from static catches.",
+    "Terminal fault uses explicitly owned low-privilege role/RLS query-specific P0001 and sequence hit witness; no app/helper replacement.",
+    "No reset-before-try failure or other SQLSTATE authority.",
+    "Native terminal SELECT error mapping is not proved by this Source capture."
+  ],
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit and AGPL; framework authors retain their credit/licenses."
+}

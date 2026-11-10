@@ -1,0 +1,456 @@
+{
+  "format_version": 1,
+  "source_only": true,
+  "groups": {
+    "normal": {
+      "checks": [
+        {
+          "name": "bounded-result-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "no-unexpected-executed-family",
+          "passed": true
+        }
+      ],
+      "cases": [
+        {
+          "name": "exhausted_file",
+          "source_id": 1,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T18:07:19.302129+00:00",
+            "task_id": "1e33ef2e-21b2-40db-85a3-a1d67a6d5be5"
+          },
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "name": "exhausted_parser",
+          "source_id": 2,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T18:07:22.143617+00:00",
+            "task_id": "18f4cff6-c1a7-47ca-b239-caf54e2293ea"
+          },
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+              "custom_properties": {}
+            }
+          ]
+        }
+      ]
+    },
+    "status_fault": {
+      "checks": [
+        {
+          "name": "bounded-result-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "caught-status-fault-preserves-idle",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file_status_fault",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "caught-status-fault-preserves-idle",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser_status_fault",
+          "passed": true
+        },
+        {
+          "name": "no-unexpected-executed-family",
+          "passed": true
+        }
+      ],
+      "cases": [
+        {
+          "name": "exhausted_file",
+          "source_id": 1,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T18:12:29.371656+00:00",
+            "task_id": "bb9c1f51-e260-44d7-bd4c-c7b54aef55ca"
+          },
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "name": "exhausted_parser",
+          "source_id": 2,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T18:12:32.244733+00:00",
+            "task_id": "ed4f6b14-fcc2-4fe5-9471-ec18819538cd"
+          },
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "name": "exhausted_file_status_fault",
+          "source_id": 3,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T18:12:35.131382+00:00",
+            "task_id": "491303db-8124-4e96-b74d-1af0edb77dcb"
+          },
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "name": "exhausted_parser_status_fault",
+          "source_id": 4,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T18:12:38.014949+00:00",
+            "task_id": "64c13e99-e2df-44b3-a007-9842109a685c"
+          },
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "source_state": [
+            {
+              "status": "idle",
+              "last_message": null,
+              "custom_properties": {}
+            }
+          ]
+        }
+      ]
+    },
+    "terminal_fault": {
+      "checks": [
+        {
+          "name": "bounded-result-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "actual-terminal-SELECT-fault-exhausted_file_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "bounded-result-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "normal-success-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "exact-return-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "no-child-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "invalidates-index-before-deferral-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "exhausted-sets-source-error",
+          "passed": true
+        },
+        {
+          "name": "refresh-lock-effect-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "actual-terminal-SELECT-fault-exhausted_parser_terminal_fault",
+          "passed": true
+        },
+        {
+          "name": "no-unexpected-executed-family",
+          "passed": true
+        }
+      ],
+      "cases": [
+        {
+          "name": "exhausted_file_terminal_fault",
+          "source_id": 1,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T18:31:00.131799+00:00",
+            "task_id": "50ba5b50-6ae4-49e1-a53e-28ab10f4bdb9"
+          },
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": "owned-busy",
+          "parser_counter": null,
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (EPG file in use (index build)); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "terminal_fault_hits": 1,
+          "fixture_control": "Owned low-privilege PostgreSQL role/RLS function raises P0001 only for actual status,name terminal SELECT; unchanged application/helper functions."
+        },
+        {
+          "name": "exhausted_parser_terminal_fault",
+          "source_id": 2,
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-10T18:31:03.027588+00:00",
+            "task_id": "643c887a-64db-41b2-a1c9-4b09da035b58"
+          },
+          "index": null,
+          "refresh_lock": null,
+          "file_lock": null,
+          "parser_counter": "2",
+          "source_state": [
+            {
+              "status": "error",
+              "last_message": "EPG refresh blocked for too long (per-channel program parses in progress); retry later",
+              "custom_properties": {}
+            }
+          ],
+          "terminal_fault_hits": 1,
+          "fixture_control": "Owned low-privilege PostgreSQL role/RLS function raises P0001 only for actual status,name terminal SELECT; unchanged application/helper functions."
+        }
+      ]
+    }
+  }
+}
