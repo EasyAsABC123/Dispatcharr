@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "scope": "Original-only index ETA reservation/raw redelivery/forced-aged-score restore; no native ETA consumer or real visibility-expiry claim",
+  "evidence": "artifacts/rust/m6-index-eta-original-117",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "checks": 26,
+  "reservation_geometry": {
+    "hash_key": "unacked",
+    "sorted_set_key": "unacked_index",
+    "hash_field_equals": "message.properties.delivery_tag",
+    "hash_value_shape": [
+      "message object",
+      "exchange string",
+      "routing key string"
+    ],
+    "observed_exchange": "",
+    "observed_routing_key": "celery",
+    "score": "wall-clock epoch seconds float at reservation",
+    "hash_ttl": -1,
+    "sorted_set_ttl": -1,
+    "task_not_yet_executed_at_snapshot": true
+  },
+  "restoration": {
+    "warm_shutdown_removed_reservation": true,
+    "warm_shutdown_requeued_same_task": true,
+    "changed_json_paths": [
+      "/headers/redelivered",
+      "/properties/delivery_info/redelivered"
+    ],
+    "changed_values": true,
+    "delivery_tag_unchanged": true,
+    "hard_kill_retained_future_eta_reservation": true,
+    "forced_age_seconds": 3605,
+    "configured_visibility_seconds": 3600,
+    "restore_implementation": "Unchanged Original Kombu QoS.restore_visible invoked by owned controller after aging only the synthetic reservation score.",
+    "actual_restarted_worker_delivery_info_redelivered": true,
+    "actual_restarted_worker_result": "SUCCESS/null with original parent/root lineage, stored index and released Source file lock."
+  },
+  "actual_visibility_timeout_elapsed_verified": false,
+  "worker_polling_restore_verified": false,
+  "native_eta_consumer_verified": false,
+  "production_dispatch_verified": false,
+  "performance_verified": false,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "source_report_sha256": "e4fbf427f629ec9b92463e4ded3e768be09bea961501dbd0c2b7be7b67fb6990",
+  "tool_source_sha256": {
+    "scripts/rust-epg-parity/index_worker_observer.py": "8effb86fd4bb06e0c83c09d15fe02b3cc1f2e1013768fef39377ae590ecc9eef",
+    "scripts/rust-epg-parity/index_worker_publish.py": "8e85c49270682cbf2ab749b6b8dbdc408cd9b873134fb90d945cabf30f545727",
+    "scripts/rust-epg-parity/source_index_worker.py": "24113189ebcdf6dfef45fc784fd6b275bbc5effce9a633ad4d9cb266af14efba",
+    "scripts/rust-epg-parity/run_index_worker.py": "df0bd3cc0c3f34b3e5201727497b2e571c2049923d6d2f18583e934c82b5a3d9",
+    "scripts/rust-epg-parity/source_index_eta.py": "2a79a4a91701fbc3e4b1852e6e981c00333ffc46e7a2c823744d499517de9dd6"
+  },
+  "limitations": [
+    "Warm restored child is explicitly removed as fixture cleanup to isolate hard-kill phase; no successful execution claim for that child.",
+    "Forced aged-score restoration is a transport component observation; real one-hour expiry and original worker poll cadence remain unverified.",
+    "Original file-lock renewal/replacement ownership, native queue durability and ETA bounds remain separate component/application gates."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}

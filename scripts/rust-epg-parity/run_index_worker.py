@@ -10,7 +10,7 @@ from fixture_ports import write_port_overlay
 from tool_snapshot import snapshot_sources
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--controller',choices=['source_index_worker.py','source_index_paths.py'],default='source_index_worker.py');p.add_argument('--native-paths',action='store_true');a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True,type=Path);p.add_argument('--controller',choices=['source_index_worker.py','source_index_paths.py','source_index_eta.py'],default='source_index_worker.py');p.add_argument('--native-paths',action='store_true');a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
  if any(out.iterdir()):p.error('Empty output required')
  tools=out/'tool-source';hashes=snapshot_sources(ROOT,tools)
  for path in(ROOT/'scripts/rust-epg-parity').glob('*'):

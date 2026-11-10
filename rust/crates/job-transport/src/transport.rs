@@ -192,6 +192,60 @@ impl Jobs {
             Err(e) => Err(map(e)),
         }
     }
+    pub async fn publish_index(
+        &self,
+        task: &crate::index_protocol::IndexTask,
+        id: Uuid,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
+        let lease = self.lease(caller)?;
+        let bytes = crate::index_protocol::encode(
+            task,
+            id,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "rust-probe@native-index",
+        )
+        .map_err(|_| Error::Protocol)?;
+        let limit = self.inner.config.max_queued_jobs.to_string();
+        let keys = vec!["celery".to_owned(), "_kombu.binding.celery".to_owned()];
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(PUBLISH, &keys, &[&bytes, limit.as_bytes()], lease)
+            .await
+        {
+            Ok((n, _)) if n > 0 => Ok(Published {
+                task_id: id,
+                queue_length: n as u64,
+            }),
+            Ok((-2, _)) => Err(Error::Capacity),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(id)),
+            Err(e) => Err(map(e)),
+        }
+    }
+    pub async fn read_index(
+        &self,
+        id: Uuid,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<crate::index_protocol::IndexResult>, Error> {
+        let lease = self.lease(caller)?;
+        let keys = vec![format!("celery-tasks:celery-task-meta-{id}")];
+        let (reply, _held) = self
+            .inner
+            .result
+            .command_classified::<(i64, Vec<u8>), _>(READ, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => crate::index_protocol::parse_result(&reply.1, id)
+                .map(Some)
+                .map_err(|_| Error::Protocol),
+            _ => Err(Error::Corrupt),
+        }
+    }
     pub async fn read(
         &self,
         id: Uuid,
@@ -247,16 +301,84 @@ impl Jobs {
             Err(e) => Err(map(e)),
         }
     }
+    pub(crate) async fn claim_index(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<crate::index_protocol::IndexMessage>, Error> {
+        let lease = self.lease(caller.clone())?;
+        let keys = vec!["celery".to_owned()];
+        let (reply, held) = self
+            .inner
+            .broker
+            .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
+            .await
+            .map_err(map)?;
+        if reply.0 == 0 {
+            return Ok(None);
+        }
+        if reply.0 != 1 {
+            return Err(Error::Corrupt);
+        }
+        let message = crate::index_protocol::parse(&reply.1).map_err(|_| Error::UnsupportedTask)?;
+        if message.eta.is_some() || message.parent.is_some() {
+            return Err(Error::UnsupportedTask);
+        }
+        drop(held);
+        let lease = self.lease(caller)?;
+        match self
+            .inner
+            .broker
+            .command_classified::<i64, _>(CLAIM_CREATE, &keys, &[&reply.1], lease)
+            .await
+        {
+            Ok((1, _)) => Ok(Some(message)),
+            Ok((0, _)) => Err(Error::ClaimRace),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousClaim(message.task_id)),
+            Err(e) => Err(map(e)),
+        }
+    }
+    pub(crate) async fn write_index_success(
+        &self,
+        id: Uuid,
+        parent: Option<Uuid>,
+        children: Vec<Uuid>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if children.len() > 1 {
+            return Err(Error::Protocol);
+        }
+        self.write_result(id, serde_json::Value::Null, parent, children, caller)
+            .await
+    }
     pub(crate) async fn write_success(
         &self,
         id: Uuid,
         result: serde_json::Value,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
+        self.write_result(id, result, None, Vec::new(), caller)
+            .await
+    }
+    async fn write_result(
+        &self,
+        id: Uuid,
+        result: serde_json::Value,
+        parent: Option<Uuid>,
+        children: Vec<Uuid>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
         let lease = self.lease(caller)?;
-        let meta = serde_json::json!({"status":"SUCCESS", "result":result, "traceback":null,
-            "children":[], "date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),
-            "task_id":id.to_string()});
+        let child_tuples: Vec<serde_json::Value> = children
+            .into_iter()
+            .map(|child| serde_json::json!([[child.to_string(), null], null]))
+            .collect();
+        let mut meta = serde_json::json!({"status":"SUCCESS", "result":result, "traceback":null,
+            "children":child_tuples, "date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string()});
+        if let Some(parent) = parent {
+            meta["parent_id"] = serde_json::json!(parent.to_string());
+        }
+        meta["task_id"] = serde_json::json!(id.to_string());
         let bytes = serde_json::to_vec(&meta).map_err(|_| Error::Protocol)?;
         if bytes.len() > decode::MAX_RESULT_BYTES {
             return Err(Error::Protocol);
