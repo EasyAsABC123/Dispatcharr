@@ -1,0 +1,28 @@
+{
+  "scope": "Original Dispatcharr grid profile, dummy-span, row projection and JSON batch helpers; frozen native component",
+  "passed": true,
+  "source_cases": 304,
+  "counts": {
+    "channel_profile": 34,
+    "dummy_span": 117,
+    "stored_row": 48,
+    "batch_encoding": 98,
+    "chunk_boundaries": 7
+  },
+  "native_tests_passed": 2,
+  "strict_store_all_targets_clippy": true,
+  "evidence_directory": "artifacts/rust/m5-grid-helpers-frozen-16",
+  "artifact_sha256": {
+    "source-sha256.json": "7796c5b590951cfa2bca6848a98e3845cc381872f9888ca8cfd4d710297d2e09",
+    "tests.log": "95788ea4047fbbdb347ce9301766ab3d09558b6689123458ed71ef8b27e3dd45",
+    "clippy.log": "33cdd5dde5b07763ec3e68119f37addfd64f9c8af1e5e0f666d9c620c3173ca9",
+    "source/rust/crates/store/datasets/source-grid-helper-components.json": "7406b2a2e14928cf100449db98181857675f5d97683536c0916e7ab9652cefae"
+  },
+  "native_http_verified": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "open_gates": [
+    "Window parser, SQL visibility/filtering, dummy-programme integration and bounded HTTP streaming are separate gates.",
+    "No performance claim transfers from earlier accepted workloads."
+  ]
+}

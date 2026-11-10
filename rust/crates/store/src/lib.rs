@@ -308,3 +308,8 @@ pub use backup_files::BackupFiles;
 
 #[cfg(test)]
 extern crate self as dispatcharr_store;
+
+mod epg_grid_helpers;
+mod epg_grid_window;
+pub use epg_grid_helpers::{grid_channel_profile, grid_dummy_span, grid_encode_batch, grid_program_value};
+pub use epg_grid_window::{grid_parse_datetime, grid_resolve_window, GridTimestamp, GridWindowError};
