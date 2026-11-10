@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "scope": "Committed bounded guide admission fix; packaged/frozen correctness checkpoint, no new resource gain claim",
+  "git_revision": "916e4e5072f53c99710f8281b352bbcd28560838",
+  "image_id": "sha256:56c2d22e0f347230a7e009ae982af2ce354166c560b422be2abf0dcb57a0e3ef",
+  "source_tree_sha256": "38919c0c2a59ce7f9fb3746d9332c69b81b2f417ce4e712a4ff61a2509dc989c",
+  "source_archive_sha256": "220183084b0b7f9d526f8979b738b82b6983ccfddabf25e0ad964e2a2069d62a",
+  "build_manifest": "artifacts/rust/candidate-build-grid-queue-image30-1/build.json",
+  "build_manifest_sha256": "069baedff4b95c7301177e8884c77f1ead04cd895c5d50954cd19cb59c6ad6ad",
+  "source_input_mode": "committed-revision-snapshot",
+  "workspace_validation": {
+    "evidence": "artifacts/rust/checkpoint-image30-validation-1",
+    "strict_all_targets_clippy": true,
+    "default_passed": 313,
+    "external_ignored": 269,
+    "suites": 139,
+    "clippy_log_sha256": "6b1fac83b3070f18c5cff1c40de3e806f0507877266ae6a39ea4195380f6f603",
+    "test_log_sha256": "ffd628c65effd47c6fbb3f90d8f4be838f00b6f996c816dbe8c8e568907f402f",
+    "matching_external_test_inputs_manifest_sha256": "73875865b8905a9bbf77a248b8204dabe79d20f025a49c3c9e8d37f8410e5601"
+  },
+  "packaged_grid": {
+    "evidence": "artifacts/rust/m5-guide-grid-packaged-image30-1",
+    "report_sha256": "50d102270d35755ff6612f1730dc9387a77a6603ecd85fb4f80b68bb1785c349",
+    "wire_report_sha256": "7c2ee965059eccfd661a53e567cbbb0320d35a3eaea11754ef2a050ec42a17be",
+    "network_cases": 43,
+    "normalization": null,
+    "shutdown": {
+      "ExitCode": 0,
+      "OOMKilled": false
+    },
+    "cleanup": "project removed"
+  },
+  "large_unstaggered_grid_burst": "scripts/rust-guide-perf/verified-grid-functional-image30-1.json",
+  "bounded_queue_physical_component": "scripts/rust-epg-parity/verified-grid-queued-admission-2.json",
+  "source_relative_paths_and_dispatcher": "scripts/rust-epg-parity/verified-path-dispatcher-component-validation-1.json",
+  "prior_checkpoint": "scripts/rust-integration/verified-checkpoint-image29-1.json",
+  "performance_verified": false,
+  "whole_application_verified": false,
+  "limitations": [
+    "Image30 contains committed916e4e50 only; later immediate Index, production-constructor and VOD draft work has separate bindings.",
+    "Only grid packaged network replay rerun; broader prior endpoint/media proofs keep their original image binding.",
+    "No resource result is transferred from image28 Current/XMLTV; independent grid qualification/matrix remains separate."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit, branding, AGPL license and history."
+}
