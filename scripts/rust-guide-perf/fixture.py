@@ -28,7 +28,7 @@ if op=='seed':
  for i,guide in enumerate(guides):
   for slot in range(45):
    start=at-timedelta(hours=2)if slot==0 else at+timedelta(hours=2,minutes=30*(slot-1));end=at+timedelta(hours=2)if slot==0 else start+timedelta(minutes=30)
-   rows.append(ProgramData(epg=guide,start_time=start,end_time=end,title=f'Guide {i} programme {slot} café',sub_title='Stored guide fixture',description='A & B < C 東京 '+('bounded fixture ' *8),custom_properties={'categories':['News','Sport & café'],'language':'en','season':'2','episode':'3'}))
+   rows.append(ProgramData(epg=guide,start_time=start,end_time=end,title=f'Guide {i} programme {slot} café',sub_title='Stored guide fixture',description='A & B < C 東京 '+('bounded fixture ' *8),custom_properties={'categories':['News','Sport & café'],'language':'en','season':'2','episode':'3'},**({'tvg_id':guide.tvg_id}if request.get('workload_family')=='grid'else{})))
  ProgramData.objects.bulk_create(rows)
  with connection.cursor()as cursor:
   for table in [ProgramData._meta.db_table,EPGData._meta.db_table,Channel._meta.db_table]:cursor.execute('ANALYZE '+connection.ops.quote_name(table))

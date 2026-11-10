@@ -3,6 +3,9 @@ import hashlib,http.client,json,time,math
 from xml.etree.ElementTree import XMLPullParser
 from urllib.parse import urlsplit
 UNSET=object()
+class ResponseFailure(ValueError):
+ def __init__(self,status,mime=None,body_class=None,body_keys=None):
+  super().__init__('Guide status/encoding mismatch');self.status=status;self.mime=mime;self.body_class=body_class;self.body_keys=body_keys
 def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
 def request(base,spec,token=None,timeout=10,expected=UNSET):
  target=urlsplit(base)
@@ -30,7 +33,14 @@ def request(base,spec,token=None,timeout=10,expected=UNSET):
    if remaining<=0:raise TimeoutError('Guide request deadline')
    transport.settimeout(remaining)
   budget();connection.request(spec['method'],spec['path'],body=data,headers=headers);budget();response=connection.getresponse()
-  if response.status!=200 or response.getheader('Content-Encoding','identity')!='identity':raise ValueError('Guide status/encoding mismatch')
+  if response.status!=200 or response.getheader('Content-Encoding','identity')!='identity':
+   budget();error_data=response.read(4097);body_class='over4096'if len(error_data)>4096 else'bytes';body_keys=None
+   if len(error_data)<=4096:
+    try:
+     error_value=json.loads(error_data);body_class=type(error_value).__name__
+     if type(error_value)is dict and len(error_value)<=32:body_keys=sorted(str(key)[:64]for key in error_value)
+    except(ValueError,UnicodeError):pass
+   raise ResponseFailure(response.status,response.getheader('Content-Type','').split(';')[0],body_class,body_keys)
   mime=response.getheader('Content-Type','').split(';')[0]
   if mime!=('application/json'if spec['kind']=='json'else'application/xml'):raise ValueError('Guide MIME mismatch')
   budget();first=response.read(1);first_ms=(time.monotonic()-began)*1000

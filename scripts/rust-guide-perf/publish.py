@@ -27,7 +27,7 @@ def numeric(row, names):
 def project(value):
     if value['backend'] not in ['source', 'candidate']:
         raise ValueError('Unexpected phase backend')
-    if value['workload'] not in ['current-500-shared50', 'xmltv-cold-1', 'xmltv-cold-10', 'xmltv-hot-1', 'xmltv-hot-10']:
+    if value['workload'] not in ['current-500-shared50', 'xmltv-cold-1', 'xmltv-cold-10', 'xmltv-hot-1', 'xmltv-hot-10', 'grid-2250-shared50-1', 'grid-2250-shared50-10']:
         raise ValueError('Unexpected phase workload')
     counters = value['counters']
     selected = counters['selected_services']

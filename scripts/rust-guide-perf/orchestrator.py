@@ -55,8 +55,12 @@ def normalized(measurement, counter_result, workload, period, duration, checks):
 
 def run(*, action, output, manifest, tools, seed, reference, current, xml,
         helper, cache, start, stop, select_services, quiet_path=None, plan_path=None,
-        qualification_path=None):
+        qualification_path=None, plan_module=plan, qualification_module=qualification,
+        acceptance_module=acceptance):
     """Callbacks reuse the same immutable-tool Compose fixture as functional smoke."""
+    plan = plan_module
+    qualification = qualification_module
+    acceptance = acceptance_module
     output = Path(output)
     report = {'passed': False, 'scope': plan.POLICY['scope'], 'action': action,
               'performance_verified': False, 'trials': []}

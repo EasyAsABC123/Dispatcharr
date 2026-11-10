@@ -6,6 +6,25 @@ import publish
 
 
 class Publish(unittest.TestCase):
+    def test_grid_labels_use_the_same_numeric_only_projection(self):
+        names = ['baseline', 'origin', 'source']
+        snapshot = {'observer_seconds': 0, 'services': {
+            name: {'sampled_monotonic': 100, 'cpu': {}, 'memory_events': {}}
+            for name in names}}
+        value = dict(backend='source', normalized={},
+            counters={'selected_services': {name: {'id': 'PRIVATE_'+name} for name in names},
+                'before': snapshot, 'after': copy.deepcopy(snapshot), 'services': {}},
+            measurement={'resource_samples': [], 'summary': {'completed': 1},
+                'body': 'PRIVATE_BODY'}, token='PRIVATE_TOKEN')
+        for workload in ['grid-2250-shared50-1', 'grid-2250-shared50-10']:
+            value['workload'] = workload
+            result = publish.project(value)
+            self.assertEqual(result['workload'], workload)
+            self.assertNotIn('PRIVATE_', json.dumps(result))
+        value['workload'] = 'PRIVATE_UNDECLARED_WORKLOAD'
+        with self.assertRaises(ValueError):
+            publish.project(value)
+
     def test_all_retained_samples_and_counters_survive_without_unselected_secrets(self):
         artifact = Path(__file__).resolve().parents[2]/'artifacts/rust/m5-m7-guide-experiment23-recovery-1/matrix/xmltv-hot-1-trial-1-source.json'
         if not artifact.exists():
