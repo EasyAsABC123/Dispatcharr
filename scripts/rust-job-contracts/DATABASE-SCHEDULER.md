@@ -72,3 +72,7 @@ python3 scripts/rust-job-contracts/run_scheduler_startup.py \
 The earlier lazy-only reference's startup/reload omissions now have these scoped
 Original observations. Native startup, timezone filtering, trigger execution,
 crash windows, packaging and performance still require their own gates.
+
+The [bounded interval decision component](INTERVAL-SCHEDULER.md) now matches25
+actual controlled-clock Original cases and projected mutation effects. This
+adds no native SQL persistence, publication, startup or scheduler authority.

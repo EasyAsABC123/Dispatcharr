@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "scope": "Bounded controlled-clock interval decision/requested-effect component; not a native database scheduler or persisted mutation",
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors/contributors; Celery/django-celery-beat framework authors retain credit and licenses. AGPL retained.",
+  "source_cases": 25,
+  "Source_reference": "scripts/rust-job-contracts/source-original-interval-model-1.json",
+  "Source_reference_sha256": "96b2692508f9b8324dd407a802ebf15e00c27acbcbd7b28161d82dcda06458ce",
+  "Source_tools_match_successful_Docker_capture": true,
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Source_default_database_unchanged": true,
+  "Source_owned_rows_removed": true,
+  "Source_independent_cleanup_review": "artifacts/rust/database-scheduler-interval-source-parent-review-1.json",
+  "frozen_manifest": "artifacts/rust/interval-model-frozen-inputs-2.json",
+  "frozen_manifest_sha256": "98001f2ddb64a347fc2a245bc460c29084cc8a361b10cd860476590ce2e6f6f2",
+  "base_revision": "7bf71af289ab24e9c3b2a135cf39d27a57882c36",
+  "runtime_files": 564,
+  "selected_Rust": {
+    "rust/crates/job-transport/src/interval_schedule.rs": "c54748c2b0dd3c4d069eed42454ffa66b80b17d5a2996b756a03be2ada1a035b",
+    "rust/crates/job-transport/tests/interval_schedule.rs": "05eec0a6834d3a6a53018847b0b7956514b5c528a8ca387573818bf7106f498d",
+    "rust/crates/job-transport/datasets/interval-source-1.json": "96b2692508f9b8324dd407a802ebf15e00c27acbcbd7b28161d82dcda06458ce",
+    "rust/crates/job-transport/src/lib.rs": "d97b68f24fbdf777bc0c402965939a1ff74cf7d0ddbb825223916d18be901c06"
+  },
+  "workspace_tests": {
+    "passed": 355,
+    "failed": 0,
+    "external_ignored": 361,
+    "suites": 164,
+    "log_sha256": "b79e974dfc4f243f746cb6004c67c1b183087c16b5ce62796dd546a2551865d5"
+  },
+  "strict_workspace_alltargets_clippy": true,
+  "clippy_log_sha256": "a612e808380137afd4831be357bd07179c796faa1751ee88ce1e8ade4010ced0",
+  "first_attempt": {
+    "retained_log": "artifacts/rust/interval-model-tests-2.log",
+    "failure": "Four existing HTTP tests could not bind localhost under the filesystem/network sandbox (EPERM). Same exact frozen runtime rerun with local listener access passed.",
+    "runtime_changed_for_retry": false
+  },
+  "native_comparison": "One test loops over25actualSource cases: due,nextseconds,and three projected persisted/entry fields. Second test checks explicit native capacity errors. No native SQL commit is inferred.",
+  "limits": [
+    "One explicit UTC clock; no moving clocks/calendar/timezone acceptance",
+    "Native32bit every,2^53microsecond duration/positive clock-distance caps return errors; these are not Source parity outside the corpus",
+    "Hours unit has arithmetic support but no named hours-unit Source vector in this corpus",
+    "No database loading/persistence/default installation/reload/publication/sync/crash/worker/application hook"
+  ],
+  "new_image_built": false,
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "no_sibling_mutable_Rust_used": true
+}

@@ -1,0 +1,314 @@
+{
+  "passed": true,
+  "scope": "Actual Original ModelEntry.is_due with explicit per-entry _default_now and schedule.nowfun clock dependencies; no elapsed-time, calendar, transport or native application acceptance",
+  "fixed_now": "2026-11-10T12:00:00.123456+00:00",
+  "cases": [
+    {
+      "input": {
+        "name": "hour_due",
+        "last_offset_us": -3600000000
+      },
+      "due": true,
+      "next_seconds": 3600.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "hour_before",
+        "last_offset_us": -3599999999
+      },
+      "due": false,
+      "next_seconds": 1e-06,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "hour_late",
+        "last_offset_us": -7200000000
+      },
+      "due": true,
+      "next_seconds": 3600.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "hour_fresh",
+        "last_offset_us": 0
+      },
+      "due": false,
+      "next_seconds": 3600.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "future_last",
+        "last_offset_us": 5000000
+      },
+      "due": false,
+      "next_seconds": 3605.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "disabled",
+        "enabled": false
+      },
+      "due": false,
+      "next_seconds": 5.0,
+      "persisted_enabled": false,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "disabled_expired",
+        "enabled": false,
+        "expires_offset_us": -1
+      },
+      "due": false,
+      "next_seconds": 5.0,
+      "persisted_enabled": false,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "start_future_fraction",
+        "start_offset_us": 1250000
+      },
+      "due": false,
+      "next_seconds": 2,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "start_one_microsecond",
+        "start_offset_us": 1
+      },
+      "due": false,
+      "next_seconds": 1,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "start_boundary",
+        "start_offset_us": 0
+      },
+      "due": true,
+      "next_seconds": 3600.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "future_start_precedes_expiry",
+        "start_offset_us": 1250000,
+        "expires_offset_us": -1
+      },
+      "due": false,
+      "next_seconds": 2,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "expires_boundary",
+        "expires_offset_us": 0
+      },
+      "due": false,
+      "next_seconds": 100000000,
+      "persisted_enabled": false,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": true
+    },
+    {
+      "input": {
+        "name": "expired",
+        "expires_offset_us": -1
+      },
+      "due": false,
+      "next_seconds": 100000000,
+      "persisted_enabled": false,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": true
+    },
+    {
+      "input": {
+        "name": "expiry_future",
+        "expires_offset_us": 1
+      },
+      "due": true,
+      "next_seconds": 3600.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "one_off_first",
+        "one_off": true
+      },
+      "due": true,
+      "next_seconds": 3600.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "one_off_done",
+        "one_off": true,
+        "total_run_count": 1
+      },
+      "due": false,
+      "next_seconds": 100000000,
+      "persisted_enabled": false,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "expired_one_off",
+        "one_off": true,
+        "total_run_count": 2,
+        "expires_offset_us": -1
+      },
+      "due": false,
+      "next_seconds": 100000000,
+      "persisted_enabled": false,
+      "persisted_total_run_count": 2,
+      "entry_no_changes": true
+    },
+    {
+      "input": {
+        "name": "disabled_one_off",
+        "one_off": true,
+        "total_run_count": 2,
+        "enabled": false
+      },
+      "due": false,
+      "next_seconds": 5.0,
+      "persisted_enabled": false,
+      "persisted_total_run_count": 2,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "future_start_one_off",
+        "one_off": true,
+        "total_run_count": 2,
+        "start_offset_us": 1
+      },
+      "due": false,
+      "next_seconds": 1,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 2,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "zero_interval",
+        "every": 0
+      },
+      "due": true,
+      "next_seconds": 0.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "one_day_due",
+        "every": 1,
+        "period": "days",
+        "last_offset_us": -86400000000
+      },
+      "due": true,
+      "next_seconds": 86400.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "two_minutes_before",
+        "every": 2,
+        "period": "minutes",
+        "last_offset_us": -119999999
+      },
+      "due": false,
+      "next_seconds": 1e-06,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "three_seconds_due",
+        "every": 3,
+        "period": "seconds",
+        "last_offset_us": -3000000
+      },
+      "due": true,
+      "next_seconds": 3.0,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "microsecond_before",
+        "every": 2,
+        "period": "microseconds",
+        "last_offset_us": -1
+      },
+      "due": false,
+      "next_seconds": 1e-06,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    },
+    {
+      "input": {
+        "name": "microsecond_due",
+        "every": 2,
+        "period": "microseconds",
+        "last_offset_us": -2
+      },
+      "due": true,
+      "next_seconds": 2e-06,
+      "persisted_enabled": true,
+      "persisted_total_run_count": 0,
+      "entry_no_changes": false
+    }
+  ],
+  "model_entry_source_sha256": "e710af762a9704592a89a589fad34b91eb72d376d7bdc3d1f2ca1ebfe125f2fe",
+  "owned_rows_removed": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "default_database_unchanged": true,
+  "owned_Compose_resources_independently_absent": true,
+  "tools_sha256": {
+    "scripts/rust-job-contracts/run_scheduler_interval.py": "90a5e5b1730d4ba69cae0d2539aebf0e5f86c65728af9d43a864816e4678dba6",
+    "scripts/rust-job-contracts/source_scheduler_interval.py": "804c7bf284c3ecef7b0d2d61c22fab4f502b73cbbc9e2f65e0c27566499cc603"
+  },
+  "original_credit": "Original Dispatcharr authors/contributors retain all application/algorithm credit; Celery/django-celery-beat framework credit and licenses retained.",
+  "native_scheduler_verified": false,
+  "performance_verified": false
+}

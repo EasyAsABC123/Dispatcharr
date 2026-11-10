@@ -535,3 +535,6 @@ Source restart observations [176](../scripts/rust-redis-restart-contracts/verifi
 
 
 [The eager Original scheduler capture](../scripts/rust-job-contracts/verified-original-database-scheduler-startup-1.json) passes 16 startup/default-installation and changed-sentinel reload checks in an owned copied database. It records stale cached entries after unsignalled bulk updates and reload after ordinary saves/deletes or explicit marker updates. No native scheduler, task execution, process restart or performance acceptance follows; M6 remains in progress.
+
+
+[The bounded interval decision checkpoint](../scripts/rust-job-contracts/verified-interval-scheduler-component-1.json) matches 25 actual Original controlled-clock decisions and requested mutation effects. Its immutable 564-input workspace passes strict all-target Clippy and 355 default tests (361 external-fixture tests ignored). Four initial HTTP listener EPERM failures are retained; the unchanged frozen runtime passes with local-socket access. Native SQL persistence, full scheduler startup/publication/crash behavior, packaging and performance remain open. M6 remains in progress.

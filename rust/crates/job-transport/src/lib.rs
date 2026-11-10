@@ -49,3 +49,6 @@ pub mod refresh_publish;
 // Fixture-only immediate refresh execution; no production intake.
 #[cfg(test)]
 pub mod refresh_worker;
+
+// Controlled-clock interval decision component; no scheduler/application hook.
+pub mod interval_schedule;
