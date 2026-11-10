@@ -36,11 +36,16 @@ def main():
     parser.add_argument('--native-categories',action='store_true',help='New test-only category SQL component; no app routes')
     parser.add_argument('--native-http',action='store_true',help='Run independent native TCP HTTP peer against original network corpus')
     parser.add_argument('--http-wire',action='store_true',help='Add original network method/detail/negotiation/routing characterization')
+    parser.add_argument('--category-browser',action='store_true',help='Actual unchanged React category selection for movie-only/series-only Standard users; requires packaged-categories')
+    parser.add_argument('--packaged-categories',action='store_true',help='Manifest-bound category+ordinary app replay, mixed burst and initial fault; no host peer build')
     parser.add_argument('--build-manifest','--candidate-build-manifest',dest='build_manifest',type=Path,help='Successful immutable app manifest for packaged replay; skips native peer compilation')
     parser.add_argument('--candidate-image',help='Must equal the successful manifest tag')
     args=parser.parse_args()
     manifest=json.loads(args.build_manifest.read_text())if args.build_manifest else None
     if args.candidate_image and manifest is None:parser.error('--candidate-image requires --build-manifest')
+    if args.category_browser and not args.packaged_categories:parser.error('--category-browser requires --packaged-categories')
+    if args.packaged_categories and manifest is None:parser.error('--packaged-categories requires --build-manifest')
+    if args.packaged_categories:args.category_forms_source=True;args.category_wire_source=True
     if manifest is not None:
         if not manifest.get('passed')or(args.candidate_image and args.candidate_image!=manifest['tag']):parser.error('Successful matching candidate manifest required')
         if args.native_sql or args.native_http or args.native_categories:parser.error('Packaged replay must not compile a host native peer')
@@ -57,7 +62,9 @@ def main():
     try:
         for mode in modes:
             evidence=out/mode;evidence.mkdir()
-            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('category_initial_source.py')]if args.category_initial_source else[]),*([Path(__file__).with_name('category_burst_source.py')]if args.native_categories else[]),*([Path(__file__).with_name('category_defaults_source.py')]if args.category_defaults_source else[]),*([Path(__file__).with_name('category_schedule_source.py')]if args.category_schedule_source else[]),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
+            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('category_initial_source.py')]if args.category_initial_source or args.packaged_categories else[]),*([Path(__file__).with_name('category_burst_source.py')]if args.native_categories or args.packaged_categories else[]),*([Path(__file__).with_name('category_defaults_source.py')]if args.category_defaults_source else[]),*([Path(__file__).with_name('category_schedule_source.py')]if args.category_schedule_source else[]),*([Path(__file__).with_name('packaged_probe.py'),Path(__file__).with_name('effects_source.py'),ROOT/'docker/compose.rust-candidate.yml',ROOT/'scripts/rust-integration/run.py']if manifest is not None else[]),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
+                *([Path(__file__).with_name('category_packaged_probe.py')]if args.packaged_categories else[]),
+                *([Path(__file__).with_name(name)for name in ['category_browser.js','category_browser_fixture.py','category_browser_runner.py']]if args.category_browser else[]),
                 ROOT/'docker/compose.rust-playback.yml',ROOT/'scripts/rust-integration/shared_ts.py',
                 ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'scripts/rust-baseline/dependencies.py',
                 *([ROOT/'scripts/rust-vod-api-contracts/source-vod-rest-1.json',ROOT/'scripts/rust-vod-api-contracts/source-default-queries-1.json',ROOT/'scripts/rust-vod-api-contracts/schedule_source.py',ROOT/'scripts/rust-vod-api-contracts/category_fault_source.py']if args.native_sql else []),
@@ -99,14 +106,29 @@ def main():
                 if manifest is not None:
                     candidate=candidate_overlay(tools/'docker/compose.rust-candidate.yml',evidence/'candidate.yml',manifest['tag']);compose+=['-f',str(candidate),'-f',str(ports)]
                     result['build_manifest_sha256']=hashlib.sha256(args.build_manifest.read_bytes()).hexdigest();shutil.copyfile(args.build_manifest,evidence/'build-manifest.json')
-                def command(argv,timeout=180):
+                if args.category_browser:
+                    browser_overlay=evidence/'browser-network-guard.yml';browser_overlay.write_text(json.dumps({'services':{'baseline':{'environment':{'DISPATCHARR_ENABLE_IP_LOOKUP':'false'}},'candidate':{'environment':{'DISPATCHARR_ENABLE_IP_LOOKUP':'false'}}}}));compose+=['-f',str(browser_overlay)]
+                    result['browser_network_guard']='IP lookup disabled by original/native documented environment flag; browser provider/poster/unified flows excluded'
+                def command(argv,timeout=180,payload=None):
                     result['commands'].append(argv)
-                    completed=subprocess.run(argv,cwd=ROOT,env=environment,text=True,capture_output=True,timeout=timeout)
+                    completed=subprocess.run(argv,cwd=ROOT,env=environment,input=payload,text=True,capture_output=True,timeout=timeout)
                     if completed.returncode:
                         (evidence/'failed-command.log').write_text(completed.stdout+'\n'+completed.stderr)
                         completed.check_returncode()
                     return completed
                 try:
+                    if args.category_browser:
+                        compiled=evidence/'compiled-frontend';compiled.mkdir();(source/'frontend/dist').mkdir(parents=True,exist_ok=True)
+                        inspected_image=json.loads(command(['docker','image','inspect',manifest['tag']]).stdout)[0];assert inspected_image['Id']==manifest['image_id'],'Frontend donor image identity changed'
+                        frontend_container=command(['docker','create',manifest['tag']]).stdout.strip()
+                        try:command(['docker','cp',frontend_container+':/opt/dispatcharr-frontend/.',str(compiled)])
+                        finally:command(['docker','rm',frontend_container])
+                        frontend_hashes={str(path.relative_to(compiled)):hashlib.sha256(path.read_bytes()).hexdigest()for path in compiled.rglob('*')if path.is_file()}
+                        assert 'index.html'in frontend_hashes and len(frontend_hashes)>10
+                        (evidence/'frontend-sha256.json').write_text(json.dumps(frontend_hashes,indent=2)+'\n')
+                        ini=evidence/'original-browser-uwsgi.ini';ini.write_text((tools/'scripts/rust-playback-baseline/uwsgi.ini').read_text()+'\nstatic-map = /static=/app/frontend/dist\nstatic-map = /assets=/app/frontend/dist/assets\ncheck-static = /app/frontend/dist\n')
+                        frontend_overlay=evidence/'browser-frontend.yml';frontend_overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[str(compiled)+':/app/frontend/dist:ro',str(ini)+':/verification/uwsgi.ini:ro']}}}));compose+=['-f',str(frontend_overlay)]
+                        result['browser_frontend']={'donor_image_id':inspected_image['Id'],'files':len(frontend_hashes),'sha256':hashlib.sha256(json.dumps(frontend_hashes,sort_keys=True,separators=(',',':')).encode()).hexdigest(),'scope':'Exact unchanged canonical React bundle, mounted into original git-source fixture and served by uWSGI static-map; no JS/backend view patches'}
                     command(compose+['up','-d','--no-build','baseline','origin'])
                     # Use a Docker exec health probe: no host public-interface
                     # assumptions or retry of observed API workloads.
@@ -130,7 +152,7 @@ def main():
                     if args.http_wire:
                         burst=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/burst_source.py'],timeout=30)
                         observed=json.loads(burst.stdout.splitlines()[-1]);assert observed['passed'];(evidence/'source-burst.json').write_text(json.dumps(observed,indent=2)+'\n')
-                    if args.native_categories:
+                    if args.native_categories or args.packaged_categories:
                         burst=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_burst_source.py'],timeout=30)
                         observed_categories=json.loads(burst.stdout.splitlines()[-1]);assert observed_categories['passed'];(evidence/'source-category-burst.json').write_text(json.dumps(observed_categories,indent=2)+'\n')
                         mixed=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','-e','VOD_CATEGORY_BURST_MIXED=1','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_burst_source.py'],timeout=30)
@@ -155,9 +177,28 @@ def main():
                         packaged=probe(candidate_base,corpus,observed)
                         (evidence/'packaged-http.json').write_text(json.dumps(packaged,indent=2)+'\n')
                         result['packaged_ordinary_http_passed']=packaged['passed'];assert packaged['passed'],'Packaged ordinary HTTP mismatch'
+                        if args.packaged_categories:
+                            from category_packaged_probe import probe as category_probe
+                            categories=category_probe(candidate_base,corpus,observed_categories,observed_mixed)
+                            (evidence/'packaged-category-http.json').write_text(json.dumps(categories,indent=2)+'\n');result['packaged_category_http_passed']=categories['passed'];assert categories['passed'],'Packaged category wire/mixed mismatch'
+                            initial_observations={}
+                            for target in ['original','candidate']:
+                                initial=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','-e','VOD_CATEGORY_INITIAL_TARGET='+target,'baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_initial_source.py'],timeout=30)
+                                initial_observations[target]=json.loads(initial.stdout.splitlines()[-1])
+                            original_initial=initial_observations['original'];candidate_initial=initial_observations['candidate']
+                            initial_pass=all(original_initial[key]==candidate_initial[key]for key in ['response','committed_category_type_prefix','application_headers'])and all(row['original_category_and_relationship_rows_exactly_restored']for row in initial_observations.values())
+                            (evidence/'packaged-category-initial.json').write_text(json.dumps({'passed':initial_pass,'observations':initial_observations},indent=2)+'\n');result['packaged_category_initial_passed']=initial_pass;assert initial_pass,'Packaged category initial fault/prefix mismatch'
+
                         effects=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/effects_source.py'],timeout=30)
                         after=json.loads(effects.stdout.splitlines()[-1]);before={key:corpus['final_effects'][key]for key in after}
                         (evidence/'packaged-effects.json').write_text(json.dumps({'passed':after==before,'before':before,'after':after},indent=2)+'\n');assert after==before,'Packaged reads changed owned metadata/provider refresh rows'
+                        if args.category_browser:
+                            from category_browser_runner import probe as browser_probe
+                            source_base='http://'+command(compose+['port','baseline','5656']).stdout.strip()
+                            browser=browser_probe(command,compose,environment,evidence,tools,source_base,candidate_base)
+                            result['packaged_category_browser_passed']=browser['passed'];assert browser['passed'],'Actual unchanged React category workflow mismatch'
+                            restored_effects=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/effects_source.py'],timeout=30)
+                            final_browser_effects=json.loads(restored_effects.stdout.splitlines()[-1]);assert final_browser_effects==before,'Browser fixture did not restore metadata/provider state'
                         shutdown_at=time.monotonic();command(compose+['stop','--timeout','15','candidate'],timeout=25)
                         stopped=json.loads(command(['docker','inspect',identifier]).stdout)[0]['State']
                         result['candidate_shutdown']={'elapsed_seconds':time.monotonic()-shutdown_at,'exit_code':stopped['ExitCode'],'running':stopped['Running']}

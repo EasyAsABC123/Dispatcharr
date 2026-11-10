@@ -1,0 +1,228 @@
+{
+  "passed": true,
+  "scope": "Canonical image33 actual original/native API and actual unchanged React category selection/display with real logins; not fullVOD/provider/artwork/unified/episode or performance acceptance.",
+  "original_credit": "All application/algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "evidence": "artifacts/rust/m5-vod-category-browser-image33-6/http",
+  "successful_tools": "artifacts/rust/m5-vod-category-browser-image33-6/http/tools",
+  "image": {
+    "tag": "dispatcharr-rust-candidate:vod-categories-image33-1",
+    "image_id": "sha256:f48f01c715fbd134df74b91111c27150f07ec28a77688ed1ae0724379069d68e",
+    "source_tree_sha256": "9a308613f654701984a054cad27ea2d2ac42ea870dcc29d610d2cf8421f3de82",
+    "git_revision": "30951cd2"
+  },
+  "checks": {
+    "source_network_cases": 664,
+    "ordinary_exact_HTTP_responses": 393,
+    "category_exact_HTTP_responses": 159,
+    "known_category_exclusions_not_parity_pass": [
+      {
+        "index": 483,
+        "path": "/api/vod/categories/?ordering=get_category_type_display",
+        "source_status": 500,
+        "recognized_open_case": true,
+        "parity_pass": false
+      },
+      {
+        "index": 485,
+        "path": "/api/vod/categories/?ordering=m3u_relations",
+        "source_status": 200,
+        "recognized_open_case": true,
+        "parity_pass": false
+      },
+      {
+        "index": 489,
+        "path": "/api/vod/categories/?search=Drama%5C%20News",
+        "source_status": 200,
+        "recognized_open_case": true,
+        "parity_pass": false
+      },
+      {
+        "index": 530,
+        "path": "/api/vod/categories/?format=api",
+        "source_status": 406,
+        "recognized_open_case": true,
+        "parity_pass": false
+      }
+    ],
+    "ordinary_category_mixed_unstaggered10_bursts": true,
+    "initial500_HTML_securityheaders_and_committed_prefix": true,
+    "metadata_provider_effects_unchanged": true,
+    "actualReact_comparisons": [
+      {
+        "kind": "movies",
+        "selected_category": "rust-probe-vod-rest-Drama (movie)",
+        "ordered_content": [
+          {
+            "id": 1,
+            "name": "rust-probe-vod-rest-Alpha"
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-vod-rest-Movie03"
+          },
+          {
+            "id": 7,
+            "name": "rust-probe-vod-rest-Movie06"
+          },
+          {
+            "id": 10,
+            "name": "rust-probe-vod-rest-Movie09"
+          },
+          {
+            "id": 13,
+            "name": "rust-probe-vod-rest-Movie12"
+          },
+          {
+            "id": 16,
+            "name": "rust-probe-vod-rest-Movie15"
+          },
+          {
+            "id": 19,
+            "name": "rust-probe-vod-rest-Movie18"
+          },
+          {
+            "id": 22,
+            "name": "rust-probe-vod-rest-Movie21"
+          },
+          {
+            "id": 25,
+            "name": "rust-probe-vod-rest-Movie24"
+          }
+        ],
+        "visible_cards": 9,
+        "native_exact": true,
+        "Source_uncaught_exceptions": 0,
+        "native_uncaught_exceptions": 0,
+        "Source_VOD_HTTP_failures": [],
+        "native_VOD_HTTP_failures": []
+      },
+      {
+        "kind": "series",
+        "selected_category": "rust-probe-vod-rest-Drama (series)",
+        "ordered_content": [
+          {
+            "id": 1,
+            "name": "rust-probe-vod-rest-Series0"
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-vod-rest-Series1"
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-vod-rest-Series2"
+          }
+        ],
+        "visible_cards": 3,
+        "native_exact": true,
+        "Source_uncaught_exceptions": 0,
+        "native_uncaught_exceptions": 0,
+        "Source_VOD_HTTP_failures": [],
+        "native_VOD_HTTP_failures": []
+      }
+    ],
+    "successful_browser_sessions": 4,
+    "frontend_exact_immutable_asset_binding": {
+      "donor_image_id": "sha256:f48f01c715fbd134df74b91111c27150f07ec28a77688ed1ae0724379069d68e",
+      "files": 85,
+      "sha256": "43dc51e1a1794de354bc694297ee673ac373b3ec9b249eccd47a377ec8bb06ef",
+      "scope": "Exact unchanged canonical React bundle, mounted into original git-source fixture and served by uWSGI static-map; no JS/backend view patches"
+    },
+    "browser_network_guard": "IP lookup disabled by original/native documented environment flag; browser provider/poster/unified flows excluded",
+    "fixture_preparation_scope": "Actual unchanged React category selection on seeded movies/series, single-type Standard roles; posters removed only for this separate UI phase; provider/artwork/unified flows not claimed",
+    "fixture_restoration": {
+      "restored": true,
+      "users_passwords_and_rows_exact": true,
+      "poster_relations_exact": true,
+      "category_enabled_flags_exact": true
+    },
+    "actual_login_budget_witness": {
+      "passed": true,
+      "records": [
+        {
+          "ordinal_in_owned_phase": 3,
+          "status": 200,
+          "body": {
+            "redacted_success_token_fields": [
+              "access",
+              "refresh"
+            ],
+            "access_present": true,
+            "refresh_present": true
+          },
+          "retry_after": null
+        },
+        {
+          "ordinal_in_owned_phase": 4,
+          "status": 429,
+          "body": {
+            "detail": "Request was throttled. Expected available in 58 seconds."
+          },
+          "retry_after": "58"
+        }
+      ],
+      "scope": "Actual original shared3/min bucket: two completed UI logins followed by valid third/fourth token requests; successful JWTs redacted, fourth rejection body retained; no runtime/policy modification"
+    },
+    "phase_login_isolation": {
+      "original": {
+        "owned_buckets_cleared": 0,
+        "observed_entry_counts": [],
+        "only_fixture_login_history": true
+      },
+      "candidate": {
+        "owned_buckets_cleared": 1,
+        "observed_entry_counts": [
+          3
+        ],
+        "only_fixture_login_history": true
+      }
+    },
+    "prior_to_witness_entry_counts": [
+      2
+    ],
+    "candidate_shutdown": {
+      "elapsed_seconds": 0.31760298299923306,
+      "exit_code": 0,
+      "running": false
+    }
+  },
+  "open_default_exception_wire_cases": 7,
+  "retained_failures": [
+    {
+      "evidence": "artifacts/rust/m5-vod-category-browser-image33-1",
+      "scope": "Original git-source fixture lacked compiled React; no login/VOD workflow started. Metadata restoration/cleanup passed."
+    },
+    {
+      "evidence": "artifacts/rust/m5-vod-category-browser-image33-2",
+      "scope": "OCI setup failure: frontend mountpoint absent under readonly Source bind; no API/browser execution."
+    },
+    {
+      "evidence": "artifacts/rust/m5-vod-category-browser-image33-3",
+      "scope": "Original page title loaded but root blank: fixture omitted actual /assets static mapping; no login/VOD workflow."
+    },
+    {
+      "evidence": "artifacts/rust/m5-vod-category-browser-image33-4",
+      "scope": "Original2/nativeMovie UI succeeded; fourth shared login timeout. Token rejection response not retained inthatattempt. Final6 records actual3rd200/4th429 and bucket history; prior timeout interpretation remains distinguished."
+    }
+  ],
+  "prior_success_superseded_for_stronger_diagnostics": "artifacts/rust/m5-vod-category-browser-image33-5",
+  "evidence_sha256": {
+    "source-run.json": "a6beb6d5b37aaaeb764f0cfb5bc38e5ee673c9ad41f0ffbcdce082bdad8cbce2",
+    "build-manifest.json": "c7cb1646167ac3689a2533551b49cabccb608f318dda894fce34f5ac46bf487b",
+    "source-corpus.json": "3cf3f579e0ce4b24ae0860e7e56b4cb166523e1ae3e0ab4d2d9e67a3479b78c3",
+    "packaged-http.json": "c152e61e3b1ab4bbabcc4078b22a5e1a9d602c61288f4a2c9cb84935ea6d84ec",
+    "packaged-category-http.json": "ce58fc1377a9bb1b80a209068fa6ee7063c72a5d93d234bcb15edf40c268576d",
+    "packaged-category-initial.json": "c9304e6a3bf36619ff5fd4ffc73a14145a57702ea12f43edad5215bcc1a09311",
+    "packaged-effects.json": "6d56af748885e6c834e8b08e114a283f48ef1aa5a7efbd82a2d5209cea55a994",
+    "packaged-category-browser.json": "9e4251a8cac13ecc5ba8d13bf32fabf07e02dbeab710729bce455a5f66e327fa",
+    "frontend-sha256.json": "be321d18f8433796b1173541853736b997525b2f680b1d7adc1876fbc296231a",
+    "browser-original-movies.json": "4e87925479a3ed1f2a328b0fba3f40b1d9c6d519e118d29ae01289ae5b26a5ec",
+    "browser-original-series.json": "d01e0abb797029aea50743e921e24e2c225aaea67eaf14752e926826d2b33580",
+    "browser-candidate-movies.json": "8c8a57f0578bf288bace0988c5cf185e8e1c6786d1078fffda86d8630be1764e",
+    "browser-candidate-series.json": "c3fef19bb29ee59e451029decde1f227106238e411015ad9a8d2d8bb321115f0"
+  },
+  "cleanup": "owned Compose project removed",
+  "performance_verified": false,
+  "full_category_or_VOD_parity": false,
+  "browser_plaintext_passwords_and_successful_login_JWT_bodies_absent_from_durable_browser_artifacts": true
+}

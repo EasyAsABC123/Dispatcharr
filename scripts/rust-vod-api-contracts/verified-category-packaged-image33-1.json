@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "scope": "Actual canonical image33 ordinary/category network wire, initial fault, mixed traffic, metadata restoration and shutdown; actualReact/browser and performance excluded from this run",
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "evidence": "artifacts/rust/m5-vod-category-packaged-image33-1/http",
+  "successful_tools": "artifacts/rust/m5-vod-category-packaged-image33-1/http/tools",
+  "image": {
+    "tag": "dispatcharr-rust-candidate:vod-categories-image33-1",
+    "image_id": "sha256:f48f01c715fbd134df74b91111c27150f07ec28a77688ed1ae0724379069d68e",
+    "source_tree_sha256": "9a308613f654701984a054cad27ea2d2ac42ea870dcc29d610d2cf8421f3de82",
+    "git_revision": "30951cd2"
+  },
+  "checks": {
+    "source_network_cases": 664,
+    "ordinary_exact_responses": 393,
+    "category_exact_responses": 159,
+    "category_explicit_unsupported_not_parity_pass": [
+      {
+        "index": 483,
+        "path": "/api/vod/categories/?ordering=get_category_type_display",
+        "source_status": 500,
+        "recognized_open_case": true,
+        "parity_pass": false
+      },
+      {
+        "index": 485,
+        "path": "/api/vod/categories/?ordering=m3u_relations",
+        "source_status": 200,
+        "recognized_open_case": true,
+        "parity_pass": false
+      },
+      {
+        "index": 489,
+        "path": "/api/vod/categories/?search=Drama%5C%20News",
+        "source_status": 200,
+        "recognized_open_case": true,
+        "parity_pass": false
+      },
+      {
+        "index": 530,
+        "path": "/api/vod/categories/?format=api",
+        "source_status": 406,
+        "recognized_open_case": true,
+        "parity_pass": false
+      }
+    ],
+    "ordinary_burst": true,
+    "category_burst": true,
+    "mixed_burst": true,
+    "initial_actual_source_native_fault": true,
+    "all_ordinary_and_category_compared_headers_include_Django4security": true,
+    "initial_fault_includes_Django4security": true,
+    "metadata_provider_rows_unchanged": true,
+    "candidate_shutdown": {
+      "elapsed_seconds": 0.3227256739992299,
+      "exit_code": 0,
+      "running": false
+    }
+  },
+  "open_defaults_fault_wire_cases": 7,
+  "evidence_sha256": {
+    "source-run.json": "a549db50919e86913e6a82e39d0d2abc18bb39c2f2ed32d361895840af399573",
+    "build-manifest.json": "c7cb1646167ac3689a2533551b49cabccb608f318dda894fce34f5ac46bf487b",
+    "source-corpus.json": "27f2ad7773d8fed0dcd65de9f5afbaaa089e187d7caf8c25c2a8bd8152f5792b",
+    "packaged-http.json": "1b3599777719cfb00189068058f5fb4e8e03670da4fd95983b448f888090daec",
+    "packaged-category-http.json": "0a279e453c999270f1a009e809901c9048b2ca028fdbef23fc4b4a162015681e",
+    "packaged-category-initial.json": "c9304e6a3bf36619ff5fd4ffc73a14145a57702ea12f43edad5215bcc1a09311",
+    "packaged-effects.json": "1ff734dec7571cbe847acac8bdbbfe212c9290c91ac1d84028da6b55f1b596f3",
+    "source-category-burst.json": "29b37e67c7361840e840080ff3b3b599fcd5775ac57a20f73f2dca1dd48580dc",
+    "source-vod-mixed-burst.json": "106981ec6750aa0aad6c04c8ee4175012a1185d03536a7ee4b6d966da64f20a8",
+    "source-burst.json": "58edc98a1c9ea4b3143e50c4424c718bd2b39fad1bbe46e19936fe542d694fed"
+  },
+  "cleanup": "owned Compose project removed",
+  "browser_verified": false,
+  "performance_verified": false,
+  "full_category_or_VOD_parity": false
+}

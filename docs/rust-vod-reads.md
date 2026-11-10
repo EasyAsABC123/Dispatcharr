@@ -70,6 +70,10 @@ The later [category source extension](../scripts/rust-vod-api-contracts/CATEGORY
 adds list/detail routes through the same VOD admission, memory and shutdown
 resources. Its [source checkpoint](../scripts/rust-integration/verified-vod-category-source-1.json)
 records component comparisons, ordinary-read regressions and the compiled main
-merge. Canonical packaging, category browser workflows, performance, four query/
-format differences and seven default-error branches remain open. Image31's
-ordinary VOD measurements do not establish category performance gains.
+merge. [Image33](../scripts/rust-integration/verified-checkpoint-image33-1.json)
+now passes packaged API comparisons, mixed bursts, initialization faults and four
+actual Original/native React category workflows, plus the broader API/playback
+regressions. Its historical scope still excludes four query/format cases and
+seven default-error branches. Further fixes need their own packaged evidence.
+Category performance remains open; image31's ordinary VOD measurements do not
+establish category gains.

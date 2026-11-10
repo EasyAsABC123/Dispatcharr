@@ -55,8 +55,10 @@ performance remain open.
 
 The [VOD category source checkpoint](../scripts/rust-integration/verified-vod-category-source-1.json)
 adds application routes sharing the accepted VOD resource limits. Component
-interoperability and ordinary regressions pass; packaged application/browser
-verification and the explicitly excluded category behaviors remain open. It
+interoperability and ordinary regressions pass. The later
+[image33 checkpoint](../scripts/rust-integration/verified-checkpoint-image33-1.json)
+passes packaged API, actual scoped React workflows and broader regressions.
+Its four query/format and seven default-error exclusions remain explicit. It
 does not close M5 or establish new performance gains.
 
 The [Original EPG refresh worker reference](../scripts/rust-job-contracts/EPG-REFRESH-WORKER.md)
