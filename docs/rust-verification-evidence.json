@@ -257,5 +257,35 @@
     "performance_verified": false,
     "whole_application_verified": false,
     "active_VOD_Redis_recovery_passed": false
+  },
+  "category_metadata_resources_image34": {
+    "passed": true,
+    "report": "scripts/rust-vod-category-perf/verified-experiment-image34-1.json",
+    "documentation": "docs/rust-vod-category-performance.md",
+    "scope": "Exact category-list metadata only, 242 categories/501 nested links, one reader1s and ten readers5s; no full VOD/browser/media/application gain",
+    "candidate_image": "sha256:b0034daea0add637f63f01702be047a02d32d78c9f03089ed093065e2a0c92c9",
+    "git_revision": "a84d4acafe7bf70667129c5d6ddf3c74b2b505d5",
+    "pairs": 6,
+    "measurement_samples": 720,
+    "verified_measurement_requests": 1080,
+    "all_resource_samples": 840,
+    "all_timings_including_warmup": 1601,
+    "median_paired_ratios": {
+      "category-list-1": {
+        "cpu_percent_mean": 0.2961305932907207,
+        "peak_working_memory_bytes": 0.39587802191431387,
+        "completion_p95_ms": 0.3503768342935691,
+        "throughput_per_second": 1.0
+      },
+      "category-list-10": {
+        "cpu_percent_mean": 0.2927754088751356,
+        "peak_working_memory_bytes": 0.3844739764850063,
+        "completion_p95_ms": 0.34331118434572117,
+        "throughput_per_second": 1.0
+      }
+    },
+    "performance_verified": true,
+    "whole_application_performance_verified": false,
+    "full_milestone_complete": false
   }
 }

@@ -1,0 +1,94 @@
+{
+  "passed": true,
+  "scope": "Steady category metadata JSON list only; no complete VOD/browser/media/provider/unified/artwork or wholeapp gain claim",
+  "candidate_image": "sha256:b0034daea0add637f63f01702be047a02d32d78c9f03089ed093065e2a0c92c9",
+  "candidate_source_tree": "01977eb04b0e1ba70e75a6b0230a986f5ba9a3245b51fa1853e10a7e7ed5fc11",
+  "candidate_source_archive": "15d91c50a811e799183a787899a6dcbfa1c659b1c85d1de1fa4e5edeaec0ed9c",
+  "git_revision": "a84d4acafe7bf70667129c5d6ddf3c74b2b505d5",
+  "build_manifest_sha256": "ec229ae670e1fe377d2d7778d94c69df04f1b36106f65dbc6ace03bbbf213712",
+  "evidence": "/home/justin/github/Dispatcharr/artifacts/rust/vod-category-resource-experiment-1",
+  "integration_report_sha256": "7e050b7064650a3604b38e486020626b8ee7415845431f84c7ef34544ff5432c",
+  "tool_manifest_sha256": "e16d65ad0eeafe55712a3a0689f8c0a1b4a9f41d67c36463393df03f72ea6a46",
+  "policy_sha256": "a069f665602ad1565ebc9c7ddb10d63cbd2da51a6c07474223630f7ec331dcb3",
+  "plan_sha256": "4093c50ac6091ae387b76591e261be7fb292483f6fb199ffc46ba589c782c9a5",
+  "spec_sha256": "be87890e587eb8c6175cdc7c906a915d652d0b5be3eff30bcd4bc3242b362f9b",
+  "bound_record_sha256": "fce187e74d08fa88b6a4237982af29a0f45f4b286de0e955b7d97cb214b17820",
+  "manifest_canonical_sha256": "91b22c761574e4586317a1d5db64c838d9b8e2447415040503cd19187821c67b",
+  "qualification_sha256": "b99295b6fc448afb84d969ffa62dc48120f56cd81637f06c2d86359fa7ac90ec",
+  "frozen_plan_file_sha256": "d28411bea1fc2cfdec2da26925e2e4ec9f91eddfedb813dcdf7636120246d4ca",
+  "pairs": 6,
+  "measurement_phases": 12,
+  "qualification_phases": 8,
+  "resource_samples": 840,
+  "measurement_samples": 720,
+  "request_traces": 1262,
+  "verified_measurement_requests": 1080,
+  "warmup_and_measured_timings": 1350,
+  "all_phase_request_timings_including_warmup": 1601,
+  "failed_source_qualification_observations_retained": 2,
+  "selected_periods_seconds": {
+    "category-list-1": 1,
+    "category-list-10": 5
+  },
+  "medians": {
+    "category-list-1": {
+      "readers": 1,
+      "paired_ratios": {
+        "cpu_percent_mean": 0.2961305932907207,
+        "peak_working_memory_bytes": 0.39587802191431387,
+        "completion_p95_ms": 0.3503768342935691,
+        "throughput_per_second": 1.0
+      },
+      "decrease_percent": {
+        "cpu_percent_mean": 70.38694067092793,
+        "peak_working_memory_bytes": 60.412197808568614,
+        "completion_p95_ms": 64.96231657064308
+      },
+      "backend_medians": {
+        "source": {
+          "cpu_percent_mean": 35.95727836216559,
+          "peak_working_memory_bytes": 428896256,
+          "completion_p95_ms": 368.95686400384875
+        },
+        "candidate": {
+          "cpu_percent_mean": 10.725896013853253,
+          "peak_working_memory_bytes": 168960000,
+          "completion_p95_ms": 129.27393800055142
+        }
+      }
+    },
+    "category-list-10": {
+      "readers": 10,
+      "paired_ratios": {
+        "cpu_percent_mean": 0.2927754088751356,
+        "peak_working_memory_bytes": 0.3844739764850063,
+        "completion_p95_ms": 0.34331118434572117,
+        "throughput_per_second": 1.0
+      },
+      "decrease_percent": {
+        "cpu_percent_mean": 70.72245911248645,
+        "peak_working_memory_bytes": 61.552602351499374,
+        "completion_p95_ms": 65.66888156542788
+      },
+      "backend_medians": {
+        "source": {
+          "cpu_percent_mean": 72.29224591447284,
+          "peak_working_memory_bytes": 427536384,
+          "completion_p95_ms": 379.79914999596076
+        },
+        "candidate": {
+          "cpu_percent_mean": 21.178216916667377,
+          "peak_working_memory_bytes": 164478976,
+          "completion_p95_ms": 130.3892959986115
+        }
+      }
+    }
+  },
+  "numerical_evidence_sha256": "2cdb42e6670d65d9a7245f1972815a3c09ad335d3553295ddf53eb79fa05fc2f",
+  "publisher_source_sha256": "b1216f75496042dbe61b880c2a004fbc0fb29325b8f2fed5a0eddf9d529aff71",
+  "cleanup": "owned project removed",
+  "performance_verified": true,
+  "whole_application_performance_verified": false,
+  "full_milestone_complete": false,
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing."
+}

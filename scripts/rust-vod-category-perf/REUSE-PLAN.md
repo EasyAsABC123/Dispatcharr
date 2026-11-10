@@ -1,0 +1,11 @@
+# Framework reuse boundaries
+
+Original Dispatcharr authors retain application credit and AGPL licensing. No existing image31/33 policy, observer evidence or numerical result is relabeled for this experiment.
+
+The guide observer, cgroup-counter reader and Docker sampler can remain unchanged. The existing API scheduler already accepts a path list and a reader callback, so the category endpoint can use that scheduling logic with the same completion-deadline enforcement and stagger policy. The idle origin overlay and whole-service-group limits can remain unchanged. These shared infrastructure modules must be captured with their hashes before the run.
+
+The ordinary VOD orchestrator is not a drop-in category runner. Its normalization loop assumes two endpoints, its fixture fields expect movie counts, and its protocol authorization scopes/image31 constants differ. A category adapter must iterate the actual one-path workload, use the bound category policy, validate the 242/501 fixture and complete-table fingerprints, and require category-specific Source/measurement cues. It must not leave an empty second-endpoint aggregate or accidentally import the live ordinary protocol from sys.modules. Captured protocol/reader/acceptance modules must be installed consistently before loading the orchestrator.
+
+The category reader validates unpaginated arrays and all nested metadata, rather than ordinary count/results envelopes. Existing acceptance calculations can be reused only with the category bound budgets and one endpoint. Late-completed and observer failures remain fatal. Controls must exercise these adapter boundaries, including a Source plan frozen before any native resource observations and a missing future measurement cue.
+
+Image binding is a separate pre-sampling action after canonical image34 and functional gates pass. `protocol.bind` writes a new exclusive file containing the fixed spec digest, exact committed image/archive/tree/manifest identity and final policy digest. Until that record exists and fresh cues match it, no observer or experiment can run. The runner adaptation now has Source-only functional validation and seven pure controls. Source/native functional validation, observer capability, qualification and measured pairs still require canonical image34 and fresh review/cues.

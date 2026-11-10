@@ -1,0 +1,110 @@
+{
+  "passed": true,
+  "scope": "Exact image34 category performance fixture functional verification only; no observer, qualification or native resource measurement",
+  "original_credit": "All application/algorithm credit remains with original Dispatcharr authors/contributors; AGPL retained.",
+  "evidence": "artifacts/rust/vod-category-perf-functional-image34-1",
+  "successful_tools": "artifacts/rust/vod-category-perf-functional-image34-1/tools",
+  "image": {
+    "image_id": "sha256:b0034daea0add637f63f01702be047a02d32d78c9f03089ed093065e2a0c92c9",
+    "source_tree_sha256": "01977eb04b0e1ba70e75a6b0230a986f5ba9a3245b51fa1853e10a7e7ed5fc11",
+    "git_revision": "a84d4acafe7bf70667129c5d6ddf3c74b2b505d5"
+  },
+  "bound_policy_sha256": "a069f665602ad1565ebc9c7ddb10d63cbd2da51a6c07474223630f7ec331dcb3",
+  "spec_sha256": "be87890e587eb8c6175cdc7c906a915d652d0b5be3eff30bcd4bc3242b362f9b",
+  "fixture": {
+    "categories": 242,
+    "nested_links": 501,
+    "owned_accounts": 5,
+    "active_XC_accounts": 3,
+    "owned_profiles": 5,
+    "content_tables_empty": true,
+    "fingerprinted_table_counts": {
+      "accounts_user": 1,
+      "m3u_m3uaccount": 6,
+      "m3u_m3uaccountprofile": 6,
+      "vod_vodcategory": 242,
+      "vod_m3uvodcategoryrelation": 501,
+      "core_coresettings": 8
+    },
+    "fixture_sha256": "8afb5471f2813a4ef5bcae3c4085e5cbee820fa91d2df43d4b9d50df72e9b52c",
+    "schema_sha256": "7d14f257d439eb858b4609c5aca6bac6d1ad187c7a455f393712256e457e4606"
+  },
+  "checks": [
+    {
+      "backend": "source",
+      "path_index": 0,
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 97835,
+      "body_sha256": "317cfa35aba27dff2b1a5e5803cb9a0f0d007e25dea4a1c2b0cd0f0ef2ce7af1"
+    },
+    {
+      "backend": "source",
+      "path_index": 0,
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 97835,
+      "body_sha256": "317cfa35aba27dff2b1a5e5803cb9a0f0d007e25dea4a1c2b0cd0f0ef2ce7af1"
+    },
+    {
+      "backend": "candidate",
+      "path_index": 0,
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 97835,
+      "body_sha256": "317cfa35aba27dff2b1a5e5803cb9a0f0d007e25dea4a1c2b0cd0f0ef2ce7af1"
+    },
+    {
+      "backend": "candidate",
+      "path_index": 0,
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 97835,
+      "body_sha256": "317cfa35aba27dff2b1a5e5803cb9a0f0d007e25dea4a1c2b0cd0f0ef2ce7af1"
+    }
+  ],
+  "actual_limits": {
+    "baseline": {
+      "id": "ba223490278ba24819c803c5933ec34e343efba7b0c0f6b8e4623d9bdc97a07c",
+      "memory_bytes": 1073741824,
+      "nano_cpus": 1000000000
+    },
+    "origin": {
+      "id": "e8169e6d49e32488292fb6a56aae3276927a2c35aa5f25c980faa2b36ac43d29",
+      "memory_bytes": 1073741824,
+      "nano_cpus": 2000000000
+    },
+    "source": {
+      "id": "3a8169a8808a8aeb6a34af9bd99ec9845ce74a2e080427739d5c9b27b614616e",
+      "memory_bytes": 536870912,
+      "nano_cpus": 2000000000
+    },
+    "candidate": {
+      "id": "5117b6dcc9ed4d5a8e16be744ffa1adb25f274afd8e4ad2a6671aa2d6dc3a607",
+      "memory_bytes": 536870912,
+      "nano_cpus": 2000000000
+    }
+  },
+  "candidate_binding": {
+    "image_id": "sha256:b0034daea0add637f63f01702be047a02d32d78c9f03089ed093065e2a0c92c9",
+    "source_tree_sha256": "01977eb04b0e1ba70e75a6b0230a986f5ba9a3245b51fa1853e10a7e7ed5fc11",
+    "manifest_verified": true
+  },
+  "source_binding": {
+    "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "configured_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "container_id": "3a8169a8808a8aeb6a34af9bd99ec9845ce74a2e080427739d5c9b27b614616e"
+  },
+  "fingerprints_unchanged": true,
+  "source_only": false,
+  "sampler_started": false,
+  "evidence_sha256": {
+    "integration.json": "39d3f6edcef3e867db03f2c8323e9146c4ef02d2075e0b553252312214bce8dd",
+    "build-manifest.json": "ec229ae670e1fe377d2d7778d94c69df04f1b36106f65dbc6ace03bbbf213712",
+    "bound-policy.json": "fce187e74d08fa88b6a4237982af29a0f45f4b286de0e955b7d97cb214b17820",
+    "reference-private.json": "fb1cd66690cc75d7d8ce9d838fee239edb1ca234ed811c7ff4a109278c88577a"
+  },
+  "cleanup": "owned project removed",
+  "performance_verified": false,
+  "qualification_authorized": false
+}

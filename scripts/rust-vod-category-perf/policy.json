@@ -1,0 +1,156 @@
+{
+  "status": "draft budgets and fixture declared before candidate values; binding awaits canonical image34",
+  "policy": {
+    "service_limits": {
+      "backend": {
+        "memory_bytes": 536870912,
+        "nano_cpus": 2000000000
+      },
+      "infrastructure": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 1000000000
+      },
+      "origin": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 2000000000
+      }
+    },
+    "selected_services": {
+      "source": [
+        "baseline",
+        "origin",
+        "source"
+      ],
+      "candidate": [
+        "baseline",
+        "origin",
+        "candidate"
+      ]
+    },
+    "qualification": {
+      "source_only": true,
+      "warmup_seconds": 5,
+      "duration_seconds": 15,
+      "max_errors": 0,
+      "min_pacing_fraction": 0.95,
+      "max_backend_cpu_percent_mean": 170,
+      "max_backend_memory_fraction": 0.9,
+      "max_throttled_period_fraction": 0.05,
+      "selection": "Smallest feasible declared fixed request period selected using Source counters only; candidate values never consulted"
+    },
+    "budgets": {
+      "max_cpu_ratio": 1.0,
+      "max_memory_ratio": 1.0,
+      "max_ttfb_p95_ratio": 1.1,
+      "ttfb_floor_ms": 50,
+      "max_completion_p95_ratio": 1.1,
+      "min_throughput_ratio": 0.95,
+      "min_pacing_fraction": 0.95,
+      "max_errors": 0,
+      "minimum_samples": 60,
+      "max_oom_kills": 0,
+      "max_counter_resets": 0
+    },
+    "warmup_seconds": 15,
+    "measurement_seconds": 60,
+    "trials": 3,
+    "orders": [
+      [
+        "source",
+        "candidate"
+      ],
+      [
+        "candidate",
+        "source"
+      ],
+      [
+        "source",
+        "candidate"
+      ]
+    ],
+    "sample_seconds": 1,
+    "format_version": 1,
+    "scope": "Steady category metadata JSON list only; no complete VOD/browser/media/provider/unified/artwork or wholeapp gain claim",
+    "candidate_binding": {
+      "status": "pending canonical image34 commit/build; no candidate sampling authorized",
+      "image_id": null,
+      "source_tree_sha256": null,
+      "source_archive_sha256": null
+    },
+    "fixture": {
+      "owned_categories": 240,
+      "movie_categories": 120,
+      "series_categories": 120,
+      "global_uncategorized_categories": 2,
+      "returned_categories": 242,
+      "owned_accounts": 5,
+      "active_XC_accounts": 3,
+      "inactive_XC_accounts": 1,
+      "active_STD_accounts": 1,
+      "owned_account_profiles": 5,
+      "ordinary_category_XC_links": 480,
+      "STD_extra_links": 15,
+      "existing_global_default_links": 6,
+      "returned_nested_links": 501,
+      "source_content_tables_empty": [
+        "Movie",
+        "Series",
+        "Episode",
+        "VODLogo"
+      ],
+      "properties_max_serialized_bytes": 256,
+      "role": "one active Standard user; both content flags true",
+      "names": "unique within category_type; explicit ordering=category_type,name gives a unique tuple including two global defaults",
+      "remote_provider_requests": 0,
+      "disabled_nested_links": 177,
+      "enabled_nested_links": 324
+    },
+    "workloads": [
+      {
+        "name": "category-list-1",
+        "users": 1,
+        "paths": [
+          "/api/vod/categories/?ordering=category_type,name"
+        ],
+        "period_candidates_seconds": [
+          10,
+          5,
+          2,
+          1
+        ]
+      },
+      {
+        "name": "category-list-10",
+        "users": 10,
+        "paths": [
+          "/api/vod/categories/?ordering=category_type,name"
+        ],
+        "period_candidates_seconds": [
+          10,
+          5,
+          2,
+          1
+        ]
+      }
+    ],
+    "host_header": "vod-category-perf.invalid:8088",
+    "encoding": "identity",
+    "body_limit_bytes": 4194304,
+    "request_timeout_seconds": 10,
+    "pacing": "Same existing closed-loop scheduler, offsets, source/native period and staggering; independent functional10-reader barrier has no staggering.",
+    "initialization": "Global categories and6active-XC default links exist before reference capture/timing. Normal Source get_or_create existence checks remain part of every request. No endpoint-specific caches or work removed.",
+    "correctness": "Every response exact Original status/MIME/raw-byte length/SHA and ordered typed JSON;242categories/501nested links, all default/disabled/inactive/STD metadata retained; unique type/name ordering; fixture/schema hashes checked before and after every phase.",
+    "fingerprint": "All fields of User,M3UAccount,M3UAccountProfile,VODCategory,M3UVODCategoryRelation and CoreSettings, including baseline custom STD account where present; Movie/Series/Episode/VODLogo emptiness checked. Schema hash explicitly covers selected information_schema.columns, not all DDL.",
+    "reset": "Stop both backends, clear only owned disposable Redis, inspect finite cgroups, force-recreate one backend. Warm grouped auth/settings caches using the same exact endpoint checks before15s warmup. No metadata/content-cache reset inside measurement.",
+    "observer": "Unchanged rust-guide-perf observer/cgroup/docker_stats and rust-perf sampler; infrastructure+origin+one backend whole-group CPU and Docker working memory, plus components. Optional processRSS diagnostic is not summed as primary memory.",
+    "acceptance": "All6pairs/12phases must pass every CPU/memory/latency/throughput/pacing/error/sample/OOM/reset gate; minimum60samples; measured late_completed must be0; no median can override failedpair. Scope is one endpoint.",
+    "authorization": "No samplers in functional mode. Source observer smoke/qualification require new Root quiet authorization bound to image34/manifest/policy/boot. Freeze Source-only pacing; native sampling waits distinct Root cue bound to frozenplan. No run while sibling builds/fixtures active.",
+    "exclusions": [
+      "No resource observation before canonical34 closed-query/default-wire and broad functional gates pass",
+      "No inherited image31/33 performance claim",
+      "No WebSocket/browser workload or media playback",
+      "No provider refresh or remote assets",
+      "No uncaptured property grammar/full category parity claim"
+    ]
+  }
+}

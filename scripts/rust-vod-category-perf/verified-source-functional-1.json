@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "scope": "Original-only category experiment fixture functional verification; no candidate, observer, sampler, qualification or resource evidence",
+  "original_credit": "Original Dispatcharr authors/contributors retain all application credit; AGPL retained.",
+  "evidence": "artifacts/rust/vod-category-perf-source-functional-2",
+  "successful_tools": "artifacts/rust/vod-category-perf-source-functional-2/tools",
+  "policy_spec_sha256": "be87890e587eb8c6175cdc7c906a915d652d0b5be3eff30bcd4bc3242b362f9b",
+  "checks": [
+    {
+      "backend": "source",
+      "path_index": 0,
+      "consumers": 1,
+      "passed": true,
+      "body_bytes": 97835,
+      "body_sha256": "317cfa35aba27dff2b1a5e5803cb9a0f0d007e25dea4a1c2b0cd0f0ef2ce7af1"
+    },
+    {
+      "backend": "source",
+      "path_index": 0,
+      "consumers": 10,
+      "passed": true,
+      "body_bytes": 97835,
+      "body_sha256": "317cfa35aba27dff2b1a5e5803cb9a0f0d007e25dea4a1c2b0cd0f0ef2ce7af1"
+    }
+  ],
+  "fixture": {
+    "categories": 242,
+    "nested_links": 501,
+    "owned_accounts": 5,
+    "active_XC_accounts": 3,
+    "owned_profiles": 5,
+    "content_tables_empty": true,
+    "fingerprinted_table_counts": {
+      "accounts_user": 1,
+      "m3u_m3uaccount": 6,
+      "m3u_m3uaccountprofile": 6,
+      "vod_vodcategory": 242,
+      "vod_m3uvodcategoryrelation": 501,
+      "core_coresettings": 8
+    },
+    "fixture_sha256": "9927fe496316b7e39c395272a9c274878d1e69f3b39003f505b3256a1fe4ac22",
+    "schema_sha256": "7d14f257d439eb858b4609c5aca6bac6d1ad187c7a455f393712256e457e4606"
+  },
+  "source_binding": {
+    "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "configured_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "container_id": "22bd210ca51e261da11575d427fb5d3c9e15cc0d07ca5069fc3e96dce7550618"
+  },
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "actual_configured_limits": {
+    "baseline": {
+      "id": "f419003a1e352dc167323ea17554e68c19f5d1d279c6b8ec4887d70391426523",
+      "memory_bytes": 1073741824,
+      "nano_cpus": 1000000000
+    },
+    "origin": {
+      "id": "b3eb9c1ff3316e51d37d936feeab6a1e3ab890dc5f73f8942f4c5fa878d0ab12",
+      "memory_bytes": 1073741824,
+      "nano_cpus": 2000000000
+    },
+    "source": {
+      "id": "22bd210ca51e261da11575d427fb5d3c9e15cc0d07ca5069fc3e96dce7550618",
+      "memory_bytes": 536870912,
+      "nano_cpus": 2000000000
+    }
+  },
+  "source_only": true,
+  "sampler_started": false,
+  "idle_origin_zero_requests": true,
+  "fingerprints_unchanged": true,
+  "controls": {
+    "pure_tests": 7,
+    "passed": true,
+    "log": "artifacts/rust/category-perf-runner-controls-2.log",
+    "sha256": "209637c5270ea62667d3505f25f6e8e713fd220b3020983b799e40ff6ae4138a"
+  },
+  "evidence_sha256": {
+    "integration.json": "05cadad141431f112baeccdd2dc4d613214b52af0c976308aee8c2eabdfaedce",
+    "reference-private.json": "fb1cd66690cc75d7d8ce9d838fee239edb1ca234ed811c7ff4a109278c88577a"
+  },
+  "earlier_functional_success": "artifacts/rust/vod-category-perf-source-functional-1",
+  "cleanup": "owned project removed",
+  "image34_binding_pending": true,
+  "performance_verified": false
+}
