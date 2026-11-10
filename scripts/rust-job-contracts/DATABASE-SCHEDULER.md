@@ -47,3 +47,28 @@ or a completed scheduling milestone.
 python3 scripts/rust-job-contracts/run_scheduler.py \
   --output artifacts/rust/database-scheduler-local
 ```
+
+[The eager startup/reload reference](verified-original-database-scheduler-startup-1.json)
+passes 16 further actual Original checks. Full `DatabaseScheduler(lazy=False)`
+installs five configured application schedules plus `celery.backend_cleanup`;
+construction and reconstruction publish nothing and produce no task results.
+After defaults are disabled with an explicit change marker, a model create/save
+reloads the owned interval entry, while `QuerySet.update(enabled=False)` alone
+leaves its cached enabled model present. Updating `PeriodicTasks` removes it; an
+ordinary save re-enables it and deletion removes it. Reconstructing the scheduler
+creates no duplicate default names. This is an in-process reference, with no
+OS-process restart or elapsed-time guarantee.
+
+The capture deliberately clears and changes periodic-task rows only in its
+disposable copied database; that copy is removed with the Compose project. It
+does not claim copied-row restoration. The original default database remains
+unchanged, and independent container/network/volume checks confirm cleanup.
+
+```sh
+python3 scripts/rust-job-contracts/run_scheduler_startup.py \
+  --output artifacts/rust/database-scheduler-startup-local
+```
+
+The earlier lazy-only reference's startup/reload omissions now have these scoped
+Original observations. Native startup, timezone filtering, trigger execution,
+crash windows, packaging and performance still require their own gates.

@@ -1,0 +1,239 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "configured-default-rows-installed",
+      "passed": true
+    },
+    {
+      "name": "backend-cleanup-installation-matches-result-expiry",
+      "passed": true
+    },
+    {
+      "name": "backend-cleanup-task-name",
+      "passed": true
+    },
+    {
+      "name": "eager-construction-has-not-published",
+      "passed": true
+    },
+    {
+      "name": "eager-construction-has-no-results",
+      "passed": true
+    },
+    {
+      "name": "signalled-disabled-defaults-absent",
+      "passed": true
+    },
+    {
+      "name": "created-entry-save-reloads",
+      "passed": true
+    },
+    {
+      "name": "bulk-update-without-sentinel-retains-cached-entry",
+      "passed": true
+    },
+    {
+      "name": "cached-entry-retains-prior-enabled-model",
+      "passed": true
+    },
+    {
+      "name": "explicit-sentinel-removes-disabled-entry",
+      "passed": true
+    },
+    {
+      "name": "model-save-reloads-enabled-entry",
+      "passed": true
+    },
+    {
+      "name": "model-delete-removes-entry",
+      "passed": true
+    },
+    {
+      "name": "eager-reconstruction-has-no-duplicate-names",
+      "passed": true
+    },
+    {
+      "name": "eager-reconstruction-preserves-default-name-set",
+      "passed": true
+    },
+    {
+      "name": "reconstruction-has-not-published",
+      "passed": true
+    },
+    {
+      "name": "reconstruction-has-no-results",
+      "passed": true
+    }
+  ],
+  "versions": {
+    "celery": "5.6.3",
+    "django-celery-beat": "2.9.0",
+    "Django": "6.0.9"
+  },
+  "scope": "Actual eager DatabaseScheduler setup/default installation and in-process changed-sentinel reload; no tick, worker, native scheduler, process restart or performance acceptance",
+  "configured_defaults": [
+    "check-account-expirations",
+    "check-version-updates",
+    "fetch-channel-statuses",
+    "maintain-recurring-recordings",
+    "scan-files"
+  ],
+  "result_expires_enabled": true,
+  "installed_rows": [
+    {
+      "name": "celery.backend_cleanup",
+      "task": "celery.backend_cleanup",
+      "enabled": true,
+      "interval_id": null,
+      "crontab_id": 1,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": 43200,
+      "one_off": false
+    },
+    {
+      "name": "check-account-expirations",
+      "task": "apps.m3u.tasks.check_account_expirations",
+      "enabled": true,
+      "interval_id": 5,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    },
+    {
+      "name": "check-version-updates",
+      "task": "core.tasks.check_for_version_update",
+      "enabled": true,
+      "interval_id": 5,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    },
+    {
+      "name": "fetch-channel-statuses",
+      "task": "apps.proxy.tasks.fetch_channel_stats",
+      "enabled": false,
+      "interval_id": 2,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    },
+    {
+      "name": "maintain-recurring-recordings",
+      "task": "apps.channels.tasks.maintain_recurring_recordings",
+      "enabled": true,
+      "interval_id": 4,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    },
+    {
+      "name": "scan-files",
+      "task": "core.tasks.scan_and_process_files",
+      "enabled": true,
+      "interval_id": 3,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    }
+  ],
+  "reconstructed_rows": [
+    {
+      "name": "celery.backend_cleanup",
+      "task": "celery.backend_cleanup",
+      "enabled": false,
+      "interval_id": null,
+      "crontab_id": 1,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": 43200,
+      "one_off": false
+    },
+    {
+      "name": "check-account-expirations",
+      "task": "apps.m3u.tasks.check_account_expirations",
+      "enabled": false,
+      "interval_id": 5,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    },
+    {
+      "name": "check-version-updates",
+      "task": "core.tasks.check_for_version_update",
+      "enabled": false,
+      "interval_id": 5,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    },
+    {
+      "name": "fetch-channel-statuses",
+      "task": "apps.proxy.tasks.fetch_channel_stats",
+      "enabled": false,
+      "interval_id": 2,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    },
+    {
+      "name": "maintain-recurring-recordings",
+      "task": "apps.channels.tasks.maintain_recurring_recordings",
+      "enabled": false,
+      "interval_id": 4,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    },
+    {
+      "name": "scan-files",
+      "task": "core.tasks.scan_and_process_files",
+      "enabled": false,
+      "interval_id": 3,
+      "crontab_id": null,
+      "args": "[]",
+      "kwargs": "{}",
+      "expire_seconds": null,
+      "one_off": false
+    }
+  ],
+  "scheduler_source_sha256": "e710af762a9704592a89a589fad34b91eb72d376d7bdc3d1f2ca1ebfe125f2fe",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors/contributors; Celery and django-celery-beat framework credit and licenses retained.",
+  "default_database_unchanged": true,
+  "cleanup": "Owned Compose project independently absent: containers/networks/volumes",
+  "copied_database_restored": false,
+  "copied_database_lifecycle": "Disposable copied database removed with owned project; prior copied rows are not claimed restored.",
+  "tools_sha256": {
+    "scripts/rust-job-contracts/run_scheduler_startup.py": "a32b8feb520b7c17ad92e447fe92195a1e37753add04a0b116e131ab47bdaad8",
+    "scripts/rust-job-contracts/source_scheduler_startup.py": "62395eec1092588a24ff385a35444cd47f93ec776feecdeed003bf796b7969ef"
+  },
+  "raw_evidence": {
+    "integration_sha256": "efd8a5100bbb18030ff3b91edbe27c0825f1812da1426335ccc1bf0e12588c38",
+    "observations_sha256": "266dd7a239939e883eb131462f8ffedc4714a31d41de7d4954880fdde45dd2f9"
+  },
+  "native_scheduler_verified": false,
+  "elapsed_transitions_verified": false,
+  "os_process_restart_verified": false,
+  "performance_verified": false
+}
