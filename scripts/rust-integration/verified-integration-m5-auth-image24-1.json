@@ -1,0 +1,119 @@
+{
+  "scope": "Canonical immutable24 M5 regression plus job-free backup files: fullAPI1024, enabled-IP33, hash34, persistent unchanged React/logo16, logo101/104responses, OutputProfile127+3 ownership gates, serializer141/no-mutation, and backup112 with five named Source-invalid204 header differences.",
+  "passed": true,
+  "build_manifest": "artifacts/rust/candidate-build-m7-xc-epg-image24-1/build.json",
+  "build_manifest_sha256": "e11e7831a02e1d558b0721fb09213325e7e1d9cf30de1d4c4d8cffdb782298fe",
+  "image_id": "sha256:f45cb87fe16dd5b3ee918d31e53f113dad18a1d0c0e13a5350ffdbbfbb7fbbf6",
+  "source_tree_sha256": "75c6c0c9df48d89bfb7f36e450bd4f8b91c1075e5e6281249092c11abcfad201",
+  "source_archive_sha256": "cbec46d621c368c33c586f1948423294ffa2b1039d83ab5877926aea81feea7a",
+  "runs": [
+    {
+      "report": "artifacts/rust/m5-auth-full-integration-image24-1/integration.json",
+      "sha256": "7e533e22fe9a0687503e876eb7c951e48ce4bc57bc1b2f5594a77552ea7bcdde",
+      "tool_source": "artifacts/rust/m5-auth-full-integration-image24-1/tool-source",
+      "cleanup": "project removed",
+      "checks": 1024,
+      "contract_suites": [
+        "accounts",
+        "account_crud",
+        "app_data",
+        "core",
+        "profiles",
+        "memberships",
+        "channel_reads",
+        "channel_crud",
+        "groups",
+        "channel_stops",
+        "group_cleanup",
+        "streams",
+        "provider_reads",
+        "server_group_crud",
+        "filter_crud",
+        "core_utilities",
+        "core_stream_crud",
+        "notifications"
+      ]
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-ip-image24-1/integration.json",
+      "sha256": "fd501dd54d06534bbd903a27e3dc746ea0226de19f17af396f638452f63a1a8e",
+      "tool_source": "artifacts/rust/m5-packaged-ip-image24-1/tool-source",
+      "cleanup": "project removed",
+      "checks": 33,
+      "contract_suites": [
+        "environment_ip"
+      ]
+    },
+    {
+      "report": "artifacts/rust/m5-packaged-auth-hash-image24-1/integration.json",
+      "sha256": "180d8b5e5913a74c34909a2c412bba859d52f8d858f30454a08f5d07c202dcc9",
+      "tool_source": "artifacts/rust/m5-packaged-auth-hash-image24-1/tool-source",
+      "cleanup": "project removed",
+      "checks": 34,
+      "contract_suites": [
+        "auth_hash"
+      ]
+    },
+    {
+      "report": "artifacts/rust/m5-native-react-logo-image24-1/integration.json",
+      "sha256": "6a9875123d4cff2f5ffd25bb270fdbb3747d7f54f8d6a875471b23eaab04f7a4",
+      "tool_source": "artifacts/rust/m5-native-react-logo-image24-1/tool-source",
+      "cleanup": "project removed",
+      "checks": 16
+    },
+    {
+      "report": "artifacts/rust/m5-logo-packaged-image24-1/integration.json",
+      "sha256": "5697e3b484545ecc00664e0a888d9897d1a9e71dbd1b688576c17080400fca98",
+      "tool_source": "artifacts/rust/m5-logo-packaged-image24-1/tool-source",
+      "cleanup": "project removed",
+      "source_cases": 101,
+      "source_http_responses": 104
+    },
+    {
+      "report": "artifacts/rust/m5-output-profile-packaged-image24-1/integration.json",
+      "sha256": "d35cd97d7c97eac5bbe0add3bf4217c8bdb041b7b936731b33ef7262484360a1",
+      "tool_source": "artifacts/rust/m5-output-profile-packaged-image24-1/tool-source",
+      "cleanup": "project removed",
+      "source_cases": 127,
+      "sql_fault_cases": 4,
+      "resource_checks": 3
+    },
+    {
+      "report": "artifacts/rust/m5-serializer-null-packaged-image24-1/integration.json",
+      "sha256": "e0569a79e997555af1e17c9d615240c400c1a0bea067429563863e0f8db4e8af",
+      "tool_source": "artifacts/rust/m5-serializer-null-packaged-image24-1/tool-source",
+      "cleanup": "project removed",
+      "source_cases": 141,
+      "protected_tables": 16,
+      "no_model_mutations": true
+    },
+    {
+      "report": "artifacts/rust/m8-backup-api-packaged-image24-1/integration.json",
+      "sha256": "6c335a5c9cb0d2550e7ffabdb34d158beab3dc48cef66d235bfe74231a4e7777",
+      "tool_source": "artifacts/rust/m8-backup-api-packaged-image24-1/tool-source",
+      "cleanup": "project removed",
+      "comparison_cases": 112,
+      "large_upload_cases": 3,
+      "raw_exact_wire_parity": false,
+      "secondary_contract_acceptance": true,
+      "declared_source_invalid_204_content_length_deltas": 5,
+      "exact_wire_cases": 107,
+      "runtime_spool_configuration": {
+        "TMPDIR": "/data",
+        "root_filesystem_read_only": true
+      }
+    }
+  ],
+  "performance_verified": false,
+  "remaining": [
+    "Five specifically named backup204 responses retain raw Content-Length40-to-absent wire differences; secondary acceptance permits only that observed invalid Source header, never full wire parity.",
+    "Backup creation/restore/task status success, durable jobs/restart/restore quiescence, scheduling mutations, SQLite and upgrades remain unported.",
+    "Other parser/filesystem/deployment corners and broad GUI workflows remain separately gated.",
+    "Current/XMLTV performance characterization is planned separately; no image24 performance gain is inferred from functional passes."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing.",
+  "tool_paths": {
+    "clean_install_compose": "artifacts/rust/m5-native-react-logo-image24-1/tool-source/docker/compose.rust-clean-install.yml",
+    "backup_overlay": "artifacts/rust/m8-backup-api-packaged-image24-1/backup-files-fixture.yml"
+  }
+}

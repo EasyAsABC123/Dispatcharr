@@ -1,10 +1,13 @@
 //! Bounded XMLTV file-to-PostgreSQL orchestration using original Dispatcharr
 //! projection and staged-swap algorithms. Original authors retain full credit.
 //! Application scheduling/status/cache/event wiring remains a separate gate.
+pub mod auto_logos;
 pub mod cache_policy;
 pub mod channel_core;
 mod channel_sql;
 pub mod channels;
+pub mod file_job;
+mod file_lease;
 pub mod reporter;
 use chrono::{DateTime, Utc};
 use dispatcharr_ingest_core::{
@@ -154,6 +157,9 @@ pub struct ImportReport {
     pub parser: XmltvStats,
     pub swap: GuideSwapCounts,
     pub no_mapped_channels: bool,
+    /// Actual initial mapping used by this parse, for Source late-mapping dispatch.
+    /// Returned only by the reported import path; bounded by staging limits.
+    pub initial_mapped_epg_ids: Vec<i64>,
 }
 #[derive(Clone)]
 pub struct EpgImporter {
@@ -526,6 +532,11 @@ async fn import_owned(
     } else {
         (stage, 0)
     };
+    let initial_mapped_epg_ids = if reporting.is_some() {
+        mapping.epg_ids.clone()
+    } else {
+        Vec::new()
+    };
     let mapped_tvg_ids = mapping.by_tvg_id.len();
     cancelled(&state.cancelled)?;
     if mapping.epg_ids.is_empty() {
@@ -677,6 +688,7 @@ async fn import_owned(
             )
             .await?;
     }
+    parsed.report.initial_mapped_epg_ids = initial_mapped_epg_ids;
     Ok(parsed.report)
 }
 

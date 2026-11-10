@@ -36,12 +36,17 @@ def request(base, path, token, timeout, expected=UNSET):
 
 
 def phase(base, paths, token, expected, *, users, duration, period, timeout,
-          sample=None, sample_interval=1):
+          sample=None, sample_interval=1, read_request=None, stagger=False,
+          require_complete_before_deadline=False):
     if (not 1 <= users <= 100 or not 0 < duration <= 300
             or not .05 <= period <= 10 or not 0 < timeout <= 10
             or not 0 < sample_interval <= 10 or not 1 <= len(paths) <= 32
             or any(not math.isfinite(x) for x in [duration, period, timeout, sample_interval])):
         raise ValueError('Invalid bounded API workload')
+    if read_request is not None and not callable(read_request):
+        raise ValueError('API request adapter must be callable')
+    read = request if read_request is None else read_request
+    began_phase = time.monotonic()
     stop = threading.Event()
     samples, sample_errors = [], []
     deadline = time.monotonic()+duration
@@ -58,15 +63,20 @@ def phase(base, paths, token, expected, *, users, duration, period, timeout,
             stop.wait(sample_interval)
 
     def user(index):
-        result = {'completed': 0, 'errors': {}, 'ttfb': [], 'roundtrip': [],
+        result = {'completed': 0, 'late_completed': 0, 'errors': {}, 'ttfb': [], 'roundtrip': [],
                   'per_path': {path: 0 for path in paths}}
+        if stagger:
+            stop.wait(max(0, began_phase+index*period/users-time.monotonic()))
         sequence = index
         while time.monotonic() < deadline:
             path = paths[sequence % len(paths)]
             sequence += 1
             began = time.monotonic()
             try:
-                _, first, elapsed = request(base, path, token, timeout, expected[path])
+                _, first, elapsed = read(base, path, token, timeout, expected[path])
+                if require_complete_before_deadline and time.monotonic() > deadline:
+                    result['late_completed'] += 1
+                    continue
                 result['completed'] += 1
                 result['per_path'][path] += 1
                 result['ttfb'].append(first)
@@ -97,6 +107,7 @@ def phase(base, paths, token, expected, *, users, duration, period, timeout,
     roundtrip = [value for row in rows for value in row['roundtrip']]
     return {'summary': {'completed': completed, 'errors': errors,
                 'users_without_success': sum(not row['completed'] for row in rows),
+                'late_completed': sum(row['late_completed'] for row in rows),
                 'requests_per_second': completed/duration,
                 'ttfb_ms_p95': percentile(ttfb, .95),
                 'roundtrip_ms_p95': percentile(roundtrip, .95),

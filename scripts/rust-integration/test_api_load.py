@@ -78,6 +78,24 @@ class ApiLoadTests(unittest.TestCase):
             new[section][field] = value
             self.assertFalse(api_load.compare(old, new)['passed'])
 
+    def test_optional_request_adapter_and_uniform_client_start(self):
+        calls=[]
+        def fake(base,path,token,timeout,expected):
+            calls.append((path,expected));return expected,0,0
+        with patch('api_load.request',side_effect=AssertionError('Default network reader used')):
+            result=api_load.phase('http://fixture',['guide'],'private',{'guide':{'kind':'json'}},users=2,duration=.06,period=.1,timeout=1,read_request=fake,stagger=True,require_complete_before_deadline=True)
+        self.assertEqual(result['summary']['completed'],2)
+        self.assertEqual(result['summary']['late_completed'],0)
+        self.assertEqual(len(calls),2)
+
+    def test_strict_guide_mode_excludes_response_completed_after_measurement_deadline(self):
+        import time
+        def late(*args):time.sleep(.03);return None,1,30
+        result=api_load.phase('http://fixture',['guide'],'private',{'guide':None},users=1,duration=.01,period=.1,timeout=1,read_request=late,require_complete_before_deadline=True)
+        self.assertEqual(result['summary']['completed'],0)
+        self.assertEqual(result['summary']['late_completed'],1)
+        self.assertEqual(result['summary']['users_without_success'],1)
+
     def test_workload_limits_reject_nan_or_unbounded_worker_counts(self):
         for users, duration in [(0, 1), (101, 1), (1, math.nan), (1, 301)]:
             with self.assertRaises(ValueError):

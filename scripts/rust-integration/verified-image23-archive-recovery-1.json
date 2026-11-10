@@ -1,0 +1,25 @@
+{
+  "scope": "Exact archived image23 source replay after host reboot; recovered image identity, not new parity or performance acceptance",
+  "passed": true,
+  "original_image_id": "sha256:fa6b9b0c920f961a77dd069227b871a2fbb7e92486e9296d2c4cda738c54ab56",
+  "recovered_image_id": "sha256:6178eff8a3a32a9f5dcf7c691a8b518716f96d424c1e4cc62f87697253c266e4",
+  "recovered_tag": "dispatcharr-rust-candidate:image23-recovery-1",
+  "equal_provenance_fields": {
+    "source_tree_sha256": "5a58751e7d2e1df2d3db0f04c80dd00406cd71da813a5402e0227d8083a8fb9f",
+    "source_archive_sha256": "1234f5bdff9c2381c6a2ee6624b02f6ca87b7756da1d8b94b5c60a6bdface8d7",
+    "runtime_packages_sha256": "4684080fdea7a873518c60324d723c19355bf825f0a8a76ede65c35ddfe25481",
+    "ffmpeg_version": "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers"
+  },
+  "replay_control_tests": 8,
+  "evidence_directory": "artifacts/rust/candidate-build-image23-recovery-1",
+  "artifact_sha256": {
+    "build.json": "d370a8a2c79ebd7cabddfcba5bea81dcaf4d9e9fc201e01d23256353782a492f",
+    "replay-tests.log": "be23a50a746ce69b025d336daf384815e06fe414caecfa99fa2dcdec46d41562",
+    "source-manifest.json": "2a51c35b2fe7463bc05f0c9d4bdfa228cdce64d805b976b55283a675597f4b5b",
+    "tool-source/scripts/rust-integration/build.py": "6bcb3c56585329811308cf2784510037dca900a8ad6a990ffa33fd088707860a",
+    "tool-source/scripts/rust-integration/test_build_replay.py": "055afb6937a19531ff06ade6ce2c8309b6f9ceb59c3a9947db2ed2082c124a1d"
+  },
+  "historical_functional_gates_not_rerun_by_build": true,
+  "performance_verified": false,
+  "application_parity_verified": false
+}

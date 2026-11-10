@@ -28,6 +28,10 @@ mod epg_program_http;
 pub use epg_program_http::{EpgProgramReadLimits, EpgProgramReads};
 mod epg_current;
 mod epg_current_http;
+mod epg_grid_helpers;
+mod epg_grid_window;
+pub use epg_grid_window::{grid_parse_datetime, grid_resolve_window, GridTimestamp, GridWindowError};
+pub use epg_grid_helpers::{grid_channel_profile, grid_dummy_span, grid_encode_batch, grid_program_value};
 pub use epg_current::CurrentProgramSelection;
 mod ip_lookup;
 mod notifications;
@@ -309,7 +313,5 @@ pub use backup_files::BackupFiles;
 #[cfg(test)]
 extern crate self as dispatcharr_store;
 
-mod epg_grid_helpers;
-mod epg_grid_window;
-pub use epg_grid_helpers::{grid_channel_profile, grid_dummy_span, grid_encode_batch, grid_program_value};
-pub use epg_grid_window::{grid_parse_datetime, grid_resolve_window, GridTimestamp, GridWindowError};
+mod epg_grid_db;
+pub use epg_grid_db::GridChannel;

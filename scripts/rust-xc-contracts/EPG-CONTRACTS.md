@@ -51,3 +51,42 @@ Custom regex guides, richer category collisions, archive boundary timestamps,
 stored-dummy rows, metadata failures and actual entry-point HTTP/auth/error wire
 are additional gates. VOD/series refresh side effects remain separate and must
 not be replaced with cached-only read claims.
+
+The staged native reader now matches all 750 actual original helper cases and
+88 real HTTP cases. Stored-row JSON bytes and error classes are exact. Only
+measured process-random generated IDs are normalized; all other fields remain
+exact. The hash primitive also matches seven actual zero-seed vectors. See
+`verified-xc-epg-native-2.json` for frozen Rust/tool hashes, logs and cleanup.
+
+The reader performs one atomic scoped metadata SELECT, keeps category numbering
+separate from visibility, and projects only the title/description fields needed
+from stored programmes. Rows stream into the bounded ASCII JSON writer; it does
+not build an entire response Value tree. Byte, row and number-allocation caps
+fail explicitly instead of silently discarding programmes. The real fixture
+proved cancellation while the metadata SELECT was observed waiting on a
+PostgreSQL table lock: admission stayed held until the owned worker finished.
+A detached response frame retains its byte budget through its final clone after
+shutdown. Row, response, numbering and SQL metadata caps all passed.
+
+App activation follows these component gates; packaged image/middleware proof
+remains separate. Custom dummy source properties are explicitly 501 and are not
+replaced with fabricated standard programmes. Nonzero configured Python hash
+seeds, richer numeric/category/time boundary grammars, and VOD/series refresh
+side effects remain independent gates. No resource performance gains are claimed.
+
+Packaged image 24 now passes all 750 helper cases over the actual application
+HTTP surface and 88 original HTTP comparisons, using the frozen source/image
+identity in `verified-xc-epg-image24-3.json`. Two PostgreSQL metadata queries were
+observed waiting while the disposable fixture held the channel table lock.
+Closing one caller socket kept both admission slots protected; a third request
+returned 503. Unlocking recovered normal responses. The same image with a
+64-byte response budget rejected oversized output, and an unverified nonzero
+Python hash seed returned 501 for generated programmes. Both containers exited
+cleanly without OOM or drain warnings; the fixture was removed.
+
+Two preceding packaged tool failures remain preserved: JSON-array query pairs
+required tuples for urllib.urlencode, and the lock-holding PostgreSQL transaction
+needed its cached statistics snapshot cleared before each monitoring poll. No
+application change or image rebuild was used for either correction. XMLTV's
+47-case/cache/audit regression also passed on the same frozen image. These are
+scoped functional/resource gates, not a whole-application or performance claim.

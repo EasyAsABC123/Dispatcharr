@@ -27,10 +27,10 @@ def load(path, name):
     return value
 
 
-def freeze_current_rust(output):
-    frozen = output/'current-frozen-source'
+def freeze_current_rust(output, prefix='current'):
+    frozen = output/(prefix+'-frozen-source')
     hashes = {}
-    with tarfile.open(output/'current-rust-source.tar', 'w') as archive:
+    with tarfile.open(output/(prefix+'-rust-source.tar'), 'w') as archive:
         for base, directories, names in os.walk(ROOT/'rust'):
             directories[:] = sorted(d for d in directories if d not in {'target','.git','__pycache__'})
             for name in sorted(names):
@@ -61,7 +61,10 @@ def main():
     parser.add_argument('--guide-source', action='store_true', help='Capture original current-programme and streamed guide-grid contracts on owned rows')
     parser.add_argument('--native-current', action='store_true', help='Run frozen current-programme parser/DB selection against original guide capture')
     parser.add_argument('--candidate-current', action='store_true', help='Compare actual Source/native real-clock current-programme wire instead of programme list reads')
+    parser.add_argument('--native-grid', action='store_true', help='Run original/native grid metadata and stored-row component comparisons')
     args = parser.parse_args()
+    if args.native_grid:
+        args.guide_source = True
     if args.native_current:
         args.guide_source = True
     if args.candidate_current:
@@ -92,6 +95,7 @@ def main():
     report = {'scope':'original-stored-EPG-read-oracle', 'passed':False,
               'native_verified':False, 'performance_verified':False,
               'project':project, 'tool_source_sha256':hashes}
+    grid_snapshot = freeze_current_rust(output, 'grid') if args.native_grid else None
     status = 1
     with integration.fixture_source(report, False, output) as directory:
         source = Path(directory)/'source'
@@ -160,6 +164,26 @@ def main():
                 (output/'guide-source.json').write_text(json.dumps(guide_data,indent=2)+'\n')
                 report['original_guide_http_cases']=len(guide_data['cases'])
                 report['native_guide_http_verified']=False
+                if args.native_grid:
+                    frozen, grid_hashes = grid_snapshot
+                    report['grid_rust_source_sha256'] = grid_hashes
+                    postgres = command(compose+['port','baseline','5432']).stdout.strip()
+                    grid_env = dict(env, DATABASE_TEST_URL='postgresql://dispatch:playback-fixture-only@'+postgres+'/dispatcharr',
+                        EPG_READ_DISPOSABLE_FIXTURE='playback-fixture-only', GUIDE_READ_FIXTURE=str(output/'guide-source.json'),
+                        CARGO_TARGET_DIR=str(output/'grid-cargo-target'))
+                    native = subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),
+                        '-p','dispatcharr-store','--test','epg_grid_sql','--locked','--offline',
+                        '--','--ignored','--nocapture','--test-threads=1'],env=grid_env,capture_output=True,text=True,timeout=600)
+                    (output/'native-grid.log').write_text(native.stdout+'\n'+native.stderr)
+                    native.check_returncode()
+                    entity = subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),
+                        '-p','dispatcharr-output-http','--test','epg_grid_sql','--locked','--offline',
+                        '--','--ignored','--nocapture','--test-threads=1'],env=grid_env,capture_output=True,text=True,timeout=600)
+                    (output/'native-grid-entity.log').write_text(entity.stdout+'\n'+entity.stderr)
+                    entity.check_returncode()
+                    report['native_grid_complete_entity_verified'] = True
+                    report['native_grid_metadata_stored_verified'] = True
+                    report['native_grid_http_verified'] = False
                 if args.native_current:
                     frozen, hashes = freeze_current_rust(output)
                     report['current_rust_source_sha256']=hashes

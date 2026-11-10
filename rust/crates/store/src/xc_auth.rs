@@ -358,6 +358,13 @@ impl AuthService {
     }
 }
 impl Store {
+    /// Original XC EPG visibility in a caller's atomic metadata query. The
+    /// channel table must use alias `c`. Unlike export lists, admins are not
+    /// capped by level; hidden channels are excluded for these EPG actions.
+    pub fn append_xc_epg_visibility(query: &mut QueryBuilder<'_, sqlx::Postgres>, user: &User) {
+        query.push(" AND NOT c.hidden_from_output");
+        scope(query, user);
+    }
     /// Source get_channel_for_user(user,id=...) for already-XC-authorized users.
     /// Inactive users remain eligible under the original XC contract.
     pub async fn channel_for_xc_user_by_id(

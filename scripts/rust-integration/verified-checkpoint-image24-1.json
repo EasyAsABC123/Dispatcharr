@@ -1,0 +1,95 @@
+{
+  "format_version": 1,
+  "scope": "Immutable image24 checkpoint: XC EPG attachment and all previously accepted packaged regressions; component-only guide/job work remains separate",
+  "passed": true,
+  "build_manifest": "artifacts/rust/candidate-build-m7-xc-epg-image24-1/build.json",
+  "build_manifest_sha256": "e11e7831a02e1d558b0721fb09213325e7e1d9cf30de1d4c4d8cffdb782298fe",
+  "image_id": "sha256:f45cb87fe16dd5b3ee918d31e53f113dad18a1d0c0e13a5350ffdbbfbb7fbbf6",
+  "source_tree_sha256": "75c6c0c9df48d89bfb7f36e450bd4f8b91c1075e5e6281249092c11abcfad201",
+  "source_archive_sha256": "cbec46d621c368c33c586f1948423294ffa2b1039d83ab5877926aea81feea7a",
+  "rust_source_files": 447,
+  "validation_directory": "artifacts/rust/checkpoint-image24-validation-1",
+  "rust_tests": {
+    "passed": 288,
+    "failed": 0,
+    "external_fixture_ignored": 232,
+    "suites": 126
+  },
+  "strict_all_targets_clippy": true,
+  "python_review_directory": "artifacts/rust/checkpoint-image24-review-1",
+  "python_source_files": 305,
+  "python_tool_tests_passed": 178,
+  "runtime_reports": [
+    {
+      "path": "scripts/rust-epg-contracts/verified-current-packaged-image24-1.json",
+      "sha256": "5149a38c973ca9b2bbd6b610763401e9e1ae7c1320749fd90f9b35930ec31974"
+    },
+    {
+      "path": "scripts/rust-epg-contracts/verified-program-packaged-image24-1.json",
+      "sha256": "60baade0b8638604ef3b992e06fc3d9f62cc5381c965023b254c67f84d3cb266"
+    },
+    {
+      "path": "scripts/rust-hdhr-contracts/verified-hdhr-image24-1.json",
+      "sha256": "75c050bf77510332e1b896781325d71461b63827a947dd11391cbdd02d8eab77"
+    },
+    {
+      "path": "scripts/rust-integration/verified-backup-api-packaged-image24-1.json",
+      "sha256": "b68e9bc6db0524ecf9114b3a2788e5a8b0f02b105174913f15ea2bf6acc82a8c"
+    },
+    {
+      "path": "scripts/rust-integration/verified-integration-m5-auth-image24-1.json",
+      "sha256": "ad5f62fc3c41790f2340b98edb8e7dd54b541a0ef69e34e0154326342b91db18"
+    },
+    {
+      "path": "scripts/rust-output-contracts/verified-m3u-image24-1.json",
+      "sha256": "b0e22bb9cca3e107850d8a87f922cef42a9741b9cae05b4d3f6e5dd69ee01a2c"
+    },
+    {
+      "path": "scripts/rust-timeshift-contracts/verified-image24-regression.json",
+      "sha256": "81bf7b0b4f2c9b33c8883c90e7ed1deb8c55e9804f8c689cef095cbb06e14602"
+    },
+    {
+      "path": "scripts/rust-xc-contracts/verified-xc-epg-image24-3.json",
+      "sha256": "d33802ed285237cfb8ddaddec53206011080894c1710bcc9e14c840d646e59a8"
+    },
+    {
+      "path": "scripts/rust-xc-contracts/verified-xc-image24-1.json",
+      "sha256": "bfd87c13f89113a8a2729e1a950f5cb5f252f24a5fe0048d47324b16372b0f52"
+    },
+    {
+      "path": "scripts/rust-xmltv-contracts/verified-xmltv-image24-1.json",
+      "sha256": "b5ad0f351372a4de4f8374a1570a18b26410144a5583a2cc09c841f973aedb02"
+    }
+  ],
+  "separate_component_reports": [
+    {
+      "path": "scripts/rust-epg-contracts/verified-grid-entity-components-24.json",
+      "sha256": "a7c975ca9405e16da05c1a0fcb4e92cafb104af236a13e3c72fc97f114da4303"
+    },
+    {
+      "path": "scripts/rust-epg-parity/verified-logo-job-component-docker-84.json",
+      "sha256": "6b6a289839d884b0d56e7eb1f35bf4fac7b9a6e3eac7724e6db56be95010185e"
+    },
+    {
+      "path": "scripts/rust-xc-contracts/verified-xc-epg-native-2.json",
+      "sha256": "4a63540c5e93b3aae5a9d26198bdb705af8ef174332085b230749c0265966f9b"
+    },
+    {
+      "path": "scripts/rust-xmltv-contracts/verified-xmltv-shared-helpers-1.json",
+      "sha256": "35de059465109e8a5085fa4426e2b7f3039e2a4d6a5dcabd507792137d999da3"
+    },
+    {
+      "path": "scripts/rust-integration/verified-image23-archive-recovery-1.json",
+      "sha256": "dad36312cdccc0125293f0a0c1605bdb229a1580d547ea97529a495e02b50844"
+    }
+  ],
+  "full_milestones_accepted": [],
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "limits": [
+    "Backup112 retains five explicitly named original invalid204 Content-Length deltas,107 raw exact.",
+    "XC generated IDs normalize only independently random Source IDs; nonzero configured Python hash seeds are explicit501 pending their gate.",
+    "Guide22 complete entities and file-job/logo components remain unwired; broad date parser corrections after7189-case audit are post24.",
+    "All prior performance evidence remains bound to its historical image/workload; recovered23 guide smoke is correctness only."
+  ]
+}

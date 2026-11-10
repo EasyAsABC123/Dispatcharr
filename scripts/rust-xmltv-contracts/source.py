@@ -72,13 +72,13 @@ def exercise(base,control,out):
     return rows,snapshots
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--native-cache',action='store_true');parser.add_argument('--native-content',action='store_true');parser.add_argument('--native-http',action='store_true');parser.add_argument('--xc-epg-source',action='store_true');args=parser.parse_args();docker=shutil.which('docker');assert docker
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--native-cache',action='store_true');parser.add_argument('--native-content',action='store_true');parser.add_argument('--native-http',action='store_true');parser.add_argument('--xc-epg-source',action='store_true');parser.add_argument('--native-xc-epg',action='store_true');parser.add_argument('--xc-epg-http-source',action='store_true');parser.add_argument('--native-xc-epg-http',action='store_true');args=parser.parse_args();args.native_xc_epg=args.native_xc_epg or args.native_xc_epg_http;args.xc_epg_http_source=args.xc_epg_http_source or args.native_xc_epg_http;docker=shutil.which('docker');assert docker
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=True);assert not any(out.iterdir())
     report={'scope':'actual original XMLTV HTTP/cache/real+defaultdummy characterization only','passed':False,'native_verified':False,'baseline_commit':BASELINE,'baseline_image':IMAGE,'commands':[]}
-    tools=[Path(__file__).resolve(),Path(__file__).with_name('control.py'),Path(__file__).with_name('render_source.py'),Path(__file__).with_name('cache_source.py'),Path(__file__).with_name('window_source.py'),Path(__file__).with_name('content_source.py'),ROOT/'scripts/rust-xc-contracts/control.py',ROOT/'scripts/rust-xc-contracts/epg_source.py',ROOT/'scripts/rust-realtime-contracts/interop.py',ROOT/'scripts/rust-integration/shared_ts.py',ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'docker/compose.rust-playback.yml',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
+    tools=[Path(__file__).resolve(),Path(__file__).with_name('control.py'),Path(__file__).with_name('render_source.py'),Path(__file__).with_name('cache_source.py'),Path(__file__).with_name('window_source.py'),Path(__file__).with_name('content_source.py'),ROOT/'scripts/rust-xc-contracts/control.py',ROOT/'scripts/rust-xc-contracts/epg_source.py',ROOT/'scripts/rust-xc-contracts/epg_http.py',ROOT/'scripts/rust-realtime-contracts/interop.py',ROOT/'scripts/rust-integration/shared_ts.py',ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'docker/compose.rust-playback.yml',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
     copies=out/'tools'
     for path in tools:target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
-    if args.native_cache or args.native_content or args.native_http:
+    if args.native_cache or args.native_content or args.native_http or args.native_xc_epg:
         for path in (ROOT/'rust').rglob('*'):
             if path.is_file() and not set(path.relative_to(ROOT/'rust').parts)&{'target','.git','__pycache__'}:
                 target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
@@ -96,16 +96,39 @@ def main():
         try:
             command(compose+['up','-d','baseline','origin'],180);base='http://'+command(compose+['port','baseline','5656']).strip();wait(lambda:(out/'seed.json').exists() and ready_http(base+'/proxy/ts/stream/missing')[0]==404,300,'original ready')
             control=Peer(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/xmltv-probe/control.py'],env,out/'control.log');report['cases'],report['cache_snapshots']=exercise(base,control,out);report['render_vectors']=control.call({'op':'render_vectors'});report['cache_vectors']=control.call({'op':'cache_vectors'});report['window_vectors']=control.call({'op':'window_vectors'});report['content_vectors']=control.call({'op':'content_vectors'});(out/'content-source.json').write_text(json.dumps(report['content_vectors'],ensure_ascii=False));report['passed']=True
-            if args.xc_epg_source:
+            if args.xc_epg_http_source:
+                sys.path.insert(0,str(copies/'scripts/rust-xc-contracts'))
+                from epg_http import exercise as epg_http_exercise
+                report['xc_epg_http_original']=epg_http_exercise(base,control)
+            if args.xc_epg_source or args.native_xc_epg:
                 captured=control.call({'op':'xc_epg_vectors','start':0,'count':32});total=captured['total']
                 for start in range(32,total,32):captured['cases'].extend(control.call({'op':'xc_epg_vectors','start':start,'count':32})['cases'])
                 captured['hash_characterization']=control.call({'op':'xc_epg_hash'});(out/'xc-epg-source.json').write_text(json.dumps(captured,ensure_ascii=False));report['xc_epg_source']={'cases':len(captured['cases']),'source_sha256':captured['source_sha256'],'hash_characterization':captured['hash_characterization'],'native_verified':False}
-            if args.native_cache or args.native_content or args.native_http:
-                env_test=dict(env,CARGO_HOME='/tmp/dispatcharr-cargo',RUSTUP_HOME='/tmp/dispatcharr-rustup',RUSTUP_TOOLCHAIN='1.90.0',REDIS_TEST_URL='redis://:playback-fixture-only@'+command(compose+['port','baseline','6379']).strip()+'/0')
+            if args.native_cache or args.native_content or args.native_http or args.native_xc_epg:
+                env_test=dict(env,CARGO_HOME=os.environ.get('CARGO_HOME','/tmp/dispatcharr-cargo'),RUSTUP_HOME=os.environ.get('RUSTUP_HOME','/tmp/dispatcharr-rustup'),RUSTUP_TOOLCHAIN='1.90.0',REDIS_TEST_URL='redis://:playback-fixture-only@'+command(compose+['port','baseline','6379']).strip()+'/0')
                 env_test.update(DATABASE_TEST_URL='postgres://dispatch:playback-fixture-only@'+command(compose+['port','baseline','5432']).strip()+'/dispatcharr',XMLTV_CONTENT_SOURCE=str(out/'content-source.json'))
                 cmd=['/tmp/dispatcharr-cargo/bin/cargo','test','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xmltv-http','--lib','--','--ignored','--test-threads=1'];report['native_command']=cmd
                 with (out/'native-cache-tests.log').open('w') as native_log:tested=subprocess.run(cmd,env=env_test,text=True,stdout=native_log,stderr=subprocess.STDOUT,timeout=180)
                 report['native_cache_component_verified']=tested.returncode==0;assert tested.returncode==0,'native cache component tests failed'
+                if args.native_xc_epg:
+                    xc_command=['/tmp/dispatcharr-cargo/bin/cargo','test','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xc-http','--lib','epg::tests','--','--ignored','--test-threads=1']
+                    with (out/'native-xc-epg-tests.log').open('w')as xc_log:xc_tested=subprocess.run(xc_command,env=dict(env_test,XC_EPG_SOURCE=str(out/'xc-epg-source.json')),stdout=xc_log,stderr=subprocess.STDOUT,text=True,timeout=180)
+                    report['native_xc_epg_verified']=xc_tested.returncode==0;assert xc_tested.returncode==0,'native XC EPG source corpus comparison failed'
+                    resource_command=['/tmp/dispatcharr-cargo/bin/cargo','test','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xc-http','--lib','gateway::tests::epg_sql_cancellation_and_detached_body_keep_bounded_lifetimes','--','--ignored','--test-threads=1']
+                    with (out/'native-xc-epg-resource-tests.log').open('w')as resource_log:resource_tested=subprocess.run(resource_command,env=dict(env_test,SECRET_KEY='playback-fixture-only'),stdout=resource_log,stderr=subprocess.STDOUT,text=True,timeout=90)
+                    report['native_xc_epg_resources_verified']=resource_tested.returncode==0;assert resource_tested.returncode==0,'native XC EPG resource gate'
+                    if args.native_xc_epg_http:
+                        epg_build=['/tmp/dispatcharr-cargo/bin/cargo','build','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xc-http','--example','epg_peer']
+                        with (out/'native-xc-epg-peer-build.log').open('w')as epg_log:epg_built=subprocess.run(epg_build,env=env_test,stdout=epg_log,stderr=subprocess.STDOUT,text=True,timeout=180)
+                        assert epg_built.returncode==0,'native XC EPG peer build'
+                        executable=out/'xc-epg-peer';shutil.copy2(ROOT/'rust/target/debug/examples/epg_peer',executable)
+                        with executable.open('rb')as elf:report['native_xc_epg_peer_sha256']=hashlib.file_digest(elf,'sha256').hexdigest()
+                        native=Peer([str(executable)],dict(env_test,SECRET_KEY='playback-fixture-only'),out/'native-xc-epg-peer.log')
+                        report['xc_epg_http_native']=epg_http_exercise('http://127.0.0.1:'+str(native.ready['port']),control)
+                        report['xc_epg_http_differences']=[{'case':original['case'],'original':original,'native':actual}for original,actual in zip(report['xc_epg_http_original'],report['xc_epg_http_native'],strict=True)if original!=actual]
+                        report['native_xc_epg_shutdown']=native.call({'op':'close'});native.close();native=None
+                        assert report['native_xc_epg_shutdown']['drained'] and report['native_xc_epg_shutdown']['active_requests']==0,'native XC EPG shutdown'
+                        assert not report['xc_epg_http_differences'],'native XC EPG HTTP mismatch'
                 if args.native_http:
                     build=cmd[:cmd.index('test')]+['build','--manifest-path',str(copies/'rust/Cargo.toml'),'--target-dir',str(ROOT/'rust/target'),'--locked','--offline','-p','dispatcharr-xmltv-http','--example','peer']
                     built=subprocess.run(build,env=env_test,text=True,capture_output=True,timeout=180);(out/'native-peer-build.log').write_text(built.stdout+built.stderr);assert built.returncode==0,'native peer build'

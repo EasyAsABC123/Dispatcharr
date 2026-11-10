@@ -12,6 +12,24 @@ from core.models import SystemEvent
 state={}
 def command(request):
     op=request['op']
+    if op=='lock_xc_epg_metadata':
+        from django.db import connection
+        assert not state.get('epg_locked')
+        with connection.cursor()as cursor:
+            cursor.execute('BEGIN');cursor.execute('LOCK TABLE dispatcharr_channels_channel IN ACCESS EXCLUSIVE MODE')
+        state['epg_locked']=True
+        return {'locked':'only owned fixture channel metadata table'}
+    if op=='xc_epg_waiting':
+        from django.db import connection
+        with connection.cursor()as cursor:
+            cursor.execute("SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND wait_event_type='Lock' AND query LIKE 'SELECT c.id::bigint AS id,COALESCE(o.channel_number%'")
+            return {'waiting':cursor.fetchone()[0]}
+    if op=='unlock_xc_epg_metadata':
+        from django.db import connection
+        assert state.get('epg_locked')
+        with connection.cursor()as cursor:cursor.execute('ROLLBACK')
+        state['epg_locked']=False
+        return {'unlocked':True}
     if op=='seed':
         seeded=xc.command(request)
         if state:return {**seeded,**state['public']}

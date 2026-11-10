@@ -18,9 +18,9 @@ use std::{
 };
 
 async fn state(store: &Store, id: i64) -> Value {
-    let row=sqlx::query("SELECT status,last_message,updated_at,file_path,(SELECT count(*) FROM epg_epgdata WHERE epg_source_id=$1) AS epg_rows,(SELECT count(*) FROM epg_programdata p JOIN epg_epgdata e ON e.id=p.epg_id WHERE e.epg_source_id=$1) AS programmes,(SELECT count(*) FROM core_systemevent WHERE details->>'source_name'=epg_epgsource.name) AS audit_events FROM epg_epgsource WHERE id=$1").bind(id).fetch_one(store.pool()).await.unwrap();
+    let row=sqlx::query("SELECT status,last_message,updated_at,file_path,(SELECT count(*) FROM epg_epgdata WHERE epg_source_id=$1) AS epg_rows,(SELECT count(*) FROM epg_programdata p JOIN epg_epgdata e ON e.id=p.epg_id WHERE e.epg_source_id=$1) AS programmes,(SELECT count(*) FROM core_systemevent WHERE details->>'source_name'=epg_epgsource.name) AS audit_events,(SELECT l.url FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_logo l ON c.logo_id=l.id WHERE c.name=epg_epgsource.name LIMIT 1) AS base_logo_url FROM epg_epgsource WHERE id=$1").bind(id).fetch_one(store.pool()).await.unwrap();
     let time: Option<DateTime<Utc>> = row.get("updated_at");
-    json!({"status":row.get::<String,_>("status"),"last_message":row.get::<Option<String>,_>("last_message"),"updated_at":time.map(|value|value.to_rfc3339_opts(chrono::SecondsFormat::Micros,false).replace(".000000+00:00","+00:00")),"file_path":row.get::<Option<String>,_>("file_path"),"epg_rows":row.get::<i64,_>("epg_rows"),"programmes":row.get::<i64,_>("programmes"),"audit_events":row.get::<i64,_>("audit_events")})
+    json!({"status":row.get::<String,_>("status"),"last_message":row.get::<Option<String>,_>("last_message"),"updated_at":time.map(|value|value.to_rfc3339_opts(chrono::SecondsFormat::Micros,false).replace(".000000+00:00","+00:00")),"file_path":row.get::<Option<String>,_>("file_path"),"epg_rows":row.get::<i64,_>("epg_rows"),"programmes":row.get::<i64,_>("programmes"),"audit_events":row.get::<i64,_>("audit_events"),"base_logo_url":row.get::<Option<String>,_>("base_logo_url")})
 }
 struct Recorder {
     store: Store,
@@ -124,6 +124,7 @@ async fn original_channel_fields_progress_duplicates_and_stale_cleanup() {
                     path,
                     cache_file: PathBuf::from(case["after_state"]["file_path"].as_str().unwrap()),
                     source_has_url: false,
+                    source_properties: case["source_properties"].clone(),
                     cancelled: Arc::new(AtomicBool::new(false)),
                 },
                 Arc::new(()),
@@ -180,7 +181,7 @@ async fn original_channel_fields_progress_duplicates_and_stale_cleanup() {
         assert_eq!(json!(alternate), case["override_epg_id"]);
         compared += 1;
     }
-    assert_eq!(compared, 19);
+    assert_eq!(compared, 21);
     assert!(importer.shutdown(Duration::from_secs(2)).await);
     assert!(reporter.shutdown(Duration::from_secs(2)).await);
     println!("EPG_CHANNEL_SOURCE_CASES={compared}");
@@ -269,6 +270,7 @@ async fn physical_sql_abort_retains_admission_then_joins_blocked_parser() {
                     path: input,
                     cache_file: PathBuf::from("/tmp/unused-channel-cache.tmp"),
                     source_has_url: false,
+                    source_properties: serde_json::json!({}),
                     cancelled: Arc::new(AtomicBool::new(false)),
                 },
                 retained,
@@ -309,6 +311,7 @@ async fn physical_sql_abort_retains_admission_then_joins_blocked_parser() {
                 path,
                 cache_file: PathBuf::from("/tmp/unused-channel-cache.tmp"),
                 source_has_url: false,
+                source_properties: serde_json::json!({}),
                 cancelled: Arc::new(AtomicBool::new(false)),
             },
             Arc::new(()),
@@ -379,6 +382,7 @@ async fn snapshot_capacity_failure_releases_guard_without_creating_rows() {
                 path,
                 cache_file: PathBuf::from("/tmp/unused-channel-cache.tmp"),
                 source_has_url: false,
+                source_properties: serde_json::json!({}),
                 cancelled: Arc::new(AtomicBool::new(false)),
             },
             Arc::new(Witness(dropped.clone())),

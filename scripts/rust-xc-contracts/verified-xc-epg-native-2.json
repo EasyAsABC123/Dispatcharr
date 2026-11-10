@@ -1,0 +1,59 @@
+{
+  "scope": "Native staged XC short/simple EPG original-source and network/component resource gates; original Dispatcharr credit retained",
+  "passed": true,
+  "native_source_manifest_sha256": "0f7543665a36b92382c795345b30ac21d1d470b8c06f15034ab066f7b2ac9566",
+  "native_peer_sha256": "71eca56bd935f908ba6c2581e9dd4bab820b8409769a77ad980c2d2c5055a3b8",
+  "original_helper_cases": 750,
+  "native_helper_verified": true,
+  "http_cases": 88,
+  "http_differences": [],
+  "normalizations": [
+    "Only synthetic programme IDs: actual original fresh processes produce different values for identical input",
+    "Stored programme IDs and all other bytes/fields/error classes unchanged"
+  ],
+  "hash_primitive_source_vectors": 7,
+  "resource_gates": [
+    "Full-row cap rejects rather than silently truncating",
+    "Response byte cap",
+    "Category number allocation cap",
+    "SQL metadata octet-length cap before host decode",
+    "Actual observed PostgreSQL table-lock caller cancellation retains request admission until physical worker finishes",
+    "Detached final frame retains capacity until final clone after bounded shutdown"
+  ],
+  "resources_verified": true,
+  "shutdown": {
+    "closed": true,
+    "drained": true,
+    "active_requests": 0,
+    "available_bytes": 201326592
+  },
+  "limits": {
+    "max_programmes": 50000,
+    "max_category_channels": 50000,
+    "metadata_bytes": 8388608,
+    "response_bytes": 16777216,
+    "number_bytes": 134217728,
+    "request_deadline_seconds": 15,
+    "shutdown_seconds": 5
+  },
+  "evidence": "artifacts/rust/m7-xc-epg-http-native-2/xmltv-source.json",
+  "logs": [
+    "artifacts/rust/m7-xc-epg-http-native-2/native-xc-epg-tests.log",
+    "artifacts/rust/m7-xc-epg-http-native-2/native-xc-epg-resource-tests.log"
+  ],
+  "tool_source": "artifacts/rust/m7-xc-epg-http-native-2/tools",
+  "cleanup": "owned Compose project removed",
+  "packaged_verified": false,
+  "performance_verified": false,
+  "remaining": [
+    "Packaged action/router/middleware proof after next parent-built immutable image",
+    "Custom source-property regex explicitly501",
+    "Configured Python hash seeds beyond zero are a separate unaccepted gate",
+    "VOD/series info refresh side effects remain501/open"
+  ],
+  "failure_markers": [
+    "No failed native750/HTTP88 runtime comparisons; native1 and native2 passed",
+    "Host reboot preceded these new runs; historical completed image23/shared-helper proofs remain separately bound",
+    "Test tooling now honors persistent Cargo/Rustup roots"
+  ]
+}

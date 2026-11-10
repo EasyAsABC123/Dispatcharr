@@ -1,0 +1,132 @@
+{
+  "scope": "Packaged XMLTV HTTP/cache/audit regression after shared-helper extraction and XC EPG activation",
+  "passed": true,
+  "candidate_image_id": "sha256:f45cb87fe16dd5b3ee918d31e53f113dad18a1d0c0e13a5350ffdbbfbb7fbbf6",
+  "candidate_source_tree_sha256": "75c6c0c9df48d89bfb7f36e450bd4f8b91c1075e5e6281249092c11abcfad201",
+  "build_manifest": "artifacts/rust/candidate-build-m7-xc-epg-image24-1/build.json",
+  "cases": 47,
+  "differences": [],
+  "python_cache_interop": {
+    "source_status": 200,
+    "native_status": 200,
+    "source_sha256": "3d2787f3d1b7e110f6cefd7def88adafd2cef5f1ce49e51f6b1fb0c14bb3a796",
+    "native_sha256": "3d2787f3d1b7e110f6cefd7def88adafd2cef5f1ce49e51f6b1fb0c14bb3a796",
+    "events_unchanged": true
+  },
+  "event_count_checkpoints": [
+    {
+      "after": "seed",
+      "original": [
+        0,
+        0
+      ],
+      "native": [
+        0,
+        0
+      ]
+    },
+    {
+      "after": "normal HEAD cold",
+      "original": [
+        0,
+        0
+      ],
+      "native": [
+        0,
+        0
+      ]
+    },
+    {
+      "after": "normal first",
+      "original": [
+        1,
+        0
+      ],
+      "native": [
+        1,
+        0
+      ]
+    },
+    {
+      "after": "normal replay",
+      "original": [
+        1,
+        0
+      ],
+      "native": [
+        1,
+        0
+      ]
+    },
+    {
+      "after": "XC HEAD cold days2",
+      "original": [
+        7,
+        0
+      ],
+      "native": [
+        7,
+        0
+      ]
+    },
+    {
+      "after": "XC HEAD",
+      "original": [
+        7,
+        0
+      ],
+      "native": [
+        7,
+        0
+      ]
+    },
+    {
+      "after": "mutation before invalidation",
+      "original": [
+        7,
+        1
+      ],
+      "native": [
+        7,
+        1
+      ]
+    },
+    {
+      "after": "mutation after invalidation",
+      "original": [
+        8,
+        1
+      ],
+      "native": [
+        8,
+        1
+      ]
+    },
+    {
+      "after": "finished",
+      "original": [
+        8,
+        4
+      ],
+      "native": [
+        8,
+        4
+      ]
+    }
+  ],
+  "shutdown_states": {
+    "ExitCode": 0,
+    "OOMKilled": false
+  },
+  "shutdown_seconds": 0.3978978139998617,
+  "cleanup": "owned Compose project removed",
+  "evidence": "artifacts/rust/m7-xmltv-image24-1/xmltv-image.json",
+  "tool_source": "artifacts/rust/m7-xmltv-image24-1/tools",
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "remaining": [
+    "Custom source-property/regex guides remain explicit501",
+    "Mixed Python stale writers do not honor Rust fences"
+  ],
+  "original_credit": "Full original Dispatcharr authors/contributors attribution retained."
+}

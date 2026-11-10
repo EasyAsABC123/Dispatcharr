@@ -1,0 +1,26 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "App-unwired automatic EPG-logo helper and physical SQL resource guards",
+  "original_authors_credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit.",
+  "evidence": "artifacts/rust/m6-auto-logo-physical-source-native-81",
+  "evidence_sha256": "64204d03a194adc04cd1dbacbede34aa686701343fba0ceddb8e5c19ea49b794",
+  "runtime_archive_sha256": "c3ac04bbd17126caad506a76b6244d46308119cb74b030f78a15be77950e2a26",
+  "source_cases": 18,
+  "native_physical_scenarios": 2,
+  "app_wired": false,
+  "full_refresh_job_verified": false,
+  "http_dispatch_verified": false,
+  "child_task_execution_verified": false,
+  "performance_verified": false,
+  "cleanup_passed": true,
+  "tool_source_snapshot": "artifacts/rust/m6-auto-logo-physical-source-native-81/tool-source",
+  "default_row_url_bytes": 1048576,
+  "configured_test_row_url_bytes": 131072,
+  "source_positive_url_bytes": 163840,
+  "prior_setup_failures": [
+    "artifacts/rust/m6-auto-logo-physical-source-native-79",
+    "artifacts/rust/m6-auto-logo-physical-source-native-80"
+  ],
+  "prior_setup_failure_reason": "Synthetic1MiB and300KiB URLs exceeded original unique B-tree index entry limits before reaching intended native guard. Default1MiB unchanged; explicit lower configurable limit tested against valid160KiB row."
+}

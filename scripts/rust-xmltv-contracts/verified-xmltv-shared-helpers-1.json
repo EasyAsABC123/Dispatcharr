@@ -1,0 +1,139 @@
+{
+  "scope": "Post-image23 pure output-http XMLTV window/default-dummy extraction regression; original author credit retained",
+  "passed": true,
+  "native_source_manifest_sha256": "1b1679c87cb8069592394f836d06420945d730f7696c56389792eae1199c1df3",
+  "original_native_http_cases": 47,
+  "http_differences": [],
+  "complete_original_native_xml_documents": 36,
+  "real_redis_cache_delivery_tests": 7,
+  "real_pg_generator_tests": 1,
+  "real_pg_redis_resource_tests": 4,
+  "pure_source_window_vectors": 1664,
+  "pure_source_standard_dummy_vectors": 144,
+  "pure_tests_previously_passed": 5,
+  "python_cache_interop": {
+    "status": 200,
+    "body_sha256": "8b21b4625cc602225865893cbbc0bb6d6180bdd770dbcb84e699a472c5236ae8",
+    "expected_sha256": "8b21b4625cc602225865893cbbc0bb6d6180bdd770dbcb84e699a472c5236ae8",
+    "actual_python_endpoint_primed_current_generation": true,
+    "events_unchanged": true
+  },
+  "event_count_checkpoints": [
+    {
+      "after": "seed",
+      "source": [
+        0,
+        0
+      ],
+      "native": [
+        0,
+        0
+      ]
+    },
+    {
+      "after": "normal HEAD cold",
+      "source": [
+        0,
+        0
+      ],
+      "native": [
+        0,
+        0
+      ]
+    },
+    {
+      "after": "normal first",
+      "source": [
+        1,
+        0
+      ],
+      "native": [
+        1,
+        0
+      ]
+    },
+    {
+      "after": "normal replay",
+      "source": [
+        1,
+        0
+      ],
+      "native": [
+        1,
+        0
+      ]
+    },
+    {
+      "after": "XC HEAD cold days2",
+      "source": [
+        7,
+        0
+      ],
+      "native": [
+        7,
+        0
+      ]
+    },
+    {
+      "after": "XC HEAD",
+      "source": [
+        7,
+        0
+      ],
+      "native": [
+        7,
+        0
+      ]
+    },
+    {
+      "after": "mutation before invalidation",
+      "source": [
+        7,
+        1
+      ],
+      "native": [
+        7,
+        1
+      ]
+    },
+    {
+      "after": "mutation after invalidation",
+      "source": [
+        8,
+        1
+      ],
+      "native": [
+        8,
+        1
+      ]
+    },
+    {
+      "after": "finished",
+      "source": [
+        8,
+        4
+      ],
+      "native": [
+        8,
+        4
+      ]
+    }
+  ],
+  "native_shutdown": {
+    "closed": true,
+    "drained": true,
+    "active_requests": 0,
+    "available_bytes": 536870912
+  },
+  "cleanup": "owned Compose project removed",
+  "evidence": "artifacts/rust/m7-xmltv-shared-helpers-native-1/xmltv-source.json",
+  "tool_source": "artifacts/rust/m7-xmltv-shared-helpers-native-1/tools",
+  "packaged_post_move_verified": false,
+  "performance_verified": false,
+  "limitations": [
+    "Existing M3U runtime functions unchanged; shared helpers added for XC EPG reuse",
+    "Custom source properties/regex remain guarded501",
+    "Image23 packaged results bind frozen pre-extraction code; no retroactive image proof",
+    "Completed proof and cleanup were saved before host reboot; native XC EPG actions remain501"
+  ]
+}

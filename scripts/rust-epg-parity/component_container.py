@@ -8,7 +8,7 @@ import subprocess
 
 
 def execute(compose, environment, output, manifest_path, suite, fixture_name):
-    if suite not in ('source_sql', 'policy_cache_sql', 'reporter_sql'):
+    if suite not in ('source_sql', 'policy_cache_sql', 'reporter_sql', 'channels_sql', 'file_job_sql', 'auto_logos_sql'):
         raise ValueError('Unknown EPG component suite')
     output = Path(output)
     manifest = json.loads(Path(manifest_path).read_bytes())
@@ -32,6 +32,12 @@ def execute(compose, environment, output, manifest_path, suite, fixture_name):
         'EPG_IMPORT_DISPOSABLE_FIXTURE': 'playback-fixture-only',
         'EPG_POLICY_DISPOSABLE_FIXTURE': 'playback-fixture-only',
         'EPG_REPORTER_DISPOSABLE_FIXTURE': 'playback-fixture-only',
+        'EPG_LOGO_DISPOSABLE_FIXTURE': 'playback-fixture-only',
+        'EPG_LOGO_FIXTURE': '/evidence/' + fixture_name,
+        'EPG_FILE_JOB_DISPOSABLE_FIXTURE': 'playback-fixture-only',
+        'EPG_FILE_JOB_FIXTURE': '/evidence/' + fixture_name,
+        'EPG_CHANNEL_DISPOSABLE_FIXTURE': 'playback-fixture-only',
+        'EPG_CHANNEL_FIXTURE': '/evidence/' + fixture_name,
         'EPG_REPORTER_FIXTURE': '/evidence/' + fixture_name,
         'EPG_IMPORT_FIXTURE': '/evidence/' + fixture_name,
         'EPG_POLICY_FIXTURE': '/evidence/' + fixture_name,

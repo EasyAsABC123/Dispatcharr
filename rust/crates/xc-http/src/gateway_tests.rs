@@ -106,3 +106,55 @@ async fn cancelled_sql_caller_retains_admission_until_owned_worker_finishes() {
     .unwrap();
     assert!(gateway.shutdown().await);
 }
+
+#[tokio::test]
+#[ignore = "requires disposable original PostgreSQL/Redis XC fixture"]
+async fn epg_sql_cancellation_and_detached_body_keep_bounded_lifetimes() {
+    let (gateway, query) = fixture().await;
+    let gateway = gateway.with_epg();
+    let pk: i64 = sqlx::query_scalar(
+        "SELECT id::bigint FROM dispatcharr_channels_channel WHERE name='XC channel 0'",
+    )
+    .fetch_one(gateway.inner.store.pool())
+    .await
+    .unwrap();
+    let query = format!("{query}&action=get_short_epg&stream_id={pk}");
+    let maximum = gateway.inner.config.max_memory_bytes;
+    let mut locked = gateway.inner.store.pool().begin().await.unwrap();
+    sqlx::query("LOCK TABLE dispatcharr_channels_channel IN ACCESS EXCLUSIVE MODE")
+        .execute(&mut *locked)
+        .await
+        .unwrap();
+    let worker = gateway.clone();
+    let requested = request(&query, false);
+    let caller = tokio::spawn(async move { worker.handle(requested).await });
+    tokio::time::timeout(Duration::from_secs(3),async{
+        loop {
+            let waiting:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND wait_event_type='Lock' AND query LIKE 'SELECT c.id::bigint AS id,COALESCE(o.channel_number%')").fetch_one(gateway.inner.store.pool()).await.unwrap();
+            if waiting{break}tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    }).await.unwrap();
+    caller.abort();
+    let _ = caller.await;
+    assert_eq!(gateway.active_requests(), 1);
+    assert!(gateway.handle(request(&query, false)).await.is_err());
+    locked.rollback().await.unwrap();
+    tokio::time::timeout(Duration::from_secs(5), async {
+        while gateway.active_requests() != 0 || gateway.available_memory_bytes() != maximum {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+    let response = gateway.handle(request(&query, false)).await.unwrap();
+    let mut body = response.into_body();
+    let frame = body.frame().await.unwrap().unwrap().into_data().unwrap();
+    let clone = frame.clone();
+    drop(frame);
+    drop(body);
+    assert!(gateway.shutdown().await);
+    assert_eq!(gateway.active_requests(), 0);
+    assert!(gateway.available_memory_bytes() < maximum);
+    drop(clone);
+    assert_eq!(gateway.available_memory_bytes(), maximum);
+}

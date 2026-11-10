@@ -21,7 +21,7 @@ pub fn reservation(rows: usize) -> Result<usize, NumberError> {
         .ok_or(NumberError::Capacity)
 }
 
-fn integer(value: f64) -> Result<String, NumberError> {
+pub(crate) fn integer(value: f64) -> Result<String, NumberError> {
     if !value.is_finite() {
         return Err(NumberError::Invalid);
     }

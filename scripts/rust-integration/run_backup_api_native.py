@@ -27,7 +27,7 @@ def main():
     tools=output/'tool-source';tool_hashes=snapshot_sources(ROOT,tools);project='dispatcharr-backup-api-'+uuid.uuid4().hex[:10]
     manifest=None
     if manifest is not None and not manifest.get('passed'):parser.error('Successful candidate manifest required')
-    report={'passed':False,'scope':'job-free original/native backup HTTP and filesystem effects; raw equality plus four explicitly declared Source-invalid204 Content-Length deltas; no application or jobs wiring','project':project,'performance_verified':False,'application_image_verified':False,'tool_source_sha256':tool_hashes}
+    report={'passed':False,'scope':'job-free original/native backup HTTP and filesystem effects; raw equality plus five explicitly named Source-invalid204 Content-Length deltas; no application or jobs wiring','project':project,'performance_verified':False,'application_image_verified':False,'tool_source_sha256':tool_hashes}
     status=1
     with fixture_source(report,False,output) as directory:
         temporary=Path(directory);source=temporary/'source';source.mkdir();source.chmod(0o755)

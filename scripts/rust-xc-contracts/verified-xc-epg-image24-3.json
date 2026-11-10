@@ -1,0 +1,56 @@
+{
+  "scope": "Packaged XC short/simple EPG scoped original/native HTTP, payload and resource gates",
+  "passed": true,
+  "candidate_image_id": "sha256:f45cb87fe16dd5b3ee918d31e53f113dad18a1d0c0e13a5350ffdbbfbb7fbbf6",
+  "candidate_source_tree_sha256": "75c6c0c9df48d89bfb7f36e450bd4f8b91c1075e5e6281249092c11abcfad201",
+  "build_manifest": "artifacts/rust/candidate-build-m7-xc-epg-image24-1/build.json",
+  "build_manifest_sha256": "e11e7831a02e1d558b0721fb09213325e7e1d9cf30de1d4c4d8cffdb782298fe",
+  "original_helper_cases_over_app_http": 750,
+  "original_native_http_cases": 88,
+  "http_differences": [],
+  "normalizations": [
+    "Only independently process-random synthetic IDs; stored IDs and every other field/real-row byte remain exact"
+  ],
+  "protected_admission": {
+    "status": 503,
+    "configured_requests": 2,
+    "physical_waiters_after_cancel": 2
+  },
+  "cancelled_socket_waiters": 2,
+  "response_cap": {
+    "configured_bytes": 64,
+    "status": 503
+  },
+  "nonzero_hash_guard": {
+    "configured_seed": "1",
+    "status": 501
+  },
+  "shutdown_states": [
+    {
+      "service": "candidate",
+      "ExitCode": 0,
+      "OOMKilled": false
+    },
+    {
+      "service": "candidate-small",
+      "ExitCode": 0,
+      "OOMKilled": false
+    }
+  ],
+  "shutdown_seconds": 0.2921311509999214,
+  "cleanup": "owned Compose project removed",
+  "evidence": "artifacts/rust/m7-xc-epg-image24-3/xc-epg-image.json",
+  "tool_source": "artifacts/rust/m7-xc-epg-image24-3/tools",
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "remaining": [
+    "Custom dummy regex/name-source/logos remain unsupported501",
+    "VOD/series on-demand info refresh actions remain independent501 gates",
+    "No resource performance claim for this image"
+  ],
+  "preserved_failures": {
+    "image24-1": "All88 HTTP passed; urllib.urlencode rejected JSON array query pairs before first helper request. Tool-only tuple conversion.",
+    "image24-2": "All750+88 passed; monitor reused cached pg_stat_activity within lock transaction. Tool-only pg_stat_clear_snapshot eachpoll."
+  },
+  "original_credit": "Full application/algorithm credit remains with original Dispatcharr authors and contributors."
+}

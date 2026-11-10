@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "scope": "job-free original/native backup HTTP and filesystem effects; raw equality plus five explicitly named Source-invalid204 Content-Length deltas; no application or jobs wiring",
+  "cleanup": "project removed",
+  "source_cases": 109,
+  "large_upload_cases": 3,
+  "raw_exact_wire_parity": false,
+  "secondary_contract_acceptance": true,
+  "declared_source_invalid_204_content_length_deltas": 5,
+  "exact_wire_cases": 107,
+  "physical_resources": {
+    "unread_download_retains_lease": true,
+    "drop_releases_download": true,
+    "canceled_observer_retains_physical_worker": true,
+    "capacity_503": true,
+    "shutdown_waits_physical_reply": true,
+    "canceled_upload_spool_cleanup": true,
+    "schedule_read_independent_of_filesystem_capacity": true
+  },
+  "report": "artifacts/rust/m8-backup-api-source-native-7/integration.json",
+  "report_sha256": "f230ce2c98f270a37979a04967ba5f0aaf7d6e2fee2b8004a97a93aa885d6308",
+  "tool_source": "artifacts/rust/m8-backup-api-source-native-7/tool-source",
+  "rust_source_archive_sha256": "6d7116e29ce91c1113e34f38e522d8710178b96c040ae6b9b18dce59596def54",
+  "actual_comparison_cases": 112,
+  "raw_oracle_unchanged": true,
+  "known_protocol_delta": "Only five specifically named Source204 empty-body deletes carry invalid Content-Length40; Hyper omits it. Every status/body/other captured header/filesystem effect must match. The raw oracle remains unchanged; any other difference fails secondary acceptance.",
+  "application_image_verified": false,
+  "app_router_wired": false,
+  "performance_verified": false,
+  "large_upload_scope": [
+    "8MiB+1 generated stream",
+    "32MiB generated stream",
+    "Ignored32MiB other-file field followed by small selected file",
+    "Headers1021/1022 accepted,1023/1024/1025/2048 rejected as actual Source"
+  ],
+  "remaining": [
+    "Additional malformed multipart/filesystem failures, schedules and deployment variants",
+    "Cross-replica collision semantics and complete UI/packaged-route gates",
+    "Durable job/status/restart/restore lifecycle and schedule writes"
+  ],
+  "credit": "Original Dispatcharr authors retain full application credit and AGPL license.",
+  "verified_failure_ordering": [
+    "Normal DRF auth before manual download token, including invalid Bearer with a valid query token",
+    "Valid token/no-token admin download intentionally bypasses UI policy as original",
+    "Forged nonASCII token produces original145-byte HTML500; invalid Bearer still401 first",
+    "NUL query token is a normal invalid-token403",
+    "Schedule-only SQL reads remain200 while all four filesystem slots are occupied",
+    "Literal ampersand/plus/equal in URI filename preserved without query interpretation or double decoding"
+  ],
+  "failed_attempts": [
+    {
+      "evidence": "artifacts/rust/m8-backup-api-source-native-1",
+      "reason": "Four original-invalid204 Content-Length40 header differences discovered; all status/filesystem effects matched"
+    },
+    {
+      "evidence": "artifacts/rust/m8-backup-api-source-native-3",
+      "reason": "Two exact header-quota differences discovered and corrected after inspecting pinned Django parser and capturing both accepted/rejected boundary sizes"
+    },
+    {
+      "evidence": "artifacts/rust/m8-backup-api-source-native-6",
+      "reason": "New punctuation-file deletion correctly rejected by original four-name protocol allowlist; real fifth Source204/empty/CL40 case explicitly approved and added, preserving all five raw mismatches"
+    }
+  ],
+  "production_source_matches_canonical23": {
+    "rust/crates/store/src/backup_files.rs": "7b63cd254f62dbbb6fd95124115af4c3b8e70f8bfee8db242676eb4e6a88773a",
+    "rust/crates/store/src/backup_multipart_guard.rs": "d6f018067e0c934fe6137b7e0ef0f606908ad338d9b96ba33f3471c8c6bc938c"
+  }
+}

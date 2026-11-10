@@ -28,6 +28,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from apps.accounts.models import User
 from apps.channels.models import Channel, ChannelOverride, ChannelProfile, ChannelProfileMembership
 from apps.epg.models import EPGSource, EPGData, ProgramData
+from core.models import CoreSettings
 
 PREFIX = 'rust-probe-guide-http-'
 NOW = datetime.datetime(2026, 11, 9, 12, 37, 29, 123456, tzinfo=datetime.timezone.utc)
@@ -118,6 +119,7 @@ def case(path, body=None, role='admin', method='GET', raw=None, content_type='ap
                         'chunk_lengths': chunks, 'stream_error': stream_error}
             try:expected['json']=json.loads(content)
             except ValueError:pass
+            result['executed_sql_before_close'] = [query['sql'] for query in queries.captured_queries]
             response.close()
         except Exception as error:
             # APIRequestFactory does not install Django's outer500 handler.
@@ -145,6 +147,17 @@ def case(path, body=None, role='admin', method='GET', raw=None, content_type='ap
     # statements (not result rows); retain them to diagnose observable unordered
     # join/scan order without inventing an ID sort in the port.
     result['executed_sql'] = [query['sql'] for query in queries.captured_queries]
+    if path.startswith('/api/epg/grid/') and expected.get('status') == 200:
+        from apps.epg.api_grid import _visible_channels_queryset, _parse_channel_profile_id
+        channels_for_grid = _visible_channels_queryset(users[role]['user'], _parse_channel_profile_id(request.GET))
+        from django.core.exceptions import EmptyResultSet
+        try:result['grid_channel_sql'] = str(channels_for_grid.query)
+        except EmptyResultSet:result['grid_channel_sql'] = None
+        result['grid_channels'] = [dict(id=c.pk, uuid=str(c.uuid), name=c.effective_name,
+            epg_id=c.effective_epg_data_obj.pk if c.effective_epg_data_obj else None,
+            source_type=c.effective_epg_data_obj.epg_source.source_type if c.effective_epg_data_obj and c.effective_epg_data_obj.epg_source else None,
+            source_properties=c.effective_epg_data_obj.epg_source.custom_properties if c.effective_epg_data_obj and c.effective_epg_data_obj.epg_source else None)
+            for c in channels_for_grid]
     result['expected']=expected;cases.append(result)
 
 current='/api/epg/current-programs/'
@@ -186,6 +199,6 @@ for query in ['?days=0','?days=1','?days=-1','?prev_days=1','?days=bad',
     case(grid+query)
 case(grid,method='HEAD')
 print(json.dumps({'scope':'Actual original current-programme and streamed guide-grid view/DB corpus; pinned clock; unhandled exceptions characterized separately',
-                  'clock':NOW.isoformat(),'cases':cases,'fixtures':{'channel_uuids':[str(c.uuid) for c in channels],
+                  'clock':NOW.isoformat(),'history_max_days':CoreSettings.get_epg_history_policy().max_days,'cases':cases,'fixtures':{'channel_uuids':[str(c.uuid) for c in channels],
                   'epg_data_ids':[entry.pk for entry in entries],'profile_ids':[p.pk for p in profiles]},
                   'native_verified':False,'application_parity_verified':False,'performance_verified':False},ensure_ascii=False))

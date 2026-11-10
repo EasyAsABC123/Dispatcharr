@@ -61,6 +61,7 @@ struct Inner {
     requests: Arc<Semaphore>,
     memory: Arc<Semaphore>,
     stopped: AtomicBool,
+    epg_enabled: AtomicBool,
     workers: AtomicUsize,
     done: Notify,
     live: std::sync::OnceLock<LiveDispatcher>,
@@ -128,6 +129,7 @@ impl XcGateway {
                 memory: Arc::new(Semaphore::new(config.max_memory_bytes)),
                 config,
                 stopped: AtomicBool::new(false),
+                epg_enabled: AtomicBool::new(false),
                 workers: AtomicUsize::new(0),
                 done: Notify::new(),
                 live: std::sync::OnceLock::new(),
@@ -141,6 +143,12 @@ impl XcGateway {
             .route("/player_api.php", any(dispatch))
             .route("/panel_api.php", any(dispatch))
             .with_state(self.clone())
+    }
+    /// Explicit staged capability; the application keeps these actions guarded
+    /// until the original/native HTTP and resource gates have passed.
+    pub fn with_epg(self) -> Self {
+        self.inner.epg_enabled.store(true, Ordering::Release);
+        self
     }
     pub fn active_requests(&self) -> usize {
         self.inner.workers.load(Ordering::Acquire)
@@ -289,6 +297,44 @@ impl XcGateway {
         } else if stream {
             self.write_live(&identity, &user, &limits, &mut out, false)
                 .await?;
+        } else if matches!(action, "get_short_epg" | "get_simple_data_table")
+            && self.inner.epg_enabled.load(Ordering::Acquire)
+        {
+            let limits = crate::epg::Limits {
+                max_programmes: config.max_rows,
+                max_category_channels: config.max_rows,
+                max_metadata_bytes: config.max_metadata_bytes,
+                max_response_bytes: config.max_response_bytes,
+                max_number_bytes: config.max_number_bytes,
+            };
+            let result = crate::epg::write(
+                &crate::epg::Context {
+                    store: &self.inner.store,
+                    auth: &self.inner.auth,
+                    user: &user,
+                    request: &identity,
+                    short: action == "get_short_epg",
+                    now: chrono::Utc::now(),
+                    limits: &limits,
+                    number_memory: self.inner.memory.clone(),
+                },
+                &mut out,
+            )
+            .await;
+            match result {
+                Ok(()) => {}
+                Err(crate::epg::Error::NotFound) => return Ok(django_page(404)),
+                Err(crate::epg::Error::InvalidLimit | crate::epg::Error::Backend) => {
+                    return Ok(django_page(500))
+                }
+                Err(crate::epg::Error::Unsupported) => {
+                    return Err(StoreError::StatusBody(
+                        501,
+                        json!({"detail":"Custom XC EPG source properties require a verified regex adapter."}),
+                    ))
+                }
+                Err(crate::epg::Error::Capacity) => return Err(reader::capacity()),
+            }
         } else if matches!(
             action,
             "get_short_epg"
@@ -361,6 +407,19 @@ impl XcGateway {
         let mut live = LiveRows::project(&self.inner.auth, request, user, rows, budget).await?;
         live.write(&self.inner.store, out, as_object).await
     }
+}
+fn django_page(status: u16) -> Response {
+    let body = if status == 404 {
+        "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n</body>\n</html>\n"
+    } else {
+        "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n"
+    };
+    (
+        StatusCode::from_u16(status).unwrap(),
+        [("content-type", "text/html; charset=utf-8")],
+        body,
+    )
+        .into_response()
 }
 fn identity(request: &Request<Body>) -> PlaybackRequest {
     PlaybackRequest {

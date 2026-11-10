@@ -661,11 +661,14 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "bytes",
+ "chrono",
  "dispatcharr-contracts",
+ "dispatcharr-ingest-core",
  "dispatcharr-output-store",
  "dispatcharr-store",
  "futures-util",
  "md-5",
+ "num-bigint",
  "reqwest",
  "serde_json",
  "sha2 0.10.9",
@@ -886,6 +889,7 @@ name = "dispatcharr-xc-http"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "base64 0.22.1",
  "bytes",
  "chrono",
  "dispatcharr-contracts",

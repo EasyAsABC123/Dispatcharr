@@ -1,0 +1,51 @@
+{
+  "scope": "Original guide successful-case metadata, stored programme frames and complete stored/standard-dummy JSON entities; component only",
+  "passed": true,
+  "source_view_cases_captured": 104,
+  "source_grid_cases_captured": 40,
+  "successful_grid_cases_compared": 22,
+  "metadata_channel_order_exact": true,
+  "stored_row_order_types_exact": true,
+  "complete_entity_sha256_and_length_exact": true,
+  "source_clock_pinned": true,
+  "source_history_policy_captured": true,
+  "native_component_tests_passed": 2,
+  "evidence_directory": "artifacts/rust/m5-grid-entity-native-24",
+  "artifact_sha256": {
+    "result.json": "34c032a5aeab147eeeb3884099d4b17c16f15a99619a9a4d0617483584720bdf",
+    "guide-source.json": "af2427a3d68e0587d3bef6102181dbe65ed63360c47e10a15f5ec821d0998ed8",
+    "native-grid.log": "1cb1b65357566b278b95bc4a2129aa1ed8c5d63d81633557973ed88fc355cfda",
+    "native-grid-entity.log": "be040323085d66a539448d5e97866ebb6d96848a37846079214e330c572c2912",
+    "grid-rust-source.tar": "8a09e5ad96a281d5f252042a7ed7f9ae4eaa4a02bb7f903f9c6563ccd93d5c43",
+    "tool-source/scripts/rust-epg-contracts/control_reads.py": "46e5ac53fa5e2d34e23a8b9c0d78317d021543f998521a6c1eff5e7a4e9645a3",
+    "tool-source/scripts/rust-epg-contracts/guide_source.py": "8d30dc7275ec9d613d84510162f747c467e10124b680e05c4d24967929937f0b"
+  },
+  "cleanup": "project removed",
+  "resources_retained": false,
+  "native_http_verified": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "retained_failed_attempts": {
+    "18": "Narrow effective-EPG join changed original channel order.",
+    "19": "Source evidence collector encountered intentionally empty queryset while rendering diagnostic SQL; corrected collector only.",
+    "21": "Guarded expressions/casts and LIMIT changed original query plan/order.",
+    "22": "Interrupted edit left diagnostic column names inconsistent; coherent source restored for23."
+  },
+  "bounds": {
+    "metadata_rows": 50000,
+    "metadata_charge_bytes": 16777216,
+    "source_json_or_text_field_bytes": 65536,
+    "stored_row_bytes": 1048576,
+    "stored_rows": 50000,
+    "batch_rows": 500,
+    "frame_bytes": 16777216,
+    "aggregate_entity_frame_bytes": 33554432,
+    "sql_statement_timeout_ms": 2000
+  },
+  "limitations": [
+    "This is a direct component comparison against Source APIRequestFactory captures; native authentication/method/error HTTP behavior and network HEAD semantics remain unaccepted.",
+    "Source generator chunk boundaries and native internal frame boundaries are not compared; complete JSON entities match exact bytes.",
+    "Custom dummy properties and regex rules, offset-sensitive dummy integration, broader datetime grammar and extreme-year generation require further gates.",
+    "Metadata and stored reads use separate bounded transactions; HTTP worker admission, response lifetime, cancellation, shutdown and concurrent-update consistency remain open."
+  ]
+}

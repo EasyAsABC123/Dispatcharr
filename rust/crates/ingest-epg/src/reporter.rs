@@ -66,12 +66,20 @@ pub enum ReportAction {
         processed: u64,
     },
     ChannelFailed(FailedImport),
+    RefreshFailed(FailedImport),
+    DownloadFailed(FailedImport),
+    LocalDownloadComplete {
+        source_id: i64,
+    },
 }
 impl ReportAction {
     fn charge(&self) -> usize {
         match self {
             Self::Committed(v) => v.source_name.capacity(),
-            Self::Failed(v) | Self::ChannelFailed(v) => v
+            Self::Failed(v)
+            | Self::ChannelFailed(v)
+            | Self::RefreshFailed(v)
+            | Self::DownloadFailed(v) => v
                 .source_name
                 .capacity()
                 .saturating_add(v.last_message.capacity())
@@ -318,6 +326,20 @@ impl Inner {
             ReportAction::Failed(value) => self.failure(value, "parsing_programs", context).await,
             ReportAction::ChannelFailed(value) => {
                 self.failure(value, "parsing_channels", context).await
+            }
+            ReportAction::RefreshFailed(value) => self.failure(value, "refresh", context).await,
+            ReportAction::DownloadFailed(value) => {
+                self.failure(value, "downloading", context).await
+            }
+            ReportAction::LocalDownloadComplete { source_id } => {
+                let saved = sqlx::query("UPDATE epg_epgsource SET status='success' WHERE id=$1")
+                    .bind(source_id)
+                    .execute(self.store.pool())
+                    .await?;
+                saved_source(saved.rows_affected())?;
+                let mut data = stage_progress_data(source_id, "downloading", 100);
+                data["status"] = json!("success");
+                self.send(data, context).await;
             }
             ReportAction::ChannelProgress {
                 source_id,

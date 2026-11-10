@@ -63,6 +63,8 @@ pub struct ChannelRequest {
     /// Prepared by the source/path resolver (including cache-parent creation).
     pub cache_file: PathBuf,
     pub source_has_url: bool,
+    /// Snapshot from the caller's original source object, before parsing.
+    pub source_properties: serde_json::Value,
     pub cancelled: Arc<AtomicBool>,
 }
 #[derive(Debug, Default)]
@@ -77,6 +79,7 @@ pub enum ChannelError {
     NoUrl,
     Scan(ImportError),
     Final(ImportError),
+    LogoProperties(String),
 }
 impl From<ImportError> for ChannelError {
     fn from(value: ImportError) -> Self {
@@ -164,6 +167,9 @@ impl ChannelImporter {
         retained: Arc<dyn Send + Sync>,
         reporter: Option<GuideReporter>,
     ) -> Result<ChannelReport, ChannelError> {
+        if !crate::auto_logos::bounded_properties(&request.source_properties) {
+            return Err(ImportError::Capacity("source properties").into());
+        }
         if request.source_name.capacity() > 4096 {
             return Err(ImportError::Capacity("source name").into());
         }
@@ -211,6 +217,10 @@ impl ChannelImporter {
                         let message = error_text(error);
                         Some((format!("Error parsing XML file: {message}"), message))
                     }
+                    ChannelError::LogoProperties(message) => Some((
+                        format!("Error parsing EPG file: {message}"),
+                        message.clone(),
+                    )),
                     ChannelError::Final(error) => {
                         let message = error_text(error);
                         Some((format!("Error parsing EPG file: {message}"), message))
@@ -493,6 +503,19 @@ async fn run(
         },
     )
     .await?;
+    crate::auto_logos::maybe_apply(
+        inner.store.clone(),
+        request.source_id,
+        &request.source_properties,
+        context(&state),
+    )
+    .await
+    .map_err(|error| match error {
+        crate::auto_logos::LogoError::Properties(_) => {
+            ChannelError::LogoProperties(error.to_string())
+        }
+        crate::auto_logos::LogoError::Resource(error) => ChannelError::Import(error),
+    })?;
     Ok(ChannelReport {
         processed,
         initial_total: initial,

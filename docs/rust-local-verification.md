@@ -291,3 +291,9 @@ those uploads. Image23's first backup fixture retained that configuration
 failure, then replayed the unchanged image with the explicit volume-backed
 spool setting. These are temporary files, separate from `/data/backups`; normal
 completion and cancellation cleanup have independent ownership tests.
+
+### Immutable image24 and archive recovery
+
+The [image24 checkpoint](../scripts/rust-integration/verified-checkpoint-image24-1.json) binds its source archive, image, strict Rust checks, captured tool review and scoped packaged regression reports. Original authors retain full application credit. Default Rust tests exclude232 external-fixture cases; run their disposable Compose gates separately.
+
+The [recovered image23 proof](../scripts/rust-integration/verified-image23-archive-recovery-1.json) preserves the historical archive/tree/runtime-package/FFmpeg hashes after a host reboot removed local images. The rebuilt image has a new Docker identity. Build recovery does not rerun historical parity or establish performance gains. Replay with `scripts/rust-integration/build.py --output <new-empty-directory> --tag <new-tag> --source-archive <retained-source.tar> --source-manifest <original-passing-build.json>`. Both inputs are required; streamed archive validation checks exact members/content, safe paths, bounded sizes and manifest/tree hashes. Docker consumes the validated retained copy, and the current Compose deployment template is separately hashed.

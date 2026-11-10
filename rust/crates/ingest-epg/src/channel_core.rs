@@ -17,7 +17,7 @@ impl ChannelRow {
     }
 }
 /// Exact Python3.13 Unicode15.1 str.strip whitespace (including U+001C–001F).
-fn strip(value: &str) -> &str {
+pub(crate) fn strip(value: &str) -> &str {
     value.trim_matches(|ch:char|matches!(ch,'\u{0009}'..='\u{000d}'|'\u{001c}'..='\u{0020}'|'\u{0085}'|'\u{00a0}'|'\u{1680}'|'\u{2000}'..='\u{200a}'|'\u{2028}'|'\u{2029}'|'\u{202f}'|'\u{205f}'|'\u{3000}'))
 }
 /// Blank/missing IDs produce no row, but the original caller still increments

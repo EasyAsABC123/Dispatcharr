@@ -6,6 +6,7 @@ from unittest.mock import patch
 from django.http import QueryDict
 from django.test import RequestFactory
 from apps.accounts.models import User
+from apps.epg.models import ProgramData
 from apps.output import views
 
 def specifications(channels):
@@ -27,7 +28,7 @@ def specifications(channels):
 def capture(users,channels,clock,start=0,count=32):
     assert 0<=start<10000 and 1<=count<=64
     now=datetime.fromisoformat(clock)
-    cases=specifications(channels);result=[]
+    cases=specifications(channels);result=[];stored_ids={str(pk)for pk in ProgramData.objects.values_list("pk",flat=True)}
     for spec in cases[start:start+count]:
         user=User.objects.get(pk=users[spec['role']]['id'])
         request=RequestFactory().get('/player_api.php',HTTP_HOST='xc.fixture.invalid:8088')
@@ -38,7 +39,14 @@ def capture(users,channels,clock,start=0,count=32):
         with patch.object(views.django_timezone,'now',return_value=now):
             try:value=views.xc_get_epg(request,user,short=spec['short'])
             except Exception as error:row['error']=type(error).__name__
-            else:row['expected']=value
+            else:
+                row['expected']=value
+                comparison=json.loads(json.dumps(value))
+                synthetic=[]
+                for index,listing in enumerate(comparison['epg_listings']):
+                    if listing['id']not in stored_ids:listing['id']='<process-random-synthetic>';synthetic.append(index)
+                row['synthetic_indices']=synthetic
+                row['comparison_json']=json.dumps(comparison)
         result.append(row)
     return {'scope':'Actual original XC short/simple EPG helper at fixed clock; no auth/HTTP acceptance','source_sha256':hashlib.sha256(Path('/app/apps/output/views.py').read_bytes()).hexdigest(),'total':len(cases),'cases':result,'native_verified':False}
 

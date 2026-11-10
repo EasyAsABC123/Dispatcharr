@@ -163,7 +163,7 @@ impl TaskLocks {
             .map_err(|_| TaskLockError::RedisUnavailable)?
     }
 }
-async fn release(held: Arc<Held>) -> Result<(), TaskLockError> {
+async fn release(held: Arc<Held>) -> Result<bool, TaskLockError> {
     held.stop.send_replace(true);
     let _command = held
         .locks
@@ -172,13 +172,13 @@ async fn release(held: Arc<Held>) -> Result<(), TaskLockError> {
         .await
         .map_err(|_| TaskLockError::RedisUnavailable)?;
     let mut connection = held.locks.connection.clone();
-    let _: i64 = Script::new(RELEASE)
+    let removed: i64 = Script::new(RELEASE)
         .key(&held.key)
         .arg(&held.token)
         .invoke_async(&mut connection)
         .await
         .map_err(|_| TaskLockError::RedisUnavailable)?;
-    Ok(())
+    Ok(removed == 1)
 }
 impl TaskLease {
     pub fn key(&self) -> &str {
@@ -191,8 +191,14 @@ impl TaskLease {
         self.inner.lost.subscribe()
     }
     pub async fn release(self) -> Result<(), TaskLockError> {
+        self.release_owned().await.map(|_| ())
+    }
+    /// Return whether the actual owner-checked DEL removed our lease. False
+    /// includes a missing/replaced owner; it cannot authorize successor work.
+    /// The physical task/admission survives cancellation of this waiter.
+    pub async fn release_owned(self) -> Result<bool, TaskLockError> {
         if self.inner.releasing.swap(true, Ordering::AcqRel) {
-            return Ok(());
+            return Ok(false);
         }
         // Spawn before awaiting: cancelling this waiter cannot cancel cleanup.
         let inner = self.inner.clone();

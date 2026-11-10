@@ -2,6 +2,9 @@
 //! All original application authors retain full credit; see ATTRIBUTION.md.
 //! Prototype only: no application route or output parity is accepted yet.
 mod csrf;
+pub mod epg_dummy;
+pub mod epg_grid;
+pub mod epg_window;
 mod gateway;
 pub mod reader;
 pub mod render;
@@ -24,7 +27,9 @@ pub fn source_csrf_failure(
     headers: &axum::http::HeaderMap,
     body: &[u8],
 ) -> Option<&'static str> {
-    csrf::check(method, headers, body).err().map(|error| error.body())
+    csrf::check(method, headers, body)
+        .err()
+        .map(|error| error.body())
 }
 
 #[cfg(test)]

@@ -502,7 +502,8 @@ async fn run() -> Result<(), String> {
                     )? as u64),
                 },
             )
-            .map_err(|_| "XC initialization failed (credentials omitted)")?,
+            .map_err(|_| "XC initialization failed (credentials omitted)")?
+            .with_epg(),
         )
     } else {
         None

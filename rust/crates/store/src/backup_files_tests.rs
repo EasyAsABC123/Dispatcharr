@@ -180,6 +180,7 @@ async fn original_job_free_backup_file_contracts() {
             "delete-name-dispatcharr-backup-rust-probe-a.zip",
             "delete-name-arbitrary-upload.txt",
             "delete-name-café.zip",
+            "delete-name-amp&plus+=.zip",
         ];
         let declared_delta = if declared_names.contains(&case["name"].as_str().unwrap())
             && failures == ["response"]
@@ -392,7 +393,7 @@ async fn original_job_free_backup_file_contracts() {
         .iter()
         .filter(|v| v["declared_source_invalid_204_length_delta"] == true)
         .count();
-    assert_eq!(deltas, 4);
+    assert_eq!(deltas, 5);
     eprintln!(
         "BACKUP_API_CHECKS {}",
         json!({"passed":passed,"secondary_passed":secondary,"declared_source_invalid_204_length_deltas":deltas,"checks":checks})

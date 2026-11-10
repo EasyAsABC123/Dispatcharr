@@ -1,0 +1,225 @@
+{
+  "format_version": 1,
+  "scope": "Immutable image24 prior VOD/timeshift and packaged WebSocket/byte-boundary functional regressions; not full M4 acceptance",
+  "passed": true,
+  "cleanup_passed": true,
+  "evidence": "artifacts/rust/m4-all-functional-image24-1/vod-contracts.json",
+  "evidence_sha256": "77191f18f10f4d224d3c6a06eecce6ee30b503593c83b4b03950a141b641937c",
+  "provenance": {
+    "image_id": "sha256:f45cb87fe16dd5b3ee918d31e53f113dad18a1d0c0e13a5350ffdbbfbb7fbbf6",
+    "source_tree_sha256": "75c6c0c9df48d89bfb7f36e450bd4f8b91c1075e5e6281249092c11abcfad201",
+    "source_archive_sha256": "cbec46d621c368c33c586f1948423294ffa2b1039d83ab5877926aea81feea7a",
+    "build_manifest_sha256": "e11e7831a02e1d558b0721fb09213325e7e1d9cf30de1d4c4d8cffdb782298fe"
+  },
+  "tool_manifest_sha256": "b416f3897d62b850083028e50d5bdd13d9c173290d12444c5ee7489c7a878329",
+  "comparisons": {
+    "wire_comparison": {
+      "format_version": 1,
+      "scope": "captured native XC VOD seven-case wire comparison only",
+      "captured_wire_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false,
+      "remaining_gates": [
+        "bound candidate build/source provenance",
+        "authenticated handoff and user/network controls",
+        "provider/cross-worker session lifecycle",
+        "full metadata/WebSocket side effects",
+        "decoded browser execution",
+        "resource/performance matrix"
+      ]
+    },
+    "profile_alias_comparison": {
+      "captured_wire_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_management_comparison": {
+      "captured_management_matches": true,
+      "differences": [],
+      "normalizations": [
+        "Allow order as unordered original DRF method set",
+        "Only top-level timestamp replaced after verifying it lies within each actual request interval"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_xc_comparison": {
+      "captured_direct_auth_matches": true,
+      "differences": [],
+      "normalizations": [
+        "opaque redirect SID and query token values",
+        "Allow method order is a set; original DRF order varies by Python hash seed",
+        "JSON object content compared semantically; each Content-Length must match its actual body bytes"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_direct_auth_comparison": {
+      "captured_direct_auth_matches": true,
+      "differences": [],
+      "normalizations": [
+        "opaque redirect SID and query token values",
+        "Allow method order is a set; original DRF order varies by Python hash seed",
+        "JSON object content compared semantically; each Content-Length must match its actual body bytes"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_busy_seek_comparison": {
+      "captured_busy_controls_match": true,
+      "differences": [],
+      "normalizations": [
+        "elapsed time and queued old-response bytes are observed, not equated",
+        "immediate client-close scheduling is observed; established grace is checked after 9 seconds",
+        "busy statistics byte totals reflect differently buffered delivery and remain a separate contract"
+      ],
+      "continuous_quota_sampling_verified": false,
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_idle_reopen_comparison": {
+      "captured_idle_reopen_matches": true,
+      "differences": [],
+      "normalizations": [
+        "wall-clock timestamps compared by preservation/reanchor relationships",
+        "numeric seek base tolerance 1e-9 seconds",
+        "bounded sliding TTLs account for observer boot"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_native_limit_comparison": {
+      "captured_wire_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_session_comparison": {
+      "captured_wire_matches": true,
+      "differences": [],
+      "application_parity_verified": false,
+      "performance_verified": false
+    },
+    "timeshift_media_comparison": {
+      "captured_media_matches": true,
+      "differences": [],
+      "normalizations": [
+        "elapsed wall time is measured separately",
+        "observer boot makes exact remaining TTL unstable; source policy/bounds and30second jitter ceiling retained"
+      ],
+      "application_parity_verified": false,
+      "performance_verified": false
+    }
+  },
+  "decoders": [
+    {
+      "backend": "baseline",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    },
+    {
+      "backend": "candidate",
+      "frames": 75,
+      "audio_and_video_mapped": true,
+      "strict_decoder_passed": true
+    }
+  ],
+  "groups": {
+    "vod_wire": 7,
+    "profile_alias_react": 2,
+    "management": 31,
+    "management_active_idle": 2,
+    "xc_alias": 23,
+    "direct_auth": 15,
+    "busy_seek": 3,
+    "idle_reopen": 3,
+    "positive_limit_redirect": true,
+    "session_api": 24,
+    "archive_media": 6
+  },
+  "packaged_events_and_boundaries": {
+    "passed": true,
+    "cleanup": true,
+    "evidence": "artifacts/rust/m4-events-boundaries-image24-1/vod-contracts.json",
+    "sha256": "f072efbaedb03f4bd91215f186ad435dfd7a9ae8bbad1bae717494e98314ebb1",
+    "comparisons": {
+      "vod_ws_comparison": {
+        "captured_packaged_vod_events_match": true,
+        "differences": [],
+        "normalizations": [
+          "Own timestamps/elapsed/consumed progress validated; stable complete DTOs compared",
+          "Original stopping snapshot races metadata removal; empty/nonempty final snapshots permitted"
+        ],
+        "application_parity_verified": false,
+        "performance_verified": false
+      },
+      "wire_comparison": {
+        "format_version": 1,
+        "scope": "captured native XC VOD seven-case wire comparison only",
+        "captured_wire_matches": true,
+        "differences": [],
+        "application_parity_verified": false,
+        "performance_verified": false,
+        "remaining_gates": [
+          "bound candidate build/source provenance",
+          "authenticated handoff and user/network controls",
+          "provider/cross-worker session lifecycle",
+          "full metadata/WebSocket side effects",
+          "decoded browser execution",
+          "resource/performance matrix"
+        ]
+      },
+      "timeshift_session_comparison": {
+        "captured_wire_matches": true,
+        "differences": [],
+        "application_parity_verified": false,
+        "performance_verified": false
+      },
+      "timeshift_ws_comparison": {
+        "captured_packaged_timeshift_events_match": true,
+        "differences": [],
+        "normalizations": [
+          "Actual capability IDs replaced by first-seen session ordinals",
+          "Own timestamps/elapsed/byte-rate progress validated; stable full DTOs and snapshot counts compared"
+        ],
+        "application_parity_verified": false,
+        "performance_verified": false
+      },
+      "timeshift_media_comparison": {
+        "captured_media_matches": true,
+        "differences": [],
+        "normalizations": [
+          "elapsed wall time is measured separately",
+          "observer boot makes exact remaining TTL unstable; source policy/bounds and30second jitter ceiling retained"
+        ],
+        "application_parity_verified": false,
+        "performance_verified": false
+      }
+    },
+    "vod_progress_cases": 3,
+    "vod_progress_matches": true,
+    "decoders": [
+      {
+        "backend": "baseline",
+        "frames": 75,
+        "audio_and_video_mapped": true,
+        "strict_decoder_passed": true
+      },
+      {
+        "backend": "candidate",
+        "frames": 75,
+        "audio_and_video_mapped": true,
+        "strict_decoder_passed": true
+      }
+    ]
+  },
+  "full_m4_parity_verified": false,
+  "performance_verified": false,
+  "remaining_gates": [
+    "Full application, continuous quota, wider provider variants and faults remain separate gates.",
+    "This functional replay does not transfer earlier image20 resource reductions to image24."
+  ]
+}
