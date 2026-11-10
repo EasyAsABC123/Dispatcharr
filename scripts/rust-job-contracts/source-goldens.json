@@ -1,0 +1,872 @@
+{
+  "scope": "Actual pinned original task status/auth/result contracts; neutral fixture tasks explicitly labeled, no native parity claim",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "versions": {
+    "celery": "5.6.3",
+    "kombu": "5.6.2",
+    "redis": "6.4.0",
+    "Django": "6.0.9"
+  },
+  "configuration": {
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "task_serializer": "json",
+    "result_serializer": "json",
+    "accept_content": [
+      "json"
+    ],
+    "task_track_started": false,
+    "task_acks_late": false,
+    "task_acks_on_failure_or_timeout": true,
+    "task_reject_on_worker_lost": null,
+    "worker_prefetch_multiplier": 4,
+    "broker_pool_limit": 10,
+    "result_expires": 3600,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    }
+  },
+  "publication": {
+    "task_name": "apps.backups.tasks.create_backup_task",
+    "header_fields": [
+      "argsrepr",
+      "eta",
+      "expires",
+      "group",
+      "group_index",
+      "id",
+      "ignore_result",
+      "kwargsrepr",
+      "lang",
+      "origin",
+      "parent_id",
+      "replaced_task_nesting",
+      "retries",
+      "root_id",
+      "shadow",
+      "stamped_headers",
+      "stamps",
+      "task",
+      "timelimit"
+    ],
+    "property_fields": [
+      "body_encoding",
+      "correlation_id",
+      "delivery_info",
+      "delivery_mode",
+      "delivery_tag",
+      "priority",
+      "reply_to"
+    ],
+    "content_type": "application/json",
+    "content_encoding": "utf-8",
+    "delivery_mode": 2,
+    "priority": 0,
+    "delivery_info": {
+      "exchange": "",
+      "routing_key": "celery"
+    },
+    "body_shape": [
+      "list",
+      "dict",
+      "dict"
+    ],
+    "args": [],
+    "kwargs": {},
+    "embedded_fields": [
+      "callbacks",
+      "chain",
+      "chord",
+      "errbacks"
+    ],
+    "envelope_sha256": "427b88bbf6fd72d05820e0b162b70dcc7ed90bcc85e820fbd0ce43ec9d28c652"
+  },
+  "cases": [
+    {
+      "name": "create-unread-malformed-json-202",
+      "passed": true
+    },
+    {
+      "name": "task-token-hmac",
+      "passed": true
+    },
+    {
+      "name": "pending-publication-durable-in-broker",
+      "passed": true,
+      "http": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      },
+      "result_key_absent": true
+    },
+    {
+      "name": "status-auth-admin-none",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-admin-valid",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-admin-bad",
+      "passed": true,
+      "observed": {
+        "status": 403,
+        "mime": "application/json",
+        "body": {
+          "detail": "Invalid task token"
+        }
+      }
+    },
+    {
+      "name": "status-auth-admin-empty",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-admin-unicode",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "text/html",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+      }
+    },
+    {
+      "name": "status-auth-viewer-none",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Authentication required"
+        }
+      }
+    },
+    {
+      "name": "status-auth-viewer-valid",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-viewer-bad",
+      "passed": true,
+      "observed": {
+        "status": 403,
+        "mime": "application/json",
+        "body": {
+          "detail": "Invalid task token"
+        }
+      }
+    },
+    {
+      "name": "status-auth-viewer-empty",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Authentication required"
+        }
+      }
+    },
+    {
+      "name": "status-auth-viewer-unicode",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "text/html",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+      }
+    },
+    {
+      "name": "status-auth-inactive-none",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-inactive-valid",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-inactive-bad",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-inactive-empty",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-inactive-unicode",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-none",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-valid",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-bad",
+      "passed": true,
+      "observed": {
+        "status": 403,
+        "mime": "application/json",
+        "body": {
+          "detail": "Invalid task token"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-empty",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-blocked-unicode",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "text/html",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+      }
+    },
+    {
+      "name": "status-auth-None-none",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Authentication required"
+        }
+      }
+    },
+    {
+      "name": "status-auth-None-valid",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "status-auth-None-bad",
+      "passed": true,
+      "observed": {
+        "status": 403,
+        "mime": "application/json",
+        "body": {
+          "detail": "Invalid task token"
+        }
+      }
+    },
+    {
+      "name": "status-auth-None-empty",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Authentication required"
+        }
+      }
+    },
+    {
+      "name": "status-auth-None-unicode",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "text/html",
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+      }
+    },
+    {
+      "name": "status-auth-invalid-none",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "status-auth-invalid-valid",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "status-auth-invalid-bad",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "status-auth-invalid-empty",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "status-auth-invalid-unicode",
+      "passed": true,
+      "observed": {
+        "status": 401,
+        "mime": "application/json",
+        "body": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "producer-restart-queue-retained",
+      "passed": true
+    },
+    {
+      "name": "actual-backup-worker-success",
+      "passed": true,
+      "http_state": "completed",
+      "result_fields": [
+        "filename",
+        "size",
+        "status"
+      ],
+      "archive_exists": true,
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "2b228f781ca28c35782ab42b983ed1379c334f9b11f562a37897919c59273c7a"
+      }
+    },
+    {
+      "name": "broker-result-databases-separated",
+      "passed": true,
+      "broker_db": 8,
+      "result_db": 9
+    },
+    {
+      "name": "restore-existing-invalid-archive-published",
+      "passed": true
+    },
+    {
+      "name": "returned-failure-dict-is-celery-success",
+      "passed": true,
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "failed",
+          "error": "File is not a zip file"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "53eb2ee5bb0a5fc62056773bac6f3360e23c2f8beeabd11bd02ea2ff846e6005"
+      }
+    },
+    {
+      "name": "worker-result-failed-dict",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "failed",
+          "error": "fixture returned failure"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "47e4d308d2e600ef0dfde3e2f046d5e12884549f88c606dd1c95ef201f0052eb"
+      }
+    },
+    {
+      "name": "worker-result-null-error",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "failed",
+          "error": null
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "140ea144743ffeeac3463c736030bdd1453bd2b95e61ef6cc7f423f564f3f175"
+      }
+    },
+    {
+      "name": "worker-result-empty",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "failed",
+          "error": "Unknown error"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "b407a88316f5e613c3e15d5cfb8f123d866b746d4d0c677dc3c0177454394d83"
+      }
+    },
+    {
+      "name": "worker-result-scalar",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'str' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "str",
+        "raw_sha256": "15bd6027cf6c4256a1f9e990e687d338ebf15374fe7844f8df53935c64a630b5"
+      }
+    },
+    {
+      "name": "worker-result-list",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'list' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "list",
+        "raw_sha256": "51415599d7d7ae30deb8256a81c5a121c876acc1c273099cbec42e28ea99ea3d"
+      }
+    },
+    {
+      "name": "worker-result-null",
+      "passed": true,
+      "celery_state": "SUCCESS",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: 'NoneType' object has no attribute 'get'"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "NoneType",
+        "raw_sha256": "93d8b72bfa984140d8db2317d2e9e9c16f640fe49417924553c92d22f1c11168"
+      }
+    },
+    {
+      "name": "worker-result-uncaught",
+      "passed": true,
+      "celery_state": "FAILURE",
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: fixture uncaught"
+        }
+      },
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "FAILURE",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "541bfaf7f3f7513835facefa9efa44862b7579cbb2ee86e3aaf9c0a1cf686051"
+      }
+    },
+    {
+      "name": "tracked-fixture-started-visible",
+      "passed": true,
+      "fixture_override": "track_started=True",
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "STARTED",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "b34037e1e33cac2b8f96d756351d64d308ec6627b900a4e821eebcd67a03a416"
+      }
+    },
+    {
+      "name": "actual-retry-visible-not-ready",
+      "passed": true,
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "RETRY",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "9fbc1414504b3dbc0526e607efba71a117c16f38eb2457b06aec1236774af49f"
+      }
+    },
+    {
+      "name": "retry-worker-success",
+      "passed": true,
+      "retries": 1
+    },
+    {
+      "name": "default-running-early-ack-pending",
+      "passed": true
+    },
+    {
+      "name": "hard-restart-early-ack-task-not-replayed",
+      "passed": true,
+      "http": {
+        "status": 200,
+        "mime": "application/json",
+        "body": {
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "name": "result-original-expiry3600",
+      "passed": true,
+      "result_backend": {
+        "key_prefix": "celery-tasks:celery-task-meta-",
+        "ttl_seconds": 3600,
+        "status": "SUCCESS",
+        "json_fields": [
+          "children",
+          "date_done",
+          "result",
+          "status",
+          "task_id",
+          "traceback"
+        ],
+        "result_type": "dict",
+        "raw_sha256": "92f81b0eaba743e077b157c06f8a0eaea9e325d28aa80ba5038c236ede575787"
+      }
+    },
+    {
+      "name": "expired-result-is-new-pending-query",
+      "passed": true,
+      "fixture_only_expiry_seconds": 1,
+      "original_expiry_seconds": 3600
+    },
+    {
+      "name": "corrupt-result-backend-500",
+      "passed": true,
+      "observed": {
+        "status": 500,
+        "mime": "application/json",
+        "body": {
+          "detail": "Failed to get task status: Expecting value: line 1 column 1 (char 0)"
+        }
+      }
+    },
+    {
+      "name": "bad-token-before-corrupt-backend",
+      "passed": true
+    },
+    {
+      "name": "invalid-bearer-before-valid-token",
+      "passed": true
+    }
+  ],
+  "active_default_ack": {
+    "state": "PENDING",
+    "http": {
+      "status": 200,
+      "mime": "application/json",
+      "body": {
+        "state": "pending"
+      }
+    },
+    "unacked_hash": 0,
+    "unacked_sorted": 0,
+    "unacked_tasks": [],
+    "default_track_started": false,
+    "default_acks_late": false
+  },
+  "quarantined_startup_tasks": [
+    {
+      "task_name": "apps.plugins.tasks.refresh_plugin_repos",
+      "envelope_sha256": "9e033da68a3e5677bd11e2cdf4bc42fb091ee4058ab9665ad0547c9a047c61e6"
+    },
+    {
+      "task_name": "apps.plugins.tasks.refresh_plugin_repos",
+      "envelope_sha256": "061837bd5d02541363ce70ac0d5fafd78423c77068a46920fc98ebd9daf8aff7"
+    }
+  ],
+  "visibility_timeout_seconds": 3600,
+  "visibility_timeout_expiry_observed": false,
+  "native_jobs_verified": false,
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

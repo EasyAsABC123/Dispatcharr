@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "scope": "Original-only full protocol2 create/restore publication and producerrestart, no worker/native transport",
+  "report": "artifacts/rust/m8-original-job-envelope-2/integration.json",
+  "report_sha256": "03bf80e9b90712fc9008f722a71ebf1604321a385d1bc821e6a52efbb5aec5a7",
+  "source_report_sha256": "467faf75881ccd7e982af9017adbcad7515d04588238bb8f9cb54c21e49fce05",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "tool_source": "artifacts/rust/m8-original-job-envelope-2/tool-source",
+  "captures": 4,
+  "checks": 26,
+  "worker_started": false,
+  "restore_executed": false,
+  "native_transport_verified": false,
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "private_envelope_byte_guard": 65536,
+  "private_decoded_body_byte_guard": 32768,
+  "private_raw_files": [
+    {
+      "file": "message-0.json",
+      "sha256": "c425cd7431204666ffe5d961d8c26746a7f2611fbf1a283783638e3d663f0163",
+      "bytes": 962
+    },
+    {
+      "file": "message-1.json",
+      "sha256": "0d2bbfebbdf5a41a2310a9509b1d4fec5e6691856e0ced7f7da517431a5c3afb",
+      "bytes": 1034
+    },
+    {
+      "file": "message-2.json",
+      "sha256": "1de2750034b5bde06648864dfff634961108f7a8a4a233bbe09b8e8a9785c875",
+      "bytes": 962
+    },
+    {
+      "file": "message-3.json",
+      "sha256": "2d1113577146d70112e8b298251026acaaca5c817b41fd1a76950c88746523d0",
+      "bytes": 1034
+    }
+  ],
+  "goldens": "scripts/rust-job-contracts/source-envelope-goldens.json",
+  "goldens_sha256": "fcbbf13b534d9222c623ba0fe77e8908329fd2a8126778b7eeba3d49676f9d3d",
+  "configuration": {
+    "task_protocol": 2,
+    "task_publish_retry": true,
+    "task_publish_retry_policy": {
+      "max_retries": 3,
+      "interval_start": 0,
+      "interval_max": 1,
+      "interval_step": 0.2
+    },
+    "broker_connection_timeout": 4,
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "task_serializer": "json",
+    "result_serializer": "json",
+    "result_expires": 3600,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    }
+  },
+  "observations": [
+    "Four real Source202 publications: create and existinginvalidZIP restore across two original webproducer epochs. Worker was never started; no archive or restore execution.",
+    "Complete deterministic protocol2 header/property/body values and JSON types captured, dynamic ID/origin/reply/delivery fields hashed with actual cross-field equality relations.",
+    "id=root_id=correlation_id; parent_idNone; independent delivery tags; reply_to varied even within a two-thread producer epoch. Do not assume one fixed reply target per process.",
+    "Physical listhead-to-tail task order, binding set and routing values retained; consumer order is not inferred without a worker.",
+    "Original task_publish_retryTrue policy max_retries3/intervalstart0/step.2/max1 and broker_connection_timeout4 captured. No delayed-reply retry behavior proved.",
+    "Private raw bytes mode0600 under0700 directory remain inignored artifacts; public projections contain no raw IDs/auth tokens/body credentials."
+  ],
+  "limitations": [
+    "Complete raw result/exception metadata still needs further capture before native result decoder interoperability.",
+    "Priority/routing options beyond captured priority0/routingcelery, consumer ack/requeue/recovery and native physical ownership remain unproved.",
+    "Source envelope attempt1 failed hostpublishedport readiness on internalnetwork before controller; retained/cleaned. Attempt2 probes readiness insidecontainer and uses internalnetwork/loopback throughout."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

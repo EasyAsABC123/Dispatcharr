@@ -1,0 +1,957 @@
+{
+  "passed": true,
+  "scope": "Original-only full protocol2 create/restore publication and producerrestart, no worker/native transport",
+  "captures": [
+    {
+      "kind": "create",
+      "producer_epoch": 1,
+      "private_raw_file": "message-0.json",
+      "raw_bytes": 962,
+      "raw_sha256": "c425cd7431204666ffe5d961d8c26746a7f2611fbf1a283783638e3d663f0163",
+      "decoded_body_bytes": 77,
+      "decoded_body_sha256": "91d3e63d5afc7aeef65871495a65a4a3226f7bde1a67ef03c283af7ed4902bc8",
+      "headers": {
+        "type": "dict",
+        "fields": {
+          "lang": {
+            "type": "str",
+            "value": "py"
+          },
+          "task": {
+            "type": "str",
+            "value": "apps.backups.tasks.create_backup_task"
+          },
+          "id": {
+            "type": "str",
+            "sha256": "bfbd6d29dc83f1c14b4ce17f8e907f2b71426a4a474d099f4c1327e74eb6b076"
+          },
+          "shadow": {
+            "type": "NoneType",
+            "value": null
+          },
+          "eta": {
+            "type": "NoneType",
+            "value": null
+          },
+          "expires": {
+            "type": "NoneType",
+            "value": null
+          },
+          "group": {
+            "type": "NoneType",
+            "value": null
+          },
+          "group_index": {
+            "type": "NoneType",
+            "value": null
+          },
+          "retries": {
+            "type": "int",
+            "value": 0
+          },
+          "timelimit": {
+            "type": "list",
+            "items": [
+              {
+                "type": "NoneType",
+                "value": null
+              },
+              {
+                "type": "NoneType",
+                "value": null
+              }
+            ]
+          },
+          "root_id": {
+            "type": "str",
+            "sha256": "bfbd6d29dc83f1c14b4ce17f8e907f2b71426a4a474d099f4c1327e74eb6b076"
+          },
+          "parent_id": {
+            "type": "NoneType",
+            "value": null
+          },
+          "argsrepr": {
+            "type": "str",
+            "value": "()"
+          },
+          "kwargsrepr": {
+            "type": "str",
+            "value": "{}"
+          },
+          "origin": {
+            "type": "str",
+            "sha256": "77d5f63704583bd5c88c8e932e7db45812ee95c63cba3330c4992db37bdfc39c"
+          },
+          "ignore_result": {
+            "type": "bool",
+            "value": false
+          },
+          "replaced_task_nesting": {
+            "type": "int",
+            "value": 0
+          },
+          "stamped_headers": {
+            "type": "NoneType",
+            "value": null
+          },
+          "stamps": {
+            "type": "dict",
+            "fields": {}
+          }
+        }
+      },
+      "properties": {
+        "type": "dict",
+        "fields": {
+          "correlation_id": {
+            "type": "str",
+            "sha256": "bfbd6d29dc83f1c14b4ce17f8e907f2b71426a4a474d099f4c1327e74eb6b076"
+          },
+          "reply_to": {
+            "type": "str",
+            "sha256": "3d26ca3e17f451f1c3a611db79e970629ef7a0496c9150563eecab72f368c6c1"
+          },
+          "delivery_mode": {
+            "type": "int",
+            "value": 2
+          },
+          "delivery_info": {
+            "type": "dict",
+            "fields": {
+              "exchange": {
+                "type": "str",
+                "value": ""
+              },
+              "routing_key": {
+                "type": "str",
+                "value": "celery"
+              }
+            }
+          },
+          "priority": {
+            "type": "int",
+            "value": 0
+          },
+          "body_encoding": {
+            "type": "str",
+            "value": "base64"
+          },
+          "delivery_tag": {
+            "type": "str",
+            "sha256": "c2962011588cc23283422526d7dd8390bc8b3b53b7c04c5ebfb5b08b4f3ca939"
+          }
+        }
+      },
+      "content_type": "application/json",
+      "content_encoding": "utf-8",
+      "body": {
+        "type": "list",
+        "items": [
+          {
+            "type": "list",
+            "items": []
+          },
+          {
+            "type": "dict",
+            "fields": {}
+          },
+          {
+            "type": "dict",
+            "fields": {
+              "callbacks": {
+                "type": "NoneType",
+                "value": null
+              },
+              "errbacks": {
+                "type": "NoneType",
+                "value": null
+              },
+              "chain": {
+                "type": "NoneType",
+                "value": null
+              },
+              "chord": {
+                "type": "NoneType",
+                "value": null
+              }
+            }
+          }
+        ]
+      },
+      "relations": {
+        "response_equals_header_id": true,
+        "correlation_equals_header_id": true,
+        "root_equals_header_id": true,
+        "parent_is_none": true,
+        "delivery_tag_equals_task_id": false
+      },
+      "task_id_sha256": "bfbd6d29dc83f1c14b4ce17f8e907f2b71426a4a474d099f4c1327e74eb6b076"
+    },
+    {
+      "kind": "restore",
+      "producer_epoch": 1,
+      "private_raw_file": "message-1.json",
+      "raw_bytes": 1034,
+      "raw_sha256": "0d2bbfebbdf5a41a2310a9509b1d4fec5e6691856e0ced7f7da517431a5c3afb",
+      "decoded_body_bytes": 107,
+      "decoded_body_sha256": "f0ac303ba3c148806b5be1fa1b01d7ee2e5d6ec7762a7a16be9d44205a969a93",
+      "headers": {
+        "type": "dict",
+        "fields": {
+          "lang": {
+            "type": "str",
+            "value": "py"
+          },
+          "task": {
+            "type": "str",
+            "value": "apps.backups.tasks.restore_backup_task"
+          },
+          "id": {
+            "type": "str",
+            "sha256": "3b5b04919fdb6330ed5f9b0bd0507614e79507dba03e6857a6f326eb0eedd826"
+          },
+          "shadow": {
+            "type": "NoneType",
+            "value": null
+          },
+          "eta": {
+            "type": "NoneType",
+            "value": null
+          },
+          "expires": {
+            "type": "NoneType",
+            "value": null
+          },
+          "group": {
+            "type": "NoneType",
+            "value": null
+          },
+          "group_index": {
+            "type": "NoneType",
+            "value": null
+          },
+          "retries": {
+            "type": "int",
+            "value": 0
+          },
+          "timelimit": {
+            "type": "list",
+            "items": [
+              {
+                "type": "NoneType",
+                "value": null
+              },
+              {
+                "type": "NoneType",
+                "value": null
+              }
+            ]
+          },
+          "root_id": {
+            "type": "str",
+            "sha256": "3b5b04919fdb6330ed5f9b0bd0507614e79507dba03e6857a6f326eb0eedd826"
+          },
+          "parent_id": {
+            "type": "NoneType",
+            "value": null
+          },
+          "argsrepr": {
+            "type": "str",
+            "value": "('owned invalid-\u00e9 &+=.zip',)"
+          },
+          "kwargsrepr": {
+            "type": "str",
+            "value": "{}"
+          },
+          "origin": {
+            "type": "str",
+            "sha256": "77d5f63704583bd5c88c8e932e7db45812ee95c63cba3330c4992db37bdfc39c"
+          },
+          "ignore_result": {
+            "type": "bool",
+            "value": false
+          },
+          "replaced_task_nesting": {
+            "type": "int",
+            "value": 0
+          },
+          "stamped_headers": {
+            "type": "NoneType",
+            "value": null
+          },
+          "stamps": {
+            "type": "dict",
+            "fields": {}
+          }
+        }
+      },
+      "properties": {
+        "type": "dict",
+        "fields": {
+          "correlation_id": {
+            "type": "str",
+            "sha256": "3b5b04919fdb6330ed5f9b0bd0507614e79507dba03e6857a6f326eb0eedd826"
+          },
+          "reply_to": {
+            "type": "str",
+            "sha256": "066da59a1b0574110f2419520ce27ce2569cb8d9879b319ba1a932fe506f3092"
+          },
+          "delivery_mode": {
+            "type": "int",
+            "value": 2
+          },
+          "delivery_info": {
+            "type": "dict",
+            "fields": {
+              "exchange": {
+                "type": "str",
+                "value": ""
+              },
+              "routing_key": {
+                "type": "str",
+                "value": "celery"
+              }
+            }
+          },
+          "priority": {
+            "type": "int",
+            "value": 0
+          },
+          "body_encoding": {
+            "type": "str",
+            "value": "base64"
+          },
+          "delivery_tag": {
+            "type": "str",
+            "sha256": "f9524c6d0645fd39dd5863c0acb2e754bdf61d1652d75302d95932bf4d85a908"
+          }
+        }
+      },
+      "content_type": "application/json",
+      "content_encoding": "utf-8",
+      "body": {
+        "type": "list",
+        "items": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "type": "str",
+                "value": "owned invalid-\u00e9 &+=.zip"
+              }
+            ]
+          },
+          {
+            "type": "dict",
+            "fields": {}
+          },
+          {
+            "type": "dict",
+            "fields": {
+              "callbacks": {
+                "type": "NoneType",
+                "value": null
+              },
+              "errbacks": {
+                "type": "NoneType",
+                "value": null
+              },
+              "chain": {
+                "type": "NoneType",
+                "value": null
+              },
+              "chord": {
+                "type": "NoneType",
+                "value": null
+              }
+            }
+          }
+        ]
+      },
+      "relations": {
+        "response_equals_header_id": true,
+        "correlation_equals_header_id": true,
+        "root_equals_header_id": true,
+        "parent_is_none": true,
+        "delivery_tag_equals_task_id": false
+      },
+      "task_id_sha256": "3b5b04919fdb6330ed5f9b0bd0507614e79507dba03e6857a6f326eb0eedd826"
+    },
+    {
+      "kind": "create",
+      "producer_epoch": 2,
+      "private_raw_file": "message-2.json",
+      "raw_bytes": 962,
+      "raw_sha256": "1de2750034b5bde06648864dfff634961108f7a8a4a233bbe09b8e8a9785c875",
+      "decoded_body_bytes": 77,
+      "decoded_body_sha256": "91d3e63d5afc7aeef65871495a65a4a3226f7bde1a67ef03c283af7ed4902bc8",
+      "headers": {
+        "type": "dict",
+        "fields": {
+          "lang": {
+            "type": "str",
+            "value": "py"
+          },
+          "task": {
+            "type": "str",
+            "value": "apps.backups.tasks.create_backup_task"
+          },
+          "id": {
+            "type": "str",
+            "sha256": "9309cc59078874711cdf896e3125536407836cf53351ae43e48bdb99c35bdde8"
+          },
+          "shadow": {
+            "type": "NoneType",
+            "value": null
+          },
+          "eta": {
+            "type": "NoneType",
+            "value": null
+          },
+          "expires": {
+            "type": "NoneType",
+            "value": null
+          },
+          "group": {
+            "type": "NoneType",
+            "value": null
+          },
+          "group_index": {
+            "type": "NoneType",
+            "value": null
+          },
+          "retries": {
+            "type": "int",
+            "value": 0
+          },
+          "timelimit": {
+            "type": "list",
+            "items": [
+              {
+                "type": "NoneType",
+                "value": null
+              },
+              {
+                "type": "NoneType",
+                "value": null
+              }
+            ]
+          },
+          "root_id": {
+            "type": "str",
+            "sha256": "9309cc59078874711cdf896e3125536407836cf53351ae43e48bdb99c35bdde8"
+          },
+          "parent_id": {
+            "type": "NoneType",
+            "value": null
+          },
+          "argsrepr": {
+            "type": "str",
+            "value": "()"
+          },
+          "kwargsrepr": {
+            "type": "str",
+            "value": "{}"
+          },
+          "origin": {
+            "type": "str",
+            "sha256": "a54e982b922dce68bee57af058f736d7622dfcc0cd115033373779094a3289be"
+          },
+          "ignore_result": {
+            "type": "bool",
+            "value": false
+          },
+          "replaced_task_nesting": {
+            "type": "int",
+            "value": 0
+          },
+          "stamped_headers": {
+            "type": "NoneType",
+            "value": null
+          },
+          "stamps": {
+            "type": "dict",
+            "fields": {}
+          }
+        }
+      },
+      "properties": {
+        "type": "dict",
+        "fields": {
+          "correlation_id": {
+            "type": "str",
+            "sha256": "9309cc59078874711cdf896e3125536407836cf53351ae43e48bdb99c35bdde8"
+          },
+          "reply_to": {
+            "type": "str",
+            "sha256": "c5a90a2fa4d840b969e34ba5db4283e7877049cee05771fb480ee38125ddaf00"
+          },
+          "delivery_mode": {
+            "type": "int",
+            "value": 2
+          },
+          "delivery_info": {
+            "type": "dict",
+            "fields": {
+              "exchange": {
+                "type": "str",
+                "value": ""
+              },
+              "routing_key": {
+                "type": "str",
+                "value": "celery"
+              }
+            }
+          },
+          "priority": {
+            "type": "int",
+            "value": 0
+          },
+          "body_encoding": {
+            "type": "str",
+            "value": "base64"
+          },
+          "delivery_tag": {
+            "type": "str",
+            "sha256": "04aa64e495dae0fe554723bd9f5c791d51e2bffd4f1b74cfd4ba7fbe084e3daa"
+          }
+        }
+      },
+      "content_type": "application/json",
+      "content_encoding": "utf-8",
+      "body": {
+        "type": "list",
+        "items": [
+          {
+            "type": "list",
+            "items": []
+          },
+          {
+            "type": "dict",
+            "fields": {}
+          },
+          {
+            "type": "dict",
+            "fields": {
+              "callbacks": {
+                "type": "NoneType",
+                "value": null
+              },
+              "errbacks": {
+                "type": "NoneType",
+                "value": null
+              },
+              "chain": {
+                "type": "NoneType",
+                "value": null
+              },
+              "chord": {
+                "type": "NoneType",
+                "value": null
+              }
+            }
+          }
+        ]
+      },
+      "relations": {
+        "response_equals_header_id": true,
+        "correlation_equals_header_id": true,
+        "root_equals_header_id": true,
+        "parent_is_none": true,
+        "delivery_tag_equals_task_id": false
+      },
+      "task_id_sha256": "9309cc59078874711cdf896e3125536407836cf53351ae43e48bdb99c35bdde8"
+    },
+    {
+      "kind": "restore",
+      "producer_epoch": 2,
+      "private_raw_file": "message-3.json",
+      "raw_bytes": 1034,
+      "raw_sha256": "2d1113577146d70112e8b298251026acaaca5c817b41fd1a76950c88746523d0",
+      "decoded_body_bytes": 107,
+      "decoded_body_sha256": "f0ac303ba3c148806b5be1fa1b01d7ee2e5d6ec7762a7a16be9d44205a969a93",
+      "headers": {
+        "type": "dict",
+        "fields": {
+          "lang": {
+            "type": "str",
+            "value": "py"
+          },
+          "task": {
+            "type": "str",
+            "value": "apps.backups.tasks.restore_backup_task"
+          },
+          "id": {
+            "type": "str",
+            "sha256": "e8600f4da536087c55e580e133af3aba6033b851d1fb9cbd97979761049a3afe"
+          },
+          "shadow": {
+            "type": "NoneType",
+            "value": null
+          },
+          "eta": {
+            "type": "NoneType",
+            "value": null
+          },
+          "expires": {
+            "type": "NoneType",
+            "value": null
+          },
+          "group": {
+            "type": "NoneType",
+            "value": null
+          },
+          "group_index": {
+            "type": "NoneType",
+            "value": null
+          },
+          "retries": {
+            "type": "int",
+            "value": 0
+          },
+          "timelimit": {
+            "type": "list",
+            "items": [
+              {
+                "type": "NoneType",
+                "value": null
+              },
+              {
+                "type": "NoneType",
+                "value": null
+              }
+            ]
+          },
+          "root_id": {
+            "type": "str",
+            "sha256": "e8600f4da536087c55e580e133af3aba6033b851d1fb9cbd97979761049a3afe"
+          },
+          "parent_id": {
+            "type": "NoneType",
+            "value": null
+          },
+          "argsrepr": {
+            "type": "str",
+            "value": "('owned invalid-\u00e9 &+=.zip',)"
+          },
+          "kwargsrepr": {
+            "type": "str",
+            "value": "{}"
+          },
+          "origin": {
+            "type": "str",
+            "sha256": "a54e982b922dce68bee57af058f736d7622dfcc0cd115033373779094a3289be"
+          },
+          "ignore_result": {
+            "type": "bool",
+            "value": false
+          },
+          "replaced_task_nesting": {
+            "type": "int",
+            "value": 0
+          },
+          "stamped_headers": {
+            "type": "NoneType",
+            "value": null
+          },
+          "stamps": {
+            "type": "dict",
+            "fields": {}
+          }
+        }
+      },
+      "properties": {
+        "type": "dict",
+        "fields": {
+          "correlation_id": {
+            "type": "str",
+            "sha256": "e8600f4da536087c55e580e133af3aba6033b851d1fb9cbd97979761049a3afe"
+          },
+          "reply_to": {
+            "type": "str",
+            "sha256": "44d5cba6b4ab7c575a6a6264fdce8a799eab5bdbc3451e16026add69ff88dac4"
+          },
+          "delivery_mode": {
+            "type": "int",
+            "value": 2
+          },
+          "delivery_info": {
+            "type": "dict",
+            "fields": {
+              "exchange": {
+                "type": "str",
+                "value": ""
+              },
+              "routing_key": {
+                "type": "str",
+                "value": "celery"
+              }
+            }
+          },
+          "priority": {
+            "type": "int",
+            "value": 0
+          },
+          "body_encoding": {
+            "type": "str",
+            "value": "base64"
+          },
+          "delivery_tag": {
+            "type": "str",
+            "sha256": "a2d96669b4323ad1e83dba6d00945a7b29950c229de6454e9ac611480d6e321b"
+          }
+        }
+      },
+      "content_type": "application/json",
+      "content_encoding": "utf-8",
+      "body": {
+        "type": "list",
+        "items": [
+          {
+            "type": "list",
+            "items": [
+              {
+                "type": "str",
+                "value": "owned invalid-\u00e9 &+=.zip"
+              }
+            ]
+          },
+          {
+            "type": "dict",
+            "fields": {}
+          },
+          {
+            "type": "dict",
+            "fields": {
+              "callbacks": {
+                "type": "NoneType",
+                "value": null
+              },
+              "errbacks": {
+                "type": "NoneType",
+                "value": null
+              },
+              "chain": {
+                "type": "NoneType",
+                "value": null
+              },
+              "chord": {
+                "type": "NoneType",
+                "value": null
+              }
+            }
+          }
+        ]
+      },
+      "relations": {
+        "response_equals_header_id": true,
+        "correlation_equals_header_id": true,
+        "root_equals_header_id": true,
+        "parent_is_none": true,
+        "delivery_tag_equals_task_id": false
+      },
+      "task_id_sha256": "e8600f4da536087c55e580e133af3aba6033b851d1fb9cbd97979761049a3afe"
+    }
+  ],
+  "checks": [
+    {
+      "name": "create-1-202",
+      "passed": true
+    },
+    {
+      "name": "create-1-hmac",
+      "passed": true
+    },
+    {
+      "name": "create-1-one-durable-envelope",
+      "passed": true
+    },
+    {
+      "name": "body-three-element-array",
+      "passed": true
+    },
+    {
+      "name": "body-arguments",
+      "passed": true
+    },
+    {
+      "name": "backend-still-pending-no-worker",
+      "passed": true
+    },
+    {
+      "name": "restore-1-202",
+      "passed": true
+    },
+    {
+      "name": "restore-1-hmac",
+      "passed": true
+    },
+    {
+      "name": "restore-1-one-durable-envelope",
+      "passed": true
+    },
+    {
+      "name": "body-three-element-array",
+      "passed": true
+    },
+    {
+      "name": "body-arguments",
+      "passed": true
+    },
+    {
+      "name": "backend-still-pending-no-worker",
+      "passed": true
+    },
+    {
+      "name": "expected-queued-count-1",
+      "passed": true
+    },
+    {
+      "name": "create-2-202",
+      "passed": true
+    },
+    {
+      "name": "create-2-hmac",
+      "passed": true
+    },
+    {
+      "name": "create-2-one-durable-envelope",
+      "passed": true
+    },
+    {
+      "name": "body-three-element-array",
+      "passed": true
+    },
+    {
+      "name": "body-arguments",
+      "passed": true
+    },
+    {
+      "name": "backend-still-pending-no-worker",
+      "passed": true
+    },
+    {
+      "name": "restore-2-202",
+      "passed": true
+    },
+    {
+      "name": "restore-2-hmac",
+      "passed": true
+    },
+    {
+      "name": "restore-2-one-durable-envelope",
+      "passed": true
+    },
+    {
+      "name": "body-three-element-array",
+      "passed": true
+    },
+    {
+      "name": "body-arguments",
+      "passed": true
+    },
+    {
+      "name": "backend-still-pending-no-worker",
+      "passed": true
+    },
+    {
+      "name": "expected-queued-count-2",
+      "passed": true
+    }
+  ],
+  "quarantined": [
+    {
+      "task_name": "apps.plugins.tasks.refresh_plugin_repos",
+      "sha256": "c6475bf9c7f5843d6569a3c9dd2e72a8df86fab23eeb50704c49203f10dd15b7"
+    },
+    {
+      "task_name": "apps.plugins.tasks.refresh_plugin_repos",
+      "sha256": "b448b79bc79e2ae40fa7895a88aa0f56e2899d5e186e9dc1aed6cbc9abe99ec9"
+    }
+  ],
+  "configuration": {
+    "task_protocol": 2,
+    "task_publish_retry": true,
+    "task_publish_retry_policy": {
+      "max_retries": 3,
+      "interval_start": 0,
+      "interval_max": 1,
+      "interval_step": 0.2
+    },
+    "broker_connection_timeout": 4,
+    "task_default_queue": "celery",
+    "task_default_exchange": null,
+    "task_default_routing_key": null,
+    "task_serializer": "json",
+    "result_serializer": "json",
+    "result_expires": 3600,
+    "broker_transport_options": {
+      "visibility_timeout": 3600
+    },
+    "result_backend_transport_options": {
+      "global_keyprefix": "celery-tasks:"
+    }
+  },
+  "queue_orders": [
+    {
+      "producer_epoch": 1,
+      "head_to_tail_task_id_sha256": [
+        "3b5b04919fdb6330ed5f9b0bd0507614e79507dba03e6857a6f326eb0eedd826",
+        "bfbd6d29dc83f1c14b4ce17f8e907f2b71426a4a474d099f4c1327e74eb6b076"
+      ]
+    },
+    {
+      "producer_epoch": 2,
+      "head_to_tail_task_id_sha256": [
+        "e8600f4da536087c55e580e133af3aba6033b851d1fb9cbd97979761049a3afe",
+        "9309cc59078874711cdf896e3125536407836cf53351ae43e48bdb99c35bdde8",
+        "3b5b04919fdb6330ed5f9b0bd0507614e79507dba03e6857a6f326eb0eedd826",
+        "bfbd6d29dc83f1c14b4ce17f8e907f2b71426a4a474d099f4c1327e74eb6b076"
+      ]
+    }
+  ],
+  "broker_keys": [
+    {
+      "key": "_kombu.binding.celery",
+      "type": "set",
+      "members_utf8": [
+        "celery\u0006\u0016\u0006\u0016celery"
+      ]
+    },
+    {
+      "key": "celery",
+      "type": "list",
+      "length": 4
+    }
+  ],
+  "cross_capture_relations": [
+    {
+      "left": 0,
+      "right": 1,
+      "reply_to_equal": false,
+      "delivery_tag_equal": false,
+      "origin_equal": true,
+      "task_id_equal": false
+    },
+    {
+      "left": 0,
+      "right": 2,
+      "reply_to_equal": false,
+      "delivery_tag_equal": false,
+      "origin_equal": false,
+      "task_id_equal": false
+    },
+    {
+      "left": 1,
+      "right": 3,
+      "reply_to_equal": false,
+      "delivery_tag_equal": false,
+      "origin_equal": false,
+      "task_id_equal": false
+    }
+  ],
+  "worker_started": false,
+  "restore_executed": false,
+  "native_transport_verified": false,
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

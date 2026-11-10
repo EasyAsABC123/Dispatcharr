@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "scope": "Test-only bounded original backup_status projection, no native job publication/handler/authentication/router/202 acceptance",
+  "source_goldens": "scripts/rust-job-contracts/verified-original-celery-contracts-4.json",
+  "files_sha256": {
+    "rust/crates/store/src/backup_jobs_status.rs": "05aeb91980c7336f1cb63ab9f35eecb91a0d158eb71ed6206c7192436c6cbfbc",
+    "rust/crates/store/src/backup_jobs_source_vectors.json": "d63a0601352a6aa8e51fddb4d028680a42512b979948ff5542835b1742d072f6",
+    "scripts/rust-job-contracts/source-goldens.json": "bd9daf96ff5a60a0e3ac8658a99177e51449b85277442d30b533905f47f39a78"
+  },
+  "source_entity_vectors": 11,
+  "native_unit_tests": 3,
+  "validation": [
+    {
+      "command": "cargo test --manifest-path rust/Cargo.toml -p dispatcharr-store --lib backup_jobs_status --locked --offline",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo clippy --manifest-path rust/Cargo.toml -p dispatcharr-store --all-targets --locked --offline -- -D warnings",
+      "exit_code": 0
+    }
+  ],
+  "registration": "Store lib cfg(test)-only; no production module",
+  "bounds": {
+    "result_serialized_bytes": 1048576,
+    "result_nodes": 8192,
+    "depth": 32,
+    "message_or_string_bytes": 65536,
+    "oversize_behavior": "typed Capacity error; no invented success/status response"
+  },
+  "limitations": [
+    "Typed snapshots supplied directly: no Redis wire decoder, exception deserialization, physically retained transport, durable claims or handler execution implemented.",
+    "READY REVOKED and other unobserved states explicitly unsupported; Source originals need further actual capture before closing status inventory.",
+    "Completed echo and bool/int/float attribute-error controls derive from inspected Source code and are labeled separately from11 Source wire/entity assertion vectors.",
+    "No native HTTP/token/network authorization or job202 was added; existing job-free backup112 routes unchanged."
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}

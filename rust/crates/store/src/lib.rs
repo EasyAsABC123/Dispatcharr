@@ -322,3 +322,6 @@ pub fn source_html_unescape(value: &str) -> String {
 }
 
 mod epg_grid_iso;
+
+#[cfg(test)]
+mod backup_jobs_status;

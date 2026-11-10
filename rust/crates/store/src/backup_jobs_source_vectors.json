@@ -1,0 +1,144 @@
+{
+  "source_goldens_sha256": "bd9daf96ff5a60a0e3ac8658a99177e51449b85277442d30b533905f47f39a78",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "scope": "Pure mapper only, actual Source entities/assertions; no broker/auth/job execution native claim",
+  "vectors": [
+    {
+      "name": "pending-publication-durable-in-broker",
+      "kind": "unready",
+      "state": "PENDING",
+      "expected": {
+        "status": 200,
+        "body": {
+          "state": "pending"
+        }
+      },
+      "evidence": "actual HTTP entity or successful exact Source-script equality assertion"
+    },
+    {
+      "name": "tracked-fixture-started-visible",
+      "kind": "unready",
+      "state": "STARTED",
+      "expected": {
+        "status": 200,
+        "body": {
+          "state": "started"
+        }
+      },
+      "evidence": "actual HTTP entity or successful exact Source-script equality assertion"
+    },
+    {
+      "name": "actual-retry-visible-not-ready",
+      "kind": "unready",
+      "state": "RETRY",
+      "expected": {
+        "status": 200,
+        "body": {
+          "state": "retry"
+        }
+      },
+      "evidence": "actual HTTP entity or successful exact Source-script equality assertion"
+    },
+    {
+      "name": "worker-result-failed-dict",
+      "kind": "success",
+      "result": {
+        "status": "failed",
+        "error": "fixture returned failure"
+      },
+      "expected": {
+        "status": 200,
+        "body": {
+          "state": "failed",
+          "error": "fixture returned failure"
+        }
+      }
+    },
+    {
+      "name": "worker-result-null-error",
+      "kind": "success",
+      "result": {
+        "status": "failed",
+        "error": null
+      },
+      "expected": {
+        "status": 200,
+        "body": {
+          "state": "failed",
+          "error": null
+        }
+      }
+    },
+    {
+      "name": "worker-result-empty",
+      "kind": "success",
+      "result": {},
+      "expected": {
+        "status": 200,
+        "body": {
+          "state": "failed",
+          "error": "Unknown error"
+        }
+      }
+    },
+    {
+      "name": "worker-result-scalar",
+      "kind": "success",
+      "result": "fixture scalar",
+      "expected": {
+        "status": 500,
+        "body": {
+          "detail": "Failed to get task status: 'str' object has no attribute 'get'"
+        }
+      }
+    },
+    {
+      "name": "worker-result-list",
+      "kind": "success",
+      "result": [
+        1,
+        2
+      ],
+      "expected": {
+        "status": 500,
+        "body": {
+          "detail": "Failed to get task status: 'list' object has no attribute 'get'"
+        }
+      }
+    },
+    {
+      "name": "worker-result-null",
+      "kind": "success",
+      "result": null,
+      "expected": {
+        "status": 500,
+        "body": {
+          "detail": "Failed to get task status: 'NoneType' object has no attribute 'get'"
+        }
+      }
+    },
+    {
+      "name": "worker-result-uncaught",
+      "kind": "propagated",
+      "message": "fixture uncaught",
+      "expected": {
+        "status": 500,
+        "body": {
+          "detail": "Failed to get task status: fixture uncaught"
+        }
+      }
+    },
+    {
+      "name": "corrupt-result-backend-500",
+      "kind": "backend",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "expected": {
+        "status": 500,
+        "body": {
+          "detail": "Failed to get task status: Expecting value: line 1 column 1 (char 0)"
+        }
+      }
+    }
+  ],
+  "credit": "Original Dispatcharr authors and contributors retain full application credit and AGPL licensing."
+}
