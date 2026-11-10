@@ -1,6 +1,6 @@
-//! UNREGISTERED/UNCOMPILED Source VOD REST pagination draft. No route or gate.
-//! Source api_views.VODPagination and UnifiedContentViewSet.list deliberately
-//! use different defaults and errors. All original authors retain full credit.
+//! Source-derived VOD pagination used by ordinary bounded read routes.
+//! Source VODPagination and unshipped UnifiedContentViewSet policies have
+//! different defaults/errors. Original Dispatcharr authors retain full credit.
 use num_bigint::BigInt;
 
 pub(crate) fn last_query<'a>(pairs: &'a [(String, String)], key: &str) -> Option<&'a str> {

@@ -1,0 +1,182 @@
+{
+  "scope": "Actual original HTTP ordinaryGET corpus versus test-only nativePostgreSQL peer using real shared cached AuthService; no nativeHTTP/app/fullVOD acceptance",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": "artifacts/rust/m5-vod-rest-native-sql-8/http",
+  "frozen_rust_manifest_sha256": "17b7f1e9b697fc0538931918b85c71d7f831f18368b68c4b3534f31670cd0e2b",
+  "frozen_runtime_overlay": "artifacts/rust/m5-vod-cached-auth-overlay-1/provenance.json",
+  "successful_tool_source": "artifacts/rust/m5-vod-rest-native-sql-8/http/tools",
+  "source_sha256": {
+    "rust/crates/store/src/vod_api_projection.rs": "b809b5e597f8f7e2509ca2c7fc9d616eaeb1415823919d950534fc7526e99ac4",
+    "rust/crates/store/src/vod_api_dto.rs": "d2dc77d53926606285f3cf7b9746a67a9367cbd173747b859880fa89f57b4e25",
+    "rust/crates/store/src/vod_api_pagination.rs": "29dd2514722a7543b1bf744a05fd47f8fa885c0fdb502ad853bb421b84e9f208",
+    "rust/crates/store/src/vod_api_source_tests.rs": "f3df977e5f200b573a1d2e20c425922dec31b7e5c4502a144b61635c5172e242",
+    "rust/crates/store/src/vod_api_owned_read.rs": "2ae98c292df207f31d08a310d8ad9381b5722bb6ae6bc685273f0f0fdfa42be6",
+    "rust/crates/store/src/vod_api_sql.rs": "72b668ca8a09332052f2405caab046e8d0f898aeac1f837af8a78edba8ba3e00",
+    "rust/crates/store/src/vod_api_read_component.rs": "06924c6920cf357c06a596d79a15c71a5c4e5b0babba52b654af6c4c5b4b640d",
+    "rust/crates/store/src/vod_api_category_seed.rs": "a0fbbf5c4a4bc30b9547fec51011e907be73368e4b4dda758484c108b6a3f06e",
+    "rust/crates/store/src/vod_api_query.rs": "a6a96468edf2524967fb63834862d23e44aaf06faa13c6bafe69cff1a7205c0b",
+    "rust/crates/store/src/vod_api_draft.rs": "22dbd1d302fd1bbe2d90be2f8bb0c70d84175ff1368d5eb6b0d39741abd8a7d9",
+    "rust/crates/store/src/vod_api_native_tests.rs": "0b2a957368d75f656ef4b1adbd07b794bf19aab0122e03b534096e20fefa6d83",
+    "rust/crates/store/src/auth.rs": "852852a5b8a6ba5f670d9e0aa05ea8ddca098357926bc2d78af9106772adaad2",
+    "rust/crates/store/src/notifications.rs": "e38c7986c394e4d8a56c6f5c15634a931e8fe06de5c98096869d789fafb36049"
+  },
+  "evidence_sha256": {
+    "source-run.json": "170d4584c51d17e13586436aac808f7d9f83206e161c4ea27916ce65fec8b90a",
+    "ordinary-sql.json": "38bc1b591a25497bc8af0d3278a7b6d41be9760eb0f0dda7dcf8e838b3779031",
+    "ordering-plans.json": "76897224d18146f0c6c251b88f41f92cc89ce357ccce5bbb9699585c8024f3c0",
+    "owned-caller-frame.json": "adbaea5fcebdf912438872785cbabde5cb9fc0a1f1cecc213b4a34ddc81540b4",
+    "owned-logical-timeout.json": "02efa40f4ee7ec7230d4a775b0470a62f6f251670277e8a9de60cb238e4776b4",
+    "source-schedule.json": "e8e8d89ad2898954644c6951742d40612cba3152c6ada7ad087ed02c656565f6",
+    "metadata-schedule.json": "bade2edf684107ea2c9febb3f7f297840ca457f8c0a87ce0d0d46749bcb2d8fc",
+    "native-sql-tests.log": "b84c7d733bc3444cee5fe0eb7c06a549abe328a9b886a9c4c141de813753a6c5",
+    "source-category-fault.json": "ea3169730a226def256ac268b8bca507c55d356c551cd81ca69ffd9f50166e39",
+    "category-effects.json": "522b5816e3496dbacf4e1eabdcbcf2a2529d118892f118dd078942901980cdd9",
+    "cached-auth-owner.json": "1acf5035e2802787be98040b90bad9a0d19b0111fbda112718935c842e5b804f"
+  },
+  "checks": {
+    "original_http_cases_captured": 463,
+    "ordinary_get_cases_exact_status_json_and_body_sha256": 201,
+    "ordinary_differences": [],
+    "ordinary_unsupported_cases": [],
+    "outside_component_cases_not_counted_as_pass": 262,
+    "actual_pg_physical_tests": 3,
+    "source_factory_native_metadata_schedule_exact_body": true,
+    "pure_source_dto_filter_pagination_assertions": 5,
+    "strict_store_all_target_clippy": true,
+    "physical_workers_after_read": 0,
+    "retained_memory_after_read": 0,
+    "category_lazy_defaults_idempotence_actual_source_effects": true,
+    "category_partial_pg_failure_prefix_and_retained_owner": true,
+    "cached_shared_auth_service": true,
+    "cached_pg_fallback_pending_redis_owner": true,
+    "six_actual_fixture_tests": true
+  },
+  "physical": {
+    "owned-caller-frame.json": {
+      "passed": true,
+      "scope": "ActualPG component ownership; not HTTP/app performance",
+      "actual_blocked_read_workers": 2,
+      "aborted_caller_did_not_release_physical_admission": true,
+      "third_request_capacity_before_auth_sql": true,
+      "detached_frame_len": 8512,
+      "detached_frame_retained_capacity": 9216,
+      "worker_shutdown_with_held_frame": true,
+      "lastclone_released_memory": true,
+      "pool_statement_timeout_restored": "3s"
+    },
+    "owned-logical-timeout.json": {
+      "passed": true,
+      "scope": "ActualPG component ownership; no native HTTP/global authcache proof",
+      "logical_timeout_ms": 150,
+      "physical_statement_timeout_ms": 2000,
+      "pending_query_witness_after_logical_timeout": true,
+      "retained_bytes_while_pending": 71303168,
+      "all_memory_returned_after_physical_rollback": true
+    },
+    "category-effects.json": {
+      "passed": true,
+      "scope": "Actual Source normal/categoryPGfailure prefix vs lowlevel nativehelper; no nativeHTTP/categoryroute acceptance",
+      "owned_relations_before": 9,
+      "owned_relations_after": 13,
+      "source_effects_equal_by_semantic_category_kind": true,
+      "normalization": "Uncategorized row IDs differ after explicit fixture reset; kinds/account/enabled preserved; original relations/properties exact",
+      "existing_defaults_unchanged": true,
+      "idempotent_repeat": true,
+      "source_failure": {
+        "class": "ProgrammingError",
+        "sqlstate": "P0001",
+        "message": "owned-vod-series-failure\nCONTEXT:  PL/pgSQL function rust_vod_fixture_fail_series() line 1 at RAISE"
+      },
+      "retained_category_prefix": [
+        "movie"
+      ],
+      "aborted_caller_kept_owner_through_pending_insert_and_failure_cleanup": true,
+      "all_memory_and_workers_returned": true,
+      "restored_normal_fixture_state": true
+    },
+    "cached-auth-owner.json": {
+      "passed": true,
+      "scope": "Real cached sharedAuthService UI policy, actual delayedRedis and PG fallback; no HTTP/app acceptance",
+      "successful_pg_fallback_kept_vod_worker_until_cache_reply": true,
+      "retained_bytes_while_cache_pending": 54535168,
+      "frame_capacity_after_worker_drain": 9216,
+      "all_memory_returned": true,
+      "no_cache_or_auth_policy_bypass": true
+    }
+  },
+  "schedule": {
+    "scope": "OriginalFactory vsNativeSQL same phase interleaving; not native HTTP/fullconcurrency proof",
+    "passed": true,
+    "source_status": 200,
+    "native_status": 200,
+    "source_sha256": "ca221f674ec51f5fd4b409cc411d05d18d0d12f16df44efdfb3df9623441f2db",
+    "native_sha256": "ca221f674ec51f5fd4b409cc411d05d18d0d12f16df44efdfb3df9623441f2db",
+    "selected_logo_scalars_from_page": true,
+    "counts_names_fresh_after_page": true
+  },
+  "source_order_correction": {
+    "failed_fixtures": [
+      "artifacts/rust/m5-vod-rest-native-sql-2",
+      "artifacts/rust/m5-vod-rest-native-sql-3",
+      "artifacts/rust/m5-vod-rest-native-sql-5"
+    ],
+    "observed_movie_tied_order_differences": 20,
+    "causal_evidence": "artifacts/rust/m5-vod-rest-native-sql-5/http/ordering-plans.json",
+    "source_and_inner_page_order": [
+      1,
+      2,
+      3
+    ],
+    "old_final_order": [
+      2,
+      1,
+      3
+    ],
+    "fix": "Source-shaped page as MATERIALIZED CTE, guarded scalar scan, bounded retained PgRows inRust order, fresh metadata lookups; no newPKtie/window/outerORDER"
+  },
+  "operational_failures_preserved": [
+    {
+      "evidence": "artifacts/rust/m5-vod-rest-native-sql-1",
+      "reason": "Harness used wrong DBusername before any readSQL; cleanup complete"
+    },
+    {
+      "evidence": "artifacts/rust/m5-vod-rest-native-sql-4",
+      "reason": "Plan probe named id resolved nullable joinedlogo column; physical2passed, fixed probe tocolumn0"
+    }
+  ],
+  "remaining_gates": [
+    "Independent nativeHTTP HEAD/OPTIONS/negotiation/permission/routes",
+    "Affected shared cache/API/default-UA policy regression beyond low-level classes",
+    "Lockout retained publication ownership",
+    "Production module registration and actual canonical packaged/React proof",
+    "Categories/unified/actions/artwork/provider-refresh not ordinary route passes"
+  ],
+  "production_registered": false,
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "cleanup": "owned Compose project removed",
+  "original_credit": "All application and algorithm credit belongs to original Dispatcharr authors and contributors; AGPL licensing preserved.",
+  "prior_ordinary_component_proof": "scripts/rust-vod-api-contracts/verified-vod-rest-native-sql-1.json",
+  "lint_binding": {
+    "strict_store_all_target_clippy": true,
+    "scope": "Exact frozen VOD8 composite tree all-target Store Clippy passed after all six actual fixture tests; no mutable runtime validation inferred.",
+    "log": "artifacts/rust/m5-vod-rest-native-sql-8/http/clippy.log",
+    "log_sha256": "7d246f56ae8a9f1019d394d84ac9ac72e4808f1e830c50abdc6eee401f10a755",
+    "whole_frozen_tree_lint_rerun": true
+  },
+  "reproduction_helper_inputs_sha256": {
+    "scripts/rust-vod-api-contracts/run.py": "bd43696a6b885465fb0a87f786317e53ebaf3fca9132ab0ace059c5fcddd7a1c",
+    "scripts/rust-vod-api-contracts/schedule_source.py": "bc49674ed6f73a1ff671d2608d129089867ba1ec439f187b8b95899888bc3319",
+    "scripts/rust-vod-api-contracts/category_fault_source.py": "b8993bfbf120a6394ff60853ae0de08d8213c6b8d4f64bffd23708e69ef4ee2d",
+    "scripts/rust-vod-api-contracts/source-default-queries-1.json": "12349b3e7b3b1968d6f29ac56ab5303bf5aa0bc09029cbaf7e54c3c51a456f4f"
+  },
+  "lint_evidence": {
+    "strict_store_all_target_clippy": true,
+    "scope": "Exact frozen VOD8 composite tree all-target Store Clippy passed after all six actual fixture tests; no mutable runtime validation inferred.",
+    "log": "artifacts/rust/m5-vod-rest-native-sql-8/http/clippy.log",
+    "log_sha256": "7d246f56ae8a9f1019d394d84ac9ac72e4808f1e830c50abdc6eee401f10a755",
+    "whole_frozen_tree_lint_rerun": true
+  },
+  "clippy_scope": "Exact frozen VOD8 composite tree all-target Store Clippy passed after all six actual fixture tests; no mutable runtime validation inferred."
+}

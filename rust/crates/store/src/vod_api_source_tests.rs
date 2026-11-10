@@ -1,4 +1,4 @@
-//! UNREGISTERED, NOT RUN during quiet. Future pure DTO/policy corpus tests.
+//! Test-only original-corpus DTO/policy assertions; no SQL/HTTP claims here.
 //! These are projection tests using Source response-derived rows, NOT SQL/
 //! HTTP/resource/provider acceptance. Actual native DB parity needs a separate
 //! seeded PostgreSQL/Source gate. Original Dispatcharr authors retain credit.

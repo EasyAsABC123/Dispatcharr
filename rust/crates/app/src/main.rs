@@ -550,6 +550,9 @@ async fn run() -> Result<(), String> {
         },
     )
     .map_err(|_| "Invalid EPG programme read configuration")?;
+    let vod_reads =
+        dispatcharr_store::VodReads::new(auth.clone(), dispatcharr_store::VodReadLimits::default())
+            .map_err(|_| "Invalid ordinary VOD read configuration (credentials omitted)")?;
     let grid = dispatcharr_output_http::GridGateway::new(
         store.clone(),
         auth.clone(),
@@ -578,6 +581,7 @@ async fn run() -> Result<(), String> {
         .merge(backup_files.clone().router())
         .merge(epg_programs.clone().router())
         .merge(epg_programs.clone().current_router())
+        .merge(vod_reads.router())
         .merge(grid.clone().router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))
@@ -674,6 +678,7 @@ async fn run() -> Result<(), String> {
         output_profiles,
         backup_files,
         epg_programs,
+        vod_reads,
         grid,
         hdhr,
         live_statistics,
@@ -745,6 +750,7 @@ struct ShutdownServices {
     output_profiles: dispatcharr_store::OutputProfileWrites,
     backup_files: dispatcharr_store::BackupFiles,
     epg_programs: dispatcharr_store::EpgProgramReads,
+    vod_reads: dispatcharr_store::VodReads,
     grid: dispatcharr_output_http::GridGateway,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
     live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
@@ -765,6 +771,7 @@ async fn shutdown_components(services: ShutdownServices) {
         output_profiles,
         backup_files,
         epg_programs,
+        vod_reads,
         grid,
         hdhr,
         live_statistics,
@@ -786,6 +793,7 @@ async fn shutdown_components(services: ShutdownServices) {
         programs,
         grid,
         hdhr,
+        vod_read_drained,
     ) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
@@ -852,6 +860,7 @@ async fn shutdown_components(services: ShutdownServices) {
         epg_programs.shutdown(Duration::from_secs(8)),
         grid.shutdown(Duration::from_secs(8)),
         hdhr.shutdown(),
+        vod_reads.shutdown(Duration::from_secs(8)),
     );
     if !live
         || !vod
@@ -866,6 +875,7 @@ async fn shutdown_components(services: ShutdownServices) {
         || !programs
         || !grid
         || !hdhr
+        || !vod_read_drained
     {
         eprintln!("Media drain deadline reached; pending reservations require recovery");
     }

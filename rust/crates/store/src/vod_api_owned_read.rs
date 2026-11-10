@@ -1,7 +1,8 @@
-//! UNREGISTERED/UNCOMPILED ownership adapter draft; no routes or acceptance.
+//! Bounded ordinary VOD ownership validated with actual PostgreSQL/Redis.
 //! Original Dispatcharr authors retain all application/algorithm credit.
-//! Caller cancellation is a logical event. Physical SQL/rollback and detached
-//! frames retain separate permits. This file must pass real-PG gates before use.
+//! Caller cancellation is logical: physical SQL/rollback, scoped cache work
+//! and detached frames retain independent leases. Allocator-wide amplification
+//! and canonical packaged shutdown acceptance remain separate gates.
 use bytes::Bytes;
 use futures_util::FutureExt;
 use sqlx::{pool::PoolConnection, PgPool, Postgres};
@@ -17,7 +18,7 @@ pub(crate) enum ReadError {
 impl From<sqlx::Error> for ReadError { fn from(value:sqlx::Error)->Self {Self::Source(value.into())} }
 impl From<crate::StoreError> for ReadError { fn from(value:crate::StoreError)->Self {Self::Source(value)} }
 #[derive(Clone,Copy)]
-pub(crate) struct ReadLimits {
+pub struct ReadLimits {
     pub workers:usize, pub memory_bytes:usize, pub work_bytes:usize,
     pub response_bytes:usize, pub row_bytes:usize, pub input_bytes:usize,
     pub logical_deadline:Duration, pub statement_deadline:Duration,
@@ -60,6 +61,10 @@ impl ReadRuntime {
     /// Input extraction has a separate outer HTTP-server byte/admission gate.
     pub async fn run<F,Fut>(&self,input_bytes:usize,work:F)->Result<Bytes,ReadError>
     where F:FnOnce(ReadWork)->Fut+Send+'static,Fut:Future<Output=Result<Vec<u8>,ReadError>>+Send+'static {
+        self.run_until(input_bytes,None,work).await
+    }
+    pub async fn run_until<F,Fut>(&self,input_bytes:usize,arrival_deadline:Option<tokio::time::Instant>,work:F)->Result<Bytes,ReadError>
+    where F:FnOnce(ReadWork)->Fut+Send+'static,Fut:Future<Output=Result<Vec<u8>,ReadError>>+Send+'static {
         if self.inner.closing.load(Ordering::Acquire){return Err(ReadError::Shutdown);}
         let worker=self.inner.workers.clone().try_acquire_owned().map_err(|_|ReadError::Capacity)?;
         let memory=self.inner.memory.clone().try_acquire_many_owned(self.inner.limits.work_bytes as u32).map_err(|_|ReadError::Capacity)?;
@@ -67,7 +72,8 @@ impl ReadRuntime {
         if input_bytes>self.inner.limits.input_bytes{return Err(ReadError::Capacity);}
         let lease=Arc::new(WorkLease {_worker:worker,_memory:memory});
         let cancelled=Arc::new(AtomicBool::new(false));let _caller=CancelOnDrop(cancelled.clone());
-        let deadline=tokio::time::Instant::now()+self.inner.limits.logical_deadline;
+        let local_deadline=tokio::time::Instant::now()+self.inner.limits.logical_deadline;
+        let deadline=arrival_deadline.map_or(local_deadline,|arrival|arrival.min(local_deadline));
         let context=ReadWork {lease:lease.clone(),inner:self.inner.clone(),cancelled,deadline};
         let (sender,receiver)=oneshot::channel();
         tokio::spawn(async move {
@@ -120,7 +126,10 @@ impl ReadWork {
     }
 }
 pub(crate) struct Document {data:Vec<u8>,maximum:usize}
-impl Document {pub fn finish(self)->Vec<u8>{self.data}}
+impl Document {
+    pub(crate) fn bounded(maximum:usize)->Self {Self {data:Vec::new(),maximum}}
+    pub fn finish(self)->Vec<u8>{self.data}
+}
 impl Write for Document {
     fn write(&mut self,bytes:&[u8])->io::Result<usize> {
         let needed=self.data.len().checked_add(bytes.len()).filter(|v|*v<=self.maximum)

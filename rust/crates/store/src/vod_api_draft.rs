@@ -1,6 +1,6 @@
-//! Test-only unshipped VOD draft compilation/corpus harness. Production routing
-//! and module exports remain absent. Original Dispatcharr authors retain credit.
-// These draft interfaces intentionally have no production callers yet.
+//! Bounded ordinary VOD read component derived from original Dispatcharr.
+//! App attachment and packaged acceptance are separate from host proofs. Original Dispatcharr authors retain credit.
+// Additional captured VOD category/action policies are not routed yet.
 #![allow(dead_code)]
 #[path = "vod_api_projection.rs"] mod vod_api_projection;
 #[path = "vod_api_dto.rs"] mod vod_api_dto;
@@ -10,5 +10,12 @@
 #[path = "vod_api_owned_read.rs"] mod vod_api_owned_read;
 #[path = "vod_api_read_component.rs"] mod vod_api_read_component;
 #[path = "vod_api_category_seed.rs"] mod vod_api_category_seed;
+#[cfg(test)]
 #[path = "vod_api_source_tests.rs"] mod vod_api_source_tests;
+#[cfg(test)]
 #[path = "vod_api_native_tests.rs"] mod vod_api_native_tests;
+
+#[path = "vod_api_http.rs"] mod vod_api_http;
+
+pub use vod_api_http::VodReads;
+pub use vod_api_owned_read::ReadLimits as VodReadLimits;

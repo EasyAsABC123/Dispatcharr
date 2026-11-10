@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""UNEXECUTED original VOD REST oracle runner; no native or performance claim.
+"""Guarded original VOD REST oracle and optional native SQL component runner.
+Native SQL comparison does not establish native HTTP or performance parity.
 All application credit belongs to original Dispatcharr authors/contributors.
 Each observation mode receives a fresh owned disposable Source Compose project.
 """
@@ -26,7 +27,11 @@ def main():
     parser.add_argument('--mode',choices=['factory','http','both'],default='both')
     parser.add_argument('--native-sql',action='store_true',help='Compare ordinary read component on actual Source database; not native HTTP/app acceptance')
     parser.add_argument('--frozen-rust-source',type=Path,help='Reuse an already captured coherent Rust tree for a harness-only correction')
+    parser.add_argument('--native-http',action='store_true',help='Run independent native TCP HTTP peer against original network corpus')
+    parser.add_argument('--http-wire',action='store_true',help='Add original network method/detail/negotiation/routing characterization')
     args=parser.parse_args()
+    if args.native_http:args.native_sql=True;args.http_wire=True
+    if args.http_wire and args.mode!='http':parser.error('--http-wire requires --mode http')
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     report={'scope':'Original VOD REST metadata-only capture; separate Factory and network fixtures',
         'passed':False,'baseline_commit':BASELINE,'baseline_image':IMAGE,
@@ -35,7 +40,7 @@ def main():
     try:
         for mode in modes:
             evidence=out/mode;evidence.mkdir()
-            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),
+            files=[Path(__file__).resolve(),Path(__file__).with_name('source.py'),*([Path(__file__).with_name('burst_source.py')]if args.http_wire else[]),
                 ROOT/'docker/compose.rust-playback.yml',ROOT/'scripts/rust-integration/shared_ts.py',
                 ROOT/'scripts/rust-integration/fixture_ports.py',ROOT/'scripts/rust-baseline/dependencies.py',
                 *([ROOT/'scripts/rust-vod-api-contracts/source-vod-rest-1.json',ROOT/'scripts/rust-vod-api-contracts/source-default-queries-1.json',ROOT/'scripts/rust-vod-api-contracts/schedule_source.py',ROOT/'scripts/rust-vod-api-contracts/category_fault_source.py']if args.native_sql else []),
@@ -70,7 +75,7 @@ def main():
                 (source/'media').mkdir(exist_ok=True)
                 environment=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(evidence),
                     FIXTURE_SECONDS='900',DISPATCHARR_ENV='aio')
-                ports=evidence/'ports.yml';result['ports']=write_port_overlay(ports,{'baseline':[5656,5432]if args.native_sql else[5656],'origin':[8080]})
+                ports=evidence/'ports.yml';result['ports']=write_port_overlay(ports,{'baseline':[5656,5432,6379]if args.native_sql else[5656],'origin':[8080]})
                 overlay=evidence/'oracle.yml';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[
                     str(tools/'scripts/rust-vod-api-contracts')+':/vod-api-probe:ro']}}}))
                 compose=['docker','compose','-p',project,'-f',str(tools/'docker/compose.rust-playback.yml'),'-f',str(overlay),'-f',str(ports)]
@@ -94,7 +99,7 @@ def main():
                         if time.monotonic()>=deadline:raise RuntimeError('Original fixture readiness deadline')
                         time.sleep(.2)
                     captured=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only',
-                        '-e','VOD_API_OBSERVATION='+mode,'baseline','/dispatcharrpy/bin/python','/vod-api-probe/source.py'],timeout=300)
+                        '-e','VOD_API_OBSERVATION='+mode,*(['-e','VOD_API_HTTP_WIRE=1']if args.http_wire else[]),'baseline','/dispatcharrpy/bin/python','/vod-api-probe/source.py'],timeout=300)
                     (evidence/'source-worker.log').write_text(captured.stderr)
                     corpus=json.loads(captured.stdout.splitlines()[-1]);data=json.dumps(corpus,indent=2,ensure_ascii=False)+'\n'
                     (evidence/'source-corpus.json').write_text(data)
@@ -102,23 +107,29 @@ def main():
                         corpus_sha256=hashlib.sha256(data.encode()).hexdigest(),provider_trap_attempts=len(corpus['provider_trap_attempts']),
                         provider_refresh_rows_unchanged=corpus['provider_refresh_rows_unchanged'])
                     assert result['passed'],'Incomplete Source metadata capture or unexpected provider refresh'
+                    if args.http_wire:
+                        burst=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/burst_source.py'],timeout=30)
+                        observed=json.loads(burst.stdout.splitlines()[-1]);assert observed['passed'];(evidence/'source-burst.json').write_text(json.dumps(observed,indent=2)+'\n')
                     if args.native_sql:
                         scheduled=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/schedule_source.py'],timeout=30)
                         (evidence/'source-schedule.json').write_text(json.dumps(json.loads(scheduled.stdout.splitlines()[-1]),indent=2)+'\n')
                         faulted=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_fault_source.py'],timeout=30)
                         (evidence/'source-category-fault.json').write_text(json.dumps(json.loads(faulted.stdout.splitlines()[-1]),indent=2)+'\n')
                         pgport=command(compose+['port','baseline','5432']).stdout.strip().rsplit(':',1)[1]
-                        native_environment=dict(environment,DATABASE_URL='postgresql://dispatch:playback-fixture-only@127.0.0.1:'+pgport+'/dispatcharr',
+                        redisport=command(compose+['port','baseline','6379']).stdout.strip().rsplit(':',1)[1]
+                        native_environment=dict(environment,VOD_TEST_NATIVE_HTTP='1'if args.native_http else'0',VOD_SOURCE_BURST=str(evidence/'source-burst.json'),REDIS_TEST_URL='redis://:playback-fixture-only@127.0.0.1:'+redisport,VOD_TEST_CACHED_AUTH='1',DATABASE_URL='postgresql://dispatch:playback-fixture-only@127.0.0.1:'+pgport+'/dispatcharr',
                             VOD_API_NATIVE_FIXTURE='playback-fixture-only',VOD_SOURCE_CORPUS=str(evidence/'source-corpus.json'),VOD_NATIVE_EVIDENCE=str(evidence),VOD_SOURCE_DEFAULT_SQL=str(tools/'scripts/rust-vod-api-contracts/source-default-queries-1.json'),VOD_SOURCE_SCHEDULE=str(evidence/'source-schedule.json'),VOD_SOURCE_CATEGORY_FAULT=str(evidence/'source-category-fault.json'))
                         target=Path(os.environ.get('VOD_CARGO_TARGET_DIR',str(ROOT/'artifacts/rust/vod-rest-cargo-target')))
                         argv=['cargo','test','--manifest-path',str(tools/'rust/Cargo.toml'),'--target-dir',str(target),'--locked','--offline','-p','dispatcharr-store','--lib',
-                            'vod_api_draft::vod_api_native_tests','--','--ignored','--nocapture','--test-threads=1']
+                            'vod_api_draft::vod_api_native_tests','--',*(['--skip','http_']if not args.native_http else[]),'--ignored','--nocapture','--test-threads=1']
                         result['native_command']=argv
                         with(evidence/'native-sql-tests.log').open('w')as log:
                             native=subprocess.run(argv,cwd=ROOT,env=native_environment,text=True,stdout=log,stderr=subprocess.STDOUT,timeout=240)
                         native.check_returncode()
                         result['native_ordinary_component']=json.loads((evidence/'ordinary-sql.json').read_text())
                         assert result['native_ordinary_component']['passed'],'Native ordinary component mismatch'
+                        if args.native_http:
+                            result['native_http_component']=json.loads((evidence/'ordinary-http.json').read_text());assert result['native_http_component']['passed']
                         result['native_scope']='Only original ordinary read cases vs nativeSQL component; outside/unsupported families not counted as passes'
 
                 except Exception as error:

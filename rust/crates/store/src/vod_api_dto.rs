@@ -1,7 +1,7 @@
-//! UNREGISTERED/UNCOMPILED code-only draft. No native acceptance or routes.
+//! Source-derived ordinary VOD DTOs used by the bounded read component.
 //! Projection order/nullability is derived from original serializers.py and
-//! actual source-vod-rest-1.json, not the existing XC catalog DTOs.
-//! Full application/algorithm credit belongs to original Dispatcharr authors.
+//! actual source-vod-rest-1.json, independently of existing XC catalog DTOs.
+//! Original Dispatcharr authors retain full application/algorithm credit.
 use chrono::{DateTime, NaiveDate, Utc};
 use md5::{Digest, Md5};
 use serde_json::{Map, Value};

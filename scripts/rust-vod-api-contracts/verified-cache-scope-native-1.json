@@ -1,0 +1,65 @@
+{
+  "credit": "All original application and algorithm credit belongs to the Dispatcharr authors/contributors; existing AGPL retained.",
+  "scope": "Central shared Redis cache physical ownership component; no new API, production VOD router, Source policy acceptance, browser or performance claim.",
+  "passed": true,
+  "evidence": "artifacts/rust/m5-cache-scope-frozen-4",
+  "frozen_rust_manifest_sha256": "9105e3e4af8073624bbe877b98f2acc8838bcea52a6a760689b81a5ed8d48896",
+  "owned_file_overlays": {
+    "crates/store/src/auth.rs": {
+      "before_sha256": "efeae9ce983b4b6cba4872eb165432f5b3a9b0a0b0ed8a9d4feb7fffa13213bd",
+      "after_sha256": "852852a5b8a6ba5f670d9e0aa05ea8ddca098357926bc2d78af9106772adaad2"
+    },
+    "crates/store/src/notifications.rs": {
+      "before_sha256": "ce8648bb889a502931f4b86004520b2a48e3efad5016083cfed9fef129adfa64",
+      "after_sha256": "e38c7986c394e4d8a56c6f5c15634a931e8fe06de5c98096869d789fafb36049"
+    },
+    "crates/store/src/vod_api_read_component.rs": {
+      "before_sha256": "419a8a5e6656a238bf07ece6f7cad4b91450a78cd0a9c5f3e623cd0580f9e275",
+      "after_sha256": "06924c6920cf357c06a596d79a15c71a5c4e5b0babba52b654af6c4c5b4b640d"
+    }
+  },
+  "strict_store_all_target_clippy": "artifacts/rust/m5-cache-scope-frozen-4/clippy.log",
+  "actual_redis": "Redis server v=7.4.12 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=5e6b576434da555d",
+  "tests": [
+    {
+      "name": "notifications::tests::cancelled_cache_command_retains_physical_slot_and_scope",
+      "passed": true
+    },
+    {
+      "name": "notifications::tests::cache_logical_timeout_retains_pending_reply_and_composed_scopes",
+      "passed": true
+    },
+    {
+      "name": "notifications::tests::cache_cancelled_burst_cannot_reuse_sixteen_pending_slots",
+      "passed": true
+    },
+    {
+      "name": "notifications::tests::cache_waiter_bound_and_cancelled_queue_restore_admission",
+      "passed": true
+    },
+    {
+      "name": "notifications::tests::cache_and_user_agent_server_error_classifications_stay_distinct",
+      "passed": true
+    }
+  ],
+  "cleanup": true,
+  "retained_failures": {
+    "frozen1": "items_after_test_module lint, no Redis tests executed",
+    "frozen3": "drain observer4s vs actual4.07s pause; first3 tests passed; cleanup succeeded. Observer raised6s, runtime unchanged."
+  },
+  "remaining": [
+    "Cached shared AuthService VOD/SQL fallback physical ownership",
+    "Actual Source cache policy and default-UA backend/server error regression",
+    "Lockout event retained scope and affected APIs",
+    "Native HTTP roles/HEAD/OPTIONS/body/error representation",
+    "Canonical packaged/browser acceptance"
+  ],
+  "intentional_overload_difference": "Existing16 physical operations plus new256 bounded waiters; exhaustion retains existing503 classification, not identical overloaded timing.",
+  "django_cache_interoperability": {
+    "passed": true,
+    "evidence": "artifacts/rust/m5-cache-scope-source-interop-1",
+    "report_sha256": "240de12c7cfb2b09b1b80431e4bddb3990f12387f5fb0e1a473a43f7710b8a36",
+    "scope": "Actual original Django cache decoding Rust booleans/dicts, Rust decoding original values, network-group fallback and TTL; not all Auth/API error policy",
+    "cleanup": true
+  }
+}

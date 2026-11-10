@@ -1,6 +1,7 @@
-//! UNREGISTERED, uncompiled draft of original VOD REST pure policies.
-//! No SQL, router, provider fetch, or native acceptance follows from this file.
-//! All application credit belongs to original Dispatcharr contributors.
+//! Source-derived VOD access and category projection rules.
+//! Ordinary route policies have captured SQL/HTTP validation; unused category
+//! and provider/action policies do not imply those routes are implemented.
+//! Original Dispatcharr authors retain full application credit.
 //! Source: apps/vod/utils.py _is_vod_access_enabled/parse_category_filter_value.
 use serde_json::Value;
 

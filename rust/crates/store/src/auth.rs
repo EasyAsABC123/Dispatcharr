@@ -77,6 +77,8 @@ pub struct AuthService {
     pub(crate) channel_control: Option<Arc<dyn ChannelControl>>,
     pub(crate) notification_cache: Option<crate::NotificationCache>,
     pub(crate) event_sink: Option<Arc<dyn dispatcharr_contracts::UpdateEventSink>>,
+    // Request-local ownership only; global AuthService remains unscoped.
+    retained_scope: Option<Arc<dyn Send + Sync>>,
     pub(crate) images: crate::image_proxy::ImageRuntime,
     pub(crate) ip_lookup: crate::ip_lookup::IpLookup,
 }
@@ -94,6 +96,7 @@ impl AuthService {
             channel_control: None,
             notification_cache: None,
             event_sink: None,
+            retained_scope: None,
             images: crate::image_proxy::ImageRuntime::new(),
             ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),
         }
@@ -107,7 +110,10 @@ impl AuthService {
     }
 
     pub fn with_notification_cache(mut self, cache: crate::NotificationCache) -> Self {
-        self.notification_cache = Some(cache);
+        self.notification_cache = Some(match self.retained_scope.as_ref() {
+            Some(scope) => cache.with_retained_scope(scope.clone()),
+            None => cache,
+        });
         self
     }
 
@@ -115,7 +121,30 @@ impl AuthService {
         mut self,
         sink: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
     ) -> Self {
-        self.event_sink = Some(sink);
+        self.event_sink = Some(match self.retained_scope.as_ref() {
+            Some(scope) => Arc::new(RetainedAuthSink { inner: sink, guard: scope.clone() }),
+            None => sink,
+        });
+        self
+    }
+
+    /// Create on an existing per-request clone, never on the app singleton.
+    /// Policy/cache/connection budgets stay shared. Retain request ownership
+    /// through awaited SQL, supervised cache replies and event publication even
+    /// when an inner logical timeout returns before physical I/O completion.
+    /// This bridge must pass delayed-cache/resource gates before VOD app use.
+    pub fn with_retained_scope(mut self, guard: Arc<dyn Send + Sync>) -> Self {
+        let combined: Arc<dyn Send + Sync> = match self.retained_scope.take() {
+            Some(previous) => Arc::new((previous, guard)),
+            None => guard,
+        };
+        if let Some(cache) = self.notification_cache.take() {
+            self.notification_cache = Some(cache.with_retained_scope(combined.clone()));
+        }
+        if let Some(sink) = self.event_sink.take() {
+            self.event_sink = Some(Arc::new(RetainedAuthSink { inner: sink, guard: combined.clone() }));
+        }
+        self.retained_scope = Some(combined);
         self
     }
 
@@ -779,6 +808,24 @@ fn token_error(kind: &str, message: &'static str) -> StoreError {
     } else {
         json!({"detail":message,"code":"token_not_valid"})
     })
+}
+
+/// Physical publication belongs to the same caller scope. The real M7 bus
+/// overrides send_retained to move that guard into each owned Redis operation.
+/// A second supplied scope composes with the authentication scope.
+struct RetainedAuthSink {
+    inner: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
+    guard: Arc<dyn Send + Sync>,
+}
+impl dispatcharr_contracts::UpdateEventSink for RetainedAuthSink {
+    fn send<'a>(&'a self, group: &'a str, message: Value)
+        -> dispatcharr_contracts::BoxFuture<'a, Result<(), dispatcharr_contracts::UpdateEventError>> {
+        self.inner.send_retained(group, message, self.guard.clone())
+    }
+    fn send_retained<'a>(&'a self, group: &'a str, message: Value, guard: Arc<dyn Send + Sync>)
+        -> dispatcharr_contracts::BoxFuture<'a, Result<(), dispatcharr_contracts::UpdateEventError>> {
+        self.inner.send_retained(group, message, Arc::new((self.guard.clone(), guard)))
+    }
 }
 
 #[cfg(test)]

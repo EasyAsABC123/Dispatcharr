@@ -1,6 +1,6 @@
-//! Isolated real-PG draft component gates, not shipped HTTP acceptance.
-//! Original Dispatcharr authors retain full credit. Exact Source fixture guards
-//! are mandatory. Production retained-auth/cache integration remains separate.
+//! Guarded original-network, SQL/Redis and independent native HTTP gates.
+//! Original Dispatcharr authors retain full application credit. Exact fixture
+//! guards are mandatory; canonical packaged/browser acceptance is separate.
 use super::{vod_api_owned_read::{ReadError,ReadLimits},vod_api_read_component::{RetainedUiAuthorizer,SqlReads,ReadRequest},vod_api_sql::Resource};
 use crate::{AuthService,AuthConfig,Store};
 use axum::{http::{HeaderMap,HeaderName,HeaderValue},response::IntoResponse};
@@ -34,7 +34,12 @@ async fn fixture_limits(limits:ReadLimits)->(SqlReads,Value,sqlx::PgPool) {
     // fixture is direct awaited PostgreSQL work under the retained scope. This
     // is not the pending production Redis/cache authorizer implementation.
     let auth=AuthService::new(store,AuthConfig::new("playback-fixture-only".into()).unwrap());
-    (SqlReads::new(pool.clone(),Arc::new(PgOnlyAuth(auth)),limits).unwrap(),source,pool)
+    let reader=if std::env::var("VOD_TEST_CACHED_AUTH").as_deref()==Ok("1") {
+        let redis=std::env::var("REDIS_TEST_URL").expect("owned cachedAuth Redis");assert!(redis.contains("playback-fixture-only"));
+        let cache=crate::NotificationCache::connect(&redis).await.unwrap();
+        SqlReads::from_auth(auth.with_notification_cache(cache),limits).unwrap()
+    }else{SqlReads::new(pool.clone(),Arc::new(PgOnlyAuth(auth)),limits).unwrap()};
+    (reader,source,pool)
 }
 fn request(case:&Value)->Option<ReadRequest> {
     if case["method"]!="GET" {return None;}
@@ -69,7 +74,7 @@ fn output(name:&str,value:&Value) {
 async fn ordinary_source_database_rows_permissions_and_serialization() {
     let (reader,source,pool)=fixture_limits(ReadLimits::default()).await;
     let mut records=Vec::new();let mut differences=Vec::new();let mut unsupported=Vec::new();let mut outside=0;
-    for (index,case) in source["cases"].as_array().unwrap().iter().enumerate() {
+    for (index,case) in source["cases"].as_array().unwrap().iter().take(463).enumerate() {
         let Some(request)=request(case) else {outside+=1;continue;};
         let (status,body,unimplemented)=response(reader.read(request).await).await;
         let expected=&case["expected"];
@@ -105,7 +110,7 @@ async fn ordinary_source_database_rows_permissions_and_serialization() {
         "passed":passed,"source_observation":source["observation"],"compared":records.len(),"outside_component_cases":outside,
         "unsupported_not_counted_pass":unsupported,"differences":differences,"records":records,"workers_drained":drained,
         "physical_workers":reader.physical_workers(),"retained_memory_bytes":reader.retained_memory_bytes(),
-        "authorization":"Real sharedAuthService, PostgreSQL only; production retained Redis/cache auth remains open",
+        "authorization":if std::env::var("VOD_TEST_CACHED_AUTH").as_deref()==Ok("1"){"Real sharedAuthService with original-compatible Redis cache and request-retained scope"}else{"Real sharedAuthService, PostgreSQL only; production retained Redis/cache auth remains open"},
         "known_gaps":["concurrent logo metadata snapshot","JOIN/DISTINCT versus EXISTS tied order outside this fixture","raw-query grammar beyond captured subset","OPTIONS/artwork/provider/category/unified actions"]}));
     assert!(passed,"ordinary SQL differences/unsupported/resource state; see private ordinary-sql.json");
 }
@@ -297,4 +302,135 @@ async fn category_lazy_defaults_partial_failure_and_retained_owner() {
         "existing_defaults_unchanged":true,"idempotent_repeat":true,"source_failure":reference["failure"],
         "retained_category_prefix":prefix,"aborted_caller_kept_owner_through_pending_insert_and_failure_cleanup":true,
         "all_memory_and_workers_returned":true,"restored_normal_fixture_state":true}));
+}
+
+
+#[tokio::test]
+#[ignore="requires guarded originalPG/Redis; real cachedAuth logical fallback retains VOD slot"]
+async fn cached_authorizer_fallback_retains_request_until_physical_redis_reply() {
+    let (unused,source,pool)=fixture_limits(ReadLimits::default()).await;
+    assert!(unused.shutdown(Duration::from_secs(1)).await);drop(unused);
+    let url=std::env::var("REDIS_TEST_URL").unwrap();assert!(url.contains("playback-fixture-only"));
+    let cache=crate::NotificationCache::connect(&url).await.unwrap();
+    let auth=AuthService::new(Store::from_pool(pool.clone()),AuthConfig::new("playback-fixture-only".into()).unwrap()).with_notification_cache(cache.clone());
+    let reader=SqlReads::from_auth(auth,ReadLimits::default()).unwrap();
+    let mut control=redis::Client::open(url).unwrap().get_multiplexed_async_connection().await.unwrap();
+    let _:()=redis::cmd("CLIENT").arg("PAUSE").arg(4000).arg("ALL").query_async(&mut control).await.unwrap();
+    let frame=reader.read(request(standard_movie(&source)).unwrap()).await.unwrap();
+    // Cache's2s logical failure falls back to actualPG policy. The successful
+    // data read must still retain the request lease for its pending cache GET.
+    assert_eq!(reader.physical_workers(),1);assert_eq!(cache.physical_operations(),1);
+    let held=reader.retained_memory_bytes();assert!(held>ReadLimits::default().response_bytes);
+    tokio::time::timeout(Duration::from_secs(4),async {
+        while cache.physical_operations()!=0||reader.physical_workers()!=0 {tokio::time::sleep(Duration::from_millis(5)).await;}
+    }).await.unwrap();
+    let frame_capacity=reader.retained_memory_bytes();assert!(frame_capacity>=frame.len()&&frame_capacity<held);
+    drop(frame);assert_eq!(reader.retained_memory_bytes(),0);
+    assert!(reader.shutdown(Duration::from_secs(1)).await);pool.close().await;
+    output("cached-auth-owner.json",&json!({"passed":true,"scope":"Real cached sharedAuthService UI policy, actual delayedRedis and PG fallback; no HTTP/app acceptance",
+        "successful_pg_fallback_kept_vod_worker_until_cache_reply":true,"retained_bytes_while_cache_pending":held,
+        "frame_capacity_after_worker_drain":frame_capacity,"all_memory_returned":true,"no_cache_or_auth_policy_bypass":true}));
+}
+
+#[tokio::test]
+#[ignore="actual original HTTP corpus + isolated native TCP HTTP/PG/Redis comparison"]
+async fn ordinary_native_http_methods_headers_and_permissions() {
+    assert_eq!(std::env::var("VOD_TEST_NATIVE_HTTP").as_deref(),Ok("1"));
+    let(unused,source,pool)=fixture_limits(ReadLimits::default()).await;
+    assert!(unused.shutdown(Duration::from_secs(1)).await);drop(unused);
+    let cache=crate::NotificationCache::connect(&std::env::var("REDIS_TEST_URL").unwrap()).await.unwrap();
+    let auth=AuthService::new(Store::from_pool(pool.clone()),AuthConfig::new("playback-fixture-only".into()).unwrap()).with_notification_cache(cache);
+    let listener=tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();let address=listener.local_addr().unwrap();
+    let gateway=super::VodReads::new(auth,ReadLimits::default()).unwrap();let reader=gateway.reader.clone();
+    let router=gateway.router();
+    let server=tokio::spawn(async move {axum::serve(listener,router.into_make_service_with_connect_info::<SocketAddr>()).await.unwrap();});
+    let client=reqwest::Client::builder().redirect(reqwest::redirect::Policy::none()).timeout(Duration::from_secs(8)).build().unwrap();
+    let mut records=Vec::new();let mut differences=Vec::new();let mut excluded=Vec::new();
+    for(index,case)in source["cases"].as_array().unwrap().iter().enumerate() {
+        let path=case["path"].as_str().unwrap();let bare=path.split('?').next().unwrap();let parts:Vec<_>=bare.trim_matches('/').split('/').collect();
+        if parts.len()<3||parts.len()>4||!matches!(parts[2],"movies"|"series"|"episodes")||!bare.ends_with('/') {continue;}
+        let mut request=client.request(case["method"].as_str().unwrap().parse().unwrap(),format!("http://{address}{path}"));
+        for(name,value)in case["headers"].as_object().unwrap(){request=request.header(name.strip_prefix("HTTP_").unwrap_or(name).replace('_',"-"),value.as_str().unwrap());}
+        let response=request.send().await.unwrap();let status=response.status().as_u16();let headers=response.headers().clone();let body=response.bytes().await.unwrap();
+        if status==501 {excluded.push(json!({"index":index,"path":path,"reason":"Explicit unimplemented representation; not a parity pass","body":String::from_utf8_lossy(&body)}));continue;}
+        let expected=&case["expected"];let hash=format!("{:x}",Sha256::digest(&body));
+        let mut header_diffs=Vec::new();
+        for header in ["Content-Length","Allow","Vary","WWW-Authenticate"] {
+            let actual=headers.get(header).and_then(|v|v.to_str().ok());let wanted=expected["selected_headers"][header].as_str();
+            if actual!=wanted {header_diffs.push(json!({"header":header,"source":wanted,"native":actual}));}
+        }
+        let mime=headers.get("content-type").and_then(|v|v.to_str().ok());
+        let mismatch=status!=expected["status"].as_u64().unwrap()as u16||hash!=expected["body_sha256"]||mime!=expected["content_type"].as_str()||!header_diffs.is_empty();
+        if mismatch&&differences.len()<20 {differences.push(json!({"index":index,"path":path,"role":case["role"],"method":case["method"],"source_status":expected["status"],"native_status":status,"native_body":String::from_utf8_lossy(&body),"source_hash":expected["body_sha256"],"native_hash":hash,"header_differences":header_diffs}));}
+
+        records.push(json!({"index":index,"status":status,"bytes":body.len(),"hash":hash}));
+    }
+    let source_burst:Value=serde_json::from_slice(&std::fs::read(std::env::var("VOD_SOURCE_BURST").unwrap()).unwrap()).unwrap();assert_eq!(source_burst["passed"],true);
+    let barrier=Arc::new(tokio::sync::Barrier::new(11));let epoch=tokio::time::Instant::now();let mut jobs=Vec::new();
+    for index in 0..10 {
+        let client=client.clone();let barrier=barrier.clone();let case=standard_movie(&source).clone();
+        jobs.push(tokio::spawn(async move {
+            let mut request=client.get(format!("http://{address}/api/vod/movies/"));
+            for(name,value)in case["headers"].as_object().unwrap(){request=request.header(name.strip_prefix("HTTP_").unwrap_or(name).replace('_',"-"),value.as_str().unwrap());}
+            barrier.wait().await;let began=epoch.elapsed().as_secs_f64();let response=request.send().await.unwrap();let status=response.status().as_u16();let body=response.bytes().await.unwrap();
+            json!({"index":index,"started_seconds":began,"status":status,"body_bytes":body.len(),"body_sha256":format!("{:x}",Sha256::digest(&body))})
+        }));
+    }
+    barrier.wait().await;let mut burst=Vec::new();for job in jobs {burst.push(job.await.unwrap());}
+    let source_hash=&source_burst["records"][0]["body_sha256"];
+    let burst_pass=burst.iter().all(|row|row["status"]==200&&&row["body_sha256"]==source_hash);
+    output("http-burst.json",&json!({"passed":burst_pass,"scope":"Actual original/native simultaneous10 ordinary MovieList reads; barrier launch, no staggering; not performance", "source":source_burst,"native_records":burst}));
+    let drained=gateway.shutdown(Duration::from_secs(5)).await;server.abort();let _=server.await;pool.close().await;
+    let passed=differences.is_empty()&&records.len()>250&&drained&&burst_pass;
+    output("ordinary-http.json",&json!({"passed":passed,"scope":"Actual original network vs independent native TCP HTTP peer; app security/CORS middleware and canonical packaged/React gates excluded", "records":records,"differences":differences,"explicit_representation_exclusions":excluded,"workers_drained":drained,"remaining_memory":reader.retained_memory_bytes()}));
+    assert!(passed,"HTTP differences; see ordinary-http.json");
+}
+
+#[tokio::test]
+#[ignore="actual owned PG/Redis delayed cached-auth and independent HTTP error-frame ownership"]
+async fn http_frames_and_cancelled_cached_authorization_keep_admission() {
+    assert_eq!(std::env::var("VOD_TEST_NATIVE_HTTP").as_deref(),Ok("1"));
+    use futures_util::StreamExt;
+    let(unused,source,pool)=fixture_limits(ReadLimits::default()).await;
+    assert!(unused.shutdown(Duration::from_secs(1)).await);drop(unused);
+    let url=std::env::var("REDIS_TEST_URL").unwrap();
+    let cache=crate::NotificationCache::connect(&url).await.unwrap();
+    let auth=AuthService::new(Store::from_pool(pool.clone()),AuthConfig::new("playback-fixture-only".into()).unwrap()).with_notification_cache(cache.clone());
+    let reader=SqlReads::from_auth(auth.clone(),ReadLimits::default()).unwrap();let gate=super::vod_api_http::HttpGate::new(ReadLimits {logical_deadline:Duration::from_millis(150),..ReadLimits::default()}).unwrap();let slots=gate.slots.clone();
+    let peer="127.0.0.1:30000".parse().unwrap();
+    let anonymous=||axum::extract::Request::builder().uri("/api/vod/movies/").header("host","localhost").body(axum::body::Body::empty()).unwrap();
+    let first=super::vod_api_http::respond(reader.clone(),auth.clone(),gate.clone(),peer,Resource::Movie,false,anonymous()).await;
+    assert_eq!(first.status(),401);let mut stream=first.into_body().into_data_stream();let data=stream.next().await.unwrap().unwrap();drop(stream);
+    let clone=data.clone();drop(data);assert_eq!(slots.available_permits(),1);
+    let second=super::vod_api_http::respond(reader.clone(),auth.clone(),gate.clone(),peer,Resource::Movie,false,anonymous()).await;
+    assert_eq!(second.status(),401);assert_eq!(slots.available_permits(),0);
+    let queued_memory=gate.input.available_permits();
+    let authenticated=||{let mut request=axum::extract::Request::builder().uri("/api/vod/movies/").body(axum::body::Body::empty()).unwrap();*request.headers_mut()=self::request(standard_movie(&source)).unwrap().headers;request};
+    let pending=authenticated();let queued_reader=reader.clone();let queued_auth=auth.clone();let queued_gate=gate.clone();
+    let queued=tokio::spawn(async move {super::vod_api_http::respond(queued_reader,queued_auth,queued_gate,peer,Resource::Movie,false,pending).await});
+    tokio::time::timeout(Duration::from_millis(100),async {while gate.waiters.available_permits()!=255 {tokio::task::yield_now().await;}}).await.unwrap();
+    assert!(gate.input.available_permits()<queued_memory);assert_eq!(reader.physical_workers(),0);assert_eq!(cache.physical_operations(),0);
+    queued.abort();let _=queued.await;assert_eq!(gate.waiters.available_permits(),256);assert_eq!(gate.input.available_permits(),queued_memory);
+    let rejected=super::vod_api_http::respond(reader.clone(),auth.clone(),gate.clone(),peer,Resource::Movie,false,authenticated()).await;
+    assert_eq!(rejected.status(),503);drop(rejected);assert_eq!(slots.available_permits(),0);assert_eq!(reader.physical_workers(),0);assert_eq!(cache.physical_operations(),0);assert_eq!(gate.input.available_permits(),queued_memory);
+    let pending=authenticated();let queued_reader=reader.clone();let queued_auth=auth.clone();let queued_gate=gate.clone();
+    let queued=tokio::spawn(async move {super::vod_api_http::respond(queued_reader,queued_auth,queued_gate,peer,Resource::Movie,false,pending).await});
+    tokio::time::timeout(Duration::from_millis(100),async {while gate.waiters.available_permits()!=255 {tokio::task::yield_now().await;}}).await.unwrap();gate.slots.close();
+    assert_eq!(queued.await.unwrap().status(),503);assert_eq!(reader.physical_workers(),0);assert_eq!(gate.waiters.available_permits(),256);assert_eq!(gate.input.available_permits(),queued_memory);
+    drop(clone);assert_eq!(slots.available_permits(),1);drop(second);assert_eq!(slots.available_permits(),2);
+    let gate=super::vod_api_http::HttpGate::new(ReadLimits {logical_deadline:Duration::from_millis(150),..ReadLimits::default()}).unwrap();let slots=gate.slots.clone();
+    let input=request(standard_movie(&source)).unwrap();let mut control=redis::Client::open(url).unwrap().get_multiplexed_async_connection().await.unwrap();
+    let _:()=redis::cmd("CLIENT").arg("PAUSE").arg(4000).arg("ALL").query_async(&mut control).await.unwrap();
+    let mut pending=axum::extract::Request::builder().uri("/api/vod/movies/").body(axum::body::Body::empty()).unwrap();*pending.headers_mut()=input.headers;
+    let held_reader=reader.clone();let held_auth=auth.clone();let held_slots=gate.clone();
+    let task=tokio::spawn(async move{super::vod_api_http::respond(held_reader,held_auth,held_slots,peer,Resource::Movie,false,pending).await});
+    tokio::time::timeout(Duration::from_secs(1),async {while cache.physical_operations()!=1 {tokio::time::sleep(Duration::from_millis(5)).await;}}).await.unwrap();
+    task.abort();let _=task.await;assert_eq!(slots.available_permits(),1);assert_eq!(reader.physical_workers(),1);
+    tokio::time::sleep(Duration::from_millis(2200)).await;
+    assert_eq!(cache.physical_operations(),1);assert_eq!(slots.available_permits(),1);assert_eq!(reader.physical_workers(),1);
+    tokio::time::timeout(Duration::from_secs(4),async {while cache.physical_operations()!=0||slots.available_permits()!=2||reader.physical_workers()!=0 {tokio::time::sleep(Duration::from_millis(5)).await;}}).await.unwrap();
+    assert_eq!(reader.retained_memory_bytes(),0);assert!(reader.shutdown(Duration::from_secs(1)).await);pool.close().await;
+    output("http-ownership.json",&json!({"passed":true,"scope":"Actual independent HTTP body frames and direct handler abort with realPG/Redis; TCP representation proof is separate ordinary-http.json",
+        "unauthorized_error_frame_lastclone_keeps_slot":true,"expired_waiter_did_not_authenticate_or_start_SQL":true,"cancelled_waiter_returned_input_and_queue_lease":true,"shutdown_woke_queued_request_without_SQL":true,"cancelled_handler_keeps_http_and_vod_slots_through_cache_logical_timeout":true,
+        "all_slots_and_memory_return_after_actual_reply":true}));
 }

@@ -1,4 +1,4 @@
-"""UNEXECUTED draft: actual original VOD REST APIRequestFactory oracle.
+"""Guarded original VOD REST APIRequestFactory/actual-network oracle.
 
 Run only in a fresh disposable Source Compose fixture after quiet ends.
 All application credit belongs to original Dispatcharr authors/contributors.
@@ -165,11 +165,12 @@ def wire_case(path,role,method,body,headers):
         'provider_refresh_attempted':after['provider_trap_attempts']!=before['provider_trap_attempts'],
         'sql_observation':'DB effect snapshots only; actual server-process SQL not captured by observer connection'})
 
-def case(path,role='standard',method='GET',body=None):
-    if len(cases)>=600:raise RuntimeError('Owned case-count bound')
+def case(path,role='standard',method='GET',body=None,extra_headers=None):
+    if len(cases)>=700:raise RuntimeError('Owned case-count bound')
     path=quote(path,safe='/?=&|,')
     headers={'HTTP_HOST':'localhost','HTTP_ACCEPT':'application/json'}
     if role is not None:headers['HTTP_AUTHORIZATION']='Bearer '+users[role]['token']
+    if extra_headers:headers.update(extra_headers)
     if MODE=='http':return wire_case(path,role,method,body,headers)
     request=factory.generic(method,path,data=json.dumps(body).encode(),content_type='application/json',REMOTE_ADDR='127.0.0.1',**headers)
     match=resolve(path.split('?')[0]);request.resolver_match=match
@@ -249,6 +250,28 @@ for role in ['admin','standard','adult_hidden','movies_off']:
     case(f'/api/vod/movies/{movies[3].pk}/',role=role)
 case(f'/api/vod/episodes/{episodes[2].pk}/')  # Providerless top-level detail.
 case('/api/vod/episodes/?series='+str(series[0].pk))
+if os.environ.get('VOD_API_HTTP_WIRE')=='1':
+    if MODE!='http':raise RuntimeError('Additional route/negotiation evidence requires actual HTTP')
+    for endpoint,pk in [('movies',movies[0].pk),('series',series[0].pk),('episodes',episodes[0].pk)]:
+        base='/api/vod/'+endpoint+'/'
+        for role in ['admin','standard','basic',None]:
+            case(base+str(pk)+'/',role=role,method='HEAD')
+            case(base+str(pk)+'/',role=role,method='OPTIONS')
+            case(base+'999999999/',role=role,method='OPTIONS')
+        for accept in ['*/*','application/*','application/json;q=0','application/json;q=0.1,text/html;q=1','application/xml','application/json;indent=4']:
+            case(base,extra_headers={'HTTP_ACCEPT':accept})
+        for role in ['standard',None]:
+            case(base+'?format=bad',role=role)
+            case(base,role=role,extra_headers={'HTTP_ACCEPT':'application/xml'})
+        for suffix in ['?format=json','.json','.json/']:
+            case(base+suffix if suffix.startswith('?') else base.rstrip('/')+suffix)
+        for role,method,tail in [(None,'GET',''),('basic','GET',''),('standard','OPTIONS',''),('admin','POST',''),('standard','GET','?year=bad'),('standard','HEAD',''),('standard','GET','999999999/')]:
+            case(base+tail,role=role,method=method,body={},extra_headers={'HTTP_ACCEPT':'application/json;indent=4'})
+        for indent in ['0','-1','8','99','bad','"4"']:
+            case(base,extra_headers={'HTTP_ACCEPT':'application/json;indent='+indent})
+        case(base.rstrip('/'))
+        for pk_text in ['bad','0','-1','9999999999999999999999999999999999']:
+            case(base+pk_text+'/')
 final_effects=owned_effects()
 provider_trap.shutdown();provider_trap.server_close();provider_thread.join(timeout=2)
 refresh_unchanged=(initial_effects['movie_refresh_rows']==final_effects['movie_refresh_rows']and

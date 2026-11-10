@@ -1,4 +1,4 @@
-//! UNREGISTERED/UNCOMPILED lazy category-write helper draft. No HTTP/SQL gate.
+//! Validated lazy category helper; category HTTP routes remain unwired.
 //! Original Dispatcharr authors retain credit. Call only after Standard/UI
 //! authentication and physical admission, before category visibility filters.
 //! No cross-request metadata cache; no blanket transaction/rollback of earlier

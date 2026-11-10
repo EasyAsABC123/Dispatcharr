@@ -1,8 +1,8 @@
-//! UNREGISTERED/UNCOMPILED raw ordinary VOD policy draft. No gate has run.
-//! Source: actual source-vod-rest-1 + apps/vod/api_views.py/permissions.py.
-//! Caller supplies a correctly decoded QueryDict-equivalent pair list. Raw
-//! malformed URL decoding is a separate Source gate, not delegated blindly to
-//! WHATWG decoding. All original Dispatcharr authors retain full credit.
+//! Source-validated ordinary VOD query subset used by bounded read routes.
+//! Source: source-vod-rest-1 + original api_views.py/permissions.py.
+//! Only captured filter/search/ordering grammar is accepted; unsupported forms
+//! fail explicitly. URL grammar beyond the network corpus remains a separate
+//! gate. Original Dispatcharr authors retain all application credit.
 use super::{vod_api_pagination::last_query,vod_api_projection::{category_filter,Permission},
     vod_api_sql::{Resource,Selection,Filter,Order,OrderField}};
 use serde_json::{Map,Value,json};

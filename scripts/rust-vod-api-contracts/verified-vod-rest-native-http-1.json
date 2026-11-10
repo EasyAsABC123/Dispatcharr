@@ -1,0 +1,186 @@
+{
+  "scope": "Actual original network VOD corpus vs public native ordinary read constructor/router in independent TCP HTTP; canonical app/browser acceptance separate",
+  "original_credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors; AGPL retained.",
+  "passed": true,
+  "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "evidence": "artifacts/rust/m5-vod-rest-native-http-5/http",
+  "successful_tool_source": "artifacts/rust/m5-vod-rest-native-http-5/http/tools",
+  "frozen_rust_manifest_sha256": "9577d3e2802723387218c432878c9c6bdfdfc90d1b38d848ff0943734b247dbf",
+  "frozen_overlay_provenance": "artifacts/rust/m5-vod-http-overlay-5/provenance.json",
+  "source_sha256": {
+    "rust/crates/store/src/vod_api_projection.rs": "b809b5e597f8f7e2509ca2c7fc9d616eaeb1415823919d950534fc7526e99ac4",
+    "rust/crates/store/src/vod_api_dto.rs": "d2dc77d53926606285f3cf7b9746a67a9367cbd173747b859880fa89f57b4e25",
+    "rust/crates/store/src/vod_api_pagination.rs": "29dd2514722a7543b1bf744a05fd47f8fa885c0fdb502ad853bb421b84e9f208",
+    "rust/crates/store/src/vod_api_source_tests.rs": "f3df977e5f200b573a1d2e20c425922dec31b7e5c4502a144b61635c5172e242",
+    "rust/crates/store/src/vod_api_owned_read.rs": "2da1a17b550b94cbdd9cc0f2fd348e5f0cf1a9cc53af6adef83ddc46cda867b8",
+    "rust/crates/store/src/vod_api_sql.rs": "72b668ca8a09332052f2405caab046e8d0f898aeac1f837af8a78edba8ba3e00",
+    "rust/crates/store/src/vod_api_read_component.rs": "251113a8181e7b53ff0a99ba16e11e987286749dca690df2d50eb6cef2598a1f",
+    "rust/crates/store/src/vod_api_category_seed.rs": "a0fbbf5c4a4bc30b9547fec51011e907be73368e4b4dda758484c108b6a3f06e",
+    "rust/crates/store/src/vod_api_query.rs": "a6a96468edf2524967fb63834862d23e44aaf06faa13c6bafe69cff1a7205c0b",
+    "rust/crates/store/src/vod_api_draft.rs": "3a8c9e22550d0b9cd037672edc16d2361ad0e6822313db2618a1fb4e2b02461a",
+    "rust/crates/store/src/vod_api_native_tests.rs": "c54b5531ed0a5de59c8e90c17f29b436c62925bfef46b56b1b5c9e8aa30f7f00",
+    "rust/crates/store/src/vod_api_http.rs": "ee83f67a9c1db5c2b167760cca2ede6a74b4f3f31f22fced98c861ee4b5418bf",
+    "rust/crates/store/src/auth.rs": "852852a5b8a6ba5f670d9e0aa05ea8ddca098357926bc2d78af9106772adaad2",
+    "rust/crates/store/src/notifications.rs": "e38c7986c394e4d8a56c6f5c15634a931e8fe06de5c98096869d789fafb36049",
+    "rust/crates/store/src/lib.rs": "81367fe90de005fe11f8427dd1e297c66b0c60a0bcdb92e748a0fc747227a544"
+  },
+  "evidence_sha256": {
+    "source-run.json": "d1b318ab04a4956aa17c48b38024f30157abe521fa62d3001984b849ba8ed75c",
+    "ordinary-http.json": "0dbc2d627771f153c89e52ea3cb3a989c3ffba32bdc56680f7ebb6543df30e30",
+    "source-burst.json": "4597a84c43e9a9203264e883fa7fbef06806e42ff4389dfb341390c08e323bfa",
+    "http-burst.json": "983cca3f5f796cc0c8b60f39c3955754c1c6f673bb17a50e6ad0e2da0b16b15c",
+    "http-ownership.json": "cc2b8a656e1b5f20cd1c16cf6fe59e6bff5340b4b6baa40f4963d9711e0be415",
+    "cached-auth-owner.json": "1acf5035e2802787be98040b90bad9a0d19b0111fbda112718935c842e5b804f",
+    "ordinary-sql.json": "da5cb337974585ade7db48440ca9f128ab3fdc9a3aec4dec68212908d471bd38",
+    "ordering-plans.json": "85d536ff7e6e3b23b4b1cf3b01266ca9695933f4525c6d613e2b62de01eb0cd3",
+    "owned-caller-frame.json": "adbaea5fcebdf912438872785cbabde5cb9fc0a1f1cecc213b4a34ddc81540b4",
+    "owned-logical-timeout.json": "02efa40f4ee7ec7230d4a775b0470a62f6f251670277e8a9de60cb238e4776b4",
+    "metadata-schedule.json": "f32d0da9aff1670f284f69cd84478cc5a793839fb3a07e27876e5e8ee4384e72",
+    "category-effects.json": "522b5816e3496dbacf4e1eabdcbcf2a2529d118892f118dd078942901980cdd9",
+    "native-sql-tests.log": "159519050af201d15456486b002862a5d9997b6377f9b7fe2538c1d9ff122ade",
+    "clippy.log": "f05f89529391763057d086c778280a20c00fa5d322d46d570e0830f9cf0b78ac",
+    "formatter-tests.log": "b37b75823fcc851c07791800cb9a8c03af361fdf781bc7f5bc04b7dff936625b"
+  },
+  "checks": {
+    "actual_original_http_cases": 592,
+    "supported_native_http_status_body_hash_MIME_ContentLength_Allow_Vary_Bearer_challenge_exact": 393,
+    "differences": [],
+    "representation_exclusions": [],
+    "actual_simultaneous10_source": true,
+    "actual_simultaneous10_native_same_source_hash": true,
+    "source_burst_not_staggered": true,
+    "eight_actual_PG_Redis_HTTP_tests": true,
+    "one_bounded_formatter_test": true,
+    "strict_frozen_store_all_target_clippy": true,
+    "native_sql_baseline_ordinary_get_exact": 201,
+    "real_cached_shared_UI_auth": true,
+    "held_error_finalclone_and_waiter_cancel_expiry_shutdown": {
+      "passed": true,
+      "scope": "Actual independent HTTP body frames and direct handler abort with realPG/Redis; TCP representation proof is separate ordinary-http.json",
+      "unauthorized_error_frame_lastclone_keeps_slot": true,
+      "expired_waiter_did_not_authenticate_or_start_SQL": true,
+      "cancelled_waiter_returned_input_and_queue_lease": true,
+      "shutdown_woke_queued_request_without_SQL": true,
+      "cancelled_handler_keeps_http_and_vod_slots_through_cache_logical_timeout": true,
+      "all_slots_and_memory_return_after_actual_reply": true
+    },
+    "workers_drained": true,
+    "memory_returned": true
+  },
+  "limits": {
+    "active_reads": 2,
+    "total_configured_memory_bytes": 201326592,
+    "work_reservation_bytes": 54525952,
+    "response_reservation_bytes": 16777216,
+    "waiter_count_cap": 256,
+    "queued_input_budget_bytes": 16777216,
+    "input_per_waiter_cap_bytes": 65536,
+    "queued_input_budget_source": "Unallocated remainder after both configured active work+response reservations, capped16MiB; no memory-budget increase",
+    "arrival_deadline_seconds": 5,
+    "statement_deadline_seconds": 3,
+    "error_document_cap_bytes": 65536
+  },
+  "public_api": {
+    "types": [
+      "VodReads",
+      "VodReadLimits"
+    ],
+    "new": "VodReads::new(auth.clone(), VodReadLimits::default()) -> Result<Self, StoreError>",
+    "router": "router(&self) -> Router",
+    "shutdown": "shutdown(&self, Duration) -> bool"
+  },
+  "route_scope": [
+    "/api/vod/movies/",
+    "/api/vod/movies/{pk}/",
+    "/api/vod/series/",
+    "/api/vod/series/{pk}/",
+    "/api/vod/episodes/",
+    "/api/vod/episodes/{pk}/"
+  ],
+  "retained_failures": [
+    {
+      "evidence": "artifacts/rust/m5-vod-rest-native-http-3",
+      "reason": "New negative/zero indent6 representations differed; original treats clampedzero as compact; corrected selector,7other tests passed, cleanup complete"
+    },
+    {
+      "evidence": "artifacts/rust/m5-vod-rest-native-http-4",
+      "reason": "Real Source simultaneous10 all200; native2x200/8x503 under try-acquisition. Bounded queue corrected without worker/memory increase; cleanup complete"
+    }
+  ],
+  "remaining": [
+    "Canonical app/security/CORS/shutdown/package/browser acceptance",
+    "Browsable HTML intentionally501; advanced media-negotiation grammar beyond corpus not generalized",
+    "Suffix/noslash routes are not registered by ordinary adapter; existing XC precedence preserved",
+    "Category/unified/provider/action/artwork routes not ordinary HTTP acceptance; provider refresh remains unmigrated",
+    "Allocator and arbitrary deep metadata amplification beyond declared row/document bounds are separate resource gates",
+    "Shared auth/cache broader affected API/package regressions beyond component proofs"
+  ],
+  "cleanup": "owned Compose project removed",
+  "application_image_verified": false,
+  "performance_verified": false,
+  "full_milestone_complete": false,
+  "comment_only_staging_deltas": {
+    "rust/crates/store/src/vod_api_projection.rs": {
+      "executed_sha256": "b809b5e597f8f7e2509ca2c7fc9d616eaeb1415823919d950534fc7526e99ac4",
+      "staged_sha256": "885b81041fb9c794f25aeb94ec234646ffeb9bc48b5e027b629f39937062492a",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_dto.rs": {
+      "executed_sha256": "d2dc77d53926606285f3cf7b9746a67a9367cbd173747b859880fa89f57b4e25",
+      "staged_sha256": "5b98f428586aa8bdf7fbd7a02c5433c60e19af2792b21cb520830efbb4effaec",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_pagination.rs": {
+      "executed_sha256": "29dd2514722a7543b1bf744a05fd47f8fa885c0fdb502ad853bb421b84e9f208",
+      "staged_sha256": "85fc85d49e3ebf1641b5cdee6d9d9977f8bd182e30ff804c89ab42494c8f3257",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_source_tests.rs": {
+      "executed_sha256": "f3df977e5f200b573a1d2e20c425922dec31b7e5c4502a144b61635c5172e242",
+      "staged_sha256": "4eab5c2bae05bd6bdf169a1c4863213e646b2677ea98609d906a40188f38a449",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_owned_read.rs": {
+      "executed_sha256": "2da1a17b550b94cbdd9cc0f2fd348e5f0cf1a9cc53af6adef83ddc46cda867b8",
+      "staged_sha256": "bd2dc5fb2497b8702e3ba33ca74383c29f8a979438a10b5df2d521474dc00028",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_sql.rs": {
+      "executed_sha256": "72b668ca8a09332052f2405caab046e8d0f898aeac1f837af8a78edba8ba3e00",
+      "staged_sha256": "8524679564ddbcbb197852a04334bba1b3cdc90fc0732b0c209da4cbd6e35d2a",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_read_component.rs": {
+      "executed_sha256": "251113a8181e7b53ff0a99ba16e11e987286749dca690df2d50eb6cef2598a1f",
+      "staged_sha256": "83afcbaab0f1ed7512c4f503fba0e25d5a86087a493f6717784acddbec5ac08b",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_category_seed.rs": {
+      "executed_sha256": "a0fbbf5c4a4bc30b9547fec51011e907be73368e4b4dda758484c108b6a3f06e",
+      "staged_sha256": "275bd1c9b64baa849b1e68b7b4655a334edc9e3ac6d309cb0fd55816dbb5ffdb",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_query.rs": {
+      "executed_sha256": "a6a96468edf2524967fb63834862d23e44aaf06faa13c6bafe69cff1a7205c0b",
+      "staged_sha256": "7bc2728739df443d72beac93622629240b416c69ba8333fc5973f7c65d39b92a",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/vod_api_native_tests.rs": {
+      "executed_sha256": "c54b5531ed0a5de59c8e90c17f29b436c62925bfef46b56b1b5c9e8aa30f7f00",
+      "staged_sha256": "0fc387668e5ef2300fc993ea8c7a608a47df32fff3853ea131e4af2f32c1c0d7",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    },
+    "rust/crates/store/src/lib.rs": {
+      "executed_sha256": "81367fe90de005fe11f8427dd1e297c66b0c60a0bcdb92e748a0fc747227a544",
+      "staged_sha256": "77e6bd42917e8d2ae689b1a48aafbde5e54269c34fde5839b48160028453cbaa",
+      "delta": "Comments only, mechanically checked line diff; no functions/types/constants changed."
+    }
+  },
+  "main_hook_validation": {
+    "scope": "App compilation only; canonical packaged replay remains next gate",
+    "source": "artifacts/rust/app-vod-snapshot-1/frozen-source/rust/crates/app/src/main.rs",
+    "source_sha256": "c6980cc12ac6b4e46d2ac50648582cb252191446130db6e6f7ae36633935611e",
+    "strict_app_all_target_clippy_log": "artifacts/rust/app-vod-snapshot-1/app-clippy.log",
+    "log_sha256": "9190caa18fab8ab808ce339582459065d75dec50dd1b4abc39c2a62e12d34bcf"
+  }
+}

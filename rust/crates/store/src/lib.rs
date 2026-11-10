@@ -335,6 +335,6 @@ mod backup_jobs_status;
 
 mod epg_current_lookup;
 
-// Test-only Source VOD REST prototype; no production exports or routes.
-#[cfg(test)]
+// Bounded ordinary VOD reads; other VOD REST families remain separate gates.
 mod vod_api_draft;
+pub use vod_api_draft::{VodReads,VodReadLimits};

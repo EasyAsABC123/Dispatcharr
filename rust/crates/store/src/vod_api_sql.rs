@@ -1,7 +1,8 @@
-//! UNREGISTERED/UNCOMPILED ordinary VOD SQL draft. Original authors retain
-//! credit. No endpoint, fixture, SQL, ownership or performance gate has run.
-//! Parsed filter/search inputs are not a substitute for the still-open DRF
-//! raw-query grammar gate. Unsupported kinds fail explicitly, never empty.
+//! Source-derived ordinary VOD SQL used by bounded read routes.
+//! Original Dispatcharr authors retain all application/algorithm credit.
+//! Captured page ordering, fresh metadata schedules and physical SQL ownership
+//! have real database/HTTP validation. Query grammar beyond the captured
+//! subset remains explicit and unsupported, never a silent empty result.
 use super::{vod_api_dto::*,vod_api_owned_read::ReadError,vod_api_pagination::Page,
     vod_api_projection::Visibility};
 use serde_json::Value;
