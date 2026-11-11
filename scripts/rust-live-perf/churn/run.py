@@ -1,0 +1,160 @@
+#!/usr/bin/env python3
+"""Functional authenticated live playback fixture; no resource measurements.
+Original Dispatcharr authors retain application/algorithm credit and licensing.
+"""
+import argparse,hashlib,importlib.util,json,os,shutil,subprocess,sys,tempfile,time,uuid
+from pathlib import Path
+from workload import run as load
+from resources import Window
+from acceptance import qualify,pair
+from controller_contract import complete
+REV='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
+IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
+def module(path,name):
+ s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+
+def main():
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--repo',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--build-manifest',type=Path,required=True);p.add_argument('--viewers',type=int,nargs='+',default=[1,10,100]);p.add_argument('--action',choices=['functional'],default='functional');p.add_argument('--quiet-cue',type=Path);p.add_argument('--source-only',action='store_true');a=p.parse_args()
+ root=a.repo.resolve();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);own=Path(__file__).resolve().parent
+ manifest=json.loads(a.build_manifest.read_bytes());assert manifest['passed'];tools=out/'tools';tools.mkdir()
+ archive=subprocess.check_output(['git','-C',str(root),'archive','HEAD','docker','scripts','docs'])
+ subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(tools)],input=archive,check=True)
+ live=tools/'scripts/rust-live-perf';shutil.copytree(own,live,dirs_exist_ok=True,ignore=shutil.ignore_patterns('__pycache__'))
+ sys.path.insert(0,str(tools/'scripts/rust-integration'));integration=module(tools/'scripts/rust-integration/run.py','_m2_controlled_integration');ports=module(tools/'scripts/rust-integration/fixture_ports.py','_m2_controlled_ports')
+ plan=json.loads((live/'protocol.json').read_text())
+ plan_sha=hashlib.sha256((live/'protocol.json').read_bytes()).hexdigest()
+ if a.action in ['qualify','measure']:
+  if a.quiet_cue is None:raise ValueError('Root coordinated quiet cue required')
+  cue=json.loads(a.quiet_cue.read_text())
+  assert cue['quiet_active']is True and cue['plan_sha256']==plan_sha and cue['candidate_image']==manifest['image_id']and cue['action']==a.action
+  assert cue['boot_id']==Path('/proc/sys/kernel/random/boot_id').read_text().strip()and time.time()<cue['expires_epoch']
+ if a.action=='measure':
+  source_review=json.loads(Path(cue['Source_qualification_review']).read_text());assert source_review['passed']and source_review['protocol_sha256']==plan_sha and source_review['Native_resource_measurements']is False and source_review['windows']==3
+  assert hashlib.sha256(Path(cue['Source_qualification_review']).read_bytes()).hexdigest()==cue['Source_qualification_review_sha256']
+  source_report=json.loads(Path(cue['Source_qualification_report']).read_text());assert source_report['passed']and source_report['action']=='qualify'and source_report['protocol_sha256']==plan_sha
+  assert hashlib.sha256(Path(cue['Source_qualification_report']).read_bytes()).hexdigest()==source_review['report_sha256']
+  assert sorted(p['count']for p in source_report['phases'])==plan['viewers']and all(p['backend']=='source'and p['qualification']['passed']for p in source_report['phases'])
+  for name in ['workload.py','resources.py','acceptance.py','seed.py','protocol.json']:
+   assert source_report['tools_sha256']['scripts/rust-live-perf/'+name]==hashlib.sha256((own/name).read_bytes()).hexdigest(),name
+  assert a.viewers==plan['viewers']
+ project='dispatcharr-m2-functional-'+uuid.uuid4().hex[:10]
+ report={'passed':False,'project':project,'scope':'Original-only observer contract, no comparative or isolated performance acceptance'if a.action=='observer-smoke'else 'Isolated Original-only resource qualification; no Native resource measurements/gain'if a.action=='qualify'else 'Fixed paired authenticated live TS backend plus common PostgreSQL/Redis/origin resource comparison; no full application claim'if a.action=='measure'else 'Actual authenticated live TS functional delivery; no resource sampling','performance_verified':False,'observer_contract_only':a.action=='observer-smoke','action':a.action,'source_revision':REV,'candidate_image':manifest['image_id'],'phases':[],'protocol_sha256':hashlib.sha256((live/'protocol.json').read_bytes()).hexdigest(),'tool_base_commit':subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(),'tools_sha256':{str(x.relative_to(tools)):hashlib.sha256(x.read_bytes()).hexdigest()for x in tools.rglob('*')if x.is_file()and '__pycache__'not in x.parts}}
+ status=1
+ with integration.fixture_source(report,False,out)as tmp:
+  source=Path(tmp)/'source';source.mkdir(mode=0o755);raw=subprocess.check_output(['git','-C',str(root),'archive',REV]);assert hashlib.sha256(raw).hexdigest()=='f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff';subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(source)],input=raw,check=True);(source/'media').mkdir(exist_ok=True)
+  env=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(out),FIXTURE_SECONDS='300',FIXTURE_CODEC='h264',BENCHMARK_SHUTDOWN_DELAY='5',BENCHMARK_RETENTION_SECONDS='60',BENCHMARK_STARTUP_BEHIND='5')
+  candidate=integration.candidate_overlay(tools/'docker/compose.rust-candidate.yml',out/'candidate.yml',manifest['image_id'])
+  config={'services':{'baseline':{'cpus':1,'mem_limit':'1g'},'origin':{'cpus':2,'mem_limit':'512m'},'candidate':{'cpus':2,'mem_limit':'512m'},'source':{'image':IMAGE,'working_dir':'/app','entrypoint':['/dispatcharrpy/bin/python','/m4-perf/source_web.py'],'cpus':2,'mem_limit':'512m','environment':{'DJANGO_SECRET_KEY':'playback-fixture-only','POSTGRES_DB':'dispatcharr','POSTGRES_USER':'dispatch','POSTGRES_PASSWORD':'playback-fixture-only','POSTGRES_HOST':'baseline','POSTGRES_PORT':'5432','REDIS_HOST':'baseline','REDIS_PORT':'6379','REDIS_PASSWORD':'playback-fixture-only','DJANGO_SETTINGS_MODULE':'dispatcharr.settings','DISPATCHARR_ENV':'aio','DISPATCHARR_LOG_LEVEL':'WARNING','PYTHONDONTWRITEBYTECODE':'1','DISPATCHARR_TRUSTED_PROXIES':'none','LANG':'C.UTF-8','LC_ALL':'C.UTF-8'},'volumes':[str(source)+':/app:ro',str(tools/'scripts/rust-playback-baseline')+':/verification:ro',str(tools/'scripts/rust-m4-perf')+':/m4-perf:ro'],'tmpfs':['/data:mode=1777,size=67108864','/app/media:mode=1777,size=67108864','/tmp:mode=1777,size=134217728'],'ports':['127.0.0.1::5656','127.0.0.1::9191'],'stop_grace_period':'15s'}},'networks':{'default':{'internal':False}}}
+  overlay=out/'live.yml';overlay.write_text(json.dumps(config));portfile=out/'ports.yml';ports.write_port_overlay(portfile,{'baseline':[5656],'origin':[8080],'source':[5656,9191],'candidate':[9192]})
+  compose=['docker','compose','-p',project,'-f',str(tools/'docker/compose.rust-playback.yml'),'-f',str(candidate),'-f',str(overlay),'-f',str(portfile)]
+  def command(argv,body=None,timeout=180):return subprocess.check_output(argv,input=body,env=env,stderr=subprocess.PIPE,timeout=timeout)
+  def execute(*args,body=None,timeout=180):return command(compose+list(args),body,timeout)
+  def endpoint(name,port):return 'http://'+execute('port',name,str(port)).decode().strip()
+  import urllib.request
+  def ready(url):
+   from urllib.parse import urlsplit
+   report['readiness_path']=urlsplit(url).path
+   deadline=time.monotonic()+180
+   while time.monotonic()<deadline:
+    try:
+     with urllib.request.urlopen(url,timeout=3)as r:
+      if r.status==200:return
+    except Exception as error:
+     report['readiness_last_error']={'type':type(error).__name__,'status':getattr(error,'code',None)}
+    (out/'readiness-private.json').write_text(json.dumps({'path':report['readiness_path'],'last_error':report.get('readiness_last_error')}))
+    time.sleep(.25)
+   raise TimeoutError('HTTP readiness')
+  try:
+   execute('up','-d','baseline');base=endpoint('baseline',5656);origin=endpoint('origin',8080);ready(origin+'/stats');ready(base+'/api/core/version/');seed=json.loads((out/'seed.json').read_text());identity_raw=execute('exec','-T','-e','LIVE_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','-',body=(live/'seed.py').read_bytes());identity=json.loads(identity_raw.splitlines()[-1]);token=identity['token'];uid=str(identity['user_id'])
+   execute('exec','-T','baseline','/dispatcharrpy/bin/python','/verification/supervisor.py','control','stop');execute('up','-d','--no-deps','data-init')
+   phases=[(v,t,b)for b in (['source']if a.source_only else ['source','candidate'])for t,v in enumerate(plan['churn_schedule'],1)]
+   report['scope']=plan['scope'];report['fixture_provider_max_streams']=identity['max_streams'];report['backend_starts']={}
+   previous_backend=None
+   for viewers,trial,backend in phases:
+    if viewers not in plan['viewers']:raise ValueError('Unplanned viewers')
+    if True:
+     backend_changed=backend!=previous_backend
+     if backend_changed:
+      execute('stop','-t','15','source','candidate',timeout=60);execute('exec','-T','baseline','redis-cli','FLUSHDB');execute('up','-d','--no-deps','--force-recreate',backend);base=endpoint(backend,5656 if backend=='source'else 9192);ready(base+'/api/core/version/')
+      previous_backend=backend
+     else:
+      base=endpoint(backend,5656 if backend=='source'else 9192)
+     cid=execute('ps','-q',backend).decode().strip();inspected=json.loads(command(['docker','inspect',cid]))[0]
+     if backend=='candidate':integration.validate_candidate_image(manifest,inspected)
+     if backend_changed:report['backend_starts'][backend]={'id':cid,'started_at':inspected['State']['StartedAt']}
+     assert report['backend_starts'][backend]=={'id':cid,'started_at':inspected['State']['StartedAt']},'Backend restarted between rounds'
+     assert inspected['HostConfig']['Memory']==536870912 and inspected['HostConfig']['NanoCpus']==2000000000
+     internal='http://'+backend+(':'+str(5656 if backend=='source'else 9192))+seed['path']
+     if backend_changed:
+      primer=execute('exec','-T','baseline','ffmpeg','-hide_banner','-loglevel','error','-xerror','-progress','pipe:1','-nostats','-i',internal,'-t','3','-f','null','-',timeout=45);(out/(backend+'-'+str(viewers)+'-'+str(trial)+'-prime.log')).write_bytes(primer);prime_frames=max(int(x.split(b'=')[1])for x in primer.splitlines()if x.startswith(b'frame='));assert prime_frames>=50
+     def inspect_active(count):
+      script="local keys=redis.call('KEYS',ARGV[1]);local n=0;for _,k in ipairs(keys) do if redis.call('TYPE',k).ok=='hash' then if redis.call('HGET',k,'user_id')~=ARGV[2] then return {-1,#keys} end;n=n+1 end end;return {n,#keys}"
+      response=execute('exec','-T','baseline','redis-cli','--json','EVAL',script,'0','live:channel:'+seed['channel_uuid']+':clients:*',uid)
+      rows=json.loads(response);assert rows==[count,count],('auth metadata mismatch',backend,count,rows);return {'clients':count,'all_owned_user_id':True}
+     prime_deadline=time.monotonic()+20
+     while True:
+      try:inspect_active(0);break
+      except AssertionError:
+       if time.monotonic()>=prime_deadline:raise
+       time.sleep(.1)
+     phaseout=out/(backend+'-'+str(viewers)+'-'+str(trial))
+     window=None
+     if a.action!='functional':
+      selected={}
+      for logical,service in [('backend',backend),('infrastructure','baseline'),('origin','origin')]:
+       ident=execute('ps','-q',service).decode().strip();record=json.loads(command(['docker','inspect',ident]))[0]
+       selected[logical]={'id':ident,'limits':{'nano_cpus':record['HostConfig']['NanoCpus'],'memory_bytes':record['HostConfig']['Memory']}}
+       assert selected[logical]['limits']==plan[logical+'_limits']
+      window=Window(selected,tools,minimum_samples=8 if a.action=='observer-smoke'else 50)
+     try:phase=load(base,seed['path'],token,viewers,plan['functional_warmup_seconds']if a.action=='functional'else plan['functional_warmup_seconds']if a.action=='observer-smoke'else plan['resource_warmup_seconds'],plan['functional_measure_seconds']if a.action=='functional'else 10 if a.action=='observer-smoke'else plan['resource_measure_seconds'],phaseout,window.start if window else lambda:None,window.finish if window else lambda *args:None,inspect_active,prefix_limit=plan['decoder_prefix_bytes_per_viewer'])
+     finally:
+      if window:window.close()
+     phase.update(backend=backend,count=viewers,trial=trial,primer_frames=prime_frames,source_bound_image=inspected['Image']);assert len(phase['viewers'])==viewers
+     for index,row in enumerate(phase['viewers']):
+      assert row['status']==200 and row['requests']==1 and not row['errors']and not row['unexpected_eof']and row['measured_bytes']>0 and row['prefix_bytes']==plan['decoder_prefix_bytes_per_viewer'] and row['post_window_barrier']
+      payload=(phaseout/(str(index)+'.ts')).read_bytes();assert hashlib.sha256(payload).hexdigest()==row['prefix_sha256']
+      decoder=subprocess.run(compose+['exec','-T','baseline','ffmpeg','-hide_banner','-loglevel','error','-xerror','-progress','pipe:1','-nostats','-i','/evidence/'+phaseout.name+'/'+str(index)+'.ts','-map','0:v:0','-map','0:a:0','-t',str(plan['decoder_output_seconds']),'-f','null','-'],env=env,capture_output=True,timeout=20)
+      (phaseout/(str(index)+'.decode.stdout')).write_bytes(decoder.stdout);(phaseout/(str(index)+'.decode.stderr')).write_bytes(decoder.stderr)
+      row['decoder_exit_code']=decoder.returncode;row['decoder_stdout_sha256']=hashlib.sha256(decoder.stdout).hexdigest();row['decoder_stderr_sha256']=hashlib.sha256(decoder.stderr).hexdigest();row['decoder_probe_diagnostic_bytes']=len(decoder.stderr);decoder.check_returncode();result=decoder.stdout
+      frames=max([int(x.split(b'=')[1])for x in result.splitlines()if x.startswith(b'frame=')],default=0);row['decoder_frames']=frames;assert frames>=plan['decoder_min_video_frames']
+     deadline=time.monotonic()+plan['budgets']['cleanup_seconds']
+     while True:
+      with urllib.request.urlopen(origin+'/stats',timeout=3)as r:stats=json.load(r)
+      if stats['active']==0:break
+      if time.monotonic()>deadline:raise TimeoutError('UpstreamCleanup')
+      time.sleep(.25)
+     cleanup_script="local p='live:channel:'..ARGV[1];return {redis.call('GET',p..':owner') or '',redis.call('GET','profile_connections:'..ARGV[2]) or '0',redis.call('SCARD',p..':clients'),redis.call('HLEN',p..':metadata')}"
+     while True:
+      cleanup_rows=json.loads(execute('exec','-T','baseline','redis-cli','--json','EVAL',cleanup_script,'0',seed['channel_uuid'],str(identity['profile_id'])))
+      if cleanup_rows==['','0',0,0]:break
+      if time.monotonic()>deadline:raise TimeoutError('OwnerSlotClientMetadataCleanup')
+      time.sleep(.25)
+     inspect_active(0)
+     phase['cleanup_state']={'owner_absent':True,'provider_slots':0,'clients':0,'metadata_fields':0};phase['runtime']=report['backend_starts'][backend]
+     phase['cleanup_upstream_active']=0;phase['passed']=True
+     if a.action in ['qualify','measure']:
+      phase['qualification']=qualify(phase,plan);phase['passed']=phase['qualification']['passed']
+     report['phases'].append(phase);(out/(backend+'-'+str(viewers)+'-'+str(trial)+'.json')).write_text(json.dumps(phase,indent=2)+'\n');print(json.dumps({'backend':backend,'viewers':viewers,'trial':trial,'passed':phase['passed']}),flush=True)
+     if not phase['passed']:raise ValueError('Phase qualification failed; stop and retain')
+     if a.action=='measure':
+      paired=[p for p in report['phases']if p['count']==viewers and p['trial']==trial]
+      if len(paired)==2:
+       result=pair(next(p for p in paired if p['backend']=='source'),next(p for p in paired if p['backend']=='candidate'),plan);result.update(viewers=viewers,trial=trial,order=plan['orders'][trial-1]);report.setdefault('pairs',[]).append(result)
+       (out/'paired-progress.json').write_text(json.dumps({'pairs':report['pairs']},indent=2)+'\n');print(json.dumps({'pair_completed':result}),flush=True)
+       if not result['passed']:raise ValueError('Fixed paired budget failed; stop and retain')
+   if a.action=='measure':
+    assert a.viewers==plan['viewers'];complete(report,plan)
+    report['performance_verified']=True
+   report['passed']=True;status=0
+  except Exception as error:
+   report['error_type']=type(error).__name__
+   if isinstance(error,subprocess.CalledProcessError):(out/'failure-private.log').write_bytes(error.stderr or b'')
+   # Assertion diagnostics contain only numeric counts/fixed labels, never tokens.
+   if isinstance(error,AssertionError):report['assertion']=str(error)
+  finally:
+   try:execute('down','--volumes','--remove-orphans');report['cleanup']='owned project removed'
+   except Exception as error:report['passed']=False;status=1;report['cleanup_error']=type(error).__name__
+   if status!=0 or not report['passed']:report['performance_verified']=False
+   (out/'live-functional.json').write_text(json.dumps(report,indent=2)+'\n')
+ print(json.dumps({'passed':report['passed'],'output':str(out)}));return status
+if __name__=='__main__':raise SystemExit(main())
