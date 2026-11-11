@@ -37,11 +37,11 @@ impl HttpGate {
 /// Ordinary Movie/Series/Episode list/detail reads. Categories, unified reads,
 /// provider refresh/actions and artwork are separate capabilities, not aliases.
 #[derive(Clone)]
-pub struct VodReads {pub(super) reader:SqlReads,auth:crate::AuthService,gate:HttpGate}
+pub struct VodReads {pub(super) reader:SqlReads,auth:crate::AuthService,gate:HttpGate,image_routes:Arc<std::sync::atomic::AtomicBool>}
 impl VodReads {
     pub fn new(auth:crate::AuthService,limits:super::vod_api_owned_read::ReadLimits)->Result<Self,StoreError> {
         let reader=SqlReads::from_auth(auth.clone(),limits).map_err(|_|StoreError::Unsupported("Invalid VOD read resource limits"))?;
-        Ok(Self {reader,auth,gate:HttpGate::new(limits)?})
+        Ok(Self {reader,auth,gate:HttpGate::new(limits)?,image_routes:Arc::new(std::sync::atomic::AtomicBool::new(false))})
     }
     pub fn router(&self)->Router {router_with_gate(self.reader.clone(),self.auth.clone(),self.gate.clone())}
     #[cfg(test)]
@@ -58,13 +58,22 @@ impl VodReads {
     pub fn unified_router(&self)->Router {
         super::vod_api_unified_http::UnifiedHttp::shared(self.auth.clone(),self.reader.shared_runtime(),self.gate.clone()).router()
     }
+    /// Source-derived image/cache router sharing this exact read runtime.
+    /// Registers opt-in physical-image shutdown; app/browser gates are separate.
+    pub fn vod_image_router(&self)->Router {
+        self.image_routes.store(true,std::sync::atomic::Ordering::Release);
+        super::vod_api_images_http::ImageHttp::shared(self.auth.clone(),self.reader.shared_runtime(),self.gate.clone()).router()
+    }
     /// Provider/episode actions share this exact runtime and admission queue.
     /// App attachment and packaged browser acceptance are separate gates.
     pub fn provider_router(&self)->Router {
         super::vod_api_actions_http::ActionHttp::shared(self.auth.clone(),self.reader.shared_runtime(),self.gate.clone()).router()
     }
     /// Stops admission immediately; held body frames retain their own leases.
-    pub async fn shutdown(&self,budget:std::time::Duration)->bool {self.gate.slots.close();self.reader.shutdown(budget).await}
+    pub async fn shutdown(&self,budget:std::time::Duration)->bool {
+        self.gate.slots.close();
+        let(reads,images)=tokio::join!(self.reader.shutdown(budget),async{if self.image_routes.load(std::sync::atomic::Ordering::Acquire){self.auth.shutdown_images(budget).await}else{true}});reads&&images
+    }
 }
 pub(crate) fn options(resource:Resource,detail:bool)->Value {
     let (name,description)=match resource {Resource::Movie=>("Movie","ViewSet for Movie content"),Resource::Series=>("Series","ViewSet for Series management"),Resource::Episode=>("Episode","ViewSet for Episode content")};

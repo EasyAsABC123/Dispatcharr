@@ -1,0 +1,543 @@
+{
+  "credit": "Original Dispatcharr/Celery authors retain application/protocol credit and licenses.",
+  "source": "artifacts/rust/m6-original-default-stats-worker-2",
+  "checks": 65,
+  "defaults": [
+    {
+      "task": "celery.backend_cleanup",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "celery.backend_cleanup",
+          "id": "d290c709-3c50-4537-bb02-b7580e46b54b",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "d290c709-3c50-4537-bb02-b7580e46b54b",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen363@a965f85033ee",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "d290c709-3c50-4537-bb02-b7580e46b54b",
+          "reply_to": "3cbbec46-c94f-342d-8780-b4213824faeb",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "bc8329d9-11f9-48fc-93af-8cd7dfa4823a"
+        }
+      },
+      "source_file": "default-task-celery-backend_cleanup.py",
+      "source_sha256": "2f1839b06ba5b212f8a621881dc570bb443da2e1fe0b01bdbaf221cc57758e49",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null,
+        "max_retries": 3,
+        "time_limit": null,
+        "soft_time_limit": null
+      }
+    },
+    {
+      "task": "apps.proxy.tasks.fetch_channel_stats",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.proxy.tasks.fetch_channel_stats",
+          "id": "5588c233-1dcc-4db6-9ac4-1a70db91748d",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "5588c233-1dcc-4db6-9ac4-1a70db91748d",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen363@a965f85033ee",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "5588c233-1dcc-4db6-9ac4-1a70db91748d",
+          "reply_to": "3cbbec46-c94f-342d-8780-b4213824faeb",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "e0974a1e-a458-405f-8087-caa7827a19ca"
+        }
+      },
+      "source_file": "default-task-apps-proxy-tasks-fetch_channel_stats.py",
+      "source_sha256": "43041731923747e2555bff4e5f41abcec6c50e9ede8143ff9e299df35b3092cd",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null,
+        "max_retries": 3,
+        "time_limit": null,
+        "soft_time_limit": null
+      }
+    },
+    {
+      "task": "core.tasks.scan_and_process_files",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.scan_and_process_files",
+          "id": "f04a5558-ebfa-48e5-bd66-aa26bb3e12c0",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "f04a5558-ebfa-48e5-bd66-aa26bb3e12c0",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen363@a965f85033ee",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "f04a5558-ebfa-48e5-bd66-aa26bb3e12c0",
+          "reply_to": "3cbbec46-c94f-342d-8780-b4213824faeb",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "b871dc59-4890-4285-b757-fca7a00798c7"
+        }
+      },
+      "source_file": "default-task-core-tasks-scan_and_process_files.py",
+      "source_sha256": "6fff35a075df2726fa060ce56a54a06b5ede88e587c412fc8ad97c903096b71d",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null,
+        "max_retries": 3,
+        "time_limit": null,
+        "soft_time_limit": null
+      }
+    },
+    {
+      "task": "apps.channels.tasks.maintain_recurring_recordings",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.maintain_recurring_recordings",
+          "id": "7121fea5-aaae-4559-87e1-010516f5cc55",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "7121fea5-aaae-4559-87e1-010516f5cc55",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen363@a965f85033ee",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "7121fea5-aaae-4559-87e1-010516f5cc55",
+          "reply_to": "3cbbec46-c94f-342d-8780-b4213824faeb",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "597a0384-df0d-4891-806d-df9472772775"
+        }
+      },
+      "source_file": "default-task-apps-channels-tasks-maintain_recurring_recordings.py",
+      "source_sha256": "a42d31ddb880654159ee887919d8863c445e9fe62caac36fe7261d5fb886de71",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null,
+        "max_retries": 3,
+        "time_limit": null,
+        "soft_time_limit": null
+      }
+    },
+    {
+      "task": "core.tasks.check_for_version_update",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.check_for_version_update",
+          "id": "7bcd200f-2a7f-4d7a-8df9-b37c8429a844",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "7bcd200f-2a7f-4d7a-8df9-b37c8429a844",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen363@a965f85033ee",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "7bcd200f-2a7f-4d7a-8df9-b37c8429a844",
+          "reply_to": "3cbbec46-c94f-342d-8780-b4213824faeb",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "d2580c50-7d47-4966-abf3-99f6042f2d3e"
+        }
+      },
+      "source_file": "default-task-core-tasks-check_for_version_update.py",
+      "source_sha256": "0eb9d89ae4c736a41ba37a84dcf6d78ca440bf308ac0b8de454a285539e08671",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null,
+        "max_retries": 3,
+        "time_limit": null,
+        "soft_time_limit": null
+      }
+    },
+    {
+      "task": "apps.m3u.tasks.check_account_expirations",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.check_account_expirations",
+          "id": "45e028c1-f9f8-46f9-89d0-895ce12c4daa",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "45e028c1-f9f8-46f9-89d0-895ce12c4daa",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen363@a965f85033ee",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "45e028c1-f9f8-46f9-89d0-895ce12c4daa",
+          "reply_to": "3cbbec46-c94f-342d-8780-b4213824faeb",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "25c98bca-65e0-4cae-be23-6a17164edf1d"
+        }
+      },
+      "source_file": "default-task-apps-m3u-tasks-check_account_expirations.py",
+      "source_sha256": "332ec6ee1dc7ce79d6efc088673f0fa9923e62ecd7fa9959b355c7b9fdc32d1a",
+      "attributes": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "reject_on_worker_lost": null,
+        "max_retries": 3,
+        "time_limit": null,
+        "soft_time_limit": null
+      }
+    }
+  ],
+  "stats_cases": [
+    {
+      "name": "empty",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T03:52:55.357054+00:00",
+        "task_id": "4186e04d-1998-428b-9ac3-8eea154a4651"
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "success": true,
+            "type": "channel_stats",
+            "stats": "{\"channels\": [], \"count\": 0}"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_default_stats!receiver"
+          ]
+        }
+      ],
+      "stats": {
+        "channels": [],
+        "count": 0
+      },
+      "queue_count": 0,
+      "unacked_count": 0
+    },
+    {
+      "name": "static-live-client",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T03:52:55.464871+00:00",
+        "task_id": "9597b4ef-bdb3-4bbb-a28c-d3ce5a0a9361"
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "success": true,
+            "type": "channel_stats",
+            "stats": "{\"channels\": [{\"channel_id\": \"rust-owned-stats\", \"state\": \"active\", \"url\": \"http://owned.invalid/fixture\", \"stream_profile\": \"owned\", \"owner\": \"owned-fixture\", \"buffer_index\": 0, \"client_count\": 1, \"uptime\": 0, \"started_at\": null, \"channel_name\": \"Owned fixture\", \"total_bytes\": 188, \"clients\": [{\"client_id\": \"owned-client\", \"user_agent\": \"Owned fixture\", \"output_format\": \"mpegts\", \"ip_address\": \"192.0.2.1\", \"user_id\": \"0\", \"output_profile_id\": null}]}], \"count\": 1}"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_default_stats!receiver"
+          ]
+        }
+      ],
+      "stats": {
+        "channels": [
+          {
+            "channel_id": "rust-owned-stats",
+            "state": "active",
+            "url": "http://owned.invalid/fixture",
+            "stream_profile": "owned",
+            "owner": "owned-fixture",
+            "buffer_index": 0,
+            "client_count": 1,
+            "uptime": 0,
+            "started_at": null,
+            "channel_name": "Owned fixture",
+            "total_bytes": 188,
+            "clients": [
+              {
+                "client_id": "owned-client",
+                "user_agent": "Owned fixture",
+                "output_format": "mpegts",
+                "ip_address": "192.0.2.1",
+                "user_id": "0",
+                "output_profile_id": null
+              }
+            ]
+          }
+        ],
+        "count": 1
+      },
+      "queue_count": 0,
+      "unacked_count": 0
+    },
+    {
+      "name": "ghost-client",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T03:52:55.564693+00:00",
+        "task_id": "44b48ef4-068b-4183-8dae-f8f7809048dc"
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "success": true,
+            "type": "channel_stats",
+            "stats": "{\"channels\": [{\"channel_id\": \"rust-owned-stats\", \"state\": \"active\", \"url\": \"http://owned.invalid/fixture\", \"stream_profile\": \"owned\", \"owner\": \"owned-fixture\", \"buffer_index\": 0, \"client_count\": 0, \"uptime\": 0, \"started_at\": null, \"channel_name\": \"Owned fixture\", \"total_bytes\": 188, \"clients\": []}], \"count\": 1}"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_default_stats!receiver"
+          ]
+        }
+      ],
+      "stats": {
+        "channels": [
+          {
+            "channel_id": "rust-owned-stats",
+            "state": "active",
+            "url": "http://owned.invalid/fixture",
+            "stream_profile": "owned",
+            "owner": "owned-fixture",
+            "buffer_index": 0,
+            "client_count": 0,
+            "uptime": 0,
+            "started_at": null,
+            "channel_name": "Owned fixture",
+            "total_bytes": 188,
+            "clients": []
+          }
+        ],
+        "count": 1
+      },
+      "queue_count": 0,
+      "unacked_count": 0
+    },
+    {
+      "name": "wrongtype-metadata",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T03:52:55.709063+00:00",
+        "task_id": "2e06bd06-7093-41cf-81c7-9bde58c508a7"
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "success": true,
+            "type": "channel_stats",
+            "stats": "{\"channels\": [], \"count\": 0}"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_default_stats!receiver"
+          ]
+        }
+      ],
+      "stats": {
+        "channels": [],
+        "count": 0
+      },
+      "queue_count": 0,
+      "unacked_count": 0
+    },
+    {
+      "name": "invalid-buffer-index",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T03:52:55.856626+00:00",
+        "task_id": "cf86caef-22eb-4a15-a52d-034ebada7384"
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "success": true,
+            "type": "channel_stats",
+            "stats": "{\"channels\": [], \"count\": 0}"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_default_stats!receiver"
+          ]
+        }
+      ],
+      "stats": {
+        "channels": [],
+        "count": 0
+      },
+      "queue_count": 0,
+      "unacked_count": 0
+    },
+    {
+      "name": "group-send-wrongtype",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T03:52:55.974168+00:00",
+        "task_id": "2468d586-4d74-4a03-8305-334e62f731a9"
+      },
+      "events": [],
+      "stats": null,
+      "queue_count": 0,
+      "unacked_count": 0
+    }
+  ]
+}

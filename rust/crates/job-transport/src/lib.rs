@@ -75,3 +75,13 @@ pub mod scheduled_refresh_driver;
 pub mod database_schedule;
 
 mod periodic_headers;
+
+#[cfg(test)]
+mod stats_protocol;
+#[cfg(test)]
+mod stats_worker;
+#[cfg(test)]
+mod stats_peer;
+
+#[cfg(test)]
+mod stats_resources;

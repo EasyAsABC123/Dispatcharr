@@ -20,7 +20,7 @@ use std::{
     },
     time::{Duration, Instant},
 };
-use tokio::sync::{OwnedSemaphorePermit, Semaphore};
+use tokio::sync::{oneshot, Notify, OwnedSemaphorePermit, Semaphore};
 /// Preserve explicit original raw-image MIME through generic app defaults.
 #[derive(Clone, Debug)]
 pub struct SourceImageResponse;
@@ -33,6 +33,25 @@ pub(crate) struct ImageRuntime {
     waiting: Arc<Semaphore>,
     memory: Arc<AtomicUsize>,
     failures: Arc<Mutex<HashMap<String, Instant>>>,
+    lifecycle: Arc<Mutex<ImageLifecycle>>,
+    drained: Arc<Notify>,
+}
+#[derive(Default)]
+struct ImageLifecycle {
+    closing: bool,
+    physical: usize,
+}
+struct ImageWork {
+    lifecycle: Arc<Mutex<ImageLifecycle>>,
+    drained: Arc<Notify>,
+}
+impl Drop for ImageWork {
+    fn drop(&mut self) {
+        if let Ok(mut state) = self.lifecycle.lock() {
+            state.physical -= 1;
+        }
+        self.drained.notify_waiters();
+    }
 }
 impl ImageRuntime {
     pub(crate) fn new() -> Self {
@@ -41,6 +60,8 @@ impl ImageRuntime {
             waiting: Arc::new(Semaphore::new(64)),
             memory: Arc::new(AtomicUsize::new(0)),
             failures: Arc::new(Mutex::new(HashMap::new())),
+            lifecycle: Arc::new(Mutex::new(ImageLifecycle::default())),
+            drained: Arc::new(Notify::new()),
         }
     }
     pub(crate) async fn reserve(&self) -> Result<OwnedSemaphorePermit, StoreError> {
@@ -59,8 +80,51 @@ impl ImageRuntime {
             .map_err(|_| busy())
     }
 
+    fn begin(&self) -> Result<Arc<ImageWork>, StoreError> {
+        let mut state = self
+            .lifecycle
+            .lock()
+            .map_err(|_| StoreError::StatusBody(503, json!({"detail":"Image service busy."})))?;
+        if state.closing {
+            return Err(StoreError::StatusBody(
+                503,
+                json!({"detail":"Image service busy."}),
+            ));
+        }
+        state.physical += 1;
+        Ok(Arc::new(ImageWork {
+            lifecycle: self.lifecycle.clone(),
+            drained: self.drained.clone(),
+        }))
+    }
+    async fn shutdown(&self, budget: Duration) -> bool {
+        {
+            let Ok(mut state) = self.lifecycle.lock() else {
+                return false;
+            };
+            state.closing = true;
+            self.slots.close();
+            self.waiting.close();
+        }
+        tokio::time::timeout(budget, async {
+            loop {
+                let notified = self.drained.notified();
+                if self
+                    .lifecycle
+                    .lock()
+                    .map(|state| state.physical == 0)
+                    .unwrap_or(false)
+                {
+                    break;
+                }
+                notified.await;
+            }
+        })
+        .await
+        .is_ok()
+    }
     fn resources(&self) -> Value {
-        json!({"admitted":4-self.slots.available_permits(),"waiting":64-self.waiting.available_permits(),"max_admitted":4,"max_waiting":64,"retained_response_bytes":self.memory.load(Ordering::Relaxed),"negative_entries":self.failures.lock().map(|v|v.len()).unwrap_or(0)})
+        json!({"physical_work":self.lifecycle.lock().ok().map(|state|state.physical),"admitted":4-self.slots.available_permits(),"waiting":64-self.waiting.available_permits(),"max_admitted":4,"max_waiting":64,"retained_response_bytes":self.memory.load(Ordering::Relaxed),"negative_entries":self.failures.lock().map(|v|v.len()).unwrap_or(0)})
     }
     fn remember(&self, url: &str) {
         let Ok(mut cache) = self.failures.lock() else {
@@ -108,18 +172,39 @@ impl AuthService {
     }
     /// Source core.image_proxy response. The route remains responsible for
     /// authentication and selecting the authorized image URL.
+    /// Close shared image admission and wait for owned I/O, not held completed
+    /// byte frames. This is opt-in at the VOD image router's service shutdown.
+    pub async fn shutdown_images(&self, budget: Duration) -> bool {
+        self.images.shutdown(budget).await
+    }
     pub async fn image_response(&self, url: &str) -> Result<Response, StoreError> {
         if url.is_empty() {
             return Err(missing("Image not found"));
         }
-        let permit = self.images.reserve().await?;
-        if url.starts_with("/data") {
-            return local(url.to_owned(), permit, self.images.memory.clone()).await;
-        }
-        if !url.starts_with("http://") && !url.starts_with("https://") {
-            return Err(missing("Image not found"));
-        }
-        remote(self, url, permit).await
+        let permit = Arc::new(self.images.reserve().await?);
+        let work = self.images.begin()?;
+        let scoped = self
+            .clone()
+            .with_retained_scope(Arc::new((permit.clone(), work.clone())));
+        let url = url.to_owned();
+        let (sender, receiver) = oneshot::channel();
+        // The existing four image slots bound this owned operation. Caller
+        // cancellation never orphans cache/SQL/HTTP or a queued file opener.
+        tokio::spawn(async move {
+            let result = if url.starts_with("/data") {
+                local(url, permit, scoped.images.memory.clone(), work.clone()).await
+            } else if !url.starts_with("http://") && !url.starts_with("https://") {
+                Err(missing("Image not found"))
+            } else {
+                remote(&scoped, &url, permit).await
+            };
+            let _ = sender.send(result);
+            drop(scoped);
+            drop(work);
+        });
+        receiver
+            .await
+            .map_err(|_| missing("Error fetching remote image"))?
     }
 }
 fn missing(message: &str) -> StoreError {
@@ -319,10 +404,17 @@ fn local_error() -> Response {
     );
     response
 }
+struct LocalFile {
+    file: std::fs::File,
+    permit: Arc<OwnedSemaphorePermit>,
+    memory: Arc<AtomicUsize>,
+    _work: Arc<ImageWork>,
+}
 async fn local(
     url: String,
-    permit: OwnedSemaphorePermit,
+    permit: Arc<OwnedSemaphorePermit>,
     memory: Arc<AtomicUsize>,
+    work: Arc<ImageWork>,
 ) -> Result<Response, StoreError> {
     let safe = tokio::task::spawn_blocking(move || {
         let root = std::fs::canonicalize("/data/logos").ok()?;
@@ -333,26 +425,47 @@ async fn local(
     .ok()
     .flatten()
     .ok_or_else(|| missing("Image not found"))?;
-    let file = match tokio::fs::File::open(&safe).await {
-        Ok(v) => v,
-        Err(_) => return Ok(local_error()),
-    };
-    let metadata = match file.metadata().await {
-        Ok(v) if !v.is_dir() => v,
+    // The enclosing owned image operation survives caller cancellation while
+    // open/metadata complete. No new blocking pool or image budget is created.
+    let path = safe.clone();
+    let opened = tokio::task::spawn_blocking(move || {
+        let file = std::fs::File::open(path)?;
+        let metadata = file.metadata()?;
+        Ok::<_, std::io::Error>((file, metadata))
+    })
+    .await;
+    let (file, metadata) = match opened {
+        Ok(Ok((file, metadata))) if !metadata.is_dir() => (file, metadata),
         _ => return Ok(local_error()),
     };
     let mime = mime_guess::from_path(&safe)
         .first_raw()
         .unwrap_or("image/jpeg");
-    let permit = Arc::new(permit);
-    let stream = tokio_util::io::ReaderStream::with_capacity(file, 8192).map(move |frame| {
-        frame.map(|bytes| {
-            Bytes::from_owner(Retained::new(
-                bytes.to_vec(),
-                permit.clone(),
-                memory.clone(),
-            ))
+    let state = LocalFile {
+        file,
+        permit,
+        memory,
+        _work: work,
+    };
+    let stream = futures_util::stream::try_unfold(state, |mut state| async move {
+        let result = tokio::task::spawn_blocking(move || {
+            let mut bytes = vec![0; 8192];
+            let size = std::io::Read::read(&mut state.file, &mut bytes)?;
+            bytes.truncate(size);
+            Ok::<_, std::io::Error>((state, bytes))
         })
+        .await
+        .map_err(std::io::Error::other)??;
+        let (state, bytes) = result;
+        if bytes.is_empty() {
+            return Ok::<_, std::io::Error>(None);
+        }
+        let retained = Bytes::from_owner(Retained::new(
+            bytes,
+            state.permit.clone(),
+            state.memory.clone(),
+        ));
+        Ok(Some((retained, state)))
     });
     let mut response = Body::from_stream(stream).into_response();
     response.extensions_mut().insert(SourceImageResponse);
@@ -437,7 +550,7 @@ async fn user_agent(auth: &AuthService) -> Result<String, StoreError> {
 async fn remote(
     auth: &AuthService,
     url: &str,
-    permit: OwnedSemaphorePermit,
+    permit: Arc<OwnedSemaphorePermit>,
 ) -> Result<Response, StoreError> {
     if auth.images.failed(url) {
         return Err(missing("Remote image temporarily unavailable"));
@@ -534,7 +647,7 @@ async fn remote(
         let length = bytes.len();
         let mut response = Body::from(Bytes::from_owner(Retained::new(
             bytes,
-            Arc::new(permit),
+            permit,
             auth.images.memory.clone(),
         )))
         .into_response();

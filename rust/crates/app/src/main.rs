@@ -700,6 +700,7 @@ async fn run() -> Result<(), String> {
         .merge(vod_reads.category_router())
         .merge(vod_reads.unified_router())
         .merge(vod_reads.provider_router())
+        .merge(vod_reads.vod_image_router())
         .merge(grid.clone().router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))

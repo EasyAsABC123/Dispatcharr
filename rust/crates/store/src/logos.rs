@@ -31,7 +31,7 @@ pub(crate) fn params(uri: &Uri) -> Vec<(String, String)> {
 }
 // .isdigit() includes non-decimal superscripts; int() then raises and the
 // original queryset becomes empty. Negative and wholly invalid IDs are ignored.
-fn ids(values: impl Iterator<Item = String>) -> Option<Vec<String>> {
+pub(crate) fn ids(values: impl Iterator<Item = String>) -> Option<Vec<String>> {
     static DIGITS: OnceLock<HashMap<u32, Option<u8>>> = OnceLock::new();
     let digits = DIGITS.get_or_init(|| {
         serde_json::from_str::<Vec<(u32, Option<u8>)>>(include_str!(

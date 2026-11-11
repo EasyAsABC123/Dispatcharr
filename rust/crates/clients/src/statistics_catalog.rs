@@ -35,6 +35,22 @@ impl ClientStore {
         &self,
         cursor: u64,
     ) -> Result<ChannelStatisticsPage, Error> {
+        self.statistics_page_owned(cursor, None).await
+    }
+    /// Additive task scope: retain the caller through the actual supervised Lua
+    /// reply even if this request returns its logical timeout first.
+    pub async fn channel_statistics_page_retained(
+        &self,
+        cursor: u64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<ChannelStatisticsPage, Error> {
+        self.statistics_page_owned(cursor, Some(caller)).await
+    }
+    async fn statistics_page_owned(
+        &self,
+        cursor: u64,
+        retained: Option<Arc<dyn Send + Sync>>,
+    ) -> Result<ChannelStatisticsPage, Error> {
         let budget = time::timeout(
             self.inner.config.command_timeout,
             self.inner
@@ -47,6 +63,7 @@ impl ClientStore {
         .map_err(|_| Error::Stopped)?;
         let maximum = self.inner.config.max_clients;
         era::supervised(self.inner.clone(),move|mut connection|async move {
+            let _retained = retained;
             let (next,examined,payload_bytes,rows):(u64,usize,usize,Vec<Row>)=Script::new(PAGE)
                 .arg(cursor).arg(PAGE_BYTES).arg(maximum).invoke_async(&mut connection).await.map_err(|_|Error::RedisUnavailable)?;
             let mut records=Vec::with_capacity(rows.len());
@@ -270,4 +287,28 @@ mod tests {
         .unwrap();
         store.shutdown().await;
     }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    #[ignore = "owned Redis physical reply retention; serial CLIENT PAUSE"]
+    async fn retained_catalog_scope_survives_abort_and_logical_timeout_until_actual_reply() {
+        let url = std::env::var("REDIS_TEST_URL").unwrap();
+        let config = ClientConfig { command_timeout: Duration::from_millis(50), ..ClientConfig::default() };
+        let store = ClientStore::connect(&url, config).await.unwrap();
+        let mut control = redis::Client::open(url).unwrap().get_multiplexed_async_connection().await.unwrap();
+        for abort in [true, false] {
+            let _: String = redis::cmd("CLIENT").arg("PAUSE").arg(500).query_async(&mut control).await.unwrap();
+            let caller = Arc::new(());
+            let weak = Arc::downgrade(&caller);
+            let owned = store.clone();
+            let task = tokio::spawn(async move { owned.channel_statistics_page_retained(0, caller).await });
+            time::sleep(Duration::from_millis(20)).await;
+            if abort { task.abort(); let _ = task.await; }
+            else { assert!(task.await.unwrap().is_err()); }
+            assert!(weak.upgrade().is_some(), "task scope must remain in actual Lua worker");
+            assert_eq!(store.inner.statistics_bytes.available_permits(), 3 * PAGE_BYTES);
+            time::timeout(Duration::from_secs(3), async { while weak.upgrade().is_some() { time::sleep(Duration::from_millis(5)).await; } }).await.unwrap();
+            assert_eq!(store.inner.statistics_bytes.available_permits(), 4 * PAGE_BYTES);
+        }
+        store.shutdown().await;
+    }
+
 }

@@ -1,5 +1,8 @@
 //! Fixture-authorized publisher/result reader; no consumer or application route.
 //! Original Dispatcharr authors retain application credit and AGPL licensing.
+#[cfg(test)]
+#[path = "stats_transport.rs"]
+mod stats_transport;
 use crate::{
     decode::{self, Metadata},
     protocol::{self, Published, Task},

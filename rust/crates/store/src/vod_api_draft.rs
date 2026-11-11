@@ -90,3 +90,19 @@ mod vod_api_provider_info_read;
 #[cfg(test)]
 #[path="vod_api_provider_info_peer.rs"]
 mod vod_api_provider_info_peer;
+
+#[path="vod_api_images_resolve.rs"]
+mod vod_api_images_resolve;
+
+#[path="vod_api_images_sql.rs"]
+mod vod_api_images_sql;
+
+#[path="vod_api_images_read.rs"]
+mod vod_api_images_read;
+
+#[path="vod_api_images_http.rs"]
+mod vod_api_images_http;
+
+#[cfg(test)]
+#[path="vod_api_images_peer.rs"]
+mod vod_api_images_peer;

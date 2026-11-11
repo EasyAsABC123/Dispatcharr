@@ -23,6 +23,20 @@ impl StreamEngine {
             .and_then(Weak::upgrade)
     }
     pub async fn global_live_statistics(&self) -> Result<Value, PlaybackError> {
+        self.global_statistics_owned(None).await
+    }
+    /// Same global scanner, with an additive task owner retained by every
+    /// actual client-catalog Lua command after a logical timeout/caller abort.
+    pub async fn global_live_statistics_retained(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Value, PlaybackError> {
+        self.global_statistics_owned(Some(caller)).await
+    }
+    async fn global_statistics_owned(
+        &self,
+        retained: Option<Arc<dyn Send + Sync>>,
+    ) -> Result<Value, PlaybackError> {
         let Some(store) = &self.inner.clients else {
             return Ok(json!({"channels":[],"count":0}));
         };
@@ -32,9 +46,10 @@ impl StreamEngine {
         let mut examined = 0usize;
         let mut bytes = 0usize;
         loop {
-            let page = store
-                .channel_statistics_page(cursor)
-                .await
+            let page = match retained.as_ref() {
+                Some(caller) => store.channel_statistics_page_retained(cursor, caller.clone()).await,
+                None => store.channel_statistics_page(cursor).await,
+            }
                 .map_err(|_| PlaybackError::new(503, "Live metadata unavailable"))?;
             pages += 1;
             examined = examined.saturating_add(page.examined);
