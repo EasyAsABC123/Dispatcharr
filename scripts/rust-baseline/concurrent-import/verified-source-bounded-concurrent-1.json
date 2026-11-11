@@ -1,0 +1,1053 @@
+{
+  "passed": true,
+  "scope": "ONE complete positive Original concurrent playback+real normal import workflow with bounded collector; no workload resource window/gain/Native/M0 closure.",
+  "M0_complete": false,
+  "resource_acceptance": false,
+  "Native_enabled": false,
+  "resource_execution_hardblocked": true,
+  "policy_sha256": "a157a8e8aa5f36a147a9afe3f90fcf1b21fcdcc3e83711e526105ea1ac1154ff",
+  "pre_execution_seal_sha256": "9c8b48741fb59e6d21a8b26a5df9c2cbbbea6b93220a667525b9006b96d558ef",
+  "captured_source_hashes_match_preseal": true,
+  "offline_controls": 14,
+  "real_worker_task_executions": 6,
+  "durable_checks": 44,
+  "workflow_checks": [
+    {
+      "name": "event-subscriber-ready",
+      "passed": true
+    },
+    {
+      "name": "import1-scheduled",
+      "passed": true
+    },
+    {
+      "name": "import1-viewer-active",
+      "passed": true
+    },
+    {
+      "name": "guide-not-expired",
+      "passed": true
+    },
+    {
+      "name": "import1-http202",
+      "passed": true
+    },
+    {
+      "name": "import1-all-three-normal",
+      "passed": true
+    },
+    {
+      "name": "import1-two-result-children",
+      "passed": true
+    },
+    {
+      "name": "resultTTL1-apps.epg.tasks.refresh_epg_data",
+      "passed": true
+    },
+    {
+      "name": "result1-apps.epg.tasks.refresh_epg_data",
+      "passed": true
+    },
+    {
+      "name": "resultTTL1-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "result1-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "resultTTL1-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "result1-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "import1-stored-index",
+      "passed": true
+    },
+    {
+      "name": "import1-source-success",
+      "passed": true
+    },
+    {
+      "name": "import1-programme",
+      "passed": true
+    },
+    {
+      "name": "import1-current-and-guide",
+      "passed": true
+    },
+    {
+      "name": "import1-queue-and-locks-drained",
+      "passed": true
+    },
+    {
+      "name": "import1-child-parent-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "import1-child-parent-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "import1-realtime-refresh",
+      "passed": true
+    },
+    {
+      "name": "import2-scheduled",
+      "passed": true
+    },
+    {
+      "name": "import2-viewer-active",
+      "passed": true
+    },
+    {
+      "name": "guide-not-expired",
+      "passed": true
+    },
+    {
+      "name": "import2-http202",
+      "passed": true
+    },
+    {
+      "name": "import2-all-three-normal",
+      "passed": true
+    },
+    {
+      "name": "import2-two-result-children",
+      "passed": true
+    },
+    {
+      "name": "resultTTL2-apps.epg.tasks.refresh_epg_data",
+      "passed": true
+    },
+    {
+      "name": "result2-apps.epg.tasks.refresh_epg_data",
+      "passed": true
+    },
+    {
+      "name": "resultTTL2-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "result2-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "resultTTL2-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "result2-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "import2-stored-index",
+      "passed": true
+    },
+    {
+      "name": "import2-source-success",
+      "passed": true
+    },
+    {
+      "name": "import2-programme",
+      "passed": true
+    },
+    {
+      "name": "import2-current-and-guide",
+      "passed": true
+    },
+    {
+      "name": "import2-queue-and-locks-drained",
+      "passed": true
+    },
+    {
+      "name": "import2-child-parent-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "import2-child-parent-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "import2-realtime-refresh",
+      "passed": true
+    },
+    {
+      "name": "only-three-owned-families-executed",
+      "passed": true
+    },
+    {
+      "name": "recordings-unchanged",
+      "passed": true
+    },
+    {
+      "name": "event-reader-no-errors",
+      "passed": true
+    }
+  ],
+  "imports": [
+    {
+      "iteration": 1,
+      "http": {
+        "status": 202,
+        "body": {
+          "success": true,
+          "message": "EPG data refresh initiated."
+        }
+      },
+      "completed": [
+        {
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "eb006551-8f52-4b0c-a38a-bb9022396d7c",
+          "state": "SUCCESS",
+          "result": null,
+          "monotonic": 153196.590962705,
+          "wall": 1794432801.545457
+        },
+        {
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "f44f38d2-e979-4e0c-ae04-7f57bf605d8d",
+          "state": "SUCCESS",
+          "result": null,
+          "monotonic": 153196.652115161,
+          "wall": 1794432801.6066093
+        },
+        {
+          "task": "apps.channels.tasks.evaluate_series_rules",
+          "id": "42706617-748e-4224-9d27-064cacbe73f0",
+          "state": "SUCCESS",
+          "result": {
+            "scheduled": 0,
+            "details": []
+          },
+          "monotonic": 153196.659925522,
+          "wall": 1794432801.6144192
+        }
+      ],
+      "source_status": "success",
+      "stored_index": {
+        "channels": {
+          "workflow-owned": [
+            86
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "file_sha256": "35b118a5a8dc9a31f73d0b457967cc644ec2261bfeca314d7feba713f5060153",
+      "current": [
+        {
+          "id": 1,
+          "start_time": "2026-11-11T21:17:36Z",
+          "end_time": "2026-11-11T23:32:36Z",
+          "title": "Owned first import",
+          "sub_title": null,
+          "description": null,
+          "tvg_id": "workflow-owned",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "channel_uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1"
+        }
+      ],
+      "programmes": [
+        {
+          "id": 1,
+          "start_time": "2026-11-11T21:17:36Z",
+          "end_time": "2026-11-11T23:32:36Z",
+          "title": "Owned first import",
+          "sub_title": null,
+          "description": null,
+          "tvg_id": "workflow-owned",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "http": {
+        "status": 202,
+        "body": {
+          "success": true,
+          "message": "EPG data refresh initiated."
+        }
+      },
+      "completed": [
+        {
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "4a40e06f-c27b-44e5-a1c2-cc16c2a209e3",
+          "state": "SUCCESS",
+          "result": null,
+          "monotonic": 153251.405421167,
+          "wall": 1794432856.3599148
+        },
+        {
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "36e812ba-ddc7-47af-8c42-179c8a31f995",
+          "state": "SUCCESS",
+          "result": null,
+          "monotonic": 153251.45590945,
+          "wall": 1794432856.4104033
+        },
+        {
+          "task": "apps.channels.tasks.evaluate_series_rules",
+          "id": "6c95b18a-5ae3-46dc-8236-19b2f8604bb2",
+          "state": "SUCCESS",
+          "result": {
+            "scheduled": 0,
+            "details": []
+          },
+          "monotonic": 153251.457370512,
+          "wall": 1794432856.411864
+        }
+      ],
+      "source_status": "success",
+      "stored_index": {
+        "channels": {
+          "workflow-owned": [
+            86
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "file_sha256": "62e17c20e06e28c879e3efd36e87bcd4d3942de90d2ffc9ff8c5a31bda350f10",
+      "current": [
+        {
+          "id": 2,
+          "start_time": "2026-11-11T21:17:36Z",
+          "end_time": "2026-11-11T23:32:36Z",
+          "title": "Owned second import",
+          "sub_title": null,
+          "description": null,
+          "tvg_id": "workflow-owned",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "channel_uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1"
+        }
+      ],
+      "programmes": [
+        {
+          "id": 2,
+          "start_time": "2026-11-11T21:17:36Z",
+          "end_time": "2026-11-11T23:32:36Z",
+          "title": "Owned second import",
+          "sub_title": null,
+          "description": null,
+          "tvg_id": "workflow-owned",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false
+        }
+      ]
+    }
+  ],
+  "normal_collector_witness": {
+    "normal_capacity_marker_absent": true,
+    "worker_journal_budget": {
+      "records": 16,
+      "bytes": 5887
+    },
+    "worker_journal_counts": {
+      "prerun": 6,
+      "postrun": 6,
+      "published": 4
+    },
+    "worker_aggregate_bytes": 5887,
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "combined_process_output_bytes": 0,
+    "process_returncode": 0,
+    "physical_process_and_pipes_settled": true,
+    "resource_execution_blocked": true
+  },
+  "genuine_django_overflow": {
+    "passed": true,
+    "actual_Original_Django": true,
+    "actual_app_main": "dispatcharr",
+    "actual_task_name": "apps.epg.tasks.refresh_epg_data",
+    "no_app_task_signal_stubs": true,
+    "same_copied_database": true,
+    "signal_exception_swallowed": true,
+    "persistent_overflow_witness": true,
+    "no_overcap_event_written": true,
+    "normal_worker_budget_unaffected": true,
+    "task_body_executed": false
+  },
+  "playback": {
+    "viewers": [
+      {
+        "status": 200,
+        "requests": 1,
+        "first_byte_ms": 4636.445683019701,
+        "warmup_bytes": 4861492,
+        "measured_bytes": 29936556,
+        "prefix_bytes": 2097152,
+        "errors": [],
+        "unexpected_eof": false,
+        "post_window_barrier": true,
+        "prefix_sha256": "6249a5b72318a6ec1e9e558808ca706cc647a7a44c663b8bfad5dd8bb044a39e",
+        "reader_start_monotonic": 153171.082823999,
+        "reader_end_monotonic": 153311.443347857,
+        "byte_trace": [
+          {
+            "monotonic": 153191.69233079,
+            "bytes": 12345
+          },
+          {
+            "monotonic": 153192.696609846,
+            "bytes": 268213
+          },
+          {
+            "monotonic": 153193.699973965,
+            "bytes": 524081
+          },
+          {
+            "monotonic": 153195.204807709,
+            "bytes": 779949
+          },
+          {
+            "monotonic": 153195.807775744,
+            "bytes": 1035817
+          },
+          {
+            "monotonic": 153196.812324568,
+            "bytes": 1291685
+          },
+          {
+            "monotonic": 153197.817320284,
+            "bytes": 1547553
+          },
+          {
+            "monotonic": 153198.820730016,
+            "bytes": 1799306
+          },
+          {
+            "monotonic": 153199.825255899,
+            "bytes": 2051059
+          },
+          {
+            "monotonic": 153201.329902679,
+            "bytes": 2315157
+          },
+          {
+            "monotonic": 153201.933818351,
+            "bytes": 2566910
+          },
+          {
+            "monotonic": 153202.937528822,
+            "bytes": 2818663
+          },
+          {
+            "monotonic": 153203.941675865,
+            "bytes": 3078646
+          },
+          {
+            "monotonic": 153204.944756307,
+            "bytes": 3338629
+          },
+          {
+            "monotonic": 153205.947892432,
+            "bytes": 3590382
+          },
+          {
+            "monotonic": 153207.453785568,
+            "bytes": 3846250
+          },
+          {
+            "monotonic": 153208.056871427,
+            "bytes": 4106233
+          },
+          {
+            "monotonic": 153209.061225096,
+            "bytes": 4362101
+          },
+          {
+            "monotonic": 153210.065665968,
+            "bytes": 4613854
+          },
+          {
+            "monotonic": 153211.570220566,
+            "bytes": 4869722
+          },
+          {
+            "monotonic": 153212.173322886,
+            "bytes": 5129705
+          },
+          {
+            "monotonic": 153213.177687806,
+            "bytes": 5385573
+          },
+          {
+            "monotonic": 153214.180191684,
+            "bytes": 5641441
+          },
+          {
+            "monotonic": 153215.684682681,
+            "bytes": 5893194
+          },
+          {
+            "monotonic": 153216.287687748,
+            "bytes": 6149062
+          },
+          {
+            "monotonic": 153217.291122962,
+            "bytes": 6400815
+          },
+          {
+            "monotonic": 153218.295344378,
+            "bytes": 6664913
+          },
+          {
+            "monotonic": 153219.298740942,
+            "bytes": 6916666
+          },
+          {
+            "monotonic": 153220.301772125,
+            "bytes": 7172534
+          },
+          {
+            "monotonic": 153221.806891591,
+            "bytes": 7428402
+          },
+          {
+            "monotonic": 153222.409689952,
+            "bytes": 7684270
+          },
+          {
+            "monotonic": 153223.413499397,
+            "bytes": 7940138
+          },
+          {
+            "monotonic": 153224.417394625,
+            "bytes": 8196006
+          },
+          {
+            "monotonic": 153225.420767488,
+            "bytes": 8451874
+          },
+          {
+            "monotonic": 153226.925265227,
+            "bytes": 8707742
+          },
+          {
+            "monotonic": 153227.528353048,
+            "bytes": 8963610
+          },
+          {
+            "monotonic": 153228.53274404,
+            "bytes": 9219478
+          },
+          {
+            "monotonic": 153229.536214656,
+            "bytes": 9475346
+          },
+          {
+            "monotonic": 153230.539401935,
+            "bytes": 9731214
+          },
+          {
+            "monotonic": 153231.543633943,
+            "bytes": 9987082
+          },
+          {
+            "monotonic": 153233.048771141,
+            "bytes": 10251180
+          },
+          {
+            "monotonic": 153233.650558154,
+            "bytes": 10502933
+          },
+          {
+            "monotonic": 153234.654404492,
+            "bytes": 10750571
+          },
+          {
+            "monotonic": 153235.659226407,
+            "bytes": 11010554
+          },
+          {
+            "monotonic": 153236.662616811,
+            "bytes": 11270537
+          },
+          {
+            "monotonic": 153238.167141273,
+            "bytes": 11526405
+          },
+          {
+            "monotonic": 153238.770267195,
+            "bytes": 11778158
+          },
+          {
+            "monotonic": 153239.773740662,
+            "bytes": 12038141
+          },
+          {
+            "monotonic": 153240.777922429,
+            "bytes": 12294009
+          },
+          {
+            "monotonic": 153242.283585833,
+            "bytes": 12549877
+          },
+          {
+            "monotonic": 153242.886758677,
+            "bytes": 12805745
+          },
+          {
+            "monotonic": 153243.890125242,
+            "bytes": 13057498
+          },
+          {
+            "monotonic": 153244.89326332,
+            "bytes": 13317481
+          },
+          {
+            "monotonic": 153245.896321456,
+            "bytes": 13569234
+          },
+          {
+            "monotonic": 153247.401543928,
+            "bytes": 13825102
+          },
+          {
+            "monotonic": 153248.00428966,
+            "bytes": 14080970
+          },
+          {
+            "monotonic": 153249.008147429,
+            "bytes": 14336838
+          },
+          {
+            "monotonic": 153250.012143122,
+            "bytes": 14592706
+          },
+          {
+            "monotonic": 153251.015504797,
+            "bytes": 14852689
+          },
+          {
+            "monotonic": 153252.519829455,
+            "bytes": 15108557
+          },
+          {
+            "monotonic": 153253.122138774,
+            "bytes": 15364425
+          },
+          {
+            "monotonic": 153254.125369466,
+            "bytes": 15620293
+          },
+          {
+            "monotonic": 153255.128776763,
+            "bytes": 15876161
+          },
+          {
+            "monotonic": 153256.131908102,
+            "bytes": 16127914
+          },
+          {
+            "monotonic": 153257.136014769,
+            "bytes": 16387897
+          },
+          {
+            "monotonic": 153258.640186353,
+            "bytes": 16639650
+          },
+          {
+            "monotonic": 153259.243389588,
+            "bytes": 16907863
+          },
+          {
+            "monotonic": 153260.247752792,
+            "bytes": 17151386
+          },
+          {
+            "monotonic": 153261.250774399,
+            "bytes": 17411369
+          },
+          {
+            "monotonic": 153262.254938228,
+            "bytes": 17663122
+          },
+          {
+            "monotonic": 153263.760492252,
+            "bytes": 17918990
+          },
+          {
+            "monotonic": 153264.363818041,
+            "bytes": 18178973
+          },
+          {
+            "monotonic": 153265.367249809,
+            "bytes": 18434841
+          },
+          {
+            "monotonic": 153266.3714886,
+            "bytes": 18686594
+          },
+          {
+            "monotonic": 153267.375896997,
+            "bytes": 18946577
+          },
+          {
+            "monotonic": 153268.8793014,
+            "bytes": 19202445
+          },
+          {
+            "monotonic": 153269.482480495,
+            "bytes": 19458313
+          },
+          {
+            "monotonic": 153270.486845541,
+            "bytes": 19710066
+          },
+          {
+            "monotonic": 153271.491267348,
+            "bytes": 19965934
+          },
+          {
+            "monotonic": 153272.995333011,
+            "bytes": 20225917
+          },
+          {
+            "monotonic": 153273.598901837,
+            "bytes": 20473555
+          },
+          {
+            "monotonic": 153274.602840651,
+            "bytes": 20733538
+          },
+          {
+            "monotonic": 153275.606725293,
+            "bytes": 20985291
+          },
+          {
+            "monotonic": 153276.609862744,
+            "bytes": 21245274
+          },
+          {
+            "monotonic": 153277.613985833,
+            "bytes": 21505257
+          },
+          {
+            "monotonic": 153279.119866668,
+            "bytes": 21761125
+          },
+          {
+            "monotonic": 153279.723145597,
+            "bytes": 22016993
+          },
+          {
+            "monotonic": 153280.726927386,
+            "bytes": 22268746
+          },
+          {
+            "monotonic": 153281.731801227,
+            "bytes": 22528729
+          },
+          {
+            "monotonic": 153282.735161555,
+            "bytes": 22780482
+          },
+          {
+            "monotonic": 153283.738245895,
+            "bytes": 23036350
+          },
+          {
+            "monotonic": 153285.243670388,
+            "bytes": 23296333
+          },
+          {
+            "monotonic": 153285.846198046,
+            "bytes": 23548086
+          },
+          {
+            "monotonic": 153286.849698218,
+            "bytes": 23803954
+          },
+          {
+            "monotonic": 153287.853806877,
+            "bytes": 24063937
+          },
+          {
+            "monotonic": 153288.858175754,
+            "bytes": 24315690
+          },
+          {
+            "monotonic": 153290.362127166,
+            "bytes": 24575673
+          },
+          {
+            "monotonic": 153290.965065425,
+            "bytes": 24831541
+          },
+          {
+            "monotonic": 153291.969622868,
+            "bytes": 25087409
+          },
+          {
+            "monotonic": 153292.973690817,
+            "bytes": 25343277
+          },
+          {
+            "monotonic": 153294.478154774,
+            "bytes": 25595030
+          },
+          {
+            "monotonic": 153295.080728453,
+            "bytes": 25855013
+          },
+          {
+            "monotonic": 153296.084660958,
+            "bytes": 26102651
+          },
+          {
+            "monotonic": 153297.088095369,
+            "bytes": 26362634
+          },
+          {
+            "monotonic": 153298.592582428,
+            "bytes": 26614387
+          },
+          {
+            "monotonic": 153299.195691512,
+            "bytes": 26874370
+          },
+          {
+            "monotonic": 153300.199188505,
+            "bytes": 27134353
+          },
+          {
+            "monotonic": 153301.203374858,
+            "bytes": 27386106
+          },
+          {
+            "monotonic": 153302.207773287,
+            "bytes": 27641974
+          },
+          {
+            "monotonic": 153303.211135927,
+            "bytes": 27901957
+          },
+          {
+            "monotonic": 153304.716664835,
+            "bytes": 28157825
+          },
+          {
+            "monotonic": 153305.319852652,
+            "bytes": 28413693
+          },
+          {
+            "monotonic": 153306.324170179,
+            "bytes": 28665446
+          },
+          {
+            "monotonic": 153307.327709974,
+            "bytes": 28921314
+          },
+          {
+            "monotonic": 153308.330760436,
+            "bytes": 29177182
+          },
+          {
+            "monotonic": 153309.334831386,
+            "bytes": 29428935
+          },
+          {
+            "monotonic": 153310.840077917,
+            "bytes": 29688918
+          }
+        ],
+        "captures": {
+          "import1": {
+            "bytes": 2097152,
+            "sha256": "c757ae521b431ae45a4931db4e70cc88fb87d128ad4f0da78edc163f8de224ea"
+          },
+          "import2": {
+            "bytes": 2097152,
+            "sha256": "6d602046b0404b0e27c2b343b47dd1f90307b4048b512c06a9123449a79f5e19"
+          }
+        }
+      }
+    ],
+    "authenticated_identity": {
+      "clients": 1,
+      "all_owned_user_id": true
+    },
+    "continuous_connections": true,
+    "requests": 1,
+    "warmup_seconds": 15,
+    "measure_seconds": 120,
+    "resources": {
+      "scope": "No resource sampler during workload",
+      "workflow_passed": true
+    }
+  },
+  "decodes": [
+    {
+      "label": "startup",
+      "frames": 124,
+      "payload_sha256": "6249a5b72318a6ec1e9e558808ca706cc647a7a44c663b8bfad5dd8bb044a39e"
+    },
+    {
+      "label": "import1",
+      "frames": 86,
+      "payload_sha256": "c757ae521b431ae45a4931db4e70cc88fb87d128ad4f0da78edc163f8de224ea"
+    },
+    {
+      "label": "import2",
+      "frames": 92,
+      "payload_sha256": "6d602046b0404b0e27c2b343b47dd1f90307b4048b512c06a9123449a79f5e19"
+    }
+  ],
+  "existing_observer_contract": {
+    "passed": true,
+    "samples": 10,
+    "services": [
+      "baseline",
+      "origin",
+      "source",
+      "worker"
+    ],
+    "functional_cadence_seconds": 10.000070935988333,
+    "maximum_sample_observer_seconds": 0.024425702984444797,
+    "limits_verified": true,
+    "monotonic_counters_verified": true,
+    "memory_metric": "Docker working-memory sum, exactSourceweb+Originalworker+PGRedis+origin",
+    "cpu_metric": "Sum of complete-window cgroup usage_usec/time per selected service",
+    "performance_verified": false,
+    "scope": "10s four-service capability check only; no workload resource acceptance",
+    "all_four_CLI_memory_comparison_controls_passed": true
+  },
+  "census_complete": {
+    "baseline": true,
+    "source": true,
+    "origin": true,
+    "worker": true
+  },
+  "default_database_all_public_schema_manifest_unchanged": true,
+  "queue_after_work": [
+    0,
+    0,
+    0
+  ],
+  "event_bytes": 3156,
+  "event_reader_errors": [],
+  "cleanup": {
+    "project": "dispatcharr-m0-concurrent-9ac24455b6",
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "raw_bindings": [
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/integration.json",
+      "sha256": "6ea7a69a1fb63ea00e46a8b75101d17ba702bcbca73873306f0ca7b377d0a6ad"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/source-refresh-workflow-private.json",
+      "sha256": "feedcde950a1cd026ddfbe25ab3bf6570b4b200b47fce07d091c59685ac9e22e"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/workflow-prerun.jsonl",
+      "sha256": "572528baaeadaa705618c57d4a25c4ded633464272f36e2a63737caeb94a97dc"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/workflow-postrun.jsonl",
+      "sha256": "558c41bcfe70bbcf17fd2cc2c9b29c7bb981100bf16ed628d45102a85d7c0f98"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/workflow-published.jsonl",
+      "sha256": "7bc48020924f1d3a14c6d21f12eb794b3cf1bae3367b0a9c79802c81b0ddc94e"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/worker-observer-budget.json",
+      "sha256": "29cc1f9af250892fd583953727dc888444fa196ba64240707989700f4c237efe"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/django-overflow/proof.json",
+      "sha256": "01e67012f3326f0102208100960ab0ed4288d8b375393e579fbbbf3b5218cb69"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/seal.json",
+      "sha256": "bfa7ff4d86601a01895066806da18ab66ce6c1f277353231266f2f5f4b52acf3"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/support-binding.json",
+      "sha256": "757f3e2425aef5eed5440a15196224daeffcd02affbb35ce1ca416ff8cd40a9e"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/independent-cleanup.json",
+      "sha256": "8661c6bebdb1840772b16d074a07fd44d1f4bb4c11b43349df90d08cd8ab0aba"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-prep-1/pre-execution-seal.json",
+      "sha256": "9c8b48741fb59e6d21a8b26a5df9c2cbbbea6b93220a667525b9006b96d558ef"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-bounded-normal-prep-1/controls.log",
+      "sha256": "f196bef0973ff999dcbcf679ca035393cbb4be84e582dd7f9d09005e1f656ac4"
+    }
+  ],
+  "stdout_stderr_files": {
+    "count": 85,
+    "bytes": 65752
+  },
+  "source_authority": "Original1241b3f7/f2323archive; supportGit21a152a2; copiedownedDB/broker8/result9; no unrelatedprovider jobs",
+  "remaining": [
+    "Resource-draft4 remains hardblocked pendingRootreview and fresh quietcue; no Source3rep or Native measurements.",
+    "Existing10sobserver capabilitysmoke is BEFOREworkload; does not characterize worker cost during2imports.",
+    "Positive normal collector proof does not replace retained genuineoverflow/SQLheldabortnegativecontrols.",
+    "No full default worker graph, role/grammar, completeM0 or Native rewrite acceptance.",
+    "Inherited controller census formula does not explicitly test denial flags. Actual four raw censuses have zero denials/races and completepartcoverage; canonical denial-aware merge/negativecontrols required before any resourceunblock."
+  ],
+  "independent_census_raw_denials_and_races": {
+    "baseline": {
+      "parts_coverage_complete": true,
+      "denied_processes": 0,
+      "denied_descriptors": 0,
+      "raced_processes": 0,
+      "raced_descriptors": 0
+    },
+    "source": {
+      "parts_coverage_complete": true,
+      "denied_processes": 0,
+      "denied_descriptors": 0,
+      "raced_processes": 0,
+      "raced_descriptors": 0
+    },
+    "origin": {
+      "parts_coverage_complete": true,
+      "denied_processes": 0,
+      "denied_descriptors": 0,
+      "raced_processes": 0,
+      "raced_descriptors": 0
+    },
+    "worker": {
+      "parts_coverage_complete": true,
+      "denied_processes": 0,
+      "denied_descriptors": 0,
+      "raced_processes": 0,
+      "raced_descriptors": 0
+    }
+  },
+  "publication_delta": "Runtime behavior files unchanged from capturedcontroller14. Only test_controls.py now resolves explicit public cgroup/docker_stats authority with pinnedhashes; no private supportfallback. All files are newnamespace, no measurednamespace overwrite."
+}

@@ -1,0 +1,38 @@
+{
+  "status": "Source-controller qualification only; no resource acceptance/full repetitions/Native graph",
+  "viewers": 1,
+  "warmup_seconds": 15,
+  "measure_seconds": 120,
+  "imports_at_seconds": [
+    5,
+    60
+  ],
+  "import_deadline_seconds": 50,
+  "prefix_bytes": 2097152,
+  "decode_seconds": 5,
+  "minimum_video_frames": 25,
+  "minimum_bytes_per_second": 100000,
+  "startup_p95_ms": 15000,
+  "cleanup_seconds": 45,
+  "caps": {
+    "baseline": {
+      "nano_cpus": 1000000000,
+      "memory_bytes": 1073741824
+    },
+    "source": {
+      "nano_cpus": 2000000000,
+      "memory_bytes": 536870912
+    },
+    "origin": {
+      "nano_cpus": 2000000000,
+      "memory_bytes": 536870912
+    },
+    "worker": {
+      "nano_cpus": 1000000000,
+      "memory_bytes": 536870912
+    }
+  },
+  "provider_max_streams": 1,
+  "Source_repetitions_now": 1,
+  "resource_acceptance": false
+}

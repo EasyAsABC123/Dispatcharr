@@ -661,3 +661,6 @@ Source restart observations [176](../scripts/rust-redis-restart-contracts/verifi
 
 
 [The new Source-only capacity/switch/sustained references](rust-m0-baseline-progress.md) verify actual finite1/10 provider boundaries, shared reuse/overflow refusal/release, real admin POST switching and one continuous15/60s read followed by explicit close/70s retention. All final clients/origins/slots settle to zero;22 portable guards pass. The relocated sustained harness leaves measured image47/image48 namespaces untouched and collects zero resource samples. These close named Source functional evidence gaps, not Native/resource/fullM0 acceptance.
+
+
+[The bounded worker-inclusive Original workflow](rust-m0-concurrent-bounded.md) passes real2 imports/6 Django-Celery tasks/44 durable checks while one authenticated viewer remains open. Normal journal16 records/5,887 bytes and all process pipes settle;14 portable guards and separate genuine Django overflow controls pass. All four pre-work census parts are complete/zero-denial; the inherited denial-merger omission still blocks resource acceptance. No during-workload sampler or Native gain is claimed; M0 remains open.

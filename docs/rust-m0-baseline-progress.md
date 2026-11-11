@@ -17,7 +17,7 @@ These support the baseline; they are not full worker-graph measurements.
 | Ten distinct channels and configured capacity | Warmed ten-channel Source accounting passes with limit0 explicitly unlimited. Separate configured capacity1 and10 references now verify shared reuse, refusal, release and later admission. They remain Source-only functional gates. |
 | Slow plus fast readers | Qualified same-container accounting now records before/active/local-close/70s-retention states with the existing observer. It remains Source functional evidence, with no isolated resource acceptance. |
 | Stall, failure, stream change and recovery | Stall/failover now have qualified observer/state/cleanup attachments. Interior warning and healthy recovery remain separate. Actual admin POST stream-change and same-container sustained15/60/70 references now pass, separately scoped without CPU/memory acceptance. |
-| Import/EPG refresh during playback | Capture one real owned Source import/worker and playback workload concurrently, including worker cost and durable effects. Separate successful tests do not establish contention behavior. |
+| Import/EPG refresh during playback | One real bounded Source workload now verifies2 imports/6 tasks/44 durable checks during continuous playback. Worker-inclusive resource cost remains unmeasured; resource controller stays blocked pending qualification. |
 | Sustained playback followed by disconnect | Reconcile same-run post-close retention/footprint evidence, or add that accounting to the declared sustained workload. An unrelated short cleanup run cannot substitute. |
 
 The [public observer controller](../scripts/rust-baseline/idle-churn/README.md)'s short contract test passed18 offline controls, ten real observer
@@ -66,3 +66,6 @@ The pinned Source deliberately keeps up to three warm database connections per w
 
 
 New Source-only references cover [capacity1](rust-m0-finite-capacity.md), [capacity10 with an eleventh distinct-channel refusal](rust-m0-finite-ten.md), [real admin POST stream change](rust-m0-stream-change.md), and [one continuous sustained reader with same-container close/retention](rust-m0-sustained-accounting.md). They pass12/30/10 checks respectively and the declared sustained read/decode/retention conditions, with22 portable guards across the four new harnesses. The sustained sampler is disabled; it supplies no CPU/memory observations. Historical image47/image48 tools remain unchanged. Worker-inclusive resource accounting, budget/contract crosswalk and broader milestone gates remain open.
+
+
+[The bounded concurrent Source workflow](rust-m0-concurrent-bounded.md) now passes one real15/120s playback/import run: two imports, six actual task executions,44 durable checks, and physically settled bounded collector pipes. Four initial service censuses were complete with zero denials/races; the inherited merger omission is explicitly unqualified for resource use. The10s observer smoke occurs before workload only. It is not a worker-cost benchmark or M0 completion.
