@@ -9,3 +9,25 @@ The original lists never-enabled plugins from declarative manifests without impo
 Reproduce with `source artifacts/rust/tooling/environment.sh` then `python scripts/rust-plugin-contracts/run.py --output <fresh-empty-output>`. All files, database rows, imports and ORM writes belong to the synthetic fixture. The first attempt retained a wrong backup-helper bind-mount error; fixture2 fixes the setup.
 
 This is source behavior evidence, not a native executor, API or performance pass. Native metadata copied only from database rows would miss discovery, dynamic fields, import trust and action behavior. The existing [plugin/admin audit](../../docs/rust-plugin-admin-compatibility.md) identifies in-process Python/Django and intentional worker monkey patches; a Rust port must explicitly preserve the supported extension behavior or label its boundary. A separate compatibility execution design needs real import/reload/ORM/stop/schedule/event tests and resource/process ownership before registration. Managed ZIP/repository/signature operations, periodic-task ownership, concurrent mutation/reload, actual network/cache authentication, Django admin and full operational compatibility remain separate gates.
+
+## Actual HTTP and caller lifetime
+
+The later [35-case Original HTTP oracle](verified-plugin-http-4.json) exercises
+real JWT authentication, methods/negotiation and the actual owned uWSGI plugin
+manager against a copied database. Network HEAD sends an empty body; the older
+Factory-rendered HEAD record remains separate. Import trust, settings/defaults,
+wrapped dict/scalar/failed/undeclared action results, actual ORM writes and
+reload/disable/delete stop hooks are captured. No native executor is accepted.
+
+A controlled admitted action also proves that closing the HTTP caller does not
+end its Python work: it performs its owned ORM write after an explicit release.
+A future compatibility executor must retain physical work/admission ownership
+until actual completion, not infer completion from a closed HTTP connection.
+This does not establish arbitrary plugin/monkey-patch compatibility.
+
+Reproduce with `python3 scripts/rust-plugin-contracts/run_http.py --output
+artifacts/rust/plugin-http-NEW` in the documented Docker environment. The
+controller checks the exact pinned Original archive before execution, owns its
+plugin files/users/config rows/uWSGI process and copied DB, audits the untouched
+default database and removes its Compose project. The previous Factory
+connection-cleanup instrumentation is not relabeled as network instrumentation.

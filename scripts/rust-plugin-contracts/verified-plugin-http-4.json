@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "scope": "Actual pinned Original HTTP only; synthetic owned plugin/users/DB. No native/API migration acceptance.",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "actual_TCP_cases": 35,
+  "methods": {
+    "GET": 11,
+    "HEAD": 1,
+    "OPTIONS": 2,
+    "POST": 20,
+    "DELETE": 1
+  },
+  "actual_network_HEAD_empty_body": true,
+  "actual_original_plugin_import_run_reload_disable_delete_ORM": true,
+  "admitted_action_ORM_write_after_HTTP_caller_abort": {
+    "actual_HTTP_action_admitted_before_abort": true,
+    "no_ORM_effect_before_release": true,
+    "actual_ORM_effect_after_caller_abort": true,
+    "owned_release_and_completion_witness": true,
+    "not_counted_as_successful_HTTP_response": true
+  },
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "owned_plugin_users_config_files_and_uWSGI_removed": true,
+  "independent_remaining_owned_resources": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "raw_report_sha256": "13c2c8dfcd22461b8f57304de504299bcca6178965b6b18178680c693a0367bb",
+  "integration_sha256": "8eeeeee68f26e533badf3a37777a112b1ce79ff480628511115f96dd47952069",
+  "dataset_sha256": "56219aacf7b8844e8ced5724783aa752dec6d006f31039f2c568cd68020112d3",
+  "tools": {
+    "scripts/rust-plugin-contracts/run_http.py": "e80356942b2abd51128c7b522b54da9046389cf24e8e3c2051f546118b61b667",
+    "scripts/rust-plugin-contracts/source_http.py": "0d6fcf446c66a2d153ccd820da8b8f79a927276bdc9298954565a6631d6814c4"
+  },
+  "retained_attempts": [
+    {
+      "path": "artifacts/rust/plugin-http-source-1",
+      "scope": "35HTTPcaptures retained; assertion wrongly expected top-level owned_effect instead of actual result wrapper; cleaned."
+    },
+    {
+      "path": "artifacts/rust/plugin-http-source-2",
+      "scope": "35HTTPpass before caller-abort extension"
+    },
+    {
+      "path": "artifacts/rust/plugin-http-source-3",
+      "scope": "35HTTP+caller-abort PASS; explicit full-archive hash check added before final4"
+    }
+  ],
+  "remaining": [
+    "Native control/execution bridge and real runtime/cancellation/resource tests",
+    "ManagedZIP/repository/signature install, schedule ownership, events/concurrency, general legacy Python/monkeypatch compatibility",
+    "Real login/session/cookie behavior and Django admin/management commands"
+  ],
+  "native_verified": false,
+  "performance_verified": false,
+  "milestone_M8_complete": false,
+  "credit": "Original Dispatcharr authors and contributors retain full application and algorithm credit and AGPL licensing."
+}
