@@ -76,6 +76,7 @@ struct Inner {
     database: String,
     authority: Authority,
     eta: std::sync::Mutex<Option<Arc<crate::eta::Pool>>>,
+    cleanup_receipts: std::sync::Mutex<Option<Arc<cleanup_reservation_transport::Pool>>>,
 }
 #[derive(Clone)]
 pub struct Jobs {
@@ -233,6 +234,7 @@ impl Jobs {
                 database,
                 authority,
                 eta: std::sync::Mutex::new(None),
+                cleanup_receipts: std::sync::Mutex::new(None),
             }),
         })
     }
@@ -1258,6 +1260,10 @@ impl Jobs {
         } else {
             None
         };
+        let cleanup = self.inner.cleanup_receipts.lock().map_err(|_|Error::Backend)?.clone();
+        let _cleanup = if let Some(pool)=cleanup {
+            Some(tokio::time::timeout(deadline.saturating_duration_since(tokio::time::Instant::now()),pool.count.clone().acquire_many_owned(pool.maximum as u32)).await.map_err(|_|Error::DrainTimeout)?.map_err(|_|Error::Backend)?)
+        } else { None };
         let all = self
             .inner
             .slots
@@ -1344,3 +1350,7 @@ mod scheduler_transport;
 // Private fixture-only two-family draft.
 #[path = "default_transport.rs"]
 mod default_transport;
+
+#[path = "cleanup_reservation_transport.rs"]
+mod cleanup_reservation_transport;
+pub(crate) use cleanup_reservation_transport::Reservation as CleanupReservation;

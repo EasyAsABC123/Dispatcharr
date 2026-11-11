@@ -36,9 +36,20 @@ struct Lifecycle {
     started: bool,
     closed: bool,
 }
+struct ApplicationLifetime {
+    stop: watch::Sender<bool>,
+    worker: DefaultWorker,
+}
+impl Drop for ApplicationLifetime {
+    fn drop(&mut self) {
+        self.stop.send_replace(true);
+        self.worker.request_stop();
+    }
+}
 #[derive(Clone)]
 pub struct DefaultApplication {
     inner: Arc<Inner>,
+    _lifetime: Arc<ApplicationLifetime>,
 }
 struct Inner {
     worker: DefaultWorker,
@@ -53,12 +64,17 @@ impl DefaultApplication {
         if !(Duration::from_millis(25)..=Duration::from_secs(5)).contains(&poll) {
             return Err(LifecycleError::Configuration);
         }
+        let stop = watch::channel(false).0;
         Ok(Self {
+            _lifetime: Arc::new(ApplicationLifetime {
+                stop: stop.clone(),
+                worker: worker.clone(),
+            }),
             inner: Arc::new(Inner {
                 worker,
                 poll,
                 lifecycle: Mutex::new(Lifecycle::default()),
-                stop: watch::channel(false).0,
+                stop,
                 done: watch::channel(true).0,
                 state: watch::channel(State::Prepared).0,
             }),
@@ -88,7 +104,9 @@ impl DefaultApplication {
             while !*stop.borrow() {
                 let observation = match inner.worker.run_once(Arc::new(())).await {
                     Ok(Run::Empty) => State::Empty,
-                    Ok(Run::Completed(_) | Run::AlreadySucceeded(_)) => State::Completed,
+                    Ok(Run::Completed(_) | Run::AlreadySucceeded(_) | Run::Revoked(_, _)) => {
+                        State::Completed
+                    }
                     Ok(Run::Unsupported(_)) => State::UnsupportedDomain,
                     Ok(Run::UnsupportedHead) => State::UnsupportedHead,
                     Err(Error::Closed) if *stop.borrow() => break,

@@ -1,0 +1,390 @@
+{
+  "scope": "Actual Original/native cleanup-only result-before-ACK, backend failure warm restore and unexpired ACK-delay boundaries; no elapsed visibility/automatic recovery claim",
+  "checks": [
+    {
+      "name": "actual-backend-reply-held",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-tuple",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "backend-committed-REVOKED-before-ACK",
+      "passed": true
+    },
+    {
+      "name": "exact-Source-owned-unacked-geometry",
+      "passed": true
+    },
+    {
+      "name": "held-no-body-or-revoked-completion",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "actual-ACK-only-after-result-reply",
+      "passed": true
+    },
+    {
+      "name": "owned-ACL-user-new",
+      "passed": true
+    },
+    {
+      "name": "actual-backend-command-denied",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-tuple",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-tuple",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "denied-never-ran-body",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "unexpired-ACK-real-response-held",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "unexpired-body-runs-despite-late-ACK-response",
+      "passed": true
+    },
+    {
+      "name": "Source-ACK-server-applied-before-response",
+      "passed": true
+    },
+    {
+      "name": "native-expired-actual-result-reply-held",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-tuple",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "native-expired-matches-Source-held-unacked-and-metadata",
+      "passed": true
+    },
+    {
+      "name": "Original-decoder-native-expired-error",
+      "passed": true
+    },
+    {
+      "name": "native-peer-exit0",
+      "passed": true
+    },
+    {
+      "name": "native-peer-bounded-output",
+      "passed": true
+    },
+    {
+      "name": "native-peer-unique-marker",
+      "passed": true
+    },
+    {
+      "name": "native-peer-actual-outcome",
+      "passed": true
+    },
+    {
+      "name": "native-peer-all-physical-drains",
+      "passed": true
+    },
+    {
+      "name": "native-expired-no-body",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "native-ACK-after-result-reply",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-tuple",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "native-backend-fault-matches-Source-PENDING-and-unacked",
+      "passed": true
+    },
+    {
+      "name": "native-peer-exit0",
+      "passed": true
+    },
+    {
+      "name": "native-peer-bounded-output",
+      "passed": true
+    },
+    {
+      "name": "native-peer-unique-marker",
+      "passed": true
+    },
+    {
+      "name": "native-peer-actual-outcome",
+      "passed": true
+    },
+    {
+      "name": "native-peer-all-physical-drains",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "native-backend-fault-warm-restores-Source-shape",
+      "passed": true
+    },
+    {
+      "name": "native-normal-real-ACK-response-held",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-unacked",
+      "passed": true
+    },
+    {
+      "name": "snapshot-bounded-owned-queue",
+      "passed": true
+    },
+    {
+      "name": "native-normal-matches-Source-SUCCESS-before-late-ACK-response",
+      "passed": true
+    },
+    {
+      "name": "native-peer-exit0",
+      "passed": true
+    },
+    {
+      "name": "native-peer-bounded-output",
+      "passed": true
+    },
+    {
+      "name": "native-peer-unique-marker",
+      "passed": true
+    },
+    {
+      "name": "native-peer-actual-outcome",
+      "passed": true
+    },
+    {
+      "name": "native-peer-all-physical-drains",
+      "passed": true
+    },
+    {
+      "name": "native-normal-body-once-despite-expiry-crossing",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "held-backend-EXEC-reply",
+      "metadata": {
+        "status": "REVOKED",
+        "result": {
+          "exc_type": "TaskRevokedError",
+          "exc_message": [
+            "expired"
+          ],
+          "exc_module": "celery.exceptions"
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T13:55:31.686301+00:00"
+      },
+      "held": {
+        "queued": 0,
+        "unacked": 1,
+        "scores": 1
+      },
+      "after_reply": {
+        "queued": 0,
+        "unacked": 0,
+        "scores": 0
+      }
+    },
+    {
+      "name": "backend-SETEX-denied",
+      "before_stop": {
+        "AsyncResult_state": "PENDING",
+        "metadata_present": false
+      },
+      "after_warm_stop": {
+        "queued": 1,
+        "unacked": 0,
+        "scores": 0
+      }
+    },
+    {
+      "name": "unexpired-ACK-response-held-past-expiry",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T13:55:38.068553+00:00"
+      },
+      "held": {
+        "queued": 0,
+        "unacked": 0,
+        "scores": 0
+      }
+    },
+    {
+      "name": "native-expired-result-reply-held",
+      "metadata": {
+        "status": "REVOKED",
+        "result": {
+          "exc_type": "TaskRevokedError",
+          "exc_message": [
+            "expired"
+          ],
+          "exc_module": "celery.exceptions"
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T13:55:41.761859+00:00"
+      },
+      "held": {
+        "queued": 0,
+        "unacked": 1,
+        "scores": 1
+      },
+      "after_reply": {
+        "queued": 0,
+        "unacked": 0,
+        "scores": 0
+      },
+      "native": {
+        "ok": true,
+        "drained": true,
+        "jobs_drained": true,
+        "pool_closed": true,
+        "available_slots": 2,
+        "execute_calls": 0
+      }
+    },
+    {
+      "name": "native-backend-denied-warm-stop",
+      "before_stop": {
+        "queued": 0,
+        "unacked": 1,
+        "scores": 1
+      },
+      "after_warm_stop": {
+        "queued": 1,
+        "unacked": 0,
+        "scores": 0
+      },
+      "native": {
+        "ok": false,
+        "drained": true,
+        "jobs_drained": true,
+        "pool_closed": true,
+        "available_slots": 2,
+        "execute_calls": 0
+      }
+    },
+    {
+      "name": "native-unexpired-ACK-response-held-past-expiry",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T13:55:42.077625+00:00"
+      },
+      "held": {
+        "queued": 0,
+        "unacked": 0,
+        "scores": 0
+      },
+      "native": {
+        "ok": true,
+        "drained": true,
+        "jobs_drained": true,
+        "pool_closed": true,
+        "available_slots": 2,
+        "execute_calls": 1
+      }
+    }
+  ]
+}

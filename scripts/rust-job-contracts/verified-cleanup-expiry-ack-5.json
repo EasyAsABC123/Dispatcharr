@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "scope": "Known Redis backend_cleanup expiry, scoped production reservation/result/ACK and typed revoked reader; inert normal library, no Main/default intake or full scheduler/task-family closure",
+  "base": "2fbeabcd69802ef82c7dcb2be277d622e6eba7df",
+  "full_source_map_files": 711,
+  "full_source_inputs_sha256": "53d46e5d86f89b8945f64e81b6d03fe3d6d9410bca21f58672d3c097054ceb19",
+  "native_binary_sha256": "26942e807e0e9ed000e890328398c74f8076882c1b0b64f15cdfe65bc88ed5e1",
+  "actual_same_elf_reports": {
+    "backend-cleanup-ack-source-native-final-5": {
+      "sha256": "ff8e98d8c2ed8e9031bd7af40cf011adca6da6167659d0a2283b079367f707bc",
+      "checks": 63,
+      "elf": "26942e807e0e9ed000e890328398c74f8076882c1b0b64f15cdfe65bc88ed5e1",
+      "host_exit_code": 0
+    },
+    "backend-cleanup-ack-expiry-regression-6": {
+      "sha256": "20b103028168f9bfbee5570eb248211ab5c820ac31f29823fd009559be3e4109",
+      "checks": 83,
+      "elf": "26942e807e0e9ed000e890328398c74f8076882c1b0b64f15cdfe65bc88ed5e1",
+      "host_exit_code": 0
+    },
+    "backend-cleanup-ack-inactive-regression-7": {
+      "sha256": "28b602a82fabd427a47353050f3a11134b305d8011e17fac9f9cdb424b73c366",
+      "checks": 134,
+      "elf": "26942e807e0e9ed000e890328398c74f8076882c1b0b64f15cdfe65bc88ed5e1",
+      "host_exit_code": 0
+    },
+    "backend-cleanup-ack-pair-regression-8": {
+      "sha256": "c8cba723bf81834bc6275e243070218c448d67c5f538a5eb2e7829cf43358c11",
+      "checks": 58,
+      "elf": "26942e807e0e9ed000e890328398c74f8076882c1b0b64f15cdfe65bc88ed5e1",
+      "host_exit_code": 0
+    }
+  },
+  "actual_ack_checks": 63,
+  "expiry_regression_checks": 83,
+  "inactive_regression_checks": 134,
+  "pair_regression_checks": 58,
+  "distinct_physical_tests": 15,
+  "job_unit_tests": 51,
+  "job_ignored": 52,
+  "workspace_default_tests": 390,
+  "workspace_ignored": 623,
+  "workspace_suites": 166,
+  "strict_workspace_all_target_clippy": true,
+  "performance_verified": false,
+  "main_default_intake_enabled": false,
+  "source_credit": "Original Dispatcharr, Celery, Kombu, Django, Channels and Redis authors retain code/algorithm/license credit.",
+  "evidence_sha256": {
+    "artifacts/rust/backend-cleanup-ack-prep-1/clippy-4.log": "ea1840c84f3a5584a6188f9512c3fcfce0d2156da463f66a627bcc942f2d2a4a",
+    "artifacts/rust/backend-cleanup-ack-prep-1/compiler-4.jsonl": "76e69c89fbba69b23e8d7a1693d7ecb61fc2c7d76035000710bd448d00a6cdd5",
+    "artifacts/rust/backend-cleanup-ack-prep-1/all-lib-units-4.log": "7b217bdc8e76d7c772c5b4c18535bc7e6e999fbf5217b0f45749507d9908da80",
+    "artifacts/rust/backend-cleanup-ack-prep-1/workspace-clippy-4.log": "a041156a853ca57c79f9edbbe9577022bf9c4a0ffd059c975c4a2dbc182c3a40",
+    "artifacts/rust/backend-cleanup-ack-prep-1/workspace-tests-4-sockets.log": "39ab87e22bad47e3731e7c6531f7015d123fa91ce9d0ba74aefda3f9eb69c95b"
+  },
+  "actual_source_references": [
+    "artifacts/rust/backend-cleanup-expiry-original-3: real Beat expires43200, aged delivery, worker-seeded oldSUCCESS, same-worker revoked ID/fresh worker",
+    "artifacts/rust/backend-cleanup-ack-original-3: result-before-ACK, denied SETEX PENDING/unacked warm restore, body success before late normal ACK reply"
+  ],
+  "boundaries": [
+    "Only cleanup accepts expiry; known UTC/microsecond datetime and canonical transport millis0..43200000",
+    "Source Redis transport retains queued messages despite transport expiration; worker deadline decides expired",
+    "Expired reserves, writes REVOKED, then ACKs; failed/ambiguous backend write does not authorize ACK and retains receipt until warm/final-owner stop",
+    "Unexpired cleanup expiry reserves then dispatches early ACK and actual body/result concurrently; no after-ACK expiry recheck",
+    "Unexpired expiry needs two existing command credits; one-credit configuration explicitly refuses before POP. Expired sequential handling works with one",
+    "Same-ID oldSUCCESS bytes/aged TTL preserved; known revoked ID skips body until worker-local state reset; fixed50000/10800 LimitedSet behavior/no membership-time purge",
+    "Foreign tuple/TTL, origin fence, frame/count/byte caps and physical caller/job receipts preserved; no new caps raised"
+  ],
+  "remaining": [
+    "Main/default scheduler enablement and complete six-default-family application workflow",
+    "External revoke/stamp/state-db persistence, cross-family UUID reuse and general timezone/options",
+    "Full visibility recovery sweep/cadence and hard process crash acceptance",
+    "Ambiguous/corrupt broker and unclassified IO beyond tested conservative operational handling",
+    "Active recurring, file scan/import, version/active account and other unported families remain explicit unsupported"
+  ],
+  "historical_failures": [
+    "Expiry original1 signal observer assumed Request but received Context; actual failed capture retained",
+    "Revoked-set factory1 used unrelated monotonic clock offsets; corrected factory2 retained separately",
+    "Expiry native1 Clippy: nanos multiple style and unused peer expiry corrected before actual gates",
+    "Expiry native3 first corpus exposed factory-seeded children:null; decoder remains strict; actual-worker seed used thereafter and null seed is a negative",
+    "Early-pop expiry4/e12/83 final-state proof is partial and superseded for ACK order; no historical raw artifacts changed",
+    "ACK original2 pubsub-ping readiness unsupported by deliberate request-response proxy; successful3 passive BRPOP readiness",
+    "Workspace initial sandbox-only loopback socket failures retained; socket-authorized exact same sources passed390/623"
+  ],
+  "raw_ack_sha256": "4e728c9715865e80a47e9405e8e5200a01621818edaa88074c7d5b5fdac2ddc9",
+  "portable_reconstruction": {
+    "passed": true,
+    "files": 711,
+    "controls": 7,
+    "scope": "Exact immutable2fbe+17Gitblobs; precommit blobs validated from explicit private object store, normal public reproduction requires published commit objects; no private fallback in tool",
+    "control_log_sha256": "f70b5dd68be651ec3b0f1146c4b3357597bd30f8b1823448985a85e719c6ac2b"
+  }
+}

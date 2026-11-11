@@ -9,11 +9,35 @@ use crate::{
 use serde_json::{json, Value};
 use sqlx::postgres::PgPoolOptions;
 use std::{
-    io::{self, Read},
+    io::{self, Read, Write},
     sync::Arc,
     time::Duration,
 };
 use uuid::Uuid;
+struct CountedDomains {
+    actual: KnownDomains,
+    calls: Arc<std::sync::atomic::AtomicUsize>,
+}
+impl crate::default_domains::Domains for CountedDomains {
+    fn preflight(
+        &self,
+        kind: Kind,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::default_domains::Error>> {
+        self.actual.preflight(kind, owner)
+    }
+    fn execute(
+        &self,
+        kind: Kind,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::default_protocol::Normal, crate::default_domains::Error>,
+    > {
+        self.calls.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        self.actual.execute(kind, owner)
+    }
+}
 pub(crate) fn validate_fixture_redis() {
     let mut address = None;
     for (name, db) in [("CELERY_BROKER_URL", 8), ("CELERY_RESULT_BACKEND", 9)] {
@@ -60,13 +84,24 @@ async fn native_default_family_peer() {
     .unwrap();
     let _validated_fixture = KnownDomains::copied_fixture(pool.clone(), &database).unwrap();
     validate_fixture_redis();
-    let domains = Arc::new(KnownDomains::with_notifications(
-        pool.clone(),
-        Arc::new(bus),
-    ));
+    let calls = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let domains = Arc::new(CountedDomains {
+        actual: KnownDomains::with_notifications(pool.clone(), Arc::new(bus)),
+        calls: calls.clone(),
+    });
+    let proxy_url = |field: &str, db: u8, fallback: &str| {
+        request
+            .get(field)
+            .map(|value| {
+                let port = value.as_u64().unwrap();
+                assert!((61000..=65000).contains(&port));
+                format!("redis://:playback-fixture-only@127.0.0.1:{port}/{db}")
+            })
+            .unwrap_or_else(|| std::env::var(fallback).unwrap())
+    };
     let jobs = Jobs::connect_defaults(
-        &std::env::var("CELERY_BROKER_URL").unwrap(),
-        &std::env::var("CELERY_RESULT_BACKEND").unwrap(),
+        &proxy_url("broker_proxy_port", 8, "CELERY_BROKER_URL"),
+        &proxy_url("result_proxy_port", 9, "CELERY_RESULT_BACKEND"),
         Config {
             operations: 2,
             command_timeout: Duration::from_secs(2),
@@ -85,14 +120,54 @@ async fn native_default_family_peer() {
                 "inactive" => Kind::InactiveAccountNotifications,
                 _ => panic!("Unsupported fixture family"),
             };
+            let expires = request.get("expiry_seconds").map(|v| {
+                let seconds = v.as_i64().unwrap();
+                assert!((-60..=43_200).contains(&seconds));
+                let deadline = chrono::Utc::now() + chrono::Duration::seconds(seconds);
+                let deadline =
+                    chrono::DateTime::from_timestamp_micros(deadline.timestamp_micros()).unwrap();
+                crate::cleanup_expiry::CleanupExpiration::new(
+                    deadline,
+                    seconds.max(0) as u64 * 1000,
+                )
+                .unwrap()
+            });
             let message = Message {
                 task_id: Uuid::parse_str(request["task_id"].as_str().unwrap()).unwrap(),
                 kind,
+                expires,
             };
             jobs.publish_default(&message, Arc::new(()))
                 .await
                 .map(|v| json!({"task_id":v.task_id,"queue_length":v.queue_length}))
                 .map_err(|e| format!("{e:?}"))
+        }
+        "run_many" => {
+            async {
+                let count=request["count"].as_u64().unwrap();assert!((1..=8).contains(&count));
+                let mut outcomes=Vec::new();
+                for _ in 0..count {
+                    let value=worker.run_once(Arc::new(())).await.map_err(|e|e.to_string())?;
+                    let id=match &value {crate::default_worker::Run::Completed(id)|crate::default_worker::Run::AlreadySucceeded(id)|crate::default_worker::Run::Revoked(id,_)=>Some(*id),_=>None};
+                    let metadata=if let Some(id)=id{jobs.read(id,Arc::new(())).await.map_err(|e|format!("{e:?}"))?.map(|v|json!({"state":format!("{:?}",v.state),"result":v.result,"task_id":v.task_id}))}else{None};
+                    outcomes.push(json!({"outcome":value.summary(),"metadata":metadata}));
+                }
+                Ok::<_,String>(json!({"outcomes":outcomes}))
+            }.await
+        }
+        "run_fault" => {
+            let outcome=worker.run_once(Arc::new(())).await;
+            assert!(outcome.is_err(),"Expected owned backend failure");
+            let id=Uuid::parse_str(request["task_id"].as_str().unwrap()).unwrap();
+            let stop=std::path::Path::new("/evidence").join(format!("native-stop-{id}"));
+            assert!(!stop.exists());
+            let phase=json!({"phase":"operational-before-warm-stop","task_id":id,"error":outcome.as_ref().err().map(ToString::to_string),"available_job_commands":jobs.available_slots(),"execute_calls":calls.load(std::sync::atomic::Ordering::SeqCst)});
+            let file=std::path::Path::new("/evidence").join(format!("native-phase-{id}.json"));let temporary=file.with_extension("tmp");assert!(!file.exists()&&!temporary.exists());std::fs::write(&temporary,serde_json::to_vec(&phase).unwrap()).unwrap();std::fs::rename(temporary,file).unwrap();println!("NATIVE_DEFAULT_PHASE_JSON={phase}");
+            io::stdout().flush().unwrap();
+            let deadline=tokio::time::Instant::now()+Duration::from_secs(10);
+            while !stop.is_file(){assert!(tokio::time::Instant::now()<deadline,"Owned warm-stop signal deadline");tokio::time::sleep(Duration::from_millis(20)).await;}
+            std::fs::remove_file(stop).unwrap();
+            outcome.map(|v|json!({"outcome":v.summary()})).map_err(|e|e.to_string())
         }
         "run" => worker
             .run_once(Arc::new(()))
@@ -155,6 +230,6 @@ async fn native_default_family_peer() {
     let error = result.as_ref().err().cloned();
     println!(
         "NATIVE_DEFAULT_PAIR_JSON={}",
-        json!({"ok":result.is_ok(),"error":error,"result":result.ok(),"drained":drained,"jobs_drained":jobs_drained,"available_slots":available,"pool_closed":pool.is_closed()})
+        json!({"ok":result.is_ok(),"error":error,"result":result.ok(),"drained":drained,"jobs_drained":jobs_drained,"available_slots":available,"pool_closed":pool.is_closed(),"execute_calls":calls.load(std::sync::atomic::Ordering::SeqCst)})
     );
 }

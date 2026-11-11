@@ -75,6 +75,7 @@ fn message(kind: Kind) -> Message {
     Message {
         task_id: Uuid::new_v4(),
         kind,
+        expires: None,
     }
 }
 async fn publish(jobs: &Jobs, m: &Message) {

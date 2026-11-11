@@ -1,0 +1,361 @@
+{
+  "scope": "Actual Original cleanup-only expired request result-before-ACK and backend SETEX denial; no native acceptance or elapsed visibility/recovery claim",
+  "cases": [
+    {
+      "name": "held-backend-EXEC-reply",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "celery.backend_cleanup",
+          "id": "dfac44fc-7066-4ccf-b3c0-99d87471da9d",
+          "shadow": null,
+          "eta": null,
+          "expires": "2026-11-11T12:56:51.986406+00:00",
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "dfac44fc-7066-4ccf-b3c0-99d87471da9d",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen372@e04397044419",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "dfac44fc-7066-4ccf-b3c0-99d87471da9d",
+          "reply_to": "6f87f418-d7b6-38fd-8ad2-e3276a5ed71f",
+          "delivery_mode": 2,
+          "expiration": "0",
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "ced649dd-f457-4033-bd31-e85daa3d7f80"
+        }
+      },
+      "metadata": {
+        "status": "REVOKED",
+        "result": {
+          "exc_type": "TaskRevokedError",
+          "exc_message": [
+            "expired"
+          ],
+          "exc_module": "celery.exceptions"
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T12:57:53.118595+00:00",
+        "task_id": "dfac44fc-7066-4ccf-b3c0-99d87471da9d"
+      },
+      "held": {
+        "queue": [],
+        "unacked": {
+          "ced649dd-f457-4033-bd31-e85daa3d7f80": [
+            {
+              "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+              "content-encoding": "utf-8",
+              "content-type": "application/json",
+              "headers": {
+                "lang": "py",
+                "task": "celery.backend_cleanup",
+                "id": "dfac44fc-7066-4ccf-b3c0-99d87471da9d",
+                "shadow": null,
+                "eta": null,
+                "expires": "2026-11-11T12:56:51.986406+00:00",
+                "group": null,
+                "group_index": null,
+                "retries": 0,
+                "timelimit": [
+                  null,
+                  null
+                ],
+                "root_id": "dfac44fc-7066-4ccf-b3c0-99d87471da9d",
+                "parent_id": null,
+                "argsrepr": "()",
+                "kwargsrepr": "{}",
+                "origin": "gen372@e04397044419",
+                "ignore_result": false,
+                "replaced_task_nesting": 0,
+                "stamped_headers": null,
+                "stamps": {}
+              },
+              "properties": {
+                "correlation_id": "dfac44fc-7066-4ccf-b3c0-99d87471da9d",
+                "reply_to": "6f87f418-d7b6-38fd-8ad2-e3276a5ed71f",
+                "delivery_mode": 2,
+                "expiration": "0",
+                "delivery_info": {
+                  "exchange": "",
+                  "routing_key": "celery"
+                },
+                "priority": 0,
+                "body_encoding": "base64",
+                "delivery_tag": "ced649dd-f457-4033-bd31-e85daa3d7f80"
+              }
+            },
+            "",
+            "celery"
+          ]
+        },
+        "scores": [
+          [
+            "ced649dd-f457-4033-bd31-e85daa3d7f80",
+            1794401873.1177468
+          ]
+        ]
+      },
+      "after_reply": {
+        "queue": [],
+        "unacked": {},
+        "scores": []
+      },
+      "backend_reply_observed_before_ACK": true
+    },
+    {
+      "name": "backend-SETEX-denied",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "celery.backend_cleanup",
+          "id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+          "shadow": null,
+          "eta": null,
+          "expires": "2026-11-11T12:56:54.927402+00:00",
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen372@e04397044419",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+          "reply_to": "6f87f418-d7b6-38fd-8ad2-e3276a5ed71f",
+          "delivery_mode": 2,
+          "expiration": "0",
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "3ad9c528-ede5-4d39-94e6-09624f2f55fa"
+        }
+      },
+      "before_stop": {
+        "first_250ms": {
+          "queue": [],
+          "unacked": {
+            "3ad9c528-ede5-4d39-94e6-09624f2f55fa": [
+              {
+                "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "celery.backend_cleanup",
+                  "id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": "2026-11-11T12:56:54.927402+00:00",
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    null,
+                    null
+                  ],
+                  "root_id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+                  "parent_id": null,
+                  "argsrepr": "()",
+                  "kwargsrepr": "{}",
+                  "origin": "gen372@e04397044419",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+                  "reply_to": "6f87f418-d7b6-38fd-8ad2-e3276a5ed71f",
+                  "delivery_mode": 2,
+                  "expiration": "0",
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "3ad9c528-ede5-4d39-94e6-09624f2f55fa"
+                }
+              },
+              "",
+              "celery"
+            ]
+          },
+          "scores": [
+            [
+              "3ad9c528-ede5-4d39-94e6-09624f2f55fa",
+              1794401876.0453107
+            ]
+          ]
+        },
+        "second_1000ms": {
+          "queue": [],
+          "unacked": {
+            "3ad9c528-ede5-4d39-94e6-09624f2f55fa": [
+              {
+                "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "celery.backend_cleanup",
+                  "id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": "2026-11-11T12:56:54.927402+00:00",
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    null,
+                    null
+                  ],
+                  "root_id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+                  "parent_id": null,
+                  "argsrepr": "()",
+                  "kwargsrepr": "{}",
+                  "origin": "gen372@e04397044419",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+                  "reply_to": "6f87f418-d7b6-38fd-8ad2-e3276a5ed71f",
+                  "delivery_mode": 2,
+                  "expiration": "0",
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "3ad9c528-ede5-4d39-94e6-09624f2f55fa"
+                }
+              },
+              "",
+              "celery"
+            ]
+          },
+          "scores": [
+            [
+              "3ad9c528-ede5-4d39-94e6-09624f2f55fa",
+              1794401876.0453107
+            ]
+          ]
+        },
+        "metadata": null,
+        "AsyncResult_state": "PENDING",
+        "worker_alive": true
+      },
+      "after_warm_stop": {
+        "queue": [
+          {
+            "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+            "content-encoding": "utf-8",
+            "content-type": "application/json",
+            "headers": {
+              "lang": "py",
+              "task": "celery.backend_cleanup",
+              "id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+              "shadow": null,
+              "eta": null,
+              "expires": "2026-11-11T12:56:54.927402+00:00",
+              "group": null,
+              "group_index": null,
+              "retries": 0,
+              "timelimit": [
+                null,
+                null
+              ],
+              "root_id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+              "parent_id": null,
+              "argsrepr": "()",
+              "kwargsrepr": "{}",
+              "origin": "gen372@e04397044419",
+              "ignore_result": false,
+              "replaced_task_nesting": 0,
+              "stamped_headers": null,
+              "stamps": {},
+              "redelivered": true
+            },
+            "properties": {
+              "correlation_id": "1a5e5b42-c9b7-4ace-994d-5ab0e5b19de8",
+              "reply_to": "6f87f418-d7b6-38fd-8ad2-e3276a5ed71f",
+              "delivery_mode": 2,
+              "expiration": "0",
+              "delivery_info": {
+                "exchange": "",
+                "routing_key": "celery",
+                "redelivered": true
+              },
+              "priority": 0,
+              "body_encoding": "base64",
+              "delivery_tag": "3ad9c528-ede5-4d39-94e6-09624f2f55fa"
+            }
+          }
+        ],
+        "unacked": {},
+        "scores": []
+      },
+      "revoked_signals": []
+    },
+    {
+      "name": "unexpired-ACK-response-held-past-expiry",
+      "task_id": "374ad277-412f-4685-a0cd-55ea2f3b819d",
+      "ack_tag": "264516ce-3b23-4324-8f90-5aa09e35af8b",
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T12:57:59.079295+00:00",
+        "task_id": "374ad277-412f-4685-a0cd-55ea2f3b819d"
+      },
+      "held": {
+        "queue": [],
+        "unacked": {},
+        "scores": []
+      },
+      "scope": "Real short-TTL unexpired arrival/body acceptance before delayed broker ACK response; no clock patch"
+    }
+  ]
+}

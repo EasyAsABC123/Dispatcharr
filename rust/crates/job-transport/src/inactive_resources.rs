@@ -100,6 +100,7 @@ async fn publish(jobs: &Jobs) -> Message {
     let m = Message {
         task_id: Uuid::new_v4(),
         kind: Kind::InactiveAccountNotifications,
+        expires: None,
     };
     jobs.publish_default(&m, Arc::new(())).await.unwrap();
     m

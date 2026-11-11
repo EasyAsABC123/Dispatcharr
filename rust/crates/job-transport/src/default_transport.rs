@@ -11,9 +11,9 @@ use crate::default_protocol::{self, Message, Normal};
 // repeated constructors can bypass the shared bound.
 pub struct Candidate {
     pub message: Message,
-    bytes: Vec<u8>,
-    origin: Arc<Inner>,
-    held: Arc<Lease>,
+    pub(super) bytes: Vec<u8>,
+    pub(super) origin: Arc<Inner>,
+    pub(super) held: Arc<Lease>,
 }
 impl Jobs {
     fn require_default(&self) -> Result<(), Error> {
@@ -123,5 +123,23 @@ impl Jobs {
         let value = result.value(message.kind).map_err(|_| Error::Protocol)?;
         self.write_result(message.task_id, value, None, Vec::new(), owner)
             .await
+    }
+    pub async fn write_default_revoked(
+        &self,
+        message: &Message,
+        reason: crate::cleanup_expiry::Revocation,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        self.require_default()?;
+        if message.kind != crate::default_protocol::Kind::RedisBackendCleanup {
+            return Err(Error::UnsupportedTask);
+        }
+        let date = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.6f+00:00")
+            .to_string();
+        let value = serde_json::json!({"status":"REVOKED","result":{"exc_type":"TaskRevokedError","exc_message":[reason.reason()],"exc_module":"celery.exceptions"},"traceback":null,"children":[],"date_done":date,"task_id":message.task_id.to_string()});
+        let bytes = serde_json::to_vec(&value).map_err(|_| Error::Protocol)?;
+        crate::decode::decode(&bytes, message.task_id).map_err(|_| Error::Protocol)?;
+        self.write_metadata(message.task_id, bytes, owner).await
     }
 }

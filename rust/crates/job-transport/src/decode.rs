@@ -20,6 +20,7 @@ pub enum State {
     Retry,
     Success,
     Failure,
+    Revoked,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct Exception {
@@ -131,6 +132,7 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
         Some("RETRY") => State::Retry,
         Some("SUCCESS") => State::Success,
         Some("FAILURE") => State::Failure,
+        Some("REVOKED") => State::Revoked,
         _ => return Err(DecodeError::UnsupportedState),
     };
     let result = fields.get("result").ok_or(DecodeError::Malformed)?.clone();
@@ -144,7 +146,7 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
             _ => Err(DecodeError::Malformed),
         }
     };
-    let exception = if matches!(state, State::Failure | State::Retry) {
+    let exception = if matches!(state, State::Failure | State::Retry | State::Revoked) {
         let object = result
             .as_object()
             .ok_or(DecodeError::UnsupportedException)?;
@@ -165,29 +167,42 @@ pub fn decode(raw: &[u8], expected: Uuid) -> Result<Metadata, DecodeError> {
         }
         // These are data descriptors from captured Source records. No module
         // is imported and no exception constructor or HTTP mapper is invoked.
-        let supported = match (module, class) {
-            ("builtins", "ValueError" | "KeyError") => true,
-            ("builtins", "IsADirectoryError") => {
-                arguments.len() == 2
-                    && arguments[0].as_i64() == Some(21)
-                    && arguments[1].as_str() == Some("Is a directory")
-            }
-            ("builtins", "AttributeError")
-            | ("django.db.utils", "ProgrammingError")
-            | (
-                "redis.exceptions",
-                "ConnectionError" | "AuthenticationError" | "NoPermissionError",
-            )
-            | ("kombu.exceptions", "OperationalError") => {
-                if arguments.len() != 1 || !arguments[0].is_string() {
-                    return Err(DecodeError::UnsupportedException);
+        let supported = if state == State::Revoked {
+            module == "celery.exceptions"
+                && class == "TaskRevokedError"
+                && object.len() == 3
+                && arguments.len() == 1
+                && matches!(arguments[0].as_str(), Some("expired" | "revoked"))
+                && fields.get("traceback") == Some(&Value::Null)
+                && fields["children"].as_array().is_some_and(Vec::is_empty)
+                && optional("date_done")?.is_some_and(|v| {
+                    v.len() <= 40 && chrono::DateTime::parse_from_rfc3339(&v).is_ok()
+                })
+        } else {
+            match (module, class) {
+                ("builtins", "ValueError" | "KeyError") => true,
+                ("builtins", "IsADirectoryError") => {
+                    arguments.len() == 2
+                        && arguments[0].as_i64() == Some(21)
+                        && arguments[1].as_str() == Some("Is a directory")
                 }
-                if arguments[0].as_str().unwrap().len() > 8192 {
-                    return Err(DecodeError::Capacity);
+                ("builtins", "AttributeError")
+                | ("django.db.utils", "ProgrammingError")
+                | (
+                    "redis.exceptions",
+                    "ConnectionError" | "AuthenticationError" | "NoPermissionError",
+                )
+                | ("kombu.exceptions", "OperationalError") => {
+                    if arguments.len() != 1 || !arguments[0].is_string() {
+                        return Err(DecodeError::UnsupportedException);
+                    }
+                    if arguments[0].as_str().unwrap().len() > 8192 {
+                        return Err(DecodeError::Capacity);
+                    }
+                    true
                 }
-                true
+                _ => false,
             }
-            _ => false,
         };
         if !supported {
             return Err(DecodeError::UnsupportedException);

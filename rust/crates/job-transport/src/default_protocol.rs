@@ -36,6 +36,7 @@ impl Kind {
 pub struct Message {
     pub task_id: Uuid,
     pub kind: Kind,
+    pub expires: Option<crate::cleanup_expiry::CleanupExpiration>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Normal {
@@ -65,6 +66,62 @@ pub fn parse(raw: &[u8]) -> Result<Message, ProtocolError> {
             .ok_or(ProtocolError::InvalidArgument)?,
     )
     .ok_or(ProtocolError::InvalidArgument)?;
+    // Source warm restoration adds these two fields together. Only the proven
+    // cleanup family may re-enter this scoped consumer through that path.
+    if kind == Kind::RedisBackendCleanup {
+        match (
+            frame["headers"].get("redelivered"),
+            frame["properties"]["delivery_info"].get("redelivered"),
+        ) {
+            (None, None) => {}
+            (Some(Value::Bool(true)), Some(Value::Bool(true))) => {
+                frame["headers"]
+                    .as_object_mut()
+                    .ok_or(ProtocolError::InvalidArgument)?
+                    .remove("redelivered");
+                frame["properties"]["delivery_info"]
+                    .as_object_mut()
+                    .ok_or(ProtocolError::InvalidArgument)?
+                    .remove("redelivered");
+            }
+            _ => return Err(ProtocolError::InvalidArgument),
+        }
+    }
+    let expires = if frame["headers"]["expires"].is_null() {
+        if frame["properties"].get("expiration").is_some() {
+            return Err(ProtocolError::InvalidArgument);
+        }
+        None
+    } else {
+        if kind != Kind::RedisBackendCleanup {
+            return Err(ProtocolError::InvalidArgument);
+        }
+        let raw = frame["headers"]["expires"]
+            .as_str()
+            .filter(|v| v.len() <= 40)
+            .ok_or(ProtocolError::InvalidArgument)?;
+        let parsed = chrono::DateTime::parse_from_rfc3339(raw)
+            .map_err(|_| ProtocolError::InvalidArgument)?;
+        if parsed.offset().local_minus_utc() != 0 {
+            return Err(ProtocolError::InvalidArgument);
+        }
+        let ttl = frame["properties"]["expiration"]
+            .as_str()
+            .ok_or(ProtocolError::InvalidArgument)?;
+        let millis = ttl
+            .parse::<u64>()
+            .map_err(|_| ProtocolError::InvalidArgument)?;
+        if millis.to_string() != ttl {
+            return Err(ProtocolError::InvalidArgument);
+        }
+        let value = crate::cleanup_expiry::CleanupExpiration::new(parsed.to_utc(), millis)?;
+        frame["headers"]["expires"] = Value::Null;
+        frame["properties"]
+            .as_object_mut()
+            .ok_or(ProtocolError::InvalidArgument)?
+            .remove("expiration");
+        Some(value)
+    };
     if !matches!(frame["headers"]["argsrepr"].as_str(), Some("[]" | "()")) {
         return Err(ProtocolError::InvalidArgument);
     }
@@ -76,7 +133,11 @@ pub fn parse(raw: &[u8]) -> Result<Message, ProtocolError> {
         &serde_json::to_vec(&frame).map_err(|_| ProtocolError::InvalidArgument)?,
     )
     .map_err(|_| ProtocolError::InvalidArgument)?;
-    Ok(Message { task_id: id, kind })
+    Ok(Message {
+        task_id: id,
+        kind,
+        expires,
+    })
 }
 pub fn encode(message: &Message) -> Result<Vec<u8>, ProtocolError> {
     let raw = protocol::encode(
@@ -89,6 +150,19 @@ pub fn encode(message: &Message) -> Result<Vec<u8>, ProtocolError> {
     let mut value: Value =
         serde_json::from_slice(&raw).map_err(|_| ProtocolError::InvalidArgument)?;
     value["headers"]["task"] = json!(message.kind.name());
+    if let Some(expires) = &message.expires {
+        if message.kind != Kind::RedisBackendCleanup {
+            return Err(ProtocolError::InvalidArgument);
+        }
+        let validated = crate::cleanup_expiry::CleanupExpiration::new(
+            expires.deadline,
+            expires.transport_millis,
+        )?;
+        value["headers"]["expires"] = json!(validated
+            .deadline
+            .to_rfc3339_opts(chrono::SecondsFormat::AutoSi, false));
+        value["properties"]["expiration"] = json!(validated.transport_millis.to_string());
+    }
     let bytes = serde_json::to_vec(&value).map_err(|_| ProtocolError::InvalidArgument)?;
     if parse(&bytes)? != *message {
         return Err(ProtocolError::InvalidArgument);
@@ -106,6 +180,7 @@ mod tests {
             let message = Message {
                 task_id: Uuid::new_v4(),
                 kind,
+                expires: None,
             };
             assert_eq!(parse(&encode(&message).unwrap()), Ok(message.clone()));
             assert_eq!(

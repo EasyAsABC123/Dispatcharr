@@ -12,7 +12,7 @@ use std::{
     },
     time::Duration,
 };
-use tokio::sync::{OwnedSemaphorePermit, Semaphore};
+use tokio::sync::{oneshot, watch, OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 #[derive(Debug)]
 pub enum Error {
@@ -30,6 +30,7 @@ pub enum Run {
     Unsupported(Kind),
     Completed(Uuid),
     AlreadySucceeded(Uuid),
+    Revoked(Uuid, crate::cleanup_expiry::Revocation),
 }
 struct Owner {
     _slot: OwnedSemaphorePermit,
@@ -40,10 +41,19 @@ struct Inner {
     domains: Arc<dyn Domains>,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
+    revoked: std::sync::Mutex<crate::cleanup_expiry::RevokedSet>,
+    stop: watch::Sender<bool>,
+}
+struct Lifetime(watch::Sender<bool>);
+impl Drop for Lifetime {
+    fn drop(&mut self) {
+        self.0.send_replace(true);
+    }
 }
 #[derive(Clone)]
 pub struct DefaultWorker {
     inner: Arc<Inner>,
+    _lifetime: Arc<Lifetime>,
 }
 impl DefaultWorker {
     pub fn new_fixture(jobs: Jobs, domains: Arc<dyn Domains>) -> Result<Self, Error> {
@@ -62,12 +72,16 @@ impl DefaultWorker {
         if !jobs.allows_defaults() {
             return Err(Error::Configuration);
         }
+        let stop = watch::channel(false).0;
         Ok(Self {
+            _lifetime: Arc::new(Lifetime(stop.clone())),
             inner: Arc::new(Inner {
                 jobs,
                 domains,
                 slots: Arc::new(Semaphore::new(1)),
                 closed: AtomicBool::new(false),
+                revoked: std::sync::Mutex::new(crate::cleanup_expiry::RevokedSet::new()),
+                stop,
             }),
         })
     }
@@ -89,51 +103,206 @@ impl DefaultWorker {
             _caller: caller,
         });
         let inner = self.inner.clone();
+        let (outcome, received) = oneshot::channel();
+        // The owned job survives a dropped caller. On backend failure it can
+        // report the operational result while retaining its receipt/admission
+        // until explicit/final-owner warm shutdown restores the message.
         tokio::spawn(async move {
-            let candidate = match inner.jobs.peek_default(owner.clone()).await {
-                Ok(Some(candidate)) => candidate,
-                Ok(None) => return Ok(Run::Empty),
-                Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),
-                Err(error) => return Err(Error::Transport(error)),
-            };
-            let kind = candidate.message.kind;
-            match inner.domains.preflight(kind, owner.clone()).await {
-                Ok(()) => {}
-                Err(DomainError::Unsupported) => return Ok(Run::Unsupported(kind)),
-                Err(error) => return Err(Error::Domain(error)),
+            let mut outcome = Some(outcome);
+            let result = async {
+                let candidate = match inner.jobs.peek_default(owner.clone()).await {
+                    Ok(Some(value)) => value,
+                    Ok(None) => return Ok(Run::Empty),
+                    Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),
+                    Err(error) => return Err(Error::Transport(error)),
+                };
+                let kind = candidate.message.kind;
+                let cached = inner
+                    .revoked
+                    .lock()
+                    .map_err(|_| Error::Panic)?
+                    .contains(candidate.message.task_id);
+                if cached && kind != Kind::RedisBackendCleanup {
+                    return Ok(Run::Unsupported(kind));
+                }
+                let initially_expired = candidate
+                    .message
+                    .expires
+                    .as_ref()
+                    .is_some_and(|value| value.expired(chrono::Utc::now()));
+                if !cached && !initially_expired {
+                    match inner.domains.preflight(kind, owner.clone()).await {
+                        Ok(()) => {}
+                        Err(DomainError::Unsupported) => return Ok(Run::Unsupported(kind)),
+                        Err(error) => return Err(Error::Domain(error)),
+                    }
+                }
+                let needs_receipt = kind == Kind::RedisBackendCleanup
+                    && (candidate.message.expires.is_some() || cached);
+                if needs_receipt {
+                    if !cached && !initially_expired && !inner.jobs.cleanup_parallel() {
+                        return Ok(Run::Unsupported(kind));
+                    }
+                    let receipt = inner
+                        .jobs
+                        .reserve_cleanup(candidate)
+                        .await
+                        .map_err(Error::Transport)?;
+                    let message = receipt.message().clone();
+                    // This is Source's message-admission point, after its broker
+                    // reservation reply and before dispatch/ACK. A normal ACK
+                    // response delayed beyond expiry must not change this decision.
+                    let reason = if message
+                        .expires
+                        .as_ref()
+                        .is_some_and(|value| value.expired(chrono::Utc::now()))
+                    {
+                        inner
+                            .revoked
+                            .lock()
+                            .map_err(|_| Error::Panic)?
+                            .add(message.task_id);
+                        Some(crate::cleanup_expiry::Revocation::Expired)
+                    } else if cached {
+                        Some(crate::cleanup_expiry::Revocation::Revoked)
+                    } else {
+                        None
+                    };
+                    if let Some(reason) = reason {
+                        let (done, completed) = oneshot::channel();
+                        let physical: Arc<dyn Send + Sync> =
+                            Arc::new((owner.clone(), receipt.clone(), WriteCompletion(Some(done))));
+                        let written = inner
+                            .jobs
+                            .write_default_revoked(&message, reason, physical.clone())
+                            .await;
+                        drop(physical);
+                        let _ = completed.await;
+                        let failure = match written {
+                            Ok(saved) => match inner.jobs.ack_cleanup(&receipt).await {
+                                Ok(true) => {
+                                    return Ok(if saved {
+                                        Run::Revoked(message.task_id, reason)
+                                    } else {
+                                        Run::AlreadySucceeded(message.task_id)
+                                    })
+                                }
+                                Ok(false) => {
+                                    return Err(Error::Transport(TransportError::LostReservation))
+                                }
+                                Err(error) => Error::Transport(error),
+                            },
+                            Err(error) => Error::Transport(error),
+                        };
+                        if let Some(sender) = outcome.take() {
+                            let _ = sender.send(Err(failure));
+                        }
+                        warm_restore(inner.clone(), receipt).await;
+                        // The operational outcome was already sent. No invented
+                        // terminal result follows warm restoration.
+                        return Err(Error::Closed);
+                    }
+                    // Source ACK3: prefork body/result can complete while the
+                    // early ACK response is held. Two *existing* operation
+                    // credits are required; one-credit configurations refuse
+                    // this branch before POP rather than exceeding the budget.
+                    let work = async {
+                        let value = inner
+                            .domains
+                            .execute(kind, owner.clone())
+                            .await
+                            .map_err(Error::Domain)?;
+                        let (done, completed) = oneshot::channel();
+                        let physical: Arc<dyn Send + Sync> =
+                            Arc::new((owner.clone(), receipt.clone(), WriteCompletion(Some(done))));
+                        let result = inner
+                            .jobs
+                            .write_default_success(&message, value, physical.clone())
+                            .await
+                            .map_err(Error::Transport);
+                        drop(physical);
+                        let _ = completed.await;
+                        result
+                    };
+                    let (ack, worked) = tokio::join!(inner.jobs.ack_cleanup(&receipt), work);
+                    match ack {
+                        Ok(true) => {
+                            return worked.map(|saved| {
+                                if saved {
+                                    Run::Completed(message.task_id)
+                                } else {
+                                    Run::AlreadySucceeded(message.task_id)
+                                }
+                            })
+                        }
+                        Ok(false) => return Err(Error::Transport(TransportError::LostReservation)),
+                        Err(error) => {
+                            if let Some(sender) = outcome.take() {
+                                let _ = sender.send(Err(Error::Transport(error)));
+                            }
+                            warm_restore(inner.clone(), receipt).await;
+                            return Err(Error::Closed);
+                        }
+                    }
+                }
+                let message = inner
+                    .jobs
+                    .claim_default(candidate)
+                    .await
+                    .map_err(Error::Transport)?;
+                let value = inner
+                    .domains
+                    .execute(kind, owner.clone())
+                    .await
+                    .map_err(Error::Domain)?;
+                let saved = inner
+                    .jobs
+                    .write_default_success(&message, value, owner)
+                    .await
+                    .map_err(Error::Transport)?;
+                Ok(if saved {
+                    Run::Completed(message.task_id)
+                } else {
+                    Run::AlreadySucceeded(message.task_id)
+                })
             }
-            let message = inner
-                .jobs
-                .claim_default(candidate)
-                .await
-                .map_err(Error::Transport)?;
-            // Recheck actual domain after claim. An insertion/mutation during
-            // preflight cannot produce a fake known-null/zero result.
-            let result = inner
-                .domains
-                .execute(kind, owner.clone())
-                .await
-                .map_err(Error::Domain)?;
-            let saved = inner
-                .jobs
-                .write_default_success(&message, result, owner)
-                .await
-                .map_err(Error::Transport)?;
-            Ok(if saved {
-                Run::Completed(message.task_id)
-            } else {
-                Run::AlreadySucceeded(message.task_id)
-            })
-        })
-        .await
-        .map_err(|_| Error::Panic)?
+            .await;
+            if let Some(sender) = outcome.take() {
+                let _ = sender.send(result);
+            }
+        });
+        received.await.map_err(|_| Error::Panic)?
+    }
+    pub(crate) fn request_stop(&self) {
+        self.inner.closed.store(true, Ordering::Release);
+        self.inner.stop.send_replace(true);
     }
     pub async fn shutdown(&self, timeout: Duration) -> bool {
-        self.inner.closed.store(true, Ordering::Release);
+        self.request_stop();
         matches!(
             tokio::time::timeout(timeout, self.inner.slots.clone().acquire_owned()).await,
             Ok(Ok(_))
         )
+    }
+}
+async fn warm_restore(inner: Arc<Inner>, receipt: crate::transport::CleanupReservation) {
+    let mut stopping = inner.stop.subscribe();
+    if !*stopping.borrow() {
+        let _ = stopping.wait_for(|value| *value).await;
+    }
+    loop {
+        match inner.jobs.restore_cleanup(&receipt).await {
+            Ok(_) => return,
+            Err(_) => tokio::time::sleep(Duration::from_millis(100)).await,
+        }
+    }
+}
+struct WriteCompletion(Option<oneshot::Sender<()>>);
+impl Drop for WriteCompletion {
+    fn drop(&mut self) {
+        if let Some(done) = self.0.take() {
+            let _ = done.send(());
+        }
     }
 }
 impl std::fmt::Display for Error {
@@ -155,6 +324,7 @@ impl Run {
             Self::UnsupportedHead => "UnsupportedHead".into(),
             Self::Unsupported(kind) => format!("Unsupported({kind:?})"),
             Self::Completed(id) => format!("Completed({id})"),
+            Self::Revoked(id, reason) => format!("Revoked({id},{})", reason.reason()),
             Self::AlreadySucceeded(id) => format!("AlreadySucceeded({id})"),
         }
     }
