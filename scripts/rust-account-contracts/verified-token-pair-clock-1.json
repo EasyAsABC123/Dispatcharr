@@ -1,0 +1,84 @@
+{
+  "passed": true,
+  "scope": "Test-oracle timing correction; controlled actual pinned SimpleJWT factory and pure rejection controls, TCP rerun owned separately by Root; no auth/runtime changes",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "simplejwt": "5.5.1",
+  "factory_witness": {
+    "passed": true,
+    "rows": [
+      {
+        "access_exp_minus_access_iat": 1800,
+        "access_exp_minus_refresh_iat": 1800,
+        "case": "same-second",
+        "claims": {
+          "access": {
+            "exp": 1794391542,
+            "iat": 1794389742,
+            "token_type": "access",
+            "user_id": "7"
+          },
+          "refresh": {
+            "exp": 1794476142,
+            "iat": 1794389742,
+            "token_type": "refresh",
+            "user_id": "7"
+          }
+        },
+        "distinct_nonempty_jti": true,
+        "normalizer_passed": true,
+        "refresh_exp_minus_refresh_iat": 86400,
+        "signature_and_current_time_verified": true
+      },
+      {
+        "access_exp_minus_access_iat": 1799,
+        "access_exp_minus_refresh_iat": 1800,
+        "case": "cross-second",
+        "claims": {
+          "access": {
+            "exp": 1794391542,
+            "iat": 1794389743,
+            "token_type": "access",
+            "user_id": "7"
+          },
+          "refresh": {
+            "exp": 1794476142,
+            "iat": 1794389742,
+            "token_type": "refresh",
+            "user_id": "7"
+          }
+        },
+        "distinct_nonempty_jti": true,
+        "normalizer_passed": true,
+        "refresh_exp_minus_refresh_iat": 86400,
+        "signature_and_current_time_verified": true
+      }
+    ],
+    "scope": "Actual pinned SimpleJWT serializer/token factory with controlled creation clock; signature/time verified, no database or TCP execution, not an observed cause attribution for historical TCP failure",
+    "simplejwt_version": "5.5.1"
+  },
+  "factory_stdout_sha256": "3b233f3d7f7f11b1ac2ccbaeacafd533f44783e7f5c4588637193471cee779cf",
+  "pure_tests": 4,
+  "timing_rejection_controls": 7,
+  "pure_log_sha256": "35859f40ed013015e5e5642b7d2fcc830d2c85516045bc06b9d736a084a40a9e",
+  "strict_relations": [
+    "access.exp-refresh.iat == 1800",
+    "refresh.exp-refresh.iat == 86400",
+    "access.iat >= refresh.iat",
+    "both typed integer iat/exp; abs(iat-now)<=30; exp>now",
+    "valid fixture HMAC, token type, string user id, nonempty distinct JTI"
+  ],
+  "historical_tcp_failure": "artifacts/rust/proxy-auth-image47-1/integration.json unchanged; clock crossing is a plausible explanation, not directly observed causation",
+  "preserved_attempt": "artifacts/rust/token-pair-clock-source-1: non-root bind mount traversal denied before framework execution; retry uses bounded source stdin, network none/read-only/cap-drop/no-new-privileges/user65532",
+  "files": {
+    "scripts/rust-account-contracts/startup_probes.py": "8108fbd5bf5d7b24305732d81b264018f78be875320fc4d96b77028433108e19",
+    "scripts/rust-account-contracts/test_startup_probes.py": "a1558998037b821e7d700ea3dd41dd4cac1913fb72696e546b8022cafd4c6ad9",
+    "scripts/rust-account-contracts/source_token_pair_clock.py": "0bd4cd2229fe61e8059ff08b1f159e8f8e8e7bf280694c44969ffa26c9979491"
+  },
+  "credit": "Original Dispatcharr/SimpleJWT/Django authors retain application/framework credit and licensing.",
+  "fresh_packaged_TCP": {
+    "passed": true,
+    "path": "artifacts/rust/proxy-auth-image47-2/integration.json",
+    "sha256": "3ce698a1e737960ab743e2c857df00783b272276c9e84c4422b2de911ab90e1d",
+    "runtime_auth_changed": false
+  }
+}

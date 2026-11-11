@@ -19,7 +19,9 @@ def digest(value):
 def token_pair(value,user_id):
     result=copy.deepcopy(value)
     identifiers=[]
-    for key,lifetime in [('access',1800),('refresh',86400)]:
+    claims={}
+    now=time.time()
+    for key in ['access','refresh']:
         encoded=result[key].split('.')
         if len(encoded)!=3:raise ValueError('Invalid token encoding')
         decode=lambda part:base64.urlsafe_b64decode(part+'='*((-len(part))%4))
@@ -30,12 +32,21 @@ def token_pair(value,user_id):
             raise ValueError('Invalid token signature')
         if (payload.get('token_type')!=key or payload.get('user_id')!=str(user_id)
             or type(payload.get('iat')) is not int or type(payload.get('exp')) is not int
-            or abs(payload['iat']-time.time())>30 or payload['exp']-payload['iat']!=lifetime
+            or abs(payload['iat']-now)>30 or payload['exp']<=now
             or not isinstance(payload.get('jti'),str) or not payload['jti']):
             raise ValueError('Invalid token claims')
+        claims[key]=payload
         identifiers.append(payload['jti'])
         result[key]='<verified-fixture-'+key+'>'
     if identifiers[0]==identifiers[1]:raise ValueError('Reused token identity')
+    # SimpleJWT creates access.iat at fresh AccessToken construction, but
+    # access.exp is anchored to the refresh token's original current_time.
+    # Crossing a second can therefore give access.exp-access.iat == 1799.
+    access,refresh=claims['access'],claims['refresh']
+    if (access['exp']-refresh['iat']!=1800
+        or refresh['exp']-refresh['iat']!=86400
+        or access['iat']<refresh['iat']):
+        raise ValueError('Invalid token pair timing')
     return result
 
 

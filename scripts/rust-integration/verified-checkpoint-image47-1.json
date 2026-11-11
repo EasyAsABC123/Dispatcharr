@@ -1,0 +1,201 @@
+{
+  "passed": true,
+  "accepted_checkpoint": true,
+  "scope": "Nineteen scoped packaged regression groups and shipped safe-operator gate. Whole application and full milestones remain incomplete.",
+  "credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "source_commit": "cc31e2188bef9974e5979550424fa4b25a1f229f",
+  "image_id": "sha256:3368457d42d2cab599001d8af562ff66133be4ae56f4ab7aee62d5ee7a66b467",
+  "source_tree_sha256": "337096a49b0a523e51a377acee3c276f15bb4761bd11ce07c8b17a5eb3b641c8",
+  "Rust_inputs": 694,
+  "committed_Rust_inputs_equal_image": true,
+  "build_manifest": {
+    "path": "artifacts/rust/candidate-build-core-operator-idle-main-image47-1/build.json",
+    "sha256": "7d7f1725052067e79ca8571e22dbec0f69fda93c4dc5647c0106e9cf678dd61f"
+  },
+  "default_workspace_tests": 381,
+  "external_fixture_tests_ignored": 607,
+  "strict_wholeworkspace_clippy": true,
+  "default_log": {
+    "path": "artifacts/rust/core-operator-idle-parent-validation-2-default.log",
+    "sha256": "f0a36d8836ed807fb7a88386b10c77a18f7cc8bca58d0629c886d11faa3d6962"
+  },
+  "clippy_log": {
+    "path": "artifacts/rust/core-operator-idle-parent-validation-2-clippy.log",
+    "sha256": "c6445305791a7e58e962b3f097a62bdb148e1d633d7fe16aa1233f03126a9e81"
+  },
+  "gates": [
+    {
+      "name": "integration-full",
+      "passed": true,
+      "evidence": "artifacts/rust/integration-full-image47-1/integration.json",
+      "sha256": "d2d24c7f09c93f455bb25fde1f5f87f66d29c3e39c5aa23b24d91935bb5d3de9",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "proxy-auth",
+      "passed": true,
+      "evidence": "artifacts/rust/proxy-auth-image47-2/integration.json",
+      "sha256": "3ce698a1e737960ab743e2c857df00783b272276c9e84c4422b2de911ab90e1d",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "auth-hash",
+      "passed": true,
+      "evidence": "artifacts/rust/auth-hash-image47-1/integration.json",
+      "sha256": "743b718c80d51ba5a54b020b666152140381dae57300fc5c7dc1fd2715569190",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "user-agent",
+      "passed": true,
+      "evidence": "artifacts/rust/user-agent-image47-1/integration.json",
+      "sha256": "95350713c34d243fde0690627d5afa2bb996c4d88047e99c46c73362b6d1389e",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "output-profile",
+      "passed": true,
+      "evidence": "artifacts/rust/output-profile-image47-1/integration.json",
+      "sha256": "c8809708cf949b4762e989214a7899f327c377153c2c5be7dec2102759a211c7",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "profile-restart",
+      "passed": true,
+      "evidence": "artifacts/rust/profile-restart-image47-1/integration.json",
+      "sha256": "01b240a5dec6235ab5b4d5085eae45e700a21cff2c898bb75e2e8346c3da2b02",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "guide-grid-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/guide-grid-packaged-image47-1/integration.json",
+      "sha256": "faa838e2666ae6d69c86ab9f3fe94c48fbf4f31ab6007a9ab6aff02378798d43",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "current-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/current-packaged-image47-1/integration.json",
+      "sha256": "9907555e185e51d0410400d7dfc4dd1a9d3145a5a868cb03aadb90dd008ef864",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "m4-functional",
+      "passed": true,
+      "evidence": "artifacts/rust/m4-functional-image47-1/result.json",
+      "sha256": "268567eb187badf01f50ca539af33cffdcc371801e6b0e0b66e6774fcbc7c123",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "clean-install",
+      "passed": true,
+      "evidence": "artifacts/rust/clean-install-image47-1/integration.json",
+      "sha256": "d13cd3ddc49386ee2b31f8a0304e0a3d3670e82bf235964d3815aba07853045f",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "category-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/category-browser-image47-1/http/source-run.json",
+      "sha256": "5ae6dd782e79e7c8544803b73611053e40834a65e0d0700422b530f6a76bc3b0",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "unified-HTML-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/unified-HTML-browser-image47-1/http/source-run.json",
+      "sha256": "256a4872599d9274011a566e4b0372d269679f7652c4958782235f1f74e577fc",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "complete-refresh",
+      "passed": true,
+      "evidence": "artifacts/rust/complete-refresh-image47-1/integration.json",
+      "sha256": "b01dd1dfeea6a288aac2bc33194ad268ab2b807fa27c884ad91d1154de4c20d9",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "static-Chrome-HTML-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/combined-static-HTML-browser-image47-1/http/source-run.json",
+      "sha256": "4ef182c5dddc0623f2bc55a13cbd6e8637de5fdc324bd74d559ac492d6917ec0",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "packaged-provider-actions",
+      "passed": true,
+      "evidence": "artifacts/rust/vod-provider-actions-packaged-image47-1/http/source-run.json",
+      "sha256": "d2938fae82ca06c83b07683ae83aad3596fef5813f95ec2355e18cddfe35197d",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "packaged-cached-provider-info",
+      "passed": true,
+      "evidence": "artifacts/rust/cached-provider-info-packaged-image47-1/http/source-run.json",
+      "sha256": "a707d6424ec01d3b4578dcde6a176d07b74dd4308b6bdc36667ddb18b32c55d3",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "channel-logos",
+      "passed": true,
+      "evidence": "artifacts/rust/channel-logos-packaged-image47-1/integration.json",
+      "sha256": "626bd47afdb9baad3aed1320afa538a04e73ba995533d322056dbadc60f315e0",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "packaged-vod-images",
+      "passed": true,
+      "evidence": "artifacts/rust/vod-images-packaged-image47-1/http/source-run.json",
+      "sha256": "a7af600d34900bfb4e402c2153aaf9ec07b5399c3355c0749623190b6e44e384",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "provider-modal-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/vod-provider-modal-browser-image47-1/integration.json",
+      "sha256": "17b4a3f6c018a4a00b0390e107fe6e4a214dddba55b2417c566bcbba88f4cdb7",
+      "owned_resources_removed": true
+    }
+  ],
+  "operator": {
+    "path": "artifacts/rust/operator-parent-review-1.json",
+    "sha256": "5a50341efaadd29c6d0bb7fde63dd5df6463f3ceefcb509d5a80a8d6c450e45b",
+    "cases": 17,
+    "SQL_observations": 8,
+    "physical_controls": 6,
+    "release_ELF_identical_to_prior_SQL_controls": true,
+    "raw_packaged_evidence": "artifacts/rust/operator-packaged-image47-2/proof.json"
+  },
+  "core_functional_reference": "scripts/rust-core-contracts/verified-core-native-functional-2.json",
+  "core_reference_scope": "23normal+5pending/11HTTP14Input remain bound to691f16a snapshot; eight selected core implementation/test paths unchanged in694, not relabeled as reruns.",
+  "runtime_attribution_exact": true,
+  "token_validator_reference": "artifacts/rust/token-pair-clock-source-2/proof.json",
+  "preserved_failures": [
+    {
+      "path": "artifacts/rust/proxy-auth-image47-1",
+      "scope": "One ValueError without retained token metadata; historical cause unproven. Pinned SimpleJWT controlled Factory shows valid1799-second access lifetime and strict refresh-anchor correction. Unchanged auth/runtime passes fresh TCP attempt2."
+    },
+    {
+      "path": "artifacts/rust/candidate-build-core-idle-main-image45-1",
+      "scope": "Nineteen regression groups passed but Source full-window pending marker counterexample kept candidate unpromoted; fixed beforeCore45ea."
+    },
+    {
+      "path": "artifacts/rust/candidate-build-core-operator-idle-main-image46-1",
+      "scope": "Old operator falsecount/success after concurrent user deletion; candidate notpromoted; corrected typed no-row-save shipped in47."
+    }
+  ],
+  "recovery_default_enabled": false,
+  "default_scheduler_worker_graph_enabled": false,
+  "performance_verified": false,
+  "full_application_verified": false,
+  "full_milestone_complete": false,
+  "remaining": [
+    "Fresh fixed-policy optimized core performance rebind; old results retain exact immutable bindings",
+    "Provider stale/forced refresh, fair shared scheduling and actual API/browser attachment",
+    "Default worker graph and configured task branches",
+    "Broader source protocol/API/browser/session/fault domains",
+    "Full plugins/admin/CLI and operational compatibility",
+    "Remaining per-milestone/full-service performance, soak and cutover"
+  ]
+}
