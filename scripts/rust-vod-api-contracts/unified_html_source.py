@@ -18,6 +18,9 @@ from apps.vod.models import Movie,Series,Episode,VODLogo,VODCategory,M3UMovieRel
 from core.models import CoreSettings,SystemEvent
 from rest_framework_simplejwt.tokens import AccessToken
 import rest_framework
+TARGET=os.environ.get('VOD_UNIFIED_HTML_TARGET','Original')
+assert TARGET in ['Original','candidate']
+HOST,PORT=('127.0.0.1',5656)if TARGET=='Original'else('candidate',9192)
 prefix='rust-probe-vod-rest-';users={role:User.objects.get(username=prefix+role)for role in ['standard','admin']}
 assert M3UAccount.objects.filter(name__startswith=prefix).count()==3 and not M3UAccount.objects.filter(name__startswith=prefix).exclude(server_url__startswith='http://127.0.0.1:').exists()
 class Encoder(DjangoJSONEncoder):
@@ -42,13 +45,13 @@ def request(path,accept,role,method,cookie=''):
  headers={'Host':'localhost','Accept':accept,'Accept-Encoding':'identity'}
  if role:headers['Authorization']='Bearer '+str(AccessToken.for_user(users[role]))
  if cookie:headers['Cookie']=cookie
- connection=http.client.HTTPConnection('127.0.0.1',5656,timeout=10)
+ connection=http.client.HTTPConnection(HOST,PORT,timeout=10)
  try:connection.request(method,path,headers=headers);response=connection.getresponse();body=response.read(2*1024*1024+1);assert len(body)<=2*1024*1024;raw_headers=response.getheaders();record={'status':response.status,'reason':response.reason,'version':response.version,'raw_response_headers':raw_headers,'body_bytes':len(body),'body_sha256':hashlib.sha256(body).hexdigest(),'body_text':body.decode('utf-8'),'request_cookie':cookie,'content_type':response.getheader('Content-Type')}
  finally:connection.close()
  if body and record['content_type'].startswith('text/html'):record['DOM']=parse(body)
  try:record['json']=json.loads(body)
  except(ValueError,UnicodeDecodeError):pass
- record['Authorization_value_recorded']=False;return record
+ record['Authorization_value_recorded']=False;record['observed_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat();return record
 before=fingerprint();records=[];diffs=[]
 specs=[('accept_HTML','/api/vod/all/','text/html','standard'),*[(f'format_api_JSON_{role}', '/api/vod/all/?format=api','application/json',role)for role in ['standard','admin',None]],*[(f'format_api_HTML_{role}','/api/vod/all/?format=api','text/html',role)for role in ['standard','admin',None]]]
 for label,path,accept,role in specs:
@@ -66,10 +69,10 @@ for label,path,accept,role in specs:
 assert fingerprint()==before
 assets=sorted({url for record in records for url in record.get('DOM',{}).get('assets',[])})
 asset_observations=[]
-for url in assets:
+for url in (assets if TARGET=='Original'else[]):
  parts=urlsplit(url)
  if parts.netloc or parts.scheme:asset_observations.append({'url':url,'external_contacted':False});continue
- connection=http.client.HTTPConnection('127.0.0.1',5656,timeout=10)
+ connection=http.client.HTTPConnection(HOST,PORT,timeout=10)
  try:connection.request('GET',url,headers={'Host':'localhost'});response=connection.getresponse();body=response.read(2*1024*1024+1);assert len(body)<=2*1024*1024;asset_observations.append({'url':url,'fixture_HTTP_status':response.status,'fixture_HTTP_MIME':response.getheader('Content-Type'),'fixture_HTTP_bytes':len(body),'fixture_HTTP_sha256':hashlib.sha256(body).hexdigest(),'scope':'This fixture has no productioncollectstatic/nginx; packagebytes inventory separate'})
  finally:connection.close()
 assert fingerprint()==before
@@ -82,4 +85,4 @@ for item in dist.files or[]:
  if any(word in str(item).lower()for word in ['license','copyright','notice']):
   path=Path(dist.locate_file(item))
   if path.is_file()and path.stat().st_size<128*1024:licenses[str(item)]={'text':path.read_text(errors='replace'),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
-print(json.dumps({'passed':True,'scope':'Actual Original rawHTML/negotiation GET/HEAD/cookies/repeats +package dependency inventory; Source-only no normalization/native parity','records':records,'repeat_differences':diffs,'asset_URL_observations':asset_observations,'framework':{'djangorestframework':importlib.metadata.version('djangorestframework'),'Django':django.get_version()},'package_files':files,'license_dependencies':licenses,'owned_fullmicro14table_rows_restored':True,'fingerprints_before':before,'fingerprints_after':fingerprint(),'native_verified':False,'private_raw_HTML_cookie_values':True},cls=Encoder,ensure_ascii=False))
+print(json.dumps({'passed':True,'target':TARGET,'scope':'Actual target rawHTML/negotiation GET/HEAD/cookies/repeats +package dependency inventory; Source-only no normalization/native parity','records':records,'repeat_differences':diffs,'asset_URL_observations':asset_observations,'framework':{'djangorestframework':importlib.metadata.version('djangorestframework'),'Django':django.get_version()},'package_files':files,'license_dependencies':licenses,'owned_fullmicro14table_rows_restored':True,'fingerprints_before':before,'fingerprints_after':fingerprint(),'native_verified':False,'private_raw_HTML_cookie_values':True},cls=Encoder,ensure_ascii=False))
