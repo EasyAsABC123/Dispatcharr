@@ -1,5 +1,9 @@
 # Authenticated continuous live playback preflight
 
+The later [image47 sustained paired benchmark](image47/README.md) publishes nine
+passed resource pairs and independent numerical verification. This directory
+retains the earlier short functional runner and its original evidence binding.
+
 Original Dispatcharr authors retain full application/algorithm credit and
 licensing. Django, DRF, FFmpeg and dependency authors retain their notices.
 
@@ -94,6 +98,7 @@ matrix. It starts no resource sampler. The retained reports/222prefixes are loca
 evidence; their hashes and reviewed observations are published, not444MiB of media.
 
 The protocol lists prospective resource budgets, but this runner exposes only
-functional execution. Source-only isolated qualification, sustained paired
-measurement, full lifecycle/accounting and formal M2 acceptance remain pending.
+functional execution. The later image47 subdirectory records completed Source-only qualification and
+sustained paired measurements. Full lifecycle/accounting and formal M2
+acceptance remain pending.
 Prior cold100-viewer failures and older performance bindings remain unchanged.
