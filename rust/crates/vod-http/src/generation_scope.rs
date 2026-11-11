@@ -1,7 +1,7 @@
 //! Local body capabilities separate from public Source session accounting.
 //! Original Dispatcharr authors retain full application/algorithm credit.
 //! This adapter is opt-in/unregistered: no default SessionPool behavior changes.
-use super::{Context, Error, NewAdmission, NewGeneration, Recovery, Retired, CLASSIFY};
+use super::{Context, Error, NewAdmission, NewGeneration, Recovery, Retired};
 #[path = "entry_receipts.rs"]
 pub(crate) mod receipt;
 use dispatcharr_contracts::BoxFuture;
@@ -77,6 +77,8 @@ struct Inner {
     activated: AtomicBool,
 }
 struct Generation {
+    // Public metadata subject belongs to this proved generation, not old bodies.
+    user_id: String,
     lease: Arc<Lease>,
     token: String,
     recovered: StdMutex<Option<Arc<NewGeneration>>>,
@@ -177,6 +179,24 @@ fn timestamp() -> String {
         .as_secs_f64()
         .to_string()
 }
+// Public Source stop signals are not ownership loss or service shutdown.
+const CLASSIFY: &str = r#"
+local owner=redis.call('GET',KEYS[1])
+local metadata=redis.call('HGET',KEYS[2],'rust_owner_token')
+if owner and owner~=ARGV[1] then return 'FOREIGN' end
+if redis.call('EXISTS',KEYS[2])~=0 and metadata~=ARGV[2] then return 'FOREIGN' end
+if owner and metadata then return 'OWNED' end
+if owner or metadata or redis.call('EXISTS',KEYS[3])~=0 then return 'PARTIAL' end
+return 'ABSENT'
+"#;
+pub(crate) const CONSUME_PUBLIC_STOP: &str = r#"
+if redis.call('EXISTS',KEYS[4])==0 then return {'CLEAR'} end
+if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2]
+ or redis.call('HGET',KEYS[3],'token')~=ARGV[1] then return {'FOREIGN'} end
+if redis.call('HGET',KEYS[2],'user_id')~=ARGV[3] or redis.call('HGET',KEYS[2],'content_uuid')~=ARGV[4]
+ or redis.call('HGET',KEYS[2],'content_obj_type')~=ARGV[5] then return {'PARTIAL'} end
+redis.call('DEL',KEYS[4]);return {'UPDATED'}
+"#;
 const CHECK_INITIAL: &str = r#"
 if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2]
  or redis.call('HGET',KEYS[3],'token')~=ARGV[1] or redis.call('HGET',KEYS[3],'profile')~=ARGV[6]
@@ -185,7 +205,6 @@ if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_t
 return 1
 "#;
 pub(crate) const MUTATE: &str = r#"
-if ARGV[6]~='close' and ARGV[6]~='abandon' and redis.call('EXISTS',KEYS[4])~=0 then return {'STOP'} end
 if redis.call('GET',KEYS[1])~=ARGV[1] then
  if redis.call('EXISTS',KEYS[1])==0 and redis.call('EXISTS',KEYS[2])==0 then return {'MISSING'} end
  return {'FOREIGN'}
@@ -225,7 +244,6 @@ if count>0 then return {'ACTIVE'} end
 redis.call('DEL',KEYS[2]);return {'DELETED'}
 "#;
 pub(crate) const ENTER_CURRENT: &str = r#"
-if redis.call('EXISTS',KEYS[4])~=0 then return {'STOP'} end
 if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2]
  or redis.call('HGET',KEYS[3],'token')~=ARGV[1] then return {'FOREIGN'} end
 if redis.call('HGET',KEYS[2],'user_id')~=ARGV[3] or redis.call('HGET',KEYS[2],'content_uuid')~=ARGV[4]
@@ -249,6 +267,7 @@ redis.call('HSET',KEYS[2],'last_activity',ARGV[7]);redis.call('EXPIRE',KEYS[2],3
 redis.call('HSET',KEYS[6],ARGV[9],ARGV[2]);redis.call('EXPIRE',KEYS[6],3600)
 return {'ENTERED'}
 "#;
+
 async fn control(inner: &Arc<Inner>) -> Result<Arc<Control>, Error> {
     let permit = inner
         .controls
@@ -276,7 +295,7 @@ async fn mutate(
         .key(receipt.map_or_else(|| owner(inner), |entry| entry.key.clone()))
         .arg(gen.lease.token())
         .arg(&gen.token)
-        .arg(&inner.identity.user_id)
+        .arg(&gen.user_id)
         .arg(&inner.identity.content_uuid)
         .arg(&inner.identity.content_kind)
         .arg(op)
@@ -316,6 +335,7 @@ impl LocalScope {
             return Err(Error::Configuration);
         }
         let gen = Arc::new(Generation {
+            user_id: initial.identity.user_id.clone(),
             lease: initial.lease,
             token: initial.metadata_token,
             recovered: StdMutex::new(None),
@@ -351,7 +371,7 @@ impl LocalScope {
                 .key(ledger(&task_inner, &gen.lease))
                 .arg(gen.lease.token())
                 .arg(&gen.token)
-                .arg(&task_inner.identity.user_id)
+                .arg(&gen.user_id)
                 .arg(&task_inner.identity.content_uuid)
                 .arg(&task_inner.identity.content_kind)
                 .arg(format!("profile_connections:{}", task_inner.profile))
@@ -634,7 +654,10 @@ impl LocalScope {
             || body.state.admitted.load(Ordering::Acquire)
             || request.channel_id != self.inner.id
             || request.provider_profile_id != Some(self.inner.profile)
-            || admission.fields.get("user_id") != Some(&self.inner.identity.user_id)
+            || !admission
+                .fields
+                .get("user_id")
+                .is_some_and(|user| user == &self.inner.identity.user_id || user == "unknown")
             || admission.fields.get("content_uuid") != Some(&self.inner.identity.content_uuid)
             || admission.fields.get("content_obj_type") != Some(&self.inner.identity.content_kind)
         {
@@ -664,7 +687,14 @@ impl LocalScope {
             // This extra guard, released on successful delivery, keeps serialization
             // through ambiguous initial acquisition and abandoned ADMIT cleanup too.
             let caller: Arc<dyn Send + Sync> = Arc::new((guard.clone(), hold.clone()));
-            let generation = retired.reopen_retained(request, admission, caller).await?;
+            let public_user_id = admission
+                .fields
+                .get("user_id")
+                .cloned()
+                .ok_or(Error::Configuration)?;
+            let generation = retired
+                .reopen_source_retained(request, admission, caller)
+                .await?;
             if *inner.stop.borrow() || body.is_closed() {
                 let _ = generation.close().await;
                 return Err(Error::Stopped);
@@ -678,6 +708,7 @@ impl LocalScope {
             let token = generation.metadata_token().to_owned();
             let recovered = Arc::new(generation);
             let next = Arc::new(Generation {
+                user_id: public_user_id,
                 lease,
                 token,
                 recovered: StdMutex::new(Some(recovered)),
@@ -709,7 +740,6 @@ impl LocalScope {
         if !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner))
             || body.is_closed()
             || body.state.admitted.load(Ordering::Acquire)
-            || admission.fields.get("user_id") != Some(&self.inner.identity.user_id)
             || admission.fields.get("content_uuid") != Some(&self.inner.identity.content_uuid)
             || admission.fields.get("content_obj_type") != Some(&self.inner.identity.content_kind)
         {
@@ -727,13 +757,23 @@ impl LocalScope {
         let task = tokio::spawn(async move {
             let guard = control(&inner).await?;
             let gen = inner.state.lock().await.current.clone();
+            // Source skips optional user restoration while public metadata exists.
+            // Anonymous request policy does not authorize changing its public subject.
+            if !admission
+                .fields
+                .get("user_id")
+                .is_some_and(|user| user == &gen.user_id || user == "unknown")
+            {
+                return Err(Error::Configuration);
+            }
+
             if *inner.stop.borrow() || body.is_closed() {
                 return Err(Error::Stopped);
             }
             let owner_key = owner(&inner);
             let stop_key = format!("vod_proxy:client:{}:stop", inner.id);
             if admission.limit > 0 {
-                dispatcharr_clients::vod::admit_fenced_physical(
+                dispatcharr_clients::vod::admit_source_owner_physical(
                     &mut inner.recovery.inner.connection.clone(),
                     dispatcharr_clients::vod::Admission {
                         session_id: &inner.id,
@@ -782,7 +822,7 @@ impl LocalScope {
                 .key(&receipt.key)
                 .arg(gen.lease.token())
                 .arg(&gen.token)
-                .arg(&inner.identity.user_id)
+                .arg(&gen.user_id)
                 .arg(&inner.identity.content_uuid)
                 .arg(&inner.identity.content_kind)
                 .arg(format!("profile_connections:{}", inner.profile))
@@ -842,6 +882,62 @@ impl LocalScope {
             .await
             .map_err(|_| Error::ObserverTimeout)?
             .map_err(|_| Error::Backend)?
+    }
+    /// Called only at an acknowledged Source100th-yield boundary, before
+    /// progress. One owned physical command consumes a signal for this body;
+    /// it never replays an uncertain DEL or broadcasts a public stop.
+    pub async fn consume_public_stop(&self, body: &Body) -> Result<bool, Error> {
+        if !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner)) || body.is_closed() {
+            return Err(Error::Configuration);
+        }
+        let hold = body
+            .state
+            .hold
+            .lock()
+            .unwrap()
+            .clone()
+            .ok_or(Error::Configuration)?;
+        let body = body.clone();
+        let inner = self.inner.clone();
+        let task = tokio::spawn(async move {
+            let _hold = hold;
+            let _control = control(&inner).await?;
+            if *inner.stop.borrow() || body.is_closed() {
+                return Err(Error::Stopped);
+            }
+            let gen = inner.state.lock().await.current.clone();
+            let reply: Vec<String> = Script::new(CONSUME_PUBLIC_STOP)
+                .key(owner(&inner))
+                .key(key(&inner.id))
+                .key(ledger(&inner, &gen.lease))
+                .key(format!("vod_proxy:client:{}:stop", inner.id))
+                .arg(gen.lease.token())
+                .arg(&gen.token)
+                .arg(&gen.user_id)
+                .arg(&inner.identity.content_uuid)
+                .arg(&inner.identity.content_kind)
+                .invoke_async(&mut inner.recovery.inner.connection.clone())
+                .await
+                .map_err(|_| Error::Backend)?;
+            match reply.first().map(String::as_str) {
+                Some("CLEAR") => Ok(false),
+                Some("UPDATED") => Ok(true),
+                Some("FOREIGN") => {
+                    inner.stop.send_replace(true);
+                    Err(Error::ForeignOwner)
+                }
+                _ => Err(Error::PartialState),
+            }
+        });
+        let result = tokio::time::timeout(self.inner.recovery.inner.observer_timeout, task)
+            .await
+            .map_err(|_| Error::ObserverTimeout)
+            .and_then(|result| result.map_err(|_| Error::Backend))
+            .and_then(|result| result);
+        if matches!(result, Err(Error::Backend | Error::ObserverTimeout)) {
+            self.inner.failed.store(true, Ordering::Release);
+        }
+        result
     }
     pub async fn progress(&self, body: &Body, bytes: u64) -> Result<Progress, Error> {
         if !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner)) || body.is_closed() {

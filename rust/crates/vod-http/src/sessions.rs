@@ -51,7 +51,6 @@ return 1
 "#;
 const ENTER: &str = r#"
 if #KEYS>1 then
- if redis.call('EXISTS',KEYS[4])~=0 then return -3 end
  if redis.call('GET',KEYS[2])~=ARGV[3] or redis.call('HGET',KEYS[3],'token')~=ARGV[3] then return -2 end
 end
 if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return 0 end
@@ -108,6 +107,7 @@ struct Inner {
     sessions: Mutex<HashMap<String, Arc<Session>>>,
     slots: Arc<Semaphore>,
     requests: Arc<Semaphore>,
+    admin_controls: Arc<Semaphore>,
     idle_grace: Duration,
     stopped: watch::Sender<bool>,
     max_requests: usize,
@@ -126,22 +126,47 @@ pub(crate) struct Progress {
     pool: Weak<Inner>,
     acknowledged: u64,
     reported: u64,
+    checked_boundary: u64,
+    public_stopped: bool,
     body: Option<ScopedBody>,
 }
 impl Progress {
-    pub async fn acknowledge(&mut self, bytes: usize) {
+    /// True ends this HTTP body only. Hard service/foreign watches are separate.
+    pub async fn acknowledge(&mut self, bytes: usize) -> bool {
+        if self.public_stopped {
+            return true;
+        }
         self.acknowledged = self.acknowledged.saturating_add(bytes as u64);
-        // Source writes after100 completed8192-byte generator yields. Count
-        // consumed bytes, independently of network/TLS/frame fragmentation.
         let milestone = (self.acknowledged / 819200) * 819200;
+        if milestone > self.reported && self.public_stop_at(milestone / 8192).await {
+            return true;
+        }
         self.record(milestone).await;
+        false
     }
     pub async fn finish(&mut self) {
-        // Requests yields a final short8192-byte block too. If that is block
-        //100/200/etc, Source stores its actual byte count rather than rounding.
-        if self.acknowledged > 0 && self.acknowledged.div_ceil(8192).is_multiple_of(100) {
+        let yields = self.acknowledged.div_ceil(8192);
+        if self.acknowledged > 0
+            && yields.is_multiple_of(100)
+            && !self.public_stopped
+            && !self.public_stop_at(yields).await
+        {
             self.record(self.acknowledged).await;
         }
+    }
+    async fn public_stop_at(&mut self, yields: u64) -> bool {
+        if yields == 0 || !yields.is_multiple_of(100) || yields <= self.checked_boundary {
+            return self.public_stopped;
+        }
+        self.checked_boundary = yields;
+        if let (Some(session), Some(body)) = (self.session.upgrade(), self.body.as_ref()) {
+            if let Some(scope) = session.scope.get() {
+                // Unknown physical consume replies are never retried. Keep the
+                // operational diagnostic and end only this observer's body.
+                self.public_stopped = scope.consume_public_stop(body).await.unwrap_or(true);
+            }
+        }
+        self.public_stopped
     }
     async fn record(&mut self, milestone: u64) {
         if milestone <= self.reported {
@@ -208,6 +233,7 @@ impl SessionPool {
                 sessions: Mutex::new(HashMap::new()),
                 slots: Arc::new(Semaphore::new(max_sessions)),
                 requests: Arc::new(Semaphore::new(max_requests)),
+                admin_controls: Arc::new(Semaphore::new(max_requests)),
                 idle_grace,
                 stopped: watch::channel(false).0,
                 max_requests,
@@ -348,6 +374,7 @@ impl SessionPool {
         self.inner.stopped.send_replace(true);
         self.inner.slots.close();
         self.inner.requests.close();
+        self.inner.admin_controls.close();
     }
     pub async fn drain(&self) {
         loop {
@@ -357,6 +384,7 @@ impl SessionPool {
             }
             if sessions.is_empty()
                 && self.inner.requests.available_permits() == self.inner.max_requests
+                && self.inner.admin_controls.available_permits() == self.inner.max_requests
                 && self.inner.pending_cleanups.load(Ordering::Acquire) == 0
                 && self.inner.coordinator.is_idle()
                 && (self.inner.recovery.lock().unwrap().is_none()
@@ -446,7 +474,7 @@ impl SessionPool {
             Err(recovery::Error::StillOwned) => {
                 let hook = scope_hook(
                     &self.inner,
-                    transition_data(&previous.source, &previous.client_ip, false),
+                    transition_data(&source, &request.client_ip_text(), false),
                 );
                 let body = scope
                     .attach_entry_pending(request_permit.clone(), hook)
@@ -676,22 +704,33 @@ impl SessionPool {
                         ("content_uuid".into(), source.content_uuid.clone()),
                     ]);
                     let mut connection = self.inner.connection.clone();
-                    dispatcharr_clients::vod::admit(
-                        &mut connection,
-                        dispatcharr_clients::vod::Admission {
-                            session_id: &session.id,
-                            fields: &fields,
-                            limit: user.stream_limit as u32,
-                            policy: &source.limit_policy,
-                            create: false,
-                            token: &session.metadata_token,
-                            scan_limit: 50000,
-                            timeout: Duration::from_secs(2),
-                            ttl: Duration::from_secs(3600),
-                        },
-                    )
-                    .await
-                    .map_err(|error| admission_error(error, user.stream_limit))?;
+                    let admission = dispatcharr_clients::vod::Admission {
+                        session_id: &session.id,
+                        fields: &fields,
+                        limit: user.stream_limit as u32,
+                        policy: &source.limit_policy,
+                        create: false,
+                        token: &session.metadata_token,
+                        scan_limit: 50000,
+                        timeout: Duration::from_secs(2),
+                        ttl: Duration::from_secs(3600),
+                    };
+                    let admitted = if let Some(scope) = session.scope.get() {
+                        let (owner, _, stop) = scope.entry_fence_keys(&session.lease);
+                        dispatcharr_clients::vod::admit_source_owner_physical(
+                            &mut connection,
+                            admission,
+                            dispatcharr_clients::vod::AdmissionFence {
+                                owner_key: &owner,
+                                owner_token: session.lease.token(),
+                                stop_key: &stop,
+                            },
+                        )
+                        .await
+                    } else {
+                        dispatcharr_clients::vod::admit(&mut connection, admission).await
+                    };
+                    admitted.map_err(|error| admission_error(error, user.stream_limit))?;
                 }
             }
             let reserved_here = !state.reserved;
@@ -811,21 +850,23 @@ impl SessionPool {
             .user
             .as_ref()
             .map_or(0, |user| user.stream_limit.max(0));
-        let created = dispatcharr_clients::vod::admit(
-            &mut connection,
-            dispatcharr_clients::vod::Admission {
-                session_id: id,
-                fields: &fields,
-                limit: limit as u32,
-                policy: &source.limit_policy,
-                create: true,
-                token: &metadata_token,
-                scan_limit: 50000,
-                timeout: Duration::from_secs(2),
-                ttl: Duration::from_secs(10),
-            },
-        )
-        .await
+        let admission = dispatcharr_clients::vod::Admission {
+            session_id: id,
+            fields: &fields,
+            limit: limit as u32,
+            policy: &source.limit_policy,
+            create: true,
+            token: &metadata_token,
+            scan_limit: 50000,
+            timeout: Duration::from_secs(2),
+            ttl: Duration::from_secs(10),
+        };
+        let source_mode = self.inner.recovery.lock().unwrap().is_some();
+        let created = if source_mode {
+            dispatcharr_clients::vod::admit_source(&mut connection, admission).await
+        } else {
+            dispatcharr_clients::vod::admit(&mut connection, admission).await
+        }
         .map_err(|error| admission_error(error, limit))?;
         if !created {
             return Err(unavailable());
@@ -914,22 +955,7 @@ impl SessionPool {
     }
 
     pub async fn stop(&self, id: &str) -> Result<bool, dispatcharr_store::StoreError> {
-        let mut connection = self.inner.connection.clone();
-        if !connection
-            .exists::<_, bool>(key(id))
-            .await
-            .map_err(|_| redis_error())?
-        {
-            return Ok(false);
-        }
-        let _: () = connection
-            .set_ex(format!("vod_proxy:client:{id}:stop"), "true", 60)
-            .await
-            .map_err(|_| redis_error())?;
-        if let Some(session) = self.inner.sessions.lock().await.get(id) {
-            session.stop.send_replace(true);
-        }
-        Ok(true)
+        session_stop_owned::stop(self.inner.clone(), id).await
     }
 
     pub async fn update(
@@ -1152,12 +1178,17 @@ fn scope_hook(pool: &Inner, event: Transition) -> Option<Arc<dyn StopHook>> {
 }
 
 impl Ticket {
+    pub(crate) fn source_blocks(&self) -> bool {
+        self.session.scope.get().is_some()
+    }
     pub fn progress(&self) -> Progress {
         Progress {
             session: Arc::downgrade(&self.session),
             pool: self.pool.clone(),
             acknowledged: 0,
             reported: 0,
+            checked_boundary: 0,
+            public_stopped: false,
             body: self.scope_body.clone(),
         }
     }
@@ -1416,3 +1447,6 @@ mod session_restart_peer;
 
 #[path = "session_user_lookup.rs"]
 mod session_user_lookup;
+
+#[path = "session_stop_owned.rs"]
+mod session_stop_owned;

@@ -699,3 +699,54 @@ async fn local_physical_fresh_entry_classification_keeps_request_through_actual_
     scope.drain().await;
     f.empty().await;
 }
+
+#[tokio::test]
+#[ignore = "actual held/lost public-stop consume never replays or drops physical body ownership"]
+async fn local_physical_public_stop_consume_retains_body_and_never_replays() {
+    for lose in [false, true] {
+        let proxy = proxy_for(
+            scoped::functional::prototype::local::CONSUME_PUBLIC_STOP,
+            false,
+            lose,
+        )
+        .await;
+        let (mut f, scope, stop) = scoped::initial_with_connection(Some(&proxy.url)).await;
+        let caller = Arc::new(());
+        let weak = Arc::downgrade(&caller);
+        let body = scope.attach_reserved(caller, true, None).await.unwrap();
+        body.started();
+        let _: () = f.redis.set_ex(f.stop(), "true", 60).await.unwrap();
+        assert!(scope.consume_public_stop(&body).await.is_err());
+        wait(async || proxy.effects.load(Ordering::SeqCst) == 1).await;
+        // Simulate a later distinct signal after the first DEL physically ran.
+        let _: () = f.redis.set_ex(f.stop(), "later-stop", 60).await.unwrap();
+        drop(body);
+        if !lose {
+            tokio::time::sleep(Duration::from_millis(2200)).await;
+            assert!(weak.upgrade().is_some());
+            assert_eq!(scope.control_slots(), 1);
+            assert!(
+                tokio::time::timeout(Duration::from_millis(50), scope.drain())
+                    .await
+                    .is_err()
+            );
+            proxy.release.send_replace(true);
+        }
+        tokio::time::timeout(Duration::from_secs(5), scope.drain())
+            .await
+            .unwrap();
+        assert!(weak.upgrade().is_none());
+        assert!(!*stop.borrow());
+        assert_eq!(proxy.effects.load(Ordering::SeqCst), 1);
+        assert_eq!(
+            f.redis.get::<_, String>(f.stop()).await.unwrap(),
+            "later-stop"
+        );
+        assert!(
+            !scope.cleanup_succeeded(),
+            "unknown consume reply remains a diagnostic"
+        );
+        let _: usize = f.redis.del(f.stop()).await.unwrap();
+        f.empty().await;
+    }
+}

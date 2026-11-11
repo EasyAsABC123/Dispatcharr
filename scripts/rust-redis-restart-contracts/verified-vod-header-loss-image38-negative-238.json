@@ -1,0 +1,45 @@
+{
+  "passed": false,
+  "scope": "Actual image38 opt-in authenticated user2 initial body, all-missing Redis restart, then headerless same-SID requests. No default or complete M4 acceptance.",
+  "original_authors": "Original Dispatcharr authors retain application and algorithm credit.",
+  "proof": {
+    "path": "artifacts/rust/m4-vod-auth-loss-image38-238/vod-contracts.json",
+    "sha256": "780dd30bfaeae9c5254bce908f2d95e10841a1d7554dca6a46ce13ec2ac790ec"
+  },
+  "source": {
+    "path": "artifacts/rust/m4-vod-auth-loss-image38-238/vod-active-restart-source.json",
+    "sha256": "61c05af195379f7038323835084dae6bb91d009ba41381ebb415864198a1ad35"
+  },
+  "native": {
+    "path": "artifacts/rust/m4-vod-auth-loss-image38-238/vod-active-restart-native.json",
+    "sha256": "92e0327665a31b578c65f5d1a8a7fccb320eb05f62c296d6f1c1ad36da6446dc"
+  },
+  "tools": {
+    "path": "artifacts/rust/m4-vod-auth-loss-image38-238/tool-source-sha256.json",
+    "sha256": "5369e3f19815e07ba03aa16e460af296a355a9b9e7242cf904f2e4781023e22f"
+  },
+  "candidate": {
+    "image_id": "sha256:3f1395ae14ccc13404a546b5369f221110c1a610ad2712aac5ab9993af5807c8",
+    "source_tree_sha256": "3649bbf80270a0fcb8121a8be113647bb23135363159226152455cf083eaf535",
+    "build_manifest_sha256": "49b8b3f52cf6fdb6b64a8c01ca13e7ec2c25391727d78fe8da41990acbc5329a",
+    "container_id": "01a0abd63473bfd599e8a0aa59cf34f16c56ce43d3769859c86e2219ac30bf08",
+    "started_at": "2026-11-11T01:13:09.904946851Z"
+  },
+  "cleanup_passed": true,
+  "observations": {
+    "initial_user_id_both": "2",
+    "source_reopen_status": 200,
+    "source_additional_status": 200,
+    "source_recreated_user_id": "unknown",
+    "native_reopen_status": 503,
+    "native_additional_status": 503,
+    "native_recreated_metadata": false,
+    "old_initial_and_next_8192_bytes_match": true,
+    "source_event_usernames": [
+      "rust-vod-fixture-capped",
+      null
+    ]
+  },
+  "interpretation": "Healthy authenticated redirect/headerless follow/range seek passed237. This separate true-restart request-subject transition is unsupported by current immutable LocalScope identity. No blanket anonymous acceptance, cached-user restoration or foreign-owner fence weakening is justified. Preserve exact negative and require per-generation public identity plus separate request policy subject before implementing.",
+  "event_note": "Source vod_start audit details use authenticated request username first, anonymous request username after recreation. Source body cleanup closes over that request user, independently of later metadata subject (multi_worker_connection_manager.py:1566)."
+}

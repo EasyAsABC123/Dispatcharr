@@ -39,6 +39,26 @@ def main():
     parser.add_argument('--timeshift-redirect-session', action='store_true', help='Use Redirect channel with empty allowed profiles to verify established capability still proxies')
     parser.add_argument('--m3u-rust-http', action='store_true', help='Compare actual native M3U HTTP/auth/cache with original source')
     parser.add_argument('--m3u-rust-renderer', action='store_true', help='Compare native SQL/renderer positive export bytes with original source')
+    parser.add_argument('--vod-active-long-prefix', action='store_true', help='Modifier: retainactualold/youngprefixesbounded1MiBeachfordecoderinteriorverification')
+    parser.add_argument('--vod-active-fast-reopen', action='store_true', help='Modifier: reopenimmediatelyafterRedisready, beforeold34blocksample/monitorgrace')
+    parser.add_argument('--vod-active-recovery-characterize', action='store_true', help='Modifier: recordpolicy/faultoutcomeswithoutrequiringanonymouscontinuitycontract; preservesallchecks')
+    parser.add_argument('--vod-header-stripped-native', action='store_true', help='Compare actual Original/native authenticated redirect and headerless follows; optional source seek flag')
+    parser.add_argument('--vod-header-stripped-mapping-loss-source', action='store_true', help='Source-only expired/deleted mapping before first headerless stream')
+    parser.add_argument('--vod-header-stripped-state-loss-source', action='store_true', help='Source-only controlled public metadata/mapping/provider loss between headerless siblings')
+    parser.add_argument('--vod-header-stripped-seek-source', action='store_true', help='Source-only authenticated301 then headerless follow and same-SID range seek')
+    parser.add_argument('--vod-header-stripped-follow-source', action='store_true', help='Source-only actual Bearer redirect then two headerless same-SID bodies')
+    parser.add_argument('--vod-optional-session-lookup-source', action='store_true', help='Source-only exact optional Redis-to-user lookup error and parsing corpus')
+    parser.add_argument('--vod-active-admin-stop-entry-source', action='store_true', help='Source-only additional same-ID request while actual admin stop remains pending')
+    parser.add_argument('--vod-active-admin-stop-source', action='store_true', help='Source-only actual authenticated admin stop while old and younger bodies remain open')
+    parser.add_argument('--vod-active-auth-loss', action='store_true', help='Modifier: omit initially validBearer after actualRedisstate-loss; recordsrequest/publicidentitychange')
+    parser.add_argument('--vod-active-capped-viewer', action='store_true', help='Modifier: actualBearerJWT fixtureviewer withstream_limit1 foractiveVODcapture')
+    parser.add_argument('--vod-active-idle-same-entry', action='store_true', help='Qualify each backend freshpublicactive0 window before actualsameSIDrequest')
+    parser.add_argument('--vod-active-idle-follow-source', action='store_true', help='Source-only followRedirectidle-adoption andobserveproviderreservation/oldtimer')
+    parser.add_argument('--vod-active-idle-redirect-source', action='store_true', help='Source-only Redirect idle-adoption afterstate-lossreopen whileyoungerbodyheld')
+    parser.add_argument('--vod-active-idle-mint-source', action='store_true', help='Source-only no-SIDmint whilecurrentpublicidle/oldbodyclosed butyoungerbodyheld')
+    parser.add_argument('--vod-active-recovery-native', action='store_true', help='Source/native actualHTTP fullrecovery schedule: activeentry, oldprogress/close, retiredreopen; requiresopt-in frozenimage')
+    parser.add_argument('--vod-active-retired-reopen-source', action='store_true', help='Source-only same-ID public reopen after oldclose removesmetadata whileyoungerbodycontinues')
+    parser.add_argument('--vod-active-extra-entry-source', action='store_true', help='Source-only third same-ID request after state-loss reopen, while old and younger bodies stay open')
     parser.add_argument('--vod-active-old-close-source', action='store_true', help='Source-only old-body close effects while a younger same-ID body stays open')
     parser.add_argument('--vod-active-old-progress-source', action='store_true', help='Source-only old body100th-yield telemetry after same-ID reopen')
     parser.add_argument('--vod-active-restart-http-source', action='store_true', help='Source-only actual HTTP active VOD Redis state-loss characterization')
@@ -83,6 +103,10 @@ def main():
     parser.add_argument('--rust-ingest-test', action='store_true', help='Compare the native M3U batch sink to original Django writes in this disposable database')
     args = parser.parse_args()
     output_peer=None
+    if args.vod_header_stripped_native:args.vod_header_stripped_follow_source=True
+    if args.vod_header_stripped_native and not(args.candidate_overlay and args.candidate_build_manifest):parser.error('native header flow requiresimmutable image manifest/overlay')
+    if args.vod_header_stripped_seek_source or args.vod_header_stripped_mapping_loss_source or args.vod_header_stripped_state_loss_source:args.vod_header_stripped_follow_source=True
+    if (args.vod_optional_session_lookup_source or (args.vod_header_stripped_follow_source and not args.vod_header_stripped_native)) and args.candidate_overlay:parser.error('lookup/header corpus is Source-only')
     if args.vod_rapid_reclose_ws:
         args.vod_playback_ws = True
     if args.vod_rapid_reclose_rust:
@@ -126,14 +150,36 @@ def main():
         args.timeshift_media = True
     if args.timeshift_rust_test or args.timeshift_media or args.timeshift_admission_source or args.timeshift_native_limit or args.timeshift_idle_reopen or args.timeshift_busy_seek or args.timeshift_direct_auth or args.timeshift_xc or args.timeshift_management:
         args.timeshift_sessions = True
+    if args.vod_active_admin_stop_entry_source:args.vod_active_admin_stop_source=True
+    if args.vod_active_admin_stop_source:
+        if args.candidate_overlay:parser.error('admin stop characterization is Source-only')
+        args.vod_active_extra_entry_source=True
+        args.vod_active_old_close_source=True
+    if args.vod_active_recovery_native:
+        args.vod_active_restart_native=True
+        args.vod_active_restart_http_source=True
+        args.vod_active_extra_entry_source=True
+        args.vod_active_retired_reopen_source=True
+        args.vod_active_old_close_source=True
+    if args.vod_active_idle_same_entry:args.vod_active_old_close_source=True
+    if args.vod_active_idle_follow_source:args.vod_active_idle_redirect_source=True
+    if args.vod_active_idle_redirect_source:args.vod_active_idle_mint_source=True
+    if args.vod_active_idle_mint_source:args.vod_active_old_close_source=True
     if args.vod_active_old_close_source:args.vod_active_old_progress_source=True
     if args.vod_active_old_progress_source:
-        if args.candidate_overlay:parser.error('old-generation telemetry probe is Source-only')
+        if args.candidate_overlay and not args.vod_active_recovery_native:parser.error('old-generation telemetry probe is Source-only')
         args.vod_active_restart_http_source=True
     if args.vod_active_restart_native:
         if not args.candidate_overlay or not args.candidate_build_manifest:parser.error('native active restart capture requires immutable candidate overlay/manifest')
         args.vod_active_restart_http_source=True
+    if args.vod_active_retired_reopen_source:
+        args.vod_active_old_progress_source=True
+        args.vod_active_old_close_source=True
+        args.vod_active_restart_http_source=True
+    if args.vod_active_extra_entry_source:args.vod_active_restart_http_source=True
     if args.vod_active_restart_http_source:args.vod_active_restart_source=True
+    if (args.vod_active_capped_viewer or args.vod_active_fast_reopen or args.vod_active_long_prefix or args.vod_active_auth_loss) and not args.vod_active_restart_source:parser.error('activeviewer/fastreopen modifiers requireactiveVODcapture')
+    if args.vod_active_recovery_characterize and not args.vod_active_recovery_native:parser.error('characterization modifier requiresSource/native recoverycapture')
     if args.vod_active_restart_source and args.candidate_overlay and not args.vod_active_restart_native:
         parser.error('active restart Source characterization does not yet implement candidate comparison')
     if bool(args.candidate_overlay) != bool(args.candidate_build_manifest):
@@ -164,11 +210,13 @@ def main():
         compose += ['-f',str(tool_root/'scripts/rust-output-contracts/compose.yml')]
     if args.vod_playback_ws:
         compose += ['-f',str(tool_root/'scripts/rust-output-contracts/compose.ws.yml')]
-    if args.vod_active_restart_source:
+    if args.vod_active_restart_source or args.vod_header_stripped_follow_source:
         active_overlay=output/'active-vod-fixture.yml'
         active_overlay.write_text('services:\n  origin:\n    environment:\n      VOD_FIXTURE_BYTES_PER_SECOND: "32768"\n')
-        if args.vod_active_restart_native:
+        if args.vod_active_restart_native or args.vod_header_stripped_native:
             with active_overlay.open('a') as fixture:fixture.write('  candidate:\n    environment:\n      DISPATCHARR_TRUSTED_PROXIES: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"\n')
+        if args.vod_active_recovery_native or args.vod_header_stripped_native:
+            with active_overlay.open('a') as fixture:fixture.write('      RUST_VOD_REDIS_RECOVERY_ENABLED: \"1\"\n')
         # Apply this owned functional fixture override after candidate policy.
     candidate_manifest = None
     candidate_manifest_bytes = None
@@ -184,7 +232,7 @@ def main():
         compose += ['-f',str(overlay)]
         if args.m3u_output:
             compose += ['-f',str(tool_root/'scripts/rust-output-contracts/candidate-policy.yml')]
-    if args.vod_active_restart_source:compose += ['-f',str(active_overlay)]
+    if args.vod_active_restart_source or args.vod_header_stripped_follow_source:compose += ['-f',str(active_overlay)]
     port_source = (tool_root/'scripts/rust-integration/fixture_ports.py').read_bytes()
     (output/'fixture-ports-tool.py').write_bytes(port_source)
     port_namespace = {'__file__':str(tool_root/'scripts/rust-integration/fixture_ports.py')}
@@ -257,9 +305,50 @@ def main():
                 time.sleep(1)
         command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/vod-verification/seed.py'])
         seed = json.loads((output/'vod-seed.json').read_text())
+        if args.vod_header_stripped_follow_source:
+            command(compose+['exec','-T']+(['-e','HEADER_STRIPPED_SEEK=1']if args.vod_header_stripped_seek_source else[])+(['-e','HEADER_MAPPING_LOSS=1']if args.vod_header_stripped_mapping_loss_source else[])+(['-e','HEADER_STATE_LOSS=1']if args.vod_header_stripped_state_loss_source else[])+['baseline','/dispatcharrpy/bin/python','/vod-verification/header_stripped_follow_source.py'],timeout=90)
+            captured=json.loads((output/'vod-header-stripped-follow-source.json').read_text())
+            report['header_stripped_follow_source']=captured
+            report['passed']=captured['capture_complete']and not captured['remaining_metadata']and captured['provider_after_close']in [None,'0']
+            report['scope']='Actual Original Bearer redirect/headerless initial+existing-SID follow only; no native/restart acceptance'
+            if args.vod_header_stripped_native:
+                report['header_candidate_reset']={'web_stop':json.loads(command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/verification/supervisor.py','control','stop'])),'redis_clear':command(compose+['exec','-T','baseline','redis-cli','FLUSHDB']).strip()}
+                command(compose+['up','-d','--no-build','candidate'])
+                candidate=address('candidate',9192);deadline=time.monotonic()+60
+                while True:
+                    try:
+                        with urllib.request.urlopen(candidate+'/health/ready',timeout=2)as ready:
+                            if json.load(ready).get('status')=='ready':break
+                    except(OSError,ValueError):pass
+                    if time.monotonic()>deadline:raise TimeoutError('Native header candidate readiness')
+                    time.sleep(.25)
+                inspected=json.loads(command([args.docker,'inspect',container('candidate')]))[0]
+                spec=importlib.util.spec_from_file_location('header_build_adapter',tool_root/'scripts/rust-playback-baseline/run.py');adapter=importlib.util.module_from_spec(spec);spec.loader.exec_module(adapter)
+                tree=adapter.validate_build_manifest(candidate_manifest,inspected['Image'],(inspected['Config'].get('Labels')or{}).get('org.opencontainers.image.source-tree-sha256'))
+                report['header_candidate_provenance']={'image_id':inspected['Image'],'source_tree_sha256':tree,'build_manifest_sha256':hashlib.sha256(candidate_manifest_bytes).hexdigest(),'container_id':inspected['Id'],'started_at':inspected['State']['StartedAt']}
+                command(compose+['exec','-T','-e','HEADER_NATIVE_BASE_URL=http://candidate:9192']+(['-e','HEADER_STRIPPED_SEEK=1']if args.vod_header_stripped_seek_source else[])+['baseline','/dispatcharrpy/bin/python','/vod-verification/header_stripped_follow_native.py'],timeout=90)
+                native=json.loads((output/'vod-header-stripped-follow-native.json').read_text());report['header_stripped_follow_native']=native
+                final=json.loads(command([args.docker,'inspect',container('candidate')]))[0]
+                checks={'both_complete':captured['capture_complete']and native['capture_complete'],'redirect_status':captured['redirect_status']==native['redirect_status'],'same_process':final['Id']==inspected['Id']and final['State']['StartedAt']==inspected['State']['StartedAt']and final['RestartCount']==0}
+                for name in ['first_headerless_follow','second_headerless_existing_session']:
+                    a=captured.get(name,{});b=native.get(name,{})
+                    checks[name]=a.get('status')==b.get('status')and a.get('bytes')==b.get('bytes')and a.get('sha256')==b.get('sha256')and a.get('content_range')==b.get('content_range')
+                checks['cleanup']=not captured['remaining_metadata']and not native['remaining_metadata']and captured['provider_after_close']in[None,'0']and native['provider_after_close']in[None,'0']
+                report['header_schedule']={'checks':checks,'passed':all(checks.values()),'scope':'Actual selected redirect/headerless body/range bytes; not full metadata/event/auth/concurrency parity'}
+                report['passed']&=report['header_schedule']['passed']
+                report['scope']='Actual Original/native headerless capability follow comparison; failures preserved, no default/fullauth promotion'
+                if not report['passed']:raise RuntimeError('Selected headerless Source/native flow differs')
+            raise ActiveSourceComplete()
+        if args.vod_optional_session_lookup_source:
+            command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/vod-verification/optional_session_lookup_source.py'],timeout=90)
+            captured=json.loads((output/'vod-optional-session-lookup-source.json').read_text())
+            report['optional_session_lookup_source']=captured
+            report['passed']=captured['capture_complete']and captured['cleanup_complete']
+            report['scope']='Exact Original optional-session lookup block with actual Redis ACL/type/parse cases; no native/HTTP/restart acceptance'
+            raise ActiveSourceComplete()
         if args.vod_active_restart_source:
             active_controller='active_restart_http_source.py'if args.vod_active_restart_http_source else'active_restart_source.py'
-            command(compose+['exec','-T']+(['-e','ACTIVE_OBSERVE_OLD_PROGRESS=1']if args.vod_active_old_progress_source else[])+(['-e','ACTIVE_CLOSE_OLD_FIRST=1']if args.vod_active_old_close_source else[])+['baseline','/dispatcharrpy/bin/python','/vod-verification/'+active_controller],timeout=150)
+            command(compose+['exec','-T']+(['-e','ACTIVE_OBSERVE_OLD_PROGRESS=1']if args.vod_active_old_progress_source else[])+(['-e','ACTIVE_CLOSE_OLD_FIRST=1']if args.vod_active_old_close_source else[])+(['-e','ACTIVE_EXTRA_ENTRY=1']if args.vod_active_extra_entry_source else[])+(['-e','ACTIVE_RETIRED_REOPEN=1']if args.vod_active_retired_reopen_source else[])+(['-e','ACTIVE_ENTRY_AFTER_ADMIN_STOP=1']if args.vod_active_admin_stop_entry_source else[])+(['-e','ACTIVE_ADMIN_STOP=1']if args.vod_active_admin_stop_source else[])+(['-e','ACTIVE_IDLE_SAME_ENTRY=1']if args.vod_active_idle_same_entry else[])+(['-e','ACTIVE_IDLE_MINT=1']if args.vod_active_idle_mint_source else[])+(['-e','ACTIVE_IDLE_REDIRECT=1']if args.vod_active_idle_redirect_source else[])+(['-e','ACTIVE_IDLE_FOLLOW=1']if args.vod_active_idle_follow_source else[])+(['-e','ACTIVE_STRIP_AUTH_AFTER_LOSS=1']if args.vod_active_auth_loss else[])+(['-e','ACTIVE_CAPPED_VIEWER=1']if args.vod_active_capped_viewer else[])+(['-e','ACTIVE_FAST_REOPEN=1']if args.vod_active_fast_reopen else[])+(['-e','ACTIVE_CAPTURE_LONG_PREFIX=1']if args.vod_active_long_prefix else[])+['baseline','/dispatcharrpy/bin/python','/vod-verification/'+active_controller],timeout=150)
             active=json.loads((output/'vod-active-restart-source.json').read_text())
             report['active_vod_restart_source']=active
             report['active_source_transport']='actual HTTP'if args.vod_active_restart_http_source else'full manager responseiterator'
@@ -282,12 +371,19 @@ def main():
                 spec=importlib.util.spec_from_file_location('active_build_adapter',tool_root/'scripts/rust-playback-baseline/run.py');adapter=importlib.util.module_from_spec(spec);spec.loader.exec_module(adapter)
                 tree=adapter.validate_build_manifest(candidate_manifest,inspected['Image'],(inspected['Config'].get('Labels')or{}).get('org.opencontainers.image.source-tree-sha256'))
                 report['active_candidate_provenance']={'image_id':inspected['Image'],'source_tree_sha256':tree,'build_manifest_sha256':hashlib.sha256(candidate_manifest_bytes).hexdigest(),'container_id':inspected['Id'],'started_at':inspected['State']['StartedAt']}
-                command(compose+['exec','-T','-e','ACTIVE_NATIVE_BASE_URL=http://candidate:9192','baseline','/dispatcharrpy/bin/python','/vod-verification/active_restart_native.py'],timeout=150)
+                command(compose+['exec','-T','-e','ACTIVE_NATIVE_BASE_URL=http://candidate:9192']+(['-e','ACTIVE_OBSERVE_OLD_PROGRESS=1','-e','ACTIVE_CLOSE_OLD_FIRST=1','-e','ACTIVE_EXTRA_ENTRY=1','-e','ACTIVE_RETIRED_REOPEN=1']if args.vod_active_recovery_native else[])+(['-e','ACTIVE_IDLE_SAME_ENTRY=1']if args.vod_active_idle_same_entry else[])+(['-e','ACTIVE_STRIP_AUTH_AFTER_LOSS=1']if args.vod_active_auth_loss else[])+(['-e','ACTIVE_CAPPED_VIEWER=1']if args.vod_active_capped_viewer else[])+(['-e','ACTIVE_FAST_REOPEN=1']if args.vod_active_fast_reopen else[])+(['-e','ACTIVE_CAPTURE_LONG_PREFIX=1']if args.vod_active_long_prefix else[])+['baseline','/dispatcharrpy/bin/python','/vod-verification/active_restart_native.py'],timeout=150)
                 native=json.loads((output/'vod-active-restart-native.json').read_text());report['active_vod_restart_native']=native
                 final=json.loads(command([args.docker,'inspect',container('candidate')]))[0]
                 report['active_candidate_process_preserved']=final['Id']==inspected['Id']and final['State']['StartedAt']==inspected['State']['StartedAt']and final['RestartCount']==0
                 report['active_vod_comparison']={'both_captures_complete':active['capture_complete']and native['capture_complete'],'old_body_ended_matches':active['old_body']['ended']==native['old_body']['ended'],'old_body_bytes_match':active['old_body']['bytes']==native['old_body']['bytes'],'same_id_reopen_status_matches':active['same_id_reopen']['status']==native['same_id_reopen']['status'],'both_sampled_prefixes_match_origin':active['body_prefix_matches_origin']and native['body_prefix_matches_origin'],'application_parity_verified':False}
                 report['passed']&=native['capture_complete']and report['active_candidate_process_preserved']
+                if args.vod_active_recovery_native:
+                    spec=importlib.util.spec_from_file_location('active_recovery_compare',tool_root/'scripts/rust-vod-contracts/active_recovery_compare.py');recovery_compare=importlib.util.module_from_spec(spec);spec.loader.exec_module(recovery_compare)
+                    report['active_recovery_schedule']=recovery_compare.comparison(active,native)
+                    report['active_recovery_schedule_verified']=report['active_recovery_schedule']['passed']
+                    if not args.vod_active_recovery_characterize:report['passed']&=report['active_recovery_schedule']['passed']
+                    else:report['scope']='Characterizationonly: policy/faultSource/native differences retained, no active recovery parity acceptance'
+                    if not report['active_recovery_schedule']['passed'] and not args.vod_active_recovery_characterize:raise RuntimeError('Selected Source/native active recovery schedule differs')
                 report['scope']='Actual Original full-manager and frozen native HTTP active state-loss characterization; differences are evidence, not parity acceptance'
             raise ActiveSourceComplete()
         if args.vod_rapid_reclose_source:

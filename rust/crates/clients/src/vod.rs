@@ -23,7 +23,16 @@ pub async fn admit<C: redis::aio::ConnectionLike + Send + Unpin>(
     connection: &mut C,
     request: Admission<'_>,
 ) -> Result<bool, Error> {
-    admit_inner(connection, request, None).await
+    admit_inner(connection, request, None, false).await
+}
+
+/// Literal Source policy for the opt-in VOD body-stop protocol. Public stop
+/// signals are consumed by a body later, and do not hide counted metadata.
+pub async fn admit_source<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
+    request: Admission<'_>,
+) -> Result<bool, Error> {
+    admit_inner(connection, request, None, true).await
 }
 
 /// Additional current-owner/stop fence for a supervised recovery transition.
@@ -48,13 +57,33 @@ pub async fn admit_fenced_physical<C: redis::aio::ConnectionLike + Send + Unpin>
     {
         return Err(Error::InvalidClient);
     }
-    admit_inner(connection, request, Some(fence)).await
+    admit_inner(connection, request, Some(fence), false).await
+}
+
+/// Same physical ownership contract as the stopped-owner variant. Source's
+/// public stop does not deny admission; the current coordinator owner is fenced.
+pub async fn admit_source_owner_physical<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
+    request: Admission<'_>,
+    fence: AdmissionFence<'_>,
+) -> Result<bool, Error> {
+    if fence.owner_key.is_empty()
+        || fence.owner_key.len() > 512
+        || fence.owner_token.is_empty()
+        || fence.owner_token.len() > 128
+        || fence.stop_key.is_empty()
+        || fence.stop_key.len() > 512
+    {
+        return Err(Error::InvalidClient);
+    }
+    admit_inner(connection, request, Some(fence), true).await
 }
 
 async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
     connection: &mut C,
     request: Admission<'_>,
     fence: Option<AdmissionFence<'_>>,
+    source_policy: bool,
 ) -> Result<bool, Error> {
     let Admission {
         session_id,
@@ -79,7 +108,11 @@ async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
     let policy = json!({"terminate_on_limit_exceeded":policy.terminate_on_limit_exceeded,"prioritize_single_client_channels":policy.prioritize_single_client_channels,"ignore_same_channel_connections":policy.ignore_same_channel_connections,"terminate_oldest":policy.terminate_oldest});
     const FENCE: &str = "if redis.call('EXISTS',KEYS[3])~=0 or redis.call('GET',KEYS[2])~=ARGV[8] then return {'STOPPED'} end\n";
     let script = if fence.is_some() {
-        format!("{FENCE}{ADMIT}")
+        if source_policy {
+            format!("if redis.call('GET',KEYS[2])~=ARGV[8] then return {{'STOPPED'}} end\n{ADMIT}")
+        } else {
+            format!("{FENCE}{ADMIT}")
+        }
     } else {
         ADMIT.to_owned()
     };
@@ -99,7 +132,10 @@ async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
         .arg(token);
     if let Some(fence) = &fence {
         invocation.arg(fence.owner_token);
+    } else {
+        invocation.arg("");
     }
+    invocation.arg(if source_policy { "source" } else { "legacy" });
     let command = invocation.invoke_async::<Vec<String>>(connection);
     let result = if fence.is_some() {
         command.await.map_err(|_| Error::RedisUnavailable)?
@@ -153,7 +189,7 @@ local function scan(pattern,typ)
       examined=examined+1
       if examined>tonumber(ARGV[5]) then return false end
       if kind(key)=='hash' and redis.call('HGET',key,'user_id')==user and
-          redis.call('HGET',key,'rust_preempted')~='1' then
+          (ARGV[9]=='source' or redis.call('HGET',key,'rust_preempted')~='1') then
         local media,client,started,stop
         if typ=='vod' then
           client=string.sub(key,string.len('vod_persistent_connection:')+1)
@@ -226,8 +262,12 @@ for _,client in ipairs(stop_targets) do
   if stop_kind~='none' and stop_kind~='string' then return {'CORRUPT'} end
 end
 for _,client in ipairs(stop_targets) do
-  redis.call('SET',client.stop,'limit','PX',60000)
-  redis.call('HSET',client.key,'rust_preempted','1')
+  if ARGV[9]=='source' then
+    redis.call('SET',client.stop,'true','PX',60000)
+  else
+    redis.call('SET',client.stop,'limit','PX',60000)
+    redis.call('HSET',client.key,'rust_preempted','1')
+  end
 end
 if ARGV[6]=='create' then
   for key,value in pairs(data) do redis.call('HSET',KEYS[1],key,tostring(value)) end

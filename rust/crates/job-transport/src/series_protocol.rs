@@ -37,6 +37,9 @@ pub fn parse(bytes: &[u8]) -> Result<SeriesMessage, ProtocolError> {
         return Err(ProtocolError::Capacity);
     }
     let mut envelope: Value = serde_json::from_slice(bytes).map_err(|_| invalid())?;
+    // Actual Source periodic worker34 preserves this bounded marker only in
+    // task.request.headers; ordinary result metadata/body semantics are unchanged.
+    crate::periodic_headers::take(&mut envelope)?;
     let headers = &envelope["headers"];
     if headers["task"] != "apps.channels.tasks.evaluate_series_rules" {
         return Err(invalid());

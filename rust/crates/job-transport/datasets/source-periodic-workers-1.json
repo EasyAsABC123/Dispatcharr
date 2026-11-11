@@ -1,0 +1,118 @@
+{
+  "scope": "Actual Source periodic worker34 normalized UUID/origin only; header/result body fields preserved.",
+  "private_report_sha256": "5a1ce0340a3f03450ba9233f06366bb00e8133ea23e9926ef98bb506e9b0f50b",
+  "credit": "Original Dispatcharr/Celery/django-celery-beat authors retain credit/licenses.",
+  "cases": [
+    {
+      "name": "refresh",
+      "envelope": {
+        "body": "W1syXSwgeyJmb3JjZSI6IHRydWV9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "11111111-1111-4111-8111-000000000001",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            14400,
+            null
+          ],
+          "root_id": "11111111-1111-4111-8111-000000000001",
+          "parent_id": null,
+          "argsrepr": "[2]",
+          "kwargsrepr": "{'force': True}",
+          "origin": "source-observed-origin",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "periodic_task_name": "rust-owned-periodic-worker-refresh"
+        },
+        "properties": {
+          "correlation_id": "11111111-1111-4111-8111-000000000001",
+          "reply_to": "22222222-2222-4222-8222-000000000001",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "33333333-3333-4333-8333-000000000001"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T00:17:17.758658+00:00",
+        "task_id": "11111111-1111-4111-8111-000000000001"
+      },
+      "ttl_observed": 3600
+    },
+    {
+      "name": "series",
+      "envelope": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.evaluate_series_rules",
+          "id": "11111111-1111-4111-8111-000000000002",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "11111111-1111-4111-8111-000000000002",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "source-observed-origin",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "periodic_task_name": "rust-owned-periodic-worker-series"
+        },
+        "properties": {
+          "correlation_id": "11111111-1111-4111-8111-000000000002",
+          "reply_to": "22222222-2222-4222-8222-000000000002",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "33333333-3333-4333-8333-000000000002"
+        }
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": {
+          "scheduled": 0,
+          "details": []
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T00:17:17.831102+00:00",
+        "task_id": "11111111-1111-4111-8111-000000000002"
+      },
+      "ttl_observed": 3600
+    }
+  ]
+}

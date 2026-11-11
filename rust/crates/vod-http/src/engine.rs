@@ -344,6 +344,14 @@ impl VodEngine {
         let provider_body_length = upstream.content_length();
         let progress = ticket.progress();
         let (start_body, body_started) = tokio::sync::oneshot::channel();
+        // Only the opt-in Source body protocol waits for downstream completion.
+        // A hard stop still releases an unpolled held response during shutdown.
+        let (finish_body, body_finished) = if ticket.source_blocks() {
+            let (sender, receiver) = tokio::sync::oneshot::channel();
+            (Some(sender), Some(receiver))
+        } else {
+            (None, None)
+        };
         let task = tokio::spawn(pump(
             upstream,
             ticket,
@@ -351,18 +359,23 @@ impl VodEngine {
             self.inner.config.frame_bytes,
             retry,
             body_started,
+            body_finished,
         ));
         let state = BodyState {
             receiver,
             stop,
             _cancel: CancelTask(task),
             start_body: Some(start_body),
+            finish_body,
             progress,
             pending_bytes: 0,
             remaining: provider_body_length,
         };
         let body = stream::try_unfold(state, |mut state| async move {
-            state.progress.acknowledge(state.pending_bytes).await;
+            if state.progress.acknowledge(state.pending_bytes).await {
+                state.finish();
+                return Ok(None);
+            }
             state.pending_bytes = 0;
             if let Some(start) = state.start_body.take() {
                 let _ = start.send(());
@@ -389,8 +402,10 @@ impl VodEngine {
                         // Hyper can retire a known-length body after this frame
                         // without another EOF poll. Commit its final Source
                         // generator yield here so that progress is not lost.
-                        state.progress.acknowledge(chunk.len()).await;
-                        state.progress.finish().await;
+                        if !state.progress.acknowledge(chunk.len()).await {
+                            state.progress.finish().await;
+                        }
+                        state.finish();
                     } else {
                         state.pending_bytes = chunk.len();
                     }
@@ -399,6 +414,7 @@ impl VodEngine {
                 Some(Err(error)) => Err(error),
                 None => {
                     state.progress.finish().await;
+                    state.finish();
                     Ok(None)
                 }
             }
@@ -420,9 +436,17 @@ struct BodyState {
     stop: tokio::sync::watch::Receiver<bool>,
     _cancel: CancelTask,
     start_body: Option<tokio::sync::oneshot::Sender<()>>,
+    finish_body: Option<tokio::sync::oneshot::Sender<()>>,
     progress: crate::sessions::Progress,
     pending_bytes: usize,
     remaining: Option<u64>,
+}
+impl BodyState {
+    fn finish(&mut self) {
+        if let Some(sender) = self.finish_body.take() {
+            let _ = sender.send(());
+        }
+    }
 }
 struct RetryRequest {
     client: reqwest::Client,
@@ -480,9 +504,12 @@ async fn pump(
     frame_bytes: usize,
     retry: RetryRequest,
     body_started: tokio::sync::oneshot::Receiver<()>,
+    body_finished: Option<tokio::sync::oneshot::Receiver<()>>,
 ) {
-    let mut upstream: ProviderStream = Box::pin(upstream.bytes_stream());
     let mut stop = ticket.session.stop.subscribe();
+    let source_blocks = ticket.source_blocks();
+    async {
+    let mut upstream: ProviderStream = Box::pin(upstream.bytes_stream());
     if *stop.borrow() {
         return;
     }
@@ -536,7 +563,11 @@ async fn pump(
             }
         };
         while !chunk.is_empty() {
-            let frame = chunk.split_to(chunk.len().min(frame_bytes));
+            // Preserve each Source8192-byte logical boundary even when provider
+            // network fragments or the configured frame size are irregular.
+            // This only splits owned Bytes; it adds no accumulation buffer.
+            let boundary=if source_blocks {8192-(sent_bytes%8192)as usize}else{frame_bytes};
+            let frame = chunk.split_to(chunk.len().min(frame_bytes).min(boundary));
             let count = frame.len() as u64;
             if *stop.borrow() {
                 return;
@@ -547,6 +578,15 @@ async fn pump(
             }
             sent_bytes = sent_bytes.saturating_add(count);
             failures = 0;
+        }
+    }
+    }.await;
+    // Close the receiver after upstream EOF, while keeping the true body owner
+    // until its final acknowledgment or cancellation. Do not deadlock EOF reads.
+    drop(sender);
+    if let Some(finished) = body_finished {
+        if !*stop.borrow() {
+            tokio::select! {_=finished=>{},_=stop.changed()=>{}}
         }
     }
 }

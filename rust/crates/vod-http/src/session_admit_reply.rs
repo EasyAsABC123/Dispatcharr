@@ -283,3 +283,6 @@ async fn delayed_admit_reply_retains_pending_cleanup_after_logical_timeout() {
 
 #[path = "session_lookup_reply.rs"]
 mod lookup_reply;
+
+#[path = "session_stop_reply.rs"]
+mod stop_reply;

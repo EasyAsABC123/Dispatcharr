@@ -256,7 +256,7 @@ impl Retired {
         request: AcquireRequest,
         admission: NewAdmission,
     ) -> Result<NewGeneration, Error> {
-        self.reopen_scoped(request, admission, None).await
+        self.reopen_scoped(request, admission, None, false).await
     }
     /// Retain this new request's scope through actual setup/ambiguous cleanup.
     /// Successful delivery releases this extra setup reference: the caller must
@@ -267,13 +267,25 @@ impl Retired {
         admission: NewAdmission,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<NewGeneration, Error> {
-        self.reopen_scoped(request, admission, Some(caller)).await
+        self.reopen_scoped(request, admission, Some(caller), false)
+            .await
+    }
+    /// Opt-in Source body-stop admission; retain physical setup/cleanup owners.
+    pub async fn reopen_source_retained(
+        self,
+        request: AcquireRequest,
+        admission: NewAdmission,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<NewGeneration, Error> {
+        self.reopen_scoped(request, admission, Some(caller), true)
+            .await
     }
     async fn reopen_scoped(
         self,
         request: AcquireRequest,
         mut admission: NewAdmission,
         caller: Option<Arc<dyn Send + Sync>>,
+        source_policy: bool,
     ) -> Result<NewGeneration, Error> {
         if request.channel_id != self.id
             || admission.fields.get("session_id") != Some(&self.id)
@@ -321,26 +333,32 @@ impl Retired {
             let owner = format!("{}:vod:session:{}:owner", self.inner.namespace, self.id);
             let stop = format!("vod_proxy:client:{}:stop", self.id);
             let mut connection = self.inner.connection.clone();
-            let outcome = admit_fenced_physical(
-                &mut connection,
-                Admission {
-                    session_id: &self.id,
-                    fields: &admission.fields,
-                    limit: admission.limit,
-                    policy: &admission.policy,
-                    create: true,
-                    token: &token,
-                    scan_limit: 50000,
-                    timeout,
-                    ttl: Duration::from_secs(3600),
-                },
-                AdmissionFence {
-                    owner_key: &owner,
-                    owner_token: lease.token(),
-                    stop_key: &stop,
-                },
-            )
-            .await;
+            let request = Admission {
+                session_id: &self.id,
+                fields: &admission.fields,
+                limit: admission.limit,
+                policy: &admission.policy,
+                create: true,
+                token: &token,
+                scan_limit: 50000,
+                timeout,
+                ttl: Duration::from_secs(3600),
+            };
+            let fence = AdmissionFence {
+                owner_key: &owner,
+                owner_token: lease.token(),
+                stop_key: &stop,
+            };
+            let outcome = if source_policy {
+                dispatcharr_clients::vod::admit_source_owner_physical(
+                    &mut connection,
+                    request,
+                    fence,
+                )
+                .await
+            } else {
+                admit_fenced_physical(&mut connection, request, fence).await
+            };
             match outcome {
                 Ok(true) => {
                     cleanup.as_mut().expect("owned setup").pending_caller.take();

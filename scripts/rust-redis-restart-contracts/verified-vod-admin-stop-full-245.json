@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "original_authors": "Original Dispatcharr authors retain application and algorithm credit.",
+  "scope": "Exact224 baseline plus independent bounded retained admin stop writer; separate from identity/policy243.",
+  "proof": {
+    "path": "artifacts/rust/vod-admin-stop-full-245/proof.json",
+    "sha256": "cd9f067a644ef29181e4d53ec857ea25d86c748dbe222f7e661c01c3607cf324"
+  },
+  "tests_passed": 61,
+  "strict_decoders_passed": 2,
+  "strict_clippy_passed": true,
+  "cleanup_passed": true,
+  "limits": "Admin controls have max_requests independent permits; reject before work when full/closed. Actual service/permit survives caller abort and4s reply. No new response deadline or write retry. Existing body limits unchanged.",
+  "behavior": "Source EXISTS then SETEX true60s and local legacy stop behavior preserved; opt-in scope does not broadcast admin stop to every body.",
+  "known_open": "Combined73 gate246 and actual packaged SQL/auth/Redis policy+identity/admin replay pending; no default recovery or full M4 claim."
+}

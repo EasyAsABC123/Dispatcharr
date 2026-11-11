@@ -291,12 +291,9 @@ async fn local_scope_never_delegates_through_foreign_or_changed_identity() {
         .await
         .unwrap();
     let _: () = f.redis.set(f.stop(), "stop").await.unwrap();
-    assert_eq!(
-        scope.progress(&body, 819200).await.unwrap(),
-        Progress::Stopped
-    );
-    assert!(*stop.borrow());
-    let _: usize = f.redis.del(f.stop()).await.unwrap();
+    assert!(scope.consume_public_stop(&body).await.unwrap());
+    assert!(!*stop.borrow());
+    assert!(!f.redis.exists::<_, bool>(f.stop()).await.unwrap());
     let _: () = f.redis.set(f.owner(), "foreign-owner").await.unwrap();
     assert_eq!(
         scope.progress(&body, 819200).await.unwrap(),
@@ -368,10 +365,7 @@ async fn local_scope_persistent_stop_does_not_prevent_owned_teardown() {
         .unwrap();
     body.started();
     let _: () = f.redis.set(f.stop(), "stop").await.unwrap();
-    assert_eq!(
-        scope.progress(&body, 819200).await.unwrap(),
-        Progress::Stopped
-    );
+    scope.stop();
     assert!(*stop.borrow());
     let closed = scope.close(&body).await.unwrap();
     assert!(closed.deleted);
@@ -636,4 +630,179 @@ async fn local_scope_missing_unique_ledger_activates_partial_state_guard() {
         .del(&[f.owner(), f.metadata(), f.counter()])
         .await
         .unwrap();
+}
+
+#[tokio::test]
+#[ignore = "actual Source public stop permits admission and is consumed by one body only"]
+async fn local_scope_public_stop_admission_and_single_body_consumption() {
+    let (mut f, scope, stop) = initial().await;
+    let old = scope
+        .attach_reserved(Arc::new(()), true, None)
+        .await
+        .unwrap();
+    let _: () = f.redis.set_ex(f.stop(), "true", 60).await.unwrap();
+    assert_eq!(
+        scope.retire_missing().await,
+        Err(prototype::Error::StillOwned)
+    );
+    let sibling = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let mut admission = f.admission();
+    admission
+        .fields
+        .insert("content_obj_type".into(), "movie".into());
+    scope.enter_current(&sibling, admission).await.unwrap();
+    assert_eq!(
+        f.redis
+            .hget::<_, _, i64>(f.metadata(), "active_streams")
+            .await
+            .unwrap(),
+        2
+    );
+    assert!(f.redis.exists::<_, bool>(f.stop()).await.unwrap());
+    assert!(scope.consume_public_stop(&old).await.unwrap());
+    assert!(!scope.consume_public_stop(&sibling).await.unwrap());
+    assert!(!*stop.borrow());
+    assert_eq!(
+        f.redis
+            .hget::<_, _, u64>(f.metadata(), "bytes_sent")
+            .await
+            .unwrap(),
+        0
+    );
+    scope.close(&old).await.unwrap();
+    assert_eq!(
+        f.redis
+            .hget::<_, _, i64>(f.metadata(), "active_streams")
+            .await
+            .unwrap(),
+        1
+    );
+    assert_eq!(f.redis.get::<_, i64>(f.counter()).await.unwrap(), 1);
+    scope.close(&sibling).await.unwrap();
+    scope.drain().await;
+    f.empty().await;
+}
+
+#[tokio::test]
+#[ignore = "new public-stop consume cannot delete a foreign replacement owner's signal"]
+async fn local_scope_public_stop_never_consumes_foreign_generation_signal() {
+    let (mut f, scope, stop) = initial().await;
+    let body = scope
+        .attach_reserved(Arc::new(()), true, None)
+        .await
+        .unwrap();
+    f.old.release().await.unwrap();
+    f.old.settlement().wait().await;
+    let foreign = f.coordinator.acquire_vod(f.request()).await.unwrap();
+    let _: () = f
+        .redis
+        .hset_multiple(
+            f.metadata(),
+            &[
+                ("rust_owner_token", "foreign-generation"),
+                ("active_streams", "7"),
+            ],
+        )
+        .await
+        .unwrap();
+    let _: () = f
+        .redis
+        .set_ex(f.stop(), "new-owner-stop", 60)
+        .await
+        .unwrap();
+    assert_eq!(
+        scope.consume_public_stop(&body).await,
+        Err(prototype::Error::ForeignOwner)
+    );
+    assert!(*stop.borrow());
+    assert_eq!(
+        f.redis.get::<_, String>(f.stop()).await.unwrap(),
+        "new-owner-stop"
+    );
+    assert_eq!(
+        f.redis
+            .hget::<_, _, i64>(f.metadata(), "active_streams")
+            .await
+            .unwrap(),
+        7
+    );
+    assert!(!scope.close(&body).await.unwrap().changed);
+    assert_eq!(
+        f.redis.get::<_, String>(f.owner()).await.unwrap(),
+        foreign.token()
+    );
+    assert_eq!(f.redis.get::<_, i64>(f.counter()).await.unwrap(), 1);
+    foreign.release().await.unwrap();
+    foreign.settlement().wait().await;
+    let _: usize = f.redis.del(&[f.metadata(), f.stop()]).await.unwrap();
+    scope.drain().await;
+    f.empty().await;
+}
+
+#[tokio::test]
+#[ignore = "Source230 request anonymous subject must not rewrite current public identity"]
+async fn local_scope_headerless_current_entry_preserves_public_subject() {
+    let (mut f, scope, _) = initial().await;
+    let entry = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let mut request = admission(&f);
+    request.fields.insert("user_id".into(), "unknown".into());
+    scope.enter_current(&entry, request).await.unwrap();
+    let public_user: String = f.redis.hget(f.metadata(), "user_id").await.unwrap();
+    assert_eq!(public_user, "prototype-user");
+    scope.close(&entry).await.unwrap();
+    f.erase_owned_generation().await;
+    scope.retire_missing().await.unwrap();
+    drop(scope);
+    f.empty().await;
+}
+#[tokio::test]
+#[ignore = "Source238 all-missing recreation changes only generation public subject"]
+async fn local_scope_anonymous_recreation_retains_old_body_private_ownership() {
+    let (mut f, scope, _) = initial().await;
+    let old = scope
+        .attach_reserved(Arc::new(()), true, None)
+        .await
+        .unwrap();
+    old.started();
+    f.erase_owned_generation().await;
+    scope.retire_missing().await.unwrap();
+    let young = scope.attach_pending(Arc::new(()), None).await.unwrap();
+    let mut request = admission(&f);
+    request.fields.insert("user_id".into(), "unknown".into());
+    scope.reopen(&young, f.request(), request).await.unwrap();
+    young.started();
+    let public_user: String = f.redis.hget(f.metadata(), "user_id").await.unwrap();
+    assert_eq!(public_user, "unknown");
+    scope.progress(&old, 819200).await.unwrap();
+    assert_eq!(scope.body_slots(), 0);
+    scope.close(&old).await.unwrap();
+    assert!(!young.is_closed());
+    scope.close(&young).await.unwrap();
+    assert_eq!(scope.body_slots(), 2);
+    f.empty().await;
+}
+#[tokio::test]
+#[ignore = "nonanonymous alternate identity remains unsupported"]
+async fn local_scope_other_authenticated_subject_remains_rejected() {
+    let (mut f, scope, _) = initial().await;
+    let entry = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let mut request = admission(&f);
+    request
+        .fields
+        .insert("user_id".into(), "other-authenticated-user".into());
+    assert!(scope.enter_current(&entry, request).await.is_err());
+    scope.close(&entry).await.unwrap();
+    f.erase_owned_generation().await;
+    scope.retire_missing().await.unwrap();
+    drop(scope);
+    f.empty().await;
 }
