@@ -1,0 +1,89 @@
+{
+  "passed": true,
+  "comparative_core_performance_verified": true,
+  "milestone_M1_closed": false,
+  "scope": "Actual shared-buffer core plus common PGRedis only; not TS-helper or HTTP/application performance. No image44 transfer. Remaining M1 domains/trace acceptance owned by Root.",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "runtime_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "native_source_base": "24d9e72b64df1afe871f935826824a4c96fd6ade",
+  "native_source_map_sha256": "dd3e02227a38f595ace68cfa89f5414bb24efd55f87e6c3f072452280319fd25",
+  "native_binary_sha256": "2a840aee2cad30e7716abe1dc9add51bd9862df70a89ed78ab24ff9541738a9a",
+  "native_release_profile": {
+    "opt_level": "3",
+    "debuginfo": 0,
+    "debug_assertions": false,
+    "overflow_checks": false,
+    "test": true
+  },
+  "policy_sha256": "330058287fc2b47020b754ccafccce07f114c1ae9982756b95dae3ee7d304cf3",
+  "source_selected_plan_seal": "a269faf9ddc21941604e9910e07adcdc4b7d071131ad3c216e93e12441d668c7",
+  "qualifications": 9,
+  "measured_phases": 18,
+  "pairs": 9,
+  "periodic_samples": 1620,
+  "cohort_medians": {
+    "1": {
+      "cpu_ratio": 0.738543966232572,
+      "memory_ratio": 0.7057906214592902
+    },
+    "10": {
+      "cpu_ratio": 0.2697563659532061,
+      "memory_ratio": 0.6793882369524615
+    },
+    "100": {
+      "cpu_ratio": 0.08881988610424793,
+      "memory_ratio": 0.5137687616851008
+    }
+  },
+  "default_database_unchanged": true,
+  "cleanup": "project removed",
+  "independent_parent_review": {
+    "path": "artifacts/rust/m1-core-experiment2-parent-review-1.json",
+    "sha256": "51584c1ffde0d94d06cf252128e524e54981f88dc7cf7f239441c7969c164748"
+  },
+  "raw_experiment": {
+    "path": "artifacts/rust/m1-core-experiment-2",
+    "functional_sha256": "10e45f472d95c6a25a7bca59fb800ccda1b8e33d1f4d85c8d6277a4312d48067",
+    "experiment_sha256": "35fb8bff268e3009f0e6c00f42c3ce064688bdf30da81a8af8ba02bccdda669a",
+    "frozen_plan_sha256": "0e6b6a18abee8dd888666067f9a5c2ca4aeec54be5d645e3f397373001999e76",
+    "projection_sha256": "8178b1845b2133babae6279c2533ef6ea9ec1ad8ec26a720ddd749b2752ad41a"
+  },
+  "portable_replay": {
+    "path": "artifacts/rust/m1-core-portable-functional-3/functional.json",
+    "sha256": "523847a3757b803a9e17114cc420cd073fe31d0655d96c75bc66c70d70ae56ff",
+    "passed": true,
+    "cohorts": "actualSource/native1/10/100",
+    "chunks_per_backend_cohort": 44,
+    "full_bytes_per_reader": 11258192,
+    "held_controls": {
+      "cached_bytes_after_stop": true,
+      "cached_final_viewer_held": true,
+      "history_bytes_after_owned_redis_cleanup": true,
+      "history_final_viewer_held": true,
+      "passed": true,
+      "single_frame_credit_enforced": true
+    },
+    "complete_bundled_support_files": 31,
+    "complete_original_source_files": 1211,
+    "original_full_source_map_sha256": "4e03949255c204e67a73ae2f05c19277438c05aa7394d47d560c0c90c8bc65c1",
+    "complete_support_map_sha256": "651f3f0cdd4b3d2671d39bb1bc8d494b9496a7ac4d0c73554ac9e20d7eaa4374",
+    "no_resource_sampling": true,
+    "default_database_unchanged": true,
+    "cleanup": "project removed"
+  },
+  "validation": {
+    "portable_pure_import_controls": 28,
+    "public_actual_evidence_and_reconstruction_controls": 18,
+    "whole_source_reconstruction": "exactdd3 withfiveoverlays",
+    "current_and_frozen_critical_support": "all13match",
+    "public_controls_log_sha256": "47b3c68c7b040d21e66e9a607085def6edce01a40580faecfed0c7d018d61bae",
+    "portable_controls_log_sha256": "f74f49d9d2803677b5bf31989f4dd64bc69a6b99bfdbda185a6c29c1ccb4faa9"
+  },
+  "preserved_failed_attempts": [
+    "artifacts/rust/m1-core-experiment-1: setupimportcollision beforequalification/sampling",
+    "artifacts/rust/m1-core-portable-functional-1: sandboxsocketrefusal beforeDocker",
+    "artifacts/rust/m1-core-reconstructed-source-1: exactmap correctlyrejected missingtestoverlay"
+  ],
+  "no_main_Cargo_ATTRIBUTION_or_registry_edits": true,
+  "no_new_resource_experiment": true
+}

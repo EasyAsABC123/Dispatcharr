@@ -30,8 +30,10 @@ component passed, but Main omitted the image-router merge and returned404 for
 all240 requests. Image44 adds that merge and repeats the complete packaged
 regressions; no image43 acceptance is transferred.
 
-Actual provider-modal switching and image decoding in the unchanged React UI
-remain separate gates. Uncaptured stored-property, query, suffix, cookie and
+The [fresh-cache provider-modal workflow](rust-provider-modal-browser.md) now
+passes against actual unchanged React: four provider selections and six decoded
+images per phase, with provider-specific episode replacement. Stale/forced
+provider refresh remains open. Uncaptured stored-property, query, suffix, cookie and
 fault schedules remain open. These functional results claim no resource gain.
 See [the source-bound checkpoint](../scripts/rust-integration/verified-checkpoint-image44-1.json).
 

@@ -17,8 +17,9 @@ output-capacity503 controls also pass. No partially serialized success response
 is substituted for an output-capacity failure.
 
 Stale or absent provider information that requires refresh, and forced refresh,
-remain explicitly unsupported. Image bytes and cache routes, uncaptured query
-grammar, and a provider-info modal workflow in React remain separate gates.
+remain explicitly unsupported. [Image/cache routes](rust-vod-images.md) and the captured
+[fresh-cache React modal workflow](rust-provider-modal-browser.md) now pass.
+Uncaptured query grammar and stale/forced provider refresh remain open.
 This checkpoint makes no new performance claim.
 
 To reproduce the packaged check after building an image with the documented

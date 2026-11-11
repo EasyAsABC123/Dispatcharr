@@ -1,0 +1,66 @@
+{
+  "status": "unmeasured-controller-preparation",
+  "credit": "Original Dispatcharr authors retain full application/algorithm credit; original licenses preserved.",
+  "scope": "Actual Original StreamBuffer/Redis vs production native packet assembly/InputStore/Channel/History; active core plus identical stopped-web PGRedis infrastructure; no HTTP/application or performance acceptance until actual paired gates",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "packet_bytes": 188,
+  "packets_per_chunk": 1361,
+  "chunk_bytes": 255868,
+  "input_frame_bytes": 8192,
+  "retention_seconds": 60,
+  "native_authoritative_history_bytes": 134217728,
+  "native_max_chunks": 1024,
+  "native_local_cache_bytes": 4194304,
+  "viewers": [
+    1,
+    10,
+    100
+  ],
+  "source_only_period_candidates_ms": [
+    250,
+    500,
+    1000
+  ],
+  "pacing_selection": "One common candidate must pass all Source-only1/10/100 qualifications; never select using native metrics.",
+  "warmup_seconds": 15,
+  "measure_seconds": 60,
+  "pairs": 3,
+  "slow_readers": "For viewer counts above1, indexes divisible by10 hold each delivered chunk for twice the producer period until measurement ends; then drain without artificial delay.",
+  "functional_acceptance": "Both backends validate every complete delivered byte, contiguous delivered sequence, exact final produced/delivered counts, no retention eviction of Source-valid history, held-frame and final-owner controls before measurements.",
+  "measurement_acceptance": "Whole active core process plus identical PG/Redis infrastructure; finite identical backend limits; one active backend, warmup excluded; zero errors/OOM/counter resets, exact final full-byte work and at least0.98 comparable per-class measured delivery; no gain claim if CPU/memory budgets fail. Absolute core/infrastructure OOM events must remain zero through setup, qualification, measured work and drain; both measured producers retain the predeclared0.95 pacing floor.",
+  "budgets": {
+    "max_native_source_cpu_ratio": 0.9,
+    "max_native_source_peak_working_memory_ratio": 0.95,
+    "min_successful_byte_ratio": 0.98
+  },
+  "quiet_window": "No builds, unrelated fixtures, cleanup scans or other resource samplers; independent source/candidate reset and alternating pair order, retained raw CPU/memory samples and full logical counters.",
+  "remaining": "Complete native functional composition and Source/Core driver/controller, bind exact binaries/source/tooling and Source-only qualification, then authorize and run paired measurements. This file is not a benchmark pass.",
+  "backend_limits": {
+    "cpus": 2,
+    "memory_bytes": 536870912
+  },
+  "infrastructure_limits": {
+    "cpus": 2,
+    "memory_bytes": 536870912
+  },
+  "minimum_samples": 50,
+  "orders": [
+    "source,native",
+    "native,source",
+    "source,native"
+  ],
+  "qualification_limits": {
+    "minimum_pacing_fraction": 0.95,
+    "maximum_core_cpu_percent": 170,
+    "maximum_core_memory_fraction": 0.9,
+    "maximum_core_throttled_period_fraction": 0.05
+  },
+  "functional_override": {
+    "warmup_seconds": 1,
+    "measure_seconds": 10,
+    "period_ms": 250
+  },
+  "measurement_minimum_pacing_fraction": 0.95,
+  "post_window_drain_barrier": "Both peers stop post-end producer/reader/batch/cleanup work until shared release written only after all final cgroup counters; failure/finally releases for cleanup."
+}
