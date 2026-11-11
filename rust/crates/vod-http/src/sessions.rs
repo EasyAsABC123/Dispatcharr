@@ -697,6 +697,18 @@ impl SessionPool {
                         .await;
                 }
             }
+            if let Some(scope) = session.scope.get().cloned() {
+                let locally_idle = {
+                    let state = session.state.lock().await;
+                    state.active == 0 && !state.reserved && !state.closed
+                };
+                if locally_idle {
+                    scope.activate_initial_idle();
+                    return self
+                        .enter_recovered(id, source, request, request_permit, session, scope)
+                        .await;
+                }
+            }
             let mut state = session.state.lock().await;
             if state.closed || *session.stop.borrow() {
                 return Err(unavailable());

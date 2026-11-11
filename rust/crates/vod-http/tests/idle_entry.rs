@@ -550,3 +550,211 @@ async fn idle_entry_foreign_publication_during_claim_is_not_touched() {
     assert!(replacement.release().await.unwrap());
     empty(f, scope).await;
 }
+
+// New actual pending-provider cases. Source TCP2 admits this follower while the
+// target response is held. Busy public-counter undercount is intentionally not
+// copied: another movie's real reservation remains owned.
+
+async fn pending_provider_fixture(
+    p: &Proxy,
+) -> (
+    scoped::functional::Fixture,
+    scoped::functional::prototype::local::LocalScope,
+) {
+    use dispatcharr_coordination::{Coordinator, LeaseConfig};
+    use scoped::functional::Fixture;
+    let mut f = Fixture::new().await;
+    assert!(f.old.release().await.unwrap());
+    f.old.settlement().wait().await;
+    f.coordinator = Coordinator::connect(
+        &p.url,
+        LeaseConfig {
+            namespace: f.namespace.clone(),
+            heartbeat_interval: None,
+            reap_interval: None,
+            ttl: Duration::from_secs(60),
+            command_timeout: Duration::from_secs(5),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    f.old = Arc::new(f.coordinator.acquire_vod(f.request()).await.unwrap());
+    let (mut f, scope, _) = scoped::initial_from_fixture_with_body_limit(f, None, 3).await;
+    let old = scope
+        .attach_reserved(Arc::new(()), false, None)
+        .await
+        .unwrap();
+    tokio::spawn({
+        let scope = scope.clone();
+        async move {
+            let _ = scope.close(&old).await;
+        }
+    });
+    tokio::time::timeout(Duration::from_secs(2), async {
+        loop {
+            if f.redis.get::<_, i64>(f.counter()).await.unwrap() == 0 {
+                break;
+            }
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+    (f, scope)
+}
+
+async fn pending_follower_case(busy: bool, cancel_target: bool) {
+    use scoped::functional::prototype::Error;
+    let p = proxy("RESERVE_PROVIDER", false).await;
+    let (mut f, scope) = pending_provider_fixture(&p).await;
+    let other = if busy {
+        let mut request = f.request();
+        request.channel_id = uuid::Uuid::new_v4().simple().to_string();
+        Some(f.coordinator.acquire_vod(request).await.unwrap())
+    } else {
+        None
+    };
+    let caller = Arc::new(());
+    let weak = Arc::downgrade(&caller);
+    let target = scope.attach_entry_pending(caller, None).await.unwrap();
+    let data = admission(&f);
+    let task = tokio::spawn({
+        let scope = scope.clone();
+        let target = target.clone();
+        async move { scope.enter_idle(&target, data, 1).await }
+    });
+    wait(|| p.seen.load(Ordering::SeqCst) == 1).await;
+    let follower = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let mut wrong = admission(&f);
+    wrong.fields.insert("user_id".into(), "foreign-user".into());
+    assert_eq!(
+        scope.enter_current(&follower, wrong).await,
+        Err(Error::Configuration)
+    );
+    scope.enter_current(&follower, admission(&f)).await.unwrap();
+    assert_eq!(
+        f.redis
+            .hget::<_, _, i64>(f.metadata(), "active_streams")
+            .await
+            .unwrap(),
+        2
+    );
+    assert_eq!(
+        f.redis
+            .hget::<_, _, i64>(f.metadata(), "request_count")
+            .await
+            .unwrap(),
+        2
+    );
+    assert_eq!(p.seen.load(Ordering::SeqCst), 1);
+    assert!(weak.upgrade().is_some());
+    let mut task = Some(task);
+    if cancel_target {
+        let task = task.take().unwrap();
+        task.abort();
+        let _ = task.await;
+        scope.close(&target).await.unwrap();
+    }
+    p.release.send_replace(true);
+    if let Some(task) = task {
+        let result = task.await.unwrap();
+        if busy {
+            assert_eq!(result, Err(Error::ProfileFull));
+        } else {
+            assert_eq!(result, Ok(()));
+        }
+    }
+    f.old.settlement().wait().await;
+    if cancel_target {
+        tokio::time::sleep(Duration::from_millis(50)).await;
+    }
+    let expected = if busy || cancel_target { 1 } else { 2 };
+    assert_eq!(
+        f.redis
+            .hget::<_, _, i64>(f.metadata(), "active_streams")
+            .await
+            .unwrap(),
+        expected
+    );
+    assert_eq!(f.redis.get::<_, i64>(f.counter()).await.unwrap(), 1);
+    scope.close(&follower).await.unwrap();
+    if !busy && !cancel_target {
+        scope.close(&target).await.unwrap();
+    }
+    drop(target);
+    if let Some(other) = other {
+        assert_eq!(f.redis.get::<_, i64>(f.counter()).await.unwrap(), 1);
+        assert!(other.release().await.unwrap());
+        other.settlement().wait().await;
+    }
+    empty(f, scope).await;
+}
+#[tokio::test]
+#[ignore = "actual owned Redis provider reply held; pending follower receipt enters without reserve replay"]
+async fn pending_follower_success_shared_generation() {
+    pending_follower_case(false, false).await;
+}
+#[tokio::test]
+#[ignore = "actual profile-full reply held; follower enters and foreign movie reservation survives"]
+async fn pending_follower_busy_preserves_other_reservation() {
+    pending_follower_case(true, false).await;
+}
+#[tokio::test]
+#[ignore = "actual provider reply held +target caller abort; follower retains settled generation reservation"]
+async fn pending_follower_target_abort_preserves_follower() {
+    pending_follower_case(false, true).await;
+}
+
+#[tokio::test]
+#[ignore = "owned pending reply plus zero public provider state remains partial; no pre-INCR Source authority"]
+async fn pending_follower_zero_provider_remains_partial() {
+    use scoped::functional::prototype::Error;
+    let p = proxy("RESERVE_PROVIDER", false).await;
+    let (mut f, scope) = pending_provider_fixture(&p).await;
+    let body = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let data = admission(&f);
+    let target = tokio::spawn({
+        let scope = scope.clone();
+        let body = body.clone();
+        async move { scope.enter_idle(&body, data, 1).await }
+    });
+    wait(|| p.seen.load(Ordering::SeqCst) == 1).await;
+    // Explicit owned partial-state injection, NOT an Original observation.
+    let _: () = f.redis.set(f.counter(), 0).await.unwrap();
+    let follower = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    assert_eq!(
+        scope.enter_current(&follower, admission(&f)).await,
+        Err(Error::PartialState)
+    );
+    assert_eq!(
+        f.redis
+            .hget::<_, _, i64>(f.metadata(), "active_streams")
+            .await
+            .unwrap(),
+        1
+    );
+    assert_eq!(
+        f.redis
+            .hget::<_, _, i64>(f.metadata(), "request_count")
+            .await
+            .unwrap(),
+        1
+    );
+    let _: () = f.redis.set(f.counter(), 1).await.unwrap();
+    drop(follower);
+    p.release.send_replace(true);
+    target.await.unwrap().unwrap();
+    scope.close(&body).await.unwrap();
+    drop(body);
+    empty(f, scope).await;
+}

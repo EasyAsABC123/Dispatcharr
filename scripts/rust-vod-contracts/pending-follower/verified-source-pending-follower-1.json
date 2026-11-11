@@ -1,0 +1,54 @@
+{
+  "scope": "Corrected scoped source component, no Main package/full parity/gains/default enablement",
+  "original_authors": "Original Dispatcharr and dependency authors retain application and algorithm credit.",
+  "base_git_revision": "1c5196a01808ed51edca60a20d1b3d0b736e3975",
+  "rust_inputs": 749,
+  "selected_runtime_sha256": {
+    "rust/crates/vod-http/src/generation_scope.rs": "732c7b5537ef7be25507d5366b2a0cd77fc86193f72cb9a6abeb1ef1ff32df84",
+    "rust/crates/vod-http/src/generation_idle.rs": "e33cbafab4a7aa4bb62e8f650ea84d11ae2cf9b76ff7ee436d809a4631e77553",
+    "rust/crates/vod-http/src/sessions.rs": "81c016e782086b1bb6251885768b070f4ddc916db6c45a8e785d8dc55c9575e0"
+  },
+  "selected_test_sha256": {
+    "rust/crates/vod-http/tests/generation_scope.rs": "9e54e109b3c160bd0719b34f2bc9922a5038892db4b003056e0c8117bf6543b7",
+    "rust/crates/vod-http/tests/idle_entry.rs": "cabad84fe14ade8bbcdb3bf858a6ab023bd444344c663dd58fe4715aeb8898d8",
+    "rust/crates/vod-http/tests/pending_follower_http.rs": "b77ac81301bedacd624658b5f432475b1b61f909127ddfab5b9042df24bb8370"
+  },
+  "strict_workspace_clippy": true,
+  "workspace_default_tests": {
+    "passed": 462,
+    "failed": 0,
+    "ignored": 653,
+    "suites": 168
+  },
+  "actual_gates": {
+    "pending_scope": 4,
+    "prior_idle": 5,
+    "generation": 20,
+    "physical": 9,
+    "pending_HTTP": 3,
+    "broad_HTTP": 13,
+    "total": 54
+  },
+  "actual_source_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+  "native_binary_sha256": {
+    "pending_follower_http": "6621a0e4db1da0b6a14f8bfb71b5343cb1e5a0510ac041768f52eae70ce7fcae",
+    "http_recovery": "f8cd7b6429e0cc4b1b642b4b9bffb606dbc61246f8a5841bbfdbcdbfa67d32ba",
+    "generation_scope": "21d58e2db668a644979338dda9623f3a256d128a2020cfc396c573cb26a6a360",
+    "generation_scope_physical": "30e0e7df26266e08023668ca85a8664f6c2f14f470e87a7ca7a9361de3091a8b",
+    "idle_entry": "91f3911a468d09cb7d33876e2d06da4d1a57b5f611d9856329d6d7ae9d4e8ec7"
+  },
+  "root_review_correction": "Removed unbound ARGV12 zero-provider exception, preserved provider>0; no new Lua argument; added actual zero-provider rejection control",
+  "reconstructed749_hashes_equal": true,
+  "actual_public_helper_new_HTTP": 3,
+  "owned_cleanup_passed": true,
+  "default_recovery_enabled": false,
+  "known_limits": [
+    "Immutable Main package real SQL/auth pending cases",
+    "SourceTCP1 latebody20s timeout and postclose state",
+    "Source busy public-counter undercount not copied; full parity open",
+    "uncaptured races/earlier provider interleavings"
+  ],
+  "performance_verified": false,
+  "full_parity_accepted": false,
+  "qualified_manifest_sha256": "2bca9f1c542971a10c3ace78020c8a4152b8ae6db6d3058db7ac6f4368c0b02c"
+}

@@ -37,8 +37,15 @@ pub(crate) async fn initial_with_connection(
     initial_from_fixture(Fixture::new().await, proxy).await
 }
 pub(crate) async fn initial_from_fixture(
+    f: Fixture,
+    proxy: Option<&str>,
+) -> (Fixture, LocalScope, watch::Receiver<bool>) {
+    initial_from_fixture_with_body_limit(f, proxy, 2).await
+}
+pub(crate) async fn initial_from_fixture_with_body_limit(
     mut f: Fixture,
     proxy: Option<&str>,
+    bodies: usize,
 ) -> (Fixture, LocalScope, watch::Receiver<bool>) {
     if let Some(proxy) = proxy {
         let connection = redis::Client::open(proxy)
@@ -103,7 +110,7 @@ pub(crate) async fn initial_from_fixture(
             stop,
         },
         Limits {
-            bodies: 2,
+            bodies,
             controls: 2,
             idle_grace: Duration::from_secs(1),
         },

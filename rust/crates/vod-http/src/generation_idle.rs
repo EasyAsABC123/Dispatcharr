@@ -1,4 +1,4 @@
-//! Source255/265 normal public-idle transition; pending followers unsupported.
+//! Source255/265 normal public-idle transition; bounded pending followers use their own body receipts.
 //! Original Dispatcharr authors retain application and algorithm credit.
 use super::*;
 use dispatcharr_coordination::{Error as CoordinationError, ProviderReservation};
@@ -31,7 +31,9 @@ if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_t
 if redis.call('HGET',KEYS[2],'user_id')~=ARGV[3] or redis.call('HGET',KEYS[2],'content_uuid')~=ARGV[4]
  or redis.call('HGET',KEYS[2],'content_obj_type')~=ARGV[5] then return {'IDENTITY'} end
 if redis.call('HGET',KEYS[3],'profile')~=ARGV[6] or redis.call('HGET',KEYS[2],'m3u_profile_id')~=ARGV[8]
- or redis.call('HGET',KEYS[2],'active_streams')~='1' then return {'PARTIAL'} end
+ then return {'PARTIAL'} end
+local active=tonumber(redis.call('HGET',KEYS[2],'active_streams')or'-1')
+if not active or active<1 or active~=math.floor(active) or active>=9007199254740991 then return {'PARTIAL'} end
 if ARGV[10]=='1' and redis.call('HGET',KEYS[3],'reserved')~='1' then return {'PARTIAL'} end
 if redis.call('HSTRLEN',KEYS[4],ARGV[9])~=string.len(ARGV[2]) or redis.call('HGET',KEYS[4],ARGV[9])~=ARGV[2] then return {'RECEIPT_ABSENT'} end
 local requests=tonumber(redis.call('HGET',KEYS[2],'request_count')or'-1')
@@ -43,6 +45,7 @@ return {'ENTERED'}
 struct Pending(Arc<Inner>);
 impl Drop for Pending {
     fn drop(&mut self) {
+        self.0.pending_followers.store(false, Ordering::Release);
         self.0.idle_pending.store(false, Ordering::Release);
     }
 }
@@ -65,7 +68,14 @@ async fn rollback(
     let reply = mutate(inner, gen, "abandon", "0", Some(receipt)).await;
     // Release only this unique private ledger, never a guessed public counter.
     // Await actual physical reserve/release settlement before releasing guards.
-    let release = if reserved {
+    let remaining = reply
+        .as_ref()
+        .ok()
+        .and_then(|value| value.get(1))
+        .and_then(|value| value.parse::<i64>().ok());
+    // A successful reservation belongs to this immutable generation, including
+    // its admitted followers; never release it while a follower remains.
+    let release = if reserved && remaining == Some(0) {
         let result = gen.lease.release_provider().await;
         gen.lease.settlement().wait().await;
         result.map(|_| ()).map_err(|_| Error::Backend)
@@ -82,7 +92,8 @@ async fn rollback(
 }
 impl LocalScope {
     /// Component-only normal idle adoption. Concurrent requests while the
-    /// reservation is pending are explicitly unsupported (Source270 undercount).
+    /// reservation is pending own receipts and share the retained transition.
+    /// The Source270 public-counter undercount is not copied to private leases.
     /// Observer timeout never cancels physical claim/reserve/commit/cleanup.
     pub async fn enter_idle(
         &self,
@@ -124,6 +135,7 @@ impl LocalScope {
             .idle_pending
             .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
             .map_err(|_| Error::PartialState)?;
+        body.state.idle_claim.store(true, Ordering::Release);
         let pending = Pending(self.inner.clone());
         let hold = body
             .state
@@ -223,6 +235,19 @@ impl LocalScope {
                 rollback(&inner, &gen, &receipt, false).await?;
                 return Err(Error::Stopped);
             }
+            // CLAIM is now acknowledged. Keep the control/caller/body owner,
+            // but lend serialization while the provider mutation settles.
+            // A held/lost CLAIM reply never reaches this phase.
+            let Control { _permit, _serial } =
+                Arc::try_unwrap(guard).map_err(|_| Error::Configuration)?;
+            drop(_serial);
+            let _retained_control = _permit;
+            {
+                let _hold = body.state.hold.lock().unwrap();
+                inner
+                    .pending_followers
+                    .store(!body.is_closed(), Ordering::Release);
+            }
             let reserve = gen
                 .lease
                 .reserve_provider(ProviderReservation {
@@ -232,6 +257,7 @@ impl LocalScope {
                 })
                 .await;
             gen.lease.settlement().wait().await;
+            let transition_serial = inner.serial.clone().lock_owned().await;
             if let Err(error) = reserve {
                 let definite_full = error == CoordinationError::ProfileFull;
                 rollback(&inner, &gen, &receipt, !definite_full).await?;
@@ -279,10 +305,7 @@ impl LocalScope {
                 }
             };
             if abandoned {
-                let Control { _permit, _serial } =
-                    Arc::try_unwrap(guard).map_err(|_| Error::Configuration)?;
-                drop(_serial);
-                let _control = _permit;
+                drop(transition_serial);
                 close_owned(inner, hold, true, body.state.hook.clone()).await?;
                 return Err(Error::Stopped);
             }

@@ -78,6 +78,7 @@ struct Inner {
     failed: AtomicBool,
     activated: AtomicBool,
     idle_pending: AtomicBool,
+    pending_followers: AtomicBool,
 }
 struct Generation {
     // Public metadata subject belongs to this proved generation, not old bodies.
@@ -104,6 +105,7 @@ struct BodyState {
     hold: StdMutex<Option<Arc<BodyHold>>>,
     closed: AtomicBool,
     admitted: AtomicBool,
+    idle_claim: AtomicBool,
     started: AtomicBool,
     is_new: bool,
     hook: Option<Arc<dyn StopHook>>,
@@ -383,6 +385,7 @@ impl LocalScope {
             failed: AtomicBool::new(false),
             activated: AtomicBool::new(false),
             idle_pending: AtomicBool::new(false),
+            pending_followers: AtomicBool::new(false),
         });
         let task_inner = inner.clone();
         let task = tokio::spawn(async move {
@@ -444,7 +447,9 @@ impl LocalScope {
         hook: Option<Arc<dyn StopHook>>,
         admitted: bool,
     ) -> Result<Body, Error> {
-        if self.inner.idle_pending.load(Ordering::Acquire) {
+        if self.inner.idle_pending.load(Ordering::Acquire)
+            && !self.inner.pending_followers.load(Ordering::Acquire)
+        {
             return Err(Error::PartialState);
         }
         if *self.inner.stop.borrow() {
@@ -472,6 +477,7 @@ impl LocalScope {
                 }))),
                 closed: AtomicBool::new(false),
                 admitted: AtomicBool::new(admitted),
+                idle_claim: AtomicBool::new(false),
                 started: AtomicBool::new(false),
                 is_new,
                 hook,
@@ -493,6 +499,12 @@ impl LocalScope {
             ledger(&self.inner, lease),
             format!("vod_proxy:client:{}:stop", self.inner.id),
         )
+    }
+    // SessionPool calls only after its initial body is locally idle and its
+    // reservation is released. No new scope/lease or recovered generation is
+    // invented; subsequent entries use this existing fenced accounting owner.
+    pub(crate) fn activate_initial_idle(&self) {
+        self.inner.activated.store(true, Ordering::Release);
     }
     pub async fn current_identity(&self) -> (Arc<Lease>, String) {
         let current = self.inner.state.lock().await.current.clone();
@@ -588,10 +600,16 @@ impl LocalScope {
             let _caller = caller;
             let _control = control(&inner).await?;
             let gen = inner.state.lock().await.current.clone();
-            if !*gen.lease.lost().borrow() {
-                let _ = gen.lease.heartbeat().await;
+            let pending_owned = inner.idle_pending.load(Ordering::Acquire);
+            if pending_owned && !inner.pending_followers.load(Ordering::Acquire) {
+                return Err(Error::PartialState);
             }
-            gen.lease.settlement().wait().await;
+            if !pending_owned {
+                if !*gen.lease.lost().borrow() {
+                    let _ = gen.lease.heartbeat().await;
+                }
+                gen.lease.settlement().wait().await;
+            }
             let observed = match classify_current_physical(&inner, &gen).await {
                 Ok(value) => value,
                 // Only this immutable, read-only script may be observed afresh.
@@ -606,6 +624,15 @@ impl LocalScope {
                 }
                 Err(_) => return Err(Error::Backend),
             };
+            // Pending provider ownership must not be retired/reallocated on
+            // absent/partial state while its physical operation is outstanding.
+            if pending_owned && observed != "OWNED" {
+                return Err(if observed == "FOREIGN" {
+                    Error::ForeignOwner
+                } else {
+                    Error::PartialState
+                });
+            }
             match observed.as_str() {
                 "ABSENT" => {
                     // Ownership is physically absent; release the previous
@@ -797,7 +824,9 @@ impl LocalScope {
         admission: NewAdmission,
         allow_idle: bool,
     ) -> Result<Option<NewAdmission>, Error> {
-        if self.inner.idle_pending.load(Ordering::Acquire) {
+        if self.inner.idle_pending.load(Ordering::Acquire)
+            && !self.inner.pending_followers.load(Ordering::Acquire)
+        {
             return Err(Error::PartialState);
         }
         if !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner))
@@ -819,7 +848,9 @@ impl LocalScope {
         let inner = self.inner.clone();
         let task = tokio::spawn(async move {
             let guard = control(&inner).await?;
-            if inner.idle_pending.load(Ordering::Acquire) {
+            if inner.idle_pending.load(Ordering::Acquire)
+                && !inner.pending_followers.load(Ordering::Acquire)
+            {
                 return Err(Error::PartialState);
             }
             let gen = inner.state.lock().await.current.clone();
@@ -1055,21 +1086,21 @@ impl LocalScope {
         if !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner)) {
             return Err(Error::Configuration);
         }
-        if body.state.closed.swap(true, Ordering::AcqRel) {
-            return Ok(Closed {
-                changed: false,
-                remaining: 0,
-                deleted: false,
-                event_eligible: false,
-            });
-        }
-        let hold = body
-            .state
-            .hold
-            .lock()
-            .unwrap()
-            .take()
-            .ok_or(Error::Configuration)?;
+        let hold = {
+            let mut hold = body.state.hold.lock().unwrap();
+            if body.state.closed.swap(true, Ordering::AcqRel) {
+                return Ok(Closed {
+                    changed: false,
+                    remaining: 0,
+                    deleted: false,
+                    event_eligible: false,
+                });
+            }
+            if body.state.idle_claim.load(Ordering::Acquire) {
+                self.inner.pending_followers.store(false, Ordering::Release);
+            }
+            hold.take().ok_or(Error::Configuration)?
+        };
         if !body.state.admitted.load(Ordering::Acquire) {
             drop(hold);
             return Ok(Closed {
