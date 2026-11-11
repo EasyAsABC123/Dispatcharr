@@ -36,7 +36,7 @@ def main():
         axis.spines[['top', 'right', 'left']].set_visible(False)
         axis.grid(axis='x', alpha=.13)
         axis.set_axisbelow(True)
-    axes[0].set_yticks([1, 0], [f"{readers} virtual reader(s)\n1 request/{report['selected_periods_seconds'][f'unified-list-{readers}']:g}s each" for readers in [1, 10]])
+    axes[0].set_yticks([1, 0], [f"{readers} API reader{'' if readers == 1 else 's'}\n1 request/{report['selected_periods_seconds'][f'unified-list-{readers}']:g}s each" for readers in [1, 10]])
     figure.suptitle('Unified Both/All API: Rust backend', fontsize=17, weight='bold', y=.98)
     figure.text(.5, .87, '5,000 movies · 5,000 series · 50,000 episodes · all 6 paired trials passed', ha='center', fontsize=10)
     figure.text(.5, .055, 'Median paired ratios; backend, PostgreSQL/Redis and idle origin included. Throughput unchanged.', ha='center', fontsize=9)

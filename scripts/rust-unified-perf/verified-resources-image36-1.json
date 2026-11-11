@@ -1,0 +1,88 @@
+{
+  "passed": true,
+  "scope": "Unified Both/All Movie+Series list JSON reads only; no browser, media, categories, actions, artwork or wholeapp claim",
+  "candidate_image": "sha256:ab0c5e9c7073f14327254f82420507ed8b82b97dcf1d64bedc3d3bd6d3d67539",
+  "candidate_source_tree": "d20d74e32a41829a8d2eaa61133f1c7d3ce08812b1ba9610c7e25e1428cee967",
+  "candidate_source_archive": "d32901e9ba7bd452a027333bcb32a801d6d5d425ceef736e9acd32cd117e60f4",
+  "git_revision": "bce2b10632227a554d764e231e763003ed0773f4",
+  "build_manifest_sha256": "fd765252f9ee2ffa9ab33250954491fc7eb41496ba44285f2848267426f99735",
+  "evidence": "artifacts/rust/unified-experiment-image36-2",
+  "integration_report_sha256": "9f54044e9225a18c99fd0728f2a9fdcb9400f498c7c9294cd05cc05f61de71c1",
+  "tool_manifest_sha256": "28ee4aa953158bedd5061f2911a57c93ced288de81a2552bd4e6e000626df04d",
+  "policy_sha256": "c427ae8cef1634b69f866e34e53f8b010c00365eb4abc629c1b0538b08c2217b",
+  "plan_sha256": "15ea69b21c0767a8654ba9c9957e171fb86a97f0ad5911eae6501e1a698d37cb",
+  "pairs": 6,
+  "measurement_phases": 12,
+  "qualification_phases": 8,
+  "resource_samples": 840,
+  "measurement_samples": 720,
+  "request_traces": 4258,
+  "verified_measurement_requests": 3960,
+  "selected_periods_seconds": {
+    "unified-list-1": 1,
+    "unified-list-10": 1
+  },
+  "medians": {
+    "unified-list-1": {
+      "readers": 1,
+      "paired_ratios": {
+        "cpu_percent_mean": 0.8639142665384159,
+        "peak_working_memory_bytes": 0.6495968878615324,
+        "completion_p95_ms": 0.8295981838780042,
+        "throughput_per_second": 1.0
+      },
+      "decrease_percent": {
+        "cpu_percent_mean": 13.608573346158416,
+        "peak_working_memory_bytes": 35.04031121384676,
+        "completion_p95_ms": 17.04018161219958
+      },
+      "backend_medians": {
+        "source": {
+          "cpu_percent_mean": 3.4354408988534524,
+          "peak_working_memory_bytes": 726933504,
+          "completion_p95_ms": 24.148076001438312
+        },
+        "candidate": {
+          "cpu_percent_mean": 2.9679264043690563,
+          "peak_working_memory_bytes": 471937024,
+          "completion_p95_ms": 20.033199994941242
+        }
+      }
+    },
+    "unified-list-10": {
+      "readers": 10,
+      "paired_ratios": {
+        "cpu_percent_mean": 0.8645673720739768,
+        "peak_working_memory_bytes": 0.6561945781606283,
+        "completion_p95_ms": 0.8356688390601514,
+        "throughput_per_second": 1.0
+      },
+      "decrease_percent": {
+        "cpu_percent_mean": 13.543262792602317,
+        "peak_working_memory_bytes": 34.380542183937166,
+        "completion_p95_ms": 16.433116093984857
+      },
+      "backend_medians": {
+        "source": {
+          "cpu_percent_mean": 30.131637667784247,
+          "peak_working_memory_bytes": 727629824,
+          "completion_p95_ms": 23.44545601226855
+        },
+        "candidate": {
+          "cpu_percent_mean": 26.12507485137188,
+          "peak_working_memory_bytes": 477831168,
+          "completion_p95_ms": 19.407480998779647
+        }
+      }
+    }
+  },
+  "numerical_evidence_sha256": "d11c2ea7dcc46c245aa2f7cf9f79a24e0850ed7a967e231079968ede97c3691e",
+  "publisher_source_sha256": "36480f49a64dab461c2292d185f782f157d953734b02ad53588876dbfa8ed285",
+  "cleanup": "owned project removed",
+  "performance_verified": true,
+  "whole_application_performance_verified": false,
+  "full_milestone_complete": false,
+  "credit": "Original Dispatcharr authors and contributors retain all application and algorithm credit and AGPL licensing.",
+  "parent_independent_review_sha256": "31b99a04fbeba4d8bfafa38debe2575ea25c995638df8cc01b9b9ea04da32725",
+  "retained_controller_failure": "artifacts/rust/unified-experiment-image36-1: all8Sourcequalification; measurement refused before any paired measurement, controller endpoint set fixed, unchangedpolicy requalified."
+}

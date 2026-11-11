@@ -15,3 +15,5 @@ python3 scripts/rust-unified-perf/run.py --action functional \
 ```
 
 The first qualification attempt completed its eight Original-only phases, but parent review refused measurement authorization after finding a remaining two-endpoint comparison loop. No paired measurement started; the owned project was removed. The corrected comparison derives its exact endpoint set from the declared policy and rejects missing or extra endpoints. Five controller/reader safety controls pass. A new attempt must repeat qualification with fresh cues; policy, fixture, pacing choices and budgets are unchanged.
+
+The completed second attempt passes all six pairs. [Measured results and chart](../../docs/rust-unified-performance.md), [accepted summary](verified-resources-image36-1.json), and [numeric evidence](evidence-experiment-image36-1.json) retain the exact image36 binding. No whole-application or complete milestone acceptance follows.
