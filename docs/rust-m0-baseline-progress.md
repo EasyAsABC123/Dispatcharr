@@ -12,7 +12,7 @@ These support the baseline; they are not full worker-graph measurements.
 
 | Existing scenario | Necessary remaining evidence |
 | --- | --- |
-| Idle before/after playback and reconnect churn | Execute the sealed three-repetition Source idle/census/growth policy under an otherwise idle host. The observer smoke alone is not acceptance. |
+| Idle before/after playback and reconnect churn | The first sealed three-repetition run completed with two growth-budget failures and one observer-invalid repetition. Correct and qualify denied-proc coverage handling, then review a fresh unchanged-policy run; preserve all negative results. |
 | 1/10/100 viewers on one channel | Reconcile existing repeated warmed measurements with their exact budgets and preconditions; retain the cold100 failure separately. |
 | Ten distinct channels and configured capacity | Add explicit finite-capacity accounting to the existing many-channel workload. One shared provider slot on one channel is a different case. |
 | Slow plus fast readers | Add missing Source resource and post-close accounting to the existing9-fast/1-slow workload. |
@@ -50,3 +50,8 @@ reports to exact IDs, methods, roles, fixtures, assertions and limits. Passive
 metadata, help and Source-only captures are separate from Native passes. Closing
 this bookkeeping does not require all798 items or all later role matrices to
 become Native-verified, or fixing Original defects first.
+
+
+[The first full Original idle/churn attempt](../scripts/rust-baseline/idle-churn/verified-original-three-repetitions-negative-1.json) completed102 readers and all18 workload phases, with independently empty owned projects. It remains failed. Repetitions1/3 recorded post-playback process growth1 and FD growth151/149, then post-churn process growth2, FD growth279/264 and socket growth28/26 against the sealed limits. Most process/FD growth belongs to the shared infrastructure service. Retained UID/PID aggregates do not distinguish live processes, zombies or individual descriptor causes; these are not causal leak findings. Memory growth stayed within budget.
+
+Repetition2 is observer-invalid: a permission-denied read of `/proc/754/fd/0` stopped census sampling, leaving zero later stable idle samples. It supports no growth inference. The original policy, workload, failures, complete/incomplete samples and raw hashes remain unchanged. A separate private observer correction is being qualified to record denied coverage as incomplete and continue sampling, while persistent incomplete coverage must still fail the existing minimums. No Native comparison, gain or complete M0 acceptance follows from this attempt.

@@ -62,3 +62,6 @@ Whole cgroup counters/working memory and process census are different measures;
 no allocator/RSS or long-running leak guarantee follows from reservation limits.
 The controller always keeps `m0_closed` and baseline-acceptance fields false;
 an independent parent review must qualify the resulting evidence.
+
+
+[The first complete three-repetition attempt](verified-original-three-repetitions-negative-1.json) remains failed: all102 readers/18 workload phases pass, two repetitions fail fixed process/FD/socket growth limits, and one loses observer coverage after a denied proc-FD read. The latter cannot support growth conclusions. Independent owned cleanup passes. Original thresholds and failed evidence remain intact; observer correction/qualification is a separate step.

@@ -1,0 +1,200 @@
+{
+  "passed": false,
+  "scope": "Exact sealed Original-only3rep idle/churn; completed workload but Source acceptance fails and rep2 observer invalid; noNative/M0closure",
+  "review": {
+    "path": "artifacts/rust/m0-idle-churn-original-review-1/review.json",
+    "sha256": "31917a8dbc05344030939d9e0d44717b244e6c2bce7c9bbd1d5661e60e1ddb37"
+  },
+  "summary": {
+    "path": "artifacts/rust/m0-idle-churn-original-1/summary.json",
+    "sha256": "198544450c81fd7de56407da4664858a5b1005e62017ae23f3213c7a916dbd4e"
+  },
+  "seal": {
+    "path": "artifacts/rust/m0-idle-churn-original-1/pre-execution-seal.json",
+    "sha256": "d47f401e5726b51db22b9a32dd267670c0e5dc3e0f4224194aae1611b871dc7c"
+  },
+  "policy": {
+    "path": "artifacts/rust/m0-idle-churn-original-1/controller/policy.json",
+    "sha256": "6984f5e73d31048f47ebac884c3936112e26b262da842e637645d363d99fbeab"
+  },
+  "total_readers": 102,
+  "all18_workload_phases_passed": true,
+  "repetitions": [
+    {
+      "repetition": 1,
+      "passed": false,
+      "classification": "captured_sealed_growth_budget_failure_not_causal_leak_proof",
+      "result": {
+        "path": "artifacts/rust/m0-idle-churn-original-1/repetition-1/result.json",
+        "sha256": "1206ab4da8e444fb422982ff98b3bdb02ef155217929414700aee3d0891d36ca"
+      },
+      "samples": {
+        "path": "artifacts/rust/m0-idle-churn-original-1/repetition-1/samples.jsonl",
+        "sha256": "993b810d6cce6a7d37f84a310c8c2cbf9e7cb3de0d05c388d94746402d4b538e"
+      },
+      "sample_count": 115,
+      "census_coverage": {
+        "complete": 112,
+        "incomplete": 3,
+        "stable_complete": 100,
+        "total": 115
+      },
+      "observer_errors": [],
+      "failed_checks": [
+        {
+          "allowed": 0,
+          "id": "idle-after-playback/process-growth",
+          "observed": 1,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-playback/fd-growth",
+          "observed": 151,
+          "passed": false
+        },
+        {
+          "allowed": 0,
+          "id": "idle-after-churn/process-growth",
+          "observed": 2,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/fd-growth",
+          "observed": 279,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/socket-growth",
+          "observed": 28,
+          "passed": false
+        }
+      ],
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "repetition": 2,
+      "passed": false,
+      "classification": "observer_invalid_missing_later_windows_no_growth_inference",
+      "result": {
+        "path": "artifacts/rust/m0-idle-churn-original-1/repetition-2/result.json",
+        "sha256": "824ed7a2e34ad072028acc69bf63edaf908ed63145460af9eef649a570c2aba9"
+      },
+      "samples": {
+        "path": "artifacts/rust/m0-idle-churn-original-1/repetition-2/samples.jsonl",
+        "sha256": "e460b583a9782b5601d526d4e704f2bac0b62fc96df3143dc3a5fdfe0e6e2a48"
+      },
+      "sample_count": 15,
+      "census_coverage": {
+        "complete": 15,
+        "incomplete": 0,
+        "stable_complete": 11,
+        "total": 15
+      },
+      "observer_errors": [
+        "RuntimeError"
+      ],
+      "failed_checks": [
+        {
+          "id": "idle-after-playback/samples",
+          "observed": 0,
+          "passed": false
+        },
+        {
+          "id": "idle-after-churn/samples",
+          "observed": 0,
+          "passed": false
+        }
+      ],
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "repetition": 3,
+      "passed": false,
+      "classification": "captured_sealed_growth_budget_failure_not_causal_leak_proof",
+      "result": {
+        "path": "artifacts/rust/m0-idle-churn-original-1/repetition-3/result.json",
+        "sha256": "89f930d593bf7a5f5734e5ac624640799431921648e4ec1a217f45da1e9bde14"
+      },
+      "samples": {
+        "path": "artifacts/rust/m0-idle-churn-original-1/repetition-3/samples.jsonl",
+        "sha256": "6cafb96a3e115ef5b1a621b2b3874ae4b508b534dcf8d9b9d3ba810152e549e1"
+      },
+      "sample_count": 112,
+      "census_coverage": {
+        "complete": 110,
+        "incomplete": 2,
+        "stable_complete": 98,
+        "total": 112
+      },
+      "observer_errors": [],
+      "failed_checks": [
+        {
+          "allowed": 0,
+          "id": "idle-after-playback/process-growth",
+          "observed": 1,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-playback/fd-growth",
+          "observed": 149,
+          "passed": false
+        },
+        {
+          "allowed": 0,
+          "id": "idle-after-churn/process-growth",
+          "observed": 2,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/fd-growth",
+          "observed": 264,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/socket-growth",
+          "observed": 26,
+          "passed": false
+        }
+      ],
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    }
+  ],
+  "growth_attribution_scope": "Infrastructure dominatesFD/process increases; perUIDaggregate/PIDsets only, no comm/state/perPIDFDcausality. NotSourceleakproof.",
+  "observer_failure": {
+    "type": "PermissionError",
+    "errno": 13,
+    "operation": "os.readlink('/proc/754/fd/0')",
+    "service": "baseline",
+    "phase": "idle-after-playback/cleanup",
+    "numeric_exit_code_saved": false,
+    "known_wrapper": "RuntimeError(FixtureCommand)",
+    "traceback_source": {
+      "path": "artifacts/rust/m0-idle-churn-original-1/repetition-2/failure-private.log",
+      "sha256": "2c8cd3b65382f859ea85821f1f878bf80787e4b63883edb6cf13cb2778b14f66"
+    }
+  },
+  "all_owned_projects_independently_removed": true,
+  "no_native_no_retry_no_threshold_changes": true,
+  "m0_closed": false,
+  "credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "parent_independent_hashes_phases_and_cleanup_verified": true,
+  "readers_independently_counted": 102
+}
