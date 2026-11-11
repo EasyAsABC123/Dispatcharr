@@ -649,3 +649,6 @@ Source restart observations [176](../scripts/rust-redis-restart-contracts/verifi
 
 
 [The actual Original createsuperuser CLI reference](../scripts/rust-operator-contracts/createsuperuser/README.md) passes12 subprocess cases/55 checks against an owned copied database, including environment inputs, Unicode normalization, duplicate/error paths and the observed missing-versus-empty-password distinction. All24 stream hashes and unchanged default database are reviewed; fresh owned cleanup is empty. The initial wrong empty-password oracle is retained. Native CLI implementation, interactive forms, packaged login and full M8 remain open.
+
+
+[Four Source playback accounting attachments](../scripts/rust-playback-baseline/verified-source-accounting-1.json) now qualify mixed readers, stall, failover and warmed ten-channel before/active/local-close/retention states. Existing workload/sample controls and32 portable checks pass; all final clients/upstreams clear. Unlimited provider capacity and unset service caps remain explicit; Source failover warning, oracle negatives and pre-start cue/output failure remain preserved. This is Source functional accounting, not Native resource gains or full M0 closure.

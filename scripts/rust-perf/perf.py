@@ -9,6 +9,8 @@ import os
 import platform
 import statistics
 import subprocess
+import sys
+import socket
 import threading
 import time
 import urllib.request
@@ -77,14 +79,17 @@ def process_resources(ids):
             'note': 'Diagnostic RSS sums may double-count shared pages; Docker working-memory remains the primary memory metric.'}
 
 
-def viewer(url, deadline, timeout, slow_delay):
+def viewer(url, deadline, timeout, slow_delay, physical_close=False):
     result = {'bytes': 0, 'requests': 0, 'errors': 0, 'empty_responses': 0,
               'first_byte_ms': [], 'error_kinds': {}}
     while time.monotonic() < deadline:
         began = time.monotonic()
+        physical = None
         try:
             # URL credentials never enter the output or exception messages.
             with urllib.request.urlopen(url, timeout=min(timeout, max(.001, deadline - began))) as response:
+                if physical_close:
+                    physical=response.fp.raw._sock
                 result['requests'] += 1
                 first = True
                 while time.monotonic() < deadline:
@@ -109,19 +114,29 @@ def viewer(url, deadline, timeout, slow_delay):
                 kind='HTTP'+str(code) if isinstance(code,int) else type(error).__name__
                 result['error_kinds'][kind]=result['error_kinds'].get(kind,0)+1
             time.sleep(min(0.1, max(0, deadline - time.monotonic())))
+        finally:
+            if physical_close:
+                if physical is not None:
+                    try:physical.shutdown(socket.SHUT_RDWR)
+                    except OSError:pass
+                    physical.close()
+                result['physical_socket_closed']=result.get('physical_socket_closed',True) and physical is not None and physical.fileno()==-1
     return result
 
 
-def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1, warmup_ramp=0):
-    deadline = time.monotonic() + duration
+def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1, warmup_ramp=0, accounting=None):
+    began_phase=time.monotonic()
+    deadline = began_phase + duration
+    if accounting:accounting.begin_active(began_phase)
     samples = []
     sample_errors = []
     stop = threading.Event()
 
     def sample():
         next_process_sample = 0.0
-        while not stop.is_set() and time.monotonic() < deadline:
+        while not stop.is_set() and (accounting or time.monotonic() < deadline):
             try:
+                observed_started=time.monotonic();tag=accounting.tag() if accounting else None
                 row = resources(ids)
                 row['memory_metric'] = 'Docker stats working-memory usage, not process RSS'
                 if time.monotonic() >= next_process_sample:
@@ -130,6 +145,7 @@ def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1, wa
                 row['at_seconds_remaining'] = max(0, deadline - time.monotonic())
                 if time.monotonic() < deadline:
                     samples.append(row)
+                if accounting:accounting.observe(tag,row,observed_started,time.monotonic())
             except Exception as exc:
                 sample_errors.append(type(exc).__name__)
             stop.wait(interval)
@@ -143,15 +159,19 @@ def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1, wa
             # Keep the first warmup viewer connected while the channel initializes.
             # All warmup viewers share the same deadline; measurement has no ramp.
             time.sleep(min(warmup_ramp, max(0, deadline - time.monotonic())))
-        return viewer(urls[index % len(urls)], deadline, timeout, slow_delay)
+        return viewer(urls[index % len(urls)], deadline, timeout, slow_delay, physical_close=bool(accounting))
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=viewers) as pool:
         futures = [pool.submit(start_viewer, i) for i in range(viewers)]
         outcomes = [future.result() for future in futures]
     elapsed = time.monotonic() - began
-    stop.set()
-    if sampler:
-        sampler.join()
+    accounting_result=None
+    try:
+        if accounting:
+            accounting.after_readers(outcomes);time.sleep(accounting.retention_seconds);accounting_result=accounting.finish()
+    finally:
+        stop.set()
+        if sampler:sampler.join()
     latencies = [latency for row in outcomes for latency in row['first_byte_ms']]
     summary = {key: sum(row[key] for row in outcomes)
                for key in ('bytes', 'requests', 'errors', 'empty_responses')}
@@ -169,8 +189,9 @@ def phase(urls, viewers, duration, timeout, slow_delay, ids=None, interval=1, wa
         summary.update(cpu_percent_mean=statistics.mean(row['cpu_percent'] for row in samples)
                        if samples else None,
                        memory_bytes_peak=max((row['memory_bytes'] for row in samples), default=None))
-    return {'summary': summary, 'resource_samples': samples, 'sample_errors': sample_errors,
-            'viewers': outcomes}
+    result={'summary': summary, 'resource_samples': samples, 'sample_errors': sample_errors,'viewers': outcomes}
+    if accounting:result['accounting']=accounting_result
+    return result
 
 
 def compare(baseline, candidate, gates):
@@ -228,6 +249,7 @@ def main():
     run.add_argument('--sample-interval', type=float, default=1)
     run.add_argument('--output', type=Path, required=True)
     run.add_argument('--revision', required=True, help='Exact revision/image digest under test')
+    run.add_argument('--accounting-context-file',type=Path)
     run.add_argument('--fixture-id', required=True, help='Fixture content hash and profile identifier')
     check = commands.add_parser('compare')
     check.add_argument('baseline', type=Path)
@@ -267,11 +289,16 @@ def main():
             parser.error('Selected service is not running: ' + service)
         ids.extend(running)
     ids = list(dict.fromkeys(ids))
+    accounting=None
+    if args.accounting_context_file:
+        sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'rust-playback-baseline'))
+        from mixed_accounting import Hook
+        accounting=Hook(json.loads(args.accounting_context_file.read_text()),compose,ids);accounting.before()
     if args.warmup:
         phase(urls, args.viewers, args.warmup, args.timeout, args.slow_delay,
               warmup_ramp=args.warmup_ramp)
     measured = phase(urls, args.viewers, args.duration, args.timeout, args.slow_delay,
-                     ids, args.sample_interval)
+                     ids, args.sample_interval, accounting=accounting)
     output = {'format_version': 1, 'revision': args.revision,
               'timestamp_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'environment': {'host': platform.node(), 'system': platform.platform(),
@@ -286,7 +313,7 @@ def main():
     print(json.dumps(measured['summary'], indent=2))
     return 1 if (measured['summary']['errors'] or measured['summary']['viewers_without_data']
                  or measured['summary']['empty_responses'] or measured['sample_errors']
-                 or len(measured['resource_samples']) < 3) else 0
+                 or len(measured['resource_samples']) < 3 or (accounting and not measured['accounting']['functional_hook_qualified'])) else 0
 
 
 if __name__ == '__main__':

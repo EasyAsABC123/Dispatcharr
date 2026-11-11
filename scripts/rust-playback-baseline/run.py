@@ -95,6 +95,9 @@ def main():
     parser.add_argument('--max-latency-ratio', type=float, default=1.1)
     parser.add_argument('--require-comparison', action='store_true')
     parser.add_argument('--functional-only', action='store_true')
+    parser.add_argument('--many-accounting',action='store_true',help='Private exact10channel warmed functional accounting; no gains')
+    parser.add_argument('--fault-accounting', action='store_true',help='Private Source-only stall/failover accounting; no gain')
+    parser.add_argument('--mixed-accounting', action='store_true', help='Private Source-only mixed functional state/postclose attachment; no resource acceptance')
     parser.add_argument('--functional-probes', nargs='+', choices=['mixed', 'stall', 'failover', 'hls', 'fmp4', 'vod-origin'],
                         default=['mixed', 'stall', 'failover'])
     parser.add_argument('--candidate-service', default='candidate')
@@ -123,6 +126,13 @@ def main():
         parser.error('vod-origin probe requires --vod-fixture')
     if args.functional_only and any(value in args.functional_probes for value in ('hls', 'fmp4')) and args.fixture_codec != 'h264':
         parser.error('browser HLS/fMP4 probes require --fixture-codec h264')
+    accounting_enabled=args.mixed_accounting or args.fault_accounting or args.many_accounting
+    if args.many_accounting and (args.functional_only or args.candidate_overlay or args.scenarios!=['many-channel'] or args.viewers!=[10] or args.trials!=1 or args.warmup!=5 or args.duration!=10 or args.fixture_seconds!=300 or args.fixture_codec!='h264' or not args.fresh_web_per_trial):
+        parser.error('Many accounting requires exactexistingSource10channels/5swarmup/10sload/300sH264/singlefreshtrial')
+    if args.fault_accounting and (not args.functional_only or not set(args.functional_probes)<= {'stall','failover'} or args.candidate_overlay):
+        parser.error('Fault accounting requires Source-only functional stall/failover')
+    if args.mixed_accounting and (not args.functional_only or args.functional_probes != ['mixed'] or args.candidate_overlay):
+        parser.error('Mixed accounting requires Source-only functional-probes mixed')
     if args.require_comparison and args.functional_only:
         parser.error('functional-only cannot establish a resource comparison')
     if args.require_comparison and (not args.candidate_overlay or args.trials < 3
@@ -153,6 +163,8 @@ def main():
                                   for key, value in vars(args).items()},
                 'milestone_completed': False, 'performance_gain_verified': False,
                 'exit_code': 1, 'commands': [], 'measurements': []}
+    if args.many_accounting:
+        evidence['scope']='Source-only existing warmed10channel functional accounting; no isolatedperformance/gain acceptance'
     candidate_manifest = None
     if args.candidate_build_manifest:
         raw_manifest = args.candidate_build_manifest.read_bytes()
@@ -183,10 +195,19 @@ def main():
         if args.candidate_overlay:selected_ports[args.candidate_service]=[args.candidate_port]
         evidence['fixture_ports']=write_port_overlay(fixture_ports,selected_ports)
         compose += ['-f',str(fixture_ports)]
+        accounting_mount = None
+        if accounting_enabled:
+            collector = Path(__file__).with_name('m0_proc_snapshot.py')
+            collector.chmod(0o444)
+            accounting_mount = output/'accounting-mount.json'
+            accounting_mount.write_text(json.dumps({'services':{name:{'volumes':[str(collector)+':/m0-census.py:ro']}for name in ['baseline','origin']}},indent=2)+'\n')
+            compose += ['-f',str(accounting_mount)]
         tool_paths = [*Path(__file__).parent.glob('*.py'), *Path(__file__).parent.glob('*.sh'),
                       Path(__file__).with_name('uwsgi.ini'), compose_file,
                       ROOT / 'scripts/rust-perf/perf.py', ROOT / 'scripts/rust-baseline/dependencies.py',
                       ROOT / 'scripts/rust-integration/fixture_ports.py', fixture_ports]
+        if accounting_enabled:
+            tool_paths += [ROOT/'scripts/rust-baseline/idle-churn/run.py',accounting_mount]
         if args.candidate_overlay:
             tool_paths.append(args.candidate_overlay.resolve())
         evidence['tools_sha256'] = {str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -437,8 +458,17 @@ def main():
                                 '--url-file', str(urls), '--origin-base', origin,
                                 '--primary-path', seed['origin_path'], '--backup-path', seed['backup_origin_path'],
                                 '--case', probe_name, '--output', str(probe_output)]
+                        if accounting_enabled:
+                            probe_output.mkdir(parents=True, exist_ok=True)
+                            context = output/(directory_name+'.accounting-context.json')
+                            context.write_text(json.dumps({'origin':origin, 'seed':seed, 'compose':compose, 'selected_services':services, 'retention_settle_seconds':70, 'scenario':probe_name, 'expected_clients':10 if probe_name=='mixed' else 1, 'active_state_allowed':probe_name=='mixed',
+                                'source_inputs':{'Source_revision':BASELINE,'Source_archive_sha256':evidence['git_archive_sha256'],
+                                'driver_sha256':hashlib.sha256(Path(__file__).with_name('mixed_probe.py' if probe_name=='mixed' else 'fault_probe.py').read_bytes()).hexdigest()}},indent=2)+'\n')
+                            if probe_name=='mixed':
+                                command += ['--compose-file',str(accounting_mount)]
+                            command += ['--accounting-context-file',str(context)]
                         evidence['commands'].append(command)
-                        probe_result = run_load_command(command, perf_environment, 130 if protocol_probe else 100)
+                        probe_result = run_load_command(command, perf_environment, 180 if accounting_enabled else 130 if protocol_probe else 100)
                         probe_output.mkdir(parents=True, exist_ok=True)
                         (probe_output / 'command.log').write_text(probe_result.stdout + probe_result.stderr)
                         record = {'backend': backend, 'probe': probe_name, 'exit_code': probe_result.returncode,
@@ -529,12 +559,18 @@ def main():
                            '--warmup-ramp', str(args.warmup_ramp),
                            '--sample-interval', '1', '--fixture-id', fixture_id,
                            '--revision', revision, '--output', str(output / name)]
+                if args.many_accounting:
+                    context=output/(name+'.accounting-context.json')
+                    context.write_text(json.dumps({'origin':origin,'seed':seed,'selected_channels':selected,'scenario':'many','expected_clients':10,'expected_upstreams':10,'before_zero_required':False,'retention_settle_seconds':70,
+                        'declared_budgets':{'minimum_existing_active_resource_samples':3,'HTTP_errors':0,'viewers_without_data':0,'empty_responses':0},
+                        'source_inputs':{'Source_revision':BASELINE,'Source_archive_sha256':evidence['git_archive_sha256'],'driver_sha256':hashlib.sha256((ROOT/'scripts/rust-perf/perf.py').read_bytes()).hexdigest()}},indent=2)+'\n')
+                    command += ['--compose-file',str(accounting_mount),'--accounting-context-file',str(context)]
                 if scenario == 'slow-readers':
                     # Explicitly all slow readers; mixed slow/fast is a separate required scenario.
                     command += ['--slow-delay', '0.25']
                 evidence['commands'].append(command)
                 result = run_load_command(command, perf_environment,
-                                          args.warmup + args.duration + args.timeout + 45)
+                                          args.warmup + args.duration + args.timeout + 45 + (90 if args.many_accounting else 0))
                 (output / (name + '.log')).write_text(result.stdout + result.stderr)
                 after = get_json(origin + '/stats')
                 row = {'file': name, 'backend': backend, 'scenario': scenario, 'viewers': viewers, 'trial': trial,

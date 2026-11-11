@@ -155,3 +155,47 @@ warmup/measurement, isolated quality, and a bound build manifest, and returns
 nonzero if any pair fails. This is a native TS **subset** resource gate, not full
 application acceptance. First-byte p95 for a single request is just that sample;
 startup distribution gates require separate reconnect/churn workloads.
+
+
+## Source accounting attachment
+
+`verified-source-accounting-1.json` records the opt-in Original-only mixed,
+stall/failover and warmed ten-channel functional checks. Original authors retain
+all application and algorithm credit. This is functional accounting, not Native
+performance gains, finite-capacity acceptance, or complete M0 closure.
+
+The existing workloads/decoders are unchanged. Four state callbacks record
+before, active, local socket close and retention-settled state in the same
+containers. Local close is not a Source peer acknowledgement: clients/upstreams
+can remain until the declared70-second extension ends. Mixed/ten-channel extend
+the existing observer; faults attach one instance of the common observer. No
+second concurrent sampler is added. Transition and incomplete samples are
+retained separately. Callback and observer wall latency are recorded, not
+attributed as CPU overhead or savings. The default commands are unchanged.
+
+The fixture profile limit0 is explicitly unlimited, and its counter stays0 even
+with upstreams. Docker CPU/memory limits are unset in this fixture. Absolute
+CPU/memory/growth ceilings remain null. These observations do not satisfy the
+separate configured finite-capacity requirement. The literal streaming contract
+method remains unresolved; actualGET observations do not rewrite contract IDs.
+
+Offline controls work from a fresh clone without private evidence:
+
+```sh
+PYTHONPATH=scripts/rust-playback-baseline python3 -m unittest \
+  discover -s scripts/rust-playback-baseline -p 'test_*accounting*.py'
+python3 scripts/rust-playback-baseline/verify_source_accounting.py
+```
+
+The verifier checks the committed public attestation and exact runtime hashes.
+It does not claim to replay private raw data. The summary retains those raw
+path/hash bindings for optional independent review. A real Docker replay still
+requires pinned Original history/image and a new output path; do not precreate
+files in that output. Resource observations require an explicitly coordinated
+quiet slot. There is no automatic retry or adjustment of failed budgets.
+
+Source failover's interior decoder warning remains distinct from its clean
+post-recovery75-frame audio/video decode. Earlier setup and oracle failures stay
+listed. Sustained same-run post-close accounting, actual application stream
+change and finite configured capacity remain separate work; no arbitrary soak
+or retrospectively invented budget closes them.

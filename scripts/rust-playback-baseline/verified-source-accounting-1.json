@@ -1,0 +1,763 @@
+{
+  "Source_budget_acceptance": null,
+  "attribution_limits": [
+    "Local socket close is not Source acknowledgement; retained client/upstream counts after local close are reported explicitly.",
+    "Fault interior failover decoder warning exit183 remains; post-recovery audio/video decoder75frames exits0.",
+    "Only failover origin0 observed within actual faultACK/firstRecovery interval is accepted; 27controls reject missing/outside-window cases.",
+    "Observer latency is measured wall time, not CPU overhead or gain."
+  ],
+  "base_tools_revision": "28122faf28a0acf1c136ca0d0831961e786cb686",
+  "credit": "Original Dispatcharr authors retain all application/algorithm credit and licenses.",
+  "fully_verified": false,
+  "functional_cases": [
+    {
+      "callback_wall_seconds": [
+        0.6385028829972725,
+        0.6159044800151605,
+        0.6055672070069704,
+        0.6462302340078168
+      ],
+      "case": "baseline-mixed",
+      "decoder": {
+        "backend": "baseline",
+        "directory": "baseline-mixed",
+        "exit_code": 0,
+        "passed": true,
+        "probe": "mixed",
+        "reset": {
+          "mode": "isolated-web-and-redis-between-functional-cases",
+          "redis_clear_result": "OK",
+          "redis_keys_before": 5,
+          "web_start": {
+            "exit_code": null,
+            "ok": true,
+            "pid": 373,
+            "running": true
+          },
+          "web_stop": {
+            "exit_code": 0,
+            "ok": true,
+            "pid": 313,
+            "running": false
+          }
+        }
+      },
+      "events": [],
+      "observer_calls": 35,
+      "observer_median_wall_seconds": 2.0093791150138713,
+      "passed": true,
+      "raw": "artifacts/rust/m0-mixed-accounting-cumulative-1/baseline-mixed/mixed.json",
+      "resource_errors": [],
+      "run": "m0-mixed-accounting-cumulative-1",
+      "sha256": "aa275baf2ac41678d01c8def40d869dcabb70bacfe63a8ca8f5ec10e2fbdabeb",
+      "states": [
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "4025c4efe7f5161c49809552e25b01275164ce47547cd9221028c7079b06f7c5": true,
+            "ab83c3d689f9ecbdbf34d5923d639b4a92e97bd8439c99d2f289b2f6e38af5c3": true
+          },
+          "clients": 0,
+          "label": "before",
+          "origin_active": 0,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "4025c4efe7f5161c49809552e25b01275164ce47547cd9221028c7079b06f7c5": true,
+            "ab83c3d689f9ecbdbf34d5923d639b4a92e97bd8439c99d2f289b2f6e38af5c3": true
+          },
+          "clients": 10,
+          "label": "active",
+          "origin_active": 1,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "4025c4efe7f5161c49809552e25b01275164ce47547cd9221028c7079b06f7c5": true,
+            "ab83c3d689f9ecbdbf34d5923d639b4a92e97bd8439c99d2f289b2f6e38af5c3": true
+          },
+          "clients": 9,
+          "label": "post-physical-close",
+          "origin_active": 1,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "4025c4efe7f5161c49809552e25b01275164ce47547cd9221028c7079b06f7c5": true,
+            "ab83c3d689f9ecbdbf34d5923d639b4a92e97bd8439c99d2f289b2f6e38af5c3": true
+          },
+          "clients": 0,
+          "label": "retention-settled",
+          "origin_active": 0,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        }
+      ]
+    },
+    {
+      "callback_wall_seconds": [
+        0.6190755480201915,
+        0.6323198169993702,
+        0.6304077730164863,
+        0.5986328420112841
+      ],
+      "case": "baseline-stall",
+      "decoder": {
+        "backend": "baseline",
+        "decoder_exit_code": 0,
+        "decoder_frames": 258,
+        "decoder_interior_seconds": 10.281664,
+        "decoder_verified": true,
+        "directory": "baseline-stall",
+        "exit_code": 0,
+        "passed": true,
+        "post_recovery_decoder_exit_code": 0,
+        "post_recovery_decoder_frames": 75,
+        "post_recovery_video_and_audio_verified": true,
+        "probe": "stall",
+        "reset": {
+          "mode": "isolated-web-and-redis-between-functional-cases",
+          "redis_clear_result": "OK",
+          "redis_keys_before": 5,
+          "web_start": {
+            "exit_code": null,
+            "ok": true,
+            "pid": 372,
+            "running": true
+          },
+          "web_stop": {
+            "exit_code": 0,
+            "ok": true,
+            "pid": 312,
+            "running": false
+          }
+        }
+      },
+      "events": [
+        {
+          "monotonic": 149558.077031244,
+          "name": "fault-ack"
+        },
+        {
+          "monotonic": 149560.909514195,
+          "name": "first-recovery"
+        },
+        {
+          "monotonic": 149567.912258563,
+          "name": "local-client-physical-close"
+        }
+      ],
+      "observer_calls": 29,
+      "observer_median_wall_seconds": 2.0088580059818923,
+      "passed": true,
+      "raw": "artifacts/rust/m0-fault-accounting-source-3/baseline-stall/fault.json",
+      "resource_errors": [],
+      "run": "m0-fault-accounting-source-3",
+      "sha256": "8fe2ec31ba3d3b29befbead110f254c05032940a035e294bf9d3e7ce537c7833",
+      "states": [
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "7e305bb3483e8a5bd92103f18290b90ea6452ece407d482fc36651d19792e777": true,
+            "ac91dd67072fccb23dca08d9b2aa73573bd349124e4f7a7162d8141d52e5617f": true
+          },
+          "clients": 0,
+          "label": "before",
+          "origin_active": 0,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "7e305bb3483e8a5bd92103f18290b90ea6452ece407d482fc36651d19792e777": true,
+            "ac91dd67072fccb23dca08d9b2aa73573bd349124e4f7a7162d8141d52e5617f": true
+          },
+          "clients": 1,
+          "label": "active",
+          "origin_active": 1,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "7e305bb3483e8a5bd92103f18290b90ea6452ece407d482fc36651d19792e777": true,
+            "ac91dd67072fccb23dca08d9b2aa73573bd349124e4f7a7162d8141d52e5617f": true
+          },
+          "clients": 1,
+          "label": "post-physical-close",
+          "origin_active": 1,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "7e305bb3483e8a5bd92103f18290b90ea6452ece407d482fc36651d19792e777": true,
+            "ac91dd67072fccb23dca08d9b2aa73573bd349124e4f7a7162d8141d52e5617f": true
+          },
+          "clients": 0,
+          "label": "retention-settled",
+          "origin_active": 0,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        }
+      ]
+    },
+    {
+      "callback_wall_seconds": [
+        0.8409761929942761,
+        0.7722483509860467,
+        0.6258728920074645,
+        0.6194598740257788
+      ],
+      "case": "baseline-failover",
+      "decoder": {
+        "backend": "baseline",
+        "decoder_exit_code": 183,
+        "decoder_frames": 115,
+        "decoder_interior_seconds": 8.75736,
+        "decoder_verified": false,
+        "directory": "baseline-failover",
+        "exit_code": 0,
+        "passed": true,
+        "post_recovery_decoder_exit_code": 0,
+        "post_recovery_decoder_frames": 75,
+        "post_recovery_video_and_audio_verified": true,
+        "probe": "failover",
+        "reset": {
+          "mode": "isolated-web-and-redis-between-functional-cases",
+          "redis_clear_result": "OK",
+          "redis_keys_before": 8,
+          "web_start": {
+            "exit_code": null,
+            "ok": true,
+            "pid": 697,
+            "running": true
+          },
+          "web_stop": {
+            "exit_code": 0,
+            "ok": true,
+            "pid": 372,
+            "running": false
+          }
+        },
+        "transient_boundary_warning": true
+      },
+      "events": [
+        {
+          "monotonic": 149662.773791815,
+          "name": "fault-ack"
+        },
+        {
+          "monotonic": 149663.890488732,
+          "name": "first-recovery"
+        },
+        {
+          "monotonic": 149670.892916349,
+          "name": "local-client-physical-close"
+        }
+      ],
+      "observer_calls": 29,
+      "observer_median_wall_seconds": 2.0167401149810757,
+      "passed": true,
+      "raw": "artifacts/rust/m0-fault-accounting-source-3/baseline-failover/fault.json",
+      "resource_errors": [],
+      "run": "m0-fault-accounting-source-3",
+      "sha256": "b505a8ea351770a03b2a74889a22d83ac36c1dfe6c8ba7ce45829c9375005b17",
+      "states": [
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "7e305bb3483e8a5bd92103f18290b90ea6452ece407d482fc36651d19792e777": true,
+            "ac91dd67072fccb23dca08d9b2aa73573bd349124e4f7a7162d8141d52e5617f": true
+          },
+          "clients": 0,
+          "label": "before",
+          "origin_active": 0,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "7e305bb3483e8a5bd92103f18290b90ea6452ece407d482fc36651d19792e777": true,
+            "ac91dd67072fccb23dca08d9b2aa73573bd349124e4f7a7162d8141d52e5617f": true
+          },
+          "clients": 1,
+          "label": "active",
+          "origin_active": 1,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "7e305bb3483e8a5bd92103f18290b90ea6452ece407d482fc36651d19792e777": true,
+            "ac91dd67072fccb23dca08d9b2aa73573bd349124e4f7a7162d8141d52e5617f": true
+          },
+          "clients": 1,
+          "label": "post-physical-close",
+          "origin_active": 1,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        },
+        {
+          "binding_equal": true,
+          "census_complete_by_container": {
+            "7e305bb3483e8a5bd92103f18290b90ea6452ece407d482fc36651d19792e777": true,
+            "ac91dd67072fccb23dca08d9b2aa73573bd349124e4f7a7162d8141d52e5617f": true
+          },
+          "clients": 0,
+          "label": "retention-settled",
+          "origin_active": 0,
+          "provider_capacity": {
+            "kind": "unlimited",
+            "value": 0
+          },
+          "provider_slots": 0
+        }
+      ]
+    }
+  ],
+  "limits": {
+    "Docker_CPU_memory": "unset/0",
+    "absolute_CPU_memory_growth_ceilings": null,
+    "contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+    "observed_method": "GET",
+    "provider_cap": "0 means unlimited; counter0 does not prove no physical upstream"
+  },
+  "many": {
+    "Source_budget_acceptance": null,
+    "collection_overhead": [
+      {
+        "kind": "state_callback",
+        "label": "before",
+        "seconds": 0.6125671990157571
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "active",
+        "seconds": 2.0513287659850903
+      },
+      {
+        "kind": "state_callback",
+        "label": "active",
+        "seconds": 0.6014850020001177
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "active",
+        "seconds": 2.0191285550245084
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "active",
+        "seconds": 2.0515630630252417
+      },
+      {
+        "kind": "state_callback",
+        "label": "post-physical-close",
+        "seconds": 0.5953030660166405
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "active",
+        "seconds": 2.0172489320102613
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0481010649818927
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.017060116981156
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0517685299855657
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0176805249939207
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.047474448016146
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.017318884987617
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.048273930005962
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0204880659875926
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.049119114992209
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.016052140010288
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0468680819903966
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.01691692598979
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.050477285985835
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.016189833986573
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.048246841004584
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.015596827986883
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.047822149004787
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0163546499970835
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.04686347299139
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0188906529801898
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0497549359861296
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.016517155978363
+      },
+      {
+        "kind": "state_callback",
+        "label": "retention-settled",
+        "seconds": 0.5988451779994648
+      },
+      {
+        "kind": "existing_resource_observer",
+        "phase": "retention",
+        "seconds": 2.0506346210022457
+      }
+    ],
+    "events": [],
+    "existing_active_resource_sample_count": 3,
+    "fully_verified": false,
+    "independent_cleanup": {
+      "command_exit": 0,
+      "containers": [],
+      "project": "dispatcharr-playback-9a06cb39afad"
+    },
+    "policy_sha256": "43588806f1e584a7532022ad32e9f9030288f044492325ad0e4901f86090d35a",
+    "raw_bindings": [
+      {
+        "path": "artifacts/rust/m0-many-accounting-cumulative-2/run.json",
+        "sha256": "34d4d0f819d2c55467e38397c07756d92fec7ff28425a94b34784b40e913e0be"
+      },
+      {
+        "path": "artifacts/rust/m0-many-accounting-cumulative-2/baseline-many-channel-viewers-10-trial-1.json",
+        "sha256": "15c2db2f61208825b3326b093c7f994d779d5fbf35554df00277f8510f7401e7"
+      },
+      {
+        "path": "artifacts/rust/m0-many-accounting-cumulative-2/quiet-cue-2.json",
+        "sha256": "e50ff8db6472546cf953f0d1511baa90264b88a7190d82131a7a799cd648ca60"
+      },
+      {
+        "path": "artifacts/rust/m0-many-accounting-cumulative-2/preflight-2.json",
+        "sha256": "7126d9df26d4200f85dc5d05d7077e44acf598926d827b34fdbcc6ebd6aa2a9e"
+      },
+      {
+        "path": "artifacts/rust/m0-many-accounting-cumulative-2/plan-2.json",
+        "sha256": "9b6319ca8bd45dcc9b83b1201bbbcd41b20d16268c97c0b4836554d46fecff5e"
+      },
+      {
+        "path": "artifacts/rust/m0-many-accounting-cumulative-2/independent-cleanup.json",
+        "sha256": "1adc6dc61da4460d1f92cba9e4ac76c0dcf7de189f66f2f189315daa2eb8ab53"
+      }
+    ],
+    "remaining": [
+      "Configured finite-capacity boundary remains untested; max_streams0 is unlimited.",
+      "Warmed before/active/post-localclose10 is not idle or peer-close acknowledgement.",
+      "Absolute CPU/memory/growth ceilings absent/null; three active samples are existing load-smoke scope, not repeated qualification.",
+      "Method-resolved literal contract binding, sustained same-run retention and actual application stream-change remain open."
+    ],
+    "resource_acceptance": false,
+    "retained_setup_failure": {
+      "path": "artifacts/rust/m0-many-accounting-cumulative-1/setup-failure.json",
+      "sha256": "dc6946636b3b0a0fd96b86286d0acd0df26bbaab4042bb20de0d3758ed78f30e"
+    },
+    "sample_errors": [],
+    "scope": "Single Root-cued Original ten-channel load-smoke + explicit accounting, not Native/performance gain/fullM0 acceptance",
+    "seal_sha256": "b5510ecf82364e1cd6e5791310d0b77171c9c76eeb7c3914ca281ff164f28bdd",
+    "states": [
+      {
+        "binding_equal": true,
+        "census_complete_by_container": {
+          "04208f5df0beab791a0bc464b651d05a8462a0a314e3d09bc33b2029d6f4d72a": true,
+          "1ca0affa11c7192b8c9172237f623e31941c7dcd4669762e37d52bb6e7f7fafc": true
+        },
+        "clients": 10,
+        "clients_by_channel": {
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1": 1,
+          "1269d1a6-bce6-5e48-88c6-4beccc2e7e3b": 1,
+          "45342aff-1076-5f3b-89e6-9a30509cebbf": 1,
+          "62b6ec5b-ecdd-506b-ba14-8e31f7343a05": 1,
+          "8e972c1b-14a2-5a7b-ae73-d3acd17b7955": 1,
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6": 1,
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054": 1,
+          "c586ff10-c149-52eb-93f9-a1300727a0d0": 1,
+          "cb3c6af5-3779-5a7a-82a5-aee230aa7d8e": 1,
+          "f37c9f64-7192-5791-9800-8047d7bc8d58": 1
+        },
+        "label": "before",
+        "origin_active": 10,
+        "provider_capacity": {
+          "kind": "unlimited",
+          "value": 0
+        },
+        "provider_slots": 0
+      },
+      {
+        "binding_equal": true,
+        "census_complete_by_container": {
+          "04208f5df0beab791a0bc464b651d05a8462a0a314e3d09bc33b2029d6f4d72a": true,
+          "1ca0affa11c7192b8c9172237f623e31941c7dcd4669762e37d52bb6e7f7fafc": true
+        },
+        "clients": 10,
+        "clients_by_channel": {
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1": 1,
+          "1269d1a6-bce6-5e48-88c6-4beccc2e7e3b": 1,
+          "45342aff-1076-5f3b-89e6-9a30509cebbf": 1,
+          "62b6ec5b-ecdd-506b-ba14-8e31f7343a05": 1,
+          "8e972c1b-14a2-5a7b-ae73-d3acd17b7955": 1,
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6": 1,
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054": 1,
+          "c586ff10-c149-52eb-93f9-a1300727a0d0": 1,
+          "cb3c6af5-3779-5a7a-82a5-aee230aa7d8e": 1,
+          "f37c9f64-7192-5791-9800-8047d7bc8d58": 1
+        },
+        "label": "active",
+        "origin_active": 10,
+        "provider_capacity": {
+          "kind": "unlimited",
+          "value": 0
+        },
+        "provider_slots": 0
+      },
+      {
+        "binding_equal": true,
+        "census_complete_by_container": {
+          "04208f5df0beab791a0bc464b651d05a8462a0a314e3d09bc33b2029d6f4d72a": true,
+          "1ca0affa11c7192b8c9172237f623e31941c7dcd4669762e37d52bb6e7f7fafc": true
+        },
+        "clients": 10,
+        "clients_by_channel": {
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1": 1,
+          "1269d1a6-bce6-5e48-88c6-4beccc2e7e3b": 1,
+          "45342aff-1076-5f3b-89e6-9a30509cebbf": 1,
+          "62b6ec5b-ecdd-506b-ba14-8e31f7343a05": 1,
+          "8e972c1b-14a2-5a7b-ae73-d3acd17b7955": 1,
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6": 1,
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054": 1,
+          "c586ff10-c149-52eb-93f9-a1300727a0d0": 1,
+          "cb3c6af5-3779-5a7a-82a5-aee230aa7d8e": 1,
+          "f37c9f64-7192-5791-9800-8047d7bc8d58": 1
+        },
+        "label": "post-physical-close",
+        "origin_active": 10,
+        "provider_capacity": {
+          "kind": "unlimited",
+          "value": 0
+        },
+        "provider_slots": 0
+      },
+      {
+        "binding_equal": true,
+        "census_complete_by_container": {
+          "04208f5df0beab791a0bc464b651d05a8462a0a314e3d09bc33b2029d6f4d72a": true,
+          "1ca0affa11c7192b8c9172237f623e31941c7dcd4669762e37d52bb6e7f7fafc": true
+        },
+        "clients": 0,
+        "clients_by_channel": {
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1": 0,
+          "1269d1a6-bce6-5e48-88c6-4beccc2e7e3b": 0,
+          "45342aff-1076-5f3b-89e6-9a30509cebbf": 0,
+          "62b6ec5b-ecdd-506b-ba14-8e31f7343a05": 0,
+          "8e972c1b-14a2-5a7b-ae73-d3acd17b7955": 0,
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6": 0,
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054": 0,
+          "c586ff10-c149-52eb-93f9-a1300727a0d0": 0,
+          "cb3c6af5-3779-5a7a-82a5-aee230aa7d8e": 0,
+          "f37c9f64-7192-5791-9800-8047d7bc8d58": 0
+        },
+        "label": "retention-settled",
+        "origin_active": 0,
+        "provider_capacity": {
+          "kind": "unlimited",
+          "value": 0
+        },
+        "provider_slots": 0
+      }
+    ],
+    "summary": {
+      "bytes": 38380200,
+      "bytes_per_second": 3838020.0,
+      "cpu_percent_mean": 30.959999999999997,
+      "elapsed_seconds": 10.14575767001952,
+      "empty_responses": 0,
+      "error_kinds": {},
+      "errors": 0,
+      "first_byte_ms_median": 81.83598049799912,
+      "first_byte_ms_p95": 108.48899200209416,
+      "first_byte_samples": 10,
+      "memory_bytes_peak": 428154552.32,
+      "requests": 10,
+      "viewers_without_data": 0
+    },
+    "transition_observations_excluded_count": 2
+  },
+  "offline_controls": 27,
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "preserved_negatives": [
+    "m0-fault-accounting-source-1 setup-directory precondition",
+    "m0-fault-accounting-source-2 failover transient-zero-origin hook oracle mismatch",
+    "m0-mixed-accounting-source-1 wrong-table setup",
+    "m0-mixed-accounting-source-2 collector-mount permission setup",
+    "m0-mixed-accounting-source-3 unlimited-profile counter oracle mismatch",
+    "m0-many-accounting-cumulative-1 exit2: output prepopulated with cue before required-empty runner; no workload"
+  ],
+  "raw_evidence_role": "Raw private path/hash bindings are retained provenance. Public offline controls and summary validation never require those private files.",
+  "resource_acceptance": false,
+  "runtime_files": [
+    {
+      "path": "scripts/rust-playback-baseline/fault_probe.py",
+      "sha256": "c6b8efe12fed67d5cbe5a723cf43a58c9f1a222c342932cd5fd0586bb65fad62"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/mixed_probe.py",
+      "sha256": "9afba3f9de26d8694946a25d0935f98665a447027eb96d7e73133fb1a8a41cf0"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/run.py",
+      "sha256": "ce2374b74cfd1761b5a8f589c8ce3e8aabe31033270a75b81afef55c9a5f784e"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/m0_accounting.py",
+      "sha256": "6cf44f564d569cbf7a27435c6c08cebf84960cc52cebd47734cfa54ca5e119a1"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/m0_proc_snapshot.py",
+      "sha256": "fb40f382ca63cfd545c1930e9735be39f587b10df8a2b0a7a98ee814aede7caf"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/mixed_accounting.py",
+      "sha256": "a0b83f16e6f11c00a311c18f485ab070beaaabd3af7ddb3d80cdb219aecc18cc"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/test_m0_accounting.py",
+      "sha256": "d1e530dc0f996e95e43635a3c0244d5f907d26d6e929d779e662db391b57b9a0"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/test_mixed_accounting_hook.py",
+      "sha256": "881d0183a5d3d48cee73b322f98d54240ffe9aaae3fc2efa587bd2c92f043ceb"
+    },
+    {
+      "path": "scripts/rust-perf/perf.py",
+      "sha256": "c57dca29118f63bfa503424d9b61a1d05e1e9e0b7bd3448d16360debbc5ca4d2"
+    }
+  ],
+  "schema": 1,
+  "scope": "Original-only mixed, stall, failover and warmed ten-channel functional accounting. No Native/gain/full M0 acceptance.",
+  "source_seal": {
+    "path": "artifacts/rust/m0-accounting-cumulative-1/pre-execution-seal.json",
+    "sha256": "b5510ecf82364e1cd6e5791310d0b77171c9c76eeb7c3914ca281ff164f28bdd"
+  }
+}

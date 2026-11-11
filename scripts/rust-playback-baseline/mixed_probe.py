@@ -20,8 +20,12 @@ spec.loader.exec_module(perf)
 
 
 def run_probe(url, fast_viewers, slow_viewers, warmup, duration, ramp, slow_delay,
-              minimum_fast_rate, ids=None, timeout=15):
+              minimum_fast_rate, ids=None, timeout=15, accounting=None):
+    if accounting:
+        accounting.before()
     began = time.monotonic()
+    if accounting:
+        accounting.begin_active(began)
     measured_start, deadline = began + warmup, began + warmup + duration
     samples, sampling_errors = [], []
     stop = threading.Event()
@@ -33,8 +37,11 @@ def run_probe(url, fast_viewers, slow_viewers, warmup, duration, ramp, slow_dela
         if index and ramp:
             time.sleep(ramp)
         started = time.monotonic()
+        physical = None
         try:
             with urllib.request.urlopen(url, timeout=timeout) as response:
+                if accounting:
+                    physical = response.fp.raw._sock
                 if slow:
                     # Backpressure must reach the sender, not only a large OS receive buffer.
                     response.fp.raw._sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 4096)
@@ -55,18 +62,31 @@ def run_probe(url, fast_viewers, slow_viewers, warmup, duration, ramp, slow_dela
         except Exception as error:
             result['errors'] += 1
             result['error_type'] = type(error).__name__
+        finally:
+            if accounting:
+                if physical is not None:
+                    try:
+                        physical.shutdown(socket.SHUT_RDWR)
+                    except OSError:
+                        pass
+                    physical.close()
+                result['physical_socket_closed'] = physical is not None and physical.fileno() == -1
         result['bytes_per_second'] = result['bytes'] / duration
         return result
 
     def sample():
         while time.monotonic() < measured_start and not stop.is_set():
             stop.wait(min(.1, max(0, measured_start - time.monotonic())))
-        while time.monotonic() < deadline and not stop.is_set():
+        while (accounting or time.monotonic() < deadline) and not stop.is_set():
             try:
+                started = time.monotonic()
+                tag = accounting.tag() if accounting else None
                 row = perf.resources(ids)
                 if time.monotonic() < deadline:
                     row['seconds_after_measurement_start'] = time.monotonic() - measured_start
                     samples.append(row)
+                if accounting:
+                    accounting.observe(tag, row, started, time.monotonic())
             except Exception as error:
                 sampling_errors.append(type(error).__name__)
             stop.wait(1)
@@ -76,9 +96,16 @@ def run_probe(url, fast_viewers, slow_viewers, warmup, duration, ramp, slow_dela
         sampler.start()
     with concurrent.futures.ThreadPoolExecutor(max_workers=fast_viewers + slow_viewers) as pool:
         results = list(pool.map(read, range(fast_viewers + slow_viewers)))
-    stop.set()
-    if sampler:
-        sampler.join()
+    accounting_result = None
+    try:
+        if accounting:
+            accounting.after_readers(results)
+            time.sleep(accounting.retention_seconds)
+            accounting_result = accounting.finish()
+    finally:
+        stop.set()
+        if sampler:
+            sampler.join()
     fast = [row for row in results if row['role'] == 'fast']
     slow = [row for row in results if row['role'] == 'slow']
     failures = []
@@ -93,7 +120,7 @@ def run_probe(url, fast_viewers, slow_viewers, warmup, duration, ramp, slow_dela
         failures.append('Slow viewer was not substantially slower than fast viewers')
     if ids and (len(samples) < 3 or sampling_errors):
         failures.append('Insufficient valid Docker resource samples')
-    return {'scope': 'mixed-slow-fast-native-ts-http-probe', 'passed': not failures,
+    result = {'scope': 'mixed-slow-fast-native-ts-http-probe', 'passed': not failures,
             'application_performance_verified': False, 'memory_bound_proven': False,
             'failures': failures, 'workload': {'fast_viewers': fast_viewers, 'slow_viewers': slow_viewers,
                 'warmup_seconds': warmup, 'duration_seconds': duration, 'ramp_seconds': ramp,
@@ -104,6 +131,12 @@ def run_probe(url, fast_viewers, slow_viewers, warmup, duration, ramp, slow_dela
                 'slow_bytes_per_second_max': max((row['bytes_per_second'] for row in slow), default=0),
                 'cpu_percent_mean': statistics.mean(row['cpu_percent'] for row in samples) if samples else None,
                 'memory_bytes_sampled_peak': max((row['memory_bytes'] for row in samples), default=None)}}
+    if accounting:
+        result['accounting'] = accounting_result
+        if not accounting_result['functional_hook_qualified']:
+            result['passed'] = False
+            result['failures'].append('Source accounting state/close qualification')
+    return result
 
 
 def main():
@@ -120,6 +153,7 @@ def main():
     parser.add_argument('--compose-file', action='append', default=[])
     parser.add_argument('--project')
     parser.add_argument('--services', nargs='+')
+    parser.add_argument('--accounting-context-file', type=Path)
     args = parser.parse_args()
     values = (args.warmup, args.duration, args.ramp, args.slow_delay, args.minimum_fast_rate)
     if (not all(math.isfinite(value) and value >= 0 for value in values)
@@ -142,8 +176,14 @@ def main():
             if not containers:
                 parser.error('Selected service is not running')
             ids.extend(containers)
+    accounting = None
+    if args.accounting_context_file:
+        from mixed_accounting import Hook
+        if not ids:
+            parser.error('Accounting requires existing selected resource observer')
+        accounting = Hook(json.loads(args.accounting_context_file.read_text()), compose, ids)
     result = run_probe(urls[0], args.fast_viewers, args.slow_viewers, args.warmup, args.duration,
-                       args.ramp, args.slow_delay, args.minimum_fast_rate, ids)
+                       args.ramp, args.slow_delay, args.minimum_fast_rate, ids, accounting=accounting)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({'passed': result['passed'], 'failures': result['failures'], 'summary': result['summary']}))
