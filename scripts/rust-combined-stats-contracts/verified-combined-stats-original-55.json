@@ -1,0 +1,2590 @@
+{
+  "passed": true,
+  "scope": "Original-only combined-stats actualHTTP reference; synthetic owned Redis records, not active playback ownership or Native parity",
+  "actual_http_cases": 55,
+  "selected_models_unchanged": 19,
+  "sequences_unchanged": true,
+  "owned_redis_keys_removed": 6,
+  "independent_owned_cleanup": {
+    "container": "",
+    "network": "",
+    "volume": ""
+  },
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "tools_sha256": {
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+    "scripts/rust-vod-api-contracts/combined_stats_source.py": "1cb0f592e2ab5d95b28a4800997674e6c68371748006093aa6d089d8d8b77d14",
+    "scripts/rust-vod-api-contracts/provider_refresh_fair_physical.py": "e0f8a7cd9c9d6d487e1bc8f9b45f517ecc2c60e0ed786c8676d3f38cae53af4e",
+    "scripts/rust-vod-api-contracts/provider_refresh_mixed_source.py": "fee92bd1aebf127ef4eac52f63fd8192f849cbdcb58f4f8d1487405fa0f31c82",
+    "scripts/rust-vod-api-contracts/provider_refresh_source.py": "5ef4567493c028e765924ac27062acdc0455f41c84c4a8af34b27b8707001689",
+    "scripts/rust-vod-api-contracts/provider_refresh_helpers_source.py": "0092c6127d03367e0fc38ffdda02a91dc892916d5b8b859e5b1e5414668b7cf1",
+    "scripts/rust-vod-api-contracts/run_provider_refresh_source.py": "4a5423adb8372465f2cfe21c500dfd2206760812ca0aebce3add60f7a272b424",
+    "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+    "scripts/rust-integration/tool_snapshot.py": "8ef73c640d60242844bb6a875a86b37526f679f39fe8eefa4787e67ae32ffe89",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+  },
+  "raw_report": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/combined-stats-original-3/provider-refresh-Source-private.json",
+    "sha256": "0b2c586da4f873fa5bd80f866e9b745f800417a0156096fec871ac6b2b1f04ba"
+  },
+  "cases": [
+    {
+      "label": "empty-auth-None",
+      "role": null,
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "58"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-auth-invalid",
+      "role": "invalid",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 172,
+      "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "172"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-auth-inactive",
+      "role": "inactive",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 52,
+      "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "52"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-auth-basic",
+      "role": "basic",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-auth-standard",
+      "role": "standard",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-auth-admin",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 200,
+      "body_bytes": 255,
+      "body_sha256": "0837badd81aedcc70964735ac4eaa38d1d892b7e2182afa54e8636a31c952f63",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "255"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-HEAD-None",
+      "role": null,
+      "method": "HEAD",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "58"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-HEAD-standard",
+      "role": "standard",
+      "method": "HEAD",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-HEAD-admin",
+      "role": "admin",
+      "method": "HEAD",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 405,
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "41"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-OPTIONS-None",
+      "role": null,
+      "method": "OPTIONS",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "58"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-OPTIONS-standard",
+      "role": "standard",
+      "method": "OPTIONS",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-OPTIONS-admin",
+      "role": "admin",
+      "method": "OPTIONS",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 200,
+      "body_bytes": 226,
+      "body_sha256": "fdbbf88f1a02a9348fb6ae5e447896f3657278612d7bb8bcdb7abe6da9fd545c",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "226"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-POST-None",
+      "role": null,
+      "method": "POST",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "58"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-POST-standard",
+      "role": "standard",
+      "method": "POST",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-POST-admin",
+      "role": "admin",
+      "method": "POST",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 405,
+      "body_bytes": 41,
+      "body_sha256": "3986c0d4df30cfcf7db784ea02470c5776de9c1121b7306350b346bb695a752f",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "41"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-PUT-None",
+      "role": null,
+      "method": "PUT",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "58"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-PUT-standard",
+      "role": "standard",
+      "method": "PUT",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-PUT-admin",
+      "role": "admin",
+      "method": "PUT",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 405,
+      "body_bytes": 40,
+      "body_sha256": "a817fdc1bd7d8752c161e454c16ef0e7670cc29193d55f88ec5c80bb58bc7bd8",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "40"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-PATCH-None",
+      "role": null,
+      "method": "PATCH",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "58"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-PATCH-standard",
+      "role": "standard",
+      "method": "PATCH",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-PATCH-admin",
+      "role": "admin",
+      "method": "PATCH",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 405,
+      "body_bytes": 42,
+      "body_sha256": "3e91ddbaf795bc0c4cb6c99bb1c72d70181345f64bb214ecb667076ea95a19ad",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "42"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-DELETE-None",
+      "role": null,
+      "method": "DELETE",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "58"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-DELETE-standard",
+      "role": "standard",
+      "method": "DELETE",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-DELETE-admin",
+      "role": "admin",
+      "method": "DELETE",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 405,
+      "body_bytes": 43,
+      "body_sha256": "e93f84a99b10c0f2863ac4a267ca519e5a57c85a9fe0b573c3e84688eb249e0b",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "43"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-TRACE-None",
+      "role": null,
+      "method": "TRACE",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 401,
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "58"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-TRACE-standard",
+      "role": "standard",
+      "method": "TRACE",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "63"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-method-TRACE-admin",
+      "role": "admin",
+      "method": "TRACE",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 405,
+      "body_bytes": 42,
+      "body_sha256": "23e449c46b1d50f4a11bf07d2c5dd73fe20696758521a280a86e6f23c315140f",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "42"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-accept-text/html",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 200,
+      "body_bytes": 255,
+      "body_sha256": "244dc47d6dfcf2a6c2f7d03bc31625bcb52d82f5b00ed30ab67f6f5983c5d062",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "255"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-accept-*/*",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "*/*",
+      "status": 200,
+      "body_bytes": 256,
+      "body_sha256": "458c915d2a60b83f5e49256f740cc53c6c27dcbc24c270fc1bec7c41af6868d5",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "256"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-accept-application/json; indent=4",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json; indent=4",
+      "status": 200,
+      "body_bytes": 256,
+      "body_sha256": "59e4c86f8a630b4f40450a1c95c6a942ef36de0ed0e8bfdd1a14c645fee6dba9",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "256"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-accept-image/png",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "image/png",
+      "status": 406,
+      "body_bytes": 57,
+      "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "57"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-accept-application/json;q=0,text/html;q=1",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json;q=0,text/html;q=1",
+      "status": 200,
+      "body_bytes": 254,
+      "body_sha256": "0d1d25a745d3c083666ca17a68b78f65e16866bad0dbc25636146b91b4655545",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "254"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-format-/proxy/stats",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats",
+      "accept": "application/json",
+      "status": 200,
+      "body_bytes": 858,
+      "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Vary",
+          "origin"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "858"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-format-/proxy/stats/?format=json",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/?format=json",
+      "accept": "application/json",
+      "status": 200,
+      "body_bytes": 254,
+      "body_sha256": "8db45a188d8d55b9dae71bfb4f5c58b30274c01cc58246aea1aac3a4f1122b93",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "254"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-format-/proxy/stats/?format=api",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/?format=api",
+      "accept": "application/json",
+      "status": 406,
+      "body_bytes": 57,
+      "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "57"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-format-/proxy/stats/?format=invalid",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/?format=invalid",
+      "accept": "application/json",
+      "status": 404,
+      "body_bytes": 23,
+      "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "23"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "empty-html-auth-None",
+      "role": null,
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 401,
+      "body_bytes": 9851,
+      "body_sha256": "3bb42afd2c43edc664bf5e5edae8b86f7859a6fd96035389f61557f275d90d5d",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "9851"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "d1906f2f1a3d9c8c9eeb1b6d829de5d3e98d459f07236ac2970bc50b93f21a19"
+      ]
+    },
+    {
+      "label": "empty-html-auth-invalid",
+      "role": "invalid",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 401,
+      "body_bytes": 10132,
+      "body_sha256": "8e489c422ae6ffb334e85541b7ca68ef72586823499b6b39dfccd6cf4450414b",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "10132"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "59c73f4157e979f71646b843c049c235a82814d1f2bdf87c5cf68e00fb8fd471"
+      ]
+    },
+    {
+      "label": "empty-html-auth-inactive",
+      "role": "inactive",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 401,
+      "body_bytes": 9871,
+      "body_sha256": "33080904098de794427fc95c44250417ce6f852e6a2f59d7dd4ce1ca875cbc4c",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "WWW-Authenticate",
+          "Bearer realm=\"api\""
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "9871"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "0cf34018bdd0290aef2523de435c9b5e0877cbb4133b73728957fa722c6835d8"
+      ]
+    },
+    {
+      "label": "empty-html-auth-basic",
+      "role": "basic",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 403,
+      "body_bytes": 9784,
+      "body_sha256": "b43be25965fdd98c72316ed866f66c972bf010ab6986aa546a05e6fc2fa873ef",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "9784"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "7964428c4f7f6355ad400401dae6817cadbbf0b9c695dc7a20d8fa5d655fc298"
+      ]
+    },
+    {
+      "label": "empty-html-auth-standard",
+      "role": "standard",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 403,
+      "body_bytes": 9787,
+      "body_sha256": "fb137cecb05c3b46bb6308189096bc3e3e7435acbefeb786b75fccccaaec47f5",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "9787"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "5e9e662b05c1cc21c9865d83582afbd1c11c3f0962cd8a4ab979691a760cce23"
+      ]
+    },
+    {
+      "label": "empty-html-method-OPTIONS",
+      "role": "admin",
+      "method": "OPTIONS",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 200,
+      "body_bytes": 10463,
+      "body_sha256": "217362032e599b8b3ca226f16acba05fddff4007e7fdcac8e883ee7fb4b68671",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "10463"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "81cf5a259a0cce189ba2d88e29cb653a95a7e9ab94c661a37639cd6cbceaa1d2"
+      ]
+    },
+    {
+      "label": "empty-html-method-POST",
+      "role": "admin",
+      "method": "POST",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 405,
+      "body_bytes": 10138,
+      "body_sha256": "a780aaa12243debb8bfc59746dd28f81804bc7663d68668bf87e23f9af663dbd",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "10138"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "13fe38c0121d929412e925d6f0bd485327a2ec6b5b7345f7c7fd01ae447a773c"
+      ]
+    },
+    {
+      "label": "empty-html-method-HEAD",
+      "role": "admin",
+      "method": "HEAD",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 405,
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "10138"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "b44261d176ac404cf355f63d666579e28beca3858de6a41ec8dba36518e9dfbf"
+      ]
+    },
+    {
+      "label": "empty-unsupported-accept-unauth",
+      "role": null,
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "image/png",
+      "status": 406,
+      "body_bytes": 57,
+      "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "57"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "format-json-html",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/?format=json",
+      "accept": "text/html",
+      "status": 406,
+      "body_bytes": 57,
+      "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "57"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "format-api-html",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/?format=api",
+      "accept": "text/html",
+      "status": 200,
+      "body_bytes": 256,
+      "body_sha256": "04303be0c92e4e4404e245237c03a180c9e6ff147e5d56beb967443799317f97",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "256"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "format-api-options-html",
+      "role": "admin",
+      "method": "OPTIONS",
+      "path": "/proxy/stats/?format=api",
+      "accept": "text/html",
+      "status": 200,
+      "body_bytes": 10507,
+      "body_sha256": "691a4a4803b3186963ca417fe5e9359f980183391c12d5754ad174a1d960d0cd",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "Vary",
+          "Accept, origin, Cookie"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "10507"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": [
+        "41dd3ceb481517750060bc08edae32a57a515232fa7dea8f16adf28c554059ac"
+      ]
+    },
+    {
+      "label": "format-invalid-html",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/?format=invalid",
+      "accept": "text/html",
+      "status": 404,
+      "body_bytes": 23,
+      "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "23"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "options-indent",
+      "role": "admin",
+      "method": "OPTIONS",
+      "path": "/proxy/stats/",
+      "accept": "application/json; indent=4",
+      "status": 200,
+      "body_bytes": 306,
+      "body_sha256": "d9c99e09c4c5f7cdd43170598a213b86e7638201d22c414d8369f7e47d4d10cc",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "306"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "error-indent",
+      "role": "admin",
+      "method": "POST",
+      "path": "/proxy/stats/",
+      "accept": "application/json; indent=4",
+      "status": 405,
+      "body_bytes": 48,
+      "body_sha256": "f74e4af770947ff4a112b254fab76b2d0ec18979e838bc95e5a31271829ad56a",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "48"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "invalid-accept-before-auth",
+      "role": "invalid",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "image/png",
+      "status": 406,
+      "body_bytes": 57,
+      "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "57"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "nonempty-three-families",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 200,
+      "body_bytes": 4637,
+      "body_sha256": "ced72ef80a2a7bae2acd4c5dd448aed6e3e4845e2aea500a93db0e1eb5e3d712",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "4637"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "nonempty-html",
+      "role": "admin",
+      "method": "GET",
+      "path": "/proxy/stats/",
+      "accept": "text/html",
+      "status": 200,
+      "body_bytes": 4636,
+      "body_sha256": "079cec2ce20a630ae75d067ab4a453814bb5eb36f5d2bf7bf53882762357f4bc",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "4636"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    },
+    {
+      "label": "nonempty-head",
+      "role": "admin",
+      "method": "HEAD",
+      "path": "/proxy/stats/",
+      "accept": "application/json",
+      "status": 405,
+      "body_bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_header_pairs": [
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "Vary",
+          "Accept, origin"
+        ],
+        [
+          "Allow",
+          "OPTIONS, GET"
+        ],
+        [
+          "X-Frame-Options",
+          "DENY"
+        ],
+        [
+          "Content-Length",
+          "41"
+        ],
+        [
+          "X-Content-Type-Options",
+          "nosniff"
+        ],
+        [
+          "Referrer-Policy",
+          "same-origin"
+        ],
+        [
+          "Cross-Origin-Opener-Policy",
+          "same-origin"
+        ]
+      ],
+      "set_cookie_sha256": []
+    }
+  ],
+  "nonempty_counts": {
+    "live": 1,
+    "vod": 2,
+    "catchup": 1
+  },
+  "credits": "Original Dispatcharr authors retain full application and algorithm credit",
+  "native_parity": false,
+  "m2_closed": false
+}

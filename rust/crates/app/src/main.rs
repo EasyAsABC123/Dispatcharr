@@ -1,13 +1,16 @@
 //! Derivative Dispatcharr backend port. Original project credit: ATTRIBUTION.md.
-mod static_assets;
+mod combined_statistics;
+mod combined_statistics_html;
+mod combined_statistics_wire;
 mod control;
 mod playback;
 mod realtime;
 mod response_headers;
+mod static_assets;
 mod statistics;
 use axum::{
     extract::State,
-    http::{header, StatusCode},
+    http::{header, Method, StatusCode},
     response::{IntoResponse, Response},
     routing::{any, get},
     Json, Router,
@@ -104,6 +107,59 @@ async fn legacy_react_alias() -> Response {
     (
         StatusCode::INTERNAL_SERVER_ERROR,
         Json(serde_json::json!({"error":"Bundled React unavailable"})),
+    )
+        .into_response()
+}
+
+// Source's slashless path is the CSRF-protected React TemplateView, not this API.
+async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Response {
+    let method = request.method().clone();
+    let headers = request.headers().clone();
+    let body = match axum::body::to_bytes(request.into_body(), 64 * 1024).await {
+        Ok(body) => body,
+        Err(_) => {
+            return (
+                StatusCode::PAYLOAD_TOO_LARGE,
+                "Legacy alias input exceeds capacity",
+            )
+                .into_response()
+        }
+    };
+    if let Some(body) = dispatcharr_output_http::source_csrf_failure(&method, &headers, &body) {
+        return (
+            StatusCode::FORBIDDEN,
+            [(header::CONTENT_TYPE, "text/html; charset=utf-8")],
+            body,
+        )
+            .into_response();
+    }
+    if method == Method::GET {
+        return legacy_react_alias().await;
+    }
+    if method == Method::HEAD {
+        let (mut parts, body) = legacy_react_alias().await.into_parts();
+        let bytes = match axum::body::to_bytes(body, 1024 * 1024).await {
+            Ok(bytes) => bytes,
+            Err(_) => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        };
+        parts
+            .headers
+            .insert(header::CONTENT_LENGTH, bytes.len().into());
+        return Response::from_parts(parts, axum::body::Body::empty());
+    }
+    let status = if method == Method::OPTIONS {
+        StatusCode::OK
+    } else {
+        StatusCode::METHOD_NOT_ALLOWED
+    };
+    (
+        status,
+        [
+            (header::CONTENT_TYPE, "text/html; charset=utf-8"),
+            (header::ALLOW, "GET, HEAD, OPTIONS"),
+            (header::CONTENT_LENGTH, "0"),
+        ],
+        "",
     )
         .into_response()
 }
@@ -688,10 +744,22 @@ async fn run() -> Result<(), String> {
         })
         .transpose()
         .map_err(|_| "XC live dispatcher initialization failed")?;
+    let combined_statistics = combined_statistics::CombinedStatistics::connect(
+        auth.clone(),
+        store.clone(),
+        engine.clone(),
+        catchup_management.clone(),
+        env::var("REDIS_URL").ok().as_deref(),
+        combined_statistics::Config::default(),
+    )
+    .await
+    .map_err(|_| "Combined statistics initialization failed (credentials omitted)")?;
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(store)
         .merge(auth.clone().router())
+        .merge(combined_statistics.router())
+        .route("/proxy/stats", any(combined_stats_legacy_alias))
         .merge(output_profiles.clone().router())
         .merge(backup_files.clone().router())
         .merge(epg_programs.clone().router())
@@ -768,10 +836,16 @@ async fn run() -> Result<(), String> {
             let directory = std::path::Path::new(&path).join(prefix);
             if directory.is_dir() {
                 if prefix == "static" {
-                    if let Some(assets) = static_assets::load(&directory).await.map_err(|error| format!("Pinned static assets: {error}"))? {
+                    if let Some(assets) = static_assets::load(&directory)
+                        .await
+                        .map_err(|error| format!("Pinned static assets: {error}"))?
+                    {
                         let files = Router::new()
                             .fallback_service(tower_http::services::ServeDir::new(directory))
-                            .layer(axum::middleware::from_fn_with_state(assets, static_assets::apply));
+                            .layer(axum::middleware::from_fn_with_state(
+                                assets,
+                                static_assets::apply,
+                            ));
                         app = app.nest_service("/static", files.into_service());
                         continue;
                     }
@@ -816,6 +890,7 @@ async fn run() -> Result<(), String> {
         grid,
         hdhr,
         live_statistics,
+        combined_statistics,
     };
     let signal_services = services.clone();
     let server = axum::serve(
@@ -891,6 +966,7 @@ struct ShutdownServices {
     grid: dispatcharr_output_http::GridGateway,
     hdhr: dispatcharr_hdhr_http::HdhrGateway,
     live_statistics: Option<Arc<dispatcharr_realtime::LiveStatistics>>,
+    combined_statistics: combined_statistics::CombinedStatistics,
 }
 async fn shutdown_components(services: ShutdownServices) {
     let ShutdownServices {
@@ -915,8 +991,10 @@ async fn shutdown_components(services: ShutdownServices) {
         grid,
         hdhr,
         live_statistics,
+        combined_statistics,
     } = services;
     engine.shutdown();
+    combined_statistics.close_admission();
     // Refresh reporter work retains the realtime publisher until actual drain.
     // A bounded incomplete drain is reported honestly before other shutdowns.
     let (refresh_drained, index_intake_drained, series_drained) = tokio::join!(
@@ -956,6 +1034,7 @@ async fn shutdown_components(services: ShutdownServices) {
         grid,
         hdhr,
         vod_read_drained,
+        combined_stats_drained,
     ) = tokio::join!(
         engine.shutdown_wait(Duration::from_secs(8)),
         async {
@@ -1023,6 +1102,7 @@ async fn shutdown_components(services: ShutdownServices) {
         grid.shutdown(Duration::from_secs(8)),
         hdhr.shutdown(),
         vod_reads.shutdown(Duration::from_secs(8)),
+        combined_statistics.shutdown(Duration::from_secs(8)),
     );
     // Accepted HTTP reads have now drained or explicitly timed out. Close the
     // file/publication services last; late missing-index publications remain
@@ -1031,7 +1111,8 @@ async fn shutdown_components(services: ShutdownServices) {
         Some(index) => index.shutdown(Duration::from_secs(4)).await,
         None => true,
     };
-    if !refresh_drained
+    if !combined_stats_drained
+        || !refresh_drained
         || !index_intake_drained
         || !series_drained
         || !index_drained

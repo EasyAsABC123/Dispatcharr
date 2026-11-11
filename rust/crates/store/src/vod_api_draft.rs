@@ -20,6 +20,14 @@
 pub use vod_api_http::VodReads;
 pub use vod_api_owned_read::ReadLimits as VodReadLimits;
 
+/// Existing captured Django/DRF CSRF masking/cookie algorithm, reusable by a
+/// bounded browsable renderer. This does not authenticate or register a route.
+pub fn source_browsable_csrf(cookie: Option<&str>) -> (String, String, String) {
+    let csrf = vod_api_unified_html::Csrf::new(cookie);
+    let header = csrf.set_cookie();
+    (csrf.secret, csrf.masked, header)
+}
+
 #[path = "vod_api_categories.rs"] mod vod_api_categories;
 
 #[path = "vod_api_category_http.rs"] mod vod_api_category_http;

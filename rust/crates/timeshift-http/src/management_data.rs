@@ -20,6 +20,13 @@ fn nullable_number(value: &str) -> Option<f64> {
 fn integer(value: &str) -> Result<i64, ()> {
     value.parse().map_err(|_| ())
 }
+fn source_bitrate(uptime: f64, bytes: i64) -> Value {
+    if uptime > 0.0 && bytes > 0 {
+        json!((bytes as f64 * 8.0 / uptime / 1000.0 * 100.0).round_ties_even() / 100.0)
+    } else {
+        json!(0)
+    }
+}
 pub(crate) fn paused(value: &str) -> bool {
     matches!(
         value.trim().to_ascii_lowercase().as_str(),
@@ -142,11 +149,7 @@ async fn project<G: Send + 'static>(
         let init = number(text(meta, "init_time", "0"))?;
         let uptime = if init > 0.0 { now - init } else { 0.0 };
         let bytes = integer(text(meta, "total_bytes", "0"))?;
-        let bitrate = if uptime > 0.0 && bytes > 0 {
-            (bytes as f64 * 8.0 / uptime / 1000.0 * 100.0).round_ties_even() / 100.0
-        } else {
-            0.0
-        };
+        let bitrate = source_bitrate(uptime, bytes);
         let connected = text(client, "connected_at", "");
         let duration = if connected.is_empty() {
             0
@@ -169,4 +172,17 @@ async fn project<G: Send + 'static>(
     Ok(
         json!({"timeshift_sessions":grouped.into_values().collect::<Vec<_>>(),"total_connections":count,"timestamp":now}),
     )
+}
+
+#[cfg(test)]
+mod combined_stats_scalar_tests {
+    use super::*;
+    #[test]
+    fn source_skipped_bitrate_is_int_but_computed_rounded_zero_remains_float() {
+        assert_eq!(source_bitrate(0.0, 1880).as_i64(), Some(0));
+        assert_eq!(source_bitrate(10.0, 0).as_i64(), Some(0));
+        let computed = source_bitrate(1_000_000.0, 1);
+        assert_eq!(computed.as_f64(), Some(0.0));
+        assert!(computed.as_i64().is_none());
+    }
 }

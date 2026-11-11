@@ -98,6 +98,11 @@ impl CatchupManagement {
     pub async fn statistics(&self) -> Value {
         management_data::stats(&self.inner.store, &self.inner.transport, now()).await
     }
+    /// Same Source catch-up projection, retaining the caller through actual
+    /// Redis work. An owning supervisor retains SQL on observer cancellation.
+    pub async fn statistics_retained(&self, caller: Arc<dyn Send + Sync>) -> Value {
+        management_data::stats_guarded(&self.inner.store, &self.inner.transport, now(), caller).await
+    }
     async fn publish(&self) {
         if let Some(events) = &self.events {
             let stats = self.statistics().await;

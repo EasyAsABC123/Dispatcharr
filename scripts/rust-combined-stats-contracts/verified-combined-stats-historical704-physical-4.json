@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "scope": "Actual production stats service physical ownership through guarded test peer; no Source timing/package claim",
+  "native_source_map": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/combined-stats-native-4/inputs.json",
+    "sha256": "30e729e385868931046d727cf7b6bab6aca55cd123a15eb20b9e80e93b1e6bb5"
+  },
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "tools_sha256": {
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+    "scripts/rust-vod-api-contracts/combined_stats_physical.py": "ed62eaea1cb9c226016a49934008122c2614da6580f44168475077b9fdef7be3",
+    "scripts/rust-vod-api-contracts/combined_stats_compare.py": "66332aab3d3756b52a4751c2f94a372e93fc99e9d80468232222a6ba6a917e0f",
+    "scripts/rust-vod-api-contracts/combined_stats_source.py": "b6690b60eb992d518fedd229de7b6eec65228adcc0057620dcd4c9555252f1bb",
+    "scripts/rust-vod-api-contracts/provider_refresh_fair_physical.py": "e0f8a7cd9c9d6d487e1bc8f9b45f517ecc2c60e0ed786c8676d3f38cae53af4e",
+    "scripts/rust-vod-api-contracts/provider_refresh_mixed_source.py": "fee92bd1aebf127ef4eac52f63fd8192f849cbdcb58f4f8d1487405fa0f31c82",
+    "scripts/rust-vod-api-contracts/provider_refresh_source.py": "5ef4567493c028e765924ac27062acdc0455f41c84c4a8af34b27b8707001689",
+    "scripts/rust-vod-api-contracts/provider_refresh_helpers_source.py": "0092c6127d03367e0fc38ffdda02a91dc892916d5b8b859e5b1e5414668b7cf1",
+    "scripts/rust-vod-api-contracts/run_provider_refresh_source.py": "018da0a067e479cd79692fc2b003aea73675849a124238c299c0a076ca7232cd",
+    "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+    "scripts/rust-integration/tool_snapshot.py": "8ef73c640d60242844bb6a875a86b37526f679f39fe8eefa4787e67ae32ffe89",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0",
+    "scripts/rust-vod-api-contracts/native-runtime/combined-stats-main": "a46774f15c685f81cbce2f5a512e056e1b3c622fd9be2cc2c52817ca4f6542d6"
+  },
+  "selected_models": 19,
+  "models_sequences_unchanged": true,
+  "independent_owned_cleanup": {
+    "container": "",
+    "network": "",
+    "volume": ""
+  },
+  "raw_report": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/combined-stats-physical-2/provider-refresh-Source-private.json",
+    "sha256": "c6a9cbaad8c9df3366e723960a99dd87ef38c40efa72d602ef53031cfef07554"
+  },
+  "performance_claim": false,
+  "m2_closed": false,
+  "actual_cases": 4,
+  "records": [
+    {
+      "case": "actual-pg-observer-abort",
+      "passed": true,
+      "retained": {
+        "active": 1,
+        "retained_bytes": 92340224,
+        "closed": false,
+        "held_frames": 0
+      },
+      "locked_query_observed": true,
+      "shutdown_false_before_actual_reply": true,
+      "final_memory_bytes": 0,
+      "copied_models_sequences_unchanged": true
+    },
+    {
+      "case": "actual-redis-observer-abort",
+      "passed": true,
+      "redis_pause_ms": 3200,
+      "observer_abort_after_seconds": 2.15,
+      "retained": {
+        "active": 1,
+        "retained_bytes": 92340224,
+        "closed": false,
+        "held_frames": 0
+      },
+      "actual_completion_seconds": 3.29670521299704,
+      "shutdown_false_before_actual_reply": true,
+      "final_memory_bytes": 0,
+      "copied_models_sequences_unchanged": true
+    },
+    {
+      "case": "actual-http-projection-held-frames",
+      "passed": true,
+      "retained": {
+        "active": 2,
+        "retained_bytes": 184680448,
+        "closed": false,
+        "held_frames": 2
+      },
+      "third_request_status": 503,
+      "shutdown_false_while_frames_held": true,
+      "final_memory_bytes": 0,
+      "scope": "Actual service Response bodies held before polling; no TCP flush acknowledgement claim"
+    },
+    {
+      "case": "actual-input-output-limits",
+      "passed": true,
+      "input_limit_bytes": 65536,
+      "controlled_output_limit_bytes": 65536,
+      "oversized_payload_bytes": 70000,
+      "output_status": 503,
+      "input_status": 503,
+      "final_memory_bytes": 0,
+      "scope": "Explicit native resource extensions; no Source rejection parity claim"
+    }
+  ],
+  "retained_failure": "combined-stats-physical-1 helper name collision; runtime unchanged"
+}

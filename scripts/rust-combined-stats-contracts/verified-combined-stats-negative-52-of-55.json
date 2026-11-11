@@ -1,0 +1,143 @@
+{
+  "passed": false,
+  "scope": "Actual Original vs private normal native Main combined-stats HTTP; no canonical package/performance or fullM2 claim",
+  "actual_http_pairs": 55,
+  "passed_pairs": 52,
+  "failed_pairs": [
+    {
+      "label": "empty-format-/proxy/stats",
+      "passed": false,
+      "differences": [
+        "status",
+        "header/content-type",
+        "raw-body"
+      ],
+      "difference_count": 3,
+      "observed_allow_variants": [],
+      "independently_checked_clock_paths": []
+    },
+    {
+      "label": "nonempty-three-families",
+      "passed": false,
+      "differences": [
+        "type/('catchup', 'timeshift_sessions', 0, 'connections', 0, 'avg_bitrate_kbps'):int/float",
+        "type/('live', 'channels', 0, 'uptime'):int/float"
+      ],
+      "difference_count": 2,
+      "observed_allow_variants": [],
+      "independently_checked_clock_paths": [
+        [
+          "catchup",
+          "timestamp"
+        ],
+        [
+          "vod",
+          "vod_connections",
+          0,
+          "connections",
+          0,
+          "duration"
+        ],
+        [
+          "vod",
+          "vod_connections",
+          1,
+          "connections",
+          0,
+          "duration"
+        ],
+        [
+          "vod",
+          "timestamp"
+        ],
+        [
+          "timestamp"
+        ]
+      ]
+    },
+    {
+      "label": "nonempty-html",
+      "passed": false,
+      "differences": [
+        "type/('catchup', 'timeshift_sessions', 0, 'connections', 0, 'avg_bitrate_kbps'):int/float",
+        "type/('live', 'channels', 0, 'uptime'):int/float"
+      ],
+      "difference_count": 2,
+      "observed_allow_variants": [],
+      "independently_checked_clock_paths": [
+        [
+          "catchup",
+          "timestamp"
+        ],
+        [
+          "vod",
+          "vod_connections",
+          0,
+          "connections",
+          0,
+          "duration"
+        ],
+        [
+          "vod",
+          "vod_connections",
+          1,
+          "connections",
+          0,
+          "duration"
+        ],
+        [
+          "vod",
+          "timestamp"
+        ],
+        [
+          "timestamp"
+        ]
+      ]
+    }
+  ],
+  "native_source_map": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/combined-stats-native-2/inputs.json",
+    "sha256": "b3742b20ac25708f39bff0948cfb6016d9681cd3527c32805fec755b890f0a00"
+  },
+  "native_binary_sha256": "4e20954530b4dca8f50c24153b72bf7da24474f77304c6e995935ce10870fa97",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "tools_sha256": {
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+    "scripts/rust-vod-api-contracts/combined_stats_compare.py": "b1eb78eedef988fb58195142b224089819c30aea72cc8963edc99bdcc2a9107a",
+    "scripts/rust-vod-api-contracts/combined_stats_source.py": "2dafbbbdf1807d76db3be64ffb568bec8827a353bdb4d86bc1577fb058417d8a",
+    "scripts/rust-vod-api-contracts/provider_refresh_fair_physical.py": "e0f8a7cd9c9d6d487e1bc8f9b45f517ecc2c60e0ed786c8676d3f38cae53af4e",
+    "scripts/rust-vod-api-contracts/provider_refresh_mixed_source.py": "fee92bd1aebf127ef4eac52f63fd8192f849cbdcb58f4f8d1487405fa0f31c82",
+    "scripts/rust-vod-api-contracts/provider_refresh_source.py": "5ef4567493c028e765924ac27062acdc0455f41c84c4a8af34b27b8707001689",
+    "scripts/rust-vod-api-contracts/provider_refresh_helpers_source.py": "0092c6127d03367e0fc38ffdda02a91dc892916d5b8b859e5b1e5414668b7cf1",
+    "scripts/rust-vod-api-contracts/run_provider_refresh_source.py": "e14131ed4a52ac4403414a8fcb2682fb6053af30a09daa40719dbe9fcaee9ea3",
+    "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+    "scripts/rust-integration/tool_snapshot.py": "8ef73c640d60242844bb6a875a86b37526f679f39fe8eefa4787e67ae32ffe89",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0",
+    "scripts/rust-vod-api-contracts/native-runtime/combined-stats-main": "4e20954530b4dca8f50c24153b72bf7da24474f77304c6e995935ce10870fa97"
+  },
+  "startup_models_sequences_unchanged": true,
+  "selected_models_sequences_unchanged": true,
+  "selected_models": 19,
+  "owned_redis_removed": 6,
+  "independent_owned_cleanup": {
+    "container": "",
+    "network": "",
+    "volume": ""
+  },
+  "raw_report": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/combined-stats-source-native-1/provider-refresh-Source-private.json",
+    "sha256": "18fa05de90a8614643ad405aef22f9e59c489ee2bf62366c4be520c10fb3f833"
+  },
+  "comparison_policy": "StrictJSONtypes/arrayorder; independentlychecked per-family timestamps+VODdurations+CSRFmask/cookie; exact two previouslyobserved Allowvariants recorded, noinvented methods",
+  "performance_claim": false,
+  "m2_closed": false
+}

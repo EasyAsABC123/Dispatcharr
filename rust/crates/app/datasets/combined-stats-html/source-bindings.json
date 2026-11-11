@@ -1,0 +1,37 @@
+{
+  "source_report_sha256": "0b2c586da4f873fa5bd80f866e9b745f800417a0156096fec871ac6b2b1f04ba",
+  "scope": "Finite actual Source HTML contexts, escaped JSON/username/URI/method plus independently masked CSRF; no arbitrary Django templates",
+  "templates": [
+    {
+      "template": "anonymous",
+      "original_case": "empty-html-auth-None",
+      "original_body_sha256": "3bb42afd2c43edc664bf5e5edae8b86f7859a6fd96035389f61557f275d90d5d",
+      "template_sha256": "46453d69f0da9731850217f9678f5c0daa6cd4503fcf3c1eced08b8ed538f9e8"
+    },
+    {
+      "template": "standard",
+      "original_case": "empty-html-auth-standard",
+      "original_body_sha256": "fb137cecb05c3b46bb6308189096bc3e3e7435acbefeb786b75fccccaaec47f5",
+      "template_sha256": "1f85458cb66251e553cb2af9359f29b1facc81ecae489b39211242dc8c8c9ec0"
+    },
+    {
+      "template": "admin-error",
+      "original_case": "empty-html-method-POST",
+      "original_body_sha256": "a780aaa12243debb8bfc59746dd28f81804bc7663d68668bf87e23f9af663dbd",
+      "template_sha256": "5cb920d61e3b08d738c08c8493884ebc3eefb70559ef25676b0d057c5593756a"
+    },
+    {
+      "template": "admin-options",
+      "original_case": "empty-html-method-OPTIONS",
+      "original_body_sha256": "217362032e599b8b3ca226f16acba05fddff4007e7fdcac8e883ee7fb4b68671",
+      "template_sha256": "c67600433eac0e6576521016654a1102e2c99c29d5f152c004124ac8ec5b7134"
+    },
+    {
+      "template": "admin-options-api",
+      "original_case": "format-api-options-html",
+      "original_body_sha256": "691a4a4803b3186963ca417fe5e9359f980183391c12d5754ad174a1d960d0cd",
+      "template_sha256": "6aa8d7d09de9fbfb6ef20aa029bf7a957c60c76fa5fcaa3381eae535138c034f"
+    }
+  ],
+  "credits": "Original Dispatcharr, Django Software Foundation and Encode/DRF authors retain template and algorithm credit"
+}

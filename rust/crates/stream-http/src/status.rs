@@ -89,7 +89,7 @@ pub fn project_status_at(
         .unwrap_or(0.0);
     let uptime = if created > 0.0 { now - created } else { 0.0 };
     let value = |key: &str, default: &str| meta.get(key).map_or(default.to_string(), Clone::clone);
-    let mut info = json!({"channel_id":id,"state":meta.get("state"),"url":value("url",""),"stream_profile":value("stream_profile",""),"owner":meta.get("owner"),"buffer_index":index,"client_count":clients.len(),"uptime":uptime,"started_at":if created>0.0{Some(created)}else{None}});
+    let mut info = json!({"channel_id":id,"state":meta.get("state"),"url":value("url",""),"stream_profile":value("stream_profile",""),"owner":meta.get("owner"),"buffer_index":index,"client_count":clients.len(),"uptime":if !detailed && created<=0.0 {json!(0)} else {json!(uptime)},"started_at":if created>0.0{Some(created)}else{None}});
     for key in ["channel_name", "stream_name"] {
         if let Some(v) = meta.get(key).filter(|v| !v.is_empty()) {
             info[key] = json!(v);
@@ -188,4 +188,19 @@ pub fn project_status_at(
         }
     }
     info
+}
+
+#[cfg(test)]
+mod combined_stats_scalar_tests {
+    use super::*;
+    #[test]
+    fn source_basic_nonpositive_init_uses_integer_zero_without_rounding_real_uptime() {
+        let zero = BTreeMap::from([("init_time".into(), "0".into())]);
+        let value = project_status_at("fixture", &zero, 0, Vec::new(), false, 10.5);
+        assert_eq!(value["uptime"].as_i64(), Some(0));
+        let positive = BTreeMap::from([("init_time".into(), "1".into())]);
+        let value = project_status_at("fixture", &positive, 0, Vec::new(), false, 2.5);
+        assert_eq!(value["uptime"].as_f64(), Some(1.5));
+        assert!(value["uptime"].as_i64().is_none());
+    }
 }
