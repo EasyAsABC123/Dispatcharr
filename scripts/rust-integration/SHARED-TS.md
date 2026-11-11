@@ -50,3 +50,21 @@ failed. Native cleanup completes in 26.48 seconds with no automatic takeover.
 The retained raw report, exact helper hashes and independent zero-owned-resource
 check are bound in the public projection. This does not imply identical crash
 state, a new resource benchmark or complete M2 acceptance.
+
+The [image47 retained-media replay](verified-retention-image47-1.json) separately
+passes ten live channels sampled through75 seconds and100 late historical
+readers at32-way concurrency. Each late reader matches an exact Redis history
+prefix35–55 seconds old, consumes1,500,000 bytes, and opens no additional
+upstream. Twenty captured streams decode audio/video. Local payload remains
+below4MiB per channel while authoritative shared history retains its separate
+16MiB/channel and60-second limits. Final observed payload is40,938,880 local
+bytes and150,962,120 shared Redis bytes; these are payload diagnostics, not
+cgroup working memory or application resource gains.
+
+Reproduce with `retention_probe.py` and the same image/build-manifest arguments
+as the two-worker runner, adding `--expected-local-limit 4194304` and
+`--late-history-viewers 100`. The default16MiB local expectation belongs to an
+older runtime; its failed attempt is preserved. Helper hashes, source/image
+bindings, captures, decoder frame counts and independently empty owned resources
+are recorded. Use a fresh output directory. This remains a native functional
+accounting check, not an Original/native performance comparison.
