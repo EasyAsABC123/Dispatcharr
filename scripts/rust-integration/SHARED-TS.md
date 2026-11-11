@@ -40,3 +40,13 @@ are captured. Changing tested tools during execution invalidates the run. All
 resources belong to a uniquely named Compose project; cleanup touches only that
 project. If teardown fails, source mounts and resource identifiers are retained
 for review. These are functional/lifecycle gates, not performance measurements.
+
+The [image47 replay](verified-shared-ts-image47-1.json) repeats all six
+Source/native cases against the immutable measured image. All 34 checks execute;
+33 pass. Healthy Original protocol and native functional/recovery checks pass,
+including 12 bounded audio/video decodes. Original owner death again leaves one
+provider slot and an input index after 90 seconds, so the combined report remains
+failed. Native cleanup completes in 26.48 seconds with no automatic takeover.
+The retained raw report, exact helper hashes and independent zero-owned-resource
+check are bound in the public projection. This does not imply identical crash
+state, a new resource benchmark or complete M2 acceptance.
