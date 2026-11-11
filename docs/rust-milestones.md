@@ -643,3 +643,6 @@ Source restart observations [176](../scripts/rust-redis-restart-contracts/verifi
 
 
 [The completed image48 live resource experiment](../scripts/rust-live-perf/image48/README.md) retains all18 measured phases,1,062 in-window samples and666 authenticated readers. All nine fixed pairs pass unchanged budgets. Independent raw-counter, capture/decoder and source/support hash reviews pass;77 publication/control tests pass without skips, with the separate public wrapper running30 corruption controls. Exact source revision `fda49b16`, immutable image digest and measured support revision `28122faf` are recorded. Background workers, full application resource accounting and remaining milestone gates stay open; no earlier checkpoint observations are relabelled.
+
+
+[The actual Original scanner timestamp extension](../scripts/rust-job-contracts/scanner-logo/mtime/README.md) captures43 cases and509 checks across finite epoch/nanosecond values, exact raw Redis marker bytes/TTL, SQL/events and normal-null worker results. All executed tool/raw report hashes and unchanged default database were independently reviewed; fresh owned resource queries are empty. Requested nanoseconds, actual stat float and formatting candidates remain distinct. This is a Source-only contract, not ordinary-timestamp native scanner or task/application acceptance.
