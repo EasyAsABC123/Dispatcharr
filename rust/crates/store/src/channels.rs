@@ -2,15 +2,20 @@
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{AuthService, Store, StoreError, User};
 use axum::{
+    body::Bytes,
     extract::{ConnectInfo, OriginalUri, Path, Query, State},
     http::{HeaderMap, Uri},
-    routing::get,
+    response::{IntoResponse, Response},
+    routing::{get, post},
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
 use serde_json::{json, Map, Value};
 use sqlx::{Postgres, QueryBuilder, Row};
-use std::{collections::HashMap, net::SocketAddr};
+use std::{
+    collections::{HashMap, HashSet},
+    net::SocketAddr,
+};
 use url::Url;
 const FIELDS: &[&str] = &[
     "id",
@@ -610,8 +615,96 @@ async fn retrieve(
         .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Not found."})))?;
     read(auth, user, params, base_url(&headers, &uri)?, Some(id)).await
 }
+// Unlike the management list, this action starts from Channel.objects.filter
+// and applies only the shared user ACL. List filtering, ordering and pagination
+// must not hide a requested channel or change the action's response shape.
+async fn by_uuids(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    Query(params): Query<HashMap<String, String>>,
+    body: Bytes,
+) -> Result<Response, StoreError> {
+    let user = auth.account_user(peer, headers.clone(), false).await?;
+    if user.user_level < 1 {
+        return Err(StoreError::PermissionDenied);
+    }
+    let value = if body.is_empty() {
+        json!({})
+    } else {
+        serde_json::from_slice::<Value>(&body).map_err(|error| {
+            StoreError::InvalidInput(json!({"detail":format!("JSON parse error - {}", crate::source_json_error(&body, error))}))
+        })?
+    };
+    let Some(object) = value.as_object() else {
+        return Ok(source_action_error());
+    };
+    let empty = Value::Array(Vec::new());
+    let Some(values) = object.get("uuids").unwrap_or(&empty).as_array() else {
+        return Ok((
+            axum::http::StatusCode::BAD_REQUEST,
+            Json(json!({"error":"uuids must be a list of strings"})),
+        )
+            .into_response());
+    };
+    let mut ids = Vec::new();
+    let mut seen = HashSet::new();
+    for value in values {
+        if value.is_null() {
+            continue;
+        }
+        let parsed = match value {
+            Value::String(value) => {
+                let value = value.replace("urn:", "").replace("uuid:", "");
+                uuid::Uuid::parse_str(&value.trim_matches(['{', '}']).replace('-', "")).ok()
+            }
+            Value::Bool(value) => Some(uuid::Uuid::from_u128(u128::from(*value))),
+            Value::Number(value) => value
+                .to_string()
+                .parse::<u128>()
+                .ok()
+                .map(uuid::Uuid::from_u128),
+            _ => None,
+        };
+        let Some(id) = parsed else {
+            return Ok(source_action_error());
+        };
+        if seen.insert(id) {
+            ids.push(id);
+        }
+    }
+    // Freeze the un-ordered Source queryset before serializer-related joins.
+    // Those joins may reorder rows even though the action never applies the
+    // management list's ordering filter. Carry the selected ordinal through
+    // projection without sorting requested UUIDs or normalizing response order.
+    let mut query = QueryBuilder::new("WITH selected AS MATERIALIZED (SELECT c.*, row_number() OVER () AS uuid_action_position FROM dispatcharr_channels_channel c WHERE true");
+    scope(&mut query, &user);
+    query.push(" AND c.uuid=ANY(").push_bind(ids).push(") ) ");
+    query.push(SELECT.replace("FROM dispatcharr_channels_channel c", "FROM selected c"));
+    query.push(" ORDER BY c.uuid_action_position");
+    let rows = query.build().fetch_all(auth.store.pool()).await?;
+    let base = base_url(&headers, &uri)?;
+    let include = params
+        .get("include_streams")
+        .is_some_and(|value| value == "true");
+    let values = rows
+        .into_iter()
+        .map(|row| serialize(row, include, user.user_level >= 10, &base))
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(Json(Value::Array(values)).into_response())
+}
+fn source_action_error() -> Response {
+    (
+        axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+        [("content-type", "text/html; charset=utf-8")],
+        "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+    ).into_response()
+}
+
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
+        .route("/api/channels/channels/by-uuids/", post(by_uuids))
         .route("/api/channels/channels/ids/", get(ids))
         .route("/api/channels/channels/summary/", get(summary))
         .route(

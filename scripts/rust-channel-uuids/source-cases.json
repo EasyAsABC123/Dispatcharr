@@ -1,0 +1,2514 @@
+{
+  "cases": [
+    {
+      "label": "admin-default",
+      "role": "admin",
+      "user_id": 1,
+      "body": {},
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": []
+      }
+    },
+    {
+      "label": "admin-empty",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": []
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": []
+      }
+    },
+    {
+      "label": "admin-one-hidden",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-all",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 4,
+            "channel_number": 4.0,
+            "name": "Offline benchmark channel 3",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              7,
+              8
+            ],
+            "stream_profile_id": 3,
+            "uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": {
+              "name": "Owned UUID override",
+              "channel_number": 0.5,
+              "channel_group_id": null,
+              "logo_id": null,
+              "tvg_id": null,
+              "tvc_guide_stationid": null,
+              "epg_data_id": null,
+              "stream_profile_id": null,
+              "is_radio": null
+            },
+            "source_stream": null,
+            "effective_name": "Owned UUID override",
+            "effective_channel_number": 0.5,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 5,
+            "channel_number": 5.0,
+            "name": "Offline benchmark channel 4",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              9,
+              10
+            ],
+            "stream_profile_id": 3,
+            "uuid": "f37c9f64-7192-5791-9800-8047d7bc8d58",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 4",
+            "effective_channel_number": 5.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 2,
+            "channel_number": 2.0,
+            "name": "Offline benchmark channel 1",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              3,
+              4
+            ],
+            "stream_profile_id": 3,
+            "uuid": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": true,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 1",
+            "effective_channel_number": 2.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 3,
+            "channel_number": 3.0,
+            "name": "Offline benchmark channel 2",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              5,
+              6
+            ],
+            "stream_profile_id": 3,
+            "uuid": "45342aff-1076-5f3b-89e6-9a30509cebbf",
+            "logo_id": null,
+            "user_level": 2,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 2",
+            "effective_channel_number": 3.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-reverse",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "f37c9f64-7192-5791-9800-8047d7bc8d58",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 4,
+            "channel_number": 4.0,
+            "name": "Offline benchmark channel 3",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              7,
+              8
+            ],
+            "stream_profile_id": 3,
+            "uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": {
+              "name": "Owned UUID override",
+              "channel_number": 0.5,
+              "channel_group_id": null,
+              "logo_id": null,
+              "tvg_id": null,
+              "tvc_guide_stationid": null,
+              "epg_data_id": null,
+              "stream_profile_id": null,
+              "is_radio": null
+            },
+            "source_stream": null,
+            "effective_name": "Owned UUID override",
+            "effective_channel_number": 0.5,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 5,
+            "channel_number": 5.0,
+            "name": "Offline benchmark channel 4",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              9,
+              10
+            ],
+            "stream_profile_id": 3,
+            "uuid": "f37c9f64-7192-5791-9800-8047d7bc8d58",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 4",
+            "effective_channel_number": 5.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 2,
+            "channel_number": 2.0,
+            "name": "Offline benchmark channel 1",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              3,
+              4
+            ],
+            "stream_profile_id": 3,
+            "uuid": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": true,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 1",
+            "effective_channel_number": 2.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 3,
+            "channel_number": 3.0,
+            "name": "Offline benchmark channel 2",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              5,
+              6
+            ],
+            "stream_profile_id": 3,
+            "uuid": "45342aff-1076-5f3b-89e6-9a30509cebbf",
+            "logo_id": null,
+            "user_level": 2,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 2",
+            "effective_channel_number": 3.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-duplicate",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 4,
+            "channel_number": 4.0,
+            "name": "Offline benchmark channel 3",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              7,
+              8
+            ],
+            "stream_profile_id": 3,
+            "uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": {
+              "name": "Owned UUID override",
+              "channel_number": 0.5,
+              "channel_group_id": null,
+              "logo_id": null,
+              "tvg_id": null,
+              "tvc_guide_stationid": null,
+              "epg_data_id": null,
+              "stream_profile_id": null,
+              "is_radio": null
+            },
+            "source_stream": null,
+            "effective_name": "Owned UUID override",
+            "effective_channel_number": 0.5,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-missing",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "00000000-0000-0000-0000-000000000099"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": []
+      }
+    },
+    {
+      "label": "admin-null-member",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          null,
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-hex",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "11ca0bac7532414a9d5b9790cb6784a1"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-uppercase",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "11CA0BAC-7532-414A-9D5B-9790CB6784A1"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-braces",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "{11ca0bac-7532-414a-9d5b-9790cb6784a1}"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-urn",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "urn:uuid:11ca0bac-7532-414a-9d5b-9790cb6784a1"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-zero-integer",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          0
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": []
+      }
+    },
+    {
+      "label": "admin-true-integer",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          true
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": []
+      }
+    },
+    {
+      "label": "admin-wrong-list",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": "wrong"
+      },
+      "query": "",
+      "status": 400,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "error": "uuids must be a list of strings"
+        }
+      }
+    },
+    {
+      "label": "admin-null-list",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": null
+      },
+      "query": "",
+      "status": 400,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "error": "uuids must be a list of strings"
+        }
+      }
+    },
+    {
+      "label": "admin-dict-list",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": {}
+      },
+      "query": "",
+      "status": 400,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "error": "uuids must be a list of strings"
+        }
+      }
+    },
+    {
+      "label": "admin-bad-uuid",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "invalid"
+        ]
+      },
+      "query": "",
+      "status": 500,
+      "content_type": "text/html; charset=utf-8",
+      "expected": {
+        "text": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n"
+      }
+    },
+    {
+      "label": "admin-negative-uuid",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          -1
+        ]
+      },
+      "query": "",
+      "status": 500,
+      "content_type": "text/html; charset=utf-8",
+      "expected": {
+        "text": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n"
+      }
+    },
+    {
+      "label": "admin-float-uuid",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          1.5
+        ]
+      },
+      "query": "",
+      "status": 500,
+      "content_type": "text/html; charset=utf-8",
+      "expected": {
+        "text": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n"
+      }
+    },
+    {
+      "label": "admin-array-root",
+      "role": "admin",
+      "user_id": 1,
+      "body": [],
+      "query": "",
+      "status": 500,
+      "content_type": "text/html; charset=utf-8",
+      "expected": {
+        "text": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n"
+      }
+    },
+    {
+      "label": "admin-null-root",
+      "role": "admin",
+      "user_id": 1,
+      "body": null,
+      "query": "",
+      "status": 500,
+      "content_type": "text/html; charset=utf-8",
+      "expected": {
+        "text": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n"
+      }
+    },
+    {
+      "label": "standard-all",
+      "role": "standard",
+      "user_id": 2,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 4,
+            "channel_number": 4.0,
+            "name": "Offline benchmark channel 3",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              7,
+              8
+            ],
+            "stream_profile_id": 3,
+            "uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": {
+              "name": "Owned UUID override",
+              "channel_number": 0.5,
+              "channel_group_id": null,
+              "logo_id": null,
+              "tvg_id": null,
+              "tvc_guide_stationid": null,
+              "epg_data_id": null,
+              "stream_profile_id": null,
+              "is_radio": null
+            },
+            "source_stream": null,
+            "effective_name": "Owned UUID override",
+            "effective_channel_number": 0.5,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 5,
+            "channel_number": 5.0,
+            "name": "Offline benchmark channel 4",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              9,
+              10
+            ],
+            "stream_profile_id": 3,
+            "uuid": "f37c9f64-7192-5791-9800-8047d7bc8d58",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 4",
+            "effective_channel_number": 5.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 2,
+            "channel_number": 2.0,
+            "name": "Offline benchmark channel 1",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              3,
+              4
+            ],
+            "stream_profile_id": 3,
+            "uuid": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": true,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 1",
+            "effective_channel_number": 2.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "standard-bad-list",
+      "role": "standard",
+      "user_id": 2,
+      "body": {
+        "uuids": "wrong"
+      },
+      "query": "",
+      "status": 400,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "error": "uuids must be a list of strings"
+        }
+      }
+    },
+    {
+      "label": "limited-all",
+      "role": "limited",
+      "user_id": 3,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "limited-bad-list",
+      "role": "limited",
+      "user_id": 3,
+      "body": {
+        "uuids": "wrong"
+      },
+      "query": "",
+      "status": 400,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "error": "uuids must be a list of strings"
+        }
+      }
+    },
+    {
+      "label": "adult-hidden-all",
+      "role": "adult-hidden",
+      "user_id": 4,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 4,
+            "channel_number": 4.0,
+            "name": "Offline benchmark channel 3",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              7,
+              8
+            ],
+            "stream_profile_id": 3,
+            "uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": {
+              "name": "Owned UUID override",
+              "channel_number": 0.5,
+              "channel_group_id": null,
+              "logo_id": null,
+              "tvg_id": null,
+              "tvc_guide_stationid": null,
+              "epg_data_id": null,
+              "stream_profile_id": null,
+              "is_radio": null
+            },
+            "source_stream": null,
+            "effective_name": "Owned UUID override",
+            "effective_channel_number": 0.5,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 5,
+            "channel_number": 5.0,
+            "name": "Offline benchmark channel 4",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              9,
+              10
+            ],
+            "stream_profile_id": 3,
+            "uuid": "f37c9f64-7192-5791-9800-8047d7bc8d58",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 4",
+            "effective_channel_number": 5.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "adult-hidden-bad-list",
+      "role": "adult-hidden",
+      "user_id": 4,
+      "body": {
+        "uuids": "wrong"
+      },
+      "query": "",
+      "status": 400,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "error": "uuids must be a list of strings"
+        }
+      }
+    },
+    {
+      "label": "viewer-all",
+      "role": "viewer",
+      "user_id": 5,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "",
+      "status": 403,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "label": "viewer-bad-list",
+      "role": "viewer",
+      "user_id": 5,
+      "body": {
+        "uuids": "wrong"
+      },
+      "query": "",
+      "status": 403,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "detail": "You do not have permission to perform this action."
+        }
+      }
+    },
+    {
+      "label": "inactive-all",
+      "role": "inactive",
+      "user_id": 6,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "",
+      "status": 401,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "label": "inactive-bad-list",
+      "role": "inactive",
+      "user_id": 6,
+      "body": {
+        "uuids": "wrong"
+      },
+      "query": "",
+      "status": 401,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "detail": "User is inactive",
+          "code": "user_inactive"
+        }
+      }
+    },
+    {
+      "label": "anonymous-all",
+      "role": "anonymous",
+      "user_id": null,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "",
+      "status": 401,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "label": "anonymous-bad-list",
+      "role": "anonymous",
+      "user_id": null,
+      "body": {
+        "uuids": "wrong"
+      },
+      "query": "",
+      "status": 401,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "detail": "Authentication credentials were not provided."
+        }
+      }
+    },
+    {
+      "label": "invalid-all",
+      "role": "invalid",
+      "user_id": null,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "",
+      "status": 401,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "invalid-bad-list",
+      "role": "invalid",
+      "user_id": null,
+      "body": {
+        "uuids": "wrong"
+      },
+      "query": "",
+      "status": 401,
+      "content_type": "application/json",
+      "expected": {
+        "json": {
+          "detail": "Given token not valid for any token type",
+          "code": "token_not_valid",
+          "messages": [
+            {
+              "token_class": "AccessToken",
+              "token_type": "access",
+              "message": "Token is invalid"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "label": "admin-query-36",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "?include_streams=true",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 4,
+            "channel_number": 4.0,
+            "name": "Offline benchmark channel 3",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              {
+                "id": 7,
+                "name": "Offline benchmark stream 3",
+                "url": "http://origin:8080/live/3.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.704235Z",
+                "last_seen": "2026-11-11T14:03:10.704106Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "e907cda018d6e1540e29ce46bc2cd125cc208cb2ccc0d9b019cf58adfd946815",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              },
+              {
+                "id": 8,
+                "name": "Offline backupstream 3",
+                "url": "http://origin:8080/live/103.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.707787Z",
+                "last_seen": "2026-11-11T14:03:10.707654Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "78de167872e0f88ce6d3f1be8b39383da026dc33676a2264982c65ca8ad00d56",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              }
+            ],
+            "stream_profile_id": 3,
+            "uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": {
+              "name": "Owned UUID override",
+              "channel_number": 0.5,
+              "channel_group_id": null,
+              "logo_id": null,
+              "tvg_id": null,
+              "tvc_guide_stationid": null,
+              "epg_data_id": null,
+              "stream_profile_id": null,
+              "is_radio": null
+            },
+            "source_stream": null,
+            "effective_name": "Owned UUID override",
+            "effective_channel_number": 0.5,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 5,
+            "channel_number": 5.0,
+            "name": "Offline benchmark channel 4",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              {
+                "id": 9,
+                "name": "Offline benchmark stream 4",
+                "url": "http://origin:8080/live/4.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.710955Z",
+                "last_seen": "2026-11-11T14:03:10.710825Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "ccbb79e53033dd430ae21932dc4d04073f47b222e23cdc397f984a53e0978b60",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              },
+              {
+                "id": 10,
+                "name": "Offline backupstream 4",
+                "url": "http://origin:8080/live/104.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.714597Z",
+                "last_seen": "2026-11-11T14:03:10.714461Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "182b861362034f4cb09820d0e81a296165411773a061007f8dcb59dc0cafa40d",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              }
+            ],
+            "stream_profile_id": 3,
+            "uuid": "f37c9f64-7192-5791-9800-8047d7bc8d58",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 4",
+            "effective_channel_number": 5.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              {
+                "id": 1,
+                "name": "Offline benchmark stream 0",
+                "url": "http://origin:8080/live/0.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.677214Z",
+                "last_seen": "2026-11-11T14:03:10.677059Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "54847cca81b54625942e64a5ff133518ca4795a134ab20b86792d762bb50533c",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              },
+              {
+                "id": 2,
+                "name": "Offline backupstream 0",
+                "url": "http://origin:8080/live/100.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.687177Z",
+                "last_seen": "2026-11-11T14:03:10.687025Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "0fbc911bc8f1a68873a5d22b23d2bd45a42816f341cf06ba72ef18198678570a",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              }
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 2,
+            "channel_number": 2.0,
+            "name": "Offline benchmark channel 1",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              {
+                "id": 3,
+                "name": "Offline benchmark stream 1",
+                "url": "http://origin:8080/live/1.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.690541Z",
+                "last_seen": "2026-11-11T14:03:10.690395Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "ff4246d89ee702bd208954a8264a92e74a435f17998d2dd0018b94da3cbcc49c",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              },
+              {
+                "id": 4,
+                "name": "Offline backupstream 1",
+                "url": "http://origin:8080/live/101.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.694127Z",
+                "last_seen": "2026-11-11T14:03:10.693991Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "80ffc83e4595c1df7684c6ec84211c09e8a7da8c6842702b20183e5214847ea2",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              }
+            ],
+            "stream_profile_id": 3,
+            "uuid": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": true,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 1",
+            "effective_channel_number": 2.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 3,
+            "channel_number": 3.0,
+            "name": "Offline benchmark channel 2",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              {
+                "id": 5,
+                "name": "Offline benchmark stream 2",
+                "url": "http://origin:8080/live/2.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.697334Z",
+                "last_seen": "2026-11-11T14:03:10.697206Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "3d29a48a9d0d1dafbeb8c30dd3b00f37e9a84d50f2b5ad4f4036c32a9410525a",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              },
+              {
+                "id": 6,
+                "name": "Offline backupstream 2",
+                "url": "http://origin:8080/live/102.ts",
+                "m3u_account": 1,
+                "logo_url": null,
+                "tvg_id": null,
+                "local_file": null,
+                "current_viewers": 0,
+                "updated_at": "2026-11-11T14:03:10.700983Z",
+                "last_seen": "2026-11-11T14:03:10.700858Z",
+                "is_stale": false,
+                "is_adult": false,
+                "stream_profile_id": 3,
+                "is_custom": true,
+                "channel_group": null,
+                "stream_hash": "03b8e60eaf98f34d89e62c5c96aa6fcbc6be50a23d009d05f5012d6b6b442432",
+                "stream_stats": null,
+                "stream_stats_updated_at": null,
+                "stream_id": null,
+                "stream_chno": null,
+                "is_catchup": false,
+                "catchup_days": 0,
+                "is_radio": false
+              }
+            ],
+            "stream_profile_id": 3,
+            "uuid": "45342aff-1076-5f3b-89e6-9a30509cebbf",
+            "logo_id": null,
+            "user_level": 2,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 2",
+            "effective_channel_number": 3.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-query-37",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "?include_streams=False",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 4,
+            "channel_number": 4.0,
+            "name": "Offline benchmark channel 3",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              7,
+              8
+            ],
+            "stream_profile_id": 3,
+            "uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": {
+              "name": "Owned UUID override",
+              "channel_number": 0.5,
+              "channel_group_id": null,
+              "logo_id": null,
+              "tvg_id": null,
+              "tvc_guide_stationid": null,
+              "epg_data_id": null,
+              "stream_profile_id": null,
+              "is_radio": null
+            },
+            "source_stream": null,
+            "effective_name": "Owned UUID override",
+            "effective_channel_number": 0.5,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 5,
+            "channel_number": 5.0,
+            "name": "Offline benchmark channel 4",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              9,
+              10
+            ],
+            "stream_profile_id": 3,
+            "uuid": "f37c9f64-7192-5791-9800-8047d7bc8d58",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 4",
+            "effective_channel_number": 5.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 2,
+            "channel_number": 2.0,
+            "name": "Offline benchmark channel 1",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              3,
+              4
+            ],
+            "stream_profile_id": 3,
+            "uuid": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": true,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 1",
+            "effective_channel_number": 2.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 3,
+            "channel_number": 3.0,
+            "name": "Offline benchmark channel 2",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              5,
+              6
+            ],
+            "stream_profile_id": 3,
+            "uuid": "45342aff-1076-5f3b-89e6-9a30509cebbf",
+            "logo_id": null,
+            "user_level": 2,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 2",
+            "effective_channel_number": 3.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    },
+    {
+      "label": "admin-query-38",
+      "role": "admin",
+      "user_id": 1,
+      "body": {
+        "uuids": [
+          "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+          "45342aff-1076-5f3b-89e6-9a30509cebbf",
+          "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+          "f37c9f64-7192-5791-9800-8047d7bc8d58"
+        ]
+      },
+      "query": "?page=1&page_size=1&ordering=-name&search=no-match&visibility_filter=hidden",
+      "status": 200,
+      "content_type": "application/json",
+      "expected": {
+        "json": [
+          {
+            "id": 4,
+            "channel_number": 4.0,
+            "name": "Offline benchmark channel 3",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              7,
+              8
+            ],
+            "stream_profile_id": 3,
+            "uuid": "b3cee3a2-4920-59a0-a25a-2b1e41dba054",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": {
+              "name": "Owned UUID override",
+              "channel_number": 0.5,
+              "channel_group_id": null,
+              "logo_id": null,
+              "tvg_id": null,
+              "tvc_guide_stationid": null,
+              "epg_data_id": null,
+              "stream_profile_id": null,
+              "is_radio": null
+            },
+            "source_stream": null,
+            "effective_name": "Owned UUID override",
+            "effective_channel_number": 0.5,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 5,
+            "channel_number": 5.0,
+            "name": "Offline benchmark channel 4",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              9,
+              10
+            ],
+            "stream_profile_id": 3,
+            "uuid": "f37c9f64-7192-5791-9800-8047d7bc8d58",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 4",
+            "effective_channel_number": 5.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 1,
+            "channel_number": 1.0,
+            "name": "Offline benchmark channel 0",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              1,
+              2
+            ],
+            "stream_profile_id": 3,
+            "uuid": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": true,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 0",
+            "effective_channel_number": 1.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 2,
+            "channel_number": 2.0,
+            "name": "Offline benchmark channel 1",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              3,
+              4
+            ],
+            "stream_profile_id": 3,
+            "uuid": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+            "logo_id": null,
+            "user_level": 0,
+            "is_adult": true,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 1",
+            "effective_channel_number": 2.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          },
+          {
+            "id": 3,
+            "channel_number": 3.0,
+            "name": "Offline benchmark channel 2",
+            "channel_group_id": null,
+            "tvg_id": null,
+            "tvc_guide_stationid": null,
+            "epg_data_id": null,
+            "streams": [
+              5,
+              6
+            ],
+            "stream_profile_id": 3,
+            "uuid": "45342aff-1076-5f3b-89e6-9a30509cebbf",
+            "logo_id": null,
+            "user_level": 2,
+            "is_adult": false,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false,
+            "hidden_from_output": false,
+            "auto_created": false,
+            "auto_created_by": null,
+            "auto_created_by_name": null,
+            "override": null,
+            "source_stream": null,
+            "effective_name": "Offline benchmark channel 2",
+            "effective_channel_number": 3.0,
+            "effective_channel_group_id": null,
+            "effective_logo_id": null,
+            "effective_tvg_id": null,
+            "effective_tvc_guide_stationid": null,
+            "effective_epg_data_id": null,
+            "effective_stream_profile_id": 3,
+            "effective_is_radio": false
+          }
+        ]
+      }
+    }
+  ],
+  "row_fingerprints": {
+    "accounts_user": "8e4396f238cb50b067f8829f60235abc",
+    "dispatcharr_channels_channel": "7044b95594c7725225b4bf51cf5e378f",
+    "dispatcharr_channels_channeloverride": "647415de869f7253696a721574390788",
+    "dispatcharr_channels_channelprofile": "6d08031e5f3991aa4870033257a1c474",
+    "dispatcharr_channels_channelprofilemembership": "585541f3beb2bd1e3a755e5a8db87bf6",
+    "dispatcharr_channels_channelstream": "8086055c7725f32a9eee7427944e7940",
+    "dispatcharr_channels_stream": "643cfad7b9cd88a614d3dd7263049f97"
+  },
+  "Original_readonly_unchanged": true,
+  "actual_Original_HTTP": true,
+  "credit": "Original Dispatcharr authors retain full credit/licenses."
+}
