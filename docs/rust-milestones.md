@@ -646,3 +646,6 @@ Source restart observations [176](../scripts/rust-redis-restart-contracts/verifi
 
 
 [The actual Original scanner timestamp extension](../scripts/rust-job-contracts/scanner-logo/mtime/README.md) captures43 cases and509 checks across finite epoch/nanosecond values, exact raw Redis marker bytes/TTL, SQL/events and normal-null worker results. All executed tool/raw report hashes and unchanged default database were independently reviewed; fresh owned resource queries are empty. Requested nanoseconds, actual stat float and formatting candidates remain distinct. This is a Source-only contract, not ordinary-timestamp native scanner or task/application acceptance.
+
+
+[The actual Original createsuperuser CLI reference](../scripts/rust-operator-contracts/createsuperuser/README.md) passes12 subprocess cases/55 checks against an owned copied database, including environment inputs, Unicode normalization, duplicate/error paths and the observed missing-versus-empty-password distinction. All24 stream hashes and unchanged default database are reviewed; fresh owned cleanup is empty. The initial wrong empty-password oracle is retained. Native CLI implementation, interactive forms, packaged login and full M8 remain open.

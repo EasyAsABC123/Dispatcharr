@@ -1,0 +1,2167 @@
+{
+  "passed": true,
+  "scope": "Original actual createsuperuser noninteractive subprocess cases only",
+  "native_verified": false,
+  "performance_verified": false,
+  "cases": [
+    {
+      "id": "help",
+      "arguments": [
+        "--help"
+      ],
+      "environment_keys": [],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 0,
+      "stdout": "usage: manage.py createsuperuser [-h] [--username USERNAME] [--noinput]\n                                 [--database {default}] [--email EMAIL]\n                                 [--version] [-v {0,1,2,3}]\n                                 [--settings SETTINGS]\n                                 [--pythonpath PYTHONPATH] [--traceback]\n                                 [--no-color] [--force-color] [--skip-checks]\n\nUsed to create a superuser.\n\noptions:\n  -h, --help            show this help message and exit\n  --username USERNAME   Specifies the login for the superuser.\n  --noinput, --no-input\n                        Tells Django to NOT prompt the user for input of any\n                        kind. You must use --username with --noinput, along\n                        with an option for any other required field.\n                        Superusers created with --noinput will not be able to\n                        log in until they're given a valid password.\n  --database {default}  Specifies the database to use. Default is \"default\".\n  --email EMAIL         Specifies the email for the superuser.\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+      "stderr": "",
+      "start_epoch": 1794428595.5515654,
+      "end_epoch": 1794428596.2437377,
+      "stdout_sha256": "3dd369ce32cae6a4250cd27f3511d3f8989c105cea0eabcb013efdf07ae735df",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "before": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": []
+      },
+      "after": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:16.100220+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unknown-flag",
+      "arguments": [
+        "--owned-unknown"
+      ],
+      "environment_keys": [],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "usage: manage.py createsuperuser [-h] [--username USERNAME] [--noinput]\n                                 [--database {default}] [--email EMAIL]\n                                 [--version] [-v {0,1,2,3}]\n                                 [--settings SETTINGS]\n                                 [--pythonpath PYTHONPATH] [--traceback]\n                                 [--no-color] [--force-color] [--skip-checks]\nmanage.py createsuperuser: error: unrecognized arguments: --owned-unknown\n",
+      "start_epoch": 1794428596.5508375,
+      "end_epoch": 1794428597.2437382,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "cefa22a53338e0b094b7a3d052f1db9eae4edeacc8dbf337744bb4ed2e2b464c",
+      "before": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:16.100220+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:17.098295+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-input-missing-username",
+      "arguments": [
+        "--noinput"
+      ],
+      "environment_keys": [],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\nCommandError: You must use --username with --noinput.\n",
+      "start_epoch": 1794428597.5502613,
+      "end_epoch": 1794428598.7708375,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f2e7c098cc236cbce071c5d13281e9bf48246eadb193aa3911fd37908d8db923",
+      "before": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:17.098295+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:18.108335+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "invalid-username",
+      "arguments": [
+        "--noinput",
+        "--username",
+        "rust-create-owned-bad space",
+        "--email",
+        "owned@example.invalid"
+      ],
+      "environment_keys": [],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\nCommandError: Enter a valid username. This value may contain only letters, numbers, and @/./+/-/_ characters.\n",
+      "start_epoch": 1794428599.0774229,
+      "end_epoch": 1794428600.2862663,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1e5bf8d8c1610e714ccfbfe948ad5e899d33b6641e8a3475d036f9deb397aeb4",
+      "before": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:18.108335+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:19.617720+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "invalid-email",
+      "arguments": [
+        "--noinput",
+        "--username",
+        "rust-create-owned-bad-email",
+        "--email",
+        "bad-email"
+      ],
+      "environment_keys": [],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\nCommandError: Enter a valid email address.\n",
+      "start_epoch": 1794428600.5934603,
+      "end_epoch": 1794428601.793084,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "a788808267979799bef8da5b6519e9d7958d2a77770190856b3069afca1ffa1d",
+      "before": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:19.617720+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:21.146223+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "normal",
+      "arguments": [
+        "--noinput",
+        "--username",
+        "rust-create-owned-normal",
+        "--email",
+        "Owned@EXAMPLE.INVALID"
+      ],
+      "environment_keys": [
+        "DJANGO_SUPERUSER_PASSWORD"
+      ],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 0,
+      "stdout": "Superuser created successfully.\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "start_epoch": 1794428602.100638,
+      "end_epoch": 1794428603.4495888,
+      "stdout_sha256": "92349df6a99a47f7ee555bdd1ecf1958c7e70c870500128ddac608f0342b7013",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "users": [],
+        "user_sequence": [
+          2,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:21.146223+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          3,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:22.646140+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "duplicate",
+      "arguments": [
+        "--noinput",
+        "--username",
+        "rust-create-owned-normal",
+        "--email",
+        "other@example.invalid"
+      ],
+      "environment_keys": [],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\nCommandError: Error: That username is already taken.\n",
+      "start_epoch": 1794428604.3113625,
+      "end_epoch": 1794428605.5389066,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f4992a353b3f97620a3609d26c0f0877661c3ff582cde95388d855e4b1dd429b",
+      "before": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          3,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:22.646140+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          3,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:24.863254+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "environment",
+      "arguments": [
+        "--noinput"
+      ],
+      "environment_keys": [
+        "DJANGO_SUPERUSER_EMAIL",
+        "DJANGO_SUPERUSER_PASSWORD",
+        "DJANGO_SUPERUSER_USERNAME"
+      ],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 0,
+      "stdout": "Superuser created successfully.\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "start_epoch": 1794428606.3961103,
+      "end_epoch": 1794428607.7749171,
+      "stdout_sha256": "92349df6a99a47f7ee555bdd1ecf1958c7e70c870500128ddac608f0342b7013",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          3,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:24.863254+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          4,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:26.950482+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "missing-password",
+      "arguments": [
+        "--noinput",
+        "--username",
+        "rust-create-owned-unusable",
+        "--email",
+        "owned@example.invalid"
+      ],
+      "environment_keys": [],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 0,
+      "stdout": "Superuser created successfully.\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "start_epoch": 1794428609.185081,
+      "end_epoch": 1794428610.4089427,
+      "stdout_sha256": "92349df6a99a47f7ee555bdd1ecf1958c7e70c870500128ddac608f0342b7013",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          4,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:26.950482+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 5,
+            "username": "rust-create-owned-unusable",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:30.256954+00:00",
+            "last_login": null,
+            "has_usable_password": false,
+            "generated_password_valid": false,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          5,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:29.748566+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "empty-password",
+      "arguments": [
+        "--noinput",
+        "--username",
+        "rust-create-owned-empty-password",
+        "--email",
+        "owned@example.invalid"
+      ],
+      "environment_keys": [
+        "DJANGO_SUPERUSER_PASSWORD"
+      ],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 0,
+      "stdout": "Superuser created successfully.\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "start_epoch": 1794428612.3662586,
+      "end_epoch": 1794428613.72306,
+      "stdout_sha256": "92349df6a99a47f7ee555bdd1ecf1958c7e70c870500128ddac608f0342b7013",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 5,
+            "username": "rust-create-owned-unusable",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:30.256954+00:00",
+            "last_login": null,
+            "has_usable_password": false,
+            "generated_password_valid": false,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          5,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:29.748566+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 5,
+            "username": "rust-create-owned-unusable",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:30.256954+00:00",
+            "last_login": null,
+            "has_usable_password": false,
+            "generated_password_valid": false,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 6,
+            "username": "rust-create-owned-empty-password",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:33.430130+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": false,
+            "empty_password_valid": true,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          6,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:32.913039+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unicode-nfkc",
+      "arguments": [
+        "--noinput",
+        "--username",
+        "rust-create-owned-ＡＢＣ",
+        "--email",
+        "wide@example.invalid"
+      ],
+      "environment_keys": [
+        "DJANGO_SUPERUSER_PASSWORD"
+      ],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 0,
+      "stdout": "Superuser created successfully.\n",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "start_epoch": 1794428616.211706,
+      "end_epoch": 1794428617.5633008,
+      "stdout_sha256": "92349df6a99a47f7ee555bdd1ecf1958c7e70c870500128ddac608f0342b7013",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 5,
+            "username": "rust-create-owned-unusable",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:30.256954+00:00",
+            "last_login": null,
+            "has_usable_password": false,
+            "generated_password_valid": false,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 6,
+            "username": "rust-create-owned-empty-password",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:33.430130+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": false,
+            "empty_password_valid": true,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          6,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:32.913039+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 5,
+            "username": "rust-create-owned-unusable",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:30.256954+00:00",
+            "last_login": null,
+            "has_usable_password": false,
+            "generated_password_valid": false,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 6,
+            "username": "rust-create-owned-empty-password",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:33.430130+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": false,
+            "empty_password_valid": true,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 7,
+            "username": "rust-create-owned-ABC",
+            "email": "wide@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:37.267178+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          7,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:36.758795+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    },
+    {
+      "id": "quiet",
+      "arguments": [
+        "--noinput",
+        "--username=rust-create-owned-quiet",
+        "--email=quiet@example.invalid",
+        "--verbosity",
+        "0"
+      ],
+      "environment_keys": [
+        "DJANGO_SUPERUSER_PASSWORD"
+      ],
+      "synthetic_password_value_omitted": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.\n",
+      "start_epoch": 1794428620.600012,
+      "end_epoch": 1794428621.933696,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "05cfd84a60d7616904ea5025ef04d22420c380ab1b9a1dbcbe2e85f7e6118d80",
+      "before": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 5,
+            "username": "rust-create-owned-unusable",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:30.256954+00:00",
+            "last_login": null,
+            "has_usable_password": false,
+            "generated_password_valid": false,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 6,
+            "username": "rust-create-owned-empty-password",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:33.430130+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": false,
+            "empty_password_valid": true,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 7,
+            "username": "rust-create-owned-ABC",
+            "email": "wide@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:37.267178+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          7,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:36.758795+00:00"
+          }
+        ]
+      },
+      "after": {
+        "users": [
+          {
+            "id": 3,
+            "username": "rust-create-owned-normal",
+            "email": "Owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:23.158129+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 4,
+            "username": "rust-create-owned-environment",
+            "email": "env@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:27.478557+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 5,
+            "username": "rust-create-owned-unusable",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:30.256954+00:00",
+            "last_login": null,
+            "has_usable_password": false,
+            "generated_password_valid": false,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 6,
+            "username": "rust-create-owned-empty-password",
+            "email": "owned@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:33.430130+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": false,
+            "empty_password_valid": true,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 7,
+            "username": "rust-create-owned-ABC",
+            "email": "wide@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:37.267178+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          },
+          {
+            "id": 8,
+            "username": "rust-create-owned-quiet",
+            "email": "quiet@example.invalid",
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "user_level": 10,
+            "avatar_config": {},
+            "custom_properties": {},
+            "api_key": null,
+            "stream_limit": 0,
+            "date_joined": "2026-11-11 20:23:41.646443+00:00",
+            "last_login": null,
+            "has_usable_password": true,
+            "generated_password_valid": true,
+            "empty_password_valid": false,
+            "groups": [],
+            "permissions": []
+          }
+        ],
+        "user_sequence": [
+          8,
+          true
+        ],
+        "notifications": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 20:23:16.100215+00:00",
+            "updated_at": "2026-11-11 20:23:41.137994+00:00"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notifications_cleared"
+          }
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "name": "help:exit",
+      "passed": true
+    },
+    {
+      "name": "help:users-unchanged",
+      "passed": true
+    },
+    {
+      "name": "unknown-flag:exit",
+      "passed": true
+    },
+    {
+      "name": "unknown-flag:users-unchanged",
+      "passed": true
+    },
+    {
+      "name": "no-input-missing-username:exit",
+      "passed": true
+    },
+    {
+      "name": "no-input-missing-username:users-unchanged",
+      "passed": true
+    },
+    {
+      "name": "invalid-username:exit",
+      "passed": true
+    },
+    {
+      "name": "invalid-username:users-unchanged",
+      "passed": true
+    },
+    {
+      "name": "invalid-email:exit",
+      "passed": true
+    },
+    {
+      "name": "invalid-email:users-unchanged",
+      "passed": true
+    },
+    {
+      "name": "normal:exit",
+      "passed": true
+    },
+    {
+      "name": "normal:one-new-row",
+      "passed": true
+    },
+    {
+      "name": "normal:admin-flags",
+      "passed": true
+    },
+    {
+      "name": "normal:defaults",
+      "passed": true
+    },
+    {
+      "name": "normal:joined-in-command-window",
+      "passed": true
+    },
+    {
+      "name": "normal:password",
+      "passed": true
+    },
+    {
+      "name": "normal:existing-users-preserved",
+      "passed": true
+    },
+    {
+      "name": "normal:email-domain-normalization",
+      "passed": true
+    },
+    {
+      "name": "duplicate:exit",
+      "passed": true
+    },
+    {
+      "name": "duplicate:users-unchanged",
+      "passed": true
+    },
+    {
+      "name": "environment:exit",
+      "passed": true
+    },
+    {
+      "name": "environment:one-new-row",
+      "passed": true
+    },
+    {
+      "name": "environment:admin-flags",
+      "passed": true
+    },
+    {
+      "name": "environment:defaults",
+      "passed": true
+    },
+    {
+      "name": "environment:joined-in-command-window",
+      "passed": true
+    },
+    {
+      "name": "environment:password",
+      "passed": true
+    },
+    {
+      "name": "environment:existing-users-preserved",
+      "passed": true
+    },
+    {
+      "name": "missing-password:exit",
+      "passed": true
+    },
+    {
+      "name": "missing-password:one-new-row",
+      "passed": true
+    },
+    {
+      "name": "missing-password:admin-flags",
+      "passed": true
+    },
+    {
+      "name": "missing-password:defaults",
+      "passed": true
+    },
+    {
+      "name": "missing-password:joined-in-command-window",
+      "passed": true
+    },
+    {
+      "name": "missing-password:password",
+      "passed": true
+    },
+    {
+      "name": "missing-password:existing-users-preserved",
+      "passed": true
+    },
+    {
+      "name": "empty-password:exit",
+      "passed": true
+    },
+    {
+      "name": "empty-password:one-new-row",
+      "passed": true
+    },
+    {
+      "name": "empty-password:admin-flags",
+      "passed": true
+    },
+    {
+      "name": "empty-password:defaults",
+      "passed": true
+    },
+    {
+      "name": "empty-password:joined-in-command-window",
+      "passed": true
+    },
+    {
+      "name": "empty-password:password",
+      "passed": true
+    },
+    {
+      "name": "empty-password:existing-users-preserved",
+      "passed": true
+    },
+    {
+      "name": "unicode-nfkc:exit",
+      "passed": true
+    },
+    {
+      "name": "unicode-nfkc:one-new-row",
+      "passed": true
+    },
+    {
+      "name": "unicode-nfkc:admin-flags",
+      "passed": true
+    },
+    {
+      "name": "unicode-nfkc:defaults",
+      "passed": true
+    },
+    {
+      "name": "unicode-nfkc:joined-in-command-window",
+      "passed": true
+    },
+    {
+      "name": "unicode-nfkc:password",
+      "passed": true
+    },
+    {
+      "name": "unicode-nfkc:existing-users-preserved",
+      "passed": true
+    },
+    {
+      "name": "quiet:exit",
+      "passed": true
+    },
+    {
+      "name": "quiet:one-new-row",
+      "passed": true
+    },
+    {
+      "name": "quiet:admin-flags",
+      "passed": true
+    },
+    {
+      "name": "quiet:defaults",
+      "passed": true
+    },
+    {
+      "name": "quiet:joined-in-command-window",
+      "passed": true
+    },
+    {
+      "name": "quiet:password",
+      "passed": true
+    },
+    {
+      "name": "quiet:existing-users-preserved",
+      "passed": true
+    }
+  ],
+  "credit": "All original application and Django behavior credit remains with their authors."
+}
