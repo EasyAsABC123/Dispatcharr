@@ -14,6 +14,8 @@ Four actual Source/native Docker Compose comparisons cover successful reopening 
 
 The parent review checks every selected file hash, equality of all689 Rust inputs between the component tests and packaged image, unchanged frontend and attribution inputs, recomputes all four comparisons, and checks that their owned containers, networks, and volumes are gone. Authenticated and anonymous runs retain separate identities and reports.
 
+The [parent integration report](../scripts/rust-integration/verified-vod-idle-parent-1.json) also passes378 default workspace tests, strict whole-workspace Clippy,12 comparator tests, and12 packaged API/React/playback/clean-install regression groups on these same689 committed Rust inputs. Its599 skipped fixture tests are reported separately. Runtime attribution matches the exact build input. These are scoped integration checks, not a replacement for all18 accepted image44 groups.
+
 ## Physical ownership and remaining gates
 
 Unique receipts and generation ownership prevent cleanup from decrementing a foreign provider reservation. Control and body admission remain held through actual claim, reservation, commit, and cleanup settlement after observer timeout or caller cancellation. Definite profile-full failures and ambiguous transport outcomes use separate cleanup paths; uncertain mutations are never retried as though they had failed before execution.

@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "scope": "Parent integration checks for the opt-in idle component, not a replacement for all eighteen image44 groups or full milestone acceptance.",
+  "credit": "All application and algorithm credit remains with the original Dispatcharr authors and contributors.",
+  "source_commit": "f092531e2344e33ffaf77e642f1c98d1162bd3a5",
+  "Rust_inputs": 689,
+  "committed_Rust_inputs_equal_component_and_packaged_inputs": true,
+  "image_id": "sha256:bef342990c8d22097e954a4fc2d2ce3446544cfbd1b9a2f15f316c6dd5734dd2",
+  "source_tree_sha256": "d4fa64a32e0054e599e9064de21b145fd1e4bf7f9e85ac6e37d5b9151cc34cce",
+  "build_manifest": {
+    "path": "artifacts/rust/vod-idle-coalesced-package-build-294/build.json",
+    "sha256": "2513a8732a3cf61933b2a27bd06fc29c1f93960438815a132e5b055f7ffb90e8"
+  },
+  "default_workspace_tests": 378,
+  "external_fixture_tests_ignored": 599,
+  "strict_whole_workspace_clippy": true,
+  "default_log": {
+    "path": "artifacts/rust/idle-parent-validation-1/default.log",
+    "sha256": "0bcab8061501ab105c961a859642d58f83c3904bea20f4262a5d6002b55e48b4"
+  },
+  "clippy_log": {
+    "path": "artifacts/rust/idle-parent-validation-1/clippy.log",
+    "sha256": "872869f11ef100515d284739d1f5e4a67db01d780208b81cf5343602840b2e40"
+  },
+  "gates": [
+    {
+      "name": "integration-full",
+      "passed": true,
+      "evidence": "artifacts/rust/integration-full-idle-parent-1/integration.json",
+      "sha256": "cdb3dcae48ad5f961ec134c2765ac4d32c15ba405c1439d1c41ce337319f7ee5",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "proxy-auth",
+      "passed": true,
+      "evidence": "artifacts/rust/proxy-auth-idle-parent-1/integration.json",
+      "sha256": "3fe96cfb21b6bc9be321ffa4f4bc8e37e74aedf0244f0122dcd6e54fd07c5182",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "auth-hash",
+      "passed": true,
+      "evidence": "artifacts/rust/auth-hash-idle-parent-1/integration.json",
+      "sha256": "d9d4d3e97439510c8c8dd21c8cf980e93fa73a46575f2b74543c18b54916e667",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "user-agent",
+      "passed": true,
+      "evidence": "artifacts/rust/user-agent-idle-parent-1/integration.json",
+      "sha256": "6c1b1f05f7d4e7f6fdab3b1245cfb115781c4bccfcd1cdffb631436d5cd8c7f8",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "output-profile",
+      "passed": true,
+      "evidence": "artifacts/rust/output-profile-idle-parent-1/integration.json",
+      "sha256": "e1f07cea60191fc73150f88a32ff997da0141c2cd9bca952579e89634049243c",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "profile-restart",
+      "passed": true,
+      "evidence": "artifacts/rust/profile-restart-idle-parent-1/integration.json",
+      "sha256": "1063feea4da5e78161dcfda7fee0b5d52295d186bfe1fd704e4b9c8d3b7c5c50",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "guide-grid-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/guide-grid-packaged-idle-parent-1/integration.json",
+      "sha256": "78e6666fd8f6c73dde77cf5c125aa19a97ec7cb479e31a2c202ff2a4e25e2471",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "current-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/current-packaged-idle-parent-1/integration.json",
+      "sha256": "03b4a76b9cb6afb89e0ab32dea07097daf9b1222aa1e6eca2d6419b684f82a20",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "m4-functional",
+      "passed": true,
+      "evidence": "artifacts/rust/m4-functional-idle-parent-1/result.json",
+      "sha256": "2e7c1aab34c40cf27e62c8e59ce387ab7dbd7d9bd59e9c60a2c43a8765f481a4",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "clean-install",
+      "passed": true,
+      "evidence": "artifacts/rust/clean-install-idle-parent-1/integration.json",
+      "sha256": "cb66fccdd92650d0c7bbbfc7bebc00241d9c208ebaff9777410a98b28aeaa494",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "category-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/category-browser-idle-parent-1/http/source-run.json",
+      "sha256": "f4d705abc84b63488d7b07f70b39c47195ea10c05cd27c5bd0c8eed8964c2976",
+      "owned_resources_removed": true
+    },
+    {
+      "name": "unified-HTML-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/unified-HTML-browser-idle-parent-1/http/source-run.json",
+      "sha256": "1aec962ccc0d169d829e707d8291fe43d0189b3a022eb1532d37600cdbb21566",
+      "owned_resources_removed": true
+    }
+  ],
+  "component_parent_review": {
+    "path": "artifacts/rust/idle-parent-review-1.json",
+    "sha256": "49f91aea77911e2b63d12c155b4186d425b6fa4487ec6b8d33f59f6e41942a11"
+  },
+  "comparator_unit_tests": 12,
+  "component_evidence": "scripts/rust-redis-restart-contracts/verified-vod-public-idle-293-298.json",
+  "runtime_attribution_exact": true,
+  "preserved_attempts": [
+    {
+      "path": "artifacts/rust/idle-parent-validation-1/sandbox-default-failure.log",
+      "scope": "Sandbox blocked existing local HTTP socket bind with EPERM. Same frozen tests rerun with local socket permission; application source unchanged."
+    }
+  ],
+  "default_recovery_enabled": false,
+  "performance_verified": false,
+  "full_m4_verified": false,
+  "remaining": [
+    "Concurrent pending followers and Source270 public-counter behavior",
+    "Dynamic X-Worker-ID and remaining connection-header differences",
+    "Broader retired-generation, audit, state-loss and playback/session domains",
+    "Remaining packaged groups, per-milestone performance, whole-app soak and cutover"
+  ]
+}
