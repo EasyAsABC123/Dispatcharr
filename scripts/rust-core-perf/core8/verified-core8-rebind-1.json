@@ -1,0 +1,155 @@
+{
+  "passed": true,
+  "scope": "Exact immutable Core8 shared-buffer plus commonPGRedis; M1 technical gate with M0 prerequisite pending; no HTTP/application/CLI gain or other milestone closure",
+  "comparative_core_performance_verified": true,
+  "M1_technical_gate_passed": true,
+  "M0_dependency_pending": true,
+  "whole_application_performance_verified": false,
+  "credit": "Original Dispatcharr authors and contributors retain all application/algorithm credit and licensing. Django/Redis/Rust and dependency authors retain their notices.",
+  "production_base_commit": "45ea3ad2563b7db8d9221c09993944bf71b985ab",
+  "production_source_map_sha256": "f16a8b1317452a9a40cee8dc1f7f75d2149a70ea47643f831cb1088be6afb60e",
+  "native_source_map_sha256": "d27a4c69776f27682700cae01156b0faced7f2e6a5827acd961304c9ca1e35c6",
+  "native_binary_sha256": "32ddd73d70d6198a41f6fc67babc0d837cc71d2e448885e7f0aaed471b1dd947",
+  "release_record_sha256": "7fca498d8913b17a5c4261cb4dad0bda5c2535b07cbe4fc1a7b9a5ed3ec0dd20",
+  "profile": {
+    "opt_level": "3",
+    "debuginfo": 0,
+    "debug_assertions": false,
+    "overflow_checks": false,
+    "test": true
+  },
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "runtime_image_both_backends": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "policy_sha256": "330058287fc2b47020b754ccafccce07f114c1ae9982756b95dae3ee7d304cf3",
+  "source_selected_plan_seal": "788381b92aa7472d0820cd6c5d213f5d79ad5e9cc510194f1c79b9a57d9757a7",
+  "source_qualification_windows": 9,
+  "measured_phases": 18,
+  "paired_trials": 9,
+  "periodic_samples": 1620,
+  "lifecycle_zero_oom_reports": 84,
+  "measured_full_bytes_all_backends_cohorts_trials": 51122426400,
+  "cohort_medians": {
+    "1": {
+      "cpu_ratio": 0.8286200611012022,
+      "memory_ratio": 0.7036740341550449
+    },
+    "10": {
+      "cpu_ratio": 0.29582195167623554,
+      "memory_ratio": 0.6827178626381312
+    },
+    "100": {
+      "cpu_ratio": 0.09244573683362906,
+      "memory_ratio": 0.5152971495237598
+    }
+  },
+  "cohort_reductions_percent": {
+    "1": {
+      "cpu_ratio": 17.137993889879777,
+      "memory_ratio": 29.63259658449551
+    },
+    "10": {
+      "cpu_ratio": 70.41780483237645,
+      "memory_ratio": 31.728213736186884
+    },
+    "100": {
+      "cpu_ratio": 90.75542631663708,
+      "memory_ratio": 48.47028504762402
+    }
+  },
+  "measured_reader_class_byte_ratios_all_one": true,
+  "public_numeric_projection": {
+    "path": "scripts/rust-core-perf/core8/results/projection.json",
+    "sha256": "fc58617038e529e159fe499d0a895d383541755e6cf927fde47d42622f0e32db",
+    "public_controls": 22
+  },
+  "parent_independent_review": {
+    "path": "artifacts/rust/m1-core-rebind-parent-review-1.json",
+    "sha256": "4e4f317e91ab022542bd9a6cfb3be2a9f32342fc00f6d32de4605b8b190fc18d"
+  },
+  "raw_experiment": {
+    "path": "artifacts/rust/m1-core-rebind-experiment-1",
+    "functional_sha256": "0808ae13308aef3ad75eed49b31fbb95726698f36b732d01f5798b8a2f9fc3b8",
+    "experiment_sha256": "c70543dc244190938c96b04b69d60eca1a9d4f182f6d31c1da90781cafcc4ac1",
+    "frozen_plan_sha256": "c8fb45ea0421f6fefe834482dd53b4593936d6662869e7b2f5e585514b5b39c9"
+  },
+  "portable_optimized_rebuild": {
+    "path": "artifacts/rust/m1-core8-publication-build-1/build-record.json",
+    "sha256": "331678b996d7f76d4c451ea7f52b3917c47291ecfd813cf9c9c1509559d52d5c",
+    "binary_sha256": "2c20d0ef8c75b38736975620c2731afe1216246d14d6555f53172290ddd8bc0a",
+    "measured_ELF_byte_identity": false,
+    "profile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": true
+    },
+    "source_map_sha256": "d27a4c69776f27682700cae01156b0faced7f2e6a5827acd961304c9ca1e35c6",
+    "not_resource_measurement": true
+  },
+  "actual_portable_functional": {
+    "path": "artifacts/rust/m1-core8-portable-functional-1/functional.json",
+    "sha256": "030203262bcf78dc2719df7a3cb9be0f425dca2b574609b32f2846dedaeb65f8",
+    "passed": true,
+    "cohorts": "actualSource/native1/10/100",
+    "chunks_per_peer": 44,
+    "full_bytes_per_reader": 11258192,
+    "native_history_reads": {
+      "10": 12,
+      "100": 120
+    },
+    "held_controls": {
+      "cached_bytes_after_stop": true,
+      "cached_final_viewer_held": true,
+      "history_bytes_after_owned_redis_cleanup": true,
+      "history_final_viewer_held": true,
+      "passed": true,
+      "single_frame_credit_enforced": true
+    },
+    "resource_samples_collected": false,
+    "default_database_unchanged": true,
+    "cleanup": "project removed",
+    "complete_support_map_sha256": "651f3f0cdd4b3d2671d39bb1bc8d494b9496a7ac4d0c73554ac9e20d7eaa4374",
+    "original_full_source_map_sha256": "4e03949255c204e67a73ae2f05c19277438c05aa7394d47d560c0c90c8bc65c1"
+  },
+  "validation": {
+    "all_controls": 64,
+    "raw_closure_plot_controls": 37,
+    "reconstruction_controls": 5,
+    "public_numeric_controls": 22,
+    "final_control_log": {
+      "path": "artifacts/rust/m1-core8-publication-validation-1/controls-final.log",
+      "sha256": "7440a7bfd0e8cc4a2f1e5d8a19fe7607cfd392854f7aeb31c27b16197d00afb2"
+    },
+    "public_arithmetic_log": {
+      "path": "artifacts/rust/m1-core8-publication-validation-1/public-numeric-final.log",
+      "sha256": "ccb906e3f3ff0c493da2b3a1eef161f0d4fab0ad3293061ed145f290fa5ac405"
+    },
+    "reconstruction_log": {
+      "path": "artifacts/rust/m1-core8-publication-validation-1/reconstruction-1.log",
+      "sha256": "033e83ec0dd71f559565247c1a837d332f7e7afa490f30b0ce72bd5a5925dbb4"
+    },
+    "owned_cleanup": {
+      "path": "artifacts/rust/m1-core8-publication-validation-1/owned-cleanup.json",
+      "sha256": "6d4a2fbf275c87eee7a63030918a5a948bdab7b0abdd291086497470b1fc3412"
+    }
+  },
+  "preserved_publication_failures": [
+    {
+      "path": "artifacts/rust/m1-core8-publication-validation-1/assembly.log",
+      "reason": "Assembler tools-prefix mismatch before any new workload; initial code and partial package retained"
+    },
+    {
+      "path": "artifacts/rust/m1-core8-publication-validation-1/controls-2.log",
+      "reason": "Extra-window negative monkeypatch omitted Python3.14 Path.glob kwargs; corrected/tested without raw edits"
+    }
+  ],
+  "limitations": [
+    "Core-only service group; historical dd3/2a84 results unchanged",
+    "Actual peer byte validation/sequence plus numeric work evidence, not51GB raw payload publication",
+    "Source.stop retained-read boundary remains distinct from manager teardown",
+    "Late Redis writes after logical timeout can commit; arbitrary backend/owner/TTL interleavings unqualified",
+    "No full service playback/import/CLI/browser/jobs/resources/soak/cutover acceptance"
+  ],
+  "no_runtime_Main_Cargo_ATTRIBUTION_ledger_changes": true
+}
