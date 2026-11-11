@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "scope": "genuine Original Django RedisClient/real reservation helper over TCP, not full HTTP",
+  "socket_timeout": 60,
+  "connect_timeout": 5,
+  "retry_on_timeout": true,
+  "settings_socket_timeout": 60,
+  "rows": [
+    {
+      "case": "success",
+      "passed": true,
+      "result": [
+        true,
+        1,
+        null
+      ],
+      "seconds": 2.401878720993409,
+      "counter_after": 1,
+      "method_replaced": false
+    },
+    {
+      "case": "busy",
+      "passed": true,
+      "result": [
+        false,
+        1,
+        "profile_full"
+      ],
+      "seconds": 2.400552224018611,
+      "counter_after": 1,
+      "method_replaced": false
+    }
+  ]
+}

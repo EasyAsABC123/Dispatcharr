@@ -1,0 +1,37 @@
+--- tools6/tools/run.py
++++ execution7/tools/run.py
+@@ -10,8 +10,32 @@
+ def save(path,value):Path(path).write_text(json.dumps(value,indent=2)+'\n')
+ def main():
+  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--repo',type=Path,required=True);parser.add_argument('--candidate-image',required=True);parser.add_argument('--build-manifest',type=Path,required=True);parser.add_argument('--source-archive',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args();repo=args.repo.resolve();out=args.output.resolve()
+- # Explicit block until Parent image cue and offline/failure controls review.
+- raise RuntimeError('UNVALIDATED_MAIN_FIXTURE_DRAFT: remove only after Parent review/image cue')
++ # Main cue activation begin
++ cue_path=repo/'artifacts/rust/m4-vod-main-image49-execution-cue-1.json';cue=json.loads(cue_path.read_text());now=time.time()
++ if cue.get('authorized')is not True or cue.get('action')!='three_case_Main_functional_qualification' or cue.get('source_native_application_requests_authorized')is not True:raise ValueError('ExplicitMainFunctionalCueRequired')
++ if not cue['issued_epoch']<=now<cue['expires_epoch']or cue['expires_epoch']-cue['issued_epoch']>1801:raise ValueError('FreshMainCueRequired')
++ if cue['boot_id']!=Path('/proc/sys/kernel/random/boot_id').read_text().strip():raise ValueError('MainCueBootBinding')
++ if cue['cases']!=['success','busy','abort']or cue['resource_sampling']is not False or cue['performance_acceptance']is not False:raise ValueError('MainFunctionalScopeBinding')
++ if out!=repo/cue['new_output']or out.exists():raise ValueError('FreshDeclaredMainOutputRequired')
++ selection_path=repo/cue['reviewed_selection'];selection_raw=selection_path.read_bytes()
++ if hashlib.sha256(selection_raw).hexdigest()!=cue['reviewed_selection_sha256']or cue['reviewed_selection_sha256']!='7ea3365a8cdbe8477d981d489db7bbd57303505df600ea443f18f94425ae7d54':raise ValueError('MainSelectionBinding')
++ selection=json.loads(selection_raw);reviewed=selection_path.parent
++ for name,value in selection['files'].items():
++  if hashlib.sha256((reviewed/name).read_bytes()).hexdigest()!=value['sha256']:raise ValueError('ReviewedMainInputModified '+name)
++  if name.startswith('tools/')and name!='tools/run.py'and hashlib.sha256((HERE/name.removeprefix('tools/')).read_bytes()).hexdigest()!=value['sha256']:raise ValueError('ExecutionMainInputModified '+name)
++ if hashlib.sha256((HERE.parent/'policy.json').read_bytes()).hexdigest()!=cue['reviewed_policy_sha256']or cue['reviewed_policy_sha256']!='6067504eadfda5bc5f8171f5b04283852a306e5a75437822be253201d0318bae':raise ValueError('MainPolicyBinding')
++ own=Path(__file__).read_text();opening=' # Main '+'cue activation begin\n';ending=' # Main '+'cue activation end\n'
++ original=own[:own.index(opening)]+" # Explicit block until Parent image cue and offline/failure controls review.\n raise RuntimeError('UNVALIDATED_MAIN_FIXTURE_DRAFT: remove only after Parent review/image cue')\n"+own[own.index(ending)+len(ending):]
++ if hashlib.sha256(original.encode()).hexdigest()!=selection['files']['tools/run.py']['sha256']:raise ValueError('ExecutionOnlyActivationDiff')
++ if args.build_manifest.resolve()!=repo/cue['build_manifest']or hashlib.sha256(args.build_manifest.read_bytes()).hexdigest()!=cue['build_manifest_sha256']:raise ValueError('MainBuildManifestBinding')
++ if args.candidate_image not in[cue['candidate_image'],cue['candidate_tag']]:raise ValueError('MainImageBinding')
++ if args.source_archive.resolve()!=repo/'artifacts/rust/candidate-build-cli-follower-image49-1/source.tar'or hashlib.sha256(args.source_archive.read_bytes()).hexdigest()!='15a5a42f33f93281f1bc6175b50295061e98b9462868b08a4928336fe07d2f01':raise ValueError('MainSourceArchiveBinding')
++ proof=load(HERE/'candidate_inputs.py','execution_candidate_guard').candidate(args.build_manifest,args.candidate_image,HERE/'expected-runtime.json',args.source_archive)
++ if proof['image_id']!=cue['candidate_image']or proof['source_tree_sha256']!=cue['source_tree_sha256']:raise ValueError('MainCandidateSourceTreeBinding')
++ status=execute(args,repo,out)
++ shutil.copyfile(cue_path,out/'execution-cue.json')
++ return status
++ # Main cue activation end
+ def execute(args,repo,out):
+  out.mkdir(parents=True,exist_ok=False);controller=out/'controller';shutil.copytree(HERE,controller,ignore=shutil.ignore_patterns('__pycache__'))
+  proof=load(controller/'candidate_inputs.py','candidate_guard').candidate(args.build_manifest,args.candidate_image,controller/'expected-runtime.json',args.source_archive);save(out/'candidate-inputs.json',proof)

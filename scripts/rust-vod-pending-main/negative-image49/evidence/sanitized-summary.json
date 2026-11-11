@@ -1,0 +1,222 @@
+{
+  "passed": false,
+  "scope": "three-case actual packaged Main SQL/Bearer opt-in early-follower functional qualification, not full parity",
+  "cases_passed": 1,
+  "cases_total": 3,
+  "Source_phases_passed": 3,
+  "native_phases_passed": 1,
+  "phases_total": 6,
+  "all_three_native_early_follower_prefix_stop_timing_passed": true,
+  "image_id": "sha256:db4fd5f56d2e38db82086c16d1ba3fe4b15fbc9f4cb4eaa55fe9b43cd8d0977c",
+  "source_tree_sha256": "20ad37783b8cc7805fceb9b58fae6ac3ec4a01b17651ebaa8a708e20be87285d",
+  "build_manifest_sha256": "f03857c8da00975e586e73d7e932f65a4fb461b7a496b9b39fbc83d92e85309c",
+  "reviewed_selection_sha256": "7ea3365a8cdbe8477d981d489db7bbd57303505df600ea443f18f94425ae7d54",
+  "execution_activation": "artifacts/rust/m4-vod-pending-main-execution-7/activation.json",
+  "run_exit_code": 1,
+  "rows": [
+    {
+      "case": "success",
+      "passed": false,
+      "origin_preflight_passed": true,
+      "independent_DB_clone_inputs_equal": true,
+      "default_nine_tables_and_sequences_unchanged": true,
+      "proxy_invalid": [],
+      "proxy_terminal_connections": 0,
+      "physical_cleanup_errors": [],
+      "phases": {
+        "source": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.40105377099826,
+            "control_work_seconds": 2.016957273997832,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0010537709982600951,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "target_status": 200,
+          "actual_target_client_socket_closed": false,
+          "server_handler_cancellation_inferred": null,
+          "other_private_reservation_after_follower_close_qualified": false,
+          "Source_public_counter_after_follower_close_observation": null
+        },
+        "native": {
+          "passed": false,
+          "actual_SQL_Bearer_user_verified": true,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.4007721219968516,
+            "control_work_seconds": 2.013593084993772,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0007721219968517268,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "target_status": 503,
+          "actual_target_client_socket_closed": false,
+          "server_handler_cancellation_inferred": null,
+          "other_private_reservation_after_follower_close_qualified": false,
+          "Source_public_counter_after_follower_close_observation": null
+        }
+      }
+    },
+    {
+      "case": "busy",
+      "passed": false,
+      "origin_preflight_passed": true,
+      "independent_DB_clone_inputs_equal": true,
+      "default_nine_tables_and_sequences_unchanged": true,
+      "proxy_invalid": [],
+      "proxy_terminal_connections": 0,
+      "physical_cleanup_errors": [],
+      "phases": {
+        "source": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.4013699229981285,
+            "control_work_seconds": 2.0177189619862475,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0013699229981285477,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "target_status": 429,
+          "actual_target_client_socket_closed": false,
+          "server_handler_cancellation_inferred": null,
+          "other_private_reservation_after_follower_close_qualified": false,
+          "Source_public_counter_after_follower_close_observation": 1
+        },
+        "native": {
+          "passed": false,
+          "actual_SQL_Bearer_user_verified": true,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.4006698109733406,
+            "control_work_seconds": 2.013555469980929,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0006698109733407343,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "target_status": 503,
+          "actual_target_client_socket_closed": false,
+          "server_handler_cancellation_inferred": null,
+          "other_private_reservation_after_follower_close_qualified": false,
+          "Source_public_counter_after_follower_close_observation": null
+        }
+      }
+    },
+    {
+      "case": "abort",
+      "passed": true,
+      "origin_preflight_passed": true,
+      "independent_DB_clone_inputs_equal": true,
+      "default_nine_tables_and_sequences_unchanged": true,
+      "proxy_invalid": [],
+      "proxy_terminal_connections": 0,
+      "physical_cleanup_errors": [],
+      "phases": {
+        "source": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.401356771006249,
+            "control_work_seconds": 2.01899910098291,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0013567710062489802,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "target_status": null,
+          "actual_target_client_socket_closed": true,
+          "server_handler_cancellation_inferred": false,
+          "other_private_reservation_after_follower_close_qualified": false,
+          "Source_public_counter_after_follower_close_observation": null
+        },
+        "native": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.4008108809939586,
+            "control_work_seconds": 2.014722824009368,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0008108809939586514,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "target_status": null,
+          "actual_target_client_socket_closed": true,
+          "server_handler_cancellation_inferred": false,
+          "other_private_reservation_after_follower_close_qualified": false,
+          "Source_public_counter_after_follower_close_observation": null
+        }
+      }
+    }
+  ],
+  "private_raw_phase_hashes": {
+    "success/pending-main-source-success-private.json": "5cc20b4581a294a4c6a9e29a77bfbcc703624839e41362edd2612cacef1a0e62",
+    "success/pending-main-native-success-private.json": "8bf13b730609c04f683ebbca2d14f61c1eaabed249e4e02582661f76ccbb1878",
+    "busy/pending-main-source-busy-private.json": "cbef43fbb628b615439660c048b1b1b1320293f6333303c2d5aa4b3a05f0a907",
+    "busy/pending-main-native-busy-private.json": "d0ec5a03861c01d643ba1830b80eae72b5a2cd0748124648e70beba54386aea8",
+    "abort/pending-main-source-abort-private.json": "3938fea28e76baf40e58b5466dd1dca10c2a13cbeb90e371109e513455e365ec",
+    "abort/pending-main-native-abort-private.json": "0958526f1a480435595be77c9899c7c686de756981123adb1b17a5dcc2c3f2a5"
+  },
+  "cleanup_independently_verified": true,
+  "failure": "Source success200 and busy429 versus native target503 after real held reserve reply2.4s. Both native phases stop before after-follower private-other witness; no acceptance transferred to that gate.",
+  "unproven_causal_hypothesis": "immutable Coordinator LeaseConfig default command_timeout2s is shorter than predeclared2.4s real Redis reply hold, despite Main3s observer. Code/time evidence suggests logical-observer mismatch; no intervention/retry proves causality.",
+  "remaining_limits": [
+    "Source method-return gate differs from native actual reply gate",
+    "Source latebody timeout remains",
+    "Source post-close metadata remains",
+    "Source/native busy public counter divergence remains",
+    "Main older-timer beyond3s not qualified",
+    "busy native other-movie after-close private reservation assertion not reached due target503"
+  ],
+  "adaptive_retries": 0,
+  "runtime_changes": false,
+  "resource_sampling": false,
+  "performance_acceptance": false,
+  "full_M3_M4_acceptance": false
+}

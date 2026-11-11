@@ -1,0 +1,287 @@
+{
+  "source_commit": "dffe0920429c04de502e55b9052996f41ceda2c3",
+  "image_id": "sha256:db4fd5f56d2e38db82086c16d1ba3fe4b15fbc9f4cb4eaa55fe9b43cd8d0977c",
+  "support_commit": "dffe0920429c04de502e55b9052996f41ceda2c3",
+  "support_archive_sha256": "9a7b11e15c375f70e788b969a7e99a9f227145c55d620d54cf97d8b16559eec9",
+  "build_manifest_sha256": "f03857c8da00975e586e73d7e932f65a4fb461b7a496b9b39fbc83d92e85309c",
+  "scope": "Fresh functional reproduction only; successful groups do not override pending Main failure or accept image49",
+  "groups": [
+    {
+      "name": "baseline-all",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-integration/run.py",
+        "--output",
+        "{output}/baseline-all",
+        "--candidate-image",
+        "sha256:db4fd5f56d2e38db82086c16d1ba3fe4b15fbc9f4cb4eaa55fe9b43cd8d0977c",
+        "--candidate-build-manifest",
+        "{manifest}",
+        "--contract-suites",
+        "all"
+      ]
+    },
+    {
+      "name": "proxy-auth",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-integration/run.py",
+        "--output",
+        "{output}/proxy-auth",
+        "--candidate-image",
+        "sha256:db4fd5f56d2e38db82086c16d1ba3fe4b15fbc9f4cb4eaa55fe9b43cd8d0977c",
+        "--candidate-build-manifest",
+        "{manifest}",
+        "--contract-suites",
+        "proxy_auth",
+        "--trusted-proxy-fixture"
+      ]
+    },
+    {
+      "name": "auth-hash",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-integration/run.py",
+        "--output",
+        "{output}/auth-hash",
+        "--candidate-image",
+        "sha256:db4fd5f56d2e38db82086c16d1ba3fe4b15fbc9f4cb4eaa55fe9b43cd8d0977c",
+        "--candidate-build-manifest",
+        "{manifest}",
+        "--contract-suites",
+        "auth_hash",
+        "--trusted-proxy-fixture"
+      ]
+    },
+    {
+      "name": "live-react-stats",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-live-browser/run.py",
+        "--output",
+        "{output}/live-react-stats",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "user-agent",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-integration/run_user_agent_contracts.py",
+        "--output",
+        "{output}/user-agent",
+        "--candidate-build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "output-profile",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-integration/run_output_profile_contracts.py",
+        "--output",
+        "{output}/output-profile",
+        "--candidate-build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "profile-restart",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-integration/run_output_profile_contracts.py",
+        "--output",
+        "{output}/profile-restart",
+        "--candidate-build-manifest",
+        "{manifest}",
+        "--redis-restart"
+      ]
+    },
+    {
+      "name": "guide-grid-packaged",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "{output}/guide-grid-packaged",
+        "--candidate-image",
+        "sha256:db4fd5f56d2e38db82086c16d1ba3fe4b15fbc9f4cb4eaa55fe9b43cd8d0977c",
+        "--build-manifest",
+        "{manifest}",
+        "--candidate-grid-wire"
+      ]
+    },
+    {
+      "name": "current-packaged",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "{output}/current-packaged",
+        "--candidate-image",
+        "sha256:db4fd5f56d2e38db82086c16d1ba3fe4b15fbc9f4cb4eaa55fe9b43cd8d0977c",
+        "--build-manifest",
+        "{manifest}",
+        "--candidate-current"
+      ]
+    },
+    {
+      "name": "m4-functional",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-m4-perf/run.py",
+        "--output",
+        "{output}/m4-functional",
+        "--candidate-build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "clean-install",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-integration/run_clean_install.py",
+        "--output",
+        "{output}/clean-install",
+        "--candidate-build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "category-browser",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "{output}/category-browser",
+        "--mode",
+        "http",
+        "--packaged-categories",
+        "--category-closed-gaps",
+        "--category-browser",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "unified-HTML-browser",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "{output}/unified-HTML-browser",
+        "--mode",
+        "http",
+        "--packaged-unified",
+        "--packaged-html",
+        "--unified-browser",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "complete-refresh-original",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-job-contracts/run_refresh_workflow.py",
+        "--output",
+        "{output}/complete-refresh-original"
+      ]
+    },
+    {
+      "name": "complete-refresh",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-job-contracts/run_refresh_workflow.py",
+        "--output",
+        "{output}/complete-refresh",
+        "--manifest",
+        "{manifest}",
+        "--reference",
+        "{output}/complete-refresh-original"
+      ]
+    },
+    {
+      "name": "static-Chrome-HTML-browser",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "{output}/static-Chrome-HTML-browser",
+        "--mode",
+        "http",
+        "--packaged-unified",
+        "--packaged-html",
+        "--packaged-static",
+        "--unified-browser",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "packaged-provider-actions",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-vod-api-contracts/run_provider_actions_packaged.py",
+        "--output",
+        "{output}/packaged-provider-actions",
+        "--mode",
+        "http",
+        "--packaged-provider-actions",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "packaged-cached-provider-info",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-vod-api-contracts/run_packaged_cached_info.py",
+        "--output",
+        "{output}/packaged-cached-provider-info",
+        "--mode",
+        "http",
+        "--packaged-cached-info",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "channel-logos",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-integration/run_logo_contracts.py",
+        "--output",
+        "{output}/channel-logos",
+        "--candidate-build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "packaged-vod-images",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-vod-api-contracts/run_packaged_vod_images.py",
+        "--output",
+        "{output}/packaged-vod-images",
+        "--mode",
+        "http",
+        "--packaged-vod-images",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "name": "provider-modal-browser",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-vod-api-contracts/run_provider_modal_browser.py",
+        "--output",
+        "{output}/provider-modal-browser",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    }
+  ]
+}

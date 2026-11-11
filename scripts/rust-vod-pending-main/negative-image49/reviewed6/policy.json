@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "scope": "actual packaged Main opt-in pending-follower early wire/identity/physical reply functional gate",
+  "fixture_execution_authorized": false,
+  "hardblock": "UNVALIDATED_MAIN_FIXTURE_DRAFT",
+  "candidate": {
+    "manifest": "artifacts/rust/candidate-build-cli-follower-image49-1/build.json",
+    "manifest_sha256": "f03857c8da00975e586e73d7e932f65a4fb461b7a496b9b39fbc83d92e85309c",
+    "tag": "dispatcharr-rust-app:cli-follower-image49",
+    "image_id": "sha256:db4fd5f56d2e38db82086c16d1ba3fe4b15fbc9f4cb4eaa55fe9b43cd8d0977c",
+    "git_revision": "dffe0920429c04de502e55b9052996f41ceda2c3",
+    "source_tree_sha256": "20ad37783b8cc7805fceb9b58fae6ac3ec4a01b17651ebaa8a708e20be87285d"
+  },
+  "cases": [
+    "success",
+    "busy",
+    "abort"
+  ],
+  "per_case": {
+    "independent_owned_databases": [
+      "template",
+      "source",
+      "native"
+    ],
+    "named_table_count": 9,
+    "default_database_named_table_sequence_audit": true,
+    "dedicated_source_native_redis_ports": [
+      6390,
+      6391
+    ],
+    "native_proxy_port": 6381,
+    "local_origin_only": true,
+    "origin_preflight": {
+      "explicit_owned_compose_up": true,
+      "health_readiness": true,
+      "full_fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+      "range": "bytes=0-8191",
+      "required_status": 206,
+      "max_read_bytes": 8193,
+      "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+      "stats_max_bytes": 65536,
+      "direct_origin_request_count": 1
+    }
+  },
+  "fixed_observations": {
+    "gate_hold_seconds": 2.4,
+    "existing_Main_observer_seconds": 3,
+    "early_body_bytes": 8192,
+    "early_body_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+    "source_gate": "actual Original post-INCR method-return",
+    "native_gate": "actual Redis reserve-provider reply read but not delivered",
+    "reserve_script_sha1": "d757c8db4c0aa5a26a91e84d2dcbfb4047589be0",
+    "maximum_hold_seconds": 2.75,
+    "hold_boundary": "Source actual post-INCR hook monotonic vs native actual backend-reply-read monotonic",
+    "release_boundary": "Source gate release monotonic vs native actual held-reply-release monotonic",
+    "control_work_must_finish_before_target": true,
+    "exact_pause_schedule_identity_claimed": false,
+    "reserve_reply_by_case": {
+      "success": 1,
+      "busy": -2,
+      "abort": 1
+    },
+    "unexpected_redis_error_or_type": "invalid, never held",
+    "stop_witness": "stop key exists after admin200 and early8192, no late100unit claim",
+    "busy_native_ownership": "same other movie owner+metadata token+ledger token/fence/profile/reserved1 and globalcount1 after followerclose; Source publiccounter separately observed",
+    "private_fence_schema": {
+      "type": "canonical positive decimal string",
+      "minimum": 1,
+      "maximum": 9223372036854775807,
+      "maximum_digits": 19,
+      "required_at_both_snapshots": true,
+      "unchanged": true
+    }
+  },
+  "limits": {
+    "command_aggregate_bytes": 8388608,
+    "command_input_bytes": 1048576,
+    "resp_frame_bytes": 1048576,
+    "resp_line_bytes": 8192,
+    "resp_depth": 16,
+    "resp_array_items": 1024,
+    "proxy_connections": 64,
+    "pending_commands_per_connection": 128,
+    "proxy_trace_events": 1024,
+    "held_reply_seconds": 10,
+    "control_body_bytes": 4096,
+    "phase_seconds": 90
+  },
+  "remaining_open": [
+    "Source later-body timeout",
+    "Source post-close metadata",
+    "Source/native public counter divergence preserving other movie reservation",
+    "Main older-timer beyond3s",
+    "full headers/late body parity"
+  ],
+  "resource_sampling": false,
+  "performance_acceptance": false,
+  "full_M3_M4_acceptance": false,
+  "normal_recovery_default": "OFF, fixture explicitly opts in"
+}
