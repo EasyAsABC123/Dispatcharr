@@ -1,5 +1,5 @@
-//! UNCOMPILED private child module, fixture authority only. Original
-//! Dispatcharr/Celery/Kombu authors retain application/protocol credit/licenses.
+//! Bounded inert transport for the explicitly known default task authority.
+//! Original Dispatcharr/Celery/Kombu authors retain code/protocol credit/licenses.
 use super::*;
 use crate::default_protocol::{self, Message, Normal};
 
@@ -123,6 +123,33 @@ impl Jobs {
         let value = result.value(message.kind).map_err(|_| Error::Protocol)?;
         self.write_result(message.task_id, value, None, Vec::new(), owner)
             .await
+    }
+    pub async fn write_default_terminal(
+        &self,
+        message: &Message,
+        terminal: crate::notification_terminal::Terminal,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        self.require_default()?;
+        match terminal {
+            crate::notification_terminal::Terminal::Normal(value) => {
+                self.write_default_success(message, value, owner).await
+            }
+            crate::notification_terminal::Terminal::Raised(failure) => {
+                if message.kind != crate::default_protocol::Kind::InactiveAccountNotifications {
+                    return Err(Error::UnsupportedTask);
+                }
+                let date = chrono::Utc::now()
+                    .format("%Y-%m-%dT%H:%M:%S%.6f+00:00")
+                    .to_string();
+                self.write_metadata(
+                    message.task_id,
+                    failure.metadata(message.task_id, &date)?,
+                    owner,
+                )
+                .await
+            }
+        }
     }
     pub async fn write_default_revoked(
         &self,

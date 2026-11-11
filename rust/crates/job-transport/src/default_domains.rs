@@ -17,6 +17,17 @@ pub trait Domains: Send + Sync {
         kind: Kind,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), Error>>;
+    fn execute_terminal(
+        &self,
+        kind: Kind,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<crate::notification_terminal::Terminal, Error>> {
+        Box::pin(async move {
+            self.execute(kind, owner)
+                .await
+                .map(crate::notification_terminal::Terminal::Normal)
+        })
+    }
     fn execute(
         &self,
         kind: Kind,
@@ -137,6 +148,28 @@ impl Domains for KnownDomains {
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), Error>> {
         Box::pin(self.inspect(kind, owner))
+    }
+    fn execute_terminal(
+        &self,
+        kind: Kind,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<crate::notification_terminal::Terminal, Error>> {
+        Box::pin(async move {
+            if kind == Kind::InactiveAccountNotifications {
+                let sink = self.sink.clone().ok_or(Error::Unsupported)?;
+                let result = if let Some(active) = &self.active {
+                    active.execute_report(owner).await
+                } else {
+                    crate::inactive_notifications::execute_report(self.pool.clone(), sink, owner)
+                        .await
+                };
+                crate::notification_terminal::classify(result)
+            } else {
+                self.execute(kind, owner)
+                    .await
+                    .map(crate::notification_terminal::Terminal::Normal)
+            }
+        })
     }
     fn execute(
         &self,

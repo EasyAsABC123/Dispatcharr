@@ -4,6 +4,7 @@
 //! Exact Original SELECT/unsorted iteration; no concurrency or
 //! mixed-live process-local proxy-manager side-effect parity is claimed.
 use crate::default_domains::Error;
+use crate::notification_terminal::{settled, Effect, ReportError};
 use chrono::{DateTime, Datelike, SecondsFormat, Utc};
 use dispatcharr_contracts::{UpdateEventError, UpdateEventSink};
 use serde_json::{json, Value};
@@ -148,8 +149,9 @@ impl Service {
         &self,
         keys: Option<Vec<String>>,
         keep: Option<Vec<String>>,
+        effect: Effect,
         owner: Arc<dyn Send + Sync>,
-    ) -> Result<(), Error> {
+    ) -> Result<(), ReportError> {
         let mut c = self.pool.acquire().await.map_err(Error::Sql)?;
         let observed=async {
             let rows:Vec<(i64,Option<String>)>=if let Some(keys)=keys {
@@ -157,21 +159,20 @@ impl Service {
             }else{
                 sqlx::query_as(&format!("SELECT id::bigint,CASE WHEN octet_length(notification_key)<=1020 THEN notification_key ELSE NULL END FROM core_systemnotification WHERE {FILTER} AND ($1::text[] IS NULL OR NOT(notification_key=ANY($1))) ORDER BY priority DESC,created_at DESC LIMIT 129")).bind(keep).fetch_all(&mut *c).await.map_err(Error::Sql)?
             };
-            if rows.len()>128 || rows.iter().any(|v|v.1.as_ref().is_none_or(|k|k.chars().count()>255)){return Err(Error::Unsupported);}
+            if rows.len()>128 || rows.iter().any(|v|v.1.as_ref().is_none_or(|k|k.chars().count()>255)){return Err(Error::Unsupported.into());}
             let ids:Vec<i64>=rows.iter().map(|v|v.0).collect();let mut tx=c.begin().await.map_err(Error::Sql)?;
             let deleted=async {
                 sqlx::query_scalar::<_,i64>("SELECT id::bigint FROM core_systemnotification WHERE id=ANY($1) FOR UPDATE").bind(&ids).fetch_all(&mut *tx).await.map_err(Error::Sql)?;
                 let related:i64=sqlx::query_scalar("SELECT count(*) FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).fetch_one(&mut *tx).await.map_err(Error::Sql)?;
-                if related>1024{return Err(Error::Unsupported);}
-                sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).execute(&mut *tx).await.map_err(Error::Sql)?;
-                sqlx::query("DELETE FROM core_systemnotification WHERE id=ANY($1)").bind(&ids).execute(&mut *tx).await.map_err(Error::Sql)?;Ok::<_,Error>(())
+                if related>1024{return Err(Error::Unsupported.into());}
+                sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).execute(&mut *tx).await.map_err(|error|ReportError::effect(error,effect))?;
+                sqlx::query("DELETE FROM core_systemnotification WHERE id=ANY($1)").bind(&ids).execute(&mut *tx).await.map_err(|error|ReportError::effect(error,effect))?;Ok::<_,ReportError>(())
             }.await;
             match deleted{Ok(())=>tx.commit().await.map_err(Error::Sql)?,Err(e)=>{tx.rollback().await.map_err(Error::Sql)?;return Err(e);}}
-            Ok::<_,Error>(rows.into_iter().map(|v|v.1.expect("bounded key checked")).collect::<Vec<_>>())
+            Ok::<_,ReportError>(rows.into_iter().map(|v|v.1.expect("bounded key checked")).collect::<Vec<_>>())
         }.await;
         let closed = c.close().await;
-        let keys = observed?;
-        closed.map_err(Error::Sql)?;
+        let keys = settled(observed, closed)?;
         for key in keys {
             self.send(json!({"type":"update","data":{"type":"notification_dismissed","notification_key":key}}),owner.clone()).await?;
         }
@@ -183,7 +184,7 @@ impl Service {
         now: DateTime<Utc>,
         expired: bool,
         key: &str,
-    ) -> Result<Value, Error> {
+    ) -> Result<Value, ReportError> {
         let when = if expired {
             "has expired".to_string()
         } else {
@@ -203,7 +204,7 @@ impl Service {
             p.2
         );
         if title.chars().count() > 255 {
-            return Err(Error::Unsupported);
+            return Err(Error::Unsupported.into());
         }
         let message = format!(
             "Profile \"{}\" on M3U account \"{}\" {when} ({} {}).",
@@ -219,19 +220,26 @@ impl Service {
             let written=async{
                 let existing:Option<i64>=sqlx::query_scalar("SELECT id::bigint FROM core_systemnotification WHERE notification_key=$1 FOR UPDATE").bind(key).fetch_optional(&mut *tx).await.map_err(Error::Sql)?;
                 let row:(i64,DateTime<Utc>)=if let Some(id)=existing{
-                    sqlx::query_as("UPDATE core_systemnotification SET notification_type='warning',priority=$2,title=$3,message=$4,action_data=$5,is_active=true,admin_only=true,updated_at=$6 WHERE id=$1 RETURNING id::bigint,created_at").bind(id).bind(if expired{"high"}else{"normal"}).bind(&title).bind(&message).bind(&action).bind(now).fetch_one(&mut *tx).await.map_err(Error::Sql)?
+                    sqlx::query_as("UPDATE core_systemnotification SET notification_type='warning',priority=$2,title=$3,message=$4,action_data=$5,is_active=true,admin_only=true,updated_at=$6 WHERE id=$1 RETURNING id::bigint,created_at").bind(id).bind(if expired{"high"}else{"normal"}).bind(&title).bind(&message).bind(&action).bind(now).fetch_one(&mut *tx).await.map_err(|error|ReportError::effect(error,Effect::ProfileUpsert))?
                 }else{
-                    sqlx::query_as("INSERT INTO core_systemnotification(notification_key,notification_type,priority,title,message,action_data,is_active,admin_only,source,created_at,updated_at,expires_at) VALUES($1,'warning',$2,$3,$4,$5,true,true,'system',$6,$6,NULL) RETURNING id::bigint,created_at").bind(key).bind(if expired{"high"}else{"normal"}).bind(&title).bind(&message).bind(&action).bind(now).fetch_one(&mut *tx).await.map_err(Error::Sql)?
-                };Ok::<_,Error>(json!({"id":row.0,"notification_key":key,"notification_type":"warning","priority":if expired{"high"}else{"normal"},"title":title,"message":message,"action_data":action,"is_active":true,"admin_only":true,"created_at":iso(row.1)}))
+                    sqlx::query_as("INSERT INTO core_systemnotification(notification_key,notification_type,priority,title,message,action_data,is_active,admin_only,source,created_at,updated_at,expires_at) VALUES($1,'warning',$2,$3,$4,$5,true,true,'system',$6,$6,NULL) RETURNING id::bigint,created_at").bind(key).bind(if expired{"high"}else{"normal"}).bind(&title).bind(&message).bind(&action).bind(now).fetch_one(&mut *tx).await.map_err(|error|ReportError::effect(error,Effect::ProfileUpsert))?
+                };Ok::<_,ReportError>(json!({"id":row.0,"notification_key":key,"notification_type":"warning","priority":if expired{"high"}else{"normal"},"title":title,"message":message,"action_data":action,"is_active":true,"admin_only":true,"created_at":iso(row.1)}))
             }.await;
             match written{Ok(row)=>{tx.commit().await.map_err(Error::Sql)?;Ok(row)},Err(e)=>{tx.rollback().await.map_err(Error::Sql)?;Err(e)}}
         }.await;
         let closed = c.close().await;
-        let row = observed?;
-        closed.map_err(Error::Sql)?;
+        let row = settled(observed, closed)?;
         Ok(row)
     }
     pub(crate) async fn execute(&self, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
+        self.execute_report(owner)
+            .await
+            .map_err(|report| report.error)
+    }
+    pub(crate) async fn execute_report(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), ReportError> {
         let permit = self
             .slots
             .clone()
@@ -243,16 +251,16 @@ impl Service {
             let observed=Self::inspect(&mut c).await;let closed=c.close().await;let profiles=observed?;closed.map_err(Error::Sql)?;
             let mut keep=Vec::new();
             for p in profiles{
-                let now=this.clock.now();if !(1970..=9999).contains(&now.year()){return Err(Error::Unsupported);}
+                let now=this.clock.now();if !(1970..=9999).contains(&now.year()){return Err(Error::Unsupported.into());}
                 let warning=format!("xc-exp-warning-{}",p.0);let expired=format!("xc-exp-expired-{}",p.0);
                 if p.4<=now+chrono::Duration::days(7){
                     let is_expired=p.4<=now;let(key,opposite)=if is_expired{(expired,warning)}else{(warning,expired)};
-                    this.collect(Some(vec![opposite]),None,owner.clone()).await?;
+                    this.collect(Some(vec![opposite]),None,Effect::OppositeCollector,owner.clone()).await?;
                     let row=this.upsert(&p,now,is_expired,&key).await?;
                     this.send(json!({"type":"update","data":{"type":"system_notification","notification":row}}),owner.clone()).await?;keep.push(key);
-                }else{this.collect(Some(vec![warning,expired]),None,owner.clone()).await?;}
+                }else{this.collect(Some(vec![warning,expired]),None,Effect::OppositeCollector,owner.clone()).await?;}
             }
-            this.collect(None,Some(keep),owner).await
+            this.collect(None,Some(keep),Effect::FinalCollector,owner).await
         }).await.map_err(|_|Error::Panic)?
     }
 }

@@ -319,7 +319,14 @@ async fn actual_collector_error_rolls_back_children_before_owner_release() {
     let notices:i64=sqlx::query_scalar("SELECT count(*) FROM core_systemnotification WHERE notification_key='xc-exp-warning-owned-rollback'").fetch_one(&pool).await.unwrap();
     let dismissals:i64=sqlx::query_scalar("SELECT count(*) FROM core_notificationdismissal WHERE notification_id IN (SELECT id FROM core_systemnotification WHERE notification_key='xc-exp-warning-owned-rollback')").fetch_one(&pool).await.unwrap();
     assert_eq!((notices, dismissals), (1, 1));
-    assert!(jobs.read(m.task_id, Arc::new(())).await.unwrap().is_none());
+    assert_eq!(
+        jobs.read(m.task_id, Arc::new(()))
+            .await
+            .unwrap()
+            .unwrap()
+            .state,
+        crate::decode::State::Failure
+    );
     sqlx::query("DROP TRIGGER rust_inactive_resource_fail ON core_systemnotification")
         .execute(&pool)
         .await

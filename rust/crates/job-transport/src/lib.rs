@@ -23,8 +23,7 @@ pub mod visibility;
 #[cfg(test)]
 pub mod index_failure;
 
-// Source-first P0001 formatter component; no worker classification.
-#[cfg(test)]
+// Source-first bounded P0001 field renderer; classification is stage-scoped.
 pub mod pg_failure_format;
 
 // Known observed stage mappings only; production service adapter is unchanged.
@@ -117,3 +116,8 @@ pub mod active_notifications;
 
 #[cfg(test)]
 mod active_resources;
+
+pub mod notification_terminal;
+
+#[cfg(test)]
+mod notification_failure_resources;

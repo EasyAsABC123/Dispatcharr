@@ -29,6 +29,7 @@ pub enum Run {
     UnsupportedHead,
     Unsupported(Kind),
     Completed(Uuid),
+    Failed(Uuid),
     AlreadySucceeded(Uuid),
     Revoked(Uuid, crate::cleanup_expiry::Revocation),
 }
@@ -252,16 +253,21 @@ impl DefaultWorker {
                     .map_err(Error::Transport)?;
                 let value = inner
                     .domains
-                    .execute(kind, owner.clone())
+                    .execute_terminal(kind, owner.clone())
                     .await
                     .map_err(Error::Domain)?;
+                let raised = value.raised();
                 let saved = inner
                     .jobs
-                    .write_default_success(&message, value, owner)
+                    .write_default_terminal(&message, value, owner)
                     .await
                     .map_err(Error::Transport)?;
                 Ok(if saved {
-                    Run::Completed(message.task_id)
+                    if raised {
+                        Run::Failed(message.task_id)
+                    } else {
+                        Run::Completed(message.task_id)
+                    }
                 } else {
                     Run::AlreadySucceeded(message.task_id)
                 })
@@ -323,6 +329,7 @@ impl Run {
             Self::Empty => "Empty".into(),
             Self::UnsupportedHead => "UnsupportedHead".into(),
             Self::Unsupported(kind) => format!("Unsupported({kind:?})"),
+            Self::Failed(id) => format!("Failed({id})"),
             Self::Completed(id) => format!("Completed({id})"),
             Self::Revoked(id, reason) => format!("Revoked({id},{})", reason.reason()),
             Self::AlreadySucceeded(id) => format!("AlreadySucceeded({id})"),

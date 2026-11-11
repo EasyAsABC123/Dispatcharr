@@ -345,7 +345,14 @@ async fn actual_collector_error_rolls_back_children_before_owner_release() {
     assert_eq!((notices, dismissals), (1, 1));
     let written:i64=sqlx::query_scalar("SELECT count(*) FROM core_systemnotification WHERE title='Account Expiring: Owned Resource Profile'").fetch_one(&pool).await.unwrap();
     assert_eq!(written, 1);
-    assert!(jobs.read(m.task_id, Arc::new(())).await.unwrap().is_none());
+    assert_eq!(
+        jobs.read(m.task_id, Arc::new(()))
+            .await
+            .unwrap()
+            .unwrap()
+            .state,
+        crate::decode::State::Failure
+    );
     sqlx::query("DROP TRIGGER rust_inactive_resource_fail ON core_systemnotification")
         .execute(&pool)
         .await

@@ -1,0 +1,2589 @@
+{
+  "scope": "Actual Original producer/worker/native notification terminal path and actual Original TCP consumers; opaque native diagnostic intentionally differs from Original Python traceback",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "cases": [
+    {
+      "name": "new-warning",
+      "exp_date": "2026-11-12T12:00:00.123456+00:00",
+      "fault": "new-target",
+      "envelope": {
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.check_account_expirations",
+          "id": "670a08bd-b393-4ebe-92af-bbe08596d2ca",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "670a08bd-b393-4ebe-92af-bbe08596d2ca",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen378@78addd302eda",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "body": [
+          [],
+          {},
+          {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          }
+        ],
+        "properties": {
+          "correlation_id": "670a08bd-b393-4ebe-92af-bbe08596d2ca",
+          "reply_to": "166c4a99-0515-3657-a700-ebe39b590c9b"
+        }
+      },
+      "postrun": {
+        "task": "apps.m3u.tasks.check_account_expirations",
+        "id": "670a08bd-b393-4ebe-92af-bbe08596d2ca",
+        "state": "SUCCESS",
+        "result": null
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-11T16:24:36.597224+00:00",
+        "task_id": "670a08bd-b393-4ebe-92af-bbe08596d2ca"
+      },
+      "before": {
+        "notices": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 16:24:34.887703+00:00",
+            "updated_at": "2026-11-11 16:24:34.887711+00:00"
+          },
+          {
+            "id": 3,
+            "notification_key": "xc-exp-expired-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 4,
+            "notification_key": "xc-exp-warning-owned-stale",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 5,
+            "notification_key": "rust-owned-active-unrelated",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 6,
+            "notification_key": "xc-exp-expired-owned-inactive",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          }
+        ],
+        "dismissals": [
+          {
+            "id": 2,
+            "notification_id": 3,
+            "user_id": 1
+          },
+          {
+            "id": 3,
+            "notification_id": 4,
+            "user_id": 1
+          },
+          {
+            "id": 4,
+            "notification_id": 5,
+            "user_id": 1
+          },
+          {
+            "id": 5,
+            "notification_id": 6,
+            "user_id": 1
+          }
+        ]
+      },
+      "after": {
+        "notices": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 16:24:34.887703+00:00",
+            "updated_at": "2026-11-11 16:24:34.887711+00:00"
+          },
+          {
+            "id": 5,
+            "notification_key": "rust-owned-active-unrelated",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 6,
+            "notification_key": "xc-exp-expired-owned-inactive",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 7,
+            "notification_key": "xc-exp-warning-2",
+            "notification_type": "warning",
+            "priority": "normal",
+            "source": "system",
+            "title": "Account Expiring: Owned Profile",
+            "message": "Profile \"Owned Profile\" on M3U account \"Owned Active Account\" expires in 1 day (expires 2026-11-12 12:00 UTC).",
+            "action_data": {
+              "exp_date": "2026-11-12T12:00:00.123456+00:00",
+              "account_id": 1,
+              "profile_id": 2,
+              "account_name": "Owned Active Account",
+              "profile_name": "Owned Profile"
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 12:00:00.123456+00:00",
+            "updated_at": "2026-11-11 12:00:00.123456+00:00"
+          }
+        ],
+        "dismissals": [
+          {
+            "id": 4,
+            "notification_id": 5,
+            "user_id": 1
+          },
+          {
+            "id": 5,
+            "notification_id": 6,
+            "user_id": 1
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notification_dismissed",
+            "notification_key": "xc-exp-expired-2"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_active!receiver"
+          ]
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "system_notification",
+            "notification": {
+              "id": 7,
+              "notification_key": "xc-exp-warning-2",
+              "notification_type": "warning",
+              "priority": "normal",
+              "title": "Account Expiring: Owned Profile",
+              "message": "Profile \"Owned Profile\" on M3U account \"Owned Active Account\" expires in 1 day (expires 2026-11-12 12:00 UTC).",
+              "action_data": {
+                "profile_id": 2,
+                "account_id": 1,
+                "account_name": "Owned Active Account",
+                "profile_name": "Owned Profile",
+                "exp_date": "2026-11-12T12:00:00.123456+00:00"
+              },
+              "is_active": true,
+              "admin_only": true,
+              "created_at": "2026-11-11T12:00:00.123456+00:00"
+            }
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_active!receiver"
+          ]
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "notification_dismissed",
+            "notification_key": "xc-exp-warning-owned-stale"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_active!receiver"
+          ]
+        }
+      ],
+      "sql": {
+        "id": "670a08bd-b393-4ebe-92af-bbe08596d2ca",
+        "queries": [
+          {
+            "sql": "SELECT \"m3u_m3uaccountprofile\".\"id\", \"m3u_m3uaccountprofile\".\"m3u_account_id\", \"m3u_m3uaccountprofile\".\"name\", \"m3u_m3uaccountprofile\".\"is_default\", \"m3u_m3uaccountprofile\".\"max_streams\", \"m3u_m3uaccountprofile\".\"is_active\", \"m3u_m3uaccountprofile\".\"search_pattern\", \"m3u_m3uaccountprofile\".\"replace_pattern\", \"m3u_m3uaccountprofile\".\"current_viewers\", \"m3u_m3uaccountprofile\".\"custom_properties\", \"m3u_m3uaccountprofile\".\"exp_date\", \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"name\", \"m3u_m3uaccount\".\"server_url\", \"m3u_m3uaccount\".\"file_path\", \"m3u_m3uaccount\".\"server_group_id\", \"m3u_m3uaccount\".\"max_streams\", \"m3u_m3uaccount\".\"is_active\", \"m3u_m3uaccount\".\"created_at\", \"m3u_m3uaccount\".\"updated_at\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\", \"m3u_m3uaccount\".\"user_agent_id\", \"m3u_m3uaccount\".\"locked\", \"m3u_m3uaccount\".\"stream_profile_id\", \"m3u_m3uaccount\".\"account_type\", \"m3u_m3uaccount\".\"username\", \"m3u_m3uaccount\".\"password\", \"m3u_m3uaccount\".\"custom_properties\", \"m3u_m3uaccount\".\"refresh_interval\", \"m3u_m3uaccount\".\"refresh_task_id\", \"m3u_m3uaccount\".\"stale_stream_days\", \"m3u_m3uaccount\".\"priority\" FROM \"m3u_m3uaccountprofile\" INNER JOIN \"m3u_m3uaccount\" ON (\"m3u_m3uaccountprofile\".\"m3u_account_id\" = \"m3u_m3uaccount\".\"id\") WHERE (\"m3u_m3uaccountprofile\".\"exp_date\" IS NOT NULL AND \"m3u_m3uaccountprofile\".\"is_active\" AND \"m3u_m3uaccount\".\"is_active\")",
+            "param_types": [],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"notification_key\" AS \"notification_key\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s ORDER BY \"core_systemnotification\".\"priority\" DESC, \"core_systemnotification\".\"created_at\" DESC",
+            "param_types": [
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s",
+            "param_types": [
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "DELETE FROM \"core_notificationdismissal\" WHERE \"core_notificationdismissal\".\"notification_id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "DELETE FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s LIMIT 21 FOR UPDATE",
+            "param_types": [
+              "str"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "SAVEPOINT \"s140687907152384_x1\"",
+            "param_types": [],
+            "atomic": true
+          },
+          {
+            "sql": "INSERT INTO \"core_systemnotification\" (\"notification_key\", \"notification_type\", \"priority\", \"source\", \"title\", \"message\", \"action_data\", \"is_active\", \"admin_only\", \"expires_at\", \"created_at\", \"updated_at\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING \"core_systemnotification\".\"id\"",
+            "param_types": [
+              "str",
+              "NotificationType",
+              "Priority",
+              "Source",
+              "str",
+              "str",
+              "Jsonb",
+              "bool",
+              "bool",
+              "NoneType",
+              "datetime",
+              "datetime"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "RELEASE SAVEPOINT \"s140687907152384_x1\"",
+            "param_types": [],
+            "atomic": true
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"notification_key\" AS \"notification_key\" FROM \"core_systemnotification\" WHERE (\"core_systemnotification\".\"is_active\" AND (\"core_systemnotification\".\"notification_key\"::text LIKE %s OR \"core_systemnotification\".\"notification_key\"::text LIKE %s) AND NOT (\"core_systemnotification\".\"notification_key\" IN (%s))) ORDER BY \"core_systemnotification\".\"priority\" DESC, \"core_systemnotification\".\"created_at\" DESC",
+            "param_types": [
+              "str",
+              "str",
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE (\"core_systemnotification\".\"is_active\" AND (\"core_systemnotification\".\"notification_key\"::text LIKE %s OR \"core_systemnotification\".\"notification_key\"::text LIKE %s) AND NOT (\"core_systemnotification\".\"notification_key\" IN (%s)))",
+            "param_types": [
+              "str",
+              "str",
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "DELETE FROM \"core_notificationdismissal\" WHERE \"core_notificationdismissal\".\"notification_id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "DELETE FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          }
+        ]
+      },
+      "prerun": {
+        "task": "apps.m3u.tasks.check_account_expirations",
+        "id": "670a08bd-b393-4ebe-92af-bbe08596d2ca",
+        "root_id": "670a08bd-b393-4ebe-92af-bbe08596d2ca",
+        "parent_id": null,
+        "args": [],
+        "kwargs": {},
+        "controlled_now": "2026-11-11 12:00:00.123456+00:00",
+        "process_local_managers": {
+          "hls_proxy": 0,
+          "live_proxy": 0
+        }
+      },
+      "consumer_http": {
+        "task_status": {
+          "admin": {
+            "status": 500,
+            "body": {
+              "detail": "Failed to get task status: 'NoneType' object has no attribute 'get'"
+            },
+            "content_type": "application/json",
+            "body_sha256": "e5281ef286e9a884ea6a251dea6a15adec32f64e5f8db3a76fc2cf73f7e9c15f"
+          },
+          "viewer": {
+            "status": 401,
+            "body": {
+              "detail": "Authentication required"
+            },
+            "content_type": "application/json",
+            "body_sha256": "9a15b0a3fe33ddcd5af28fef761c068e8d2c5a3d736275728f3fbeef79f0cbc9"
+          },
+          "anonymous": {
+            "status": 401,
+            "body": {
+              "detail": "Authentication required"
+            },
+            "content_type": "application/json",
+            "body_sha256": "9a15b0a3fe33ddcd5af28fef761c068e8d2c5a3d736275728f3fbeef79f0cbc9"
+          },
+          "signed-task-token": {
+            "status": 500,
+            "body": {
+              "detail": "Failed to get task status: 'NoneType' object has no attribute 'get'"
+            },
+            "content_type": "application/json",
+            "body_sha256": "e5281ef286e9a884ea6a251dea6a15adec32f64e5f8db3a76fc2cf73f7e9c15f"
+          },
+          "invalid-token-with-admin": {
+            "status": 403,
+            "body": {
+              "detail": "Invalid task token"
+            },
+            "content_type": "application/json",
+            "body_sha256": "cbca7835eeb5174e2ff8d2eaee413a31c063de2147ed5937b4c58115eb5cc32e"
+          }
+        },
+        "notifications": {
+          "admin": {
+            "status": 200,
+            "body": {
+              "notifications": [
+                {
+                  "id": 7,
+                  "notification_key": "xc-exp-warning-2",
+                  "notification_type": "warning",
+                  "priority": "normal",
+                  "title": "Account Expiring: Owned Profile",
+                  "message": "Profile \"Owned Profile\" on M3U account \"Owned Active Account\" expires in 1 day (expires 2026-11-12 12:00 UTC).",
+                  "action_data": {
+                    "exp_date": "2026-11-12T12:00:00.123456+00:00",
+                    "account_id": 1,
+                    "profile_id": 2,
+                    "account_name": "Owned Active Account",
+                    "profile_name": "Owned Profile"
+                  },
+                  "is_active": true,
+                  "admin_only": true,
+                  "expires_at": null,
+                  "created_at": "2026-11-11T12:00:00.123456Z",
+                  "is_dismissed": false,
+                  "source": "system"
+                },
+                {
+                  "id": 5,
+                  "notification_key": "rust-owned-active-unrelated",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": true,
+                  "source": "developer"
+                }
+              ],
+              "count": 2,
+              "unread_count": 2
+            },
+            "content_type": "application/json",
+            "body_sha256": "084f7c1f5d3c08cf8625f109097fb6625989e0c41f0f49ad17cb761896dd72ab"
+          },
+          "viewer": {
+            "status": 200,
+            "body": {
+              "notifications": [
+                {
+                  "id": 5,
+                  "notification_key": "rust-owned-active-unrelated",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": false,
+                  "source": "developer"
+                }
+              ],
+              "count": 1,
+              "unread_count": 1
+            },
+            "content_type": "application/json",
+            "body_sha256": "38b8a5136e2bc8168f1ec983ce14f749e48be4278a0557b8590e40732634929c"
+          }
+        },
+        "token_bytes_retained": false
+      },
+      "native": {
+        "peer": {
+          "ok": true,
+          "error": null,
+          "result": {
+            "outcome": "Completed(d34e3785-1848-434c-8c6e-2f7150a29d0c)"
+          },
+          "drained": true,
+          "jobs_drained": true,
+          "available_slots": 2,
+          "pool_closed": true,
+          "execute_calls": 1
+        },
+        "metadata": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [],
+          "date_done": "2026-11-11T16:24:38.622368+00:00",
+          "task_id": "d34e3785-1848-434c-8c6e-2f7150a29d0c"
+        },
+        "events": [
+          {
+            "type": "update",
+            "data": {
+              "type": "notification_dismissed",
+              "notification_key": "xc-exp-expired-2"
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_active!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "system_notification",
+              "notification": {
+                "id": 7,
+                "notification_key": "xc-exp-warning-2",
+                "notification_type": "warning",
+                "priority": "normal",
+                "title": "Account Expiring: Owned Profile",
+                "message": "Profile \"Owned Profile\" on M3U account \"Owned Active Account\" expires in 1 day (expires 2026-11-12 12:00 UTC).",
+                "action_data": {
+                  "profile_id": 2,
+                  "account_id": 1,
+                  "account_name": "Owned Active Account",
+                  "profile_name": "Owned Profile",
+                  "exp_date": "2026-11-12T12:00:00.123456+00:00"
+                },
+                "is_active": true,
+                "admin_only": true,
+                "created_at": "2026-11-11T12:00:00.123456+00:00"
+              }
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_active!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "notification_dismissed",
+              "notification_key": "xc-exp-warning-owned-stale"
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_active!receiver"
+            ]
+          }
+        ],
+        "http": {
+          "status": 500,
+          "body": {
+            "detail": "Failed to get task status: 'NoneType' object has no attribute 'get'"
+          },
+          "content_type": "application/json",
+          "body_sha256": "e5281ef286e9a884ea6a251dea6a15adec32f64e5f8db3a76fc2cf73f7e9c15f"
+        },
+        "opaque_diagnostic_difference_explicit": false
+      }
+    },
+    {
+      "name": "opposite-delete-fault",
+      "exp_date": "2026-11-12T12:00:00.123456+00:00",
+      "fault": "delete-opposite",
+      "envelope": {
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.check_account_expirations",
+          "id": "5ffd53e7-9456-457c-92d7-006c3c6a5a4e",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "5ffd53e7-9456-457c-92d7-006c3c6a5a4e",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen378@78addd302eda",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "body": [
+          [],
+          {},
+          {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          }
+        ],
+        "properties": {
+          "correlation_id": "5ffd53e7-9456-457c-92d7-006c3c6a5a4e",
+          "reply_to": "166c4a99-0515-3657-a700-ebe39b590c9b"
+        }
+      },
+      "postrun": {
+        "task": "apps.m3u.tasks.check_account_expirations",
+        "id": "5ffd53e7-9456-457c-92d7-006c3c6a5a4e",
+        "state": "FAILURE",
+        "result": "owned active delete-opposite failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+      },
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ProgrammingError",
+          "exc_message": [
+            "owned active delete-opposite failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.RaiseException: owned active delete-opposite failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 4273, in check_account_expirations\n    active_key = evaluate_profile_expiration_notification(profile)\n  File \"/app/apps/m3u/tasks.py\", line 4196, in evaluate_profile_expiration_notification\n    SystemNotification.objects.filter(notification_key=expired_key).delete()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1238, in delete\n    num_deleted, num_deleted_per_model = collector.delete()\n                                         ~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/deletion.py\", line 505, in delete\n    count = query.delete_batch(pk_list, self.using)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/subqueries.py\", line 43, in delete_batch\n    num_deleted += self.do_query(\n                   ~~~~~~~~~~~~~^\n        self.get_meta().db_table, self.where, using=using\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/subqueries.py\", line 25, in do_query\n    return self.get_compiler(using).execute_sql(ROW_COUNT)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1624, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/pair-tools/periodic_worker_observer.py\", line 31, in observed\n    try:return execute(sql,params,many,context)\n               ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: owned active delete-opposite failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-11T16:24:39.896798+00:00",
+        "task_id": "5ffd53e7-9456-457c-92d7-006c3c6a5a4e"
+      },
+      "before": {
+        "notices": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 16:24:34.887703+00:00",
+            "updated_at": "2026-11-11 16:24:34.887711+00:00"
+          },
+          {
+            "id": 8,
+            "notification_key": "xc-exp-warning-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 9,
+            "notification_key": "xc-exp-expired-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 10,
+            "notification_key": "xc-exp-warning-owned-stale",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 11,
+            "notification_key": "rust-owned-active-unrelated",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 12,
+            "notification_key": "xc-exp-expired-owned-inactive",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          }
+        ],
+        "dismissals": [
+          {
+            "id": 6,
+            "notification_id": 8,
+            "user_id": 1
+          },
+          {
+            "id": 7,
+            "notification_id": 9,
+            "user_id": 1
+          },
+          {
+            "id": 8,
+            "notification_id": 10,
+            "user_id": 1
+          },
+          {
+            "id": 9,
+            "notification_id": 11,
+            "user_id": 1
+          },
+          {
+            "id": 10,
+            "notification_id": 12,
+            "user_id": 1
+          }
+        ]
+      },
+      "after": {
+        "notices": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 16:24:34.887703+00:00",
+            "updated_at": "2026-11-11 16:24:34.887711+00:00"
+          },
+          {
+            "id": 8,
+            "notification_key": "xc-exp-warning-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 9,
+            "notification_key": "xc-exp-expired-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 10,
+            "notification_key": "xc-exp-warning-owned-stale",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 11,
+            "notification_key": "rust-owned-active-unrelated",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 12,
+            "notification_key": "xc-exp-expired-owned-inactive",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          }
+        ],
+        "dismissals": [
+          {
+            "id": 6,
+            "notification_id": 8,
+            "user_id": 1
+          },
+          {
+            "id": 7,
+            "notification_id": 9,
+            "user_id": 1
+          },
+          {
+            "id": 8,
+            "notification_id": 10,
+            "user_id": 1
+          },
+          {
+            "id": 9,
+            "notification_id": 11,
+            "user_id": 1
+          },
+          {
+            "id": 10,
+            "notification_id": 12,
+            "user_id": 1
+          }
+        ]
+      },
+      "events": [],
+      "sql": {
+        "id": "5ffd53e7-9456-457c-92d7-006c3c6a5a4e",
+        "queries": [
+          {
+            "sql": "SELECT \"m3u_m3uaccountprofile\".\"id\", \"m3u_m3uaccountprofile\".\"m3u_account_id\", \"m3u_m3uaccountprofile\".\"name\", \"m3u_m3uaccountprofile\".\"is_default\", \"m3u_m3uaccountprofile\".\"max_streams\", \"m3u_m3uaccountprofile\".\"is_active\", \"m3u_m3uaccountprofile\".\"search_pattern\", \"m3u_m3uaccountprofile\".\"replace_pattern\", \"m3u_m3uaccountprofile\".\"current_viewers\", \"m3u_m3uaccountprofile\".\"custom_properties\", \"m3u_m3uaccountprofile\".\"exp_date\", \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"name\", \"m3u_m3uaccount\".\"server_url\", \"m3u_m3uaccount\".\"file_path\", \"m3u_m3uaccount\".\"server_group_id\", \"m3u_m3uaccount\".\"max_streams\", \"m3u_m3uaccount\".\"is_active\", \"m3u_m3uaccount\".\"created_at\", \"m3u_m3uaccount\".\"updated_at\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\", \"m3u_m3uaccount\".\"user_agent_id\", \"m3u_m3uaccount\".\"locked\", \"m3u_m3uaccount\".\"stream_profile_id\", \"m3u_m3uaccount\".\"account_type\", \"m3u_m3uaccount\".\"username\", \"m3u_m3uaccount\".\"password\", \"m3u_m3uaccount\".\"custom_properties\", \"m3u_m3uaccount\".\"refresh_interval\", \"m3u_m3uaccount\".\"refresh_task_id\", \"m3u_m3uaccount\".\"stale_stream_days\", \"m3u_m3uaccount\".\"priority\" FROM \"m3u_m3uaccountprofile\" INNER JOIN \"m3u_m3uaccount\" ON (\"m3u_m3uaccountprofile\".\"m3u_account_id\" = \"m3u_m3uaccount\".\"id\") WHERE (\"m3u_m3uaccountprofile\".\"exp_date\" IS NOT NULL AND \"m3u_m3uaccountprofile\".\"is_active\" AND \"m3u_m3uaccount\".\"is_active\")",
+            "param_types": [],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"notification_key\" AS \"notification_key\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s ORDER BY \"core_systemnotification\".\"priority\" DESC, \"core_systemnotification\".\"created_at\" DESC",
+            "param_types": [
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s",
+            "param_types": [
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "DELETE FROM \"core_notificationdismissal\" WHERE \"core_notificationdismissal\".\"notification_id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "DELETE FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true,
+            "error_class": "django.db.utils.ProgrammingError"
+          }
+        ]
+      },
+      "prerun": {
+        "task": "apps.m3u.tasks.check_account_expirations",
+        "id": "5ffd53e7-9456-457c-92d7-006c3c6a5a4e",
+        "root_id": "5ffd53e7-9456-457c-92d7-006c3c6a5a4e",
+        "parent_id": null,
+        "args": [],
+        "kwargs": {},
+        "controlled_now": "2026-11-11 12:00:00.123456+00:00",
+        "process_local_managers": {
+          "hls_proxy": 0,
+          "live_proxy": 0
+        }
+      },
+      "consumer_http": {
+        "task_status": {
+          "admin": {
+            "status": 500,
+            "body": {
+              "detail": "Failed to get task status: owned active delete-opposite failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            },
+            "content_type": "application/json",
+            "body_sha256": "f65ed015cc5a670d6a3a71a856c2cabaf06bafaa9cd6ba42bdecbe7d83bcb448"
+          },
+          "viewer": {
+            "status": 401,
+            "body": {
+              "detail": "Authentication required"
+            },
+            "content_type": "application/json",
+            "body_sha256": "9a15b0a3fe33ddcd5af28fef761c068e8d2c5a3d736275728f3fbeef79f0cbc9"
+          },
+          "anonymous": {
+            "status": 401,
+            "body": {
+              "detail": "Authentication required"
+            },
+            "content_type": "application/json",
+            "body_sha256": "9a15b0a3fe33ddcd5af28fef761c068e8d2c5a3d736275728f3fbeef79f0cbc9"
+          },
+          "signed-task-token": {
+            "status": 500,
+            "body": {
+              "detail": "Failed to get task status: owned active delete-opposite failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            },
+            "content_type": "application/json",
+            "body_sha256": "f65ed015cc5a670d6a3a71a856c2cabaf06bafaa9cd6ba42bdecbe7d83bcb448"
+          },
+          "invalid-token-with-admin": {
+            "status": 403,
+            "body": {
+              "detail": "Invalid task token"
+            },
+            "content_type": "application/json",
+            "body_sha256": "cbca7835eeb5174e2ff8d2eaee413a31c063de2147ed5937b4c58115eb5cc32e"
+          }
+        },
+        "notifications": {
+          "admin": {
+            "status": 200,
+            "body": {
+              "notifications": [
+                {
+                  "id": 10,
+                  "notification_key": "xc-exp-warning-owned-stale",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": true,
+                  "source": "developer"
+                },
+                {
+                  "id": 11,
+                  "notification_key": "rust-owned-active-unrelated",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": true,
+                  "source": "developer"
+                }
+              ],
+              "count": 2,
+              "unread_count": 2
+            },
+            "content_type": "application/json",
+            "body_sha256": "7e24783f8e94f07cdf309ea66c5565d028af101e2d1d1fa3b880ef0d2a707092"
+          },
+          "viewer": {
+            "status": 200,
+            "body": {
+              "notifications": [
+                {
+                  "id": 10,
+                  "notification_key": "xc-exp-warning-owned-stale",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": false,
+                  "source": "developer"
+                },
+                {
+                  "id": 11,
+                  "notification_key": "rust-owned-active-unrelated",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": false,
+                  "source": "developer"
+                }
+              ],
+              "count": 2,
+              "unread_count": 2
+            },
+            "content_type": "application/json",
+            "body_sha256": "af647817c2b30686b28744f56deabd9542a7af33c809b75c5be1c5737e974517"
+          }
+        },
+        "token_bytes_retained": false
+      },
+      "native": {
+        "peer": {
+          "ok": true,
+          "error": null,
+          "result": {
+            "outcome": "Failed(99bc9290-cb1f-4f2d-aa4d-4c1d3b2f6563)"
+          },
+          "drained": true,
+          "jobs_drained": true,
+          "available_slots": 2,
+          "pool_closed": true,
+          "execute_calls": 1
+        },
+        "metadata": {
+          "status": "FAILURE",
+          "result": {
+            "exc_type": "ProgrammingError",
+            "exc_module": "django.db.utils",
+            "exc_message": [
+              "owned active delete-opposite failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            ]
+          },
+          "traceback": "Native Dispatcharr account expiration task diagnostic [opposite_collector]: settled PostgreSQL ERROR P0001; transaction rollback and connection close completed; prior notification commits remain.",
+          "children": [],
+          "date_done": "2026-11-11T16:24:41.803014+00:00",
+          "task_id": "99bc9290-cb1f-4f2d-aa4d-4c1d3b2f6563"
+        },
+        "events": [],
+        "http": {
+          "status": 500,
+          "body": {
+            "detail": "Failed to get task status: owned active delete-opposite failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+          },
+          "content_type": "application/json",
+          "body_sha256": "f65ed015cc5a670d6a3a71a856c2cabaf06bafaa9cd6ba42bdecbe7d83bcb448"
+        },
+        "opaque_diagnostic_difference_explicit": true
+      }
+    },
+    {
+      "name": "upsert-fault",
+      "exp_date": "2026-11-12T12:00:00.123456+00:00",
+      "fault": "upsert",
+      "envelope": {
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.check_account_expirations",
+          "id": "10ec5f8e-e186-4759-b68d-4f96549d70bb",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "10ec5f8e-e186-4759-b68d-4f96549d70bb",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen378@78addd302eda",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "body": [
+          [],
+          {},
+          {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          }
+        ],
+        "properties": {
+          "correlation_id": "10ec5f8e-e186-4759-b68d-4f96549d70bb",
+          "reply_to": "166c4a99-0515-3657-a700-ebe39b590c9b"
+        }
+      },
+      "postrun": {
+        "task": "apps.m3u.tasks.check_account_expirations",
+        "id": "10ec5f8e-e186-4759-b68d-4f96549d70bb",
+        "state": "FAILURE",
+        "result": "owned active upsert failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+      },
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ProgrammingError",
+          "exc_message": [
+            "owned active upsert failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.RaiseException: owned active upsert failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 4273, in check_account_expirations\n    active_key = evaluate_profile_expiration_notification(profile)\n  File \"/app/apps/m3u/tasks.py\", line 4208, in evaluate_profile_expiration_notification\n    notification, created = SystemNotification.objects.update_or_create(\n                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        notification_key=warning_key,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<18 lines>...\n        },\n        ^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1053, in update_or_create\n    obj.save(using=self.db, update_fields=update_fields)\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 874, in save\n    self.save_base(\n    ~~~~~~~~~~~~~~^\n        using=using,\n        ^^^^^^^^^^^^\n    ...<2 lines>...\n        update_fields=update_fields,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 966, in save_base\n    updated = self._save_table(\n        raw,\n    ...<4 lines>...\n        update_fields,\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 1110, in _save_table\n    results = self._do_update(\n        base_qs,\n    ...<5 lines>...\n        returning_fields,\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 1213, in _do_update\n    return filtered._update(values, returning_fields)\n           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1327, in _update\n    return query.get_compiler(self.db).execute_returning_sql(returning_fields)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 2140, in execute_returning_sql\n    row_count = self.execute_sql(ROW_COUNT)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 2111, in execute_sql\n    row_count = super().execute_sql(result_type)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1624, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/pair-tools/periodic_worker_observer.py\", line 31, in observed\n    try:return execute(sql,params,many,context)\n               ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: owned active upsert failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-11T16:24:43.034743+00:00",
+        "task_id": "10ec5f8e-e186-4759-b68d-4f96549d70bb"
+      },
+      "before": {
+        "notices": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 16:24:34.887703+00:00",
+            "updated_at": "2026-11-11 16:24:34.887711+00:00"
+          },
+          {
+            "id": 13,
+            "notification_key": "xc-exp-warning-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 14,
+            "notification_key": "xc-exp-expired-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 15,
+            "notification_key": "xc-exp-warning-owned-stale",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 16,
+            "notification_key": "rust-owned-active-unrelated",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 17,
+            "notification_key": "xc-exp-expired-owned-inactive",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          }
+        ],
+        "dismissals": [
+          {
+            "id": 11,
+            "notification_id": 13,
+            "user_id": 1
+          },
+          {
+            "id": 12,
+            "notification_id": 14,
+            "user_id": 1
+          },
+          {
+            "id": 13,
+            "notification_id": 15,
+            "user_id": 1
+          },
+          {
+            "id": 14,
+            "notification_id": 16,
+            "user_id": 1
+          },
+          {
+            "id": 15,
+            "notification_id": 17,
+            "user_id": 1
+          }
+        ]
+      },
+      "after": {
+        "notices": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 16:24:34.887703+00:00",
+            "updated_at": "2026-11-11 16:24:34.887711+00:00"
+          },
+          {
+            "id": 13,
+            "notification_key": "xc-exp-warning-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 15,
+            "notification_key": "xc-exp-warning-owned-stale",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 16,
+            "notification_key": "rust-owned-active-unrelated",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 17,
+            "notification_key": "xc-exp-expired-owned-inactive",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          }
+        ],
+        "dismissals": [
+          {
+            "id": 11,
+            "notification_id": 13,
+            "user_id": 1
+          },
+          {
+            "id": 13,
+            "notification_id": 15,
+            "user_id": 1
+          },
+          {
+            "id": 14,
+            "notification_id": 16,
+            "user_id": 1
+          },
+          {
+            "id": 15,
+            "notification_id": 17,
+            "user_id": 1
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notification_dismissed",
+            "notification_key": "xc-exp-expired-2"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_active!receiver"
+          ]
+        }
+      ],
+      "sql": {
+        "id": "10ec5f8e-e186-4759-b68d-4f96549d70bb",
+        "queries": [
+          {
+            "sql": "SELECT \"m3u_m3uaccountprofile\".\"id\", \"m3u_m3uaccountprofile\".\"m3u_account_id\", \"m3u_m3uaccountprofile\".\"name\", \"m3u_m3uaccountprofile\".\"is_default\", \"m3u_m3uaccountprofile\".\"max_streams\", \"m3u_m3uaccountprofile\".\"is_active\", \"m3u_m3uaccountprofile\".\"search_pattern\", \"m3u_m3uaccountprofile\".\"replace_pattern\", \"m3u_m3uaccountprofile\".\"current_viewers\", \"m3u_m3uaccountprofile\".\"custom_properties\", \"m3u_m3uaccountprofile\".\"exp_date\", \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"name\", \"m3u_m3uaccount\".\"server_url\", \"m3u_m3uaccount\".\"file_path\", \"m3u_m3uaccount\".\"server_group_id\", \"m3u_m3uaccount\".\"max_streams\", \"m3u_m3uaccount\".\"is_active\", \"m3u_m3uaccount\".\"created_at\", \"m3u_m3uaccount\".\"updated_at\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\", \"m3u_m3uaccount\".\"user_agent_id\", \"m3u_m3uaccount\".\"locked\", \"m3u_m3uaccount\".\"stream_profile_id\", \"m3u_m3uaccount\".\"account_type\", \"m3u_m3uaccount\".\"username\", \"m3u_m3uaccount\".\"password\", \"m3u_m3uaccount\".\"custom_properties\", \"m3u_m3uaccount\".\"refresh_interval\", \"m3u_m3uaccount\".\"refresh_task_id\", \"m3u_m3uaccount\".\"stale_stream_days\", \"m3u_m3uaccount\".\"priority\" FROM \"m3u_m3uaccountprofile\" INNER JOIN \"m3u_m3uaccount\" ON (\"m3u_m3uaccountprofile\".\"m3u_account_id\" = \"m3u_m3uaccount\".\"id\") WHERE (\"m3u_m3uaccountprofile\".\"exp_date\" IS NOT NULL AND \"m3u_m3uaccountprofile\".\"is_active\" AND \"m3u_m3uaccount\".\"is_active\")",
+            "param_types": [],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"notification_key\" AS \"notification_key\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s ORDER BY \"core_systemnotification\".\"priority\" DESC, \"core_systemnotification\".\"created_at\" DESC",
+            "param_types": [
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s",
+            "param_types": [
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "DELETE FROM \"core_notificationdismissal\" WHERE \"core_notificationdismissal\".\"notification_id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "DELETE FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s LIMIT 21 FOR UPDATE",
+            "param_types": [
+              "str"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "UPDATE \"core_systemnotification\" SET \"notification_type\" = %s, \"priority\" = %s, \"title\" = %s, \"message\" = %s, \"action_data\" = %s, \"is_active\" = %s, \"admin_only\" = %s, \"expires_at\" = NULL, \"created_at\" = %s, \"updated_at\" = %s WHERE \"core_systemnotification\".\"id\" = %s",
+            "param_types": [
+              "NotificationType",
+              "Priority",
+              "str",
+              "str",
+              "Jsonb",
+              "bool",
+              "bool",
+              "datetime",
+              "datetime",
+              "int"
+            ],
+            "atomic": true,
+            "error_class": "django.db.utils.ProgrammingError"
+          }
+        ]
+      },
+      "prerun": {
+        "task": "apps.m3u.tasks.check_account_expirations",
+        "id": "10ec5f8e-e186-4759-b68d-4f96549d70bb",
+        "root_id": "10ec5f8e-e186-4759-b68d-4f96549d70bb",
+        "parent_id": null,
+        "args": [],
+        "kwargs": {},
+        "controlled_now": "2026-11-11 12:00:00.123456+00:00",
+        "process_local_managers": {
+          "hls_proxy": 0,
+          "live_proxy": 0
+        }
+      },
+      "consumer_http": {
+        "task_status": {
+          "admin": {
+            "status": 500,
+            "body": {
+              "detail": "Failed to get task status: owned active upsert failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            },
+            "content_type": "application/json",
+            "body_sha256": "68a3074b1b5febb943410380f8b73e7e8b302fe94793335b7aec033e613b311a"
+          },
+          "viewer": {
+            "status": 401,
+            "body": {
+              "detail": "Authentication required"
+            },
+            "content_type": "application/json",
+            "body_sha256": "9a15b0a3fe33ddcd5af28fef761c068e8d2c5a3d736275728f3fbeef79f0cbc9"
+          },
+          "anonymous": {
+            "status": 401,
+            "body": {
+              "detail": "Authentication required"
+            },
+            "content_type": "application/json",
+            "body_sha256": "9a15b0a3fe33ddcd5af28fef761c068e8d2c5a3d736275728f3fbeef79f0cbc9"
+          },
+          "signed-task-token": {
+            "status": 500,
+            "body": {
+              "detail": "Failed to get task status: owned active upsert failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            },
+            "content_type": "application/json",
+            "body_sha256": "68a3074b1b5febb943410380f8b73e7e8b302fe94793335b7aec033e613b311a"
+          },
+          "invalid-token-with-admin": {
+            "status": 403,
+            "body": {
+              "detail": "Invalid task token"
+            },
+            "content_type": "application/json",
+            "body_sha256": "cbca7835eeb5174e2ff8d2eaee413a31c063de2147ed5937b4c58115eb5cc32e"
+          }
+        },
+        "notifications": {
+          "admin": {
+            "status": 200,
+            "body": {
+              "notifications": [
+                {
+                  "id": 15,
+                  "notification_key": "xc-exp-warning-owned-stale",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": true,
+                  "source": "developer"
+                },
+                {
+                  "id": 16,
+                  "notification_key": "rust-owned-active-unrelated",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": true,
+                  "source": "developer"
+                }
+              ],
+              "count": 2,
+              "unread_count": 2
+            },
+            "content_type": "application/json",
+            "body_sha256": "a835adaa1280233f46c976d3746ee1f1384d67b2c8a40642409d835f24865a6e"
+          },
+          "viewer": {
+            "status": 200,
+            "body": {
+              "notifications": [
+                {
+                  "id": 15,
+                  "notification_key": "xc-exp-warning-owned-stale",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": false,
+                  "source": "developer"
+                },
+                {
+                  "id": 16,
+                  "notification_key": "rust-owned-active-unrelated",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": false,
+                  "source": "developer"
+                }
+              ],
+              "count": 2,
+              "unread_count": 2
+            },
+            "content_type": "application/json",
+            "body_sha256": "5d1f37d7578142fa3b5bc2ac424965b16e832084457c7052089538dc3b4b9d93"
+          }
+        },
+        "token_bytes_retained": false
+      },
+      "native": {
+        "peer": {
+          "ok": true,
+          "error": null,
+          "result": {
+            "outcome": "Failed(61d2319f-1825-4e3d-8ce7-cd542ccfd3ff)"
+          },
+          "drained": true,
+          "jobs_drained": true,
+          "available_slots": 2,
+          "pool_closed": true,
+          "execute_calls": 1
+        },
+        "metadata": {
+          "status": "FAILURE",
+          "result": {
+            "exc_type": "ProgrammingError",
+            "exc_module": "django.db.utils",
+            "exc_message": [
+              "owned active upsert failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            ]
+          },
+          "traceback": "Native Dispatcharr account expiration task diagnostic [profile_upsert]: settled PostgreSQL ERROR P0001; transaction rollback and connection close completed; prior notification commits remain.",
+          "children": [],
+          "date_done": "2026-11-11T16:24:44.990102+00:00",
+          "task_id": "61d2319f-1825-4e3d-8ce7-cd542ccfd3ff"
+        },
+        "events": [
+          {
+            "type": "update",
+            "data": {
+              "type": "notification_dismissed",
+              "notification_key": "xc-exp-expired-2"
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_active!receiver"
+            ]
+          }
+        ],
+        "http": {
+          "status": 500,
+          "body": {
+            "detail": "Failed to get task status: owned active upsert failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+          },
+          "content_type": "application/json",
+          "body_sha256": "68a3074b1b5febb943410380f8b73e7e8b302fe94793335b7aec033e613b311a"
+        },
+        "opaque_diagnostic_difference_explicit": true
+      }
+    },
+    {
+      "name": "stale-delete-fault",
+      "exp_date": "2026-11-12T12:00:00.123456+00:00",
+      "fault": "delete-stale",
+      "envelope": {
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.check_account_expirations",
+          "id": "d12c9e2a-fa14-4997-9f3b-532f7b757b13",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "d12c9e2a-fa14-4997-9f3b-532f7b757b13",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen378@78addd302eda",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "body": [
+          [],
+          {},
+          {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          }
+        ],
+        "properties": {
+          "correlation_id": "d12c9e2a-fa14-4997-9f3b-532f7b757b13",
+          "reply_to": "166c4a99-0515-3657-a700-ebe39b590c9b"
+        }
+      },
+      "postrun": {
+        "task": "apps.m3u.tasks.check_account_expirations",
+        "id": "d12c9e2a-fa14-4997-9f3b-532f7b757b13",
+        "state": "FAILURE",
+        "result": "owned active delete-stale failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+      },
+      "metadata": {
+        "status": "FAILURE",
+        "result": {
+          "exc_type": "ProgrammingError",
+          "exc_message": [
+            "owned active delete-stale failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+          ],
+          "exc_module": "django.db.utils"
+        },
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.RaiseException: owned active delete-stale failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/m3u/tasks.py\", line 4285, in check_account_expirations\n    stale.delete()\n    ~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1238, in delete\n    num_deleted, num_deleted_per_model = collector.delete()\n                                         ~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/deletion.py\", line 505, in delete\n    count = query.delete_batch(pk_list, self.using)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/subqueries.py\", line 43, in delete_batch\n    num_deleted += self.do_query(\n                   ~~~~~~~~~~~~~^\n        self.get_meta().db_table, self.where, using=using\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/subqueries.py\", line 25, in do_query\n    return self.get_compiler(using).execute_sql(ROW_COUNT)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1624, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/pair-tools/periodic_worker_observer.py\", line 31, in observed\n    try:return execute(sql,params,many,context)\n               ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: owned active delete-stale failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-11T16:24:46.225874+00:00",
+        "task_id": "d12c9e2a-fa14-4997-9f3b-532f7b757b13"
+      },
+      "before": {
+        "notices": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 16:24:34.887703+00:00",
+            "updated_at": "2026-11-11 16:24:34.887711+00:00"
+          },
+          {
+            "id": 18,
+            "notification_key": "xc-exp-warning-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 19,
+            "notification_key": "xc-exp-expired-2",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 20,
+            "notification_key": "xc-exp-warning-owned-stale",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 21,
+            "notification_key": "rust-owned-active-unrelated",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 22,
+            "notification_key": "xc-exp-expired-owned-inactive",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          }
+        ],
+        "dismissals": [
+          {
+            "id": 16,
+            "notification_id": 18,
+            "user_id": 1
+          },
+          {
+            "id": 17,
+            "notification_id": 19,
+            "user_id": 1
+          },
+          {
+            "id": 18,
+            "notification_id": 20,
+            "user_id": 1
+          },
+          {
+            "id": 19,
+            "notification_id": 21,
+            "user_id": 1
+          },
+          {
+            "id": 20,
+            "notification_id": 22,
+            "user_id": 1
+          }
+        ]
+      },
+      "after": {
+        "notices": [
+          {
+            "id": 1,
+            "notification_key": "network_security_m3u_epg",
+            "notification_type": "warning",
+            "priority": "high",
+            "source": "developer",
+            "title": "Network Access Security Warning",
+            "message": "Your EPG/M3U output is accessible from any network. Consider restricting access to improve security.",
+            "action_data": {
+              "condition": [
+                "m3u_epg_network_insecure"
+              ],
+              "action_url": "/settings#network-access",
+              "user_level": "admin",
+              "action_text": "Review Settings",
+              "max_version": null,
+              "min_version": null
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2026-11-11 16:24:34.887703+00:00",
+            "updated_at": "2026-11-11 16:24:34.887711+00:00"
+          },
+          {
+            "id": 18,
+            "notification_key": "xc-exp-warning-2",
+            "notification_type": "warning",
+            "priority": "normal",
+            "source": "developer",
+            "title": "Account Expiring: Owned Profile",
+            "message": "Profile \"Owned Profile\" on M3U account \"Owned Active Account\" expires in 1 day (expires 2026-11-12 12:00 UTC).",
+            "action_data": {
+              "exp_date": "2026-11-12T12:00:00.123456+00:00",
+              "account_id": 1,
+              "profile_id": 2,
+              "account_name": "Owned Active Account",
+              "profile_name": "Owned Profile"
+            },
+            "is_active": true,
+            "admin_only": true,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2026-11-11 12:00:00.123456+00:00"
+          },
+          {
+            "id": 20,
+            "notification_key": "xc-exp-warning-owned-stale",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 21,
+            "notification_key": "rust-owned-active-unrelated",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": true,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          },
+          {
+            "id": 22,
+            "notification_key": "xc-exp-expired-owned-inactive",
+            "notification_type": "info",
+            "priority": "low",
+            "source": "developer",
+            "title": "Owned existing",
+            "message": "Owned existing",
+            "action_data": {
+              "owned": "before"
+            },
+            "is_active": false,
+            "admin_only": false,
+            "expires_at": null,
+            "created_at": "2024-01-01 00:00:00+00:00",
+            "updated_at": "2024-01-01 00:00:00+00:00"
+          }
+        ],
+        "dismissals": [
+          {
+            "id": 16,
+            "notification_id": 18,
+            "user_id": 1
+          },
+          {
+            "id": 18,
+            "notification_id": 20,
+            "user_id": 1
+          },
+          {
+            "id": 19,
+            "notification_id": 21,
+            "user_id": 1
+          },
+          {
+            "id": 20,
+            "notification_id": 22,
+            "user_id": 1
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "type": "notification_dismissed",
+            "notification_key": "xc-exp-expired-2"
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_active!receiver"
+          ]
+        },
+        {
+          "type": "update",
+          "data": {
+            "type": "system_notification",
+            "notification": {
+              "id": 18,
+              "notification_key": "xc-exp-warning-2",
+              "notification_type": "warning",
+              "priority": "normal",
+              "title": "Account Expiring: Owned Profile",
+              "message": "Profile \"Owned Profile\" on M3U account \"Owned Active Account\" expires in 1 day (expires 2026-11-12 12:00 UTC).",
+              "action_data": {
+                "profile_id": 2,
+                "account_id": 1,
+                "account_name": "Owned Active Account",
+                "profile_name": "Owned Profile",
+                "exp_date": "2026-11-12T12:00:00.123456+00:00"
+              },
+              "is_active": true,
+              "admin_only": true,
+              "created_at": "2024-01-01T00:00:00+00:00"
+            }
+          },
+          "__asgi_channel__": [
+            "specific.rust_owned_active!receiver"
+          ]
+        }
+      ],
+      "sql": {
+        "id": "d12c9e2a-fa14-4997-9f3b-532f7b757b13",
+        "queries": [
+          {
+            "sql": "SELECT \"m3u_m3uaccountprofile\".\"id\", \"m3u_m3uaccountprofile\".\"m3u_account_id\", \"m3u_m3uaccountprofile\".\"name\", \"m3u_m3uaccountprofile\".\"is_default\", \"m3u_m3uaccountprofile\".\"max_streams\", \"m3u_m3uaccountprofile\".\"is_active\", \"m3u_m3uaccountprofile\".\"search_pattern\", \"m3u_m3uaccountprofile\".\"replace_pattern\", \"m3u_m3uaccountprofile\".\"current_viewers\", \"m3u_m3uaccountprofile\".\"custom_properties\", \"m3u_m3uaccountprofile\".\"exp_date\", \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"name\", \"m3u_m3uaccount\".\"server_url\", \"m3u_m3uaccount\".\"file_path\", \"m3u_m3uaccount\".\"server_group_id\", \"m3u_m3uaccount\".\"max_streams\", \"m3u_m3uaccount\".\"is_active\", \"m3u_m3uaccount\".\"created_at\", \"m3u_m3uaccount\".\"updated_at\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\", \"m3u_m3uaccount\".\"user_agent_id\", \"m3u_m3uaccount\".\"locked\", \"m3u_m3uaccount\".\"stream_profile_id\", \"m3u_m3uaccount\".\"account_type\", \"m3u_m3uaccount\".\"username\", \"m3u_m3uaccount\".\"password\", \"m3u_m3uaccount\".\"custom_properties\", \"m3u_m3uaccount\".\"refresh_interval\", \"m3u_m3uaccount\".\"refresh_task_id\", \"m3u_m3uaccount\".\"stale_stream_days\", \"m3u_m3uaccount\".\"priority\" FROM \"m3u_m3uaccountprofile\" INNER JOIN \"m3u_m3uaccount\" ON (\"m3u_m3uaccountprofile\".\"m3u_account_id\" = \"m3u_m3uaccount\".\"id\") WHERE (\"m3u_m3uaccountprofile\".\"exp_date\" IS NOT NULL AND \"m3u_m3uaccountprofile\".\"is_active\" AND \"m3u_m3uaccount\".\"is_active\")",
+            "param_types": [],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"notification_key\" AS \"notification_key\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s ORDER BY \"core_systemnotification\".\"priority\" DESC, \"core_systemnotification\".\"created_at\" DESC",
+            "param_types": [
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s",
+            "param_types": [
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "DELETE FROM \"core_notificationdismissal\" WHERE \"core_notificationdismissal\".\"notification_id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "DELETE FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" = %s LIMIT 21 FOR UPDATE",
+            "param_types": [
+              "str"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "UPDATE \"core_systemnotification\" SET \"notification_type\" = %s, \"priority\" = %s, \"title\" = %s, \"message\" = %s, \"action_data\" = %s, \"is_active\" = %s, \"admin_only\" = %s, \"expires_at\" = NULL, \"created_at\" = %s, \"updated_at\" = %s WHERE \"core_systemnotification\".\"id\" = %s",
+            "param_types": [
+              "NotificationType",
+              "Priority",
+              "str",
+              "str",
+              "Jsonb",
+              "bool",
+              "bool",
+              "datetime",
+              "datetime",
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"notification_key\" AS \"notification_key\" FROM \"core_systemnotification\" WHERE (\"core_systemnotification\".\"is_active\" AND (\"core_systemnotification\".\"notification_key\"::text LIKE %s OR \"core_systemnotification\".\"notification_key\"::text LIKE %s) AND NOT (\"core_systemnotification\".\"notification_key\" IN (%s))) ORDER BY \"core_systemnotification\".\"priority\" DESC, \"core_systemnotification\".\"created_at\" DESC",
+            "param_types": [
+              "str",
+              "str",
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "SELECT \"core_systemnotification\".\"id\", \"core_systemnotification\".\"notification_key\", \"core_systemnotification\".\"notification_type\", \"core_systemnotification\".\"priority\", \"core_systemnotification\".\"source\", \"core_systemnotification\".\"title\", \"core_systemnotification\".\"message\", \"core_systemnotification\".\"action_data\", \"core_systemnotification\".\"is_active\", \"core_systemnotification\".\"admin_only\", \"core_systemnotification\".\"expires_at\", \"core_systemnotification\".\"created_at\", \"core_systemnotification\".\"updated_at\" FROM \"core_systemnotification\" WHERE (\"core_systemnotification\".\"is_active\" AND (\"core_systemnotification\".\"notification_key\"::text LIKE %s OR \"core_systemnotification\".\"notification_key\"::text LIKE %s) AND NOT (\"core_systemnotification\".\"notification_key\" IN (%s)))",
+            "param_types": [
+              "str",
+              "str",
+              "str"
+            ],
+            "atomic": false
+          },
+          {
+            "sql": "DELETE FROM \"core_notificationdismissal\" WHERE \"core_notificationdismissal\".\"notification_id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true
+          },
+          {
+            "sql": "DELETE FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"id\" IN (%s)",
+            "param_types": [
+              "int"
+            ],
+            "atomic": true,
+            "error_class": "django.db.utils.ProgrammingError"
+          }
+        ]
+      },
+      "prerun": {
+        "task": "apps.m3u.tasks.check_account_expirations",
+        "id": "d12c9e2a-fa14-4997-9f3b-532f7b757b13",
+        "root_id": "d12c9e2a-fa14-4997-9f3b-532f7b757b13",
+        "parent_id": null,
+        "args": [],
+        "kwargs": {},
+        "controlled_now": "2026-11-11 12:00:00.123456+00:00",
+        "process_local_managers": {
+          "hls_proxy": 0,
+          "live_proxy": 0
+        }
+      },
+      "consumer_http": {
+        "task_status": {
+          "admin": {
+            "status": 500,
+            "body": {
+              "detail": "Failed to get task status: owned active delete-stale failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            },
+            "content_type": "application/json",
+            "body_sha256": "f2e9a74ff42a4cc93e7c94a797a318441d88119afa13234a94d03352d251a635"
+          },
+          "viewer": {
+            "status": 401,
+            "body": {
+              "detail": "Authentication required"
+            },
+            "content_type": "application/json",
+            "body_sha256": "9a15b0a3fe33ddcd5af28fef761c068e8d2c5a3d736275728f3fbeef79f0cbc9"
+          },
+          "anonymous": {
+            "status": 401,
+            "body": {
+              "detail": "Authentication required"
+            },
+            "content_type": "application/json",
+            "body_sha256": "9a15b0a3fe33ddcd5af28fef761c068e8d2c5a3d736275728f3fbeef79f0cbc9"
+          },
+          "signed-task-token": {
+            "status": 500,
+            "body": {
+              "detail": "Failed to get task status: owned active delete-stale failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            },
+            "content_type": "application/json",
+            "body_sha256": "f2e9a74ff42a4cc93e7c94a797a318441d88119afa13234a94d03352d251a635"
+          },
+          "invalid-token-with-admin": {
+            "status": 403,
+            "body": {
+              "detail": "Invalid task token"
+            },
+            "content_type": "application/json",
+            "body_sha256": "cbca7835eeb5174e2ff8d2eaee413a31c063de2147ed5937b4c58115eb5cc32e"
+          }
+        },
+        "notifications": {
+          "admin": {
+            "status": 200,
+            "body": {
+              "notifications": [
+                {
+                  "id": 18,
+                  "notification_key": "xc-exp-warning-2",
+                  "notification_type": "warning",
+                  "priority": "normal",
+                  "title": "Account Expiring: Owned Profile",
+                  "message": "Profile \"Owned Profile\" on M3U account \"Owned Active Account\" expires in 1 day (expires 2026-11-12 12:00 UTC).",
+                  "action_data": {
+                    "exp_date": "2026-11-12T12:00:00.123456+00:00",
+                    "account_id": 1,
+                    "profile_id": 2,
+                    "account_name": "Owned Active Account",
+                    "profile_name": "Owned Profile"
+                  },
+                  "is_active": true,
+                  "admin_only": true,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": true,
+                  "source": "developer"
+                },
+                {
+                  "id": 20,
+                  "notification_key": "xc-exp-warning-owned-stale",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": true,
+                  "source": "developer"
+                },
+                {
+                  "id": 21,
+                  "notification_key": "rust-owned-active-unrelated",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": true,
+                  "source": "developer"
+                }
+              ],
+              "count": 3,
+              "unread_count": 3
+            },
+            "content_type": "application/json",
+            "body_sha256": "c764ecbd89053323b22b971d7d72ae088d86853a5df692dc44ae577f226733d9"
+          },
+          "viewer": {
+            "status": 200,
+            "body": {
+              "notifications": [
+                {
+                  "id": 20,
+                  "notification_key": "xc-exp-warning-owned-stale",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": false,
+                  "source": "developer"
+                },
+                {
+                  "id": 21,
+                  "notification_key": "rust-owned-active-unrelated",
+                  "notification_type": "info",
+                  "priority": "low",
+                  "title": "Owned existing",
+                  "message": "Owned existing",
+                  "action_data": {
+                    "owned": "before"
+                  },
+                  "is_active": true,
+                  "admin_only": false,
+                  "expires_at": null,
+                  "created_at": "2024-01-01T00:00:00Z",
+                  "is_dismissed": false,
+                  "source": "developer"
+                }
+              ],
+              "count": 2,
+              "unread_count": 2
+            },
+            "content_type": "application/json",
+            "body_sha256": "6c3b80f12400779f52efa50e1b6d2500516cbc206a7836bc791e3d521f46225c"
+          }
+        },
+        "token_bytes_retained": false
+      },
+      "native": {
+        "peer": {
+          "ok": true,
+          "error": null,
+          "result": {
+            "outcome": "Failed(fbf6f2d5-a395-43c9-83fe-605d4ce6dc4b)"
+          },
+          "drained": true,
+          "jobs_drained": true,
+          "available_slots": 2,
+          "pool_closed": true,
+          "execute_calls": 1
+        },
+        "metadata": {
+          "status": "FAILURE",
+          "result": {
+            "exc_type": "ProgrammingError",
+            "exc_module": "django.db.utils",
+            "exc_message": [
+              "owned active delete-stale failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+            ]
+          },
+          "traceback": "Native Dispatcharr account expiration task diagnostic [final_collector]: settled PostgreSQL ERROR P0001; transaction rollback and connection close completed; prior notification commits remain.",
+          "children": [],
+          "date_done": "2026-11-11T16:24:48.199888+00:00",
+          "task_id": "fbf6f2d5-a395-43c9-83fe-605d4ce6dc4b"
+        },
+        "events": [
+          {
+            "type": "update",
+            "data": {
+              "type": "notification_dismissed",
+              "notification_key": "xc-exp-expired-2"
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_active!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "type": "system_notification",
+              "notification": {
+                "id": 18,
+                "notification_key": "xc-exp-warning-2",
+                "notification_type": "warning",
+                "priority": "normal",
+                "title": "Account Expiring: Owned Profile",
+                "message": "Profile \"Owned Profile\" on M3U account \"Owned Active Account\" expires in 1 day (expires 2026-11-12 12:00 UTC).",
+                "action_data": {
+                  "profile_id": 2,
+                  "account_id": 1,
+                  "account_name": "Owned Active Account",
+                  "profile_name": "Owned Profile",
+                  "exp_date": "2026-11-12T12:00:00.123456+00:00"
+                },
+                "is_active": true,
+                "admin_only": true,
+                "created_at": "2024-01-01T00:00:00+00:00"
+              }
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_active!receiver"
+            ]
+          }
+        ],
+        "http": {
+          "status": 500,
+          "body": {
+            "detail": "Failed to get task status: owned active delete-stale failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+          },
+          "content_type": "application/json",
+          "body_sha256": "f2e9a74ff42a4cc93e7c94a797a318441d88119afa13234a94d03352d251a635"
+        },
+        "opaque_diagnostic_difference_explicit": true
+      }
+    }
+  ],
+  "same_id_original": {
+    "task_id": "8a8ed764-4afd-488e-9e9d-c4675a64fa66",
+    "body_postrun": {
+      "task": "apps.m3u.tasks.check_account_expirations",
+      "id": "8a8ed764-4afd-488e-9e9d-c4675a64fa66",
+      "state": "FAILURE",
+      "result": "owned notification duplicate failure\nCONTEXT:  PL/pgSQL function rust_active_reject() line 1 at RAISE"
+    },
+    "old_metadata": {
+      "status": "SUCCESS",
+      "result": null,
+      "traceback": null,
+      "children": [],
+      "date_done": "2026-11-11T16:24:49.380707+00:00",
+      "task_id": "8a8ed764-4afd-488e-9e9d-c4675a64fa66"
+    },
+    "metadata_raw_unchanged": true,
+    "remaining_ttl": 120,
+    "http": {
+      "status": 500,
+      "body": {
+        "detail": "Failed to get task status: 'NoneType' object has no attribute 'get'"
+      },
+      "content_type": "application/json",
+      "body_sha256": "e5281ef286e9a884ea6a251dea6a15adec32f64e5f8db3a76fc2cf73f7e9c15f"
+    }
+  },
+  "same_id_native": {
+    "first": {
+      "ok": true,
+      "error": null,
+      "result": {
+        "outcome": "Completed(3ec6ba3e-ae88-4687-bcc1-efd604dfcfde)"
+      },
+      "drained": true,
+      "jobs_drained": true,
+      "available_slots": 2,
+      "pool_closed": true,
+      "execute_calls": 1
+    },
+    "second": {
+      "ok": true,
+      "error": null,
+      "result": {
+        "outcome": "AlreadySucceeded(3ec6ba3e-ae88-4687-bcc1-efd604dfcfde)"
+      },
+      "drained": true,
+      "jobs_drained": true,
+      "available_slots": 2,
+      "pool_closed": true,
+      "execute_calls": 1
+    },
+    "raw_unchanged": true,
+    "remaining_ttl": 120,
+    "metadata": {
+      "status": "SUCCESS",
+      "result": null,
+      "traceback": null,
+      "children": [],
+      "date_done": "2026-11-11T16:24:51.365463+00:00",
+      "task_id": "3ec6ba3e-ae88-4687-bcc1-efd604dfcfde"
+    }
+  },
+  "credential_values_retained": false
+}

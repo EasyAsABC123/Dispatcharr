@@ -1,0 +1,217 @@
+{
+  "passed_independent_review": true,
+  "scope": "Read-only exact normal-library748 notificationterminal handoff; actual OriginalHTTP consumers, no nativeHTTP/Main/defaultintake/performance/wholefamilyacceptance",
+  "selected35": {
+    "path": "artifacts/rust/notification-terminal-handoff-1/selected-files.json",
+    "sha256": "3b93e7f78825b7cdc09f700e2f8cad7b4988f4bcb743261f7a894da8802baa1c"
+  },
+  "projected_head": "671a8ff0e781d7e8bfd5fbbb882488f0f473548c",
+  "base_inputs": 746,
+  "runtime_selected": 12,
+  "projected_inputs": 748,
+  "projected_map_exact_all748": true,
+  "new_paths": [
+    "rust/crates/job-transport/src/notification_failure_resources.rs",
+    "rust/crates/job-transport/src/notification_terminal.rs"
+  ],
+  "unselected_preserved": true,
+  "source_inputs": {
+    "path": "artifacts/rust/notification-terminal-handoff-1/selected/scripts/rust-job-contracts/notification-terminal/native-source-inputs.json",
+    "sha256": "c0ec985c9eb439150c967fb0d5da258fe9f42d7ca513c9328841d8cb0c58a0c3"
+  },
+  "qualified_and_public_source_all748_rehashed": true,
+  "workspace": {
+    "passed": 462,
+    "ignored": 646,
+    "failed": 0,
+    "strict_alltargets": true,
+    "logs": [
+      {
+        "path": "artifacts/rust/notification-terminal-current-1/workspace-validation-7.json",
+        "sha256": "d412cf3daef0219e16783a79c76b47a5cca70869f0c909670a1deb0eea0f9092"
+      },
+      {
+        "path": "artifacts/rust/notification-terminal-current-1/workspace-tests-7.log",
+        "sha256": "3cb243063709bb0bb89e00f5d8436483b1036089e432bf3cc033fd4805ded3d6"
+      },
+      {
+        "path": "artifacts/rust/notification-terminal-current-1/workspace-clippy-7.log",
+        "sha256": "a91d6a8cf3da6e2da024725ddc22a57b965d91013db7a3c5a2ebea86e2d66c73"
+      }
+    ]
+  },
+  "historical_elf": {
+    "path": "artifacts/rust/notification-terminal-current-1/native-peer-7",
+    "sha256": "9224535d195ea8a630a2ce376b4fcb626692827533c1e4057ed7507d5668b585"
+  },
+  "actual_four_suites": [
+    {
+      "family": "http",
+      "integration": {
+        "path": "artifacts/rust/notification-terminal-http-final-10/integration.json",
+        "sha256": "e3be229d8aeba5b9da2a5d47e137c8eb2fd1bc6e6d490b46ce4d2b0d69156728"
+      },
+      "raw": {
+        "path": "artifacts/rust/notification-terminal-http-final-10/source-native-default-pair-private.json",
+        "sha256": "ef56d9efdc9f6a2fa7de064f7791f8a28ae6f71e797a177e39d8d10185c7763b"
+      },
+      "checks": 87,
+      "physical_count": 5,
+      "physical_logs": [
+        {
+          "path": "artifacts/rust/notification-terminal-http-final-10/native-active-resources.log",
+          "sha256": "ad7bfbeaa382ab18639833329e4d3f8110da747ff0f6384e403f519345f3afa8"
+        }
+      ],
+      "tool_hashes_verified": 3,
+      "baseline_equal": true,
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "family": "single",
+      "integration": {
+        "path": "artifacts/rust/notification-terminal-single-final-11/integration.json",
+        "sha256": "80fbebcd722bc8c29b9e89b51bef282228548c05818b806c9bbb6503d44d9e0a"
+      },
+      "raw": {
+        "path": "artifacts/rust/notification-terminal-single-final-11/source-native-default-pair-private.json",
+        "sha256": "ea8b1161175c19eef2d1fde8ca0f8929f3b13e7b6c4244c2ed59bf4022ae8e7a"
+      },
+      "checks": 317,
+      "physical_count": 9,
+      "physical_logs": [
+        {
+          "path": "artifacts/rust/notification-terminal-single-final-11/native-active-resources.log",
+          "sha256": "a6cf5466eab1bf90db82b2e3b7097b9a80a466318105b763712f473d72f07302"
+        }
+      ],
+      "tool_hashes_verified": 3,
+      "baseline_equal": true,
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "family": "multi",
+      "integration": {
+        "path": "artifacts/rust/notification-terminal-multi-final-12/integration.json",
+        "sha256": "3a2b085fb90d11db782b5bb1df2f20dd8b562721f554f4f684d3a6f313795347"
+      },
+      "raw": {
+        "path": "artifacts/rust/notification-terminal-multi-final-12/source-native-default-pair-private.json",
+        "sha256": "7d0eec6a9a6affe095dcc71e81ed5c6242b6a5bb851b823aadc10c09b795806d"
+      },
+      "checks": 112,
+      "physical_count": 9,
+      "physical_logs": [
+        {
+          "path": "artifacts/rust/notification-terminal-multi-final-12/native-active-resources.log",
+          "sha256": "8bef2de3e8223816f93f5b1235c51aed691e02f1a8f8c7a65120af99cc3f5566"
+        }
+      ],
+      "tool_hashes_verified": 3,
+      "baseline_equal": true,
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "family": "inactive",
+      "integration": {
+        "path": "artifacts/rust/notification-terminal-inactive-final-13/integration.json",
+        "sha256": "580036cc5560ccfa19f7ade2edf18bef7ebb7b1550b22e92f771d55576c72e7c"
+      },
+      "raw": {
+        "path": "artifacts/rust/notification-terminal-inactive-final-13/source-native-default-pair-private.json",
+        "sha256": "7d96475c32d26302bc6e16d274c9d4aa76dbacac291682f42ae1575af2e12dd0"
+      },
+      "checks": 160,
+      "physical_count": 9,
+      "physical_logs": [
+        {
+          "path": "artifacts/rust/notification-terminal-inactive-final-13/native-default_resources.log",
+          "sha256": "485d20a782b6150e7a313ed01133cc13382f914633eaf25b7c56ec1bc2e4ab1c"
+        },
+        {
+          "path": "artifacts/rust/notification-terminal-inactive-final-13/native-inactive_resources.log",
+          "sha256": "9b704c3c9cd9e339c228e72ab0252e8bd9ead0d23e3442600bebb7d23c7cf3b6"
+        }
+      ],
+      "tool_hashes_verified": 3,
+      "baseline_equal": true,
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    }
+  ],
+  "same_id": {
+    "actualSource_second_body_FAILURE_oldSUCCESS_raw_preserved": true,
+    "Source_agedTTL120_preserved": true,
+    "native_first_execute_calls": 1,
+    "native_second_execute_calls": 1,
+    "native_second_outcome": "AlreadySucceeded",
+    "native_oldSUCCESS_raw_and_agedTTL120_preserved": true,
+    "no_execution_skip_claim": true,
+    "raw": {
+      "path": "artifacts/rust/notification-terminal-http-final-10/source-native-default-pair-private.json",
+      "sha256": "ef56d9efdc9f6a2fa7de064f7791f8a28ae6f71e797a177e39d8d10185c7763b"
+    }
+  },
+  "typed_failure_scope": {
+    "settledP0001_cases_verified": 3,
+    "Source_native_exception_module_class_args_equal": true,
+    "native_diagnostic_explicitly_notPythontraceback": true,
+    "no_generic_SQLstate_mapping_claim": true
+  },
+  "public_reconstruction": {
+    "all748_same": true,
+    "source_record": {
+      "path": "artifacts/rust/notification-terminal-handoff-1/validation/public-source-1/source-inputs.json",
+      "sha256": "22f20f94467eb4814f770341e3b3493f745d73074b8b3a40495f933f0e0d956b"
+    },
+    "controls": 12,
+    "control_log": {
+      "path": "artifacts/rust/notification-terminal-handoff-1/validation/controls-1.log",
+      "sha256": "e495bf611091b0c307c2e84c8d1aa05f443a5872f3f19c86536dbcbcaf6d1041"
+    },
+    "fresh_build": {
+      "path": "artifacts/rust/notification-terminal-handoff-1/validation/public-build-1/build.json",
+      "sha256": "2c81fee19506cb9139f88d73ba5269943a977397eb1413f170114923828298d9"
+    },
+    "fresh_elf": {
+      "path": "artifacts/rust/notification-terminal-handoff-1/validation/public-build-1/native-default-peer",
+      "sha256": "35bd956a19fa5c6353bd8dc77f1d3e11f0557a3dbb29b6235cba8b31f4df06b1"
+    },
+    "fresh_elf_different_fromhistorical": true,
+    "fresh_public87_checks": {
+      "path": "artifacts/rust/notification-terminal-public-portable-1/http-replay/integration.json",
+      "sha256": "c08a5346cb628ced038e85704499348f520a5c5a05f0f65ba14c5c97aed305c6"
+    },
+    "fresh_physical5_log": {
+      "path": "artifacts/rust/notification-terminal-public-portable-1/http-replay/native-active-resources.log",
+      "sha256": "c306f4933346d477616ea9bd7ca5641623ef0bad98dcdaaa518d4c7872540744"
+    },
+    "fresh_baseline_equal": true,
+    "independent_cleanup": {
+      "container": [],
+      "network": [],
+      "volume": []
+    },
+    "existing_proof": {
+      "path": "artifacts/rust/notification-terminal-handoff-1/validation/public-proof-1.json",
+      "sha256": "87b1158e5be3cae77a84ab81f452152efcaaed3ba168369a1a33eb3655c5c96e"
+    }
+  },
+  "no_live_index_refs_or_fixture_reruns": true,
+  "publication_documentation_change": "README prerequisite prose uses Rust1.90/Cargo/Docker on PATH; ignored local environment.sh is not required. Runtime and executed replay-tool bytes unchanged."
+}

@@ -20,6 +20,7 @@ pub enum State {
     Starting,
     Empty,
     Completed,
+    FailedTask,
     UnsupportedHead,
     UnsupportedDomain,
     // Keep exact typed error without pretending the poller is healthy/stopped.
@@ -107,6 +108,7 @@ impl DefaultApplication {
                     Ok(Run::Completed(_) | Run::AlreadySucceeded(_) | Run::Revoked(_, _)) => {
                         State::Completed
                     }
+                    Ok(Run::Failed(_)) => State::FailedTask,
                     Ok(Run::Unsupported(_)) => State::UnsupportedDomain,
                     Ok(Run::UnsupportedHead) => State::UnsupportedHead,
                     Err(Error::Closed) if *stop.borrow() => break,
@@ -180,6 +182,7 @@ impl State {
             Self::Starting => "Starting".into(),
             Self::Empty => "Empty".into(),
             Self::Completed => "Completed".into(),
+            Self::FailedTask => "FailedTask".into(),
             Self::UnsupportedHead => "UnsupportedHead".into(),
             Self::UnsupportedDomain => "UnsupportedDomain".into(),
             Self::Stopped => "Stopped".into(),

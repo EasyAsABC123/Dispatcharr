@@ -26,6 +26,17 @@ impl crate::default_domains::Domains for CountedDomains {
     ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::default_domains::Error>> {
         self.actual.preflight(kind, owner)
     }
+    fn execute_terminal(
+        &self,
+        kind: Kind,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<
+        '_,
+        Result<crate::notification_terminal::Terminal, crate::default_domains::Error>,
+    > {
+        self.calls.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        self.actual.execute_terminal(kind, owner)
+    }
     fn execute(
         &self,
         kind: Kind,
@@ -164,7 +175,7 @@ async fn native_default_family_peer() {
                 let mut outcomes=Vec::new();
                 for _ in 0..count {
                     let value=worker.run_once(Arc::new(())).await.map_err(|e|e.to_string())?;
-                    let id=match &value {crate::default_worker::Run::Completed(id)|crate::default_worker::Run::AlreadySucceeded(id)|crate::default_worker::Run::Revoked(id,_)=>Some(*id),_=>None};
+                    let id=match &value {crate::default_worker::Run::Completed(id)|crate::default_worker::Run::Failed(id)|crate::default_worker::Run::AlreadySucceeded(id)|crate::default_worker::Run::Revoked(id,_)=>Some(*id),_=>None};
                     let metadata=if let Some(id)=id{jobs.read(id,Arc::new(())).await.map_err(|e|format!("{e:?}"))?.map(|v|json!({"state":format!("{:?}",v.state),"result":v.result,"task_id":v.task_id}))}else{None};
                     outcomes.push(json!({"outcome":value.summary(),"metadata":metadata}));
                 }
