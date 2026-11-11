@@ -37,3 +37,32 @@ expanding inherited/router actions, collecting methods/permissions and response
 contracts, and assigning an executable test and owning milestone to every
 required behavior. Use source locations to investigate candidates and track
 coverage; do not use the counts as a denominator for claiming full parity.
+
+## Scoped case attestations
+
+`register.py` validates committed sanitized case attestations by default, so
+registration works without ignored `artifacts/` data in a fresh clone. These
+attestations preserve source/candidate bindings, raw capture hashes and the
+canonical selected-case projection hash. They contain method/path/role/label,
+status, selected response headers and body hashes, not response bodies, SQL,
+Authorization inputs or credentials. Attestation validation is not a new HTTP
+comparison or private raw replay. Endpoint verification stays incomplete.
+
+Use `--deep-evidence` to additionally revalidate the retained private build,
+source/candidate matrices and predeclared fresh authorities. This mode requires
+the referenced private artifacts and fails closed when they are absent; it does
+not start services or send requests. HEAD/OPTIONS/unsupported-verb observations
+remain separate from declared operations, and route aliases are never inferred.
+
+Run the public-only reproduction and nineteen rejection controls on a fresh
+clone (no private evidence required):
+
+```sh
+python3 -m unittest discover -s scripts/rust-contracts -p test_register_evidence.py -v
+```
+
+To also check retained private raw matrices when restored locally:
+
+```sh
+DISPATCHARR_CONTRACT_DEEP_EVIDENCE=1 python3 -m unittest discover -s scripts/rust-contracts -p test_register_evidence.py -v
+```
