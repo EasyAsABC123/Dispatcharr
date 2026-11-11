@@ -36,7 +36,7 @@ pub(crate) async fn initial_with_connection(
 ) -> (Fixture, LocalScope, watch::Receiver<bool>) {
     initial_from_fixture(Fixture::new().await, proxy).await
 }
-async fn initial_from_fixture(
+pub(crate) async fn initial_from_fixture(
     mut f: Fixture,
     proxy: Option<&str>,
 ) -> (Fixture, LocalScope, watch::Receiver<bool>) {
@@ -804,5 +804,101 @@ async fn local_scope_other_authenticated_subject_remains_rejected() {
     f.erase_owned_generation().await;
     scope.retire_missing().await.unwrap();
     drop(scope);
+    f.empty().await;
+}
+
+async fn idle_start() -> (
+    Fixture,
+    LocalScope,
+    tokio::task::JoinHandle<Result<prototype::local::Closed, prototype::Error>>,
+) {
+    let (mut f, scope, _stop) = initial().await;
+    let body = scope
+        .attach_reserved(Arc::new(()), false, None)
+        .await
+        .unwrap();
+    let closing = tokio::spawn({
+        let scope = scope.clone();
+        async move { scope.close(&body).await }
+    });
+    wait(async || {
+        f.redis
+            .hget::<_, _, String>(f.metadata(), "active_streams")
+            .await
+            .unwrap()
+            == "0"
+    })
+    .await;
+    wait(async || f.redis.get::<_, String>(f.counter()).await.unwrap() == "0").await;
+    (f, scope, closing)
+}
+#[tokio::test]
+#[ignore = "actual owned Redis Source255 idle success/pending stop"]
+async fn local_scope_idle_success_preserves_generation_request_and_prior_timer() {
+    let (mut f, scope, closing) = idle_start().await;
+    let before: std::collections::BTreeMap<String, String> =
+        f.redis.hgetall(f.metadata()).await.unwrap();
+    let _: () = f.redis.set_ex(f.stop(), "true", 60).await.unwrap();
+    let body = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    scope.enter_idle(&body, admission(&f), 1).await.unwrap();
+    let after: std::collections::BTreeMap<String, String> =
+        f.redis.hgetall(f.metadata()).await.unwrap();
+    assert_eq!(after["created_at"], before["created_at"]);
+    assert_eq!(after["active_streams"], "1");
+    assert_eq!(
+        after["request_count"].parse::<u64>().unwrap(),
+        before["request_count"].parse::<u64>().unwrap() + 1
+    );
+    assert_eq!(f.redis.get::<_, String>(f.counter()).await.unwrap(), "1");
+    assert_eq!(f.redis.get::<_, String>(f.stop()).await.unwrap(), "true");
+    assert!(!closing.await.unwrap().unwrap().deleted);
+    assert!(scope.consume_public_stop(&body).await.unwrap());
+    scope.close(&body).await.unwrap();
+    assert_eq!(f.redis.get::<_, String>(f.counter()).await.unwrap(), "0");
+    f.empty().await;
+}
+#[tokio::test]
+#[ignore = "actual owned Redis Source265 idle profile refusal preserves foreign reservation"]
+async fn local_scope_idle_busy_rolls_back_only_claim_and_preserves_prior_timer() {
+    let (mut f, scope, closing) = idle_start().await;
+    let mut other = f.request();
+    other.channel_id = uuid::Uuid::new_v4().simple().to_string();
+    let other = f.coordinator.acquire_vod(other).await.unwrap();
+    let before: std::collections::BTreeMap<String, String> =
+        f.redis.hgetall(f.metadata()).await.unwrap();
+    let body = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    assert_eq!(
+        scope.enter_idle(&body, admission(&f), 1).await,
+        Err(prototype::Error::ProfileFull)
+    );
+    let after: std::collections::BTreeMap<String, String> =
+        f.redis.hgetall(f.metadata()).await.unwrap();
+    assert_eq!(after["active_streams"], "0");
+    assert_eq!(after["request_count"], before["request_count"]);
+    assert_eq!(after["created_at"], before["created_at"]);
+    assert_eq!(f.redis.get::<_, String>(f.counter()).await.unwrap(), "1");
+    assert!(closing.await.unwrap().unwrap().deleted);
+    assert_eq!(f.redis.get::<_, String>(f.counter()).await.unwrap(), "1");
+    assert!(other.release().await.unwrap());
+    f.empty().await;
+}
+#[tokio::test]
+#[ignore = "actual owned Redis Source profile unlimited skips public provider counter"]
+async fn local_scope_idle_unlimited_does_not_invent_provider_reservation() {
+    let (mut f, scope, closing) = idle_start().await;
+    let body = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    scope.enter_idle(&body, admission(&f), 0).await.unwrap();
+    assert_eq!(f.redis.get::<_, String>(f.counter()).await.unwrap(), "0");
+    assert!(!closing.await.unwrap().unwrap().deleted);
+    scope.close(&body).await.unwrap();
     f.empty().await;
 }

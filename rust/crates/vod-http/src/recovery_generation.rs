@@ -27,6 +27,7 @@ pub enum Error {
     ObserverTimeout,
     StillOwned,
     PartialState,
+    ProfileFull,
     UnprovenEntry,
     ForeignOwner,
     Stopped,

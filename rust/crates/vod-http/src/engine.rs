@@ -758,7 +758,9 @@ fn session_redirect(request: &VodRequest, session: &str) -> Response {
 fn error_response(error: StoreError) -> Response {
     let mut response = match error {
         StoreError::StatusBody(code, serde_json::Value::String(value))
-            if (code == 503 && value == "No available stream") || code == 500 =>
+            if (code == 503 && value == "No available stream")
+                || code == 500
+                || (code == 429 && value == "Connection limit exceeded for profile") =>
         {
             (
                 StatusCode::from_u16(code).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
@@ -822,7 +824,7 @@ async fn play(
         Ok(playback) => playback,
         Err(error) => return error_response(error),
     };
-    engine
+    let mut response = engine
         .respond(VodRequest {
             resolved_client_ip: None,
             playback,
@@ -831,7 +833,14 @@ async fn play(
             session_id: path.get("session_id").cloned(),
             profile_id: path.get("profile_id").and_then(|value| value.parse().ok()),
         })
-        .await
+        .await;
+    // Original @api_view(GET) finalization varies even streaming/HTML error
+    // responses by Accept. Keep this at the proxy route, not shared XC respond.
+    response.headers_mut().insert(
+        axum::http::header::VARY,
+        axum::http::HeaderValue::from_static("Accept, origin"),
+    );
+    response
 }
 async fn head() -> Response {
     (

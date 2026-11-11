@@ -39,7 +39,7 @@ def main():
         archive_path = clip
         archive_hash = state.stats['fixture_sha256']
         def alias(self):
-            if urlsplit(self.path).path in ('/movie/fixture/fixture/fixture.mp4', '/series/fixture/fixture/fixture.mp4'):
+            if urlsplit(self.path).path in ('/movie/fixture/fixture/fixture.mp4', '/series/fixture/fixture/fixture.mp4', '/movie/fixture/fixture/fixture-idle-other.mp4'):
                 self.path = '/vod.mp4'
         def do_GET(self):
             if isinstance(self.wfile,PacedWriter):self.wfile=self.wfile.raw

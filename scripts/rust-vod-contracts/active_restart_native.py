@@ -18,6 +18,22 @@ seed=json.loads(Path('/evidence/vod-seed.json').read_text());client=RedisClient.
 if list(client.scan_iter(match='vod_persistent_connection:*')):raise RuntimeError('Owned VOD fixture must start idle')
 movie=Movie.objects.get(uuid=seed['movie_uuid']);profile=M3UAccountProfile.objects.get(pk=seed['provider_profile_id']);cached=id(client);sid='fixture-vod-active-restart';key='vod_persistent_connection:'+sid;responses=[];work=Path(tempfile.mkdtemp(prefix='owned-vod-redis-'));redis_down=False
 report={'capture_complete':False,'scope':'Actual frozen native HTTP media/body state-loss characterization; Original Django is independent DB/Redis observer','pid':os.getpid(),'source_hashes':{name:hashlib.sha256(Path('/app',name).read_bytes()).hexdigest()for name in ['apps/proxy/vod_proxy/multi_worker_connection_manager.py','core/utils.py','core/redis_connection.py']},'redis_run_ids':[],'observations':[],'performance_verified':False,'native_implementation_verified':False,'packaged_http_capture':True,'body_sample_limit':34*8192,'long_prefix_limit':1048576}
+other_movie=None;idle_other_future=None;idle_other_executor=None
+if os.environ.get('ACTIVE_IDLE_PROVIDER_BUSY')=='1':
+ from apps.vod.models import M3UMovieRelation
+ account=profile.m3u_account
+ assert account.server_url=='http://origin:8080/player_api.php' and account.username=='fixture' and account.password=='fixture'
+ account.max_streams=2;account.save(update_fields=['max_streams'])
+ profile.max_streams=2;profile.save(update_fields=['max_streams'])
+ other_relation=M3UMovieRelation.objects.filter(m3u_account=account,stream_id='fixture-idle-other').select_related('movie').first()
+ if other_relation is not None:
+  assert other_relation.movie.name=='Owned idle provider-capacity fixture' and other_relation.container_extension=='mp4'
+  other_movie=other_relation.movie
+  report['owned_idle_contender_fixture_reused_from_Original']=True
+ else:
+  other_movie=Movie.objects.create(name='Owned idle provider-capacity fixture')
+  M3UMovieRelation.objects.create(m3u_account=account,movie=other_movie,stream_id='fixture-idle-other',container_extension='mp4')
+ report['idle_busy_fixture']={'initial_profile_max_streams':profile.max_streams,'initial_account_max_streams':account.max_streams,'other_movie_uuid':str(other_movie.uuid)}
 event_start=SystemEvent.objects.order_by('-id').values_list('id',flat=True).first()or 0
 cli_env=dict(os.environ,REDISCLI_AUTH='playback-fixture-only')
 def start_redis():
@@ -127,6 +143,27 @@ try:
   while current.get('metadata',{}).get('active_streams')!='1'and time.monotonic()<deadline:
    time.sleep(.1);current=state('third-close-public-count-poll')
   report['third_close_returned_public_count_to_one']=current.get('metadata',{}).get('active_streams')=='1'
+ if os.environ.get('ACTIVE_ADMIN_STOP')=='1':
+  from django.contrib.auth import get_user_model
+  from rest_framework_simplejwt.tokens import RefreshToken
+  administrator,_=get_user_model().objects.update_or_create(username='rust-vod-fixture-admin-stop',defaults={'is_active':True,'user_level':10,'stream_limit':0,'password':'!'})
+  admin_token=str(RefreshToken.for_user(administrator).access_token)
+  request=urllib.request.Request(base+'/proxy/vod/stop_client/',data=json.dumps({'client_id':sid}).encode(),headers={'Authorization':'Bearer '+admin_token,'Content-Type':'application/json'},method='POST')
+  try:stopped=urllib.request.urlopen(request,timeout=10)
+  except urllib.error.HTTPError as error:stopped=error
+  with stopped:report['admin_stop']={'status':stopped.status,'body':stopped.read(8193).decode('utf-8','replace'),'user_id':administrator.pk}
+  assert report['admin_stop']['status']==200, report['admin_stop']
+  state('admin-stop-after-third-close-old-and-younger-held')
+  if os.environ.get('ACTIVE_ENTRY_AFTER_ADMIN_STOP')=='1':
+   pending=open_response();entry={'status':pending.status_code,'streaming':pending.streaming}
+   if pending.streaming:
+    block=next(iter(pending.streaming_content));entry.update(first_bytes=len(block),first_sha256=hashlib.sha256(block).hexdigest())
+   else:entry['error_body']=pending.response.read(8193)[:8192].decode('utf-8','replace')
+   report['entry_while_admin_stop_pending']=entry
+   state('additional-entry-open-while-admin-stop-pending')
+   if pending.streaming:pending.response.fp.raw._sock.shutdown(socket.SHUT_RDWR)
+   pending.close();pending.close()
+   state('additional-entry-closed-while-admin-stop-pending')
  # Distinguish both still-open provider bodies; a recreated public session hash
  # must not be mistaken for adoption of the pre-restart body.
  try:
@@ -164,33 +201,62 @@ try:
    settings=CoreSettings.get_stream_settings().copy();settings['default_stream_profile']=StreamProfile.get_locked('Redirect').pk
    CoreSettings.objects.update_or_create(key='stream_settings',defaults={'name':'Fixture redirectidle settings','value':settings})
    report['redirect_policy_observer']=CoreSettings.is_default_stream_profile_redirect()
+  if other_movie is not None:
+   from concurrent.futures import ThreadPoolExecutor
+   idle_other_executor=ThreadPoolExecutor(max_workers=1)
+   other_id='fixture-owned-idle-provider-other'
+   def start_owned_contender():
+    request=urllib.request.Request(base+'/proxy/vod/movie/'+str(other_movie.uuid)+'/'+other_id,headers={'User-Agent':'owned-idle-provider-other'})
+    try:wire=urllib.request.urlopen(request,timeout=15)
+    except urllib.error.HTTPError as error:wire=error
+    result=WireResponse(wire);responses.append(result);return result
+   idle_other_future=idle_other_executor.submit(start_owned_contender)
+   deadline=time.monotonic()+5;other_admitted=False
+   while time.monotonic()<deadline:
+    row=client.hgetall('vod_persistent_connection:'+other_id);count=client.get('profile_connections:'+str(profile.pk))
+    if row.get('active_streams')=='1'and row.get('content_uuid')==str(other_movie.uuid)and count=='2':other_admitted=True;break
+    time.sleep(.005)
+   assert other_admitted,'Actual owned contender admission not observed before closing target'
+   report['owned_idle_contender_admission']={'provider_count':count,'active_streams':row['active_streams'],'content_uuid':row['content_uuid'],'request_in_flight':True,'admitted_under_limit':2}
+   # Legitimate live policy change: both groups were admitted under2; only the
+   # other group will remain when target closes. No counter/metadata is seeded.
+   account.max_streams=1;account.save(update_fields=['max_streams'])
+   profile.max_streams=1;profile.save(update_fields=['max_streams'])
+   report['idle_busy_fixture'].update(final_profile_max_streams=1,final_account_max_streams=1,policy_lowered_before_target_close=True)
   if response.response.fp is not None:
    sock=response.response.fp.raw._sock;sock.shutdown(socket.SHUT_RDWR)
    report['old_close_mode']='owned HTTP client socket shutdown then response.close twice'
   else:report['old_close_mode']='bodyalreadyEOF beforeexplicitclose'
   response.close();response.close()
   if os.environ.get('ACTIVE_IDLE_SAME_ENTRY')=='1':
-   # Qualify this backend's own fresh active0 window; do not align wall clocks
-   # or submit after deletion and label a different branch an idle mismatch.
    deadline=time.monotonic()+5;idle=None
    while time.monotonic()<deadline:
-    row=client.hgetall(key)
-    if row and row.get('active_streams')=='0':idle=row;observed_at=time.monotonic();break
+    row=client.hgetall(key);available=client.get('profile_connections:'+str(profile.pk))
+    capacity=(available=='1')if other_movie is not None else available in(None,'0')
+    if row and row.get('active_streams')=='0' and capacity:idle=row;observed_at=time.monotonic();break
     if not row:break
     time.sleep(.005)
-   report['controlled_idle_entry']={'qualified':idle is not None,'attempted':False}
+   report['controlled_idle_entry']={'qualified':idle is not None,'attempted':False,'provider_before':available}
    if idle is not None:
     before={field:idle.get(field)for field in ['active_streams','created_at','request_count','user_id','content_uuid','content_obj_type']}
-    # No origin/stats/SQL observer work between the qualifying read and request.
     request_at=time.monotonic();adopted=open_response()
-    follow={'status':adopted.status_code,'streaming':adopted.streaming}
+    follow={'status':adopted.status_code,'streaming':adopted.streaming,'response_headers':{name.lower():value for name,value in list(adopted.response.headers.items())[:64]}}
+    follow['response_header_pairs']=[[name,value]for name,value in list(adopted.response.headers.items())[:64]]
     if adopted.streaming:
      block=next(iter(adopted.streaming_content));follow.update(first_bytes=len(block),first_sha256=hashlib.sha256(block).hexdigest())
+    else:follow['error_body']=adopted.response.read(8193)[:8192].decode('utf-8','replace')
     after=client.hgetall(key)
     report['controlled_idle_entry'].update(attempted=True,read_to_request_ms=(request_at-observed_at)*1000,before=before,wire=follow,after={field:after.get(field)for field in before},provider_after=client.get('profile_connections:'+str(profile.pk)))
     if adopted.streaming:report['public_idle_follow']=follow
     state('controlled-public-idle-same-id-entry')
     time.sleep(1.5);state('controlled-idle-entry-after-prior-cleanup-timer')
+   if idle_other_future is not None:
+    other=idle_other_future.result(timeout=15);evidence={'status':other.status_code,'streaming':other.streaming}
+    assert other.status_code==200
+    first=next(iter(other.streaming_content));evidence.update(first_bytes=len(first),first_sha256=hashlib.sha256(first).hexdigest(),provider_count=client.get('profile_connections:'+str(profile.pk)))
+    report['owned_idle_contender']=evidence
+    if other.streaming:other.response.fp.raw._sock.shutdown(socket.SHUT_RDWR)
+    other.close();other.close();state('owned-idle-provider-contender-closed')
   if os.environ.get('ACTIVE_IDLE_MINT')=='1':
    deadline=time.monotonic()+10;idle=None
    while time.monotonic()<deadline:
@@ -268,6 +334,10 @@ try:
  if len(report['events'])>64:raise RuntimeError('Owned audit bound')
  report['same_process']=os.getpid()==report['pid'];report['capture_complete']=True
 finally:
+ if idle_other_future is not None:
+  try:idle_other_future.result(timeout=15)
+  except Exception as error:report['owned_contender_cleanup_error']=type(error).__name__
+ if idle_other_executor is not None:idle_other_executor.shutdown(wait=True,cancel_futures=True)
  if redis_down:start_redis()
  for response in reversed(responses):
   try:response.close()

@@ -7,6 +7,8 @@ pub(crate) mod receipt;
 use dispatcharr_contracts::BoxFuture;
 use dispatcharr_coordination::{AcquireRequest, Lease};
 use receipt::EntryReceipt;
+#[path = "generation_idle.rs"]
+mod idle;
 use redis::Script;
 use std::{
     collections::BTreeMap,
@@ -75,6 +77,7 @@ struct Inner {
     shutdown: watch::Sender<bool>,
     failed: AtomicBool,
     activated: AtomicBool,
+    idle_pending: AtomicBool,
 }
 struct Generation {
     // Public metadata subject belongs to this proved generation, not old bodies.
@@ -251,6 +254,7 @@ if redis.call('HGET',KEYS[2],'user_id')~=ARGV[3] or redis.call('HGET',KEYS[2],'c
 local count=tonumber(redis.call('HGET',KEYS[2],'active_streams')or'0')
 local requests=tonumber(redis.call('HGET',KEYS[2],'request_count')or'0')
 local provider=tonumber(redis.call('GET',KEYS[5])or'0')
+if count==0 then return {'IDLE'} end
 if not count or count<=0 or count~=math.floor(count) or count>=9007199254740991
  or not requests or requests<0 or requests~=math.floor(requests) or requests>=9007199254740991
  or not provider or provider<=0
@@ -378,6 +382,7 @@ impl LocalScope {
             shutdown: watch::channel(false).0,
             failed: AtomicBool::new(false),
             activated: AtomicBool::new(false),
+            idle_pending: AtomicBool::new(false),
         });
         let task_inner = inner.clone();
         let task = tokio::spawn(async move {
@@ -439,6 +444,9 @@ impl LocalScope {
         hook: Option<Arc<dyn StopHook>>,
         admitted: bool,
     ) -> Result<Body, Error> {
+        if self.inner.idle_pending.load(Ordering::Acquire) {
+            return Err(Error::PartialState);
+        }
         if *self.inner.stop.borrow() {
             return Err(Error::Stopped);
         }
@@ -757,7 +765,41 @@ impl LocalScope {
     /// Source187: an additional current request owns a body but reuses the
     /// existing provider reservation. This narrowly supports an active current
     /// generation; idle adoption remains a separate policy/physical transition.
+    /// Opt-in SessionPool adapter. A definite read-only IDLE response may
+    /// select the separately receipt-fenced idle transition; uncertain ENTER
+    /// replies never select it and never cause replay.
+    pub async fn enter_current_or_idle(
+        &self,
+        body: &Body,
+        admission: NewAdmission,
+        profile_max: Option<u32>,
+    ) -> Result<(), Error> {
+        match self.enter_current_inner(body, admission, true).await? {
+            Some(admission) => {
+                self.enter_idle_after_policy(
+                    body,
+                    admission,
+                    profile_max.ok_or(Error::PartialState)?,
+                )
+                .await
+            }
+            None => Ok(()),
+        }
+    }
     pub async fn enter_current(&self, body: &Body, admission: NewAdmission) -> Result<(), Error> {
+        self.enter_current_inner(body, admission, false)
+            .await
+            .map(|_| ())
+    }
+    async fn enter_current_inner(
+        &self,
+        body: &Body,
+        admission: NewAdmission,
+        allow_idle: bool,
+    ) -> Result<Option<NewAdmission>, Error> {
+        if self.inner.idle_pending.load(Ordering::Acquire) {
+            return Err(Error::PartialState);
+        }
         if !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner))
             || body.is_closed()
             || body.state.admitted.load(Ordering::Acquire)
@@ -777,6 +819,9 @@ impl LocalScope {
         let inner = self.inner.clone();
         let task = tokio::spawn(async move {
             let guard = control(&inner).await?;
+            if inner.idle_pending.load(Ordering::Acquire) {
+                return Err(Error::PartialState);
+            }
             let gen = inner.state.lock().await.current.clone();
             // Source skips optional user restoration while public metadata exists.
             // Anonymous request policy does not authorize changing its public subject.
@@ -869,6 +914,15 @@ impl LocalScope {
             };
             match reply.first().map(String::as_str) {
                 Some("ENTERED") => {}
+                Some("IDLE") => {
+                    // This definite script branch has performed no mutation.
+                    hold.receipt.lock().unwrap().take();
+                    return if allow_idle {
+                        Ok(Some(admission))
+                    } else {
+                        Err(Error::PartialState)
+                    };
+                }
                 Some("STOP") => return Err(Error::Stopped),
                 Some("FOREIGN") => return Err(Error::ForeignOwner),
                 Some("IDENTITY") => return Err(Error::Configuration),
@@ -897,7 +951,7 @@ impl LocalScope {
             // Both the body and this owned task retain physical admission until
             // ENTER's actual reply. Dropped observers cannot abandon an increment.
             drop(hold);
-            Ok(())
+            Ok(None)
         });
         tokio::time::timeout(self.inner.recovery.inner.observer_timeout, task)
             .await
@@ -1157,6 +1211,21 @@ async fn close_public(
     let mut stop = inner.shutdown.subscribe();
     if !*stop.borrow() {
         tokio::select! {_=tokio::time::sleep(inner.limits.idle_grace)=>{},_=stop.changed()=>{}}
+    }
+    if inner.idle_pending.load(Ordering::Acquire) {
+        let observed = inner.state.lock().await.current.clone();
+        let active: i64 = Script::new("if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2] then return -1 end return tonumber(redis.call('HGET',KEYS[2],'active_streams')or'-1')")
+            .key(owner(&inner)).key(key(&inner.id))
+            .arg(observed.lease.token()).arg(&observed.token)
+            .invoke_async(&mut inner.recovery.inner.connection.clone()).await.map_err(|_|Error::Backend)?;
+        if active > 0 {
+            return Ok(Closed {
+                changed: true,
+                remaining: 0,
+                deleted: false,
+                event_eligible: false,
+            });
+        }
     }
     let _serial = inner.serial.clone().lock_owned().await;
     // Resolve CURRENT again after Source's grace window. Never use an old token

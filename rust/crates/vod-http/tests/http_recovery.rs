@@ -35,6 +35,14 @@ impl VodResolver for Resolver {
     ) -> BoxFuture<'a, Result<VodSource, StoreError>> {
         Box::pin(async move {
             let mut source = self.0.clone();
+            // Test-only fresh resolver snapshot; production receives fresh SQL.
+            if source.name == "Owned fresh idle capacity movie"
+                && request.playback.header("x-owned-profile-cap") == Some("1")
+            {
+                for candidate in &mut source.candidates {
+                    candidate.max_streams = 1;
+                }
+            }
             // Test-only request subject switch; no SQL/JWT authentication claim.
             if source.name == "Owned request identity movie"
                 && request.playback.header("x-owned-initial-user").is_none()
@@ -149,6 +157,21 @@ async fn actual_http_source_finish_wait_preserves_shutdown_of_held_unpolled_tail
 async fn actual_http_anonymous_recreated_generation_preserves_old_body_and_subject() {
     run_case(true, true, true, Some("identity")).await;
 }
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "actual HTTP Source255 qualified idle same generation success/timer/younger continuation; fixture resolver"]
+async fn actual_http_public_idle_same_generation_success() {
+    run_case(true, false, true, Some("idle")).await;
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "actual HTTP Source265 bare429 and reserved-other-owner preservation; fixture resolver"]
+async fn actual_http_public_idle_busy_profile_bare429() {
+    run_case(true, false, true, Some("idle-busy")).await;
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "actual initial non-recovered idle requires immediate provider release on reclose"]
+async fn actual_http_initial_public_idle_provider_release_is_immediate() {
+    run_case(false, false, true, Some("idle-initial")).await;
+}
 async fn run_case(
     extra_entry: bool,
     retired_reopen: bool,
@@ -164,6 +187,8 @@ async fn run_case(
             .unwrap();
     assert!(media.len() > 1_000_000 && media.len() <= 5 * 1024 * 1024);
     assert_eq!(&media[4..8], b"ftyp");
+    let idle_case = matches!(public_stop, Some("idle" | "idle-busy"));
+    let idle_busy = public_stop == Some("idle-busy");
     let identity_case = public_stop == Some("identity");
     let stopping_case = matches!(public_stop, Some("cap" | "admin"));
     let final_case = public_stop.is_some_and(|mode| mode.starts_with("final-"));
@@ -244,6 +269,8 @@ async fn run_case(
         content_uuid: content.clone(),
         name: if identity_case {
             "Owned request identity movie"
+        } else if idle_busy {
+            "Owned fresh idle capacity movie"
         } else {
             "Owned recovery movie"
         }
@@ -263,14 +290,14 @@ async fn run_case(
             relation_id: 1,
             account_id: 1,
             profile_id: profile,
-            max_streams: 1,
+            max_streams: if idle_busy { 2 } else { 1 },
             url: format!("{origin}/fixture.mp4"),
             user_agent: "owned-recovery".into(),
         }],
     }));
     let engine = VodEngine::with_resolver(
         resolver,
-        coordinator,
+        coordinator.clone(),
         &url,
         VodConfig {
             max_sessions: 1,
@@ -387,6 +414,70 @@ async fn run_case(
     let token: String = redis.get(&owner).await.unwrap();
     let ledger = format!("{namespace}:lease:{token}");
     assert_eq!(requests.load(Ordering::SeqCst), 1);
+    if public_stop == Some("idle-initial") {
+        let created: String = redis.hget(&metadata, "created_at").await.unwrap();
+        drop(old);
+        wait(async || {
+            redis
+                .hget::<_, _, Option<i64>>(&metadata, "active_streams")
+                .await
+                .unwrap()
+                == Some(0)
+                && redis
+                    .get::<_, Option<i64>>(&counter)
+                    .await
+                    .unwrap()
+                    .unwrap_or(0)
+                    == 0
+        })
+        .await;
+        let response = client
+            .get(format!("{base}/proxy/vod/movie/{content}/{id}"))
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(response.status(), 200);
+        let mut resumed = Reader {
+            response,
+            pending: bytes::Bytes::new(),
+        };
+        assert_eq!(resumed.take(8192).await, &media[..8192]);
+        assert_eq!(
+            redis
+                .hget::<_, _, String>(&metadata, "created_at")
+                .await
+                .unwrap(),
+            created
+        );
+        assert_eq!(
+            redis
+                .hget::<_, _, i64>(&metadata, "request_count")
+                .await
+                .unwrap(),
+            2
+        );
+        tokio::time::sleep(Duration::from_millis(1200)).await;
+        assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+        drop(resumed);
+        wait(async || {
+            redis
+                .hget::<_, _, Option<i64>>(&metadata, "active_streams")
+                .await
+                .unwrap()
+                == Some(0)
+        })
+        .await;
+        assert_eq!(
+            redis.get::<_, i64>(&counter).await.unwrap(),
+            0,
+            "Source normal-close provider release precedes its delayed metadata timer"
+        );
+        wait(async || !redis.exists::<_, bool>(&metadata).await.unwrap()).await;
+        assert!(engine.shutdown().await);
+        app_task.abort();
+        origin_task.abort();
+        return;
+    }
     if final_case {
         let stopped = client
             .post(format!("{base}/proxy/vod/stop_client/"))
@@ -613,7 +704,129 @@ async fn run_case(
             1
         );
     }
+    let before_idle: std::collections::BTreeMap<String, String> = if idle_case {
+        redis.hgetall(&metadata).await.unwrap()
+    } else {
+        Default::default()
+    };
     drop(old);
+    if idle_case {
+        wait(async || {
+            redis
+                .hget::<_, _, Option<i64>>(&metadata, "active_streams")
+                .await
+                .unwrap()
+                == Some(0)
+                && redis
+                    .get::<_, Option<i64>>(&counter)
+                    .await
+                    .unwrap()
+                    .unwrap_or(0)
+                    == 0
+        })
+        .await;
+        // Actual independent fenced provider reservation, not seeded counters.
+        // Full real-other-HTTP/SQL/auth parity remains the packaged gate.
+        let other = if idle_busy {
+            Some(
+                coordinator
+                    .acquire_vod(dispatcharr_coordination::AcquireRequest {
+                        channel_id: uuid::Uuid::new_v4().to_string(),
+                        provider_profile_id: Some(profile),
+                        provider_max_streams: 1,
+                        credential_pool: None,
+                    })
+                    .await
+                    .unwrap(),
+            )
+        } else {
+            None
+        };
+        let mut idle_request = client.get(format!("{base}/proxy/vod/movie/{content}/{id}"));
+        if idle_busy {
+            idle_request = idle_request.header("x-owned-profile-cap", "1");
+        }
+        let response = idle_request.send().await.unwrap();
+        if idle_busy {
+            println!(
+                "IDLE_FRESH_CAP status={} active={} requests={} provider={}",
+                response.status().as_u16(),
+                redis
+                    .hget::<_, _, String>(&metadata, "active_streams")
+                    .await
+                    .unwrap(),
+                redis
+                    .hget::<_, _, String>(&metadata, "request_count")
+                    .await
+                    .unwrap(),
+                redis.get::<_, i64>(&counter).await.unwrap()
+            );
+            assert_eq!(response.status(), 429);
+            assert_eq!(response.headers()["vary"], "Accept, origin");
+            assert_eq!(
+                response.headers()["content-type"],
+                "text/html; charset=utf-8"
+            );
+            assert_eq!(response.headers()["content-length"], "37");
+            assert_eq!(response.headers()["allow"], "GET, OPTIONS");
+            assert!(response.headers().get("retry-after").is_none());
+            assert_eq!(
+                response.text().await.unwrap(),
+                "Connection limit exceeded for profile"
+            );
+            assert_eq!(
+                redis
+                    .hget::<_, _, String>(&metadata, "request_count")
+                    .await
+                    .unwrap(),
+                before_idle["request_count"]
+            );
+            assert_eq!(
+                redis
+                    .hget::<_, _, String>(&metadata, "active_streams")
+                    .await
+                    .unwrap(),
+                "0"
+            );
+            assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+            wait(async || !redis.exists::<_, bool>(&metadata).await.unwrap()).await;
+            assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+            assert!(other.unwrap().release().await.unwrap());
+        } else {
+            assert_eq!(response.status(), 200);
+            assert_eq!(response.headers()["vary"], "Accept, origin");
+            let mut resumed = Reader {
+                response,
+                pending: bytes::Bytes::new(),
+            };
+            assert_eq!(resumed.take(8192).await, &media[..8192]);
+            assert_eq!(
+                redis
+                    .hget::<_, _, String>(&metadata, "created_at")
+                    .await
+                    .unwrap(),
+                before_idle["created_at"]
+            );
+            assert_eq!(
+                redis
+                    .hget::<_, _, i64>(&metadata, "request_count")
+                    .await
+                    .unwrap(),
+                before_idle["request_count"].parse::<i64>().unwrap() + 1
+            );
+            assert_eq!(
+                redis
+                    .hget::<_, _, i64>(&metadata, "active_streams")
+                    .await
+                    .unwrap(),
+                1
+            );
+            tokio::time::sleep(Duration::from_millis(1200)).await;
+            assert!(redis.exists::<_, bool>(&metadata).await.unwrap());
+            assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+            drop(resumed);
+        }
+    }
     wait(async || !redis.exists::<_, bool>(&metadata).await.unwrap()).await;
     assert_eq!(
         redis
@@ -629,7 +842,9 @@ async fn run_case(
     assert_eq!(young_bytes, &media[..843776]);
     assert_eq!(
         requests.load(Ordering::SeqCst),
-        if extra_entry { 3 } else { 2 } + usize::from(pending_admin_entry)
+        if extra_entry { 3 } else { 2 }
+            + usize::from(pending_admin_entry)
+            + usize::from(idle_case && !idle_busy)
     );
     if retired_reopen {
         let response = client

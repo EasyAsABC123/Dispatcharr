@@ -492,13 +492,18 @@ impl SessionPool {
                     .as_ref()
                     .map_or(0, |user| user.stream_limit.max(0));
                 scope
-                    .enter_current(
+                    .enter_current_or_idle(
                         &body,
                         recovery::NewAdmission {
                             fields,
                             limit: limit as u32,
                             policy: source.limit_policy.clone(),
                         },
+                        source
+                            .candidates
+                            .iter()
+                            .find(|candidate| candidate.profile_id == scope.profile_id())
+                            .map(|candidate| candidate.max_streams),
                     )
                     .await
                     .map_err(|error| {
@@ -1150,6 +1155,10 @@ fn monitor_scope(id: String, scope: LocalScope, pool: Weak<Inner>) {
 }
 fn scope_error(error: recovery::Error) -> dispatcharr_store::StoreError {
     match error {
+        recovery::Error::ProfileFull => dispatcharr_store::StoreError::StatusBody(
+            429,
+            json!("Connection limit exceeded for profile"),
+        ),
         recovery::Error::StillOwned | recovery::Error::PartialState => {
             dispatcharr_store::StoreError::Unsupported(
                 "VOD recovery state requires a separately verified transition",
@@ -1338,6 +1347,7 @@ impl Drop for Ticket {
                 let deleted = match Script::new(DELETE).key(key(&session.id)).arg(&session.metadata_token).invoke_async::<i64>(&mut connection).await {
                     Ok(deleted)=>deleted,Err(_)=>{pool.cleanup_failed.store(true,Ordering::Release);0}
                 };
+
                 if deleted == 0 {
                     state.closed = true;
                 }
