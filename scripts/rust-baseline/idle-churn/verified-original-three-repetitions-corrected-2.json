@@ -1,0 +1,325 @@
+{
+  "passed": false,
+  "observation_coverage_valid_all3": true,
+  "Source_budget_acceptance": false,
+  "scope": "Corrected sealed Original-only3rep reference; valid coverage and completed workload, unchanged growthbudgets fail. NoNative/M0completion",
+  "summary": {
+    "path": "artifacts/rust/m0-idle-churn-original-2/summary.json",
+    "sha256": "c55e3d4c2f0fff3d58d74ae3f9d0bf2d9deda96b0a2efecc99ee458286128826"
+  },
+  "policy": {
+    "path": "artifacts/rust/m0-idle-churn-original-2/controller/policy.json",
+    "sha256": "6984f5e73d31048f47ebac884c3936112e26b262da842e637645d363d99fbeab"
+  },
+  "seal": {
+    "path": "artifacts/rust/m0-idle-churn-original-2/pre-execution-seal.json",
+    "sha256": "67afc2b85b954f54650be17657c1b77950ecc703061a351a1e206b9be6ed077e"
+  },
+  "active_cue": {
+    "path": "artifacts/rust/m0-idle-churn-original-2/active-quiet-cue.json",
+    "sha256": "2809cd10f7f33366758c7d308f6c28136d175dbbca3ed36f2aad0618f7d59621"
+  },
+  "all3_fixed_repetitions_completed": true,
+  "total_readers": 102,
+  "all_owned_projects_independently_removed": true,
+  "no_added_probes_or_policy_tuning": true,
+  "review": {
+    "path": "artifacts/rust/m0-idle-churn-original-review-2/review.json",
+    "sha256": "dddc084e4b468f06abbe2048fd642d1e89905a46d1c4fa505a962abcfd9c1506"
+  },
+  "repetitions": [
+    {
+      "repetition": 1,
+      "observation_coverage_valid": true,
+      "Source_budget_acceptance": false,
+      "result": {
+        "path": "artifacts/rust/m0-idle-churn-original-2/repetition-1/result.json",
+        "sha256": "dce505b098810a8154a21c81102daaba81232b3ad8f1702deaff6291b6d75e00"
+      },
+      "samples": {
+        "path": "artifacts/rust/m0-idle-churn-original-2/repetition-1/samples.jsonl",
+        "sha256": "94c578613f238bd6f00af75946ba2b057a0bcf4949c6c03e4669267ebee778c8"
+      },
+      "census_coverage": {
+        "complete": 113,
+        "incomplete": 2,
+        "stable_complete": 100,
+        "total": 115
+      },
+      "stable_idle_samples": {
+        "idle-before-first-playback": 6,
+        "idle-after-playback": 7,
+        "idle-after-churn": 6
+      },
+      "permission_denied_sample_count": 0,
+      "observer_errors": [],
+      "failed_checks": [
+        {
+          "allowed": 0,
+          "id": "idle-after-playback/process-growth",
+          "observed": 1,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-playback/fd-growth",
+          "observed": 151,
+          "passed": false
+        },
+        {
+          "allowed": 0,
+          "id": "idle-after-churn/process-growth",
+          "observed": 2,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/fd-growth",
+          "observed": 274,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/socket-growth",
+          "observed": 26,
+          "passed": false
+        }
+      ],
+      "workload_phases": [
+        {
+          "id": "idle-before-first-playback",
+          "passed": true
+        },
+        {
+          "id": "playback-one",
+          "passed": true
+        },
+        {
+          "id": "idle-after-playback",
+          "passed": true
+        },
+        {
+          "id": "churn-one",
+          "passed": true
+        },
+        {
+          "id": "churn-ten",
+          "passed": true
+        },
+        {
+          "id": "idle-after-churn",
+          "passed": true
+        }
+      ],
+      "readers": 34,
+      "startup_p95_ms": 4574.969681008952,
+      "whole_window_cpu_percent_one_core": 19.448937802915623,
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "repetition": 2,
+      "observation_coverage_valid": true,
+      "Source_budget_acceptance": false,
+      "result": {
+        "path": "artifacts/rust/m0-idle-churn-original-2/repetition-2/result.json",
+        "sha256": "9c1c0c61b04383cbceab7e9411f7766fea58166a41926514c197730a8997654c"
+      },
+      "samples": {
+        "path": "artifacts/rust/m0-idle-churn-original-2/repetition-2/samples.jsonl",
+        "sha256": "999cbba3ae5edfd3a95703d577b354a7e8b9871333eea2d94932817246a2c4c9"
+      },
+      "census_coverage": {
+        "complete": 113,
+        "incomplete": 2,
+        "stable_complete": 101,
+        "total": 115
+      },
+      "stable_idle_samples": {
+        "idle-before-first-playback": 6,
+        "idle-after-playback": 7,
+        "idle-after-churn": 6
+      },
+      "permission_denied_sample_count": 1,
+      "observer_errors": [],
+      "failed_checks": [
+        {
+          "allowed": 0,
+          "id": "idle-after-playback/process-growth",
+          "observed": 1,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-playback/fd-growth",
+          "observed": 151,
+          "passed": false
+        },
+        {
+          "allowed": 0,
+          "id": "idle-after-churn/process-growth",
+          "observed": 2,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/fd-growth",
+          "observed": 226,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/socket-growth",
+          "observed": 26,
+          "passed": false
+        }
+      ],
+      "workload_phases": [
+        {
+          "id": "idle-before-first-playback",
+          "passed": true
+        },
+        {
+          "id": "playback-one",
+          "passed": true
+        },
+        {
+          "id": "idle-after-playback",
+          "passed": true
+        },
+        {
+          "id": "churn-one",
+          "passed": true
+        },
+        {
+          "id": "churn-ten",
+          "passed": true
+        },
+        {
+          "id": "idle-after-churn",
+          "passed": true
+        }
+      ],
+      "readers": 34,
+      "startup_p95_ms": 4576.976455020485,
+      "whole_window_cpu_percent_one_core": 19.499253924453548,
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "repetition": 3,
+      "observation_coverage_valid": true,
+      "Source_budget_acceptance": false,
+      "result": {
+        "path": "artifacts/rust/m0-idle-churn-original-2/repetition-3/result.json",
+        "sha256": "067f5e0719d7d0e832c013be2dcd31e9a5877848c2197278fc576cfa4589cc37"
+      },
+      "samples": {
+        "path": "artifacts/rust/m0-idle-churn-original-2/repetition-3/samples.jsonl",
+        "sha256": "35479acd8757c7ca798f0d983dba4cf88a082e90abb08430c8e194b86b399e8d"
+      },
+      "census_coverage": {
+        "complete": 113,
+        "incomplete": 2,
+        "stable_complete": 101,
+        "total": 115
+      },
+      "stable_idle_samples": {
+        "idle-before-first-playback": 6,
+        "idle-after-playback": 7,
+        "idle-after-churn": 6
+      },
+      "permission_denied_sample_count": 1,
+      "observer_errors": [],
+      "failed_checks": [
+        {
+          "allowed": 0,
+          "id": "idle-after-playback/process-growth",
+          "observed": 1,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-playback/fd-growth",
+          "observed": 151,
+          "passed": false
+        },
+        {
+          "allowed": 0,
+          "id": "idle-after-churn/process-growth",
+          "observed": 2,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/fd-growth",
+          "observed": 237,
+          "passed": false
+        },
+        {
+          "allowed": 16,
+          "id": "idle-after-churn/socket-growth",
+          "observed": 26,
+          "passed": false
+        }
+      ],
+      "workload_phases": [
+        {
+          "id": "idle-before-first-playback",
+          "passed": true
+        },
+        {
+          "id": "playback-one",
+          "passed": true
+        },
+        {
+          "id": "idle-after-playback",
+          "passed": true
+        },
+        {
+          "id": "churn-one",
+          "passed": true
+        },
+        {
+          "id": "churn-ten",
+          "passed": true
+        },
+        {
+          "id": "idle-after-churn",
+          "passed": true
+        }
+      ],
+      "readers": 34,
+      "startup_p95_ms": 4577.070044004358,
+      "whole_window_cpu_percent_one_core": 19.45418667620258,
+      "independent_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    }
+  ],
+  "interpretation": [
+    "PinnedSource geventpoolMAX_CONNS8/REUSE_CONNS3/defaultlifetime600; uWSGI/Daphne/manage usegeventpool, Celery standardbackend. Boundedpoolwarmup is plausiblecontext only, notcausalproof from census.",
+    "Allprocessgrowth and mostFDgrowth located infrastructurebaseline, notorigin. Exact perUID andmemberPIDsets above; no perPIDfdcount/comm/state retained, cannot identifylivevszombie orPIDcausality.",
+    "Counts comparemaxwitness rows perfield; do not addindependentmaxima orcallSourceleak.",
+    "Incomplete/denied/transition samples retained+excluded; validminimum5 achieved all9idlewindows; noobserverinvalidrepetition.",
+    "Budgetfailures remainfailures; validreferencecharacterization doesnotmeanSourceacceptance orM0closure.",
+    "First uncorrected3rep/observerinvalid evidence retained; no retrytochasegreen/thresholdchanges."
+  ],
+  "credit": "All original Dispatcharr and dependency authors retain application/algorithm/license credit.",
+  "parent_independent_raw_hashes_reader_count_denied_labels_and_owned_cleanup_verified": true,
+  "parent_counted_denied_samples": [
+    0,
+    1,
+    1
+  ],
+  "Native_performance_claim": false,
+  "M0_closed": false
+}

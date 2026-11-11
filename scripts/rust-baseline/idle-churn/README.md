@@ -97,3 +97,6 @@ executed runtime/controller hashes. The earlier observer and failure history abo
 is retained. No full M0 acceptance follows from these controls.
 
 [The correction qualification](verified-observer-denial-contract-1.json) passes28 controls, the Source smoke and a separate public-path real-kernel denial/recovery control.
+
+
+[The corrected full three-repetition reference](verified-original-three-repetitions-corrected-2.json) now has valid coverage in every idle window, including two real denied reads correctly excluded without stopping sampling. All102 readers/18 phases pass; Source growth budgets remain failed. The declared policy is unchanged. Infrastructure pool retention is possible context, not causal leak proof. This captures the reference; remaining M0 scenarios and accounting are separate.
