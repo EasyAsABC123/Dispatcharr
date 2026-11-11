@@ -14,6 +14,7 @@ use bytes::Bytes;
 use serde_json::json;
 use std::{net::SocketAddr, sync::Arc};
 
+pub(super) struct UnifiedReply {pub bytes:Bytes,pub html:Option<super::vod_api_unified_html::ReplyHeaders>}
 pub(super) struct UnifiedRequest {
     pub peer: SocketAddr,
     pub headers: HeaderMap,
@@ -33,7 +34,7 @@ impl UnifiedReads {
         &self,
         request: UnifiedRequest,
         http: HttpRead,
-    ) -> Result<Bytes, ReadError> {
+    ) -> Result<UnifiedReply, ReadError> {
         let input = request
             .headers
             .iter()
@@ -50,15 +51,21 @@ impl UnifiedReads {
             )
             .ok_or(ReadError::Capacity)?;
         let state = self.clone();
-        self.runtime.run_until(input,Some(http.deadline),move |work| async move {
+        let metadata=Arc::new(std::sync::Mutex::new(None));let completed=metadata.clone();
+        let bytes=self.runtime.run_until(input,Some(http.deadline),move |work| async move {
             let indent=json_indent(&request.headers);
+            let html=super::vod_api_unified_html::requested(&request.headers);
+            let cookie=super::vod_api_unified_html::cookie(&request.headers);
+            let mut identity=None;
             let result=async {
                 work.check()?;
-                negotiate(&request.headers,&http.uri)?;
+                if !html {negotiate(&request.headers,&http.uri)?;}
+                else if !matches!(http.method,Method::GET|Method::HEAD) {return Err(ReadError::Unsupported("Browsable method template context is not captured"));}
                 let guard=work.physical_guard();
                 let guard:Arc<dyn Send+Sync>=match &http.scope {Some(scope)=>Arc::new((guard,scope.clone())),None=>guard};
                 let auth=state.auth.clone().with_retained_scope(guard);
                 let user=auth.account_user(request.peer,request.headers,false).await?;
+                identity=Some((user.username.clone(),user.user_level));
                 work.check()?;
                 if !matches!(http.method,Method::GET|Method::HEAD) {
                     if user.user_level<10 {return Err(crate::StoreError::PermissionDenied.into());}
@@ -87,10 +94,44 @@ impl UnifiedReads {
                     Err(UnifiedFault::Renderer)=>Err(ReadError::SourceUnhandledFault("Unified JSONRenderer nonfinite float")),
                 }
             }.await;
+            if html {
+                let (status,json,authenticate)=match result {
+                    Ok(bytes)=>(200,bytes,false),
+                    Err(ReadError::Source(crate::StoreError::Unauthorized(detail)))=>{
+                        let mut document=work.document();serde_json::to_writer(&mut document,&json!({"detail":detail})).map_err(|_|ReadError::Capacity)?;(401,document.finish(),true)
+                    },
+                    // These unobserved documenting-renderer errors must not
+                    // silently fall through as successful JSON negotiation.
+                    // Preserve physical/backend failures and future typed
+                    // pre-view exceptions (e.g. UI permission generic500).
+                    Err(ReadError::Source(crate::StoreError::AuthenticationBody(_)
+                        |crate::StoreError::PermissionDenied|crate::StoreError::Forbidden
+                        |crate::StoreError::NotFound|crate::StoreError::InvalidInput(_)
+                        |crate::StoreError::Throttled{..}|crate::StoreError::RateLimited(_)
+                        |crate::StoreError::XcDenied{..}|crate::StoreError::StatusBody(400..=500,_)))=>return Err(ReadError::Unsupported("Uncaptured browsable error template context")),
+                    Err(error)=>return Err(error),
+                };
+                let (kind,username)=super::vod_api_unified_html::context(&http.uri,identity.as_ref().map(|(name,level)|(name.as_str(),*level)),status)?;
+                // Raw JSON and pretty scratch coexist first; then DROP raw
+                // before HTML allocation. At each phase, response+scratch
+                // remains within the same response+work reservation, including
+                // configurations allowing64MiB responses. Leave4MiB for
+                // bounded context/headers and formatter metadata.
+                let scratch=work.work_bytes().checked_sub(4*1024*1024).ok_or(ReadError::Capacity)?.min(work.response_bytes());
+                let pretty=pretty_document(&json,4,super::vod_api_owned_read::Document::bounded(scratch))?;
+                drop(json);
+                let text=std::str::from_utf8(&pretty).map_err(|_|ReadError::WorkerFailed)?;
+                let csrf=super::vod_api_unified_html::Csrf::new(cookie.as_deref());
+                let rendered=super::vod_api_unified_html::render(kind,&username,http.method.as_str(),text,&csrf,work.document())?;
+                *metadata.lock().unwrap()=Some(super::vod_api_unified_html::ReplyHeaders{status,set_cookie:csrf.set_cookie(),authenticate});
+                return Ok(rendered);
+            }
             match (result,indent) {
                 (Ok(bytes),Some(indent))=>pretty_document(&bytes,indent,work.document()),
                 (result,_)=>result,
             }
-        }).await
+        }).await?;
+        let html=completed.lock().unwrap().take();
+        Ok(UnifiedReply{bytes,html})
     }
 }

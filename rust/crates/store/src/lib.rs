@@ -109,6 +109,8 @@ pub enum StoreError {
     AuthenticationBody(Value),
     Forbidden,
     PermissionDenied,
+    /// Source UI permission raised before the view; render Django generic500.
+    UiPermissionFault,
     NotFound,
     Unsupported(&'static str),
     RateLimited(u64),
@@ -141,6 +143,7 @@ impl std::fmt::Display for StoreError {
             }
             Self::Forbidden => formatter.write_str("Forbidden"),
             Self::PermissionDenied => formatter.write_str("Permission denied"),
+            Self::UiPermissionFault => formatter.write_str("UI permission failed"),
             Self::NotFound => formatter.write_str("Not found"),
             Self::XcDenied { status, .. } => {
                 write!(formatter, "XC request denied with status {status}")

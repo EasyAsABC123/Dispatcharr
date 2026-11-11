@@ -40,7 +40,7 @@ impl CategoryHttp {
         let result=self.reader.dispatch(input,Some(HttpRead{method:parts.method,uri:parts.uri,raw_detail:detail,scope:Some(slot.clone()),deadline})).await;
         match result {
             Ok(data)=>representation(200,data,Some(slot),head),
-            Err(ReadError::Source(crate::StoreError::Database(_))|ReadError::SourceUnhandledFault(_))=>source_server_error(slot,head),
+            Err(ReadError::Source(crate::StoreError::Database(_)|crate::StoreError::UiPermissionFault)|ReadError::SourceUnhandledFault(_))=>source_server_error(slot,head),
             Err(error)=>{
                 let error=match error{ReadError::Source(error)=>error,ReadError::Unsupported(reason)=>crate::StoreError::Unsupported(reason),_=>crate::StoreError::StatusBody(503,serde_json::json!({"detail":"VOD read capacity unavailable."}))};
                 let response=error.into_response();let(mut response_parts,body)=response.into_parts();

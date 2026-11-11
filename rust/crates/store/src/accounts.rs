@@ -85,10 +85,12 @@ impl AuthService {
             .ok_or(StoreError::Unauthorized(
                 "Authentication credentials were not provided.",
             ))?;
-        if (admin && user.user_level < 10)
-            || !self
-                .source_network_allowed(self.client_ip(request), "UI", Some(&user))
+        // Source Authenticated evaluates network/custom properties before
+        // the derived IsAdmin/IsStandardUser role predicate.
+        if !self
+                .source_ui_network_allowed(self.client_ip(request), Some(&user))
                 .await?
+            || (admin && user.user_level < 10)
         {
             return Err(StoreError::PermissionDenied);
         }

@@ -164,6 +164,7 @@ pub(super) async fn respond(reader:SqlReads,auth:crate::AuthService,gate:HttpGat
     let result=reader.dispatch(input,Some(HttpRead{method:parts.method,uri:parts.uri,raw_detail,scope:Some(slot.clone()),deadline})).await;
     let mut response=match result {
         Ok(data)=>{let length=data.len();let mut r=Response::new(if head {Body::empty()}else{Body::from(bytes::Bytes::from_owner(HttpFrame{data,_slot:slot.clone()}))});r.headers_mut().insert("content-type",HeaderValue::from_static("application/json"));r.headers_mut().insert("content-length",length.into());r},
+        Err(ReadError::Source(StoreError::UiPermissionFault))=>return super::vod_api_category_http::source_server_error(slot,head),
         Err(error)=>{
             let source=match error {ReadError::Source(source)=>source,ReadError::Unsupported(reason)=>StoreError::Unsupported(reason),_=>StoreError::StatusBody(503,json!({"detail":"VOD read capacity unavailable."}))};
             let response=source.into_response();let(parts,body)=response.into_parts();

@@ -49,7 +49,7 @@ def main():
     parser.add_argument('--category-browser',action='store_true',help='Actual unchanged React category selection for movie-only/series-only Standard users; requires packaged-categories')
     parser.add_argument('--unified-browser-source',action='store_true',help='Original-only unchangedReactAll proof with exactcompiledfrontend donor; no candidate')
     parser.add_argument('--frontend-build-manifest',type=Path,help='Successful immutableimage frontend donor for Source-only browser')
-    parser.add_argument('--packaged-unified',action='store_true',help='Manifest-bound unified188exact/1HTMLopen plusordinary393; no host peer build')
+    parser.add_argument('--packaged-unified',action='store_true',help='Manifest-bound unifiedJSON182/4HTMLopen plusordinary393; no host peer build')
     parser.add_argument('--unified-browser',action='store_true',help='Actual unchangedReact defaultBoth/All andcategory workflow; requires packaged-unified')
     parser.add_argument('--packaged-categories',action='store_true',help='Manifest-bound category+ordinary app replay, mixed burst and initial fault; no host peer build')
     parser.add_argument('--build-manifest','--candidate-build-manifest',dest='build_manifest',type=Path,help='Successful immutable app manifest for packaged replay; skips native peer compilation')
@@ -178,12 +178,6 @@ def main():
                         corpus_sha256=hashlib.sha256(data.encode()).hexdigest(),provider_trap_attempts=len(corpus['provider_trap_attempts']),
                         provider_refresh_rows_unchanged=corpus['provider_refresh_rows_unchanged'])
                     assert result['passed'],'Incomplete Source metadata capture or unexpected provider refresh'
-                    if args.unified_html_source:
-                        html=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/unified_html_source.py'],timeout=150)
-                        (evidence/'unified-html-worker.log').write_text(html.stderr);value=json.loads(html.stdout.splitlines()[-1]);assert value['passed'];(evidence/'unified-html-source.json').write_text(json.dumps(value,indent=2,ensure_ascii=False)+'\n');result['Source_unified_HTML_records']=len(value['records'])
-                    if args.shared_auth_priority_source:
-                        priority=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/shared_auth_priority_source.py'],timeout=120)
-                        (evidence/'shared-auth-priority-worker.log').write_text(priority.stderr);value=json.loads(priority.stdout.splitlines()[-1]);assert value['passed'];(evidence/'shared-auth-priority-source.json').write_text(json.dumps(value,indent=2,ensure_ascii=False)+'\n');result['Source_shared_auth_priority_records']=len(value['records'])
                     if args.unified_edge_source:
                         edge=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','-e','VOD_UNIFIED_EDGE_MODE='+mode,'baseline','/dispatcharrpy/bin/python','/vod-api-probe/unified_edges_source.py'],timeout=90)
                         (evidence/'unified-edges-worker.log').write_text(edge.stderr)
@@ -297,6 +291,12 @@ def main():
                         (evidence/'source-schedule.json').write_text(json.dumps(json.loads(scheduled.stdout.splitlines()[-1]),indent=2)+'\n')
                         faulted=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/category_fault_source.py'],timeout=30)
                         (evidence/'source-category-fault.json').write_text(json.dumps(json.loads(faulted.stdout.splitlines()[-1]),indent=2)+'\n')
+                    if args.shared_auth_priority_source:
+                        priority=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/shared_auth_priority_source.py'],timeout=120)
+                        (evidence/'shared-auth-priority-worker.log').write_text(priority.stderr);value=json.loads(priority.stdout.splitlines()[-1]);assert value['passed'];(evidence/'shared-auth-priority-source.json').write_text(json.dumps(value,indent=2,ensure_ascii=False)+'\n');result['Source_shared_auth_priority_records']=len(value['records'])
+                    if args.unified_html_source:
+                        html=command(compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/unified_html_source.py'],timeout=150)
+                        (evidence/'unified-html-worker.log').write_text(html.stderr);value=json.loads(html.stdout.splitlines()[-1]);assert value['passed'];(evidence/'unified-html-source.json').write_text(json.dumps(value,indent=2,ensure_ascii=False)+'\n');result['Source_unified_HTML_records']=len(value['records'])
                     if args.native_sql or args.native_unified or args.native_unified_http:
                         pgport=command(compose+['port','baseline','5432']).stdout.strip().rsplit(':',1)[1]
                         redisport=command(compose+['port','baseline','6379']).stdout.strip().rsplit(':',1)[1]

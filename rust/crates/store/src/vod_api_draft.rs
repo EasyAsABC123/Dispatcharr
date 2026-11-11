@@ -32,3 +32,6 @@ pub use vod_api_owned_read::ReadLimits as VodReadLimits;
 // Explicit unified JSON router extension, sharing the ordinary/category runtime and gate.
 #[path = "vod_api_unified_dispatch.rs"] mod vod_api_unified_dispatch;
 #[path = "vod_api_unified_http.rs"] mod vod_api_unified_http;
+
+#[path="vod_api_unified_html.rs"]
+mod vod_api_unified_html;

@@ -133,8 +133,17 @@ impl UnifiedHttp {
             )
             .await;
         match result {
-            Ok(bytes) => response(200, bytes, Some(slot), head),
-            Err(ReadError::SourceUnhandledFault(_)) => {
+            Ok(reply) => {
+                if let Some(html)=reply.html {
+                    let length=reply.bytes.len();let body=if head{Body::empty()}else{Body::from(bytes::Bytes::from_owner(Frame{data:reply.bytes,_slot:slot}))};
+                    let mut response=Response::new(body);*response.status_mut()=axum::http::StatusCode::from_u16(html.status).expect("internal renderer status");
+                    response.headers_mut().insert("content-type",HeaderValue::from_static("text/html; charset=utf-8"));
+                    response.headers_mut().insert("content-length",length.into());response.headers_mut().insert("allow",HeaderValue::from_static("GET, HEAD, OPTIONS"));response.headers_mut().insert("vary",HeaderValue::from_static("Accept, origin, Cookie"));
+                    response.headers_mut().insert("set-cookie",HeaderValue::from_str(&html.set_cookie).expect("bounded ASCII CSRF cookie"));
+                    if html.authenticate{response.headers_mut().insert("www-authenticate",HeaderValue::from_static("Bearer realm=\"api\""));}response
+                }else{response(200,reply.bytes,Some(slot),head)}
+            },
+            Err(ReadError::SourceUnhandledFault(_) | ReadError::Source(crate::StoreError::UiPermissionFault)) => {
                 super::vod_api_category_http::source_server_error(slot, head)
             }
             Err(error) => {

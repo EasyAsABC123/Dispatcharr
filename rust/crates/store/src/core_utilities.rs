@@ -141,11 +141,11 @@ async fn event_data(auth: &AuthService, raw: Option<String>) -> Result<Value, St
                 },
                 false,
             );
-            events.push(json!({"id":row.try_get::<i64,_>("id")?,"event_type_display":display(&kind),"event_type":kind,"timestamp":timestamp,"channel_id":row.try_get::<Option<uuid::Uuid>,_>("channel_id")?,"channel_name":row.try_get::<Option<String>,_>("channel_name")?,"details":row.try_get::<Value,_>("details")?}));
+            events.push(json!({"id":row.try_get::<i64,_>("id")?,"event_type":kind,"event_type_display":display(&kind),"timestamp":timestamp,"channel_id":row.try_get::<Option<uuid::Uuid>,_>("channel_id")?,"channel_name":row.try_get::<Option<String>,_>("channel_name")?,"details":row.try_get::<Value,_>("details")?}));
         }
     }
     Ok(
-        json!({"count":events.len(),"events":events,"total":total,"offset":serde_json::from_str::<Value>(&page.offset.to_string()).expect("integer"),"limit":serde_json::from_str::<Value>(&page.limit.to_string()).expect("integer")}),
+        json!({"events":events,"count":events.len(),"total":total,"offset":serde_json::from_str::<Value>(&page.offset.to_string()).expect("integer"),"limit":serde_json::from_str::<Value>(&page.limit.to_string()).expect("integer")}),
     )
 }
 async fn events(

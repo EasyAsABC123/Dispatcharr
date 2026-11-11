@@ -744,6 +744,13 @@ async fn logout(
 impl IntoResponse for StoreError {
     fn into_response(self) -> Response {
         let (status, body) = match self {
+            Self::UiPermissionFault => {
+                let mut response = (StatusCode::INTERNAL_SERVER_ERROR,
+                    [("content-type", "text/html; charset=utf-8"), ("vary", "origin")],
+                    "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n").into_response();
+                response.headers_mut().insert("content-length", axum::http::HeaderValue::from_static("145"));
+                return response;
+            }
             Self::Database(_) => (
                 StatusCode::SERVICE_UNAVAILABLE,
                 json!({"error":"Database unavailable"}),
