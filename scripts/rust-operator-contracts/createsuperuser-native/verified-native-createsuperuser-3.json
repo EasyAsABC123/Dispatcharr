@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "scope": "Bounded Source/native noninteractive createsuperuser implementation/effects and retained physical ownership only; no package/fullCLI/M8/performance acceptance",
+  "base_git_revision": "1c5196a01808ed51edca60a20d1b3d0b736e3975",
+  "Rust_inputs": 750,
+  "Rust_delta_sha256": {
+    "rust/crates/store/src/lib.rs": "261b33f8bd08832458533de336c0e31de746f0c853c0271c5420597df5e5b1e3",
+    "rust/crates/store/src/operator_commands.rs": "63a55c8a14f26951f5339b6a01f16959ff9af1ea50494b5382f131b88bad6e8a",
+    "rust/crates/store/src/operator_create.rs": "6892d8e372f935603f0f9c71e114e1d524f33aeb84ac7018aa83d4f6e7f5e36e",
+    "rust/crates/store/tests/operator_create_sql.rs": "573b4c5b46d524b411e15cd047e6db540e815b90b012be49cdeb424d67482074",
+    "rust/crates/app/src/bin/dispatcharr-operator.rs": "8aab1729b7d628e62a092859b312041e4029a260527ce02804abce24e075233c"
+  },
+  "default_workspace_tests": 464,
+  "external_fixture_tests_ignored": 648,
+  "workspace_suites": 168,
+  "strict_whole_workspace_alltargets_clippy": true,
+  "log_sha256": {
+    "workspace-test-3.log": "cba77bd738c308ee63910c9c47f1465f0cadd44d9c8e23dd611c43e11bafea0f",
+    "workspace-clippy-3.log": "5a627288fca17564e2d0d18afb8576906f7b7418ee7d5e299d37169bd8671d53",
+    "public-controls-1.log": "b39051031e451c440c639a9cbcb156e93c68159a49c2b762e74f421fb8beb9ff",
+    "public-controls-materialized-3.log": "2a97a525853d4ed7d209f0b012f70d3227dfddf31085f544f677511addd748b9"
+  },
+  "Source_cases": 22,
+  "Source_checks": 95,
+  "Native_cases": 22,
+  "Native_checks": 95,
+  "strict_typed_comparisons": 154,
+  "public_corruption_controls": 12,
+  "native_CLI_ELF_sha256": "b689220419f026d841ae12de17d464c66d1be269ff79f62880353064b2fccf38",
+  "physical_control_ELF_sha256": "ca867d5d4c5207661a30a15ce58297e8ca0058034e89747aeda0e20e8a21914c",
+  "physical_control": "Actual held relation lock and actual23505 ERROR followed by held trailing ReadyForQuery. Both retain caller/admission and unsettled shutdown; success inserts once, uniqueness failure preserves existing nonadmin account. Explicit Sync drain and connection close precede release.",
+  "raw_reports": {
+    "createsuperuser-original-4": {
+      "sha256": "a05a01a465f3db02d98633ebf785209ca7815e6e6065701d31e986f6e956a403",
+      "project": "dispatcharr-operator-cli-source-eeaef5851b",
+      "default_database_unchanged": true,
+      "cleanup": "project removed",
+      "tool_source_sha256": {
+        "scripts/rust-operator-contracts/run_source.py": "f8318d36686bc085bb9c89fbff929861a42560b14c9566de9709ae014038c6cb",
+        "scripts/rust-operator-contracts/source.py": "1127826e72378c44e5986e0e8bdb8174bddaaea5eb41d60b4521f72cdac3cbd4"
+      },
+      "fresh_independent_owned_resources_empty": true
+    },
+    "createsuperuser-native-3": {
+      "sha256": "4dfa2d01baccc6e6eaa871108724053e0d2b2722355c556359fd140ce457823c",
+      "project": "dispatcharr-operator-cli-source-07cc5932d9",
+      "default_database_unchanged": true,
+      "cleanup": "project removed",
+      "tool_source_sha256": {
+        "scripts/rust-operator-contracts/run_source.py": "3db6a6e9a467e7d8769de91b9a4765e73125fba07933a7e3e9fa354a492983f0",
+        "scripts/rust-operator-contracts/source.py": "06390eab4d28ebf4d26a579f7c97acb1d97a26608798b2b489c7e5ad4b72517e"
+      },
+      "fresh_independent_owned_resources_empty": true
+    },
+    "createsuperuser-native-physical-5": {
+      "sha256": "d463bbcfeb2093bc9cbe57ebb2c704707af84400105d8008d2bf0703bad35458",
+      "project": "dispatcharr-operator-cli-source-96e0ae71fa",
+      "default_database_unchanged": true,
+      "cleanup": "project removed",
+      "both_named_tests_and_exact_two_pass_count_required": true,
+      "tool_source_sha256": {
+        "scripts/rust-operator-contracts/run_source.py": "e56c7892c3d922ef863883377e3aca793cfaf77761b623ff5096a88ccae63236",
+        "scripts/rust-operator-contracts/source.py": "15a5ff9d8ae93aa71a8b9df8f84e94d77cab84eacb2c8edbe585217cfa4a2e0a"
+      },
+      "fresh_independent_owned_resources_empty": true
+    }
+  },
+  "full_CLI_byte_parity": false,
+  "stdout_equal_cases": 21,
+  "stderr_equal_cases": 1,
+  "clock_mask": "Only ten actually created users date_joined values, each in own command interval and immutable thereafter.",
+  "new_input_domain": "Explicit noinput flags; <=4096 UTF8 bytes per option/environment field/password; ASCII usernames or fullwidth Latin/digits; ordinary ASCII unquoted email or blank. Quoted/IP-literal/Unicode email and other Unicode username classes remain unsupported.",
+  "retained_failures": [
+    "Original1 incorrect empty-password expectation; corrected actual Source behavior captured in fresh2/3/4.",
+    "Physical2 parent attempted ELF copy before Cargo no-run completed; no Docker/test started; fresh3 passed.",
+    "Whole-workspace rustfmt check fails on preexisting formatting; no blanket formatter changes. New modules formatted only.",
+    "Pre-fix SQL2 successful22/95 run and lock control did not prove ERROR trailing readiness; retained separately. Static review led to explicit owned Sync/close and final physical4 actual2 controls."
+  ],
+  "accepted_packaged_image_remains": "image48 /746 inputs; no Source750 performance transfer",
+  "credit": "All application, Django command and algorithm credit remains with original Dispatcharr and dependency authors.",
+  "physical_controls": 2,
+  "peer_review": "Independent Store_auth static review identified the pre-fix SQLx ERROR-before-Ready background-pool-return gap; corrected with acquired connection +Sync/close and actual held-ready control. Separate dash-valued argument grammar remains explicitly outside this scoped CLI.",
+  "strict_comparison_sha256": "ed4ad6bc71612ce10b5c389699069a4d5212f153e150fa9c6455500cc2b50471",
+  "corruption_controls_note": "Twelve controls re-run on final materialized Native3 observations.",
+  "all88_actual_retained_Source_Native_stdout_stderr_hashes_verified": true
+}

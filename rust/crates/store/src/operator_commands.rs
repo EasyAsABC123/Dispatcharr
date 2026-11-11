@@ -16,12 +16,15 @@ use tokio::sync::{oneshot, Semaphore};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum OperatorCommand {
     ResetNetwork,
+    CreateSuperuser(crate::operator_create::CreateSuperuser),
     Help(&'static str),
     ResetUser(Option<String>),
 }
 #[derive(Debug)]
 pub enum OperatorError {
     Arguments,
+    Command(String),
+    UnsupportedCreateInput,
     MissingNetwork,
     UserSaveNoRows,
     MalformedProperties(&'static str),
@@ -39,6 +42,8 @@ impl From<sqlx::Error> for OperatorError {
 impl std::fmt::Display for OperatorError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::Command(message) => write!(f, "CommandError: {message}"),
+            Self::UnsupportedCreateInput => f.write_str("Unsupported createsuperuser input domain"),
             Self::Arguments => f.write_str("Unsupported operator arguments"),
             Self::MissingNetwork => f.write_str("Network access setting does not exist"),
             Self::UserSaveNoRows => f.write_str("User save did not affect any rows"),
@@ -57,6 +62,10 @@ impl OperatorCommand {
     /// Deliberately narrow grammar. Django global flags are unsupported; no fake
     /// Python traceback or claim that native help is manage.py help.
     pub fn parse(args: &[String]) -> Result<Self, OperatorError> {
+        if args.first().is_some_and(|s| s == "createsuperuser") {
+            if args.len() == 2 && args[1] == "--help" { return Ok(Self::Help("createsuperuser")); }
+            return crate::operator_create::CreateSuperuser::parse(&args[1..], |key| std::env::var(key).ok()).map(Self::CreateSuperuser);
+        }
         match args {
             [name, flag] if flag == "--help" && name == "reset_network_access" => {
                 Ok(Self::Help("reset_network_access"))
@@ -149,6 +158,7 @@ impl OperatorCommands {
         caller: Arc<dyn Send + Sync>,
     ) -> Result<String, OperatorError> {
         match command {
+            OperatorCommand::CreateSuperuser(input) => input.execute(&self.store, caller).await,
             OperatorCommand::Help(name)=>Ok(format!("Native safe operator: {name}\nDjango global flags and help formatting are not emulated.\n")),
             OperatorCommand::ResetUser(username) => {
                 let filter = username.filter(|s| !s.is_empty());
