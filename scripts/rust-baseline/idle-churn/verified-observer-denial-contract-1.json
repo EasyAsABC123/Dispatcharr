@@ -1,0 +1,129 @@
+{
+  "passed": true,
+  "scope": "Observer correction qualification only; no full three-repetition baseline, Source budget acceptance, Native gains or M0 closure.",
+  "credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "workload_and_budgets_unchanged": true,
+  "policy_sha256": "6984f5e73d31048f47ebac884c3936112e26b262da842e637645d363d99fbeab",
+  "selected_runtime_and_control_sha256": {
+    "scripts/rust-baseline/idle-churn/run.py": "fe9228e4b367a948fd72df4ecc8715c4a39626cfd3107efe889a9403326d2d4a",
+    "scripts/rust-baseline/idle-churn/proc_snapshot.py": "fb40f382ca63cfd545c1930e9735be39f587b10df8a2b0a7a98ee814aede7caf",
+    "scripts/rust-baseline/idle-churn/test_denial_controls.py": "e56feda6b26b57a3a7395d13067cad8a5a535f48e8b7755d9addb7b8ea63cb2b",
+    "scripts/rust-baseline/idle-churn/kernel_denial_control.py": "efcf9fa0376e179759c8da9af86cec8130b04c2423fb32a54d2dc003ab021089",
+    "scripts/rust-baseline/idle-churn/test_portable_dependency_controls.py": "d7dcfb047794610c96b8f6a65216c665fc9a1943a245543507b924b181be3d25"
+  },
+  "offline_controls": {
+    "passed": 28,
+    "log": {
+      "path": "artifacts/rust/m0-observer-public-portable-1/offline-portable-controls.log",
+      "sha256": "d933c259a3dcae873eaca63263e72220b45c88dbeacc8475c3f6d15c10d46afd"
+    },
+    "new_controls": [
+      "Changed dependency refuses beforeDocker",
+      "Missing dependency refuses beforeDocker/no privatefallback"
+    ]
+  },
+  "actual_Source_smoke": {
+    "result": {
+      "path": "artifacts/rust/m0-observer-denial-smoke-1/repetition-1/result.json",
+      "sha256": "18127f674afb99143031d87ee34cbd054c0cfcd5a802f41614c0f9d02b0a1d95"
+    },
+    "samples": {
+      "path": "artifacts/rust/m0-observer-denial-smoke-1/repetition-1/samples.jsonl",
+      "sha256": "9effa0ed11b6e7f1393745e3eec7e626ae7c5e887e1aa95ab5c20480ba760c10"
+    },
+    "seal": {
+      "path": "artifacts/rust/m0-observer-denial-smoke-1/pre-execution-seal.json",
+      "sha256": "12c36aa318e8af0d8fa29ecb7f05b77f38b402484bdf3370abce25cd1f902724"
+    },
+    "phases": [
+      {
+        "id": "contract-idle",
+        "passed": true
+      },
+      {
+        "id": "contract-play",
+        "passed": true
+      },
+      {
+        "id": "churn-one",
+        "passed": true
+      }
+    ],
+    "reader_count": 4,
+    "decoder_frames": [
+      124,
+      76,
+      108,
+      89
+    ],
+    "census_coverage": {
+      "complete": 22,
+      "incomplete": 0,
+      "stable_complete": 17,
+      "total": 22
+    },
+    "permission_denials_observed": 0,
+    "observer_errors": [],
+    "postclose": {
+      "elapsed_seconds": 6.032324416009942,
+      "passed": true,
+      "state": {
+        "clients": 0,
+        "origin_active": 0,
+        "provider_slots": 0
+      }
+    },
+    "independent_cleanup": {
+      "container": [],
+      "network": [],
+      "volume": []
+    },
+    "qualification_limit": "Busyhostfunctionality only, no resource/growthbaseline acceptance. Smokeadds fixed existingchurnonephase aftercontractidle/play; fullschedule untouched."
+  },
+  "actual_public_path_kernel_control": {
+    "result": {
+      "path": "artifacts/rust/m0-observer-kernel-denial-public-1/result.json",
+      "sha256": "b7c337e30a7a4bacfecfb375a7c588de33f07740555f4c1792e0ad454611d2cc"
+    },
+    "samples": {
+      "path": "artifacts/rust/m0-observer-kernel-denial-public-1/samples.jsonl",
+      "sha256": "87657d36875d91cfac817d1c198bcd7aa1e43fcdbe2a4db6b95c5144a750a639"
+    },
+    "denied_samples": 7,
+    "later_stable_complete_samples": 5,
+    "all_denied_rows_incomplete": true,
+    "observer_errors": [],
+    "owned_container_independently_removed": true,
+    "limits": {
+      "NanoCpus": 250000000,
+      "Memory": 67108864,
+      "PidsLimit": 32,
+      "CapDrop": [
+        "ALL"
+      ],
+      "SecurityOpt": [
+        "no-new-privileges"
+      ]
+    },
+    "not_Source_baseline": true
+  },
+  "public_dependency": {
+    "path": "scripts/rust-guide-perf/docker_stats.py",
+    "commit": "2fbeabcd69802ef82c7dcb2be277d622e6eba7df",
+    "sha256": "bc554c7c30ba004dc5b8a6e78758ca1431696d0ce94302180b6cc5aa693ddb25",
+    "historical_and_current_committed_bytes_equal": true,
+    "reconstructed_copy": {
+      "path": "artifacts/rust/m0-observer-public-portable-1/scripts/rust-guide-perf/docker_stats.py",
+      "sha256": "bc554c7c30ba004dc5b8a6e78758ca1431696d0ce94302180b6cc5aa693ddb25"
+    },
+    "no_artifacts_dependency_or_private_fallback": true
+  },
+  "parent_independent_hashes_source_phases_and_cleanup_verified": true,
+  "retained_original_negative": "scripts/rust-baseline/idle-churn/verified-original-three-repetitions-negative-1.json",
+  "historical_private_dependency_proof": {
+    "path": "artifacts/rust/m0-observer-denial-handoff-1/proof.json",
+    "sha256": "1427ea96e3074e2e540be23781932ff6bb37b7395e289e43b0e48be63f98ca70"
+  },
+  "full3rep_rerun": false,
+  "m0_closed": false
+}

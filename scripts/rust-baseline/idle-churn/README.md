@@ -9,7 +9,9 @@ one authenticated2MiB reader/124-frame decode and owned cleanup. It ran on a bus
 host to test the observer only. No Native service, comparative result, full
 three-repetition baseline or M0 acceptance is claimed.
 
-The four controller/policy files are byte-identical to that actual execution.
+That earlier four-file controller/policy version is retained in commit
+`671a8ff0e781d7e8bfd5fbbb882488f0f473548c`. The current denied-coverage
+correction below has a separate execution proof; its full policy is unchanged.
 `captured-review-seal.json` records the original review, including its historical
 README hash; this public README documents the same runtime without changing it.
 The proof retains failed permission, code-mount and census-completeness attempts.
@@ -65,3 +67,33 @@ an independent parent review must qualify the resulting evidence.
 
 
 [The first complete three-repetition attempt](verified-original-three-repetitions-negative-1.json) remains failed: all102 readers/18 workload phases pass, two repetitions fail fixed process/FD/socket growth limits, and one loses observer coverage after a denied proc-FD read. The latter cannot support growth conclusions. Independent owned cleanup passes. Original thresholds and failed evidence remain intact; observer correction/qualification is a separate step.
+
+## Permission-denied observer coverage
+
+The sealed first three-repetition Original run remains failed: repetitions1 and3
+exceeded process/FD/socket growth budgets, while repetition2 lost later stable
+coverage after a real proc fd-link PermissionError. Aggregate service/UID census
+counts do not establish per-PID causality or a Source leak. Those results and the
+original policy remain authoritative.
+
+The separately qualified observer correction records denied processes/descriptors
+and marks their merged census incomplete while continuing sampling. Denied rows
+do not count toward the unchanged stable-sample minimum; persistent denial still
+fails coverage. Unrelated command, parse and OS errors remain fatal. No application
+capabilities or credentials change. The short Source contract smoke includes the
+existing one-reader churn phase after idle/playback, and is functionality only.
+It does not replace the separate full three-repetition quiet run.
+
+`kernel_denial_control.py --output NEW_DIRECTORY` is a separate synthetic kernel
+control, not a Source baseline. It makes only a bounded owned helper non-dumpable
+inside a networkless64MiB/.25CPU container with all capabilities dropped. It
+requires real denied samples to stay incomplete and five later stable complete
+samples after helper exit. It reads the hash-checked public
+`scripts/rust-guide-perf/docker_stats.py` from committed support revision
+`2fbeabcd69802ef82c7dcb2be277d622e6eba7df`; no ignored private artifact is needed.
+
+README/history updates are documentation only and remain distinct from the exact
+executed runtime/controller hashes. The earlier observer and failure history above
+is retained. No full M0 acceptance follows from these controls.
+
+[The correction qualification](verified-observer-denial-contract-1.json) passes28 controls, the Source smoke and a separate public-path real-kernel denial/recovery control.

@@ -230,12 +230,16 @@ def merge_census(inventory, parts, ending=None):
     value['inventory_start'] = inventory
     value['inventory_end'] = ending
     value['per_uid'] = parts
-    value['complete'] = value['raced_processes'] == 0 and value['raced_descriptors'] == 0
+    for field in ['permission_denied_processes', 'permission_denied_descriptors']:
+        value[field] = sum(part.get(field, 0) for part in [inventory, *parts, ending])
+    value['complete'] = (value['raced_processes'] == 0 and value['raced_descriptors'] == 0
+                         and value['permission_denied_processes'] == 0
+                         and value['permission_denied_descriptors'] == 0)
     return value
 
 
 def complete_census(row):
-    return bool(row['census']) and all(v['processes'] > 0 and v.get('complete', True) is True and v.get('raced_processes', 0) == 0 and v.get('raced_descriptors', 0) == 0 for v in row['census'].values())
+    return bool(row['census']) and all(v['processes'] > 0 and v.get('complete', True) is True and v.get('raced_processes', 0) == 0 and v.get('raced_descriptors', 0) == 0 and v.get('permission_denied_processes', 0) == 0 and v.get('permission_denied_descriptors', 0) == 0 for v in row['census'].values())
 
 
 def evaluate_samples(rows, policy):
@@ -268,7 +272,7 @@ def evaluate_samples(rows, policy):
             checks.append(dict(id=label + '/' + name + '-growth', observed=growth,
                                allowed=allowed, passed=growth <= allowed))
     for row in rows:
-        checks.append(dict(id='sample/census-coverage-labeled', passed=all(v.get('complete', not (v.get('raced_processes', 0) or v.get('raced_descriptors', 0))) == (not (v.get('raced_processes', 0) or v.get('raced_descriptors', 0))) for v in row['census'].values())))
+        checks.append(dict(id='sample/census-coverage-labeled', passed=all(v.get('complete', not (v.get('raced_processes', 0) or v.get('raced_descriptors', 0) or v.get('permission_denied_processes', 0) or v.get('permission_denied_descriptors', 0))) == (not (v.get('raced_processes', 0) or v.get('raced_descriptors', 0) or v.get('permission_denied_processes', 0) or v.get('permission_denied_descriptors', 0))) for v in row['census'].values())))
         checks.append(dict(id='sample/whole-stack-cpu', passed=row['cpu_percent'] <= budget['whole_stack_cpu_percent_one_core']))
         checks.append(dict(id='sample/time-wait', passed=sum(value['tcp_states'].get('06', 0)
                       for value in row['census'].values()) <= budget['tcp_time_wait_ceiling']))
@@ -400,7 +404,7 @@ def repetition(root, tools, controller, out, policy, ordinal, integration, ports
                         return dict(passed=False, state=value, elapsed_seconds=policy['budgets']['cleanup_seconds'])
                     time.sleep(.25)
 
-            schedule = policy['schedule'] if not smoke else [dict(id='contract-idle', kind='idle', seconds=8), dict(id='contract-play', kind='play', viewers=1, hold_seconds=10)]
+            schedule = policy['schedule'] if not smoke else [dict(id='contract-idle', kind='idle', seconds=8), dict(id='contract-play', kind='play', viewers=1, hold_seconds=10), dict(policy['schedule'][3])]
             for phase in schedule:
                 if time.monotonic()-began > policy['budgets']['repetition_seconds']:
                     raise TimeoutError('RepetitionBudget')

@@ -55,7 +55,8 @@ def tcp_states():
 
 def collect(inventory=False):
     values = dict(processes=0, threads=0, fds=0, socket_descriptors=0,
-                  raced_processes=0, raced_descriptors=0, process_ids=[], socket_inodes=[], collector_identity=[os.geteuid(), os.getegid()])
+                  raced_processes=0, raced_descriptors=0, permission_denied_processes=0,
+                  permission_denied_descriptors=0, denied_process_ids=[], process_ids=[], socket_inodes=[], collector_identity=[os.geteuid(), os.getegid()])
     identities = set()
     inodes = set()
     for pid in processes():
@@ -79,6 +80,9 @@ def collect(inventory=False):
                 except FileNotFoundError:
                     values['raced_descriptors'] += 1
                     continue
+                except PermissionError:
+                    values['permission_denied_descriptors'] += 1
+                    raise
                 if target.startswith('socket:['):
                     values['socket_descriptors'] += 1
                     inodes.add(target)
@@ -90,6 +94,12 @@ def collect(inventory=False):
             values['process_ids'].append(pid)
         except FileNotFoundError:
             values['raced_processes'] += 1
+        except PermissionError:
+            # A changing /proc owner or dumpability can deny even same-UID fd
+            # links. Keep the denial explicit and exclude this PID's full count.
+            values['permission_denied_processes'] += 1
+            values['denied_process_ids'].append(pid)
+    values['coverage_complete'] = not (values['permission_denied_processes'] or values['permission_denied_descriptors'])
     values['socket_inodes'] = sorted(inodes)
     if inventory:
         values['identities'] = [list(v) for v in sorted(identities)]
