@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "command": "proxy",
+      "argv": [
+        "proxy",
+        "--help"
+      ],
+      "exit_code": 0,
+      "stdout": "usage: manage.py proxy [-h] [--type {hls,ts,all}] [--channel CHANNEL]\n                       [--url URL] [--version] [-v {0,1,2,3}]\n                       [--settings SETTINGS] [--pythonpath PYTHONPATH]\n                       [--traceback] [--no-color] [--force-color]\n                       [--skip-checks]\n                       {start,stop,restart}\n\nManage proxy servers\n\npositional arguments:\n  {start,stop,restart}  Action to perform\n\noptions:\n  -h, --help            show this help message and exit\n  --type {hls,ts,all}   Type of proxy to manage\n  --channel CHANNEL     Channel ID to manage\n  --url URL             Stream URL (required for start)\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+      "stderr": "",
+      "stdout_sha256": "2f8c9a0a0fd0a8bdb9488996528eb67143ed79e4b661473e212e22b1c54c929a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scope": "actual subprocess help/startup only; command handle not invoked"
+    },
+    {
+      "command": "dropdb",
+      "argv": [
+        "dropdb",
+        "--help"
+      ],
+      "exit_code": 0,
+      "stdout": "usage: manage.py dropdb [-h] [--version] [-v {0,1,2,3}] [--settings SETTINGS]\n                        [--pythonpath PYTHONPATH] [--traceback] [--no-color]\n                        [--force-color] [--skip-checks]\n\nDrop the entire database (schema and data) and recreate it. (PostgreSQL only)\n\noptions:\n  -h, --help            show this help message and exit\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+      "stderr": "",
+      "stdout_sha256": "387768d657adab91baa1c09ade56ebf8789488bdc7a04861417e55a179d66af0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scope": "actual subprocess help/startup only; command handle not invoked"
+    },
+    {
+      "command": "kill_processes",
+      "argv": [
+        "kill_processes",
+        "--help"
+      ],
+      "exit_code": 0,
+      "stdout": "usage: manage.py kill_processes [-h] [--version] [-v {0,1,2,3}]\n                                [--settings SETTINGS]\n                                [--pythonpath PYTHONPATH] [--traceback]\n                                [--no-color] [--force-color] [--skip-checks]\n\nKills all processes with 'ffmpeg' or 'streamlink' in their name or command\nline.\n\noptions:\n  -h, --help            show this help message and exit\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+      "stderr": "",
+      "stdout_sha256": "0ce2511ad1a5c87e19ff2d71eb7f1884a3955c7f566212db97a432f02b0fd9fa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scope": "actual subprocess help/startup only; command handle not invoked"
+    }
+  ],
+  "credit": "Original Dispatcharr authors retain application and algorithm credit.",
+  "command_execution_verified": false
+}
