@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "scope": "image48 tenchannel75s retainedmedia/100lateviewer functional accounting; no comparative performance/fullM1M2acceptance",
+  "raw": "artifacts/rust/retention-image48-1/retention.json",
+  "sha256": "9f2134e9a0d8eec580c73e7e1d92f51a1069871c68f1f9f992f8c31e2ffb823f",
+  "image_id": "sha256:554ec5182f3dd25b71b2bc2b3edd5e15493f98e352bec3a0715a3e4ea2b06728",
+  "tree_sha256": "e4b1166066ce043a2e89ffd3447cd8649f95d226a8abfebe7fb60d293c4d1b7b",
+  "manifest_sha256": "cd06141757f2fdf04d90d9785b4287b0c3bd00f9cb66f96c5e542bd973f91c97",
+  "configured_local_limit": 4194304,
+  "samples": [
+    {
+      "elapsed_seconds": 5.2018443460110575,
+      "local_retained_payload_bytes": 28145480,
+      "redis_logical_payload_bytes": 28145480
+    },
+    {
+      "elapsed_seconds": 30.379057626007125,
+      "local_retained_payload_bytes": 40938880,
+      "redis_logical_payload_bytes": 89553800
+    },
+    {
+      "elapsed_seconds": 60.14761634700699,
+      "local_retained_payload_bytes": 40938880,
+      "redis_logical_payload_bytes": 148403440
+    },
+    {
+      "elapsed_seconds": 75.1361137549975,
+      "local_retained_payload_bytes": 40938880,
+      "redis_logical_payload_bytes": 150962120
+    }
+  ],
+  "late_viewers": 100,
+  "late_channels": 10,
+  "late_concurrency": 32,
+  "independent_cleanup": {
+    "container": [],
+    "network": [],
+    "volume": []
+  },
+  "tool_map": {
+    "scripts/rust-integration/retention_probe.py": "adca2d5252ff5c410862116085c2a2678933bd9f0301055be821aefd68c368ad",
+    "scripts/rust-integration/collect_fixture_memory.py": "3d173783e7b1a035dda9593779780e2afdd6b9f512c9889969c187001f9070db",
+    "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-integration/seed_accounts.py": "c1f4945a51084a2c83c747de77647fe6eeec9c6202bbf1eb1c13551973674e62",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+  },
+  "changed_tools": [],
+  "credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "parent_independent_review": true,
+  "parent_fresh_owned_cleanup": {
+    "container": [],
+    "network": [],
+    "volume": []
+  },
+  "performance_claim": false
+}

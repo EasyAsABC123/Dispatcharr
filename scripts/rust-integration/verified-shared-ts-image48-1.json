@@ -1,0 +1,170 @@
+{
+  "passed": false,
+  "scope": "Source/native two-worker six functional lifecycle cases; aggregate deliberately false for actual Source ownercrash resource defect",
+  "raw": "artifacts/rust/shared-ts-image48-1/shared-ts.json",
+  "sha256": "c3179986bb1df942879f376abb9efd9992220b3d5c6ff26009cd77c1d61ea633",
+  "manifest_sha256": "cd06141757f2fdf04d90d9785b4287b0c3bd00f9cb66f96c5e542bd973f91c97",
+  "source_protocol_passed": true,
+  "candidate_functional_and_recovery_passed": true,
+  "require_active_metadata": true,
+  "checks": 46,
+  "passed_checks": 45,
+  "failed_checks": [
+    {
+      "name": "baseline:owner-crash-resource-recovery",
+      "passed": false,
+      "details": {
+        "deadline_seconds": 90.0,
+        "state": {
+          "owner": null,
+          "provider_slots": 1,
+          "clients": 0,
+          "metadata_fields": 0,
+          "input_index": 5,
+          "timestamps": 0,
+          "state": null
+        }
+      }
+    }
+  ],
+  "cases": [
+    {
+      "backend": "baseline",
+      "case": "shared-demand",
+      "cleanup_seconds": 5.561722181999357,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ]
+    },
+    {
+      "backend": "baseline",
+      "case": "stop",
+      "cleanup_seconds": 0.2812480939901434,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ]
+    },
+    {
+      "backend": "baseline",
+      "case": "owner-crash",
+      "cleanup_seconds": 90.52455769001972,
+      "after": {
+        "owner": null,
+        "provider_slots": 1,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": 5,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ]
+    },
+    {
+      "backend": "candidate",
+      "case": "shared-demand",
+      "cleanup_seconds": 4.26507262600353,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ]
+    },
+    {
+      "backend": "candidate",
+      "case": "stop",
+      "cleanup_seconds": 0.6013446260185447,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ]
+    },
+    {
+      "backend": "candidate",
+      "case": "owner-crash",
+      "cleanup_seconds": 26.477156942972215,
+      "after": {
+        "owner": null,
+        "provider_slots": 0,
+        "clients": 0,
+        "metadata_fields": 0,
+        "input_index": null,
+        "timestamps": 0,
+        "state": null
+      },
+      "decoder_frames": [
+        74,
+        74
+      ]
+    }
+  ],
+  "independent_cleanup": {
+    "container": [],
+    "network": [],
+    "volume": []
+  },
+  "tool_map": {
+    "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+    "docker/compose.rust-replicas.yml": "b28f56bcd33a6192d175eeaff8da3348c89fac22149d4e4a95a5688da5581ea4",
+    "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+    "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+    "scripts/rust-integration/playback_methods.py": "8e18a5f76efc6f77378eb75b84aab4e8aafb85b9ad00ebed746cd8bdfbb1cd1e",
+    "scripts/rust-integration/seed_accounts.py": "c1f4945a51084a2c83c747de77647fe6eeec9c6202bbf1eb1c13551973674e62",
+    "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+    "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+    "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+    "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+    "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+    "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+    "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+  },
+  "changed_tools": [],
+  "credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors.",
+  "parent_independent_review": true,
+  "parent_fresh_owned_cleanup": {
+    "container": [],
+    "network": [],
+    "volume": []
+  },
+  "performance_claim": false
+}
