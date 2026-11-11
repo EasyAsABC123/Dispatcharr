@@ -6,7 +6,7 @@ use chrono::{DateTime, Utc};
 use serde_json::Value;
 use sqlx::{PgPool, Row};
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
@@ -55,7 +55,9 @@ struct State {
     initial: bool,
     last_marker: Option<DateTime<Utc>>,
     last_full: Option<DateTime<Utc>>,
-    dirty: BTreeMap<String, (i64, DateTime<Utc>, i64)>,
+    dirty: HashMap<String, (i64, DateTime<Utc>, i64)>,
+    load_order: Vec<String>,
+    heap: Vec<heap::Event>,
     last_sync: Option<std::time::Instant>,
     heap_initialized: bool,
 }
@@ -64,6 +66,7 @@ struct Inner {
     slots: Arc<Semaphore>,
     closed: AtomicBool,
     state: Mutex<State>,
+    heap_clock: Arc<dyn Fn() -> DateTime<Utc> + Send + Sync>,
 }
 #[derive(Clone)]
 pub struct DatabaseSchedule {
@@ -76,12 +79,19 @@ pub struct Setup {
 }
 impl DatabaseSchedule {
     pub fn new(pool: PgPool) -> Self {
+        Self::new_with_heap_clock(pool, Arc::new(Utc::now))
+    }
+    fn new_with_heap_clock(
+        pool: PgPool,
+        heap_clock: Arc<dyn Fn() -> DateTime<Utc> + Send + Sync>,
+    ) -> Self {
         Self {
             inner: Arc::new(Inner {
                 pool,
                 slots: Arc::new(Semaphore::new(2)),
                 closed: AtomicBool::new(false),
                 state: Mutex::new(State::default()),
+                heap_clock,
             }),
         }
     }
@@ -243,18 +253,29 @@ impl DatabaseSchedule {
         }
         if reload {
             let _ = self.sync_locked(state).await?;
-            let entries = self.load(now).await?;
+            let (entries, order) = self.load(now).await?;
             state.entries = entries;
+            state.load_order = order;
+            state.heap.clear();
             state.heap_initialized = false;
             state.last_full = Some(now);
         }
-        Ok(state.entries.values().cloned().collect())
+        Ok(state
+            .load_order
+            .iter()
+            .filter_map(|name| state.entries.get(name).cloned())
+            .collect())
     }
-    async fn load(&self, now: DateTime<Utc>) -> Result<BTreeMap<String, Entry>, Error> {
+    async fn load(
+        &self,
+        now: DateTime<Utc>,
+    ) -> Result<(BTreeMap<String, Entry>, Vec<String>), Error> {
         // Return bounded rows or one metadata-only capacity sentinel. CASE
         // guards prevent oversized text materialization; the same MVCC
-        // statement computes count/aggregate before transfer.
-        let rows=sqlx::query("WITH candidates AS MATERIALIZED (SELECT p.id::bigint,p.enabled,p.last_run_at,p.date_changed,p.start_time,p.expires,p.one_off,p.priority::integer,p.expire_seconds,p.total_run_count::bigint,i.every,cl.clocked_time,CASE WHEN COALESCE(octet_length(p.queue),0)<=4096 THEN p.queue END AS queue,CASE WHEN COALESCE(octet_length(p.exchange),0)<=4096 THEN p.exchange END AS exchange,CASE WHEN COALESCE(octet_length(p.routing_key),0)<=4096 THEN p.routing_key END AS routing_key,CASE WHEN COALESCE(octet_length(p.name),0)<=4096 THEN p.name END AS name,CASE WHEN COALESCE(octet_length(p.task),0)<=4096 THEN p.task END AS task,CASE WHEN COALESCE(octet_length(p.args),0)<=65536 THEN p.args END AS args,CASE WHEN COALESCE(octet_length(p.kwargs),0)<=65536 THEN p.kwargs END AS kwargs,CASE WHEN COALESCE(octet_length(p.headers),0)<=65536 THEN p.headers END AS headers,CASE WHEN COALESCE(octet_length(i.period),0)<=4096 THEN i.period END AS period,CASE WHEN COALESCE(octet_length(c.minute),0)<=4096 THEN c.minute END AS minute,CASE WHEN COALESCE(octet_length(c.hour),0)<=4096 THEN c.hour END AS hour,CASE WHEN COALESCE(octet_length(c.day_of_week),0)<=4096 THEN c.day_of_week END AS day_of_week,CASE WHEN COALESCE(octet_length(c.day_of_month),0)<=4096 THEN c.day_of_month END AS day_of_month,CASE WHEN COALESCE(octet_length(c.month_of_year),0)<=4096 THEN c.month_of_year END AS month_of_year,CASE WHEN COALESCE(octet_length(c.timezone),0)<=4096 THEN c.timezone END AS timezone,(COALESCE(octet_length(p.queue),0)<=4096 AND COALESCE(octet_length(p.exchange),0)<=4096 AND COALESCE(octet_length(p.routing_key),0)<=4096 AND COALESCE(octet_length(p.name),0)<=4096 AND COALESCE(octet_length(p.task),0)<=4096 AND COALESCE(octet_length(p.args),0)<=65536 AND COALESCE(octet_length(p.kwargs),0)<=65536 AND COALESCE(octet_length(p.headers),0)<=65536 AND COALESCE(octet_length(i.period),0)<=4096 AND COALESCE(octet_length(c.minute),0)<=4096 AND COALESCE(octet_length(c.hour),0)<=4096 AND COALESCE(octet_length(c.day_of_week),0)<=4096 AND COALESCE(octet_length(c.day_of_month),0)<=4096 AND COALESCE(octet_length(c.month_of_year),0)<=4096 AND COALESCE(octet_length(c.timezone),0)<=4096) AS row_fits,(COALESCE(octet_length(p.queue),0)::bigint+COALESCE(octet_length(p.exchange),0)::bigint+COALESCE(octet_length(p.routing_key),0)::bigint+COALESCE(octet_length(p.name),0)::bigint+COALESCE(octet_length(p.task),0)::bigint+COALESCE(octet_length(p.args),0)::bigint+COALESCE(octet_length(p.kwargs),0)::bigint+COALESCE(octet_length(p.headers),0)::bigint+COALESCE(octet_length(i.period),0)::bigint+COALESCE(octet_length(c.minute),0)::bigint+COALESCE(octet_length(c.hour),0)::bigint+COALESCE(octet_length(c.day_of_week),0)::bigint+COALESCE(octet_length(c.day_of_month),0)::bigint+COALESCE(octet_length(c.month_of_year),0)::bigint+COALESCE(octet_length(c.timezone),0)::bigint) AS row_bytes FROM django_celery_beat_periodictask p LEFT JOIN django_celery_beat_intervalschedule i ON i.id=p.interval_id LEFT JOIN django_celery_beat_crontabschedule c ON c.id=p.crontab_id LEFT JOIN django_celery_beat_clockedschedule cl ON cl.id=p.clocked_id WHERE p.enabled ORDER BY p.id LIMIT 257), budget AS (SELECT count(*)::bigint AS selected_count,COALESCE(sum(row_bytes),0)::bigint AS reply_bytes,COALESCE(bool_and(row_fits),true) AS fits FROM candidates) SELECT c.*,b.selected_count,b.reply_bytes,b.fits FROM budget b LEFT JOIN candidates c ON b.selected_count<=256 AND b.reply_bytes<=1048576 AND b.fits ORDER BY c.id").fetch_all(&self.inner.pool).await?;
+        // statement computes count/aggregate before transfer. Correlated PK
+        // lookups preserve the parent scan order, like Source's queryset plus
+        // lazy schedule FKs; hash-right joins may reverse parent chains.
+        let rows=sqlx::query("WITH candidates AS MATERIALIZED (SELECT p.id::bigint,p.enabled,p.last_run_at,p.date_changed,p.start_time,p.expires,p.one_off,p.priority::integer,p.expire_seconds,p.total_run_count::bigint,i.every,cl.clocked_time,CASE WHEN COALESCE(octet_length(p.queue),0)<=4096 THEN p.queue END AS queue,CASE WHEN COALESCE(octet_length(p.exchange),0)<=4096 THEN p.exchange END AS exchange,CASE WHEN COALESCE(octet_length(p.routing_key),0)<=4096 THEN p.routing_key END AS routing_key,CASE WHEN COALESCE(octet_length(p.name),0)<=4096 THEN p.name END AS name,CASE WHEN COALESCE(octet_length(p.task),0)<=4096 THEN p.task END AS task,CASE WHEN COALESCE(octet_length(p.args),0)<=65536 THEN p.args END AS args,CASE WHEN COALESCE(octet_length(p.kwargs),0)<=65536 THEN p.kwargs END AS kwargs,CASE WHEN COALESCE(octet_length(p.headers),0)<=65536 THEN p.headers END AS headers,CASE WHEN COALESCE(octet_length(i.period),0)<=4096 THEN i.period END AS period,CASE WHEN COALESCE(octet_length(c.minute),0)<=4096 THEN c.minute END AS minute,CASE WHEN COALESCE(octet_length(c.hour),0)<=4096 THEN c.hour END AS hour,CASE WHEN COALESCE(octet_length(c.day_of_week),0)<=4096 THEN c.day_of_week END AS day_of_week,CASE WHEN COALESCE(octet_length(c.day_of_month),0)<=4096 THEN c.day_of_month END AS day_of_month,CASE WHEN COALESCE(octet_length(c.month_of_year),0)<=4096 THEN c.month_of_year END AS month_of_year,CASE WHEN COALESCE(octet_length(c.timezone),0)<=4096 THEN c.timezone END AS timezone,(COALESCE(octet_length(p.queue),0)<=4096 AND COALESCE(octet_length(p.exchange),0)<=4096 AND COALESCE(octet_length(p.routing_key),0)<=4096 AND COALESCE(octet_length(p.name),0)<=4096 AND COALESCE(octet_length(p.task),0)<=4096 AND COALESCE(octet_length(p.args),0)<=65536 AND COALESCE(octet_length(p.kwargs),0)<=65536 AND COALESCE(octet_length(p.headers),0)<=65536 AND COALESCE(octet_length(i.period),0)<=4096 AND COALESCE(octet_length(c.minute),0)<=4096 AND COALESCE(octet_length(c.hour),0)<=4096 AND COALESCE(octet_length(c.day_of_week),0)<=4096 AND COALESCE(octet_length(c.day_of_month),0)<=4096 AND COALESCE(octet_length(c.month_of_year),0)<=4096 AND COALESCE(octet_length(c.timezone),0)<=4096) AS row_fits,(COALESCE(octet_length(p.queue),0)::bigint+COALESCE(octet_length(p.exchange),0)::bigint+COALESCE(octet_length(p.routing_key),0)::bigint+COALESCE(octet_length(p.name),0)::bigint+COALESCE(octet_length(p.task),0)::bigint+COALESCE(octet_length(p.args),0)::bigint+COALESCE(octet_length(p.kwargs),0)::bigint+COALESCE(octet_length(p.headers),0)::bigint+COALESCE(octet_length(i.period),0)::bigint+COALESCE(octet_length(c.minute),0)::bigint+COALESCE(octet_length(c.hour),0)::bigint+COALESCE(octet_length(c.day_of_week),0)::bigint+COALESCE(octet_length(c.day_of_month),0)::bigint+COALESCE(octet_length(c.month_of_year),0)::bigint+COALESCE(octet_length(c.timezone),0)::bigint) AS row_bytes FROM django_celery_beat_periodictask p LEFT JOIN LATERAL (SELECT every,period FROM django_celery_beat_intervalschedule WHERE id=p.interval_id OFFSET 0) i ON true LEFT JOIN LATERAL (SELECT minute,hour,day_of_week,day_of_month,month_of_year,timezone FROM django_celery_beat_crontabschedule WHERE id=p.crontab_id OFFSET 0) c ON true LEFT JOIN LATERAL (SELECT clocked_time FROM django_celery_beat_clockedschedule WHERE id=p.clocked_id OFFSET 0) cl ON true WHERE p.enabled LIMIT 257), budget AS (SELECT count(*)::bigint AS selected_count,COALESCE(sum(row_bytes),0)::bigint AS reply_bytes,COALESCE(bool_and(row_fits),true) AS fits FROM candidates) SELECT c.*,b.selected_count,b.reply_bytes,b.fits FROM budget b LEFT JOIN candidates c ON b.selected_count<=256 AND b.reply_bytes<=1048576 AND b.fits").fetch_all(&self.inner.pool).await?;
         let budget = rows.first().ok_or(Error::Capacity)?;
         let count: i64 = budget.get("selected_count");
         let reply_bytes: i64 = budget.get("reply_bytes");
@@ -262,6 +283,7 @@ impl DatabaseSchedule {
             return Err(Error::Capacity);
         }
         let mut map = BTreeMap::new();
+        let mut order = Vec::new();
         let mut bytes = 0usize;
         for row in rows {
             if row.get::<Option<i64>, _>("id").is_none() {
@@ -343,6 +365,7 @@ impl DatabaseSchedule {
                     timezone.unwrap(),
                 )
             });
+            order.push(name.clone());
             map.insert(
                 name.clone(),
                 Entry {
@@ -368,7 +391,7 @@ impl DatabaseSchedule {
                 },
             );
         }
-        Ok(map)
+        Ok((map, order))
     }
     pub async fn shutdown(&self, deadline: Duration) -> bool {
         self.inner.closed.store(true, Ordering::Release);
@@ -405,3 +428,6 @@ pub mod tick;
 
 #[path = "database_driver.rs"]
 pub mod driver;
+
+#[path = "database_heap.rs"]
+mod heap;

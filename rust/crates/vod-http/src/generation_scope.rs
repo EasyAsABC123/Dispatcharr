@@ -280,6 +280,23 @@ async fn control(inner: &Arc<Inner>) -> Result<Arc<Control>, Error> {
         _serial: serial,
     }))
 }
+// Call only while the existing owned task retains its caller, control and
+// serialization guard. This script reads GET/HGET/EXISTS only; no ownership,
+// provider, receipt, admission or stop mutation is repeated on I/O ambiguity.
+async fn classify_current_physical(
+    inner: &Arc<Inner>,
+    gen: &Generation,
+) -> redis::RedisResult<String> {
+    Script::new(CLASSIFY)
+        .key(owner(inner))
+        .key(key(&inner.id))
+        .key(ledger(inner, &gen.lease))
+        .key(format!("vod_proxy:client:{}:stop", inner.id))
+        .arg(gen.lease.token())
+        .arg(&gen.token)
+        .invoke_async(&mut inner.recovery.inner.connection.clone())
+        .await
+}
 async fn mutate(
     inner: &Arc<Inner>,
     gen: &Generation,
@@ -567,16 +584,20 @@ impl LocalScope {
                 let _ = gen.lease.heartbeat().await;
             }
             gen.lease.settlement().wait().await;
-            let observed: String = Script::new(CLASSIFY)
-                .key(owner(&inner))
-                .key(key(&inner.id))
-                .key(ledger(&inner, &gen.lease))
-                .key(format!("vod_proxy:client:{}:stop", inner.id))
-                .arg(gen.lease.token())
-                .arg(&gen.token)
-                .invoke_async(&mut inner.recovery.inner.connection.clone())
-                .await
-                .map_err(|_| Error::Backend)?;
+            let observed = match classify_current_physical(&inner, &gen).await {
+                Ok(value) => value,
+                // Only this immutable, read-only script may be observed afresh.
+                // redis0.32.7 restricts this predicate to BrokenPipe, reset, EOF.
+                Err(error) if error.is_connection_dropped() => {
+                    if *inner.stop.borrow() || *inner.shutdown.borrow() {
+                        return Err(Error::Stopped);
+                    }
+                    classify_current_physical(&inner, &gen)
+                        .await
+                        .map_err(|_| Error::Backend)?
+                }
+                Err(_) => return Err(Error::Backend),
+            };
             match observed.as_str() {
                 "ABSENT" => {
                     // Ownership is physically absent; release the previous

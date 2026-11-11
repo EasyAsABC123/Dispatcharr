@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "original_authors": "Original Dispatcharr and redis-rs authors retain application/client credit.",
+  "scope": "Isolated exact246 plus dropped pure-classification read retry;79 tests including fixture HTTP, not canonical SQL/auth package acceptance.",
+  "proof": "artifacts/rust/vod-classify-read-full-262/proof.json",
+  "proof_sha256": "173cfbfa64417ec71d8596a748b8141fa6f49fe2283223dbc1007162c1251484",
+  "tests_passed": 79,
+  "strict_decoders_passed": 2,
+  "strict_clippy_passed": true,
+  "cleanup_passed": true,
+  "retry_policy": "At most one fresh execution of unchanged CLASSIFY constant after RedisError.is_connection_dropped only. Caller/control/serialization remain owned through first and retry replies. Hardstop skips retry; all non-dropped/server/timeout errors preserved. No heartbeat, CAS, ADMIT, provider, stop, receipt or mutation retry.",
+  "unchanged_lua_sha256": {
+    "CLASSIFY": "1f8665acd23f78ea15ef2fba43d8664d79b19d5001e1eae0cacf70773bc9e378",
+    "CONSUME_PUBLIC_STOP": "30bc424b1008620a7e2c81f9773a285f29103a2d8d2f0ae99e92aafc8bf6c1d4",
+    "CHECK_INITIAL": "6d7ce590a2601ef793d69e38c824e34d05554d5ce4a14c03a9f8f4645b224ecb",
+    "MUTATE": "8a4a507fad1460fd30d51cc58e0c5cba9925f2432aa6a8f16a54e2429e10c10c",
+    "FINALIZE": "e64a9f65baafc114e2583ccb9c44af176b4e7f14948b7fa7e1ead7a944205f1f",
+    "ENTER_CURRENT": "ee59cd3e7e4ac7217fd39bffbc34f893405f3604ca622a0bad5068c8e1d84185"
+  },
+  "source_reference": "scripts/rust-redis-restart-contracts/verified-vod-classify-stage-negative-258.json",
+  "baseline_reference": "scripts/rust-redis-restart-contracts/verified-vod-classify-read-260.json",
+  "limits": "Existing controls/body/request/receipt bounds and observer deadline unchanged; at most two constant read operations, no new queues or service caps.",
+  "known_open": "Canonical replay253/258 first503 requires next image. Controlledidle255 missing provider reservation/admission remains separate. Default recovery OFF; no full M4 or universal active-state recovery claim."
+}

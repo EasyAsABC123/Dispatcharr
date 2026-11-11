@@ -59,9 +59,9 @@ def body_view(row):
     return body, {key: headers.get(key) for key in INTRINSIC}, slots
 
 
-def compare(original, candidate):
+def compare(original, candidate, expected_count=56):
     assert original['passed'] and candidate['passed'] and original['target'] == 'Original' and candidate['target'] == 'candidate'
-    assert len(original['records']) == len(candidate['records']) == 56
+    assert len(original['records']) == len(candidate['records']) == expected_count
     assert original['fingerprints_before'] == original['fingerprints_after'] == candidate['fingerprints_before'] == candidate['fingerprints_after']
     records = []; differences = []
     for index, (source, native) in enumerate(zip(original['records'], candidate['records'])):
@@ -75,12 +75,12 @@ def compare(original, candidate):
     return {'passed': not differences, 'compared': len(records), 'records': records, 'differences': differences, 'scope': 'Exact captured56 Source/package observations, deterministic bytes/five headers and validated cookie/mask/expiry; no asset or fullHTML grammar acceptance', 'assets_verified': False, 'full_HTML_parity': False}
 
 
-def probe(command, compose, evidence, candidate_binding):
+def probe(command, compose, evidence, candidate_binding, observer="unified_html_source.py", expected_count=56, label="HTML"):
     observed = {}
     for target in ['Original', 'candidate']:
-        result = command(compose + ['exec', '-T', '-e', 'VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only', '-e', 'VOD_UNIFIED_HTML_TARGET=' + target, 'baseline', '/dispatcharrpy/bin/python', '/vod-api-probe/unified_html_source.py'], timeout=180)
+        result = command(compose + ['exec', '-T', '-e', 'VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only', '-e', 'VOD_UNIFIED_HTML_TARGET=' + target, 'baseline', '/dispatcharrpy/bin/python', '/vod-api-probe/' + observer], timeout=180)
         value = json.loads(result.stdout.splitlines()[-1]); observed[target] = value
-        (evidence / ('packaged-HTML-' + target + '-private.json')).write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n')
-    report = compare(observed['Original'], observed['candidate']); report['candidate_binding'] = candidate_binding
+        (evidence / ('packaged-' + label + '-' + target + '-private.json')).write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n')
+    report = compare(observed['Original'], observed['candidate'], expected_count); report['candidate_binding'] = candidate_binding
     report['private_observation_sha256'] = {key: hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()).hexdigest() for key, value in observed.items()}
-    (evidence / 'packaged-HTML.json').write_text(json.dumps(report, indent=2) + '\n'); return report
+    (evidence / ('packaged-' + label + '.json')).write_text(json.dumps(report, indent=2) + '\n'); return report

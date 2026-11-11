@@ -4,7 +4,7 @@
 const {spawn}=require('node:child_process');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),readline=require('node:readline');
 const directory=fs.mkdtempSync(path.join(os.tmpdir(),'dispatcharr-clean-browser-'));
-let child,cdp,next=1,stage='startup';const pending=new Map(),responses=[],assets=[],socketTypes=new Set();let exceptions=0;
+let child,cdp,next=1,stage='startup';const pending=new Map(),responses=[],assets=[],socketTypes=new Set();let exceptions=0;const drfAssets=[];
 const required=['/api/accounts/users/me/','/api/core/settings/','/api/core/settings/env/','/api/channels/groups/','/api/channels/profiles/','/api/m3u/accounts/','/api/epg/sources/','/api/epg/epgdata/','/api/core/streamprofiles/','/api/core/outputprofiles/','/api/core/useragents/','/api/m3u/server-groups/','/api/channels/channels/ids/','/api/accounts/users/','/api/channels/logos/','/api/channels/streams/filter-options/'];
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function call(method,params={}){const id=next++;return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{pending.delete(id);reject(new Error('CDP deadline'))},10000);pending.set(id,{resolve:value=>{clearTimeout(timer);resolve(value)},reject});cdp.send(JSON.stringify({id,method,params}));});}
@@ -17,7 +17,7 @@ async function start(){
  const origin=new URL(endpoint.replace('ws:','http:')).origin;const target=await(await fetch(origin+'/json/new?about:blank',{method:'PUT'})).json();cdp=new WebSocket(target.webSocketDebuggerUrl);await new Promise((resolve,reject)=>{cdp.onopen=resolve;cdp.onerror=reject});
  cdp.onmessage=event=>{const message=JSON.parse(event.data);const request=pending.get(message.id);if(request){pending.delete(message.id);if(message.error)request.reject(new Error('CDP request failed'));else request.resolve(message.result)}
   if(message.method==='Runtime.exceptionThrown')exceptions++;
-  if(message.method==='Network.responseReceived'){const r=message.params.response;try{const p=new URL(r.url).pathname;if(p.startsWith('/assets/')&&assets.length<32)assets.push({path:p,status:r.status,mime:r.mimeType});if(p.startsWith('/api/'))responses.push({path:p,query:new URL(r.url).search,status:r.status,request_id:message.params.requestId,stage})}catch{}}
+  if(message.method==='Network.responseReceived'){const r=message.params.response;try{const p=new URL(r.url).pathname;if(p.startsWith('/assets/')&&assets.length<32)assets.push({path:p,status:r.status,mime:r.mimeType});if(p.startsWith('/static/rest_framework/')&&drfAssets.length<64)drfAssets.push({path:p,status:r.status,mime:r.mimeType});if(p.startsWith('/api/'))responses.push({path:p,query:new URL(r.url).search,status:r.status,request_id:message.params.requestId,stage})}catch{}}
   if(message.method==='Network.webSocketFrameReceived'){try{const value=JSON.parse(message.params.response.payloadData);if(typeof value.type==='string')socketTypes.add(value.type)}catch{}}
  };
  await call('Runtime.enable');await call('Page.enable');await call('Network.enable');const version=await call('Browser.getVersion');return {ready:true,browser:version.product,protocol:version.protocolVersion,browser_pid:child.pid};
@@ -40,7 +40,23 @@ async function workflow(config){
  const selected=await payload(params=>params.get('category')===config.category&&params.get('page_size')==='48');if(selected.payload.results.length===0||!selected.payload.results.every(row=>row.content_type==='series'))throw Error('All category type predicate mismatch');
  const selectedNames=selected.payload.results.map(row=>row.name);await until(`(()=>{const cards=Array.from(document.querySelectorAll('#vods-container .mantine-Card-root'));return cards.length===${selectedNames.length}&&${JSON.stringify(selectedNames)}.every((name,index)=>cards[index].innerText.includes(name))})()`);
  const selectedCards=await evaluate(`Array.from(document.querySelectorAll('#vods-container .mantine-Card-root')).map(card=>card.innerText)`);
- const failures=responses.filter(row=>row.path.startsWith('/api/vod/')&&row.status>=400);return {passed:failures.length===0&&exceptions===0,scope:'Actual unchanged React normal login, both enabled flags/default All,48-row page displaying both kinds and All series-category selection; provider/playback/artwork/episode/browserHTML excluded',initial_count:initial.payload.count,initial_request:{path:initial.request.path,query:initial.request.query,status:initial.request.status},All_content:all.payload.results.map(row=>({id:row.id,kind:row.content_type,name:row.name})),All_card_texts:allCards,selected_category:config.label,selected_content:selected.payload.results.map(row=>({id:row.id,kind:row.content_type,name:row.name})),selected_card_texts:selectedCards,selected_request:{path:selected.request.path,query:selected.request.query,status:selected.request.status},VOD_HTTP_failures:failures,uncaught_exceptions:exceptions,ambient_API_failures:responses.filter(row=>!row.path.startsWith('/api/vod/')&&row.status>=400),stored_token_present:await evaluate(`!!localStorage.getItem('accessToken')`)};
+ let browsable=null;
+ if(config.browsable){
+  stage='Browsable-API-assets';
+  const access=await evaluate(`localStorage.getItem('accessToken')`);
+  if(!access)throw Error('Existing normal-login token missing');
+  await call('Network.setExtraHTTPHeaders',{headers:{Authorization:'Bearer '+access}});
+  await call('Page.navigate',{url:config.url+'/api/vod/all/?format=api'});
+  await until(`!!window.jQuery&&!!document.querySelector('.navbar-brand')&&document.readyState==='complete'`);
+  const fonts=await evaluate(`document.fonts.load("14px 'Glyphicons Halflings'").then(values=>values.length)`);
+  await delay(200);
+  const required=config.browsable_assets;
+  const complete=required.every(path=>drfAssets.some(asset=>asset.path===path&&asset.status===200));
+  const stylesheet=await evaluate(`Array.from(document.styleSheets).some(sheet=>sheet.href&&sheet.href.endsWith('/rest_framework/css/bootstrap.min.css')&&sheet.cssRules.length>100)`);
+  if(!complete||!stylesheet||fonts<1||drfAssets.some(asset=>asset.status>=400))throw Error('BrowsableAPI actual asset/font load failed');
+  browsable={passed:true,scope:'Native actual API HTML/jQuery/Bootstrap/font execution, with separate SourceHTML56/static68 references; no full BrowsableAPI workflow parity',required_asset_paths:required,asset_responses:drfAssets,glyphicons_fonts_loaded:fonts,bootstrap_styles_applied:stylesheet};
+ }
+ const failures=responses.filter(row=>row.path.startsWith('/api/vod/')&&row.status>=400);return {browsable,passed:failures.length===0&&exceptions===0,scope:'Actual unchanged React normal login, both enabled flags/default All,48-row page displaying both kinds and All series-category selection; provider/playback/artwork/episode/browserHTML excluded',initial_count:initial.payload.count,initial_request:{path:initial.request.path,query:initial.request.query,status:initial.request.status},All_content:all.payload.results.map(row=>({id:row.id,kind:row.content_type,name:row.name})),All_card_texts:allCards,selected_category:config.label,selected_content:selected.payload.results.map(row=>({id:row.id,kind:row.content_type,name:row.name})),selected_card_texts:selectedCards,selected_request:{path:selected.request.path,query:selected.request.query,status:selected.request.status},VOD_HTTP_failures:failures,uncaught_exceptions:exceptions,ambient_API_failures:responses.filter(row=>!row.path.startsWith('/api/vod/')&&row.status>=400),stored_token_present:await evaluate(`!!localStorage.getItem('accessToken')`)};
 }
 (async()=>{try{process.stdout.write(JSON.stringify(await start())+'\n');for await(const line of readline.createInterface({input:process.stdin})){const config=JSON.parse(line);let response;try{response=config.op==='close'?{closed:true}:await workflow(config)}catch(error){let document=null;try{document=await evaluate(`({path:location.pathname,title:document.title,text:document.body.innerText.slice(0,600),input_names:Array.from(document.querySelectorAll('input')).map(input=>input.name)})`)}catch{}response={passed:false,stage,error_type:error.name,failure_message:error.message,document,assets,API_responses:responses,VOD_responses:responses.filter(row=>row.path.startsWith('/api/vod/')),exceptions};process.exitCode=1}process.stdout.write(JSON.stringify(response)+'\n');break}}
  catch(error){process.stdout.write(JSON.stringify({passed:false,stage,error_type:error.name})+'\n');process.exitCode=1}

@@ -35,3 +35,29 @@ pub use vod_api_owned_read::ReadLimits as VodReadLimits;
 
 #[path="vod_api_unified_html.rs"]
 mod vod_api_unified_html;
+
+#[path="vod_api_actions_dto.rs"]
+mod vod_api_actions_dto;
+
+#[path="vod_api_actions_sql.rs"]
+mod vod_api_actions_sql;
+
+#[path="vod_api_actions_content.rs"]
+mod vod_api_actions_content;
+
+#[path="vod_api_actions_account.rs"]
+mod vod_api_actions_account;
+
+#[path="vod_api_actions_read.rs"]
+mod vod_api_actions_read;
+
+#[path="vod_api_actions_http.rs"]
+mod vod_api_actions_http;
+
+#[cfg(test)]
+#[path="vod_api_actions_peer.rs"]
+mod vod_api_actions_peer;
+
+#[cfg(test)]
+#[path="vod_api_actions_schedule.rs"]
+mod vod_api_actions_schedule;

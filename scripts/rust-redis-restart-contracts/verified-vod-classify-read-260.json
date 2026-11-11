@@ -1,0 +1,13 @@
+{
+  "passed": false,
+  "original_authors": "Original Dispatcharr and redis-rs authors retain application/client credit.",
+  "scope": "Unchanged246 actual dropped read classification baseline with controlled owned-key loss, not whole-app restart.",
+  "proof": "artifacts/rust/vod-classify-read-baseline-260/proof.json",
+  "proof_sha256": "3ef86e59e9dd8722e700a0b8a001ca798ea55b7329a485fd7a8810a45db42a4f",
+  "strict_clippy_passed": true,
+  "cleanup_passed": true,
+  "source_reference": "scripts/rust-redis-restart-contracts/verified-vod-classify-stage-negative-258.json",
+  "limits": "At most one extra constant-read script; existing caller/control/serialization retained across both physical replies. No extra admission, queue, response timeout, heartbeat/CAS/provider/stop write replay. WRONGTYPE/non-dropped/general backend remain errors.",
+  "observations": "Three controls pass: actual WRONGTYPE not retried, hardstop no second read, cancelled4s caller/control/drain retained. Lost read logical failure and fresh foreign-decision assertions fail. Existing foreign state is preserved; no corruption claim.",
+  "known_open": "Canonical package/actual SQL/auth restart replay and idle255 provider admission remain separate; default recovery OFF."
+}

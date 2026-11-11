@@ -437,3 +437,121 @@ async fn driver_shutdown_deadline_and_cancelled_wait_retain_actual_sql_tick() {
     pool.close().await;
     blocker_pool.close().await;
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "Requires guarded copied PG plus isolated Redis broker8/result9"]
+async fn multi_entry_delayed_replies_retain_each_caller_and_final_dirty_sync() {
+    let url = fixture();
+    let broker = std::env::var("CELERY_BROKER_URL").unwrap();
+    let backend = std::env::var("CELERY_RESULT_BACKEND").unwrap();
+    for (raw, db) in [(&broker, 8), (&backend, 9)] {
+        let client = redis::Client::open(raw.as_str()).unwrap();
+        let info = client.get_connection_info();
+        assert_eq!(info.redis.db, db);
+        assert!(
+            matches!(&info.addr,redis::ConnectionAddr::Tcp(host,port)if matches!(host.as_str(),"127.0.0.1"|"localhost"|"::1")&&*port==6379)
+        );
+        assert_eq!(
+            info.redis.password.as_deref(),
+            Some("playback-fixture-only")
+        );
+    }
+    let pool = PgPoolOptions::new()
+        .max_connections(1)
+        .connect(&url)
+        .await
+        .unwrap();
+    sqlx::query("UPDATE django_celery_beat_periodictask SET enabled=false")
+        .execute(&pool)
+        .await
+        .unwrap();
+    let interval:i64=sqlx::query_scalar("INSERT INTO django_celery_beat_intervalschedule(every,period) VALUES(0,'seconds') RETURNING id::bigint").fetch_one(&pool).await.unwrap();
+    sqlx::query("INSERT INTO django_celery_beat_periodictask(name,task,args,kwargs,headers,enabled,total_run_count,date_changed,description,one_off,interval_id,last_run_at) VALUES('rust-owned-held-multi-z-refresh','apps.epg.tasks.refresh_epg_data','[1]','{\"force\":true}','{}',true,0,now(),'',false,$1,now()-interval '1 hour')").bind(interval).execute(&pool).await.unwrap();
+    sqlx::query("INSERT INTO django_celery_beat_periodictask(name,task,args,kwargs,headers,enabled,total_run_count,date_changed,description,one_off,interval_id,last_run_at) VALUES('rust-owned-held-multi-a-series','apps.channels.tasks.evaluate_series_rules','[]','{}','{}',true,0,now(),'',false,$1,now()-interval '1 hour')").bind(interval).execute(&pool).await.unwrap();
+    let config = crate::transport::Config {
+        operations: 2,
+        command_timeout: Duration::from_millis(50),
+        max_queued_jobs: 64,
+    };
+    let publisher = Arc::new(tick::KnownPublisher {
+        refresh: crate::transport::Jobs::connect_refresh(&broker, &backend, config.clone())
+            .await
+            .unwrap(),
+        series: crate::transport::Jobs::connect_series(&broker, &backend, config)
+            .await
+            .unwrap(),
+    });
+    let service = DatabaseSchedule::new(pool.clone());
+    let client = redis::Client::open(broker.as_str()).unwrap();
+    let mut control = client.get_multiplexed_async_connection().await.unwrap();
+    let _: () = redis::cmd("FLUSHDB")
+        .query_async(&mut control)
+        .await
+        .unwrap();
+    let _: () = redis::cmd("CLIENT")
+        .arg("PAUSE")
+        .arg(1500)
+        .arg("WRITE")
+        .query_async(&mut control)
+        .await
+        .unwrap();
+    let first = Arc::new(());
+    let first_weak = Arc::downgrade(&first);
+    let s = service.clone();
+    let p = publisher.clone();
+    let waiter = tokio::spawn(async move { s.tick(Utc::now(), p, first).await });
+    until(|| service.inner.slots.available_permits() == 1).await;
+    let second = Arc::new(());
+    let second_weak = Arc::downgrade(&second);
+    let s = service.clone();
+    let p = publisher.clone();
+    let other = tokio::spawn(async move { s.tick(Utc::now(), p, second).await });
+    until(|| service.inner.slots.available_permits() == 0).await;
+    waiter.abort();
+    let _ = waiter.await;
+    let logical = tokio::time::timeout(Duration::from_millis(500), other)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap();
+    assert!(matches!(logical.publication, Some(Err(_))));
+    assert!(first_weak.upgrade().is_some() && second_weak.upgrade().is_some());
+    assert_eq!(service.inner.slots.available_permits(), 0);
+    assert!(matches!(
+        service
+            .tick(Utc::now(), publisher.clone(), Arc::new(()))
+            .await,
+        Err(Error::Capacity)
+    ));
+    assert!(!service.shutdown(Duration::from_millis(30)).await);
+    assert!(service.shutdown(Duration::from_secs(5)).await);
+    until(|| first_weak.upgrade().is_none() && second_weak.upgrade().is_none()).await;
+    let rows=sqlx::query("SELECT name,total_run_count::bigint AS count FROM django_celery_beat_periodictask WHERE name IN ('rust-owned-held-multi-z-refresh','rust-owned-held-multi-a-series')").fetch_all(&pool).await.unwrap();
+    assert_eq!(rows.len(), 2);
+    assert!(rows.iter().all(|row| row.get::<i64, _>("count") == 1));
+    let queued: i64 = redis::cmd("LLEN")
+        .arg("celery")
+        .query_async(&mut control)
+        .await
+        .unwrap();
+    assert_eq!(queued, 2);
+    println!(
+        "SCHEDULER_RETAINED_MULTI_JSON={}",
+        serde_json::json!({"logical_return_before_actual_publication":true,"actual_publications":queued,"persisted_each_after_shutdown":1,"callers_released_after_actual_reply":true})
+    );
+    publisher
+        .refresh
+        .shutdown(Duration::from_secs(2))
+        .await
+        .unwrap();
+    publisher
+        .series
+        .shutdown(Duration::from_secs(2))
+        .await
+        .unwrap();
+    let _: () = redis::cmd("FLUSHDB")
+        .query_async(&mut control)
+        .await
+        .unwrap();
+    pool.close().await;
+}

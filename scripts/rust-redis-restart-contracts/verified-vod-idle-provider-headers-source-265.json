@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "original_authors": "Original Dispatcharr authors retain application and algorithm credit.",
+  "scope": "Source-only actual other movie holds quota after live limit2\u21921; targetfresh publicidle refusal golden, no native acceptance.",
+  "proof": {
+    "path": "artifacts/rust/m4-vod-idle-provider-headers-source-265/vod-contracts.json",
+    "sha256": "3699afe99a41a698f55302295bb9cab45b5bb499ac68b3bdfcee4e9627bbc7cb"
+  },
+  "source": {
+    "path": "artifacts/rust/m4-vod-idle-provider-headers-source-265/vod-active-restart-source.json",
+    "sha256": "d1e3877e26849931fb2cf3e7ce135b940a4d611585297ecc105372526cb580e3"
+  },
+  "tools": {
+    "path": "artifacts/rust/m4-vod-idle-provider-headers-source-265/tool-source-sha256.json",
+    "sha256": "2f6dd8dd40c274ea6f07e5d17bb8f1193db8c5ea1eba7b9358ed12b5f17c44d0"
+  },
+  "fixture_policy": {
+    "initial_profile_max_streams": 2,
+    "initial_account_max_streams": 2,
+    "other_movie_uuid": "3c41005c-afcf-41b5-83f7-b73da66f0e78",
+    "final_profile_max_streams": 1,
+    "final_account_max_streams": 1,
+    "policy_lowered_before_target_close": true
+  },
+  "contender": {
+    "status": 200,
+    "streaming": true,
+    "first_bytes": 8192,
+    "first_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+    "provider_count": "1"
+  },
+  "controlled_idle": {
+    "qualified": true,
+    "attempted": true,
+    "provider_before": "1",
+    "read_to_request_ms": 0.0034510012483224273,
+    "before": {
+      "active_streams": "0",
+      "created_at": "1794366191.0830808",
+      "request_count": "2",
+      "user_id": "unknown",
+      "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+      "content_obj_type": "movie"
+    },
+    "wire": {
+      "status": 429,
+      "streaming": false,
+      "response_headers": {
+        "content-type": "text/html; charset=utf-8",
+        "vary": "Accept, origin",
+        "allow": "GET, OPTIONS",
+        "x-frame-options": "DENY",
+        "content-length": "37",
+        "x-content-type-options": "nosniff",
+        "referrer-policy": "same-origin",
+        "cross-origin-opener-policy": "same-origin"
+      },
+      "error_body": "Connection limit exceeded for profile"
+    },
+    "after": {
+      "active_streams": "0",
+      "created_at": "1794366191.0830808",
+      "request_count": "2",
+      "user_id": "unknown",
+      "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+      "content_obj_type": "movie"
+    },
+    "provider_after": "1"
+  },
+  "cleanup_passed": true,
+  "application_counter_cleanup_verified": false,
+  "interpretation": "Source temporarily INCRs active_streams before profile reserve and DECRs it on refusal; request_count is incremented only after successful reservation/get_stream. Stable refusal is429 literal37-byte HTML/UTF8, Allow GET, OPTIONS, Vary Accept/origin, no Retry-After; created_at/request2/active0 and otherprovider1 are preserved. No reserve-before-all-public-writes claim. Native must preserve fenced pending-entry ownership through that transient sequence and capture held-reserve/concurrent schedules before parity acceptance.",
+  "source_order_reference": "apps/proxy/vod_proxy/multi_worker_connection_manager.py:1350-1390 (pinned Original1241b3f7)"
+}

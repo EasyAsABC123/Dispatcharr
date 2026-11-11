@@ -3,7 +3,7 @@ Original Dispatcharr authors retain credit; no resource/performance claim.
 """
 import json,secrets,subprocess
 
-def probe(command,compose,environment,evidence,tools,source_base,candidate_base):
+def probe(command,compose,environment,evidence,tools,source_base,candidate_base,browsable=False):
     password=secrets.token_urlsafe(32)
     helper=compose+['exec','-T','-e','VOD_API_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/vod-api-probe/unified_browser_fixture.py']
     report={'passed':False,'scope':__doc__,'unchanged_React':True,'browser_not_mocked':True,'posters_provider_refresh_playback_episode_flows_excluded':True,'login_policy':'Exactly one normal UI login per Original/native phase, no runtime3/min adjustment or cache clearing'}
@@ -12,7 +12,10 @@ def probe(command,compose,environment,evidence,tools,source_base,candidate_base)
         setup=command(helper,payload=json.dumps({'op':'prepare','password':password}),timeout=30)
         fixture=json.loads(setup.stdout.splitlines()[-1]);prepared=fixture['prepared'];report['fixture']=fixture
         for target,base in ([('Original',source_base)]if candidate_base is None else[('Original',source_base),('native',candidate_base)]):
-            config={**fixture,'password':password,'url':base,'op':'All'}
+            config={**fixture,'password':password,'url':base,'op':'All','browsable':browsable and target=='native'}
+            if config['browsable']:
+                html=json.loads((evidence/'packaged-HTML-Original-private.json').read_text())
+                config['browsable_assets']=html['records'][0]['DOM']['assets']
             process=subprocess.run(['node',str(tools/'scripts/rust-vod-api-contracts/unified_browser.js')],input=json.dumps(config)+'\n',cwd=tools,env=environment,text=True,capture_output=True,timeout=100)
             values=[json.loads(line)for line in process.stdout.splitlines()if line.startswith('{')]
             observation=values[-1]if values else{'passed':False,'error':'No actual browser result'};observations[target]=observation

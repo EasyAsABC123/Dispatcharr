@@ -24,7 +24,7 @@ def main():
     base_group.add_argument('--git-revision')
     p.add_argument('--overlay',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--only-target',action='append',choices=['stop_writer','lookup_read','recovery_generation','recovery_generation_physical','generation_scope','generation_scope_physical','http_recovery','vod','session_diagnostic'])
+    p.add_argument('--only-target',action='append',choices=['classify_read','stop_writer','lookup_read','recovery_generation','recovery_generation_physical','generation_scope','generation_scope_physical','http_recovery','vod','session_diagnostic'])
     a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
     overlay=json.loads(a.overlay.read_text())
     if a.git_revision:
@@ -68,7 +68,7 @@ def main():
     report['build_environment']={key:env[key]for key in ['CARGO_TARGET_DIR','CARGO_PROFILE_DEV_DEBUG','CARGO_PROFILE_TEST_DEBUG','CARGO_INCREMENTAL']}
     name='dispatcharr-generation-'+uuid.uuid4().hex[:12]
     try:
-        targets=[('dispatcharr-vod-http','stop_writer',3),('dispatcharr-vod-http','lookup_read',6),('dispatcharr-coordination','redis',10),('dispatcharr-coordination','acquire_cancel',2),
+        targets=[('dispatcharr-vod-http','classify_read',6),('dispatcharr-vod-http','stop_writer',3),('dispatcharr-vod-http','lookup_read',6),('dispatcharr-coordination','redis',10),('dispatcharr-coordination','acquire_cancel',2),
                  ('dispatcharr-clients','vod',2),('dispatcharr-vod-http','recovery_generation',11),('dispatcharr-vod-http','recovery_generation_physical',2),('dispatcharr-vod-http','generation_scope',17),('dispatcharr-vod-http','generation_scope_physical',9),('dispatcharr-vod-http','http_recovery',10),('dispatcharr-vod-http','session_diagnostic',1)]
         if a.only_target:targets=[item for item in targets if item[1]in a.only_target]
         report['selected_targets']=[item[1]for item in targets]
@@ -111,7 +111,7 @@ def main():
             time.sleep(.05)
         else:raise TimeoutError('Redis readiness')
         for test in report['tests']:
-            result=subprocess.run(['docker','exec',name,'/native-peers/'+test['target'],'--ignored','--nocapture','--test-threads=1']+(['physical_']if test['target']=='recovery_generation_physical'else['local_scope_']if test['target']=='generation_scope'else['local_physical_']if test['target']=='generation_scope_physical'else['receipt_actor_failure_']if test['target']=='session_diagnostic'else['lookup_read_failure_']if test['target']=='lookup_read'else['admin_stop_writer_']if test['target']=='stop_writer'else[]),
+            result=subprocess.run(['docker','exec',name,'/native-peers/'+test['target'],'--ignored','--nocapture','--test-threads=1']+(['physical_']if test['target']=='recovery_generation_physical'else['local_scope_']if test['target']=='generation_scope'else['local_physical_']if test['target']=='generation_scope_physical'else['receipt_actor_failure_']if test['target']=='session_diagnostic'else['lookup_read_failure_']if test['target']=='lookup_read'else['admin_stop_writer_']if test['target']=='stop_writer'else['classify_read_']if test['target']=='classify_read'else[]),
                 env=env,capture_output=True,text=True,timeout=360)
             text=result.stdout+result.stderr;(out/(test['target']+'-tests.log')).write_text(text)
             test['passed']=result.returncode==0 and f"test result: ok. {test['expected_count']} passed;"in text

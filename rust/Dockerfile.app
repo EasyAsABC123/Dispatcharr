@@ -27,6 +27,8 @@ ENTRYPOINT ["/usr/local/bin/dispatcharr-xmltv-parity"]
 FROM ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f AS media
 COPY rust/runtime/collect_media.py /tmp/collect_media.py
 RUN /dispatcharrpy/bin/python /tmp/collect_media.py
+COPY rust/runtime/collect_static.py rust/runtime/drf-static-source-1.json /tmp/
+RUN /dispatcharrpy/bin/python /tmp/collect_static.py
 
 FROM debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
 LABEL org.opencontainers.image.title="Dispatcharr derivative Rust backend port" \

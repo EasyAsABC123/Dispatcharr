@@ -7,8 +7,14 @@ use axum::{
     response::Response,
 };
 
+#[derive(Clone)]
+pub struct SourceStaticResponse;
+
 pub async fn apply(request: Request, next: Next) -> Response {
     let mut response = next.run(request).await;
+    if response.extensions().get::<SourceStaticResponse>().is_some() {
+        return response;
+    }
     let raw_image = response
         .extensions()
         .get::<dispatcharr_store::SourceImageResponse>()

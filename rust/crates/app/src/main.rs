@@ -1,4 +1,5 @@
 //! Derivative Dispatcharr backend port. Original project credit: ATTRIBUTION.md.
+mod static_assets;
 mod control;
 mod playback;
 mod realtime;
@@ -697,6 +698,7 @@ async fn run() -> Result<(), String> {
         .merge(vod_reads.router())
         .merge(vod_reads.category_router())
         .merge(vod_reads.unified_router())
+        .merge(vod_reads.provider_router())
         .merge(grid.clone().router())
         .merge(hdhr.router())
         .merge(engine.controls_router(resolver.clone()))
@@ -763,6 +765,15 @@ async fn run() -> Result<(), String> {
         for prefix in ["assets", "static"] {
             let directory = std::path::Path::new(&path).join(prefix);
             if directory.is_dir() {
+                if prefix == "static" {
+                    if let Some(assets) = static_assets::load(&directory).await.map_err(|error| format!("Pinned static assets: {error}"))? {
+                        let files = Router::new()
+                            .fallback_service(tower_http::services::ServeDir::new(directory))
+                            .layer(axum::middleware::from_fn_with_state(assets, static_assets::apply));
+                        app = app.nest_service("/static", files.into_service());
+                        continue;
+                    }
+                }
                 app = app.nest_service(
                     &format!("/{prefix}"),
                     tower_http::services::ServeDir::new(directory),

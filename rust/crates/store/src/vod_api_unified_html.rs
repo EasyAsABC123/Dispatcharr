@@ -87,7 +87,7 @@ pub(super) fn render(kind:Kind,username:&str,method:&str,pretty_json:&str,csrf:&
 #[derive(Clone)]
 pub(super) struct ReplyHeaders {pub status:u16,pub set_cookie:String,pub authenticate:bool}
 pub(super) fn requested(headers:&axum::http::HeaderMap)->bool {
-    headers.get("accept").is_some_and(|value|value.as_bytes()==b"text/html")
+    headers.get("accept").is_some_and(|value|value.as_bytes()==b"text/html" || value.as_bytes()=="text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7".as_bytes())
 }
 pub(super) fn cookie(headers:&axum::http::HeaderMap)->Option<String>{
     let raw=headers.get("cookie").map(|v|dispatcharr_contracts::source_header_value(v.as_bytes()))?;

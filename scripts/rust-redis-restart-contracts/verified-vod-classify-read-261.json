@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "original_authors": "Original Dispatcharr and redis-rs authors retain application/client credit.",
+  "scope": "Exact246 plus one fresh read-only CLASSIFY after is_connection_dropped only; controlled owned-key loss/realRedis physical tests, not canonical HTTP acceptance.",
+  "proof": "artifacts/rust/vod-classify-read-controls-261/proof.json",
+  "proof_sha256": "f1a122cc2c22d3eb40c8c75ff0cf5c9c966e01f7d525d81d51aa07365ddb8536",
+  "strict_clippy_passed": true,
+  "cleanup_passed": true,
+  "source_reference": "scripts/rust-redis-restart-contracts/verified-vod-classify-stage-negative-258.json",
+  "limits": "At most one extra constant-read script; existing caller/control/serialization retained across both physical replies. No extra admission, queue, response timeout, heartbeat/CAS/provider/stop write replay. WRONGTYPE/non-dropped/general backend remain errors.",
+  "observations": "Six controls pass: dropped read\u2192two pure reads, zero other mutations; real replacement lease/metadata/provider remains fenced; WRONGTYPE only one; hardstop skips retry; cancelled4s first and retry replies retain caller/control/drain. Full79 cohort262 running.",
+  "known_open": "Canonical package/actual SQL/auth restart replay and idle255 provider admission remain separate; default recovery OFF."
+}

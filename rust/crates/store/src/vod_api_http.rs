@@ -58,6 +58,11 @@ impl VodReads {
     pub fn unified_router(&self)->Router {
         super::vod_api_unified_http::UnifiedHttp::shared(self.auth.clone(),self.reader.shared_runtime(),self.gate.clone()).router()
     }
+    /// Provider/episode actions share this exact runtime and admission queue.
+    /// App attachment and packaged browser acceptance are separate gates.
+    pub fn provider_router(&self)->Router {
+        super::vod_api_actions_http::ActionHttp::shared(self.auth.clone(),self.reader.shared_runtime(),self.gate.clone()).router()
+    }
     /// Stops admission immediately; held body frames retain their own leases.
     pub async fn shutdown(&self,budget:std::time::Duration)->bool {self.gate.slots.close();self.reader.shutdown(budget).await}
 }

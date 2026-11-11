@@ -1,0 +1,43 @@
+{
+  "passed": false,
+  "failure_reproduced": true,
+  "canonical_runtime_acceptance": false,
+  "original_authors": "Original Dispatcharr authors retain application and algorithm credit.",
+  "scope": "Diagnostic-only c80+246 error-after-await executable overlay on canonical39 filesystem; actual SQL/auth/Redis restart.",
+  "proof": {
+    "path": "artifacts/rust/m4-vod-classify-kind-image39-diagnostic-258/vod-contracts.json",
+    "sha256": "8bb9f285c9df26bcc1b5cdc24db1f2c22b1baf1997244b2d3d421b0f4bd120ac"
+  },
+  "binary_proof": {
+    "path": "artifacts/rust/m4-vod-classify-kind-image39-diagnostic-258/diagnostic-binary-proof.json",
+    "sha256": "c59f9093872a03623deb18b04ddd96b763b75465511dc26c289edcc450260910"
+  },
+  "source": {
+    "path": "artifacts/rust/m4-vod-classify-kind-image39-diagnostic-258/vod-active-restart-source.json",
+    "sha256": "1f08fb1625bc3614f5b741738d01cee06b91a52ab7ede9d0e6e9b5900b2d30a4"
+  },
+  "native": {
+    "path": "artifacts/rust/m4-vod-classify-kind-image39-diagnostic-258/vod-active-restart-native.json",
+    "sha256": "d9d1f73ba4eeab9606396a33170788a01a7a512644d83b36f0d1afc3113857f8"
+  },
+  "tools": {
+    "path": "artifacts/rust/m4-vod-classify-kind-image39-diagnostic-258/tool-source-sha256.json",
+    "sha256": "d2f792d439c5a1a9cb33318d1e8464d6d6fe6715feaa1dc2d5afe5dbb574e618"
+  },
+  "markers": [
+    {
+      "stage": "classify-read-dropped",
+      "enum_discriminant": 14
+    },
+    {
+      "stage": "initial-classify",
+      "enum_discriminant": 2
+    },
+    {
+      "stage": "session-enter",
+      "enum_discriminant": 12
+    }
+  ],
+  "cleanup_passed": true,
+  "interpretation": "Read-only CLASSIFY fails RedisError.is_connection_dropped=true /IoError14 (pinned redis0.32.7 only BrokenPipe/ConnectionReset/UnexpectedEof), then Recovery::Backend2 /StoreError12. No earlier auth/optional/resolve failure. Next isolated controls may repeat only this pure classification after physical dropped reply; no general Backend or mutation retry."
+}
