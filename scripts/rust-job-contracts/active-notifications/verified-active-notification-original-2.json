@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "actual_source_worker": true,
+  "native_verified": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "checks": 219,
+  "cases": 17,
+  "actual_host_exit_code": 0,
+  "default_database_unchanged": true,
+  "cleanup": "owned project removed",
+  "fixture_clock_control": "Only owned task django.utils.timezone.now patched; pinned task/helper/ORM/Channels/result backend unchanged. No Factory substitution. Celery result date_done uses actual worker clock.",
+  "source_process_boundary": "Worker-local hls/live manager maps observed empty. No inference that receiver changes separately running HTTP process. Same-process live managers remain unqualified.",
+  "source_error_boundary": "Three database faults produce actual FAILURE; earlier independently committed collector/upsert/event effects remain. Native operational PENDING is not Source failure-result parity.",
+  "evidence": {
+    "artifacts/rust/active-account-notifications-original-2/integration.json": "88823a2955f4efe449c90f8491818bdf873a95542ca86307d6e0dcfc989a971a",
+    "artifacts/rust/active-account-notifications-original-2/source-native-default-pair-private.json": "ab5cee72e47be39fdd89a01fa4d6203b65b9a6afe1ec649af8037834f5216263"
+  },
+  "selected_tools": {
+    "run_pair.py": "ca0c8d8ec6a14193f272a51c4fc93a3c2d7deaacbfe92b987d6ac86a21451309",
+    "source_pair.py": "25ac3fb248ba060a8184a3e32ac98f0f20b32f39146599f48c193cb1080a737d",
+    "periodic_worker_observer.py": "dce10fb934f3a2a753a7c35448bfb19a6b438336f8b185bae58011dc731c9f96"
+  },
+  "dataset_sha256": "26c26513ecaa9675153be4dfefa0b8a8920443483d6132de3708d62fdf72b8e0",
+  "credit": "Original Dispatcharr, Django, Celery, Channels and redis-py authors retain original code, algorithm and license credit."
+}

@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "scope": "New736-input active-single-profile/VOD normal-library union actual execution; no Main/default-registry/browser/performance acceptance",
+  "runtime": {
+    "passed": true,
+    "source_count": 736,
+    "inputs_sha256": "9a76a57349d875c613c2f8537fb262fe79bd80feed31b8df2d3dbe3236d0205d",
+    "strict_wholeworkspace_alltargets": true,
+    "default_passed": 452,
+    "ignored_external": 638,
+    "suites": 167,
+    "binary_source": "artifacts/rust/active-vod-union71-1/target/debug/deps/dispatcharr_job_transport-e406f39948c1750a",
+    "binary_sha256": "0cd7ab0572d9067a4cc5b3b623c9b2e71da3d4ff3badf19198d7bf4993a729fd",
+    "tests_log_sha256": "3d33e54549f0cb73fe8a8e50e99380f631fb6ab0f5bf8f9596b86d5afdd7d2b3",
+    "clippy_log_sha256": "82dbef5b078c1e575ec98c68ff53590e3a68cec8e0fd09b240b31f7f9701159a"
+  },
+  "overlay_proof_sha256": "3b205c9aa5b398b9c9886153d4157606fffe7ef0335f8ea9623a87b5a893a365",
+  "all_unselected734_bytes_preserved": true,
+  "single_profile_21file_boundary_preserved": true,
+  "replays": [
+    {
+      "name": "active",
+      "summary": "artifacts/rust/active-vod-union71-active-1/sanitized-summary.json",
+      "sha256": "1c9f5d990d588c4f2726fa1a189074ad87cc041c3b43668a8e210e8de0a053ab",
+      "checks": 314,
+      "physical_controls": 7
+    },
+    {
+      "name": "inactive",
+      "summary": "artifacts/rust/active-vod-union71-inactive-1/sanitized-summary.json",
+      "sha256": "346e5cb3e09f616e63eb4e014cc8e7a05cb9b47d2923e247f7bdabf89a7eaaa0",
+      "checks": 134,
+      "physical_controls": 9
+    },
+    {
+      "name": "expiry",
+      "summary": "artifacts/rust/active-vod-union71-expiry-1/sanitized-summary.json",
+      "sha256": "71071cda9377af4e6a21145ed5a4c8e2b6126c2728dd8b20f94a757441595983",
+      "checks": 63,
+      "physical_controls": 15
+    }
+  ],
+  "VOD_extra_replay": {
+    "executed": false,
+    "reason": "Five changed Job Transport paths have zero overlap with VOD36; unchanged VOD/Store/upstream runtime. Constructors inert, legacy inactive/expiry behavior directly regated. No734 VODHTTP execution is relabeled736."
+  },
+  "retained_component_limits": [
+    "zero-or-one eligible active profile",
+    "bounded title/name/date/notice/dismissal domains",
+    "Source SQL faults compare committed prefixes; native stays operational/PENDING rather than fake Source failure metadata",
+    "title overflow unsupported before native ACK",
+    "multiple-profile draft excluded"
+  ],
+  "selected5_sha256": "4ffb7d232123fb91a8507e64d393b0235fd9be49b3aebb83ece25288cfbe57f3"
+}

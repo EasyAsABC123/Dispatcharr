@@ -26,12 +26,17 @@ pub trait Domains: Send + Sync {
 #[derive(Clone)]
 pub struct KnownDomains {
     pool: PgPool,
+    active: Option<crate::active_notifications::Service>,
     sink: Option<Arc<dyn dispatcharr_contracts::UpdateEventSink>>,
 }
 impl KnownDomains {
     /// Constructor for explicitly assembled, inert default task services.
     pub fn new(pool: PgPool) -> Self {
-        Self { pool, sink: None }
+        Self {
+            pool,
+            sink: None,
+            active: None,
+        }
     }
     /// Use the existing application Channels sink; this starts no worker.
     pub fn with_notifications(
@@ -41,7 +46,32 @@ impl KnownDomains {
         Self {
             pool,
             sink: Some(sink),
+            active: None,
         }
+    }
+    /// Explicit bounded active evaluation. No intake starts; multiple eligible
+    /// profiles remain unsupported until task iteration ordering is qualified.
+    pub fn with_active_notifications(
+        pool: PgPool,
+        sink: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
+    ) -> Self {
+        let active = Some(crate::active_notifications::Service::new(
+            pool.clone(),
+            sink.clone(),
+            Arc::new(crate::active_notifications::UtcNotificationClock),
+        ));
+        Self {
+            pool,
+            sink: Some(sink),
+            active,
+        }
+    }
+    pub fn with_notification_clock(
+        mut self,
+        clock: Arc<dyn crate::active_notifications::NotificationClock>,
+    ) -> Self {
+        self.active = self.active.map(|service| service.with_clock(clock));
+        self
     }
     pub fn copied_fixture(pool: PgPool, database: &str) -> Result<Self, Error> {
         let options = pool.connect_options();
@@ -60,7 +90,11 @@ impl KnownDomains {
         {
             return Err(Error::Unsupported);
         }
-        Ok(Self { pool, sink: None })
+        Ok(Self {
+            pool,
+            sink: None,
+            active: None,
+        })
     }
     async fn inspect(&self, kind: Kind, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
         match kind {
@@ -71,7 +105,11 @@ impl KnownDomains {
                 if self.sink.is_none() {
                     return Err(Error::Unsupported);
                 }
-                crate::inactive_notifications::preflight(self.pool.clone(), owner).await
+                if let Some(active) = &self.active {
+                    active.preflight(owner).await
+                } else {
+                    crate::inactive_notifications::preflight(self.pool.clone(), owner).await
+                }
             }
             Kind::RecurringMaintenance => {
                 let pool = self.pool.clone();
@@ -108,7 +146,11 @@ impl Domains for KnownDomains {
         Box::pin(async move {
             if kind == Kind::InactiveAccountNotifications {
                 let sink = self.sink.clone().ok_or(Error::Unsupported)?;
-                crate::inactive_notifications::execute(self.pool.clone(), sink, owner).await?;
+                if let Some(active) = &self.active {
+                    active.execute(owner).await?;
+                } else {
+                    crate::inactive_notifications::execute(self.pool.clone(), sink, owner).await?;
+                }
                 return Ok(Normal::Null);
             }
             self.inspect(kind, owner).await?;

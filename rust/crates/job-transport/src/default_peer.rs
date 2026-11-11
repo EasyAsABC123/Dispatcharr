@@ -85,8 +85,24 @@ async fn native_default_family_peer() {
     let _validated_fixture = KnownDomains::copied_fixture(pool.clone(), &database).unwrap();
     validate_fixture_redis();
     let calls = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    struct Fixed(chrono::DateTime<chrono::Utc>);
+    impl crate::active_notifications::NotificationClock for Fixed {
+        fn now(&self) -> chrono::DateTime<chrono::Utc> {
+            self.0
+        }
+    }
+    let actual = if let Some(now) = request.get("notification_now") {
+        KnownDomains::with_active_notifications(pool.clone(), Arc::new(bus))
+            .with_notification_clock(Arc::new(Fixed(
+                chrono::DateTime::parse_from_rfc3339(now.as_str().unwrap())
+                    .unwrap()
+                    .with_timezone(&chrono::Utc),
+            )))
+    } else {
+        KnownDomains::with_notifications(pool.clone(), Arc::new(bus))
+    };
     let domains = Arc::new(CountedDomains {
-        actual: KnownDomains::with_notifications(pool.clone(), Arc::new(bus)),
+        actual,
         calls: calls.clone(),
     });
     let proxy_url = |field: &str, db: u8, fallback: &str| {

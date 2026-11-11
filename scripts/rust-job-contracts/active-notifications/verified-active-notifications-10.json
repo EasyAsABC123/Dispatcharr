@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "scope": "Normal inert single-active-profile expiration notification library; no Main/default consumer, full family, SQL FAILURE payload or performance claim",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_file_count": 713,
+  "source_map_path": "artifacts/rust/active-account-notifications-prep-1/source-inputs-5.json",
+  "source_map_sha256": "8dddbf97b272f17cdd90331715877bfaab0621756fadae1ce43ae70960354016",
+  "native_binary": "artifacts/rust/active-account-notifications-prep-1/native-peer-5",
+  "native_binary_sha256": "e69596c076899ef84c304818ad90b91d5aa3e11212055a9dc0ba7ebd3fdc48f3",
+  "source_checks": 219,
+  "source_cases": 17,
+  "paired_checks": 314,
+  "paired_cases": 17,
+  "native_physical_tests": 7,
+  "inactive_regression_checks": 134,
+  "inactive_regression_physical_tests": 9,
+  "workspace_default_passed": 390,
+  "workspace_ignored": 630,
+  "workspace_suites": 166,
+  "workspace_strict_all_targets": true,
+  "workspace_actual_exit_codes": {
+    "workspace-clippy-5": 0,
+    "workspace-tests-5": 0
+  },
+  "exact_comparison": "All stored notice/dismissal rows and actual event payload/order under restored owned IDs/sequence. Normal result typed null/status/children/traceback, own task_id/date_done/TTL validated separately. No post-diff sort of events.",
+  "known_nonparity": {
+    "sql_faults": "Source FAILURE versus native operational/PENDING, with exact committed row/event prefix",
+    "oversize_title": "Source DataError after prior opposite commit versus explicit native pre-ACK unsupported; native rows/queue preserved"
+  },
+  "normal_cases": 13,
+  "sql_operational_cases": 3,
+  "unsupported_title_cases": 1,
+  "legacy_public_apis_unchanged": true,
+  "graph_main_transport_worker_changes": false,
+  "retained_failures": [
+    "artifacts/rust/active-account-notifications-source-native-4",
+    "artifacts/rust/active-account-notifications-resources-5"
+  ],
+  "negative_control": {
+    "forced_exit": 27,
+    "expected_host_exit": 1,
+    "expected_aggregate_passed": false,
+    "physical_tests_preceding_injected_exit": 7
+  },
+  "evidence": {
+    "source2": {
+      "path": "artifacts/rust/active-account-notifications-original-2/integration.json",
+      "sha256": "88823a2955f4efe449c90f8491818bdf873a95542ca86307d6e0dcfc989a971a",
+      "actual_host_exit_code": 0,
+      "passed": true,
+      "checks": 219,
+      "default_database_unchanged": true,
+      "cleanup": "owned project removed"
+    },
+    "active10": {
+      "path": "artifacts/rust/active-account-notifications-source-native-final-10/integration.json",
+      "sha256": "603dd52ead2d56a8026942cf88fd37c5e8ae1b96a293abb999b9251048c5e3e6",
+      "actual_host_exit_code": 0,
+      "passed": true,
+      "checks": 314,
+      "default_database_unchanged": true,
+      "cleanup": "owned project removed"
+    },
+    "inactive8": {
+      "path": "artifacts/rust/active-account-notifications-inactive-regression-8/integration.json",
+      "sha256": "bc2597ac0cd15739a729624503a6aa3b71d2573bd6aafbbd8cef14f30cf18d5e",
+      "actual_host_exit_code": 0,
+      "passed": true,
+      "checks": 134,
+      "default_database_unchanged": true,
+      "cleanup": "owned project removed"
+    },
+    "negative9": {
+      "path": "artifacts/rust/active-account-notifications-runner-negative-9/integration.json",
+      "sha256": "403cd2c5b0e3bca824aeed5e0925a0fa2c6d7893b20b7195ac1af41baf5aed79",
+      "actual_host_exit_code": 1,
+      "passed": false,
+      "checks": null,
+      "default_database_unchanged": true,
+      "cleanup": "owned project removed"
+    }
+  },
+  "tool_reconstruction_controls": 7,
+  "credit": "Original Dispatcharr/Django/Celery/Channels/redis-py authors retain code, algorithm and license credit.",
+  "remaining": [
+    "Multiple eligible profiles and iteration ordering",
+    "Concurrent profile/key changes",
+    "Profile-save parsing/signals",
+    "Larger title/date/count domains",
+    "Nonempty same-process proxy managers",
+    "Exact Python failure-result serialization",
+    "Other default families and actual app/Main/default intake"
+  ],
+  "public_portability": {
+    "passed": true,
+    "public_full_reconstruction_files": 713,
+    "corruption_controls": 7,
+    "reconstructed_map_equals_qualified": true,
+    "public_build_record": "artifacts/rust/active-account-notifications-handoff-1/validation/public-build-1/build.json",
+    "public_build_record_sha256": "4b0b29dc183cab8c5c7df84f3d63afcfda0ab86d18dd77ee1f7a8950c4e3458b",
+    "build_actual_exit_code": 0,
+    "portable_controller_path": "artifacts/rust/active-account-notifications-handoff-1/selected/scripts/rust-job-contracts/active-notifications/native/run_native.py",
+    "portable_support": "scripts/rust-core-perf/support",
+    "portable_actual_exit_code": 0,
+    "portable_report": "artifacts/rust/active-account-notifications-public-portable-11/integration.json",
+    "portable_report_sha256": "23fa778a40b58de9a699eed1d004543d3924557690a4609cf7e5314a408a1cd7",
+    "paired_checks": 314,
+    "physical_tests": 7,
+    "default_database_unchanged": true,
+    "cleanup": "owned project removed",
+    "scope": "Actual public reconstruction/build/controller smoke; exact same713 source and identical executable bytes, no resource/performance claim"
+  },
+  "public_source_map": "scripts/rust-job-contracts/active-notifications/native-source-inputs.json"
+}
