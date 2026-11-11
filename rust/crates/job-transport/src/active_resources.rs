@@ -438,7 +438,7 @@ async fn actual_upsert_reply_cancel_retains_domain_and_partial_commit() {
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 #[ignore]
-async fn multiple_profiles_and_legacy_constructor_refuse_before_ack() {
+async fn profile_cap_and_legacy_constructor_refuse_before_ack() {
     let pool = pool().await;
     reset(&pool).await;
     let jobs = jobs().await;
@@ -456,7 +456,7 @@ async fn multiple_profiles_and_legacy_constructor_refuse_before_ack() {
         Run::Unsupported(Kind::InactiveAccountNotifications)
     ));
     assert!(legacy.shutdown(Duration::from_secs(1)).await);
-    sqlx::query("INSERT INTO m3u_m3uaccountprofile(m3u_account_id,name,is_active,exp_date,max_streams,current_viewers,search_pattern,replace_pattern,custom_properties,is_default) SELECT m3u_account_id,'Owned Second Profile',true,now(),0,0,'','','{}',false FROM m3u_m3uaccountprofile WHERE is_active LIMIT 1").execute(&pool).await.unwrap();
+    sqlx::query("INSERT INTO m3u_m3uaccountprofile(m3u_account_id,name,is_active,exp_date,max_streams,current_viewers,search_pattern,replace_pattern,custom_properties,is_default) SELECT p.m3u_account_id,'Owned Extra Profile-'||n::text,true,now(),0,0,'','','{}',false FROM m3u_m3uaccountprofile p CROSS JOIN generate_series(1,32) n WHERE p.is_active").execute(&pool).await.unwrap();
     let worker = DefaultWorker::new(
         jobs.clone(),
         Arc::new(KnownDomains::with_active_notifications(
@@ -529,5 +529,85 @@ async fn four_domain_admissions_retain_waiting_sql_owners_after_abort() {
         .preflight(Kind::InactiveAccountNotifications, Arc::new(()))
         .await
         .unwrap();
+    pool.close().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore]
+async fn snapshot_sql_guard_cancellation_retains_owner() {
+    let pool = pool().await;
+    reset(&pool).await;
+    insert(&pool, "xc-exp-warning-owned-resource").await;
+    let jobs = jobs().await;
+    let m = publish(&jobs).await;
+    let worker = DefaultWorker::new(
+        jobs.clone(),
+        Arc::new(KnownDomains::with_active_notifications(
+            pool.clone(),
+            Arc::new(bus().await),
+        )),
+    )
+    .unwrap();
+    let mut lock = sqlx::PgConnection::connect(&std::env::var("DATABASE_URL").unwrap())
+        .await
+        .unwrap();
+    let mut tx = lock.begin().await.unwrap();
+    sqlx::query("LOCK TABLE m3u_m3uaccountprofile IN ACCESS EXCLUSIVE MODE")
+        .execute(&mut *tx)
+        .await
+        .unwrap();
+    let (held, flag) = owner();
+    let own = worker.clone();
+    let task = tokio::spawn(async move { own.run_once(held).await });
+    tokio::time::sleep(Duration::from_millis(100)).await;
+    task.abort();
+    assert!(!worker.shutdown(Duration::from_millis(25)).await);
+    assert!(!flag.load(Ordering::SeqCst));
+    tx.rollback().await.unwrap();
+    lock.close().await.unwrap();
+    assert!(worker.shutdown(Duration::from_secs(3)).await);
+    wait(|| flag.load(Ordering::SeqCst)).await;
+    assert!(jobs.read(m.task_id, Arc::new(())).await.unwrap().is_some());
+    jobs.shutdown(Duration::from_secs(3)).await.unwrap();
+    pool.close().await;
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore]
+async fn fetched_profile_bytes_refuse_before_ack_without_mutation() {
+    let pool = pool().await;
+    reset(&pool).await;
+    sqlx::query("UPDATE m3u_m3uaccountprofile SET custom_properties=jsonb_build_object('owned',repeat('x',70000)) WHERE is_active").execute(&pool).await.unwrap();
+    sqlx::query("INSERT INTO m3u_m3uaccountprofile(m3u_account_id,name,is_active,exp_date,max_streams,current_viewers,search_pattern,replace_pattern,custom_properties,is_default) SELECT m3u_account_id,'Owned Byte Boundary Extra',true,now(),0,0,'','','{}',false FROM m3u_m3uaccountprofile WHERE is_active").execute(&pool).await.unwrap();
+    let jobs = jobs().await;
+    let m = publish(&jobs).await;
+    let worker = DefaultWorker::new(
+        jobs.clone(),
+        Arc::new(KnownDomains::with_active_notifications(
+            pool.clone(),
+            Arc::new(bus().await),
+        )),
+    )
+    .unwrap();
+    assert!(matches!(
+        worker.run_once(Arc::new(())).await.unwrap(),
+        Run::Unsupported(Kind::InactiveAccountNotifications)
+    ));
+    let mut c = redis().await;
+    let len: i64 = redis::cmd("LLEN")
+        .arg("celery")
+        .query_async(&mut c)
+        .await
+        .unwrap();
+    assert_eq!(len, 1);
+    assert!(jobs.read(m.task_id, Arc::new(())).await.unwrap().is_none());
+    let retained:i64=sqlx::query_scalar("SELECT count(*) FROM m3u_m3uaccountprofile WHERE is_active AND length(custom_properties->>'owned')=70000").fetch_one(&pool).await.unwrap();
+    assert_eq!(retained, 1);
+    assert!(worker.shutdown(Duration::from_secs(1)).await);
+    jobs.shutdown(Duration::from_secs(1)).await.unwrap();
+    sqlx::query("UPDATE m3u_m3uaccountprofile SET custom_properties='{}' WHERE is_active")
+        .execute(&pool)
+        .await
+        .unwrap();
+    reset(&pool).await;
     pool.close().await;
 }

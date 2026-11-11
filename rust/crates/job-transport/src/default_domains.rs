@@ -49,8 +49,8 @@ impl KnownDomains {
             active: None,
         }
     }
-    /// Explicit bounded active evaluation. No intake starts; multiple eligible
-    /// profiles remain unsupported until task iteration ordering is qualified.
+    /// Explicit bounded active evaluation. No intake starts; up to32 eligible
+    /// profiles with exact Source query iteration and bounded stored input.
     pub fn with_active_notifications(
         pool: PgPool,
         sink: Arc<dyn dispatcharr_contracts::UpdateEventSink>,

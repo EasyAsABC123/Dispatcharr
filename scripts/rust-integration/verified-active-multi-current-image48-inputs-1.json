@@ -1,0 +1,251 @@
+{
+  "passed": true,
+  "scope": "Independent read-only exact frozen746+multi3 audit; no package/browser/performance/full-M2 acceptance",
+  "base746": {
+    "path": "artifacts/rust/combined-stats-current-union-1/inputs.json",
+    "sha256": "d6cd638dbbcf2e2167f14c607e733d7d808d4fe74ab108a7a786b2e94a9cb71b"
+  },
+  "multi746": {
+    "path": "artifacts/rust/active-multi-current-union-1/inputs.json",
+    "sha256": "fc62da15400469a90e620a6b8d30c3aee3b74d85758a0027c76d7f689ea98eb5"
+  },
+  "source_inputs_verified": 746,
+  "only_changed_paths": [
+    "rust/crates/job-transport/src/active_notifications.rs",
+    "rust/crates/job-transport/src/active_resources.rs",
+    "rust/crates/job-transport/src/default_domains.rs"
+  ],
+  "unselected743_preserved": true,
+  "stats17_verified_unchanged": [
+    {
+      "path": "rust/crates/app/datasets/combined-stats-html/admin-error.html.in",
+      "sha256": "5cb920d61e3b08d738c08c8493884ebc3eefb70559ef25676b0d057c5593756a"
+    },
+    {
+      "path": "rust/crates/app/datasets/combined-stats-html/admin-options-api.html.in",
+      "sha256": "6aa8d7d09de9fbfb6ef20aa029bf7a957c60c76fa5fcaa3381eae535138c034f"
+    },
+    {
+      "path": "rust/crates/app/datasets/combined-stats-html/admin-options.html.in",
+      "sha256": "c67600433eac0e6576521016654a1102e2c99c29d5f152c004124ac8ec5b7134"
+    },
+    {
+      "path": "rust/crates/app/datasets/combined-stats-html/anonymous.html.in",
+      "sha256": "46453d69f0da9731850217f9678f5c0daa6cd4503fcf3c1eced08b8ed538f9e8"
+    },
+    {
+      "path": "rust/crates/app/datasets/combined-stats-html/source-bindings.json",
+      "sha256": "4cd43ab60c405fd9de2ca57ee6aaf35dc7fcc46404b057683d90ec14678722d3"
+    },
+    {
+      "path": "rust/crates/app/datasets/combined-stats-html/standard.html.in",
+      "sha256": "1f85458cb66251e553cb2af9359f29b1facc81ecae489b39211242dc8c8c9ec0"
+    },
+    {
+      "path": "rust/crates/app/src/combined_statistics.rs",
+      "sha256": "823652e8e5ea185931b0d37d63ad1dfff8af5087180cb30740d2a43751e8a0fc"
+    },
+    {
+      "path": "rust/crates/app/src/combined_statistics_html.rs",
+      "sha256": "231fbe303dbe949da3bffeccfed789cb6bf837cf2d1b19074f0125ac26aa8cda"
+    },
+    {
+      "path": "rust/crates/app/src/combined_statistics_peer.rs",
+      "sha256": "e2b4b1565cb0418cf6917fe097a85a1aee0d7189f780eee5bb2b652641c3d73b"
+    },
+    {
+      "path": "rust/crates/app/src/combined_statistics_wire.rs",
+      "sha256": "e1456e4129fd1b04c78ee203f8f86e6d2404a4f2d6ae47bf7641898ba039a75f"
+    },
+    {
+      "path": "rust/crates/app/src/main.rs",
+      "sha256": "624a792700519ae78b6a8f16bd3b7f78041594a8f083ec493b84129a50883f6b"
+    },
+    {
+      "path": "rust/crates/store/src/lib.rs",
+      "sha256": "e9a6ad17d52283862ebf8b96d5479e7e114eae8d3c20d2dc1730d11e71f3ef47"
+    },
+    {
+      "path": "rust/crates/store/src/vod_api_draft.rs",
+      "sha256": "769af6d1e2a895c2c18abc0ab8316e4eb19aff84c4f8cc56adb4383cc12ed599"
+    },
+    {
+      "path": "rust/crates/stream-http/src/status.rs",
+      "sha256": "0f435d59b4e1e81f3ed555c85cda6c28a48d51be6e178f97cad5e8411b5b6318"
+    },
+    {
+      "path": "rust/crates/timeshift-http/src/management.rs",
+      "sha256": "1e59583bfb77fa1b7d97a53dd9ae1daf36ed7fa0e512981f4fe285d8879cecc9"
+    },
+    {
+      "path": "rust/crates/timeshift-http/src/management_data.rs",
+      "sha256": "ba675eb4cb6f5e989c3513ea40cf22c6a6eebed05d555e6f4d388e0a592fea14"
+    },
+    {
+      "path": "rust/crates/vod-http/src/lib.rs",
+      "sha256": "968bd84933140a243c9bad5f65d9e76a1990bb4d7b787b84025fc85b09b3caa6"
+    }
+  ],
+  "selected_handoff68": {
+    "path": "artifacts/rust/combined-stats-handoff-1/files.json",
+    "sha256": "419577b900763bcd9dda9db7bd0078b04117fa3ab1bc140ee9e436c798325e53"
+  },
+  "composition": {
+    "path": "artifacts/rust/active-multi-current-union-1/composition.json",
+    "sha256": "01daae214e8233551cf9b823c60372529f2aae85404a2472c980b416ed856f61"
+  },
+  "workspace": {
+    "default_passed": 459,
+    "ignored": 641,
+    "failed": 0,
+    "test_result_lines": 167,
+    "strict_all_targets": true,
+    "logs": [
+      {
+        "path": "artifacts/rust/active-multi-current-union-1/clippy.log",
+        "sha256": "863a342c3530c2dba38999764d933edb979bcb8ed1babc3a85cd62960f6e3c05"
+      },
+      {
+        "path": "artifacts/rust/active-multi-current-union-1/tests.log",
+        "sha256": "80c15c4f1b7c11503b6dda6fa6460474f484469d8b2d41bc84044330e6b97f8b"
+      },
+      {
+        "path": "artifacts/rust/active-multi-current-union-1/validation.json",
+        "sha256": "f67a070a7d4a81277db1edc50c853d21dbd82f74ce3f1b87229c3732f557a705"
+      }
+    ]
+  },
+  "elf": {
+    "path": "artifacts/rust/active-multi-current-union-1/native-job-peer",
+    "sha256": "4ef893e71b28be4c980866de01006519b65f40c207ae36bc7453845b376ae0ae"
+  },
+  "actual_replays": [
+    {
+      "family": "multi",
+      "checks": 111,
+      "physical_tests": 9,
+      "physical_breakdown": [
+        9
+      ],
+      "integration": {
+        "path": "artifacts/rust/active-multi-current-union-multi-1/integration.json",
+        "sha256": "2a98391a250c95dffc60671c348722ae720ac163503e86999924a6697d8caccd"
+      },
+      "raw": {
+        "path": "artifacts/rust/active-multi-current-union-multi-1/source-native-default-pair-private.json",
+        "sha256": "34846afdf0eec7cba88b38d140ca780505796b5cf837e7c47c055b3838bd6159"
+      },
+      "resource_logs": [
+        {
+          "path": "artifacts/rust/active-multi-current-union-multi-1/native-active-resources.log",
+          "sha256": "7db0ba408277b6575c4d6afe91bf2b4ab445fa78f58e2078bd795471954e8350"
+        }
+      ],
+      "baseline_unchanged": true,
+      "baseline_before": {
+        "path": "artifacts/rust/active-multi-current-union-multi-1/baseline-before-private.json",
+        "sha256": "3e6fe59c2dae781f9f1a3d4867581d94530763b1db063b92d03528655060702c"
+      },
+      "baseline_after": {
+        "path": "artifacts/rust/active-multi-current-union-multi-1/baseline-after-private.json",
+        "sha256": "3e6fe59c2dae781f9f1a3d4867581d94530763b1db063b92d03528655060702c"
+      },
+      "independent_owned_docker_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "family": "single",
+      "checks": 314,
+      "physical_tests": 9,
+      "physical_breakdown": [
+        9
+      ],
+      "integration": {
+        "path": "artifacts/rust/active-multi-current-union-single-1/integration.json",
+        "sha256": "0dc20a749d468468957421bc3429da45125dc450b402246b44b3e33845fc9abb"
+      },
+      "raw": {
+        "path": "artifacts/rust/active-multi-current-union-single-1/source-native-default-pair-private.json",
+        "sha256": "3bc17e6883cca4911a13313b4c58455bc84145aa5b34557ecc9a79c525225e9f"
+      },
+      "resource_logs": [
+        {
+          "path": "artifacts/rust/active-multi-current-union-single-1/native-active-resources.log",
+          "sha256": "881fb6d9fe502572e003c7b2fb19f24edbcb5a5dc2a13cdf2d2bc1da225940f9"
+        }
+      ],
+      "baseline_unchanged": true,
+      "baseline_before": {
+        "path": "artifacts/rust/active-multi-current-union-single-1/baseline-before-private.json",
+        "sha256": "663adabcc5513584287e4304eb6fbe18f7a9f7dcf1d3cb809a7af5c21e36c178"
+      },
+      "baseline_after": {
+        "path": "artifacts/rust/active-multi-current-union-single-1/baseline-after-private.json",
+        "sha256": "663adabcc5513584287e4304eb6fbe18f7a9f7dcf1d3cb809a7af5c21e36c178"
+      },
+      "independent_owned_docker_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    },
+    {
+      "family": "inactive",
+      "checks": 134,
+      "physical_tests": 9,
+      "physical_breakdown": [
+        5,
+        4
+      ],
+      "integration": {
+        "path": "artifacts/rust/active-multi-current-union-inactive-1/integration.json",
+        "sha256": "3379f8bce62014eb6575ec5118f434541e643959e1b5575f99cd21277be2cb47"
+      },
+      "raw": {
+        "path": "artifacts/rust/active-multi-current-union-inactive-1/source-native-default-pair-private.json",
+        "sha256": "a101dda1812598cb8b845bbf22c045db25ee2e81e5c42b7d3e44628b5e42c9eb"
+      },
+      "resource_logs": [
+        {
+          "path": "artifacts/rust/active-multi-current-union-inactive-1/native-default_resources.log",
+          "sha256": "ad71d1b9c75dbb6107b141ae697fba694fcd4027a9ffc253bb5545df51d0ba13"
+        },
+        {
+          "path": "artifacts/rust/active-multi-current-union-inactive-1/native-inactive_resources.log",
+          "sha256": "8d87825f0149d9e7062c8fa7fa52bc37ba39bb388a5f3cae70124acceacaad6c"
+        }
+      ],
+      "baseline_unchanged": true,
+      "baseline_before": {
+        "path": "artifacts/rust/active-multi-current-union-inactive-1/baseline-before-private.json",
+        "sha256": "5dee883dac1569106d68969f207d55ecb295d10936342a93bb7c199d3adcc053"
+      },
+      "baseline_after": {
+        "path": "artifacts/rust/active-multi-current-union-inactive-1/baseline-after-private.json",
+        "sha256": "5dee883dac1569106d68969f207d55ecb295d10936342a93bb7c199d3adcc053"
+      },
+      "independent_owned_docker_cleanup": {
+        "container": [],
+        "network": [],
+        "volume": []
+      }
+    }
+  ],
+  "public_destination_recommendation": {
+    "path": "scripts/rust-integration/verified-active-multi-current-image48-inputs-1.json",
+    "contents": "Sanitized audit, exact source/selection/ELF/tool/result hashes and public replay references; retain raw rows/provider URLs in private artifacts. Bind Stats supplemental proof separately. Append image48/browser evidence only after actual runs.",
+    "stats_replay_namespace": "scripts/rust-combined-stats-contracts/"
+  },
+  "committed_build_cli": {
+    "revision": "faa561bc3f76b99fafdd4ef9456fa039195396e3",
+    "sha256": "6cdb648f258adfe27ac2223116060c90f2bffe520f4e456462f7ea4b2035575d",
+    "path": "scripts/rust-integration/build.py",
+    "source_mode": "--git-revision resolves commit and git archives LICENSE ATTRIBUTION rust frontend; no dirty application source fallback",
+    "deployment_template": "Still reads live docker/compose.rust-candidate.yml; command first compares this and driver against chosen commit",
+    "command": "set -euo pipefail\nsource artifacts/rust/tooling/environment.sh\nimage48_revision='REPLACE_WITH_FULL_NEXT_COMMITTED_746_REVISION'\ngit rev-parse --verify \"${image48_revision}^{commit}\"\ngit diff --exit-code \"$image48_revision\" -- scripts/rust-integration/build.py docker/compose.rust-candidate.yml\npython3 scripts/rust-integration/build.py --git-revision \"$image48_revision\" --output artifacts/rust/candidate-build-combined-stats-vod-image48-1 --tag dispatcharr-rust-candidate:combined-stats-vod-image48-1 --timeout 1800",
+    "executed": false
+  }
+}

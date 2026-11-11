@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "scope": "Normal inert bounded multiple-profile expiration notifications, no Main/default consumer/fullfamily/performance claim",
+  "source_files": 713,
+  "runtime_delta_paths": 3,
+  "native_binary": "artifacts/rust/active-account-notifications-multi-prep-1/native-peer-4",
+  "native_binary_sha256": "471c1cef4c6c530900cdc26aa2bac66388f0516ce2cfb0ff014c662065e87744",
+  "source_map_sha256": "d040bbe43d76a0640349fb5e9530012efb3c92d260925dfe6ace32aedecc2129",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "actual_source_native_checks": 111,
+  "cases": 8,
+  "native_physical_tests": 9,
+  "single_regression_checks": 314,
+  "single_regression_physical_tests": 9,
+  "inactive_regression_checks": 134,
+  "inactive_regression_physical_tests": 9,
+  "workspace_passed": 390,
+  "workspace_ignored": 632,
+  "workspace_suites": 166,
+  "workspace_actual_exit_codes": {
+    "workspace-clippy-4": 0,
+    "workspace-tests-4": 0
+  },
+  "bounds": {
+    "profiles": 32,
+    "multi_full_row_json_bytes": 65536,
+    "collector_notices": 128,
+    "global_dismissals": 1024,
+    "profile_name_chars": 237,
+    "account_name_chars": 255,
+    "years": [
+      1970,
+      9999
+    ],
+    "retained_service_admissions": 4
+  },
+  "single_compatibility": "Qualified0/1 projected query remains, no unused-JSON cap added. Real Source/native70KiB unused JSON case passes. Exact full Original all-column SELECT is used for2..32 only.",
+  "ordering": "No added profile ORDER BY or ID sort; original full query/projection retained for multi. Source physical reversal [2,3,4]\u2192[4,3,2], cross-account, partial error prefix,32 rows and mixed new/existing all compared in actual event delivery order.",
+  "snapshot": "Multi count/aggregate/fetch within physically retained read-only repeatable snapshot. No concurrent mutation parity claim.",
+  "known_nonparity": "Source SQL exception yields FAILURE; native operational/PENDING with exact committed row/event prefix. Unsupported date/title/count/byte domains remain pre-ACK untouched.",
+  "main_graph_registry_changed": false,
+  "credit": "Original Dispatcharr/Django/Celery/Channels/redis-py authors retain code, algorithm and license credit.",
+  "evidence": {
+    "multi": {
+      "path": "artifacts/rust/active-account-notifications-multi-source-native-final-7/integration.json",
+      "sha256": "5ecd63343b9dccd6512aa423588e91f6b0ecbeea3824a84c119298138bc71059",
+      "passed": true,
+      "actual_host_exit_code": 0,
+      "checks": 111,
+      "default_database_unchanged": true,
+      "cleanup": "owned project removed"
+    },
+    "single": {
+      "path": "artifacts/rust/active-account-notifications-multi-single-final-8/integration.json",
+      "sha256": "cd2ed55381f22efd0ca51f5e8d3fc5eed1d21872113b549fb4e4c1616b67e944",
+      "passed": true,
+      "actual_host_exit_code": 0,
+      "checks": 314,
+      "default_database_unchanged": true,
+      "cleanup": "owned project removed"
+    },
+    "inactive": {
+      "path": "artifacts/rust/active-account-notifications-multi-inactive-final-9/integration.json",
+      "sha256": "af71f4604605223b441b38f9b89fd080041ecb5fdb5ea9ef639c807dbe77fe42",
+      "passed": true,
+      "actual_host_exit_code": 0,
+      "checks": 134,
+      "default_database_unchanged": true,
+      "cleanup": "owned project removed"
+    },
+    "source_only_historical7": {
+      "path": "artifacts/rust/active-account-notifications-multi-original-3/integration.json",
+      "sha256": "b884c18c4b018f9fd8f30b88bab361d1c06d1d8d6cb0d84a414e1cf52d7d8d2a",
+      "passed": true,
+      "actual_host_exit_code": 0,
+      "checks": 62,
+      "default_database_unchanged": true,
+      "cleanup": "owned project removed"
+    }
+  },
+  "public_portability": {
+    "passed": true,
+    "exact_source_files": 713,
+    "reconstruction_controls": 7,
+    "public_builder_actual_exit_code": 0,
+    "portable_controller_actual_exit_code": 0,
+    "build_record": "artifacts/rust/active-account-notifications-multi-handoff-1/validation/public-build-1/build.json",
+    "build_record_sha256": "870d3edb41d2809eeb85d0fbf75e2ab8ff549fc4c9fc4173728379391de5e2ae",
+    "portable_report": "artifacts/rust/active-account-notifications-multi-public-portable-10/integration.json",
+    "portable_report_sha256": "429089c47e0b625cd1379dfbf285de2dc6c8f9d193857deab24511103d9262b5",
+    "actual_source_native_checks": 111,
+    "actual_physical_tests": 9,
+    "default_database_unchanged": true,
+    "cleanup": "owned project removed",
+    "source_map_exact": true,
+    "scope": "Actual public-path reconstruction/build/functional+physical smoke, committed support/no private fallback; no performance claim"
+  },
+  "remaining": [
+    "Concurrent profile/key mutations",
+    "General planner/GUC/physical-layout combinations beyond captured controls",
+    "Larger title/date/count/byte domains",
+    "Profile-save parsing/signals",
+    "Nonempty same-process proxy manager effects",
+    "Source Python failure-result metadata",
+    "Other default families and Main/default consumer application integration"
+  ]
+}
