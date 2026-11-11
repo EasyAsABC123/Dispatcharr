@@ -288,7 +288,7 @@ async fn read_with_hooks(
             .fetch_one(connection.raw())
             .await?
             .try_get::<i64, _>("count")?;
-        let (next, previous) = links(origin, path, pairs, &selection.page, count);
+        let (next, previous) = links(origin, path, pairs, &selection.page, count)?;
         // Serializer/renderer follows the count/link phase. A later PG or
         // projection failure therefore overrides an earlier nonfinite rating.
         if renderer_fault {
@@ -336,33 +336,15 @@ async fn read_with_hooks(
 }
 
 fn links(
-    origin: &str,
-    path: &str,
-    pairs: &[(String, String)],
-    page: &UnifiedPage,
-    count: i64,
-) -> (Option<String>, Option<String>) {
-    let next = (&page.offset + &page.size < BigInt::from(count))
-        .then(|| page_link(origin, path, pairs, Some(&(&page.number + 1))));
-    let previous = (page.number > BigInt::from(1)).then(|| {
-        let previous = &page.number - 1;
-        page_link(
-            origin,
-            path,
-            pairs,
-            (previous != BigInt::from(1)).then_some(&previous),
-        )
-    });
-    (next, previous)
+    origin:&str,path:&str,pairs:&[(String,String)],page:&UnifiedPage,count:i64,
+)->Result<(Option<String>,Option<String>),QueryFault>{
+    let next=if &page.offset+&page.size<BigInt::from(count){Some(page_link(origin,path,pairs,Some(&(&page.number+1)))?)}else{None};
+    let previous=if page.number>BigInt::from(1){let prior=&page.number-1;Some(page_link(origin,path,pairs,(prior!=BigInt::from(1)).then_some(&prior))?)}else{None};
+    Ok((next,previous))
 }
-fn page_link(
-    origin: &str,
-    path: &str,
-    pairs: &[(String, String)],
-    page: Option<&BigInt>,
-) -> String {
-    let page = page.map(ToString::to_string);
-    super::vod_api_pagination::page_url_text(origin, path, pairs, page.as_deref())
+fn page_link(origin:&str,path:&str,pairs:&[(String,String)],page:Option<&BigInt>)->Result<String,QueryFault>{
+    let page=page.map(super::vod_api_unified_query::decimal_text).transpose()?;
+    Ok(super::vod_api_pagination::page_url_text(origin,path,pairs,page.as_deref()))
 }
 
 #[cfg(test)]

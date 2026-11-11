@@ -24,7 +24,7 @@ def main():
     base_group.add_argument('--git-revision')
     p.add_argument('--overlay',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--only-target',action='append',choices=['recovery_generation','recovery_generation_physical','generation_scope','generation_scope_physical','http_recovery','vod','session_diagnostic'])
+    p.add_argument('--only-target',action='append',choices=['lookup_read','recovery_generation','recovery_generation_physical','generation_scope','generation_scope_physical','http_recovery','vod','session_diagnostic'])
     a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
     overlay=json.loads(a.overlay.read_text())
     if a.git_revision:
@@ -68,13 +68,13 @@ def main():
     report['build_environment']={key:env[key]for key in ['CARGO_TARGET_DIR','CARGO_PROFILE_DEV_DEBUG','CARGO_PROFILE_TEST_DEBUG','CARGO_INCREMENTAL']}
     name='dispatcharr-generation-'+uuid.uuid4().hex[:12]
     try:
-        targets=[('dispatcharr-coordination','redis',10),('dispatcharr-coordination','acquire_cancel',2),
+        targets=[('dispatcharr-vod-http','lookup_read',6),('dispatcharr-coordination','redis',10),('dispatcharr-coordination','acquire_cancel',2),
                  ('dispatcharr-clients','vod',2),('dispatcharr-vod-http','recovery_generation',11),('dispatcharr-vod-http','recovery_generation_physical',2),('dispatcharr-vod-http','generation_scope',12),('dispatcharr-vod-http','generation_scope_physical',8),('dispatcharr-vod-http','http_recovery',4),('dispatcharr-vod-http','session_diagnostic',1)]
         if a.only_target:targets=[item for item in targets if item[1]in a.only_target]
         report['selected_targets']=[item[1]for item in targets]
         for package,target,count in targets:
             built=subprocess.run(['cargo','test','--manifest-path',str(source/'rust/Cargo.toml'),'-p',package,
-                *(['--lib']if target=='session_diagnostic'else['--test',target]),'--no-run','--message-format=json','--locked','--offline'],env=env,capture_output=True,text=True,timeout=600)
+                *(['--lib']if target in ['session_diagnostic','lookup_read']else['--test',target]),'--no-run','--message-format=json','--locked','--offline'],env=env,capture_output=True,text=True,timeout=600)
             (out/(target+'-build.jsonl')).write_text(built.stdout);(out/(target+'-build.log')).write_text(built.stderr);built.check_returncode()
             paths=[json.loads(line)['executable']for line in built.stdout.splitlines()if line.startswith('{')and json.loads(line).get('reason')=='compiler-artifact'and json.loads(line).get('executable')]
             if len(paths)!=1:raise ValueError('One binary expected')
@@ -111,7 +111,7 @@ def main():
             time.sleep(.05)
         else:raise TimeoutError('Redis readiness')
         for test in report['tests']:
-            result=subprocess.run(['docker','exec',name,'/native-peers/'+test['target'],'--ignored','--nocapture','--test-threads=1']+(['physical_']if test['target']=='recovery_generation_physical'else['local_scope_']if test['target']=='generation_scope'else['local_physical_']if test['target']=='generation_scope_physical'else['receipt_actor_failure_']if test['target']=='session_diagnostic'else[]),
+            result=subprocess.run(['docker','exec',name,'/native-peers/'+test['target'],'--ignored','--nocapture','--test-threads=1']+(['physical_']if test['target']=='recovery_generation_physical'else['local_scope_']if test['target']=='generation_scope'else['local_physical_']if test['target']=='generation_scope_physical'else['receipt_actor_failure_']if test['target']=='session_diagnostic'else['lookup_read_failure_']if test['target']=='lookup_read'else[]),
                 env=env,capture_output=True,text=True,timeout=180)
             text=result.stdout+result.stderr;(out/(test['target']+'-tests.log')).write_text(text)
             test['passed']=result.returncode==0 and f"test result: ok. {test['expected_count']} passed;"in text

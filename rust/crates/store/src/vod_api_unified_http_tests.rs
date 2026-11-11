@@ -594,3 +594,6 @@ async fn actual_original_auth_priority_network_matrix() {
     let report=json!({"passed":differences.is_empty()&&event_pass,"SystemEvents_nonempty_same_DB_exact_raw_controls":events_controls,"cross_prototype_HTML_pre_view_faults":html_pre_view_faults,"additional_Category_Source_native_TCP_controls":category_controls,"scope":"297 actual Original/native TCP status/body/MIME +generic500 selectedheaders.99 invalid REMOTE_ADDR remain Source Factory authority plus native parser rejection, NOT nativeHTTP invalidsocket parity","compared_real_HTTP":records.len(),"invalid_peer_Source_Factory_only":invalid_peer_source_only,"records":records,"differences":differences,"owned_user_properties_and_cache_restored":true});
     std::fs::write(evidence.join("shared-ui-auth-priority-native.json"),serde_json::to_vec_pretty(&report).unwrap()).unwrap();assert_eq!(report["compared_real_HTTP"],297);assert_eq!(invalid_peer_source_only,99);assert_eq!(report["passed"],true,"shared UI permission matrix mismatch");
 }
+
+#[path="vod_api_unified_edge_http_peer.rs"]
+mod a000_edge_source_tests;

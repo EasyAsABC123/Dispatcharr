@@ -420,18 +420,7 @@ impl SessionPool {
         &self,
         id: &str,
     ) -> Result<Option<i64>, dispatcharr_store::StoreError> {
-        let mut connection = self.inner.connection.clone();
-        if connection
-            .exists::<_, bool>(key(id))
-            .await
-            .map_err(|_| redis_error())?
-        {
-            return Ok(None);
-        }
-        connection
-            .get(format!("vod_session_user:{id}"))
-            .await
-            .map_err(|_| redis_error())
+        session_user_lookup::optional_user(self.inner.clone(), id).await
     }
 
     async fn enter_recovered(
@@ -1424,3 +1413,6 @@ fn idle_match(
 #[cfg(test)]
 #[path = "session_restart_peer.rs"]
 mod session_restart_peer;
+
+#[path = "session_user_lookup.rs"]
+mod session_user_lookup;

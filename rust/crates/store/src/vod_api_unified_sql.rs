@@ -56,13 +56,13 @@ impl Statement {
         }
         Ok(result)
     }
-    fn limit(&mut self, value: &num_bigint::BigInt) -> String {
-        let raw = value.to_string();
+    fn limit(&mut self, value: &num_bigint::BigInt) -> Result<String, QueryFault> {
+        let raw = super::vod_api_unified_query::decimal_text(value)?;
         match raw.parse::<i64>() {
-            Ok(value) => format!("{}::bigint", self.bind(Bind::Integer(value))),
+            Ok(value) => Ok(format!("{}::bigint", self.bind(Bind::Integer(value)))),
             // Source Psycopg sends values outside i64 as numeric, then PG's
             // LIMIT coercion raises the captured `bigint out of range`.
-            Err(_) => format!("{}::numeric::bigint", self.bind(Bind::Text(raw))),
+            Err(_) => Ok(format!("{}::numeric::bigint", self.bind(Bind::Text(raw)))),
         }
     }
 }
@@ -80,9 +80,14 @@ impl UnifiedQuery {
     /// Original page SQL inside a materialized boundary; no outer reorder,
     /// join/window or invented kind tie-breaker. Must compare actual plans/IDs.
     pub fn page(&self, visible: &Visibility, row_bytes: usize) -> Result<Statement, QueryFault> {
+        // Source eagerly formats `Executing SQL with LIMIT... OFFSET...`
+        // before cursor.execute. Oversized offset decimal conversion therefore
+        // precedes Psycopg text/NUL adaptation, despite earlier bind positions.
+        let _ = super::vod_api_unified_query::decimal_text(&self.page.size)?;
+        let _ = super::vod_api_unified_query::decimal_text(&self.page.offset)?;
         let (mut statement, movie, series) = self.start(visible)?;
-        let limit = statement.limit(&self.page.size);
-        let offset = statement.limit(&self.page.offset);
+        let limit = statement.limit(&self.page.size)?;
+        let offset = statement.limit(&self.page.offset)?;
         let maximum = statement.bind(Bind::Integer(
             i64::try_from(row_bytes).map_err(|_| QueryFault::Capacity)?,
         ));

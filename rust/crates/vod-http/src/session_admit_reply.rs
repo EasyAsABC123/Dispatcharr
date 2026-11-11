@@ -156,13 +156,13 @@ async fn proxy(key: String, drop_admit: bool) -> Proxy {
         let mut jobs = JoinSet::new();
         loop {
             tokio::select! {connection=listener.accept(),if jobs.len()<4=>{let(mut client,_)=connection.unwrap();let mut admit=admit_rx.clone();let mut cleanup=cleanup_rx.clone();let key=key.clone();let sha=cleanup_sha.clone();let seen=seen.clone();jobs.spawn(async move {let mut server=TcpStream::connect(address).await?;let mut incoming=Vec::new();let mut outgoing=Vec::new();loop{let command=frame(&mut client,&mut incoming).await?;let args=arguments(&command).ok_or(std::io::ErrorKind::InvalidData)?;let is_admit=args.first().is_some_and(|x|x==b"EVALSHA")&&args.get(3).is_some_and(|x|x==key.as_bytes())&&args.get(9).is_some_and(|x|x==b"create");let is_cleanup=args.first().is_some_and(|x|x==b"EVALSHA")&&args.get(1).is_some_and(|x|x==sha.as_bytes())&&args.get(3).is_some_and(|x|x==key.as_bytes());server.write_all(&command).await?;let response=frame(&mut server,&mut outgoing).await?;
-            if response.starts_with(b"-NOSCRIPT") {if is_admit{seen.admit_noscript.fetch_add(1,Ordering::SeqCst);}
- if is_cleanup{seen.cleanup_noscript.fetch_add(1,Ordering::SeqCst);}}
-            if is_admit&&arguments(&response).is_some_and(|x|x.first().is_some_and(|v|v==b"OK")){seen.admit_written.fetch_add(1,Ordering::SeqCst);if drop_admit{return Err::<(),std::io::Error>(std::io::ErrorKind::ConnectionReset.into());}
- if admit.wait_for(|release|*release).await.is_err(){return Ok(());}}
-            if is_cleanup&&response==b":1\r\n"{seen.cleanup_done.fetch_add(1,Ordering::SeqCst);if cleanup.wait_for(|release|*release).await.is_err(){return Ok(());}}
-            client.write_all(&response).await?;
-            }});},_=jobs.join_next(),if !jobs.is_empty()=>{}}
+                       if response.starts_with(b"-NOSCRIPT") {if is_admit{seen.admit_noscript.fetch_add(1,Ordering::SeqCst);}
+            if is_cleanup{seen.cleanup_noscript.fetch_add(1,Ordering::SeqCst);}}
+                       if is_admit&&arguments(&response).is_some_and(|x|x.first().is_some_and(|v|v==b"OK")){seen.admit_written.fetch_add(1,Ordering::SeqCst);if drop_admit{return Err::<(),std::io::Error>(std::io::ErrorKind::ConnectionReset.into());}
+            if admit.wait_for(|release|*release).await.is_err(){return Ok(());}}
+                       if is_cleanup&&response==b":1\r\n"{seen.cleanup_done.fetch_add(1,Ordering::SeqCst);if cleanup.wait_for(|release|*release).await.is_err(){return Ok(());}}
+                       client.write_all(&response).await?;
+                       }});},_=jobs.join_next(),if !jobs.is_empty()=>{}}
         }
     });
     Proxy {
@@ -280,3 +280,6 @@ async fn lost_admit_reply_retains_pending_cleanup_through_noscript_and_real_repl
 async fn delayed_admit_reply_retains_pending_cleanup_after_logical_timeout() {
     run(false).await;
 }
+
+#[path = "session_lookup_reply.rs"]
+mod lookup_reply;
