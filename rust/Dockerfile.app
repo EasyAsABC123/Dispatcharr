@@ -36,6 +36,7 @@ LABEL org.opencontainers.image.title="Dispatcharr derivative Rust backend port" 
       org.opencontainers.image.description="Original Dispatcharr credit belongs to its original authors and contributors; see /usr/share/doc/dispatcharr/ATTRIBUTION.md. Migration parity is incomplete."
 COPY --from=media /media-runtime/ /
 COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-rs /usr/local/bin/dispatcharr-rs
+COPY --from=build /tmp/dispatcharr-target/release/dispatcharr-operator /usr/local/bin/dispatcharr-operator
 COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
 COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
 COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE

@@ -2,6 +2,8 @@
 
 All application credit remains with the original Dispatcharr authors and contributors. This is an original-code inventory and proposed acceptance plan, not implemented plugin/admin/CLI parity. The Rust core application remains interpreter-free. No interpreter, executor or replacement admin was implemented by this audit.
 
+
+The later [safe native operator checkpoint](../scripts/rust-operator-contracts/README.md) implements `reset_network_access` and `reset_user_network` in Rust and ships `dispatcharr-operator`. It includes real startup notification/cache effects, sequence preservation and explicitly captured concurrent save behavior. This narrows the operational gap; Django help/global arguments, other commands, full application initialization, admin and plugin compatibility remain unaccepted.
 ## Actual plugin execution contract
 
 `apps/plugins/loader.py:582` loads a Python directory containing `plugin.py` (preferred) or an `__init__.py` package. It imports an ordinary Python `Plugin` class and instantiates it with no arguments. Metadata attributes include name/version/description/author/help_url, fields and actions. A JSON `plugin.json` can describe metadata without importing an untrusted plugin. This is an in-process Python object contract, not a language-neutral C ABI, WebAssembly ABI, script subprocess protocol or REST-only extension API.

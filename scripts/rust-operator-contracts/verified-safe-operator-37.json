@@ -1,0 +1,181 @@
+{
+  "passed": true,
+  "scope": "Two safe native operator commands: declared ordinary argv cases and explicitly captured SQL boundaries/resources only. No full Django CLI, application initialization, error traceback or M8 acceptance.",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "base_commit": "d5095d208addc25ff55de9f1f71e37e56926caf4",
+  "runtime_package": {
+    "path": "artifacts/rust/operator-package-build-33/build.json",
+    "sha256": "2dafa19e46af4e1d016d0f51b9ebe93130d06740b2583569355aad35923b8ba9",
+    "image_id": "sha256:6228428fa48f0550f9bb67f54508412ad6d0ce88b31b7126d099fe08d20c0b80",
+    "source_tree_sha256": "7567bcd39003afe006c4b91184b5cb26bffd91ebcdb876faf408b13f1265fe54",
+    "source_archive_sha256": "3d997e955496cc2eee1c5bcee1c4e40248c03624edc48cca4abd1744c0fb8a93",
+    "private_component_package": true,
+    "canonical_application_verified": false
+  },
+  "ordinary_source": {
+    "path": "artifacts/rust/operator-cli-portable-source-14/integration.json",
+    "sha256": "fbdf9ef7d629246a5aac90aeb6bd4c3c40c54acd0f58c04e0fa9859906da1090",
+    "cases": 17,
+    "default_database_unchanged": true,
+    "effects_scope": [
+      "network row key/name/value + PK",
+      "per-user properties and unchanged observed user dates",
+      "network group/condition/unrelated sentinel cache values and TTL classes",
+      "developer/system notification fields, IDs, creation preservation, changed timestamp windows, notification sequence",
+      "actual ordered Channels envelopes"
+    ]
+  },
+  "actual_packaged": {
+    "path": "artifacts/rust/operator-cli-portable-package-34/proof.json",
+    "sha256": "3508fc6ef0a9af13eafccd64f9ec5e53fa3d6532191ee899ed3645b4ad6900c5",
+    "cases": 17,
+    "checks": 694,
+    "case_ids": [
+      "reset_network_access-help",
+      "reset_user_network-help",
+      "unknown-flag",
+      "network-object",
+      "network-array",
+      "network-scalar",
+      "network-null",
+      "network-missing",
+      "user-target",
+      "user-already-clear",
+      "user-null",
+      "user-empty",
+      "user-missing",
+      "users-all",
+      "users-empty-filter",
+      "user-array-no-match",
+      "user-array-match"
+    ],
+    "official_owned_postgresql_redis": true,
+    "operator_uid": 65532,
+    "read_only_root": true,
+    "Original_container_role": "fixture/read/Channels observer only; does not execute commands under test",
+    "cleanup_passed": true
+  },
+  "sql_boundaries": {
+    "path": "artifacts/rust/operator-cli-portable-sql-35/operator-cli-source.json",
+    "sha256": "837f990cd3a0af3363b184418b8d0838ccad7e7b0bcaa10cdd0fc7a65ab20f81",
+    "observations": 8,
+    "families": [
+      "existing developer notice update leaves sequence unchanged and next actual notice receives next ID",
+      "network full save overwrites concurrent key/name rename and recreates deleted snapshot at same PK after physical UPDATE wait",
+      "single-target user update_fields deletion yields Source User.NotUpdated (DatabaseError subclass) / native typed error, exit1, no reset-count output or resurrection"
+    ],
+    "actual_shipped_release_ELF": {
+      "path": "artifacts/rust/operator-package-build-33/native-dispatcharr-operator",
+      "sha256": "41a3696022973bfd8b3c3f04125855490f17420d35638c447e02fe98c9ff17b0"
+    },
+    "full_Python_exception_text_verified": false
+  },
+  "physical_resource_controls": {
+    "path": "artifacts/rust/operator-cli-portable-resources-36/integration.json",
+    "sha256": "7133ee6d79ec69e247650ff9eb39c8f26c08eec0bc4182983d510927419f6aac",
+    "tests": 6,
+    "test_log": {
+      "path": "artifacts/rust/operator-cli-portable-resources-36/resource-tests.log",
+      "sha256": "faffb1e89bed04ccc27723e5dd5fa08af482958bf0c2d5c9934561fd310daca1"
+    },
+    "executable": {
+      "path": "artifacts/rust/operator-cli-portable-resources-36/operator-resource-tests",
+      "sha256": "8d96be71ba9669688fa4060c0dba2b9590dbc2672eb73838f8537a55e03c8263"
+    },
+    "scopes": [
+      "actual blocked SELECT cancellation retains caller/admission until reply and shutdown waits",
+      "actual applied DEL reply held2.2s plus caller abort keeps owner and executes command once",
+      "SQL representation row/count/aggregate caps refuse before user-property writes",
+      "oversized condition key explicit refusal preserves unrelated key; no FLUSHDB",
+      "controlled retained-sink logical timeout preserves composite operator admission/caller until settlement; not actual paused Channels PUBLISH"
+    ]
+  },
+  "unit_tests": {
+    "path": "artifacts/rust/operator-native-build-32/unit-tests.log",
+    "sha256": "477608d90c12349536dd27a13981c6acbf0ca537fc4c49730655f83d2862b68f",
+    "count": 2
+  },
+  "verifier_negative_controls": {
+    "path": "artifacts/rust/operator-native-build-32/verifier-tests.log",
+    "sha256": "54f3a794a13b3ba6df6b177a7bdcfa99348fef746383d41ccd62fd8d4eb1aad4",
+    "count": 5,
+    "strict_typed_JSON_and_TTL_classes": true
+  },
+  "strict_clippy": {
+    "path": "artifacts/rust/operator-native-build-32/clippy.log",
+    "sha256": "83886427ffe8c8057d2342638d036ef786b1b6d75311d37cfa7559925aa24ef7",
+    "scope": "Store lib + operator SQL test + native operator bin"
+  },
+  "retained_negatives": [
+    {
+      "path": "artifacts/rust/operator-cli-sink-negative-15/resource-tests.log",
+      "sha256": "b7eb2bdbc0a3f343205b03028254571ff59384e766ac847359655065441df50c"
+    },
+    {
+      "path": "artifacts/rust/operator-parent-sequence-negative-1.json",
+      "sha256": "89d128b5a6e509b1c487f52991f31d8caeae3a06f98efb2fde4814e95f77e618"
+    },
+    {
+      "path": "artifacts/rust/operator-cli-sql-negative-21/operator-cli-source.json",
+      "sha256": "24c48e7f0437906fd117be63ac52d0342eb43e63f446b9e7da037e8286c5194e"
+    },
+    {
+      "path": "artifacts/rust/operator-cli-user-delete-negative-31/operator-cli-source.json",
+      "sha256": "085119c3586966003e52c56f105bc89eb4279964f223c4755c87c2d60c5fd514"
+    }
+  ],
+  "prediction_or_setup_failures": [
+    {
+      "path": "artifacts/rust/operator-cli-source-1",
+      "scope": "Root SQL-NULL seed failure, not runtime comparison"
+    },
+    {
+      "path": "artifacts/rust/operator-cli-source-effects-3",
+      "scope": "Channels observer loop affinity setup"
+    },
+    {
+      "path": "artifacts/rust/operator-cli-source-effects-4",
+      "scope": "incorrect no-startup-effects assertion"
+    },
+    {
+      "path": "artifacts/rust/operator-cli-package-9",
+      "scope": "temporary initdb socket readiness failure, zero CLI cases"
+    },
+    {
+      "path": "artifacts/rust/operator-cli-user-delete-negative-29",
+      "scope": "predicted DatabaseError literal suffix; actual User.NotUpdated class, raw recaptured30"
+    },
+    {
+      "path": "artifacts/rust/operator-cli-user-delete-negative-30",
+      "scope": "literal-class assertion failure; actual Source/native mismatch retained in partial report and qualified31"
+    }
+  ],
+  "limits": {
+    "operations_per_service": 1,
+    "max_users": 4096,
+    "max_SQL_JSON_row_bytes": 1048576,
+    "max_total_SQL_JSON_bytes": 4194304,
+    "JSON_heap_equal_to_representation_cap": false,
+    "scan_reply_key_count": 256,
+    "scan_reply_key_bytes": 131072,
+    "max_individual_key_bytes": 1024,
+    "max_matched_keys": 4096,
+    "max_scan_iterations": 8192,
+    "no_uncertain_command_replay": true,
+    "composite_physical_scope_through_SQL_Redis_retained_publication": true
+  },
+  "unaccepted": [
+    "Django help/global flags/abbreviations/duplicate flags/--user=value and option-like usernames; exact warnings/traceback/error-class rendering",
+    "other app-ready hooks, log-collector and unrelated cache warming",
+    "alternate developer definitions/version/expiry rules, arbitrary ACL/TLS/backend-failure and SQL trigger behavior, absent-notice creation races",
+    "settings/user races beyond captured single-row schedules and malformed all-user ordering",
+    "cache-wide FLUSHDB fallback: safe native CLI refuses explicitly; prior SQL save/startup effects can have committed",
+    "canonical integrated app/package and full M8; process-kill durability and whole-application restart recovery"
+  ],
+  "integration_note": "Store lib registration is one additive pub mod line on d509; preserve later siblings. Parent owns default-run=dispatcharr-rs Cargo metadata so extra bin does not make bare cargo run ambiguous. No Main/Cargo/live Rust was edited in this lane.",
+  "authors_credit": "Original Dispatcharr authors retain full application/algorithm credit; inherited AGPL and third-party notices preserved.",
+  "full_django_cli_verified": false,
+  "full_m8_verified": false,
+  "destructive_management_adapters_executed": false
+}
