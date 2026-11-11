@@ -1,0 +1,2871 @@
+{
+  "scope": "Derived Source6 pure Movie phase projection; no native SQL/clock/API proof. Parent updated_at checked separately by actual SQL gates.",
+  "source_sha256": "f9d78945d6b095b0cb4f2666f5b33bc800932032c26960b140459fcb04668d1b",
+  "records": [
+    {
+      "label": "movie_stale",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:46.376763+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:46.404538+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:46.400084+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_force",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T05:41:46.522600+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:46.544043+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:46.541047+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_force_upper",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T05:41:46.590982+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:46.613731+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:46.610964+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_missing_flags",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {},
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T05:41:46.798191+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:46.818772+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:46.816096+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_null_timestamp",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": null,
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:46.889192+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:46.886840+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_empty_object",
+      "payload": {},
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:46.936900+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:46.936900+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_blank_info",
+      "payload": {
+        "info": {}
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.007019+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:47.024686+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_info_list",
+      "payload": {
+        "info": [
+          {
+            "plot": "List plot"
+          }
+        ]
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.075594+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "List plot",
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:47.099426+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "List plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:47.096737+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_info_null",
+      "payload": {
+        "info": null
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.148878+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:47.197327+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_info_text",
+      "payload": {
+        "info": "bad"
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.249339+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:47.267478+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_empty_episodes",
+      "payload": {
+        "info": {},
+        "episodes": {}
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.318570+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:47.338408+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_nonobject_body",
+      "payload": [],
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.389405+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.389405+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_xc_error",
+      "payload": {
+        "error": "Owned provider denied"
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.463466+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.463466+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_auth_zero",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:47.899442+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:47.920742+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:47.918002+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_role_admin",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:48.043175+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:48.066818+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:48.064171+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_role_basic",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:48.117587+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:48.139076+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:48.136678+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_head_refresh",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:48.300391+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:48.322005+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:48.319156+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_specific_second",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 28,
+        "m3u_account_id": 3,
+        "movie_id": 1,
+        "category_id": 2,
+        "stream_id": "2000",
+        "container_extension": null,
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.830118+00:00",
+        "updated_at": "2026-11-11T06:41:39.830124+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:50.698886+00:00",
+        "last_seen": "2026-11-11T06:41:39.830033+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:50.726433+00:00"
+      },
+      "expected_relation": {
+        "id": 28,
+        "m3u_account_id": 3,
+        "movie_id": 1,
+        "category_id": 2,
+        "stream_id": "2000",
+        "container_extension": null,
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.830118+00:00",
+        "updated_at": "2026-11-11T06:41:39.830124+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:50.723257+00:00",
+        "last_seen": "2026-11-11T06:41:39.830033+00:00"
+      }
+    },
+    {
+      "label": "movie_movie_data_list",
+      "payload": {
+        "info": [
+          {
+            "plot": "Array plot"
+          }
+        ],
+        "movie_data": [
+          {
+            "container_extension": "avi"
+          }
+        ]
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:50.781893+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Array plot",
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:50.809271+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "container_extension": "avi"
+          },
+          "detailed_info": {
+            "plot": "Array plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:50.805949+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_empty_list_info",
+      "payload": {
+        "info": []
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:51.753167+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:51.772776+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_list_head_nondict",
+      "payload": {
+        "info": [
+          3,
+          {
+            "plot": "Ignored"
+          }
+        ]
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:51.825177+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:51.846851+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_false_info",
+      "payload": {
+        "info": false
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:51.896750+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:51.916179+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_fixed_clock_factory",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-08T11:37:29.123456+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-09T12:37:29.123456+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-09T12:37:29.123456+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_auth_cookie",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:52.764306+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:52.787516+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:52.784623+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_close_auth_twice",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:52.840623+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:52.862102+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:52.858729+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_close_info_twice",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:52.914003+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:52.936776+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:52.933201+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_base_php_query",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:52.984064+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:53.006194+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "1000",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:53.003740+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    },
+    {
+      "label": "movie_encoded_credentials",
+      "payload": {
+        "info": {
+          "plot": "Refreshed plot",
+          "genre": "Drama",
+          "rating": "8.4",
+          "duration_secs": "3600",
+          "releasedate": "2024-02-03",
+          "trailer": "fixture-trailer",
+          "actors": [
+            "One",
+            "Two"
+          ],
+          "director": "Director"
+        },
+        "movie_data": {
+          "container_extension": "mkv",
+          "category_id": 1
+        }
+      },
+      "movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": null,
+        "year": 2000,
+        "rating": null,
+        "genre": null,
+        "duration_secs": 0,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "nil": null,
+          "fixture": 0
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:39.787230+00:00"
+      },
+      "relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "owned +/\u00e9",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {},
+          "detailed_info": {
+            "plot": "Old plot"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-10T05:41:53.375115+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      },
+      "expected_movie": {
+        "id": 1,
+        "uuid": "a9b9cb87-a2c8-4e08-98a8-c0e9cc01e53b",
+        "name": "rust-probe-vod-rest-Alpha",
+        "description": "Refreshed plot",
+        "year": 2024,
+        "rating": "8.4",
+        "genre": "Drama",
+        "duration_secs": 3600,
+        "logo_id": 1,
+        "tmdb_id": null,
+        "imdb_id": null,
+        "language": "",
+        "is_adult": false,
+        "custom_properties": {
+          "actors": "One, Two",
+          "fixture": 0,
+          "director": "Director",
+          "youtube_trailer": "fixture-trailer"
+        },
+        "created_at": "2026-11-11T06:41:39.787226+00:00",
+        "updated_at": "2026-11-11T06:41:53.396731+00:00"
+      },
+      "expected_relation": {
+        "id": 1,
+        "m3u_account_id": 2,
+        "movie_id": 1,
+        "category_id": 1,
+        "stream_id": "owned +/\u00e9",
+        "container_extension": "mp4",
+        "custom_properties": {
+          "movie_data": {
+            "category_id": 1,
+            "container_extension": "mkv"
+          },
+          "detailed_info": {
+            "plot": "Refreshed plot",
+            "genre": "Drama",
+            "actors": "One",
+            "rating": "8.4",
+            "trailer": "fixture-trailer",
+            "director": "Director",
+            "releasedate": "2024-02-03",
+            "duration_secs": "3600"
+          },
+          "detailed_fetched": true
+        },
+        "created_at": "2026-11-11T06:41:39.794523+00:00",
+        "updated_at": "2026-11-11T06:41:39.794527+00:00",
+        "last_advanced_refresh": "2026-11-11T06:41:53.393901+00:00",
+        "last_seen": "2026-11-11T06:41:39.794431+00:00"
+      }
+    }
+  ]
+}

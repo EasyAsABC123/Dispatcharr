@@ -88,13 +88,13 @@ impl Images {
         let state = self.clone();
         let deadline = http.deadline;
         self.runtime
-            .run_until(input, Some(deadline), move |work| async move {
+            .run_scoped(input, Some(deadline), http.scope.clone(), move |work| async move {
                 work.check()?;
                 let raw_image = matches!(http.method, Method::GET | Method::HEAD);
                 if !raw_image {
                     super::vod_api_http::negotiate(&headers, &http.uri)?;
                 }
-                let physical = work.physical_guard();
+                let physical = work.io_guard()?.erased();
                 let guard: Arc<dyn Send + Sync> = match http.scope {
                     Some(scope) => Arc::new((physical, scope)),
                     None => physical,

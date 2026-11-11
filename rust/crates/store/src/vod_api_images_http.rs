@@ -2,6 +2,7 @@
 //! Actual Original/native240 and physical/mixed host gates passed;
 //! canonical app, unchanged React and broader image contracts are separate.
 //! Original Dispatcharr authors retain application/algorithm credit.
+use super::vod_api_owned_read::HttpScope;
 use super::{
     vod_api_http::{json_indent, pretty_document, HttpGate},
     vod_api_images_read::{Image, Images},
@@ -18,10 +19,10 @@ use axum::{
 };
 use bytes::Bytes;
 use std::{net::SocketAddr, sync::Arc};
-use tokio::sync::OwnedSemaphorePermit;
+
 struct Frame {
     bytes: Bytes,
-    _slot: Arc<OwnedSemaphorePermit>,
+    _slot: HttpScope,
 }
 impl AsRef<[u8]> for Frame {
     fn as_ref(&self) -> &[u8] {

@@ -52,7 +52,7 @@ impl UnifiedReads {
             .ok_or(ReadError::Capacity)?;
         let state = self.clone();
         let metadata=Arc::new(std::sync::Mutex::new(None));let completed=metadata.clone();
-        let bytes=self.runtime.run_until(input,Some(http.deadline),move |work| async move {
+        let bytes=self.runtime.run_scoped(input,Some(http.deadline),http.scope.clone(),move |work| async move {
             let indent=json_indent(&request.headers);
             let html=super::vod_api_unified_html::requested(&request.headers);
             let cookie=super::vod_api_unified_html::cookie(&request.headers);
@@ -61,7 +61,7 @@ impl UnifiedReads {
                 work.check()?;
                 if !html {negotiate(&request.headers,&http.uri)?;}
                 else if !matches!(http.method,Method::GET|Method::HEAD) {return Err(ReadError::Unsupported("Browsable method template context is not captured"));}
-                let guard=work.physical_guard();
+                let guard=work.io_guard()?.erased();
                 let guard:Arc<dyn Send+Sync>=match &http.scope {Some(scope)=>Arc::new((guard,scope.clone())),None=>guard};
                 let auth=state.auth.clone().with_retained_scope(guard);
                 let user=auth.account_user(request.peer,request.headers,false).await?;

@@ -1,0 +1,8282 @@
+{
+  "passed": true,
+  "scope": "Original pure provider refresh conversion corpus, explicitly not TCP/SQL.\nOriginal Dispatcharr authors retain all algorithm credit.\n",
+  "records": [
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        null
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        null
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        null
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": null,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": null
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        null
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        false
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        false
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        false
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": false,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": false
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        false
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        true
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        true
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        true
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": true,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": true
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        true
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'bool' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        0
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        0
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        0
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": 0,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": 0
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        0
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        1
+      ],
+      "expected": {
+        "value": 1
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        1
+      ],
+      "expected": {
+        "value": "1.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        1
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": 1,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 1
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": 1
+        }
+      ],
+      "expected": {
+        "value": 60
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        1
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'int' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        -1
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        -1
+      ],
+      "expected": {
+        "value": "-1.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        -1
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": -1,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": -1
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        -1
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'int' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        172800
+      ],
+      "expected": {
+        "value": 172800
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        172800
+      ],
+      "expected": {
+        "value": "172800.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        172800
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": 172800,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 172800
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": 172800
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        172800
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'int' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        172801
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        172801
+      ],
+      "expected": {
+        "value": "172801.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        172801
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": 172801,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": 172801
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        172801
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'int' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        1800.0
+      ],
+      "expected": {
+        "value": 1800
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        1800.0
+      ],
+      "expected": {
+        "value": "1800.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        1800.0
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": 1800.0,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 1800
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": 1800.0
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        1800.0
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'float' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        1.5
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        1.5
+      ],
+      "expected": {
+        "value": "1.5"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        1.5
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": 1.5,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": 1.5
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        1.5
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'float' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        1e-08
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        1e-08
+      ],
+      "expected": {
+        "value": "1e-08"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        1e-08
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": 1e-08,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": 1e-08
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        1e-08
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'float' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        1e+20
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        1e+20
+      ],
+      "expected": {
+        "value": "1e+20"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        1e+20
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": 1e+20,
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": 1e+20
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        1e+20
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'float' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        ""
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        ""
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        ""
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": ""
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        ""
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        " "
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        " "
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        " "
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": " ",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": " "
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        " "
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": "x"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "\u001c x \u001f",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "\u001c x \u001f"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "  8,5  "
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "  8,5  "
+      ],
+      "expected": {
+        "value": "8.5"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "  8,5  "
+      ],
+      "expected": {
+        "value": "8,5"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "  8,5  ",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "  8,5  "
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "  8,5  "
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "8.0"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "8.0"
+      ],
+      "expected": {
+        "value": "8.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "8.0"
+      ],
+      "expected": {
+        "value": "8.0"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "8.0",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "8.0"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "8.0"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "nan"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "nan"
+      ],
+      "expected": {
+        "value": "nan"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "nan"
+      ],
+      "expected": {
+        "value": "nan"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "nan",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "nan"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "nan"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "NaN"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "NaN"
+      ],
+      "expected": {
+        "value": "nan"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "NaN"
+      ],
+      "expected": {
+        "value": "NaN"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "NaN",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "NaN"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "NaN"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "inf"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "inf"
+      ],
+      "expected": {
+        "value": "inf"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "inf"
+      ],
+      "expected": {
+        "value": "inf"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "inf",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "inf"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "inf"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "-Infinity"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "-Infinity"
+      ],
+      "expected": {
+        "value": "-inf"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "-Infinity"
+      ],
+      "expected": {
+        "value": "-Infinity"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "-Infinity",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "-Infinity"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "-Infinity"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "1_000"
+      ],
+      "expected": {
+        "value": 1000
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "1_000"
+      ],
+      "expected": {
+        "value": "1000.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "1_000"
+      ],
+      "expected": {
+        "value": "1_000"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "1_000",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 1000
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "1_000"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "1_000"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": 12
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": "12.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": "\u0661\u0662"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "\u0661\u0662",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 12
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "\u0661\u0662"
+        }
+      ],
+      "expected": {
+        "value": 720
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "\u00b2"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "\u00b2"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "\u00b2"
+      ],
+      "expected": {
+        "value": "\u00b2"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "\u00b2",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "\u00b2"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "\u00b2"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": 112
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": "112.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": "\uff11\uff11\uff12"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "\uff11\uff11\uff12",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 112
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "\uff11\uff11\uff12"
+        }
+      ],
+      "expected": {
+        "value": 6720
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "1:30"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "1:30"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "1:30"
+      ],
+      "expected": {
+        "value": "1:30"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "1:30",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "1:30"
+        }
+      ],
+      "expected": {
+        "value": 90
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "1:30"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "1:02:03"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "1:02:03"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "1:02:03"
+      ],
+      "expected": {
+        "value": "1:02:03"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "1:02:03",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "1:02:03"
+        }
+      ],
+      "expected": {
+        "value": 3723
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "1:02:03"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "1:99"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "1:99"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "1:99"
+      ],
+      "expected": {
+        "value": "1:99"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "1:99",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "1:99"
+        }
+      ],
+      "expected": {
+        "value": 159
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "1:99"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "-1:61"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "-1:61"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "-1:61"
+      ],
+      "expected": {
+        "value": "-1:61"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "-1:61",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "-1:61"
+        }
+      ],
+      "expected": {
+        "value": 1
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "-1:61"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": "1 : 02"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": " 1 : 02 ",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": " 1 : 02 "
+        }
+      ],
+      "expected": {
+        "value": 62
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        " 1 : 02 "
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "+2"
+      ],
+      "expected": {
+        "value": 2
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "+2"
+      ],
+      "expected": {
+        "value": "2.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "+2"
+      ],
+      "expected": {
+        "value": "+2"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "+2",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 2
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "+2"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "+2"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        "1.0"
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        "1.0"
+      ],
+      "expected": {
+        "value": "1.0"
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        "1.0"
+      ],
+      "expected": {
+        "value": "1.0"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": "1.0",
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": "1.0"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        "1.0"
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'str' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        []
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        []
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        []
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": [],
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": []
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        []
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": [
+            null
+          ],
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": [
+            null
+          ]
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'list' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": [
+            null,
+            ""
+          ],
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": [
+            null,
+            ""
+          ]
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'list' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": "x"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": [
+            null,
+            " x "
+          ],
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": [
+            null,
+            " x "
+          ]
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'list' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": "False"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": [
+            false,
+            12
+          ],
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": [
+            false,
+            12
+          ]
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'list' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": "[1, 2]"
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": [
+            [
+              1,
+              2
+            ]
+          ],
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": [
+            [
+              1,
+              2
+            ]
+          ]
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "error_type": "AttributeError",
+        "message": "'list' object has no attribute 'items'"
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        {}
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        {}
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        {}
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": {},
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": {}
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        {}
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_duration_secs",
+      "args": [
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "normalize_rating",
+      "args": [
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_string_from_array_or_string",
+      "args": [
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration_secs": {
+            "a": 1
+          },
+          "duration": "2:03"
+        }
+      ],
+      "expected": {
+        "value": 123
+      }
+    },
+    {
+      "function": "extract_duration_from_data",
+      "args": [
+        {
+          "duration": {
+            "a": 1
+          }
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": {
+          "a": 1
+        }
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        null
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        false
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        true
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        -1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        172800
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        172801
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        1800.0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        1.5
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        1e-08
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        1e+20
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        ""
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        " "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "  8,5  "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "8.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "nan"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "NaN"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "inf"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "-Infinity"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "1_000"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "\u00b2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "1:30"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "1:02:03"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "1:99"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "-1:61"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "+2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        "1.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        []
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        {}
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        null,
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        null
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        false
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        true
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        -1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        172800
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        172801
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        1800.0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        1.5
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        1e-08
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        1e+20
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        ""
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        " "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "  8,5  "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "8.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "nan"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "NaN"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "inf"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "-Infinity"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "1_000"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "\u00b2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "1:30"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "1:02:03"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "1:99"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "-1:61"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "+2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        "1.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        []
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        {}
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "",
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        null
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        false
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        true
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        -1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        172800
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        172801
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        1800.0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        1.5
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        1e-08
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        1e+20
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        ""
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        " "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "  8,5  "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "8.0"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "nan"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "NaN"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "inf"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "-Infinity"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "1_000"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "\u00b2"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "1:30"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "1:02:03"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "1:99"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "-1:61"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "+2"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        "1.0"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        []
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        {}
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        " text ",
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        null
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        false
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        true
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        -1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        172800
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        172801
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        1800.0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        1.5
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        1e-08
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        1e+20
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        ""
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        " "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "  8,5  "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "8.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "nan"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "NaN"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "inf"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "-Infinity"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "1_000"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "\u00b2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "1:30"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "1:02:03"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "1:99"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "-1:61"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "+2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        "1.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        []
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        {}
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [],
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        null
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        false
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        true
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        -1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        172800
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        172801
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        1800.0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        1.5
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        1e-08
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        1e+20
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        ""
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        " "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "  8,5  "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "8.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "nan"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "NaN"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "inf"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "-Infinity"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "1_000"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "\u00b2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "1:30"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "1:02:03"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "1:99"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "-1:61"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "+2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        "1.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        []
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        {}
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        [
+          null
+        ],
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        null
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        false
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        true
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        -1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        172800
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        172801
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        1800.0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        1.5
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        1e-08
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        1e+20
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        ""
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        " "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "  8,5  "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "8.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "nan"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "NaN"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "inf"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "-Infinity"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "1_000"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "\u00b2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "1:30"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "1:02:03"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "1:99"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "-1:61"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "+2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        "1.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        []
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        {}
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        false,
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        null
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        false
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        true
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        -1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        172800
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        172801
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        1800.0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        1.5
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        1e-08
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        1e+20
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        ""
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        " "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "  8,5  "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "8.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "nan"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "NaN"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "inf"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "-Infinity"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "1_000"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "\u00b2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "1:30"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "1:02:03"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "1:99"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "-1:61"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "+2"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        "1.0"
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        []
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": true
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        {}
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        {},
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        null
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        false
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        true
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        -1
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        172800
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        172801
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        1800.0
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        1.5
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        1e-08
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        1e+20
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        ""
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        " "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "  8,5  "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "8.0"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "nan"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "NaN"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "inf"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "-Infinity"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "1_000"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "\u00b2"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "1:30"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "1:02:03"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "1:99"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "-1:61"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "+2"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        "1.0"
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        []
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        {}
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "should_update_field",
+      "args": [
+        "populated",
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": false
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        {
+          "youtube_trailer": null,
+          "actors": [],
+          "director": " ",
+          "cast": [
+            null,
+            " A "
+          ],
+          "backdrop_path": [
+            null,
+            " /image "
+          ],
+          "x": false,
+          "y": {},
+          "z": [
+            null,
+            null
+          ]
+        }
+      ],
+      "expected": {
+        "value": {
+          "cast": "A",
+          "backdrop_path": [
+            "/image"
+          ],
+          "x": false,
+          "y": {}
+        }
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        {
+          "x": 0,
+          "a": [],
+          "b": "",
+          "c": null,
+          "d": [
+            false
+          ]
+        }
+      ],
+      "expected": {
+        "value": {
+          "x": 0,
+          "d": [
+            false
+          ]
+        }
+      }
+    },
+    {
+      "function": "clean_custom_properties",
+      "args": [
+        {
+          "actors": [
+            1,
+            false,
+            {
+              "x": 1
+            }
+          ],
+          "backdrop_path": " /one "
+        }
+      ],
+      "expected": {
+        "value": {
+          "actors": "1",
+          "backdrop_path": [
+            "/one"
+          ]
+        }
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": null,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": null,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        null
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": null,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": false,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": false,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        false
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": false,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": true,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": true,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        true
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": true,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": 0,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": 0,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        0
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": 0,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": 1,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": 1,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        1
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": 1,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": -1,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": -1,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        -1
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": -1,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": 172800,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": 172800,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        172800
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": 172800,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": 172801,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": 172801,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        172801
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": 172801,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": 1800.0,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": 1800.0,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        1800.0
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": 1800.0,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": 1.5,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": 1.5,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        1.5
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": 1.5,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": 1e-08,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": 1e-08,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        1e-08
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": 1e-08,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": 1e+20,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": 1e+20,
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        1e+20
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": 1e+20,
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        ""
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": " ",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": " ",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        " "
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": " ",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "\u001c x \u001f",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "\u001c x \u001f",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "\u001c x \u001f"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "\u001c x \u001f",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "  8,5  ",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "  8,5  ",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "  8,5  "
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "  8,5  ",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "8.0",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "8.0",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "8.0"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "8.0",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "nan",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "nan",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "nan"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "nan",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "NaN",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "NaN",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "NaN"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "NaN",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "inf",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "inf",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "inf"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "inf",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "-Infinity",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "-Infinity",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "-Infinity"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "-Infinity",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "1_000",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "1_000",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "1_000"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "1_000",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "\u0661\u0662",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "\u0661\u0662",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "\u0661\u0662"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "\u0661\u0662",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "\u00b2",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "\u00b2",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "\u00b2"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "\u00b2",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "\uff11\uff11\uff12",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "\uff11\uff11\uff12",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "\uff11\uff11\uff12"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "\uff11\uff11\uff12",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "1:30",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "1:30",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "1:30"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "1:30",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "1:02:03",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "1:02:03",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "1:02:03"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "1:02:03",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "1:99",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "1:99",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "1:99"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "1:99",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "-1:61",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "-1:61",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "-1:61"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "-1:61",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": " 1 : 02 ",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": " 1 : 02 ",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        " 1 : 02 "
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": " 1 : 02 ",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "+2",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "+2",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "+2"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "+2",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": "1.0",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": "1.0",
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        "1.0"
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "1.0",
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": [],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": [],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        []
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": [],
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": [
+            null
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": [
+            null
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        [
+          null
+        ]
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": [
+            null
+          ],
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": [
+            null,
+            ""
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": [
+            null,
+            ""
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        [
+          null,
+          ""
+        ]
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": [
+            null,
+            ""
+          ],
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": [
+            null,
+            " x "
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": [
+            null,
+            " x "
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        [
+          null,
+          " x "
+        ]
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": [
+            null,
+            " x "
+          ],
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": [
+            false,
+            12
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": [
+            false,
+            12
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        [
+          false,
+          12
+        ]
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": [
+            false,
+            12
+          ],
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": [
+            [
+              1,
+              2
+            ]
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": [
+            [
+              1,
+              2
+            ]
+          ],
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": [
+            [
+              1,
+              2
+            ]
+          ],
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": {},
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": {},
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        {}
+      ],
+      "expected": {
+        "value": {}
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": {},
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "year": {
+            "a": 1
+          },
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "releaseDate": {
+            "a": 1
+          },
+          "name": "Fallback (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "_coerce_provider_info",
+      "args": [
+        {
+          "a": 1
+        }
+      ],
+      "expected": {
+        "value": {
+          "a": 1
+        }
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": {
+            "a": 1
+          },
+          "releasedate": "2020-1-2"
+        }
+      ],
+      "expected": {
+        "value": "2020-01-02"
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title (2024)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title (1800) later (2024)"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title - 2023"
+        }
+      ],
+      "expected": {
+        "value": 2023
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title 2022"
+        }
+      ],
+      "expected": {
+        "value": 2022
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title (\uff12\uff10\uff12\uff14)"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title (2031) - 2020"
+        }
+      ],
+      "expected": {
+        "value": 2020
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title (2024) - 2021"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title \u0968\u0966\u0968\u096a"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title (2024)\n"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": "Title (2024) space"
+        }
+      ],
+      "expected": {
+        "value": 2024
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": null
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": false
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": 3
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": {}
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "extract_year_from_data",
+      "args": [
+        {
+          "name": [
+            "x"
+          ]
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-2-3"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "20240203"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-W05-6"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024W056"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-01-01T00:30:00+02:00"
+        }
+      ],
+      "expected": {
+        "value": "2023-12-31"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "0001-01-01T00:00:00+23:00"
+        }
+      ],
+      "expected": {
+        "error_type": "OverflowError",
+        "message": "date value out of range"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "9999-12-31T23:00:00-23:00"
+        }
+      ],
+      "expected": {
+        "error_type": "OverflowError",
+        "message": "date value out of range"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02-30"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02-03\n"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": " 2024-02-03"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "\uff12\uff10\uff12\uff14-\uff12-\uff13"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "\uff12\uff10\uff12\uff14-2-3"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-2-\u0663"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02-0\u0663"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02- 3"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02-03T12:00:00.1234567Z"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02-03x12:00:00"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02-03+12:00"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02-03T+02:00"
+        }
+      ],
+      "expected": {
+        "value": null
+      }
+    },
+    {
+      "function": "episode_date_field",
+      "args": [
+        {
+          "air_date": "2024-02-03T12:30:00,5+00:00.5"
+        }
+      ],
+      "expected": {
+        "value": "2024-02-03"
+      }
+    }
+  ],
+  "count": 758,
+  "strptime_patterns": {
+    "Y": "(?P<Y>\\d\\d\\d\\d)",
+    "m": "(?P<m>1[0-2]|0[1-9]|[1-9])",
+    "d": "(?P<d>3[0-1]|[1-2]\\d|0[1-9]|[1-9]| [1-9])"
+  },
+  "datetime": "2026-11-11T07:31:23.021756+00:00"
+}

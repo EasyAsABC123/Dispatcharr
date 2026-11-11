@@ -71,10 +71,33 @@ pub struct Attempt {
 }
 impl Attempt {
     pub fn new(connect: Duration, read: Duration) -> Result<Self, reqwest::Error> {
+        Self::new_with_redirects(connect, read, true)
+    }
+    /// Opt out only for a caller that supervises intermediate response bodies.
+    /// Existing callers keep the legacy thirty-hop automatic redirect policy.
+    pub fn new_with_redirects(
+        connect: Duration,
+        read: Duration,
+        follow: bool,
+    ) -> Result<Self, reqwest::Error> {
+        Self::configured(connect, read, follow, true)
+    }
+    /// A Source Requests-compatible session may supply its own cookie URL context
+    /// for URL-embedded credentials; it still uses this bounded attempt jar.
+    pub fn new_manual_session(connect: Duration, read: Duration) -> Result<Self, reqwest::Error> {
+        Self::configured(connect, read, false, false)
+    }
+    fn configured(
+        connect: Duration,
+        read: Duration,
+        follow: bool,
+        automatic_cookies: bool,
+    ) -> Result<Self, reqwest::Error> {
         let cookies = Arc::new(AttemptCookies::default());
-        let client = Client::builder()
+        let builder = Client::builder()
             .connect_timeout(connect)
             .read_timeout(read)
+            .referer(false)
             .http1_only()
             .http1_title_case_headers()
             .pool_max_idle_per_host(1)
@@ -83,9 +106,17 @@ impl Attempt {
             .no_deflate()
             .no_brotli()
             .no_zstd()
-            .redirect(reqwest::redirect::Policy::limited(30))
-            .cookie_provider(cookies.clone())
-            .build()?;
+            .redirect(if follow {
+                reqwest::redirect::Policy::limited(30)
+            } else {
+                reqwest::redirect::Policy::none()
+            });
+        let builder = if automatic_cookies {
+            builder.cookie_provider(cookies.clone())
+        } else {
+            builder
+        };
+        let client = builder.build()?;
         Ok(Self { client, cookies })
     }
     pub fn request(
@@ -116,6 +147,19 @@ impl Attempt {
         }
         Ok(request)
     }
+    pub fn session_cookie_header(&self, url: &Url) -> Option<String> {
+        self.cookies.cookies(url).map(|value| {
+            value
+                .as_bytes()
+                .iter()
+                .map(|byte| char::from(*byte))
+                .collect()
+        })
+    }
+    pub fn store_session_cookies(&self, headers: &header::HeaderMap, url: &Url) {
+        self.cookies
+            .set_cookies(&mut headers.get_all(header::SET_COOKIE).iter(), url);
+    }
     pub fn cookie_budget_exceeded(&self) -> bool {
         self.cookies.exceeded.load(Ordering::Relaxed)
     }
@@ -145,7 +189,39 @@ enum Coding {
 fn known(value: &str) -> bool {
     matches!(value, "gzip" | "x-gzip" | "deflate")
 }
+/// Actual compressed response bytes exceeded the caller's admitted wire budget.
+#[derive(Debug)]
+pub struct WireLimitExceeded;
+impl std::fmt::Display for WireLimitExceeded {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter.write_str("upstream compressed wire byte budget exceeded")
+    }
+}
+impl std::error::Error for WireLimitExceeded {}
+/// Native bounded-storage limits, distinct from malformed provider encodings.
+#[derive(Debug)]
+pub enum ResourceLimitExceeded {
+    HeaderBytes,
+    DeflatePrefix,
+}
+impl std::fmt::Display for ResourceLimitExceeded {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Self::HeaderBytes => "upstream response headers exceed budget",
+            Self::DeflatePrefix => "deflate first-output prefix exceeds budget",
+        })
+    }
+}
+impl std::error::Error for ResourceLimitExceeded {}
 pub fn body(response: Response) -> io::Result<ByteStream> {
+    body_with_wire_limit(response, None)
+}
+/// Preserve the existing streaming decoder while charging actual received bytes
+/// before any decoder prefix/output buffers allocate from each incoming frame.
+pub fn body_limited(response: Response, max_wire_bytes: usize) -> io::Result<ByteStream> {
+    body_with_wire_limit(response, Some(max_wire_bytes))
+}
+fn body_with_wire_limit(response: Response, maximum: Option<usize>) -> io::Result<ByteStream> {
     if response
         .headers()
         .iter()
@@ -153,7 +229,10 @@ pub fn body(response: Response) -> io::Result<ByteStream> {
         .sum::<usize>()
         > HEADER_BUDGET
     {
-        return Err(invalid("upstream response headers exceed budget"));
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            ResourceLimitExceeded::HeaderBytes,
+        ));
     }
     let encoding = response
         .headers()
@@ -172,11 +251,21 @@ pub fn body(response: Response) -> io::Result<ByteStream> {
     let modes: Vec<_> = encoding.split(',').map(str::trim).collect();
     let decode =
         known(&encoding) || (encoding.contains(',') && modes.iter().any(|mode| known(mode)));
-    let mut stream: ByteStream = Box::pin(
-        response
-            .bytes_stream()
-            .map(|item| item.map_err(io::Error::other)),
-    );
+    let mut stream: ByteStream = Box::pin({
+        let mut incoming = response.bytes_stream();
+        async_stream::try_stream! {
+            let mut received = 0usize;
+            while let Some(frame) = incoming.next().await {
+                let frame = frame.map_err(io::Error::other)?;
+                if let Some(maximum) = maximum {
+                    received = received.checked_add(frame.len())
+                        .filter(|total| *total <= maximum)
+                        .ok_or_else(|| io::Error::other(WireLimitExceeded))?;
+                }
+                yield frame;
+            }
+        }
+    });
     if decode {
         if modes.len() > CHAIN {
             return Err(invalid("too many upstream content encodings"));
@@ -203,7 +292,7 @@ fn decode_layer(mut source: ByteStream, coding: Coding) -> ByteStream {
             for part in frame.chunks(FRAME) {
                 if swallow || finished {break;}
                 if let Some(prefix)=probe.as_mut() {
-                    if prefix.len()+part.len()>PREFIX {Err(invalid("deflate first-output prefix exceeds budget"))?;}
+                    if prefix.len()+part.len()>PREFIX {Err(io::Error::new(io::ErrorKind::InvalidData,ResourceLimitExceeded::DeflatePrefix))?;}
                     prefix.extend_from_slice(part);
                 }
                 let mut pending=Bytes::copy_from_slice(part);let mut offset=0;
@@ -337,6 +426,121 @@ mod tests {
         }
         let error = decode(encoded, Coding::Deflate, 8192).await.unwrap_err();
         assert!(error.to_string().contains("prefix exceeds budget"));
+    }
+    #[tokio::test]
+    async fn actual_chunked_wire_limit_precedes_stacked_decoding() {
+        use std::io::{Read, Write};
+        let plain = vec![b'x'; 128 * 1024];
+        let payload = encode(&encode(&plain, "gzip"), "zlib");
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = std::thread::spawn(move || {
+            for _ in 0..2 {
+                let (mut socket, _) = listener.accept().unwrap();
+                socket
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .unwrap();
+                let mut request = Vec::new();
+                let mut byte = [0u8; 1];
+                while !request.ends_with(b"\r\n\r\n") {
+                    socket.read_exact(&mut byte).unwrap();
+                    request.push(byte[0]);
+                }
+                socket.write_all(b"HTTP/1.1 200 OK\r\nContent-Encoding: gzip, deflate\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n").unwrap();
+                for chunk in payload.chunks(7) {
+                    if write!(socket, "{:x}\r\n", chunk.len())
+                        .and_then(|_| socket.write_all(chunk))
+                        .and_then(|_| socket.write_all(b"\r\n"))
+                        .is_err()
+                    {
+                        break;
+                    }
+                }
+                let _ = socket.write_all(b"0\r\n\r\n");
+            }
+        });
+        let client = Client::builder().no_proxy().build().unwrap();
+        let length = encode(&encode(&plain, "gzip"), "zlib").len();
+        for maximum in [length, length - 1] {
+            let response = client
+                .get(format!("http://{address}/fixture"))
+                .send()
+                .await
+                .unwrap();
+            let mut stream = body_limited(response, maximum).unwrap();
+            let mut received = Vec::new();
+            let mut failure = None;
+            while let Some(frame) = stream.next().await {
+                match frame {
+                    Ok(bytes) => received.extend_from_slice(&bytes),
+                    Err(error) => {
+                        failure = Some(error);
+                        break;
+                    }
+                }
+            }
+            if maximum == length {
+                assert!(failure.is_none());
+                assert_eq!(received, plain);
+            } else {
+                assert!(failure
+                    .unwrap()
+                    .get_ref()
+                    .unwrap()
+                    .is::<WireLimitExceeded>());
+            }
+        }
+        server.join().unwrap();
+    }
+    #[tokio::test]
+    async fn explicit_referer_survives_without_automatic_redirect_referer() {
+        use std::io::{Read, Write};
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = std::thread::spawn(move || {
+            let mut observed = Vec::new();
+            for index in 0..2 {
+                let (mut socket, _) = listener.accept().unwrap();
+                socket
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .unwrap();
+                let mut bytes = Vec::new();
+                let mut byte = [0u8; 1];
+                while !bytes.ends_with(b"\r\n\r\n") {
+                    socket.read_exact(&mut byte).unwrap();
+                    bytes.push(byte[0]);
+                }
+                observed.push(String::from_utf8(bytes).unwrap());
+                if index == 0 {
+                    socket.write_all(b"HTTP/1.1 302 Found\r\nLocation: /terminal\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").unwrap();
+                } else {
+                    socket
+                        .write_all(
+                            b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\n{}",
+                        )
+                        .unwrap();
+                }
+            }
+            observed
+        });
+        let attempt = Attempt::new(Duration::from_secs(5), Duration::from_secs(5)).unwrap();
+        let response = attempt
+            .request(
+                &format!("http://{address}/initial"),
+                "fixture-agent",
+                &[("Referer".into(), "http://explicit.test/kept".into())],
+            )
+            .unwrap()
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(response.status(), 200);
+        drop(response);
+        for request in server.join().unwrap() {
+            assert!(request
+                .to_ascii_lowercase()
+                .contains("referer: http://explicit.test/kept\r\n"));
+        }
     }
     #[test]
     fn latin1_matches_requests_and_rejects_invalid_header_values() {

@@ -106,11 +106,11 @@ impl ActionReads {
         let state = self.clone();
         let deadline = http.deadline;
         self.runtime
-            .run_until(input, Some(deadline), move |work| async move {
+            .run_scoped(input, Some(deadline), http.scope.clone(), move |work| async move {
                 work.check()?;
                 super::vod_api_http::negotiate(&headers, &http.uri)?;
                 let indent = super::vod_api_http::json_indent(&headers);
-                let guard = work.physical_guard();
+                let guard = work.io_guard()?.erased();
                 let guard: Arc<dyn Send + Sync> = if let Some(scope) = http.scope.clone() {
                     Arc::new((guard, scope))
                 } else {
@@ -124,12 +124,12 @@ impl ActionReads {
                     .account_user(peer, headers, false)
                     .await?;
                 work.check()?;
-                let mut document = work.document();
                 if !matches!(http.method, Method::GET | Method::HEAD) {
                     if user.user_level < 10 {
                         return Err(crate::StoreError::PermissionDenied.into());
                     }
                     if http.method == Method::OPTIONS {
+                        let mut document = work.document();
                         serde_json::to_writer(&mut document, &action.options()).map_err(output)?;
                         return Ok(document.finish());
                     }
@@ -165,6 +165,31 @@ impl ActionReads {
                     return Err(missing(action.resource()));
                 }
                 let mut connection = work.connection(state.auth.store.pool()).await?;
+                if matches!(action,Action::MovieInfo|Action::SeriesInfo){
+                    let prepared=async{
+                        let statement=selection.rows(&visible,work.row_bytes(),None)?;
+                        connection.configure(&work).await?;
+                        let rows=statement.query().fetch_all(connection.raw()).await?;
+                        if rows.is_empty(){return Err(missing(action.resource()))}
+                        if rows.len()!=1{return Err(ReadError::WorkerFailed)}
+                        if rows[0].try_get::<bool,_>("oversized")?{return Err(ReadError::Capacity)}
+                        let result=super::vod_api_provider_info_read::prepare(&work,&mut connection,matches!(action,Action::SeriesInfo),id,&rows[0],&query,&origin).await;
+                        drop(rows);result
+                    }.await;
+                    // Sealing the descriptor already promoted its deadline.
+                    // Finish/drop row/connection/identity state before lending.
+                    let cleanup=connection.finish().await;
+                    drop(user);drop(selection);drop(query);drop(origin);
+                    let prepared=prepared?;cleanup?;
+                    let value=match prepared{
+                        super::vod_api_provider_info_read::Preparation::Ready(value)=>value,
+                        super::vod_api_provider_info_read::Preparation::Refresh(snapshot)=>{
+                            let snapshot=work.admit_refresh(snapshot).await?;
+                            super::vod_api_provider_info_read::execute(&work,&state.auth,snapshot).await?
+                        },
+                    };
+                    return provider_body(&work,value,indent);
+                }
                 let result = async {
                     let statement = selection.rows(&visible, work.row_bytes(), None)?;
                     connection.configure(&work).await?;
@@ -178,12 +203,8 @@ impl ActionReads {
                     if rows[0].try_get::<bool, _>("oversized")? {
                         return Err(ReadError::Capacity);
                     }
-                    if matches!(action,Action::MovieInfo|Action::SeriesInfo){
-                        let value=super::vod_api_provider_info_read::read(&work,&mut connection,matches!(action,Action::SeriesInfo),id,&rows[0],&query,&origin).await?;
-                        serde_json::to_writer(&mut document,&value).map_err(output)?;
-                        return Ok(document.finish());
-                    }
                     drop(rows);
+                    let mut document=work.document();
                     let mut context = account::SerializerContext::default();
                     document.write_all(b"[").map_err(output)?;
                     if matches!(action, Action::SeriesEpisodes) {
@@ -299,6 +320,11 @@ impl ActionReads {
             .await
     }
 }
+fn provider_body(work:&ReadWork,value:Value,indent:Option<usize>)->Result<Vec<u8>,ReadError>{
+    let mut document=work.document();serde_json::to_writer(&mut document,&value).map_err(output)?;drop(value);let body=document.finish();
+    match indent{None=>Ok(body),Some(indent)=>super::vod_api_http::pretty_document(&body,indent,super::vod_api_owned_read::Document::bounded(work.work_bytes().min(work.response_bytes())))}
+}
+
 async fn relation(
     work: &ReadWork,
     connection: &mut OwnedConnection,

@@ -2,6 +2,7 @@
 //! Actual TCP/body/header/ownership gates passed; app/React/browsable HTML
 //! acceptance remains separate. No additional runtime or shutdown service.
 //! Original Dispatcharr authors/contributors retain credit and AGPL licensing.
+use super::vod_api_owned_read::HttpScope;
 use super::{
     vod_api_http::{json_indent, pretty_document, HttpGate},
     vod_api_owned_read::{ReadError, ReadRuntime},
@@ -16,11 +17,12 @@ use axum::{
     routing::any,
     Router,
 };
-use std::{net::SocketAddr, sync::Arc};
-use tokio::sync::OwnedSemaphorePermit;
+use std::net::SocketAddr;
+#[cfg(test)]use std::sync::Arc;
+
 struct Frame {
     data: bytes::Bytes,
-    _slot: Arc<OwnedSemaphorePermit>,
+    _slot: HttpScope,
 }
 impl AsRef<[u8]> for Frame {
     fn as_ref(&self) -> &[u8] {
@@ -211,7 +213,7 @@ fn common(response: &mut Response) {
 fn response(
     status: u16,
     bytes: bytes::Bytes,
-    slot: Option<Arc<OwnedSemaphorePermit>>,
+    slot: Option<HttpScope>,
     head: bool,
 ) -> Response {
     let length = bytes.len();

@@ -38,7 +38,7 @@ pub(crate) struct ReadRequest {
 }
 #[derive(Clone)]
 pub(crate) struct HttpRead {
-    pub method:Method,pub uri:Uri,pub raw_detail:Option<String>,pub scope:Option<Arc<dyn Send+Sync>>,pub deadline:tokio::time::Instant,
+    pub method:Method,pub uri:Uri,pub raw_detail:Option<String>,pub scope:Option<super::vod_api_owned_read::HttpScope>,pub deadline:tokio::time::Instant,
 }
 type PageHook=Arc<dyn Fn()->BoxFuture<'static,Result<(),ReadError>>+Send+Sync>;
 #[derive(Clone)]
@@ -56,7 +56,7 @@ impl SqlReads {
         Self::new(auth.store.pool().clone(),Arc::new(ScopedUiAuth(auth)),limits)
     }
     pub fn new(pool:PgPool,auth:Arc<dyn RetainedUiAuthorizer>,limits:ReadLimits)->Result<Self,ReadError> {
-        Ok(Self {pool,auth,runtime:ReadRuntime::new(limits)?,after_page:None})
+        Ok(Self {pool,auth,runtime:ReadRuntime::new_fair(limits)?,after_page:None})
     }
     pub fn with_page_hook(mut self,hook:PageHook)->Self {self.after_page=Some(hook);self}
     /// Ordinary Movie/Series/Episode component input, not a routed HTTP API.
@@ -72,7 +72,7 @@ impl SqlReads {
         let state=self.clone();
         let input=request.input_bytes()?.checked_add(http.as_ref().and_then(|h|h.uri.query()).map_or(0,str::len)).ok_or(ReadError::Capacity)?;
         let deadline=http.as_ref().map(|h|h.deadline);
-        self.runtime.run_until(input,deadline,move |work|async move {
+        self.runtime.run_scoped(input,deadline,http.as_ref().and_then(|h|h.scope.clone()),move |work|async move {
             let indent=http.as_ref().and_then(|_|super::vod_api_http::json_indent(&request.headers));
             let result=async {
             work.check()?;
@@ -80,7 +80,7 @@ impl SqlReads {
                 super::vod_api_http::negotiate(&request.headers,&http.uri)?;
                 request.query=url::form_urlencoded::parse(http.uri.query().unwrap_or("").as_bytes()).map(|(key,value)|(key.into_owned(),value.into_owned())).collect();
             }
-            let guard=work.physical_guard();
+            let guard=work.io_guard()?.erased();
             let guard:Arc<dyn Send+Sync>=match http.as_ref().and_then(|h|h.scope.as_ref()) {Some(scope)=>Arc::new((guard,scope.clone())),None=>guard};
             let user=state.auth.authorize(request.peer,request.headers,guard).await?;
             work.check()?;

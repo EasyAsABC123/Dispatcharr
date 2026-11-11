@@ -1,6 +1,7 @@
 //! Explicit provider/action router sharing ordinary read admission and memory.
 //! Actual Source/native component gates passed; app/browser acceptance is
 //! separate. Original Dispatcharr authors retain application/algorithm credit.
+use super::vod_api_owned_read::HttpScope;
 use super::{
     vod_api_actions_read::{Action, ActionReads},
     vod_api_http::{json_indent, pretty_document, HttpGate},
@@ -15,11 +16,11 @@ use axum::{
     routing::any,
     Router,
 };
-use std::{net::SocketAddr, sync::Arc};
-use tokio::sync::OwnedSemaphorePermit;
+use std::net::SocketAddr;
+
 struct Frame {
     data: bytes::Bytes,
-    _slot: Arc<OwnedSemaphorePermit>,
+    _slot: HttpScope,
 }
 impl AsRef<[u8]> for Frame {
     fn as_ref(&self) -> &[u8] {
@@ -194,7 +195,7 @@ fn headers(response: &mut Response) {
 fn representation(
     status: u16,
     data: bytes::Bytes,
-    slot: Option<Arc<OwnedSemaphorePermit>>,
+    slot: Option<HttpScope>,
     head: bool,
 ) -> Response {
     let length = data.len();

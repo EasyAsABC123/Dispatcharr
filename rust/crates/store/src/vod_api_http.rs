@@ -1,12 +1,13 @@
 //! Bounded ordinary VOD HTTP reads derived from original Dispatcharr.
 //! Original authors retain all application credit. Packaged/app gates are separate.
+use super::vod_api_owned_read::HttpScope;
 use super::{vod_api_owned_read::ReadError,vod_api_read_component::{SqlReads,ReadRequest,HttpRead},vod_api_sql::Resource};
 use crate::StoreError;
 use axum::{body::{Body,to_bytes},extract::ConnectInfo,http::{HeaderMap,HeaderValue,Method,Uri},response::{Response,IntoResponse},routing::any,Router};
 use serde_json::{Value,json};
 use std::{net::SocketAddr,sync::Arc,time::Duration};
-use tokio::sync::{Semaphore,OwnedSemaphorePermit};
-struct HttpFrame {data:bytes::Bytes,_slot:Arc<OwnedSemaphorePermit>}
+use tokio::sync::Semaphore;
+struct HttpFrame {data:bytes::Bytes,_slot:HttpScope}
 impl AsRef<[u8]> for HttpFrame {fn as_ref(&self)->&[u8]{self.data.as_ref()}}
 
 
@@ -15,23 +16,25 @@ impl AsRef<[u8]> for HttpFrame {fn as_ref(&self)->&[u8]{self.data.as_ref()}}
 #[derive(Clone)]
 pub(super) struct HttpGate {
     pub(super) slots:Arc<Semaphore>,pub(super) waiters:Arc<Semaphore>,
-    pub(super) input:Arc<Semaphore>,maximum_input:usize,deadline:Duration,
+    pub(super) input:Arc<Semaphore>,maximum_input:usize,deadline:Duration,runtime:Option<super::vod_api_owned_read::ReadRuntime>,
 }
 impl HttpGate {
     pub(super) fn new(limits:super::vod_api_owned_read::ReadLimits)->Result<Self,StoreError> {
         let active=limits.work_bytes.checked_add(limits.response_bytes).and_then(|v|v.checked_mul(limits.workers)).ok_or(StoreError::Unsupported("Invalid VOD HTTP read budget"))?;
         let queued=limits.memory_bytes.checked_sub(active).filter(|bytes|*bytes>=limits.input_bytes).ok_or(StoreError::Unsupported("VOD HTTP memory must cover active and queued input"))?.min(16*1024*1024);
-        Ok(Self {slots:Arc::new(Semaphore::new(limits.workers)),waiters:Arc::new(Semaphore::new(256)),input:Arc::new(Semaphore::new(queued)),maximum_input:limits.input_bytes,deadline:limits.logical_deadline})
+        Ok(Self {slots:Arc::new(Semaphore::new(limits.workers)),waiters:Arc::new(Semaphore::new(256)),input:Arc::new(Semaphore::new(queued)),maximum_input:limits.input_bytes,deadline:limits.logical_deadline,runtime:None})
     }
-    pub(super) async fn acquire(&self,bytes:usize)->Option<(Arc<OwnedSemaphorePermit>,tokio::time::Instant)> {
+    pub(super) fn with_runtime(mut self,runtime:super::vod_api_owned_read::ReadRuntime)->Self{if runtime.is_fair(){self.runtime=Some(runtime)}self}
+    pub(super) async fn acquire(&self,bytes:usize)->Option<(HttpScope,tokio::time::Instant)> {
         let deadline=tokio::time::Instant::now()+self.deadline;
+        if let Some(runtime)=&self.runtime{return runtime.acquire_http(bytes,deadline).await.ok().map(|scope|(scope,deadline))}
         if bytes>self.maximum_input||self.slots.is_closed(){return None;}
-        if let Ok(slot)=self.slots.clone().try_acquire_owned(){return Some((Arc::new(slot),deadline));}
+        if let Ok(slot)=self.slots.clone().try_acquire_owned(){return Some((HttpScope::Legacy(Arc::new(slot)),deadline));}
         let _waiting=self.waiters.clone().try_acquire_owned().ok()?;
         let _input=self.input.clone().try_acquire_many_owned(u32::try_from(bytes).ok()?).ok()?;
         let slot=tokio::time::timeout_at(deadline,self.slots.clone().acquire_owned()).await.ok()?.ok()?;
         if tokio::time::Instant::now()>=deadline{return None;}
-        Some((Arc::new(slot),deadline))
+        Some((HttpScope::Legacy(Arc::new(slot)),deadline))
     }
 }
 /// Ordinary Movie/Series/Episode list/detail reads. Categories, unified reads,
@@ -41,11 +44,15 @@ pub struct VodReads {pub(super) reader:SqlReads,auth:crate::AuthService,gate:Htt
 impl VodReads {
     pub fn new(auth:crate::AuthService,limits:super::vod_api_owned_read::ReadLimits)->Result<Self,StoreError> {
         let reader=SqlReads::from_auth(auth.clone(),limits).map_err(|_|StoreError::Unsupported("Invalid VOD read resource limits"))?;
-        Ok(Self {reader,auth,gate:HttpGate::new(limits)?,image_routes:Arc::new(std::sync::atomic::AtomicBool::new(false))})
+        let gate=HttpGate::new(limits)?.with_runtime(reader.shared_runtime());
+        Ok(Self {reader,auth,gate,image_routes:Arc::new(std::sync::atomic::AtomicBool::new(false))})
     }
     pub fn router(&self)->Router {router_with_gate(self.reader.clone(),self.auth.clone(),self.gate.clone())}
     #[cfg(test)]
     pub(super) fn shared_gate(&self)->HttpGate {self.gate.clone()}
+    /// Private fixture scalar observer; no production route or reader access.
+    #[cfg(test)]
+    pub(super) fn scheduler_state(&self)->serde_json::Value{self.reader.shared_runtime().scheduler_state()}
     /// Explicit category extension sharing this reader's active workers,
     /// byte budget, bounded waiting and shutdown. No second runtime is created.
     /// Advanced providers/unified/refresh endpoints are separate capabilities.
@@ -202,6 +209,23 @@ pub(super) async fn respond(reader:SqlReads,auth:crate::AuthService,gate:HttpGat
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn scheduler_observer_tracks_this_http_runtime_and_held_scope() {
+        let pool=sqlx::postgres::PgPoolOptions::new().connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture").unwrap();
+        let auth=crate::AuthService::new(crate::Store::from_pool(pool),crate::AuthConfig::new("fixture-only".into()).unwrap());
+        let service=VodReads::new(auth,super::super::vod_api_owned_read::ReadLimits::default()).unwrap();
+        let before=service.scheduler_state();
+        assert_eq!(before["inputs_used"],0);
+        assert!(before.as_object().unwrap().values().all(|value|value.is_boolean()||value.is_u64()));
+        let (scope,_)=service.shared_gate().acquire(7).await.unwrap();
+        assert_eq!(service.scheduler_state()["inputs_used"],1);
+        assert!(!service.shutdown(Duration::from_millis(10)).await);
+        assert_eq!(service.scheduler_state()["admission_closed"],true);
+        drop(scope);
+        assert!(service.shutdown(Duration::from_secs(1)).await);
+        assert_eq!(service.scheduler_state()["inputs_used"],0);
+        assert_eq!(service.scheduler_state()["bytes"],0);
+    }
     #[test]
     fn bounded_formatter_preserves_nested_string_syntax_and_capacity() {
         let value=json!({"quote":"[\"{},]","nested":[{},[],{"x":1}],"empty":{}});

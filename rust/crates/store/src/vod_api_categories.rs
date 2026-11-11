@@ -142,12 +142,12 @@ impl CategoryReads {
         let state=self.clone();let bytes=request.query.iter().try_fold(request.detail.as_ref().map_or(0,String::len),|n,(k,v)|n.checked_add(k.len())?.checked_add(v.len())).and_then(|query|request.headers.iter().try_fold(query,|n,(k,v)|n.checked_add(k.as_str().len())?.checked_add(v.as_bytes().len()))).ok_or(ReadError::Capacity)?;
         let bytes=bytes.checked_add(http.as_ref().and_then(|value|value.uri.query()).map_or(0,str::len)).ok_or(ReadError::Capacity)?;
         let deadline=http.as_ref().map(|value|value.deadline);
-        self.runtime.run_until(bytes,deadline,move |work|async move {
+        self.runtime.run_scoped(bytes,deadline,http.as_ref().and_then(|h|h.scope.clone()),move |work|async move {
             let indent=http.as_ref().and_then(|_|super::vod_api_http::json_indent(&request.headers));
             let result=async {
             work.check()?;
             if let Some(http)=&http {category_negotiate(&request.headers,&http.uri)?;request.query=url::form_urlencoded::parse(http.uri.query().unwrap_or("").as_bytes()).into_owned().collect();}
-            let guard=work.physical_guard();let guard:Arc<dyn Send+Sync>=match http.as_ref().and_then(|value|value.scope.as_ref()){Some(scope)=>Arc::new((guard,scope.clone())),None=>guard};
+            let guard=work.io_guard()?.erased();let guard:Arc<dyn Send+Sync>=match http.as_ref().and_then(|value|value.scope.as_ref()){Some(scope)=>Arc::new((guard,scope.clone())),None=>guard};
             let scoped=state.auth.clone().with_retained_scope(guard);let user=scoped.account_user(request.peer,request.headers,false).await?;
             work.check()?;
             if let Some(http)=&http {

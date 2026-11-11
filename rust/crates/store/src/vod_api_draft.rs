@@ -106,3 +106,40 @@ mod vod_api_images_http;
 #[cfg(test)]
 #[path="vod_api_images_peer.rs"]
 mod vod_api_images_peer;
+
+// Source-qualified refresh implementation; fixture peers remain test-only.
+#[path="vod_api_provider_refresh_value.rs"]
+mod vod_api_provider_refresh_value;
+#[path="vod_api_provider_refresh_http.rs"]
+mod vod_api_provider_refresh_http;
+#[path="vod_api_provider_refresh_movie.rs"]
+mod vod_api_provider_refresh_movie;
+#[path="vod_api_provider_refresh_sql.rs"]
+mod vod_api_provider_refresh_sql;
+#[path="vod_api_provider_refresh_actor.rs"]
+mod vod_api_provider_refresh_actor;
+#[cfg(test)]
+#[path="vod_api_provider_refresh_peer.rs"]
+mod vod_api_provider_refresh_peer;
+#[path="vod_api_provider_refresh_series_value.rs"]
+mod vod_api_provider_refresh_series_value;
+#[path="vod_api_provider_refresh_episodes.rs"]
+mod vod_api_provider_refresh_episodes;
+
+#[path="vod_api_fair_budget.rs"] mod vod_api_fair_budget;
+
+#[path="vod_api_phase_children.rs"] mod vod_api_phase_children;
+
+#[path="vod_api_phase_scope.rs"] mod vod_api_phase_scope;
+
+#[path="vod_api_provider_refresh_episode_sql.rs"]
+mod vod_api_provider_refresh_episode_sql;
+
+#[path="vod_api_provider_refresh_plan.rs"]
+mod vod_api_provider_refresh_plan;
+
+#[path="vod_api_provider_refresh_budget.rs"]
+mod vod_api_provider_refresh_budget;
+
+#[path="vod_api_provider_refresh_body.rs"]
+mod vod_api_provider_refresh_body;

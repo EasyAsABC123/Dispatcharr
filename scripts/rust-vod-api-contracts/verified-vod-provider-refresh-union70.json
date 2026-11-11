@@ -1,0 +1,376 @@
+{
+  "passed": true,
+  "scope": "Historical union70 execution preserved plus one-byte AST-equivalent publication whitespace fix; only minimal corrected-tool replays newly executed",
+  "historical_verified_evidence_sha256": "df0df2566b6d99290adf5567c41a59db71ed769314c59779deecebf10bf89bb6",
+  "historical_union70_and_public1": {
+    "passed": true,
+    "scope": "New actual734-input normal-library union; standalone native HTTP, not canonical Main/browser/performance acceptance",
+    "source": {
+      "base_commit": "6e15b9315871db97b548c262a99eeeccc24fdcbd",
+      "rust_inputs": 734,
+      "inputs_sha256": "05bb4fd0e6ddf614c7a2bbbaeaeb4c36e00818bc8ab284ad856a3ef6fb284ad4",
+      "published_blob_manifest_sha256": "23e9362b3a3186e38ca2d1d8aee99f1410d516a1b062d8909cb1da7b82725928"
+    },
+    "runtime": {
+      "rust_inputs": 734,
+      "inputs_sha256": "05bb4fd0e6ddf614c7a2bbbaeaeb4c36e00818bc8ab284ad856a3ef6fb284ad4",
+      "binary_sha256": "60a6487783ee67194d1032aa08a3caa9643ed071531d0afa33a35de86a040d1c",
+      "binary_source": "artifacts/rust/vod-refresh-parent-union70-1/target/debug/deps/dispatcharr_store-fece98ae063be2a8",
+      "strict_clippy": true,
+      "tests": {
+        "passed": 452,
+        "ignored": 631,
+        "suites": 167
+      },
+      "tests_log_sha256": "77c46f74c5375a536fe3dd91cfe6e1298f0e37e94d7a21979ba27e4e77575586",
+      "clippy_log_sha256": "bc32aa1f90be07c44464623f507c5a364b3f0eb30cf40a87391dfc0379d39a7d"
+    },
+    "full_union_execution": {
+      "HTTP_Source_records": 207,
+      "live_TCP_native_HTTP_passes": 205,
+      "raw_body_equal": 128,
+      "SQL_bound_entropy_templates": 77,
+      "SQL_differences": 0,
+      "Factory_exclusions": [
+        {
+          "label": "movie_fixed_clock_factory",
+          "reason": "Separate Source APIRequestFactory fixed-clock reference, not liveTCP"
+        },
+        {
+          "label": "series_fixed_clock_factory",
+          "reason": "Separate Source APIRequestFactory fixed-clock reference, not liveTCP"
+        }
+      ],
+      "task_caller_schedules": 5,
+      "actual_physical_SQL_Redis": 4,
+      "helper_reference_cases_per_fixture": 2358,
+      "independent_owned_cleanup": true,
+      "proof_sha256": "32829d8598a3a3a96092cc4c0e3589553cd86e2df6c57227b7e302dc551a3e92"
+    },
+    "public_reconstruction": {
+      "passed": true,
+      "scope": "Exact734 Rust-input normal-library VOD/expiry union70; committed base support files",
+      "base_commit": "6e15b9315871db97b548c262a99eeeccc24fdcbd",
+      "rust_inputs": 734,
+      "tool_files": 23,
+      "source_manifest_sha256": "23e9362b3a3186e38ca2d1d8aee99f1410d516a1b062d8909cb1da7b82725928",
+      "source_inputs_sha256": "05bb4fd0e6ddf614c7a2bbbaeaeb4c36e00818bc8ab284ad856a3ef6fb284ad4",
+      "base_archive_sha256": "10ac4da184f415b35656317173c61c4c3557006978ed79465d8337a3c31bb59c",
+      "authority": "Only pinned Git archive and explicitly named Git blobs; no mutable/private fallback"
+    },
+    "public_replay": [
+      {
+        "kind": "http",
+        "passed": true,
+        "integration_sha256": "88ff1cb7f75aa8ea559d5c6a20643bec1190df28a6ec15f624de432aea80cc1f",
+        "raw_private_sha256": "4de40b83b2dfd31c87b7a6b64e22772e3ae72bce5254f8e39fd7c44eb09b2b06",
+        "records": 2,
+        "restored18": true,
+        "sequences_restored": true,
+        "independent_owned_cleanup": {
+          "containers": "",
+          "networks": "",
+          "volumes": ""
+        },
+        "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "tools_sha256": {
+          "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+          "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+          "scripts/rust-vod-api-contracts/provider_refresh_schedule_source.py": "55f05e2f148fc9e32aa034af895dccecb259ce508c460d3e9422b4e96205cddb",
+          "scripts/rust-vod-api-contracts/provider_refresh_full_http_source.py": "213b2fa55f3b8180682e2b4b3fd26e56ec0bd5c0162abcf990e4396f632b8a45",
+          "scripts/rust-vod-api-contracts/provider_refresh_http_driver.py": "619f6ea745c3d58029ffc19ee13a5811596910e4eb0464061de0f11bf0a6fbec",
+          "scripts/rust-vod-api-contracts/provider_refresh_http_assertions.py": "2ef8266c25978684a91aa5e9ce6a95f0111dbd1e08d5c654ca7538cc4f8a498a",
+          "scripts/rust-vod-api-contracts/provider_refresh_mixed_series_source.py": "cb97a9bcb498d06481b581c42f2a2393df1c01f45eba2db28ff27f22e311a6d9",
+          "scripts/rust-vod-api-contracts/provider_refresh_fair_physical.py": "e0f8a7cd9c9d6d487e1bc8f9b45f517ecc2c60e0ed786c8676d3f38cae53af4e",
+          "scripts/rust-vod-api-contracts/provider_refresh_mixed_source.py": "b36afef54f62f577f6d1820c39ce84354d347f721985e7f39f68a219d679bbb9",
+          "scripts/rust-vod-api-contracts/provider_refresh_source.py": "352966ff3f58a04bf00f68ca3cdfdd30c119d81b30778ecf7272263105b5b988",
+          "scripts/rust-vod-api-contracts/provider_refresh_helpers_source.py": "0092c6127d03367e0fc38ffdda02a91dc892916d5b8b859e5b1e5414668b7cf1",
+          "scripts/rust-vod-api-contracts/run_provider_refresh_source.py": "9fe76b94afcda12fc988f96fdbda5de3132c520f22f6c8ed93ebabcf1f1bef32",
+          "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+          "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+          "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+          "scripts/rust-integration/tool_snapshot.py": "8ef73c640d60242844bb6a875a86b37526f679f39fe8eefa4787e67ae32ffe89",
+          "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+          "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+          "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+          "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+          "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+          "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+          "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+        },
+        "labels": [
+          "movie_auth_cookie",
+          "series_null_credentials"
+        ],
+        "live_native_HTTP_passes": 2
+      },
+      {
+        "kind": "queued",
+        "passed": true,
+        "integration_sha256": "7eb5d1c905570042ff69c92c28daa4648bb1ccb75dcee67e46682ba4bcc43037",
+        "raw_private_sha256": "5f88aa5178c8ce300d060cb9cee8de6cf6837e4cb491afb646f9e58c7a04cfda",
+        "records": 2,
+        "restored18": true,
+        "sequences_restored": true,
+        "independent_owned_cleanup": {
+          "containers": "",
+          "networks": "",
+          "volumes": ""
+        },
+        "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "tools_sha256": {
+          "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+          "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+          "scripts/rust-vod-api-contracts/provider_refresh_schedule_source.py": "55f05e2f148fc9e32aa034af895dccecb259ce508c460d3e9422b4e96205cddb",
+          "scripts/rust-vod-api-contracts/provider_refresh_full_http_source.py": "213b2fa55f3b8180682e2b4b3fd26e56ec0bd5c0162abcf990e4396f632b8a45",
+          "scripts/rust-vod-api-contracts/provider_refresh_http_driver.py": "619f6ea745c3d58029ffc19ee13a5811596910e4eb0464061de0f11bf0a6fbec",
+          "scripts/rust-vod-api-contracts/provider_refresh_http_assertions.py": "2ef8266c25978684a91aa5e9ce6a95f0111dbd1e08d5c654ca7538cc4f8a498a",
+          "scripts/rust-vod-api-contracts/provider_refresh_mixed_series_source.py": "cb97a9bcb498d06481b581c42f2a2393df1c01f45eba2db28ff27f22e311a6d9",
+          "scripts/rust-vod-api-contracts/provider_refresh_fair_physical.py": "e0f8a7cd9c9d6d487e1bc8f9b45f517ecc2c60e0ed786c8676d3f38cae53af4e",
+          "scripts/rust-vod-api-contracts/provider_refresh_mixed_source.py": "b36afef54f62f577f6d1820c39ce84354d347f721985e7f39f68a219d679bbb9",
+          "scripts/rust-vod-api-contracts/provider_refresh_source.py": "352966ff3f58a04bf00f68ca3cdfdd30c119d81b30778ecf7272263105b5b988",
+          "scripts/rust-vod-api-contracts/provider_refresh_helpers_source.py": "0092c6127d03367e0fc38ffdda02a91dc892916d5b8b859e5b1e5414668b7cf1",
+          "scripts/rust-vod-api-contracts/run_provider_refresh_source.py": "9fe76b94afcda12fc988f96fdbda5de3132c520f22f6c8ed93ebabcf1f1bef32",
+          "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+          "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+          "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+          "scripts/rust-integration/tool_snapshot.py": "8ef73c640d60242844bb6a875a86b37526f679f39fe8eefa4787e67ae32ffe89",
+          "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+          "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+          "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+          "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+          "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+          "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+          "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+        },
+        "scenario": "movie_third_recent_skip"
+      },
+      {
+        "kind": "physical",
+        "passed": true,
+        "integration_sha256": "6ed85512690b461a7ae05084af0298bbf6e6785c5868bd46535b59379e254cb1",
+        "raw_private_sha256": "8926b78e0244eb5acc7fb33f73923c05d7a14f98bbd0b3e69f78ab29a5457ac2",
+        "records": 1,
+        "restored18": true,
+        "sequences_restored": true,
+        "independent_owned_cleanup": {
+          "containers": "",
+          "networks": "",
+          "volumes": ""
+        },
+        "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "tools_sha256": {
+          "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9",
+          "docker/compose.rust-candidate.yml": "10623cfc34908fece1bcced814b65948b3999f59a92bc0757a726ed8cd4177ff",
+          "scripts/rust-vod-api-contracts/provider_refresh_schedule_source.py": "55f05e2f148fc9e32aa034af895dccecb259ce508c460d3e9422b4e96205cddb",
+          "scripts/rust-vod-api-contracts/provider_refresh_full_http_source.py": "213b2fa55f3b8180682e2b4b3fd26e56ec0bd5c0162abcf990e4396f632b8a45",
+          "scripts/rust-vod-api-contracts/provider_refresh_http_driver.py": "619f6ea745c3d58029ffc19ee13a5811596910e4eb0464061de0f11bf0a6fbec",
+          "scripts/rust-vod-api-contracts/provider_refresh_http_assertions.py": "2ef8266c25978684a91aa5e9ce6a95f0111dbd1e08d5c654ca7538cc4f8a498a",
+          "scripts/rust-vod-api-contracts/provider_refresh_mixed_series_source.py": "cb97a9bcb498d06481b581c42f2a2393df1c01f45eba2db28ff27f22e311a6d9",
+          "scripts/rust-vod-api-contracts/provider_refresh_fair_physical.py": "e0f8a7cd9c9d6d487e1bc8f9b45f517ecc2c60e0ed786c8676d3f38cae53af4e",
+          "scripts/rust-vod-api-contracts/provider_refresh_mixed_source.py": "b36afef54f62f577f6d1820c39ce84354d347f721985e7f39f68a219d679bbb9",
+          "scripts/rust-vod-api-contracts/provider_refresh_source.py": "352966ff3f58a04bf00f68ca3cdfdd30c119d81b30778ecf7272263105b5b988",
+          "scripts/rust-vod-api-contracts/provider_refresh_helpers_source.py": "0092c6127d03367e0fc38ffdda02a91dc892916d5b8b859e5b1e5414668b7cf1",
+          "scripts/rust-vod-api-contracts/run_provider_refresh_source.py": "9fe76b94afcda12fc988f96fdbda5de3132c520f22f6c8ed93ebabcf1f1bef32",
+          "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+          "scripts/rust-integration/fixture_ports.py": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5",
+          "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+          "scripts/rust-integration/tool_snapshot.py": "8ef73c640d60242844bb6a875a86b37526f679f39fe8eefa4787e67ae32ffe89",
+          "scripts/rust-baseline/dependencies.py": "642eb6dcf75f5dea38e286daee55e953f2a2b68e443f00586563aa1f0f950fd1",
+          "scripts/rust-playback-baseline/seed.py": "98fd39c6b2bf71b64f6743bf66178a2a16de4fcbe72e0fb6d8b054f5858aad76",
+          "scripts/rust-playback-baseline/origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+          "scripts/rust-playback-baseline/range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+          "scripts/rust-playback-baseline/start.sh": "6fd6c552c3922f8b377d30ea7fcc962476016b0dc3bee5b26472b7a95373ffdf",
+          "scripts/rust-playback-baseline/supervisor.py": "fee3e279866fdfff9aae01c519251915186b626e9828a8c8247ccb60ec2cc6b8",
+          "scripts/rust-playback-baseline/uwsgi.ini": "4639c0d00f939ea0d0bb9a7c5f9f36e1cd18392d5e16305f17e71249846c75f0"
+        },
+        "actual_tests": 4
+      }
+    ],
+    "credits": "Original Dispatcharr authors retain application and algorithm credit; repository licenses and attribution preserved",
+    "acceptance_not_claimed": [
+      "canonical Main/package",
+      "stale/absent modal browser",
+      "performance",
+      "all Requests CookieJar grammar",
+      "corrupted-invariant successful physical drain"
+    ],
+    "retained_negative_integration_reports": [
+      {
+        "path": "artifacts/rust/vod-provider-refresh-Source-1/integration.json",
+        "sha256": "860c3b4757c24dad356c141f158daad7b76e9a79f777a6266dbdda60eff129a7",
+        "passed": false,
+        "Source_case_count_if_reported": null
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-Source-2/integration.json",
+        "sha256": "2f3e36a69e6e6a7e13f1d29078d7520564b7ed0d6056c539501bfddb6bb4b5db",
+        "passed": false,
+        "Source_case_count_if_reported": null
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-body-negative-1/integration.json",
+        "sha256": "a8c7824ee615845535277c75208946df365440def13e9fa23c012fbf8e4619d4",
+        "passed": false,
+        "Source_case_count_if_reported": 6
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-codec-native-negative-1/integration.json",
+        "sha256": "b2be56137acc3179aa76548ba52767d074b4888155b1f11963f32142b913c6a4",
+        "passed": false,
+        "Source_case_count_if_reported": 22
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-full-http-native-2/integration.json",
+        "sha256": "6a9c90af117d73d6d104a5e01e5f24b0bf075043f067844a1cb5502dc6e9f5fa",
+        "passed": false,
+        "Source_case_count_if_reported": 153
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-mixed-negative-1/integration.json",
+        "sha256": "53f03e523edc0d561d7d636600bfbadb93ee263dce3cbea6d5fa13bac48b78c4",
+        "passed": false,
+        "Source_case_count_if_reported": 2
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-mixed-positive-1/integration.json",
+        "sha256": "772a99c3bd43ae2bb69f84c3534b7d55846590214a2bb2d36221e05e0508e8d3",
+        "passed": false,
+        "Source_case_count_if_reported": 2
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-nonfinite-native-1/integration.json",
+        "sha256": "9db8a0730ec013ed9afdfc279898074f324bc5b08a8ef103b594727a30a77933",
+        "passed": false,
+        "Source_case_count_if_reported": 9
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-nonfinite-native-2/integration.json",
+        "sha256": "b1f29c3138fcbd852349be5df0eef61e0519582c3f1612d0c63b6dee399e008f",
+        "passed": false,
+        "Source_case_count_if_reported": 9
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-nonfinite-native-3/integration.json",
+        "sha256": "2e26e5b7e08ad2139f05936f7e03e836ab6743606a2cdd40af74b40627052804",
+        "passed": false,
+        "Source_case_count_if_reported": 9
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-redirect-body-negative-1/integration.json",
+        "sha256": "8d5f4de9c89808cfa3d21a5327983c3aa8c31c905a8e3b1ad63fd38e959393ee",
+        "passed": false,
+        "Source_case_count_if_reported": 4
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-redirect-manual-native-1/integration.json",
+        "sha256": "f2b40298502158b1147dd26dc187d68baabbf653d4f4fce6d2fd98314ef088ce",
+        "passed": false,
+        "Source_case_count_if_reported": 16
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-schedule-Movie-1/integration.json",
+        "sha256": "e5bdc8fb6a9d47299fba1200014b6e4a7130a452a6609f45faa938b67617fded",
+        "passed": false,
+        "Source_case_count_if_reported": 2
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-series-native-1/integration.json",
+        "sha256": "fd1e0fed85db8f706cc021f76be41d9d6d500a118da99446b4d34dd1478bf47d",
+        "passed": false,
+        "Source_case_count_if_reported": 3
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-slow-negative-1/integration.json",
+        "sha256": "e1b60beb81fe5208de3cd171a8ac770a13d857623d78e732dc810e90eb9dec83",
+        "passed": false,
+        "Source_case_count_if_reported": 2
+      }
+    ],
+    "other_retained_negative_scopes": [
+      {
+        "path": "artifacts/rust/vod-refresh-parent-union69-1/clippy.log",
+        "classification": "Incomplete730 closure missing4 compile-time assets; no qualified ELF; repaired734 rerun separately"
+      },
+      {
+        "path": "artifacts/rust/vod-refresh-final68-compile-1",
+        "classification": "Duplicate drop(auth) compile failure; existing67 already dropped auth, no resource-bug/fix claim"
+      },
+      {
+        "path": "artifacts/rust/vod-provider-refresh-nonfinite-native-2",
+        "classification": "Stale-target provenance invalidates new-code acceptance; retained, replaced by fresh-source builds"
+      },
+      {
+        "path": "artifacts/rust/vod-refresh-parent-union70-1/finalization-environment-note.json",
+        "classification": "Metadata-only docker PATH omission; no fixture observations; corrected environment and audit"
+      }
+    ]
+  },
+  "publication_delta": {
+    "scope": "One trailing-space deletion only in provider_refresh_schedule_source.py line157; updated tool metadata/reconstructor, zero runtime changes",
+    "old_delivery_manifest_sha256": "52ab8245b7621fd132209e9b13b71f4c42da6fce4ebec56334b21626ac12bfaf",
+    "AST_equivalent": true,
+    "source_bytes_removed": 1,
+    "old_tool_sha256": "55f05e2f148fc9e32aa034af895dccecb259ce508c460d3e9422b4e96205cddb",
+    "new_tool_sha256": "4e8348770d086bb1070b0c02be77fcb0cab0185b020a0563c83121820a6308e3",
+    "old_tool_git_blob": "7fe1c10ae483c5ec500e9198ee952a48c00a4ec6",
+    "new_tool_git_blob": "94aae34b8a878a9649ab05da82c101854e478e85",
+    "old_pinned_manifest_sha256": "23e9362b3a3186e38ca2d1d8aee99f1410d516a1b062d8909cb1da7b82725928",
+    "new_pinned_manifest_sha256": "2025301f8c50e274c7c703cb6c772254cf1271a40bd0108e169701277193b20a",
+    "historical205_5_4_execution": "Unchanged originaltool hashes retained in delivery1 and union70 evidence, not relabeled as corrected-source execution",
+    "rust734_unchanged": true
+  },
+  "current_git_blob_manifest_sha256": "2025301f8c50e274c7c703cb6c772254cf1271a40bd0108e169701277193b20a",
+  "public_reconstruction": {
+    "passed": true,
+    "scope": "Exact734 Rust-input normal-library VOD/expiry union70; committed base support files",
+    "base_commit": "6e15b9315871db97b548c262a99eeeccc24fdcbd",
+    "rust_inputs": 734,
+    "tool_files": 23,
+    "source_manifest_sha256": "2025301f8c50e274c7c703cb6c772254cf1271a40bd0108e169701277193b20a",
+    "source_inputs_sha256": "05bb4fd0e6ddf614c7a2bbbaeaeb4c36e00818bc8ab284ad856a3ef6fb284ad4",
+    "base_archive_sha256": "10ac4da184f415b35656317173c61c4c3557006978ed79465d8337a3c31bb59c",
+    "authority": "Only pinned Git archive and explicitly named Git blobs; no mutable/private fallback"
+  },
+  "corrected_tool_replays": [
+    {
+      "passed": true,
+      "kind": "queued",
+      "integration_sha256": "79fa92b1d969f7ecacd5aa97b0c38797e2c71efa1f9ea4bac2ccdc722b74b4a6",
+      "private_observation_sha256": "f3e437101c3e3d12d7095c0245beb4a977c51bf51c7fba3aa006a50f4e486963",
+      "runtime_ELF_sha256": "60a6487783ee67194d1032aa08a3caa9643ed071531d0afa33a35de86a040d1c",
+      "corrected_schedule_source_sha256": "4e8348770d086bb1070b0c02be77fcb0cab0185b020a0563c83121820a6308e3",
+      "restored18": true,
+      "sequences_restored": true,
+      "independent_owned_cleanup": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "scenario": "movie_third_recent_skip",
+      "Source_native_sides": 2
+    },
+    {
+      "passed": true,
+      "kind": "physical",
+      "integration_sha256": "18e5b8fddce11d8d4bd646995e9d8c1a134b50d38846ba9c1b86c36acc299f7c",
+      "private_observation_sha256": "1ed3d8f6065e797cdd225728d3926c069bccdb32323f01963e59a01e9d3b60b5",
+      "runtime_ELF_sha256": "60a6487783ee67194d1032aa08a3caa9643ed071531d0afa33a35de86a040d1c",
+      "corrected_schedule_source_sha256": "4e8348770d086bb1070b0c02be77fcb0cab0185b020a0563c83121820a6308e3",
+      "restored18": true,
+      "sequences_restored": true,
+      "independent_owned_cleanup": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "actual_physical_tests": 4
+    }
+  ],
+  "runtime_changes": false,
+  "new_compilation": false,
+  "full205_5_4_replay_after_whitespace_fix": false,
+  "baseline_or_performance_claim": false
+}

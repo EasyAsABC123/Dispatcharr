@@ -1,14 +1,16 @@
 //! Bounded category HTTP adapter; app registration is an explicit separate hook.
 //! Original Dispatcharr authors retain application credit and AGPL attribution.
+use super::vod_api_owned_read::HttpScope;
 use super::{vod_api_categories::{CategoryReads,CategoryRequest},vod_api_owned_read::{ReadRuntime,ReadError},vod_api_http::{HttpGate,pretty_document,json_indent},vod_api_read_component::HttpRead};
 use axum::{Router,body::{Body,to_bytes},extract::ConnectInfo,http::{HeaderValue,Method},response::{Response,IntoResponse},routing::any};
-use std::{sync::Arc,net::SocketAddr};
+use std::net::SocketAddr;
+#[cfg(test)]use std::sync::Arc;
 #[cfg(test)]
 use std::time::Duration;
-use tokio::sync::OwnedSemaphorePermit;
+
 #[cfg(test)]
 use super::vod_api_owned_read::ReadLimits;
-struct Frame {data:bytes::Bytes,_slot:Arc<OwnedSemaphorePermit>}
+struct Frame {data:bytes::Bytes,_slot:HttpScope}
 impl AsRef<[u8]> for Frame {fn as_ref(&self)->&[u8]{self.data.as_ref()}}
 #[derive(Clone)]
 pub(super) struct CategoryHttp {reader:CategoryReads,gate:HttpGate}
@@ -56,13 +58,13 @@ impl CategoryHttp {
 }
 // Original uncaught Django500 response observed on the actual category route.
 // This is an error representation, independent of DRF JSON negotiation/indent.
-pub(super) fn source_server_error(slot:Arc<OwnedSemaphorePermit>,head:bool)->Response {
+pub(super) fn source_server_error(slot:HttpScope,head:bool)->Response {
     let data=bytes::Bytes::from_static(b"\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n");
     let length=data.len();let body=if head{Body::empty()}else{Body::from(bytes::Bytes::from_owner(Frame{data,_slot:slot}))};let mut response=Response::new(body);*response.status_mut()=axum::http::StatusCode::INTERNAL_SERVER_ERROR;
     response.headers_mut().insert("content-type",HeaderValue::from_static("text/html; charset=utf-8"));response.headers_mut().insert("content-length",length.into());response.headers_mut().insert("vary",HeaderValue::from_static("origin"));response
 }
 fn common_headers(response:&mut Response){for(name,value)in[("allow","GET, HEAD, OPTIONS"),("vary","Accept, origin")] {response.headers_mut().insert(name,HeaderValue::from_static(value));}}
-fn representation(status:u16,data:bytes::Bytes,slot:Option<Arc<OwnedSemaphorePermit>>,head:bool)->Response {
+fn representation(status:u16,data:bytes::Bytes,slot:Option<HttpScope>,head:bool)->Response {
     let length=data.len();let body=if head{Body::empty()}else{match slot{Some(slot)=>Body::from(bytes::Bytes::from_owner(Frame{data,_slot:slot})),None=>Body::from(data)}};
     let mut response=Response::new(body);*response.status_mut()=axum::http::StatusCode::from_u16(status).expect("internal fixed status");response.headers_mut().insert("content-type",HeaderValue::from_static("application/json"));response.headers_mut().insert("content-length",length.into());common_headers(&mut response);response
 }

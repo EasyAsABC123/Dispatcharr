@@ -81,6 +81,13 @@ fn parent(row: &PgRow, series: bool) -> Result<(Value, Option<Value>), ReadError
                 .into(),
         );
     }
+    // Source get_object retains the original ForeignKey even when a later
+    // metadata refresh performs a full Series.save(). Projection-only logo
+    // data is insufficient: missing fields in jsonb_populate_record become NULL.
+    value.insert(
+        "logo_id".into(),
+        row.try_get::<Option<i64>, _>("logo_id")?.into(),
+    );
     let logo = if let Some(id) = row.try_get::<Option<i64>, _>("logo_id")? {
         Some(
             json!({"id":id,"name":row.try_get::<String,_>("logo_name")?,"url":row.try_get::<String,_>("logo_url")?}),
@@ -90,7 +97,11 @@ fn parent(row: &PgRow, series: bool) -> Result<(Value, Option<Value>), ReadError
     };
     Ok((value.into(), logo))
 }
-pub(super) async fn read(
+pub(super) enum Preparation {
+    Ready(Value),
+    Refresh(super::vod_api_owned_read::FrozenSnapshot),
+}
+pub(super) async fn prepare(
     work: &ReadWork,
     connection: &mut OwnedConnection,
     series: bool,
@@ -98,7 +109,7 @@ pub(super) async fn read(
     row: &PgRow,
     query: &[(String, String)],
     origin: &str,
-) -> Result<Value, ReadError> {
+) -> Result<Preparation, ReadError> {
     let (parent, logo) = parent(row, series)?;
     budget(work, &parent)?;
     let relation_id = query
@@ -131,25 +142,99 @@ pub(super) async fn read(
     }
     .map_err(policy_fault)?;
     if eligibility == policy::Eligibility::RefreshRequired {
-        return Err(ReadError::Unsupported(
-            "Provider refresh execution is not ported; cached-only lane cannot serve stale data",
-        ));
+        {
+            use super::vod_api_provider_refresh_plan::{Plan, SeriesView};
+            let relation_id = relation["relation"]["id"]
+                .as_i64()
+                .ok_or(ReadError::WorkerFailed)?;
+            let force = query
+                .iter()
+                .rev()
+                .find(|(key, _)| key == "force_refresh")
+                .is_some_and(|(_, value)| value.to_lowercase() == "true");
+            let mut relation = relation;
+            let series_view = if series {
+                Some(SeriesView {
+                    parent,
+                    account: relation["account"].take(),
+                    external_id: relation["relation"]["external_series_id"]
+                        .as_str()
+                        .ok_or(ReadError::WorkerFailed)?
+                        .to_owned(),
+                })
+            } else {
+                None
+            };
+            drop(relation);
+            drop(logo);
+            return Ok(Preparation::Refresh(
+                Plan {
+                    series,
+                    id,
+                    relation_id,
+                    force,
+                    query: query.to_vec(),
+                    origin: origin.to_owned(),
+                    series_view,
+                }
+                .freeze(work)?,
+            ));
+        }
     }
+    project(
+        work,
+        connection,
+        Projection {
+            series,
+            id,
+            parent: &parent,
+            logo: logo.as_ref(),
+            relation: &relation,
+            query,
+            origin,
+        },
+    )
+    .await
+    .map(Preparation::Ready)
+}
+struct Projection<'a> {
+    series: bool,
+    id: i64,
+    parent: &'a Value,
+    logo: Option<&'a Value>,
+    relation: &'a Value,
+    query: &'a [(String, String)],
+    origin: &'a str,
+}
+async fn project(
+    work: &ReadWork,
+    connection: &mut OwnedConnection,
+    context: Projection<'_>,
+) -> Result<Value, ReadError> {
+    let Projection {
+        series,
+        id,
+        parent,
+        logo,
+        relation,
+        query,
+        origin,
+    } = context;
     let mut result = if series {
         dto::series_header(
-            &parent,
+            parent,
             &relation["relation"],
             &relation["account"],
             relation.get("category").filter(|value| !value.is_null()),
-            logo.as_ref(),
+            logo,
             origin,
         )
     } else {
         dto::movie(
-            &parent,
+            parent,
             &relation["relation"],
             &relation["account"],
-            logo.as_ref(),
+            logo,
             origin,
         )
     }
@@ -206,8 +291,8 @@ pub(super) async fn read(
                 let relation = relations
                     .remove(&episode_id)
                     .ok_or(ReadError::WorkerFailed)?;
-                let projected = dto::episode(&episode, &relation, &parent, account_id, origin)
-                    .map_err(fault)?;
+                let projected =
+                    dto::episode(&episode, &relation, parent, account_id, origin).map_err(fault)?;
                 episode_heap = episode_heap
                     .checked_add(account::heap(&projected)?)
                     .and_then(|n| n.checked_add(1024))
@@ -231,4 +316,142 @@ pub(super) async fn read(
     }
     budget(work, &result)?;
     Ok(result)
+}
+
+#[allow(clippy::too_many_arguments)] // Compatibility wrapper; fair adapter uses prepare then drops its SQL/row scope.
+pub(super) async fn read(
+    work: &ReadWork,
+    connection: &mut OwnedConnection,
+    auth: &crate::AuthService,
+    series: bool,
+    id: i64,
+    row: &PgRow,
+    query: &[(String, String)],
+    origin: &str,
+) -> Result<Value, ReadError> {
+    let _ = auth;
+    match prepare(work, connection, series, id, row, query, origin).await? {
+        Preparation::Ready(value) => Ok(value),
+        Preparation::Refresh(_snapshot) => Err(ReadError::Unsupported(
+            "Refresh execution requires the retained fair phase adapter",
+        )),
+    }
+}
+
+/// Private semantic continuation. Caller must consume it only after the common
+/// scheduler admits the refresh, and must suspend SQL/Auth children at each
+/// transport header boundary once the common phase API is integrated.
+pub(super) async fn execute(
+    work: &ReadWork,
+    auth: &crate::AuthService,
+    snapshot: super::vod_api_owned_read::FrozenSnapshot,
+) -> Result<Value, ReadError> {
+    use super::{
+        vod_api_provider_refresh_actor as refresh, vod_api_provider_refresh_plan::Plan,
+        vod_api_provider_refresh_sql as refresh_sql,
+    };
+    let Plan {
+        series,
+        id,
+        relation_id,
+        force,
+        query,
+        origin,
+        series_view,
+    } = Plan::consume(work, snapshot)?;
+    if series {
+        let view = series_view.ok_or(ReadError::WorkerFailed)?;
+        let snapshot = json!({"series":view.parent,"account":view.account,"relation":{"external_series_id":view.external_id}});
+        refresh::series(work, auth, &snapshot, refresh::Clock { fixed: None }).await?;
+        drop(snapshot);
+    } else {
+        refresh::movie(
+            work,
+            auth,
+            relation_id,
+            force,
+            refresh::Clock { fixed: None },
+        )
+        .await?;
+    }
+    let mut connection = work.connection(auth.store.pool()).await?;
+    let result = async {
+        let parent = if series {
+            refresh_sql::series_by_id(work, &mut connection, id).await?
+        } else {
+            refresh_sql::movie_by_id(work, &mut connection, id).await?
+        }
+        .ok_or(ReadError::Unsupported(
+            "Concurrent parent deletion after refresh needs Source wire reference",
+        ))?;
+        let relation = if series {
+            refresh_sql::series_relation_by_id(work, &mut connection, relation_id).await?
+        } else {
+            refresh_sql::movie_relation_by_id(work, &mut connection, relation_id).await?
+        }
+        .ok_or(ReadError::Unsupported(
+            "Concurrent selected relation deletion after refresh needs Source wire reference",
+        ))?;
+        let art = super::vod_api_provider_artwork::preferred(
+            &relation["custom_properties"],
+            &parent["custom_properties"],
+        );
+        let logo = if !super::vod_api_provider_artwork::proxyable(&art.image) {
+            if let Some(id) = parent["logo_id"].as_i64() {
+                Some(
+                    refresh_sql::logo_by_id(work, &mut connection, id)
+                        .await?
+                        .ok_or(ReadError::Unsupported(
+                            "Concurrent logo deletion after refresh needs Source wire reference",
+                        ))?,
+                )
+            } else {
+                None
+            }
+        } else {
+            None
+        };
+        let category = if series {
+            if let Some(id) = relation["category_id"].as_i64() {
+                refresh_sql::category_by_id(work, &mut connection, id)
+                    .await?
+                    .ok_or(ReadError::Unsupported(
+                        "Concurrent category deletion after refresh needs Source wire reference",
+                    ))?
+            } else {
+                Value::Null
+            }
+        } else {
+            Value::Null
+        };
+        let account = refresh_sql::account_by_id(
+            work,
+            &mut connection,
+            relation["m3u_account_id"]
+                .as_i64()
+                .ok_or(ReadError::WorkerFailed)?,
+        )
+        .await?
+        .ok_or(ReadError::Unsupported(
+            "Concurrent account deletion after refresh needs Source wire reference",
+        ))?;
+        let relation = json!({"relation":relation,"account":account,"category":category});
+        project(
+            work,
+            &mut connection,
+            Projection {
+                series,
+                id,
+                parent: &parent,
+                logo: logo.as_ref(),
+                relation: &relation,
+                query: &query,
+                origin: &origin,
+            },
+        )
+        .await
+    }
+    .await;
+    connection.finish().await?;
+    result
 }
