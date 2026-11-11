@@ -1,0 +1,88 @@
+{
+  "passed": true,
+  "scope": "Regular inert default library: Redis cleanup-null, disabled recurring integer0, bounded inactive-account stale notice collector. Main/default intake remain OFF; not whole task-family parity.",
+  "base": "cc31e2188bef9974e5979550424fa4b25a1f229f",
+  "frozen_source": "artifacts/rust/inactive-notifications-native-source-5",
+  "full_source_inputs_sha256": "b521191ef4f377db621cffe8d6903862f9ea8a35fa9f98c08a8c9228f559d4f7",
+  "all_source_inputs": 704,
+  "native_binary_sha256": "28b877cc0c9c255f2dbbca9ee567d3dd7f6bc093f96c14368bef4d19d6e92a30",
+  "actual_original_native_checks": 134,
+  "actual_cases": 12,
+  "prior_pair_same_binary_checks": 58,
+  "distinct_physical_tests": 9,
+  "job_units_passed": 44,
+  "job_ignored": 46,
+  "strict_all_target_clippy": true,
+  "non_test_library_check_and_strict_clippy": true,
+  "positive_aggregate_host_exits": [
+    0,
+    0
+  ],
+  "default_database_unchanged": true,
+  "owned_projects_removed": true,
+  "performance_verified": false,
+  "main_or_default_registry_enabled": false,
+  "normal_library_paths": [
+    "default_protocol",
+    "default_domains",
+    "default_worker",
+    "default_application",
+    "transport::default_transport",
+    "inactive_notifications"
+  ],
+  "test_only": [
+    "default_peer",
+    "default_resources",
+    "inactive_resources"
+  ],
+  "scope_details": [
+    "Actual active expired profile under inactive account remains unevaluated while stale notices/dismissals are removed",
+    "Ordered key SELECT precedes an independent transaction; Django collector child DELETE then parent DELETE, actual rollback and physical connection close retained",
+    "Normal event publish occurs only after collector commit; actual Channels wrongtype is caught/null, bounded capacity/invalid representations remain operational",
+    "Native active account/profile domain and row cap refuse unchanged FIFO before earlyACK; not Source earlyACK parity",
+    "Candidate holds shared Jobs permit and provenance; explicit production default authority refuses other task families; default scheduler expiry remains unsupported"
+  ],
+  "open": [
+    "Native Source-compatible SQL failure task metadata: Source ProgrammingError/FAILURE proven, native conservative operational PENDING/no fake SUCCESS",
+    "Active account expiration notification creation/update/domain/date grammar",
+    "Concurrent row/key mutations between SELECT and collector; equal-order SQL ties are not a proved deterministic event sequence",
+    "Native Channels capacity/representation and ambiguous transport errors beyond actual unavailable case",
+    "Beat expiry/revocation, worker crash/earlyACK loss, full task-family/default schedule/application integration"
+  ],
+  "source_authors": "Original Dispatcharr, Django, Celery, Kombu and Channels authors retain their code, algorithms and licenses",
+  "evidence_sha256": {
+    "artifacts/rust/inactive-notifications-source-native-resources-8/source-native-default-pair-private.json": "16d663c62b1f3ff283957019930748d9a223b1e8173b30e6e862c37605021848",
+    "artifacts/rust/inactive-notifications-source-native-resources-8/integration.json": "b855e7157a532edb5245a25e32fa06cb72687bbbca2280a04e7d665397cbb40e",
+    "artifacts/rust/inactive-notifications-source-native-resources-8/native-inactive_resources.log": "70c2aea6561f529b00a409e5a5bdb4e49529f5c16272579b5bc8b557d6064673",
+    "artifacts/rust/inactive-notifications-source-native-resources-8/native-default_resources.log": "ac09b5b90c8281566c5b3aef11eefb639981d4929d147d0b89a1ff203568a0bf",
+    "artifacts/rust/inactive-notifications-pair-regression-7/integration.json": "f28c4ac0fb315b7eee0fd21eaca5df7a02ca571f4c92c6ef8adb20b6ee84822f",
+    "artifacts/rust/inactive-notifications-pair-regression-7/native-resources.log": "8b38e065d03a081802c46918c3024db6aecf69fcac3b76a3b7f33d4d9b4fde51",
+    "artifacts/rust/inactive-notifications-prep-1/compiler-5.jsonl": "78af7f0989b2a7a8c13f2f73a733a7a7fe538bfad7239927df7c28430c335d3d",
+    "artifacts/rust/inactive-notifications-prep-1/clippy-5.log": "af1acaef0b9aaa747aa0da3366178836c27af229cd47e90ad0fac89b2b2b850e",
+    "artifacts/rust/inactive-notifications-prep-1/non-test-clippy-5.log": "0139e487694d992e173e98a985dc12e2ebd9baf46098cd31e2f41e7debfd5abd",
+    "artifacts/rust/inactive-notifications-prep-1/non-test-check-5.log": "e9f6a55dacbdec86c202a4456510dae9d870675dce5a408c5010512800f3f567",
+    "artifacts/rust/inactive-notifications-prep-1/all-lib-units-5.log": "afed76711375f3cfd774a91312df5f1aee713c9e91a7d75f9849575931d3d9dd"
+  },
+  "preserved_failures": [
+    "Original1: socket sandbox denial before Compose",
+    "Original2: queue observer race after worker consumed; replaced with actual before_task_publish metadata, not raw wire claim",
+    "Native1: test-only exhaustive match missing new Kind; fixed before execution",
+    "Earlier pair resources3 stale passed:true aggregate remains rejected; final negative6 host1/reportfalse control retained in pair handoff",
+    "Actual119-check gate4/5/6 remains historical; final8 adds explicit expired active profile under inactive account and active-domain refusal, unchanged source5 ELF"
+  ],
+  "parent_workspace": {
+    "source_file_count": 704,
+    "default_passed": 383,
+    "ignored": 617,
+    "strict_workspace_all_targets": true,
+    "reconstruction_controls": 7,
+    "review": "artifacts/rust/inactive-final-parent-review-1.json"
+  },
+  "public_reconstruction": {
+    "manifest": "scripts/rust-job-contracts/inactive-notifications/source-overlays.json",
+    "sha256": "382e4b0af8a593b4dd48eed122f631345aedc048057725f636661e37e9d2276a",
+    "immutable_overlay_blobs": 14,
+    "full_map_files": 704,
+    "no_private_or_mutable_source_fallback": true
+  }
+}

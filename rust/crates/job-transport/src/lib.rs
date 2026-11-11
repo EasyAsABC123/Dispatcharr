@@ -85,3 +85,22 @@ mod stats_peer;
 
 #[cfg(test)]
 mod stats_resources;
+
+pub mod default_protocol;
+
+pub mod default_domains;
+
+pub mod default_worker;
+
+pub mod default_application;
+
+#[cfg(test)]
+mod default_peer;
+
+#[cfg(test)]
+mod default_resources;
+
+mod inactive_notifications;
+
+#[cfg(test)]
+mod inactive_resources;

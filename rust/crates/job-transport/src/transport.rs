@@ -103,6 +103,7 @@ enum Authority {
     Index,
     Refresh,
     Series,
+    DefaultServices,
 }
 impl Jobs {
     /// Test-only authority: copied DB + isolated loopback RedisDB8/9. There is
@@ -177,6 +178,14 @@ impl Jobs {
     }
     /// Narrow no-recording Series authority; no backup/refresh/index publisher
     /// or default consumer is enabled by opening this connection.
+    /// Explicit bounded default-task authority. Starts no consumer. Other task
+    /// families remain refused; callers own family drain before shared close.
+    pub async fn connect_defaults(broker: &str, result: &str, config: Config) -> Result<Self, Error> {
+        Self::connect_owned(broker, result, config, String::new(), Authority::DefaultServices).await
+    }
+    pub(crate) fn allows_defaults(&self) -> bool {
+        matches!(self.inner.authority, Authority::Fixture | Authority::DefaultServices)
+    }
     pub async fn connect_series(broker: &str, result: &str, config: Config) -> Result<Self, Error> {
         Self::connect_owned(broker, result, config, String::new(), Authority::Series).await
     }
@@ -249,7 +258,7 @@ impl Jobs {
         &self,
         limits: crate::eta::Limits,
     ) -> Result<Arc<crate::eta::Pool>, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         if self.inner.closed.load(Ordering::Acquire) {
@@ -602,7 +611,7 @@ impl Jobs {
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
@@ -637,7 +646,7 @@ impl Jobs {
         id: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::index_protocol::IndexResult>, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
@@ -684,7 +693,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Candidate>, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         let pool = self.eta_pool(limits)?;
@@ -718,7 +727,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<crate::eta::Reservation, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         let pool = self.eta_pool(limits)?;
@@ -739,7 +748,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<crate::eta::Reservation, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         let expected = crate::eta::Reservation::new_shared(
@@ -919,7 +928,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Reservation>, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         let Some(candidate) = self.peek_index_candidate(caller.clone(), limits).await? else {
@@ -938,7 +947,7 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::eta::Reservation>, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         let pool = self.eta_pool(limits)?;
@@ -968,7 +977,7 @@ impl Jobs {
         reservation: &crate::eta::Reservation,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(), Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         self.owns_reservation(reservation)?;
@@ -1004,7 +1013,7 @@ impl Jobs {
         reservation: &crate::eta::Reservation,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(), Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         self.owns_reservation(reservation)?;
@@ -1080,7 +1089,7 @@ impl Jobs {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<crate::index_protocol::IndexMessage>, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller.clone())?;
@@ -1123,7 +1132,7 @@ impl Jobs {
         children: Vec<Uuid>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         if children.len() > 1 {
@@ -1149,7 +1158,7 @@ impl Jobs {
         terminal: crate::index_terminal::Terminal,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if self.inner.authority == Authority::Series {
+        if matches!(self.inner.authority, Authority::Series | Authority::DefaultServices) {
             return Err(Error::UnsupportedTask);
         }
         match terminal {
@@ -1331,3 +1340,7 @@ mod refresh_eta_transport;
 
 #[path = "scheduler_transport.rs"]
 mod scheduler_transport;
+
+// Private fixture-only two-family draft.
+#[path = "default_transport.rs"]
+mod default_transport;
