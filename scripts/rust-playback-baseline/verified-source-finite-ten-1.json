@@ -1,0 +1,1937 @@
+{
+  "passed": true,
+  "scope": "Original-only ten-channel finite provider boundary functional reference; no resource sampler/gain/M0 closure",
+  "fully_verified": false,
+  "resource_acceptance": false,
+  "Source_budget_acceptance": null,
+  "policy_sha256": "702ad8e57a5409e0cc72f692cde45d7b55176715c00f6978b71e116b6f6042ee",
+  "seal_sha256": "5df97a93b6d54dc7fff2d8454d32ed7ec2675244796a1cbc7f05011e46f9f200",
+  "offline_controls": 7,
+  "actual_checks": 30,
+  "checks": [
+    {
+      "label": "fresh-capacity-before",
+      "passed": true,
+      "details": {
+        "label": "before",
+        "profile": {
+          "id": 1,
+          "max_streams": 10,
+          "is_active": true
+        },
+        "provider_slots": 0,
+        "clients": 0,
+        "channels": [
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ]
+        ],
+        "origin": {
+          "active": 0,
+          "maximum_active": 0,
+          "connections": 0,
+          "bytes": 0,
+          "disconnections": 0,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+          "fixture_bytes": 75002600,
+          "bytes_per_second": 250000,
+          "duration_seconds": 300,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {}
+        },
+        "started_monotonic": 151963.88066514,
+        "completed_monotonic": 151964.694180091
+      }
+    },
+    {
+      "label": "ten-origins-eleven-readers-ten-finite-slots",
+      "passed": true,
+      "details": {
+        "label": "active-ten-plus-shared",
+        "profile": {
+          "id": 1,
+          "max_streams": 10,
+          "is_active": true
+        },
+        "provider_slots": 10,
+        "clients": 11,
+        "channels": [
+          [
+            2,
+            "f85697b5d209:190",
+            17,
+            "45",
+            45
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "41",
+            41
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "36",
+            36
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "32",
+            32
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "27",
+            27
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "23",
+            23
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "18",
+            18
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "14",
+            14
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "9",
+            9
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "5",
+            5
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ]
+        ],
+        "origin": {
+          "active": 10,
+          "maximum_active": 10,
+          "connections": 10,
+          "bytes": 65664452,
+          "disconnections": 0,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+          "fixture_bytes": 75002600,
+          "bytes_per_second": 250000,
+          "duration_seconds": 300,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {
+            "/live/0.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 11743984
+            },
+            "/live/1.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 10595116
+            },
+            "/live/2.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 9443616
+            },
+            "/live/3.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 8293432
+            },
+            "/live/4.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 7141932
+            },
+            "/live/5.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 5991748
+            },
+            "/live/6.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 4840248
+            },
+            "/live/7.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 3690064
+            },
+            "/live/8.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 2538564
+            },
+            "/live/9.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 1385748
+            }
+          }
+        },
+        "started_monotonic": 152010.827805476,
+        "completed_monotonic": 152011.695391808
+      }
+    },
+    {
+      "label": "finite-eleventh-channel503-no-origin",
+      "passed": true,
+      "details": {
+        "status": 503,
+        "body": {
+          "error": "All active M3U profiles have reached maximum connection limits",
+          "waited": "2s"
+        },
+        "body_sha256": "517a44333ca91c563e96576ca0683a0e62be065cad6b47313e55b3af9c2d83b5"
+      }
+    },
+    {
+      "label": "fresh-slot-count-nine",
+      "passed": true,
+      "details": {
+        "label": "nine-origins-slot-released",
+        "profile": {
+          "id": 1,
+          "max_streams": 10,
+          "is_active": true
+        },
+        "provider_slots": 9,
+        "clients": 10,
+        "channels": [
+          [
+            2,
+            "f85697b5d209:190",
+            17,
+            "57",
+            57
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "53",
+            53
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "48",
+            48
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "44",
+            44
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "39",
+            39
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "35",
+            35
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "30",
+            30
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "26",
+            26
+          ],
+          [
+            1,
+            "f85697b5d209:190",
+            17,
+            "21",
+            21
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ]
+        ],
+        "origin": {
+          "active": 9,
+          "maximum_active": 10,
+          "connections": 10,
+          "bytes": 95925872,
+          "disconnections": 1,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+          "fixture_bytes": 75002600,
+          "bytes_per_second": 250000,
+          "duration_seconds": 300,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {
+            "/live/0.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 14794472
+            },
+            "/live/1.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 13645604
+            },
+            "/live/2.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 12494104
+            },
+            "/live/3.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 11343920
+            },
+            "/live/4.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 10192420
+            },
+            "/live/5.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 9042236
+            },
+            "/live/6.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 7890736
+            },
+            "/live/7.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 6739236
+            },
+            "/live/8.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 5587736
+            },
+            "/live/9.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 4195408
+            }
+          }
+        },
+        "started_monotonic": 152023.044492795,
+        "completed_monotonic": 152023.895735861
+      }
+    },
+    {
+      "label": "released-capacity-admits-eleventh-distinct",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-0-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-1-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-2-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-3-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-4-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-5-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-6-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-7-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-8-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-9-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "same-channel-follower-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "overflow-after-release-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "same-run-retention-settled",
+      "passed": true,
+      "details": {
+        "label": "retention-settled",
+        "profile": {
+          "id": 1,
+          "max_streams": 10,
+          "is_active": true
+        },
+        "provider_slots": 0,
+        "clients": 0,
+        "channels": [
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ]
+        ],
+        "origin": {
+          "active": 0,
+          "maximum_active": 10,
+          "connections": 11,
+          "bytes": 126517608,
+          "disconnections": 11,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+          "fixture_bytes": 75002600,
+          "bytes_per_second": 250000,
+          "duration_seconds": 300,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {
+            "/live/0.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 17900232
+            },
+            "/live/1.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 16736888
+            },
+            "/live/2.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 15713040
+            },
+            "/live/3.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 14427308
+            },
+            "/live/4.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 13050772
+            },
+            "/live/5.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 12026924
+            },
+            "/live/6.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 10993864
+            },
+            "/live/7.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 9716028
+            },
+            "/live/8.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 8684284
+            },
+            "/live/9.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 4195408
+            },
+            "/live/10.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 3072860
+            }
+          }
+        },
+        "started_monotonic": 152101.340192195,
+        "completed_monotonic": 152102.199888488
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 16119684,
+        "media_bytes": 10265176,
+        "packets": 85743,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 14840344,
+        "media_bytes": 9447564,
+        "packets": 78938,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 13816872,
+        "media_bytes": 8807612,
+        "packets": 73494,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 12537532,
+        "media_bytes": 7980036,
+        "packets": 66689,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 11258192,
+        "media_bytes": 7184420,
+        "packets": 59884,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 10234720,
+        "media_bytes": 6525480,
+        "packets": 54440,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 9211248,
+        "media_bytes": 5873308,
+        "packets": 48996,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 7931908,
+        "media_bytes": 5075624,
+        "packets": 42191,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 6908436,
+        "media_bytes": 4412548,
+        "packets": 36747,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 2302812,
+        "media_bytes": 1494224,
+        "packets": 12249,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 6140832,
+        "media_bytes": 3905136,
+        "packets": 32664,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 1279340,
+        "media_bytes": 833968,
+        "packets": 6805,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    }
+  ],
+  "states": [
+    {
+      "label": "before",
+      "profile": {
+        "id": 1,
+        "max_streams": 10,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 0,
+      "channels": [
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 151963.88066514,
+      "completed_monotonic": 151964.694180091,
+      "origin_active": 0,
+      "origin_connections": 0
+    },
+    {
+      "label": "active-ten-plus-shared",
+      "profile": {
+        "id": 1,
+        "max_streams": 10,
+        "is_active": true
+      },
+      "provider_slots": 10,
+      "clients": 11,
+      "channels": [
+        [
+          2,
+          "f85697b5d209:190",
+          17,
+          "45",
+          45
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "41",
+          41
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "36",
+          36
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "32",
+          32
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "27",
+          27
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "23",
+          23
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "18",
+          18
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "14",
+          14
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "9",
+          9
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "5",
+          5
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 152010.827805476,
+      "completed_monotonic": 152011.695391808,
+      "origin_active": 10,
+      "origin_connections": 10
+    },
+    {
+      "label": "eleventh-distinct-refused",
+      "profile": {
+        "id": 1,
+        "max_streams": 10,
+        "is_active": true
+      },
+      "provider_slots": 10,
+      "clients": 11,
+      "channels": [
+        [
+          2,
+          "f85697b5d209:190",
+          17,
+          "49",
+          49
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "45",
+          45
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "40",
+          40
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "36",
+          36
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "31",
+          31
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "27",
+          27
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "22",
+          22
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "18",
+          18
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "13",
+          13
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "9",
+          9
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 152014.61988166,
+      "completed_monotonic": 152015.500695914,
+      "origin_active": 10,
+      "origin_connections": 10
+    },
+    {
+      "label": "one-channel-local-close",
+      "profile": {
+        "id": 1,
+        "max_streams": 10,
+        "is_active": true
+      },
+      "provider_slots": 10,
+      "clients": 11,
+      "channels": [
+        [
+          2,
+          "f85697b5d209:190",
+          17,
+          "51",
+          51
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "47",
+          47
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "42",
+          42
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "38",
+          38
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "33",
+          33
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "29",
+          29
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "24",
+          24
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "20",
+          20
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "15",
+          15
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "11",
+          11
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 152017.001828911,
+      "completed_monotonic": 152017.844711598,
+      "origin_active": 10,
+      "origin_connections": 10
+    },
+    {
+      "label": "nine-origins-slot-released",
+      "profile": {
+        "id": 1,
+        "max_streams": 10,
+        "is_active": true
+      },
+      "provider_slots": 9,
+      "clients": 10,
+      "channels": [
+        [
+          2,
+          "f85697b5d209:190",
+          17,
+          "57",
+          57
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "53",
+          53
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "48",
+          48
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "44",
+          44
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "39",
+          39
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "35",
+          35
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "30",
+          30
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "26",
+          26
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "21",
+          21
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 152023.044492795,
+      "completed_monotonic": 152023.895735861,
+      "origin_active": 9,
+      "origin_connections": 10
+    },
+    {
+      "label": "overflow-active-ten",
+      "profile": {
+        "id": 1,
+        "max_streams": 10,
+        "is_active": true
+      },
+      "provider_slots": 10,
+      "clients": 11,
+      "channels": [
+        [
+          2,
+          "f85697b5d209:190",
+          17,
+          "63",
+          59
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "58",
+          58
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "54",
+          54
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "49",
+          49
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "45",
+          45
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "40",
+          40
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "36",
+          36
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "31",
+          31
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "27",
+          27
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "5",
+          5
+        ]
+      ],
+      "started_monotonic": 152028.498863131,
+      "completed_monotonic": 152029.383551306,
+      "origin_active": 10,
+      "origin_connections": 11
+    },
+    {
+      "label": "post-all-physical-close",
+      "profile": {
+        "id": 1,
+        "max_streams": 10,
+        "is_active": true
+      },
+      "provider_slots": 10,
+      "clients": 11,
+      "channels": [
+        [
+          2,
+          "f85697b5d209:190",
+          17,
+          "64",
+          59
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "59",
+          59
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "55",
+          55
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "50",
+          50
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "46",
+          46
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "41",
+          41
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "37",
+          37
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "32",
+          32
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "28",
+          28
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          1,
+          "f85697b5d209:190",
+          17,
+          "6",
+          6
+        ]
+      ],
+      "started_monotonic": 152029.384912944,
+      "completed_monotonic": 152030.264909568,
+      "origin_active": 10,
+      "origin_connections": 11
+    },
+    {
+      "label": "retention-settled",
+      "profile": {
+        "id": 1,
+        "max_streams": 10,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 0,
+      "channels": [
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 152101.340192195,
+      "completed_monotonic": 152102.199888488,
+      "origin_active": 0,
+      "origin_connections": 11
+    }
+  ],
+  "refusal": {
+    "status": 503,
+    "body": {
+      "error": "All active M3U profiles have reached maximum connection limits",
+      "waited": "2s"
+    },
+    "body_sha256": "517a44333ca91c563e96576ca0683a0e62be065cad6b47313e55b3af9c2d83b5"
+  },
+  "captures": [
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/overflow-after-release.ts",
+      "bytes": 1279340,
+      "sha256": "4ba578bff63a11a47659127a322638070c28e8021e11bb1da1e242dec978cbe9",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/overflow-after-release.decode.log",
+        "sha256": "ba8186efd63986b3370977879e72729516e68810f85254a7dea4e54a67c5028f",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-0.ts",
+      "bytes": 16119684,
+      "sha256": "2c40aebdd842e7a946f1a3320afd6254557247392445f8ad65cf92c973384b21",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-0.decode.log",
+        "sha256": "3b853ca1b6e29ec74fdbc7ff776ad95b2557babb246d8f203270181543335161",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-1.ts",
+      "bytes": 14840344,
+      "sha256": "647e6c06b7586f50c6aee5d63c68ef980a29e8ec8d86e59b3219a68ffd83b8ad",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-1.decode.log",
+        "sha256": "13cae21860a3524994f8530f2923b9060108bc8f060c8bc790694da29547b9eb",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-2.ts",
+      "bytes": 13816872,
+      "sha256": "b8bc9f1dd7409ae025ae8a708427d392e69c2ccc9a8a864deb5ab6c695cb6fd9",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-2.decode.log",
+        "sha256": "26ef0840c979de6f303c45a905482a26eec947cc31129460db0fa41a54ee0371",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-3.ts",
+      "bytes": 12537532,
+      "sha256": "013efa00b04fed6cc380a2d23a85094a05f1f0e8adea45fdd0460e15e8db36bc",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-3.decode.log",
+        "sha256": "714c4d10f9fd78db2d1f4dd48a110532865a941c2ecfc311e1fc7caa1d92b502",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-4.ts",
+      "bytes": 11258192,
+      "sha256": "e839a3e4cdf46d5e7b9d06b3906a8a0f48879522dde93cac15159c0a2f373383",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-4.decode.log",
+        "sha256": "5dcc0501b96c8f8130b927033170d99402f83568edcffd686d2d0ec2c2828e3e",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-5.ts",
+      "bytes": 10234720,
+      "sha256": "686e01f326acbdb13f29451a65296afb9eb81b16e791c6be031fd79cedea6b87",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-5.decode.log",
+        "sha256": "c0959eadc2cd3f0c50a702c46b242e12f10df4d0302123600db83de9d3bd7190",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-6.ts",
+      "bytes": 9211248,
+      "sha256": "0b608336a22e7558c95c3524c0c3c80afaf06fdd0ff7a2819503b66db733faff",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-6.decode.log",
+        "sha256": "879ce4539fb49b9072806e540ac3920480a37b99cdcc929ab74b95654452c9d9",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-7.ts",
+      "bytes": 7931908,
+      "sha256": "8d21062ea9940eeebf3f6ac681686040a5e7d96c9ef311047deac03109729cb3",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-7.decode.log",
+        "sha256": "ca7b43612b0a464eec68dd2d0755c7fca4e2e11565dae097ceab995a0d7e686a",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-8.ts",
+      "bytes": 6908436,
+      "sha256": "6cb04eea098880c90cd5371039c7d9d9896c6922670a2cd2a08310c7158ba8d5",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-8.decode.log",
+        "sha256": "af55c18f034bcfff918fcadcbde25bf5c9220a34d909e9dc015da4c93562eb14",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/owner-9.ts",
+      "bytes": 2302812,
+      "sha256": "ca8bdfd4413d39641c4747f2a986621cb24774431c36024ff30e4e3cec1e4ab3",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/owner-9.decode.log",
+        "sha256": "b815fb105cc93ee575cc16f66db504d066fb300d533d20adce71fa518ed883ab",
+        "frames": 74
+      }
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/same-channel-follower.ts",
+      "bytes": 6140832,
+      "sha256": "891daf74397a4f05aff50f10a88082e751e4b25d1a6cec13b47183e13cd558c9",
+      "decoder": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/same-channel-follower.decode.log",
+        "sha256": "81091d638c0d9329aaa2c50e2c16db5c177b0eb2c76a78f7dee565eda4adfcef",
+        "frames": 70
+      }
+    }
+  ],
+  "readers": [
+    {
+      "bytes": 16119684,
+      "media_bytes": 10265176,
+      "packets": 85743,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 14840344,
+      "media_bytes": 9447564,
+      "packets": 78938,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 13816872,
+      "media_bytes": 8807612,
+      "packets": 73494,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 12537532,
+      "media_bytes": 7980036,
+      "packets": 66689,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 11258192,
+      "media_bytes": 7184420,
+      "packets": 59884,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 10234720,
+      "media_bytes": 6525480,
+      "packets": 54440,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 9211248,
+      "media_bytes": 5873308,
+      "packets": 48996,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 7931908,
+      "media_bytes": 5075624,
+      "packets": 42191,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 6908436,
+      "media_bytes": 4412548,
+      "packets": 36747,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 2302812,
+      "media_bytes": 1494224,
+      "packets": 12249,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 6140832,
+      "media_bytes": 3905136,
+      "packets": 32664,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 1279340,
+      "media_bytes": 833968,
+      "packets": 6805,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    }
+  ],
+  "container_bindings": [
+    {
+      "id": "f85697b5d209fd6e00bddab370a9f4ec8ed359a12b510c0e5b04c4097cd6a48f",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "StartedAt": "2026-11-11T21:12:40.150652573Z",
+      "NanoCpus": 0,
+      "Memory": 0
+    },
+    {
+      "id": "633eadae43e7cd3a51b2afd4b3998710bdee32f1145bda5110438c8edb6ef974",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "StartedAt": "2026-11-11T21:12:40.005628832Z",
+      "NanoCpus": 0,
+      "Memory": 0
+    }
+  ],
+  "cleanup": {
+    "project": "dispatcharr-m0-ten-90557a7f9c6c",
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "raw_bindings": [
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/result.json",
+      "sha256": "9593b4f5ef30bc75a9d5d11726429b1cb710e7b6adc9d4b23453bb8857c4d0ab"
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-source-1/independent-cleanup.json",
+      "sha256": "28a5342e0f5423b0315f9b398472189cdb836ea04f7ddf2e7aae6e452735d197"
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-prep-1/policy.json",
+      "sha256": "702ad8e57a5409e0cc72f692cde45d7b55176715c00f6978b71e116b6f6042ee"
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-prep-1/seal.json",
+      "sha256": "5df97a93b6d54dc7fff2d8454d32ed7ec2675244796a1cbc7f05011e46f9f200"
+    },
+    {
+      "path": "artifacts/rust/m0-finite-ten-prep-1/controls.log",
+      "sha256": "fe836cbecd3b6b4f70bec51b58d30c3e45ad72ae7fb3cb63421a0f7337e651ae"
+    }
+  ],
+  "limits": [
+    "Configured cap10; ten existingSource channels +one explicitowned overflow; separate from oldunlimited10channelperfdriver/load-smoke.",
+    "No manual Rediscounter cleanup/grants. Release/admission from actual Source readerclose and model profile selection.",
+    "Only functional capacity/state accounting; no CPU/memory/FD/socket sampler, resource-gain/absolute-footprint budgets null.",
+    "Local close pendingSourceclients recorded; finalslot/client/origin0, remaining metadata/history fields retained verbatim.",
+    "Streaming route method remains literal unresolvedID separately from actualGET. No Native/fullM0 acceptance."
+  ]
+}

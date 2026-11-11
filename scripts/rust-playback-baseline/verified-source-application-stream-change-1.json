@@ -1,0 +1,616 @@
+{
+  "scope": "Original-only actual admin POST application stream-change functional accounting, no resource sampler/gain/M0 closure",
+  "passed": true,
+  "fully_verified": false,
+  "resource_acceptance": false,
+  "Source_budget_acceptance": null,
+  "policy_sha256": "a4af53bb8567676e3c4f6d56acf23f8a10180854db9a36cf14e817bef6a7a560",
+  "seal_sha256": "a3af537e9f9dcb891eb474cba2f3a5be65bcf188975d5ee95ee4ae09d88e26d5",
+  "checks": [
+    {
+      "label": "before-empty",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "single-unlimited-upstream",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "GET-not-allowed",
+      "passed": true,
+      "details": {
+        "method": "GET",
+        "authenticated": true,
+        "status": 405,
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "OPTIONS, POST"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "40"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "body": {
+          "detail": "Method \"GET\" not allowed."
+        },
+        "body_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259"
+      }
+    },
+    {
+      "label": "anonymous-admin-denied",
+      "passed": true,
+      "details": {
+        "method": "POST",
+        "authenticated": false,
+        "status": 401,
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "WWW-Authenticate",
+            "Bearer realm=\"api\""
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "OPTIONS, POST"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "58"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "body": {
+          "detail": "Authentication credentials were not provided."
+        },
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+      }
+    },
+    {
+      "label": "denied-controls-no-origin-change",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "authenticated-switch-success",
+      "passed": true,
+      "details": {
+        "method": "POST",
+        "authenticated": true,
+        "status": 200,
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "OPTIONS, POST"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "198"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "body": {
+          "message": "Stream changed successfully",
+          "channel": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "url": "http://origin:8080/live/100.ts",
+          "owner": true,
+          "worker_id": "6ef30919b759:190",
+          "stream_id": 2
+        },
+        "body_sha256": "50e6fbdd47aa1a350a75df4ac2b258f5c3b7e8f49269c1de7cacf8e819729ad2"
+      }
+    },
+    {
+      "label": "new-origin-active-unlimited-counter0",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "post-switch-fresh-body-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "same-run-retention-settled",
+      "passed": true,
+      "details": {
+        "label": "retention-settled",
+        "profile": {
+          "id": 1,
+          "max_streams": 0,
+          "is_active": true
+        },
+        "provider_slots": 0,
+        "clients": 0,
+        "channels": [
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ]
+        ],
+        "origin": {
+          "active": 0,
+          "maximum_active": 1,
+          "connections": 2,
+          "bytes": 5129768,
+          "disconnections": 2,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+          "fixture_bytes": 75002600,
+          "bytes_per_second": 250000,
+          "duration_seconds": 300,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {
+            "/live/0.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 1802920
+            },
+            "/live/100.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 3326848
+            }
+          }
+        },
+        "started_monotonic": 151157.145436718,
+        "completed_monotonic": 151158.144122495
+      }
+    },
+    {
+      "label": "original-body-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 3073236,
+        "media_bytes": 2000132,
+        "packets": 16347,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    }
+  ],
+  "states": [
+    {
+      "label": "before",
+      "profile": {
+        "id": 1,
+        "max_streams": 0,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 0,
+      "started_monotonic": 151071.68313697,
+      "completed_monotonic": 151072.50965504,
+      "origin_active": 0,
+      "origin_paths": {}
+    },
+    {
+      "label": "active",
+      "profile": {
+        "id": 1,
+        "max_streams": 0,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 1,
+      "started_monotonic": 151077.112889797,
+      "completed_monotonic": 151077.9748149,
+      "origin_active": 1,
+      "origin_paths": {
+        "/live/0.ts": {
+          "active": 1,
+          "connections": 1,
+          "bytes": 1360744
+        }
+      }
+    },
+    {
+      "label": "denied-control",
+      "profile": {
+        "id": 1,
+        "max_streams": 0,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 1,
+      "started_monotonic": 151078.830859505,
+      "completed_monotonic": 151079.701397995,
+      "origin_active": 1,
+      "origin_paths": {
+        "/live/0.ts": {
+          "active": 1,
+          "connections": 1,
+          "bytes": 1792392
+        }
+      }
+    },
+    {
+      "label": "after-switch",
+      "profile": {
+        "id": 1,
+        "max_streams": 0,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 1,
+      "started_monotonic": 151084.254665973,
+      "completed_monotonic": 151085.104818639,
+      "origin_active": 1,
+      "origin_paths": {
+        "/live/0.ts": {
+          "active": 0,
+          "connections": 1,
+          "bytes": 1802920
+        },
+        "/live/100.ts": {
+          "active": 1,
+          "connections": 1,
+          "bytes": 1252832
+        }
+      }
+    },
+    {
+      "label": "post-physical-close",
+      "profile": {
+        "id": 1,
+        "max_streams": 0,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 2,
+      "started_monotonic": 151086.270641138,
+      "completed_monotonic": 151087.145367358,
+      "origin_active": 1,
+      "origin_paths": {
+        "/live/0.ts": {
+          "active": 0,
+          "connections": 1,
+          "bytes": 1802920
+        },
+        "/live/100.ts": {
+          "active": 1,
+          "connections": 1,
+          "bytes": 1763440
+        }
+      }
+    },
+    {
+      "label": "retention-settled",
+      "profile": {
+        "id": 1,
+        "max_streams": 0,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 0,
+      "started_monotonic": 151157.145436718,
+      "completed_monotonic": 151158.144122495,
+      "origin_active": 0,
+      "origin_paths": {
+        "/live/0.ts": {
+          "active": 0,
+          "connections": 1,
+          "bytes": 1802920
+        },
+        "/live/100.ts": {
+          "active": 0,
+          "connections": 1,
+          "bytes": 3326848
+        }
+      }
+    }
+  ],
+  "method_probe": {
+    "method": "GET",
+    "authenticated": true,
+    "status": 405,
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ],
+      [
+        "Vary",
+        "Accept, origin"
+      ],
+      [
+        "Allow",
+        "OPTIONS, POST"
+      ],
+      [
+        "X-Frame-Options",
+        "DENY"
+      ],
+      [
+        "Content-Length",
+        "40"
+      ],
+      [
+        "X-Content-Type-Options",
+        "nosniff"
+      ],
+      [
+        "Referrer-Policy",
+        "same-origin"
+      ],
+      [
+        "Cross-Origin-Opener-Policy",
+        "same-origin"
+      ]
+    ],
+    "body": {
+      "detail": "Method \"GET\" not allowed."
+    },
+    "body_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259"
+  },
+  "anonymous_probe": {
+    "method": "POST",
+    "authenticated": false,
+    "status": 401,
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ],
+      [
+        "WWW-Authenticate",
+        "Bearer realm=\"api\""
+      ],
+      [
+        "Vary",
+        "Accept, origin"
+      ],
+      [
+        "Allow",
+        "OPTIONS, POST"
+      ],
+      [
+        "X-Frame-Options",
+        "DENY"
+      ],
+      [
+        "Content-Length",
+        "58"
+      ],
+      [
+        "X-Content-Type-Options",
+        "nosniff"
+      ],
+      [
+        "Referrer-Policy",
+        "same-origin"
+      ],
+      [
+        "Cross-Origin-Opener-Policy",
+        "same-origin"
+      ]
+    ],
+    "body": {
+      "detail": "Authentication credentials were not provided."
+    },
+    "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+  },
+  "switch": {
+    "method": "POST",
+    "authenticated": true,
+    "status": 200,
+    "headers": [
+      [
+        "Content-Type",
+        "application/json"
+      ],
+      [
+        "Vary",
+        "Accept, origin"
+      ],
+      [
+        "Allow",
+        "OPTIONS, POST"
+      ],
+      [
+        "X-Frame-Options",
+        "DENY"
+      ],
+      [
+        "Content-Length",
+        "198"
+      ],
+      [
+        "X-Content-Type-Options",
+        "nosniff"
+      ],
+      [
+        "Referrer-Policy",
+        "same-origin"
+      ],
+      [
+        "Cross-Origin-Opener-Policy",
+        "same-origin"
+      ]
+    ],
+    "body": {
+      "message": "Stream changed successfully",
+      "channel": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "url": "http://origin:8080/live/100.ts",
+      "owner": true,
+      "worker_id": "6ef30919b759:190",
+      "stream_id": 2
+    },
+    "body_sha256": "50e6fbdd47aa1a350a75df4ac2b258f5c3b7e8f49269c1de7cacf8e819729ad2"
+  },
+  "target_metadata": [
+    "stream_id",
+    "2",
+    "temp_init",
+    "1794430677.4785347",
+    "url",
+    "http://origin:8080/live/100.ts",
+    "init_time",
+    "1794430677.484278",
+    "last_active",
+    "1794430689.4471283",
+    "owner",
+    "6ef30919b759:190",
+    "state",
+    "active",
+    "user_agent",
+    "Dispatcharr/0.33.0",
+    "channel_name",
+    "Offline benchmark channel 0",
+    "stream_name",
+    "Offline backupstream 0",
+    "state_changed_at",
+    "1794430681.998819",
+    "stream_profile",
+    "3",
+    "m3u_profile",
+    "1",
+    "connection_ready_time",
+    "1794430681.998716",
+    "buffer_chunks",
+    "4",
+    "clients_at_activation",
+    "1",
+    "total_bytes",
+    "2408448",
+    "stream_switch_time",
+    "1794430684.6988628",
+    "stream_switch_reason",
+    "manual"
+  ],
+  "readers": [
+    {
+      "bytes": 3073236,
+      "media_bytes": 2000132,
+      "packets": 16347,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    }
+  ],
+  "cleanup": {
+    "project": "dispatcharr-m0-switch-a5e75494199f",
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "raw_bindings": [
+    {
+      "path": "artifacts/rust/m0-stream-change-source-1/result.json",
+      "sha256": "f46e04eceb08cc466e77202d30566a560ea72d5f378726c555b1c212baf64d7e"
+    },
+    {
+      "path": "artifacts/rust/m0-stream-change-prep-1/policy.json",
+      "sha256": "a4af53bb8567676e3c4f6d56acf23f8a10180854db9a36cf14e817bef6a7a560"
+    },
+    {
+      "path": "artifacts/rust/m0-stream-change-prep-1/seal.json",
+      "sha256": "a3af537e9f9dcb891eb474cba2f3a5be65bcf188975d5ee95ee4ae09d88e26d5"
+    },
+    {
+      "path": "artifacts/rust/m0-stream-change-prep-1/controls.log",
+      "sha256": "d1aaab86fa02d87997171aeb3220b40f5e28046ec4d1674848f9ec5f589f297c"
+    },
+    {
+      "path": "artifacts/rust/m0-stream-change-source-1/independent-cleanup.json",
+      "sha256": "80e1d8c3aed9a2a54e8f9d345c5a5cfad7554d0617ab3844a322ed0c70bc9f10"
+    }
+  ],
+  "limits": [
+    "Actual method witnessPOST/IsAdmin, existing resolver METHOD_UNRESOLVED remains separate; no full role/grammar/browser/native parity.",
+    "Original body continued byte-alignedTS with no readerrors; recoveryAVdecode uses separatefreshrequest, not everybyte originalbody decode.",
+    "Provider cap0 unlimited; no resource sampler/absolute resource ceilings/gain/M0closure."
+  ]
+}

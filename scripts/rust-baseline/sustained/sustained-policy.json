@@ -1,0 +1,37 @@
+{
+  "scope": "Original-only existing authenticated reader driver15warmup/60active +same-container physical-close/70retention, functional only",
+  "Source": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "viewers": [
+    1
+  ],
+  "continuous_requests_per_reader": 1,
+  "warmup_s": 15,
+  "active_s": 60,
+  "retention_s": 70,
+  "source_backend": {
+    "nano_cpus": 2000000000,
+    "memory_bytes": 536870912
+  },
+  "infrastructure": {
+    "nano_cpus": 1000000000,
+    "memory_bytes": 1073741824
+  },
+  "origin": {
+    "nano_cpus": 2000000000,
+    "memory_bytes": 536870912
+  },
+  "prefix_bytes": 2097152,
+  "decoder_min_frames": 25,
+  "errors": 0,
+  "unexpected_EOF": 0,
+  "provider_cap": "0/unlimited, counter0 explicit",
+  "absolute_CPU_ceiling": null,
+  "absolute_memory_ceiling": null,
+  "postclose_growth_ceiling": null,
+  "resource_sampler": false,
+  "contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+  "fully_verified": false,
+  "error_policy": "No retry/reset/policy adaptation; preserve Source failures, cleanup always.",
+  "portable_fixture": "Source-only3services, no dormant Native overlay/build-manifest or data-init dependency. Same Source workload/limits15/60/70; retained Source1 historical setup.",
+  "namespace": "New scripts/rust-baseline/sustained only; historical image47/image48 bytes remain untouched. Seed/protocol read explicitly from pinned28122 image47 archive as unchanged authority."
+}

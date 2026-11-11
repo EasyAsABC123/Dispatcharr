@@ -1,0 +1,37 @@
+{
+  "scope": "Original-only finite provider capacity functional boundary; no resource sampler/gain/M0 closure",
+  "Source": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "fixture": "existing playback Compose H264300s/shutdown5/retention60/behind5, one uWSGI worker, no worker jobs",
+  "schedule": [
+    "fresh owned default profile max_streams1 via actual model save",
+    "before snapshot zero; owner channel0 receives>=750000bytes",
+    "same-channel follower receives>=750000bytes; actual profile counter1/origin1/clients2",
+    "second distinct channel GET must503 without new provider/origin while owner+sibling continue",
+    "close owner local socket; follower receives300000 more bytes, profile1/origin1",
+    "close follower local socket; record immediate retained state, wait provider0/origin0 <=30s",
+    "distinct channel1 now receives>=750000bytes; counter1/origin1; actual capturedAVdecode",
+    "close final reader; record immediate state; wait70s unchanged same containers; provider/client/origin0; inputmetadata observations explicit"
+  ],
+  "ceilings": {
+    "capture_bytes_per_reader": 33554432,
+    "owner_first_bytes_deadline_s": 25,
+    "refusal_http_timeout_s": 10,
+    "follower_continuity_bytes": 300000,
+    "follower_continuity_deadline_s": 10,
+    "postclose_slot_deadline_s": 30,
+    "retention_s": 70,
+    "fixture_cleanup_s": 60,
+    "absolute_CPU": null,
+    "absolute_memory": null,
+    "footprint_growth": null
+  },
+  "service_CPU_memory_caps": "0/unset; inspect exact values; not finite fixture cgroup headroom",
+  "provider_cap": 1,
+  "no_source_or_user_privilege_change": true,
+  "contract": {
+    "stream_route_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+    "observed_method": "GET",
+    "fully_verified": false
+  },
+  "error_policy": "No retries or reset to obtain success; preserve Source failures; cleanup always."
+}

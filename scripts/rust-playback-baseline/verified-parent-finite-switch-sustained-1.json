@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "scope": "Source-only finite1/applicationPOSTstreamchange/finite10 functional contracts; no resource/native/fullM0 acceptance",
+  "proposals": [
+    {
+      "proposal": "m0-finite-capacity-publication-1",
+      "manifest_sha256": "35da5d01d995c9bc97230edae0e7eb409b055e4b1f2aa604f252d3587805e458",
+      "proof": "scripts/rust-playback-baseline/verified-source-finite-capacity-1.json",
+      "checks": 12,
+      "raw_bindings_verified": 5,
+      "cleanup": {
+        "project": "dispatcharr-m0-capacity-7ace8a966ecd",
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "proposal": "m0-stream-change-publication-1",
+      "manifest_sha256": "223333b5ebdbb878308b35e3929474396c392e13809c2a9a6bba3dd5489493a5",
+      "proof": "scripts/rust-playback-baseline/verified-source-application-stream-change-1.json",
+      "checks": 10,
+      "raw_bindings_verified": 5,
+      "cleanup": {
+        "project": "dispatcharr-m0-switch-a5e75494199f",
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "proposal": "m0-finite-ten-publication-1",
+      "manifest_sha256": "a0c69ab1015f8a9ffebbe37e0b4f0fca781e8f977eac25c308c3e50061ce9f41",
+      "proof": "scripts/rust-playback-baseline/verified-source-finite-ten-1.json",
+      "checks": 30,
+      "raw_bindings_verified": 5,
+      "cleanup": {
+        "project": "dispatcharr-m0-ten-90557a7f9c6c",
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    }
+  ],
+  "sustained": {
+    "proof": "scripts/rust-baseline/sustained/verified-source-sustained-accounting-1.json",
+    "raw_bindings_verified": 5,
+    "actual_packaging_requalification": true,
+    "native_phases": 0,
+    "resource_samples": 0,
+    "new_namespace": "scripts/rust-baseline/sustained",
+    "historical_measured_namespaces_unchanged": true
+  },
+  "portable_controls": 22,
+  "fresh_independent_all4_owned_cleanup_queries_empty": true
+}

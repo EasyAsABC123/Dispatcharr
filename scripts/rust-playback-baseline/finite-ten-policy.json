@@ -1,0 +1,38 @@
+{
+  "scope": "Original-only ten-channel finite provider boundary functional reference; no resource sampler/gain/M0 closure",
+  "Source": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "fixture": "existing playback Compose H264300s/shutdown5/retention60/behind5, one uWSGI worker, no worker jobs",
+  "schedule": [
+    "Fresh owned default profile max_streams10 real model save; existingtenchannels +one explicitownedoverflowchannel using sameprofile/localorigin",
+    "Before empty; ten distinctordinaryreaders each>=750000bytes, then one samechannel follower>=750000bytes; require11clients/10slots/10origins",
+    "Eleventh distinctchannel actual503/noextraorigin; unrelated followercontinues300000morebytes",
+    "Close channel9owner; wait actualslot/origin9within30s; no fake grant or forcecleanup",
+    "Eleventh distinctchannel now>=750000bytes; actual11clients/10slots/10origins",
+    "Close all12localreaders; capture immediateSourcependingclose; decodeeachactualfile3sAV",
+    "Samecontainers70sretention then clients/provider/origin0; record remainingmetadata/historyfields without inventedgrowthceiling"
+  ],
+  "ceilings": {
+    "capture_bytes_per_reader": 33554432,
+    "owner_first_bytes_deadline_s": 25,
+    "refusal_http_timeout_s": 10,
+    "follower_continuity_bytes": 300000,
+    "follower_continuity_deadline_s": 10,
+    "postclose_slot_deadline_s": 30,
+    "retention_s": 70,
+    "fixture_cleanup_s": 60,
+    "absolute_CPU": null,
+    "absolute_memory": null,
+    "footprint_growth": null,
+    "readers_total": 12,
+    "distinct_channels_total": 11
+  },
+  "service_CPU_memory_caps": "0/unset; inspect exact values; not finite fixture cgroup headroom",
+  "provider_cap": 10,
+  "no_source_or_user_privilege_change": true,
+  "contract": {
+    "stream_route_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+    "observed_method": "GET",
+    "fully_verified": false
+  },
+  "error_policy": "No retries or reset to obtain success; preserve Source failures; cleanup always."
+}

@@ -1,0 +1,618 @@
+{
+  "scope": "Original-only finite provider capacity functional boundary; no resource sampler/gain/M0 closure",
+  "passed": true,
+  "fully_verified": false,
+  "resource_acceptance": false,
+  "Source_budget_acceptance": null,
+  "policy_sha256": "b2d3394798cd2f5a9c3c7e3002a1678553f54ce6b25b750068e3d5f4add58000",
+  "seal_sha256": "53f6e25186f7f547218cb940072e10a4304f3bc25f229d9e754f3b971155bdf1",
+  "offline_controls": 5,
+  "checks": [
+    {
+      "label": "fresh-capacity-before",
+      "passed": true,
+      "details": {
+        "label": "before",
+        "profile": {
+          "id": 1,
+          "max_streams": 1,
+          "is_active": true
+        },
+        "provider_slots": 0,
+        "clients": 0,
+        "channels": [
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ]
+        ],
+        "origin": {
+          "active": 0,
+          "maximum_active": 0,
+          "connections": 0,
+          "bytes": 0,
+          "disconnections": 0,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+          "fixture_bytes": 75002600,
+          "bytes_per_second": 250000,
+          "duration_seconds": 300,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {}
+        },
+        "started_monotonic": 150767.36117792,
+        "completed_monotonic": 150768.221085822
+      }
+    },
+    {
+      "label": "shared-two-clients-one-finite-slot",
+      "passed": true,
+      "details": {
+        "label": "active",
+        "profile": {
+          "id": 1,
+          "max_streams": 1,
+          "is_active": true
+        },
+        "provider_slots": 1,
+        "clients": 2,
+        "channels": [
+          [
+            2,
+            "e56a8465f3ad:190",
+            17,
+            "5",
+            5
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ]
+        ],
+        "origin": {
+          "active": 1,
+          "maximum_active": 1,
+          "connections": 1,
+          "bytes": 1384432,
+          "disconnections": 0,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+          "fixture_bytes": 75002600,
+          "bytes_per_second": 250000,
+          "duration_seconds": 300,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {
+            "/live/0.ts": {
+              "active": 1,
+              "connections": 1,
+              "bytes": 1384432
+            }
+          }
+        },
+        "started_monotonic": 150772.924722787,
+        "completed_monotonic": 150773.783641212
+      }
+    },
+    {
+      "label": "finite-second-channel-503-no-upstream",
+      "passed": true,
+      "details": {
+        "status": 503,
+        "body": {
+          "error": "All active M3U profiles have reached maximum connection limits",
+          "waited": "2s"
+        },
+        "body_sha256": "517a44333ca91c563e96576ca0683a0e62be065cad6b47313e55b3af9c2d83b5"
+      }
+    },
+    {
+      "label": "follower-retains-slot",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "released-capacity-admits-other-channel",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "owner-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "follower-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "after-release-audio-video-decode",
+      "passed": true,
+      "details": null
+    },
+    {
+      "label": "same-run-retention-settled",
+      "passed": true,
+      "details": {
+        "label": "retention-settled",
+        "profile": {
+          "id": 1,
+          "max_streams": 1,
+          "is_active": true
+        },
+        "provider_slots": 0,
+        "clients": 0,
+        "channels": [
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ],
+          [
+            0,
+            "",
+            0,
+            "",
+            0
+          ]
+        ],
+        "origin": {
+          "active": 0,
+          "maximum_active": 1,
+          "connections": 2,
+          "bytes": 7505148,
+          "disconnections": 2,
+          "eof_connections": 0,
+          "fault_requests": 0,
+          "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+          "fixture_bytes": 75002600,
+          "bytes_per_second": 250000,
+          "duration_seconds": 300,
+          "codec": "h264",
+          "video": "h264 320x180 25fps",
+          "audio": "aac 48kHz",
+          "paths": {
+            "/live/0.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 4333588
+            },
+            "/live/1.ts": {
+              "active": 0,
+              "connections": 1,
+              "bytes": 3171560
+            }
+          }
+        },
+        "started_monotonic": 150863.173073243,
+        "completed_monotonic": 150865.096450694
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 2302812,
+        "media_bytes": 1494224,
+        "packets": 12249,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 2558680,
+        "media_bytes": 1651580,
+        "packets": 13610,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    },
+    {
+      "label": "reader-valid-TS",
+      "passed": true,
+      "details": {
+        "bytes": 1279340,
+        "media_bytes": 833968,
+        "packets": 6805,
+        "sync_errors": 0,
+        "partial_bytes": 0,
+        "ended": true,
+        "errors": [],
+        "http_status": 200,
+        "content_type": "video/mp2t"
+      }
+    }
+  ],
+  "states": [
+    {
+      "label": "before",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 0,
+      "channels": [
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 150767.36117792,
+      "completed_monotonic": 150768.221085822,
+      "origin_active": 0,
+      "origin_connections": 0
+    },
+    {
+      "label": "active",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 1,
+      "clients": 2,
+      "channels": [
+        [
+          2,
+          "e56a8465f3ad:190",
+          17,
+          "5",
+          5
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 150772.924722787,
+      "completed_monotonic": 150773.783641212,
+      "origin_active": 1,
+      "origin_connections": 1
+    },
+    {
+      "label": "distinct-channel-refused",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 1,
+      "clients": 2,
+      "channels": [
+        [
+          2,
+          "e56a8465f3ad:190",
+          17,
+          "9",
+          9
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 150776.719641363,
+      "completed_monotonic": 150777.584280791,
+      "origin_active": 1,
+      "origin_connections": 1
+    },
+    {
+      "label": "owner-local-close",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 1,
+      "clients": 2,
+      "channels": [
+        [
+          2,
+          "e56a8465f3ad:190",
+          17,
+          "10",
+          10
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 150778.585141707,
+      "completed_monotonic": 150779.453675936,
+      "origin_active": 1,
+      "origin_connections": 1
+    },
+    {
+      "label": "post-physical-close",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 1,
+      "clients": 1,
+      "channels": [
+        [
+          1,
+          "e56a8465f3ad:190",
+          17,
+          "11",
+          11
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 150779.4538107,
+      "completed_monotonic": 150780.355082806,
+      "origin_active": 1,
+      "origin_connections": 1
+    },
+    {
+      "label": "slot-released",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 0,
+      "channels": [
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 150785.702371528,
+      "completed_monotonic": 150786.521219266,
+      "origin_active": 0,
+      "origin_connections": 1
+    },
+    {
+      "label": "after-release-active",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 1,
+      "clients": 1,
+      "channels": [
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          1,
+          "e56a8465f3ad:190",
+          17,
+          "5",
+          5
+        ]
+      ],
+      "started_monotonic": 150791.124399157,
+      "completed_monotonic": 150792.023719278,
+      "origin_active": 1,
+      "origin_connections": 2
+    },
+    {
+      "label": "second-post-physical-close",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 1,
+      "clients": 1,
+      "channels": [
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          1,
+          "e56a8465f3ad:190",
+          17,
+          "6",
+          6
+        ]
+      ],
+      "started_monotonic": 150792.023885103,
+      "completed_monotonic": 150792.909252904,
+      "origin_active": 1,
+      "origin_connections": 2
+    },
+    {
+      "label": "retention-settled",
+      "profile": {
+        "id": 1,
+        "max_streams": 1,
+        "is_active": true
+      },
+      "provider_slots": 0,
+      "clients": 0,
+      "channels": [
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ],
+        [
+          0,
+          "",
+          0,
+          "",
+          0
+        ]
+      ],
+      "started_monotonic": 150863.173073243,
+      "completed_monotonic": 150865.096450694,
+      "origin_active": 0,
+      "origin_connections": 2
+    }
+  ],
+  "refusal": {
+    "status": 503,
+    "body": {
+      "error": "All active M3U profiles have reached maximum connection limits",
+      "waited": "2s"
+    },
+    "body_sha256": "517a44333ca91c563e96576ca0683a0e62be065cad6b47313e55b3af9c2d83b5"
+  },
+  "reader_captures": [
+    {
+      "bytes": 2302812,
+      "media_bytes": 1494224,
+      "packets": 12249,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 2558680,
+      "media_bytes": 1651580,
+      "packets": 13610,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    },
+    {
+      "bytes": 1279340,
+      "media_bytes": 833968,
+      "packets": 6805,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t"
+    }
+  ],
+  "container_bindings": [
+    {
+      "id": "e56a8465f3adc390980fa4e8431c3086b796113de52adfffc463e8cd06fb12b1",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "StartedAt": "2026-11-11T20:52:44.409369927Z",
+      "NanoCpus": 0,
+      "Memory": 0
+    },
+    {
+      "id": "a04fe046da2743e4d399c0d8c03dbb2b9ac58aff96f48486742c6b71ac5f3668",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "StartedAt": "2026-11-11T20:52:44.271567634Z",
+      "NanoCpus": 0,
+      "Memory": 0
+    }
+  ],
+  "cleanup": {
+    "project": "dispatcharr-m0-capacity-7ace8a966ecd",
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "raw_bindings": [
+    {
+      "path": "artifacts/rust/m0-finite-capacity-source-1/result.json",
+      "sha256": "a7bb251bd9ce41a087a48fb43a7188731392b0779fb9693ab27f76891cd2edfb"
+    },
+    {
+      "path": "artifacts/rust/m0-finite-capacity-prep-1/policy.json",
+      "sha256": "b2d3394798cd2f5a9c3c7e3002a1678553f54ce6b25b750068e3d5f4add58000"
+    },
+    {
+      "path": "artifacts/rust/m0-finite-capacity-prep-1/seal.json",
+      "sha256": "53f6e25186f7f547218cb940072e10a4304f3bc25f229d9e754f3b971155bdf1"
+    },
+    {
+      "path": "artifacts/rust/m0-finite-capacity-prep-1/controls.log",
+      "sha256": "888a0c0ed615e57d32cf72be501b0c355f33b8613c81dfdaa99db33d7959487e"
+    },
+    {
+      "path": "artifacts/rust/m0-finite-capacity-source-1/independent-cleanup.json",
+      "sha256": "af57813652aabe858877ced8bf5bafb98aa04e9a4fff412d771c0ac636f1a5f4"
+    }
+  ],
+  "limits": "Actual SQL cap1; shared2readers\u2192provider1/origin1; distinctchannel503; localclose does not immediately unregister allSource clients; released0 permits secondchannel. No resource sampler or gain/finitecgroupheadroom claim."
+}

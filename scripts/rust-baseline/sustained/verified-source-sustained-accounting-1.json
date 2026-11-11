@@ -1,0 +1,232 @@
+{
+  "passed": true,
+  "scope": "Original-only one authenticated sustained reader15s warmup/60s active, physical-close and70s retention state; no resource sampling",
+  "fully_verified": false,
+  "resource_acceptance": false,
+  "Source_budget_acceptance": null,
+  "actual_phase_count": 1,
+  "Native_phases": 0,
+  "resource_samples_collected": false,
+  "policy_sha256": "1c90460d9e6d40d18cb915a62f222974d256fdbe37b0731d753e21bab2453b25",
+  "seal_sha256": "8b40d4d1ba98a49baf46bea4f2f064cc355ed55f00a1c37656def81e16b9efed",
+  "sealed_inputs_unchanged": true,
+  "phase": {
+    "viewers": [
+      {
+        "status": 200,
+        "requests": 1,
+        "first_byte_ms": 17.618808982660994,
+        "warmup_bytes": 5373228,
+        "measured_bytes": 15096212,
+        "prefix_bytes": 2097152,
+        "errors": [],
+        "unexpected_eof": false,
+        "post_window_barrier": true,
+        "physical_socket_closed": true,
+        "prefix_sha256": "bd88f43c4917e87f93a27f26888f45ae8918776e989ad7fdf6eab363671152c6",
+        "decoder_exit_code": 0,
+        "decoder_stdout_sha256": "35579b99910a9aa0e1e9f6fba4b21151a3d48f170abc6009b76260e9044f3ba8",
+        "decoder_stderr_sha256": "d3fa38e51034039c0d7a3302f8cbadc903755ab048b3cbb322381cb8bd681f1c",
+        "decoder_probe_diagnostic_bytes": 5978,
+        "decoder_frames": 72
+      }
+    ],
+    "authenticated_identity": {
+      "clients": 1,
+      "all_owned_user_id": true
+    },
+    "continuous_connections": true,
+    "requests": 1,
+    "warmup_seconds": 15,
+    "measure_seconds": 60,
+    "resources": null,
+    "backend": "source",
+    "count": 1,
+    "trial": 1,
+    "primer_frames": 74,
+    "source_bound_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "accounting": {
+      "states": [
+        {
+          "label": "before",
+          "profile": {
+            "id": 1,
+            "max_streams": 0,
+            "is_active": true
+          },
+          "clients": 0,
+          "provider_slots": 0,
+          "owner": "e3f582cc6647:9",
+          "metadata_fields": 17,
+          "input_index": "8",
+          "timestamps": 8,
+          "origin_active": 1,
+          "origin_connections": 1,
+          "started_monotonic": 152715.218141507,
+          "completed_monotonic": 152715.387600913
+        },
+        {
+          "label": "active",
+          "profile": {
+            "id": 1,
+            "max_streams": 0,
+            "is_active": true
+          },
+          "clients": 1,
+          "provider_slots": 0,
+          "owner": "e3f582cc6647:9",
+          "metadata_fields": 17,
+          "input_index": "23",
+          "timestamps": 23,
+          "origin_active": 1,
+          "origin_connections": 1,
+          "started_monotonic": 152730.474219029,
+          "completed_monotonic": 152730.644986353
+        },
+        {
+          "label": "post-physical-close",
+          "profile": {
+            "id": 1,
+            "max_streams": 0,
+            "is_active": true
+          },
+          "clients": 1,
+          "provider_slots": 0,
+          "owner": "e3f582cc6647:9",
+          "metadata_fields": 17,
+          "input_index": "83",
+          "timestamps": 59,
+          "origin_active": 1,
+          "origin_connections": 1,
+          "started_monotonic": 152791.521159789,
+          "completed_monotonic": 152791.699432759
+        },
+        {
+          "label": "retention-settled",
+          "profile": {
+            "id": 1,
+            "max_streams": 0,
+            "is_active": true
+          },
+          "clients": 0,
+          "provider_slots": 0,
+          "owner": "",
+          "metadata_fields": 0,
+          "input_index": "",
+          "timestamps": 0,
+          "origin_active": 0,
+          "origin_connections": 1,
+          "started_monotonic": 152861.521221681,
+          "completed_monotonic": 152861.689749557
+        }
+      ],
+      "selected": {
+        "backend": {
+          "id": "e3f582cc66472d8e34a06ffc0a1452e13c5b9f8dd6ba86d5eb3f1f8d9f0e0d15",
+          "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "StartedAt": "2026-11-11T21:25:09.702318191Z",
+          "NanoCpus": 2000000000,
+          "Memory": 536870912
+        },
+        "infrastructure": {
+          "id": "b1c377eb9c0b58d79cd06f6deb5f36c7edca9721d06bc2b02a0cefc36c2a4d5d",
+          "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "StartedAt": "2026-11-11T21:25:00.064793749Z",
+          "NanoCpus": 1000000000,
+          "Memory": 1073741824
+        },
+        "origin": {
+          "id": "734d73cbc748f1618588895ac7a87f54edf4ef9a5a8c8afd58d068ccbc6ff5f0",
+          "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "StartedAt": "2026-11-11T21:24:59.925918319Z",
+          "NanoCpus": 2000000000,
+          "Memory": 536870912
+        }
+      },
+      "resource_sampler": false,
+      "retention_seconds": 70,
+      "absolute_CPU_ceiling": null,
+      "absolute_memory_ceiling": null,
+      "postclose_growth_ceiling": null,
+      "fully_verified": false,
+      "resource_acceptance": false,
+      "scope": "Same-run15s/60s sustained functional driver plus70s retention, no CPU/memory measurements or gain claim."
+    },
+    "cleanup_upstream_active": 0,
+    "passed": true
+  },
+  "callback_wall_seconds": [
+    0.16945940599543974,
+    0.17076732398709282,
+    0.1782729699916672,
+    0.1685278759978246
+  ],
+  "cleanup": {
+    "project": "dispatcharr-m2-functional-ddf6501bd5",
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "tool_base_recorded": "28122faf28a0acf1c136ca0d0831961e786cb686",
+  "toolmap_count": 1973,
+  "toolmap_canonical_sha256": "2fa98da75bd6e05ac2554e0db31691ed1e0a22f5673cf0abcb925409261690f8",
+  "historical_namespace_files_unchanged": [
+    "scripts/rust-live-perf/image47/README.md",
+    "scripts/rust-live-perf/image47/acceptance.py",
+    "scripts/rust-live-perf/image47/application-inputs.json",
+    "scripts/rust-live-perf/image47/controller_contract.py",
+    "scripts/rust-live-perf/image47/execution-inputs.json",
+    "scripts/rust-live-perf/image47/parent-review.json",
+    "scripts/rust-live-perf/image47/plots.py",
+    "scripts/rust-live-perf/image47/projection.json",
+    "scripts/rust-live-perf/image47/protocol.json",
+    "scripts/rust-live-perf/image47/publish.py",
+    "scripts/rust-live-perf/image47/resources.py",
+    "scripts/rust-live-perf/image47/run.py",
+    "scripts/rust-live-perf/image47/seed.py",
+    "scripts/rust-live-perf/image47/test_acceptance.py",
+    "scripts/rust-live-perf/image47/test_controller_contract.py",
+    "scripts/rust-live-perf/image47/test_public.py",
+    "scripts/rust-live-perf/image47/test_resources.py",
+    "scripts/rust-live-perf/image47/test_verify.py",
+    "scripts/rust-live-perf/image47/test_workload.py",
+    "scripts/rust-live-perf/image47/verify.py",
+    "scripts/rust-live-perf/image47/verify_projection.py",
+    "scripts/rust-live-perf/image47/workload.py",
+    "scripts/rust-live-perf/image47/figures/figure-source.json",
+    "scripts/rust-live-perf/image47/figures/live-paired-ratios.png",
+    "scripts/rust-live-perf/image47/figures/live-paired-ratios.svg"
+  ],
+  "new_namespace": "scripts/rust-baseline/sustained",
+  "actual_packaging_requalification": true,
+  "raw_bindings": [
+    {
+      "path": "artifacts/rust/m0-sustained-accounting-source-3/live-functional.json",
+      "sha256": "32046abfce7576ce2ba622a0f6a829fdd90ae2e2ae123e73eee55b08596d0ecf"
+    },
+    {
+      "path": "artifacts/rust/m0-sustained-accounting-source-3/independent-cleanup.json",
+      "sha256": "7682d101569702b9067441e49ae59764e77fc28f15a8990433d67511f7694dd9"
+    },
+    {
+      "path": "artifacts/rust/m0-sustained-relocated-prep-3/policy.json",
+      "sha256": "1c90460d9e6d40d18cb915a62f222974d256fdbe37b0731d753e21bab2453b25"
+    },
+    {
+      "path": "artifacts/rust/m0-sustained-relocated-prep-3/seal.json",
+      "sha256": "8b40d4d1ba98a49baf46bea4f2f064cc355ed55f00a1c37656def81e16b9efed"
+    },
+    {
+      "path": "artifacts/rust/m0-sustained-relocated-prep-3/controls.log",
+      "sha256": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6"
+    }
+  ],
+  "historical_Source1_Source2_retained": true,
+  "limits": [
+    "Onlyone sustained authenticated Source reader; historical1/10/100 resource evidence retains oldscope.",
+    "Warm primer beforestate0client/origin1 is not idle; immediate localclose1/1, retentionall0.",
+    "No CPU/memory/FD/socket footprint or growth measurements; absolutebudgetsnull.",
+    "No Nativeoverlay/buildmanifest dependency. Image47/image48 measured files explicitlyunchanged; copied workload helper is newnamespace."
+  ]
+}

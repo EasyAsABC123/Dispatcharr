@@ -14,9 +14,9 @@ These support the baseline; they are not full worker-graph measurements.
 | --- | --- |
 | Idle before/after playback and reconnect churn | Corrected three-repetition reference now has valid coverage in all windows. Source growth budgets fail and remain recorded. Preserve these baseline facts; remaining work concerns the other scenarios and budget/contract accounting. |
 | 1/10/100 viewers on one channel | Reconcile existing repeated warmed measurements with their exact budgets and preconditions; retain the cold100 failure separately. |
-| Ten distinct channels and configured capacity | Warmed ten-channel Source accounting passes with limit0 explicitly unlimited. Finite-capacity Source qualification is separately captured and awaits review/publication. |
+| Ten distinct channels and configured capacity | Warmed ten-channel Source accounting passes with limit0 explicitly unlimited. Separate configured capacity1 and10 references now verify shared reuse, refusal, release and later admission. They remain Source-only functional gates. |
 | Slow plus fast readers | Qualified same-container accounting now records before/active/local-close/70s-retention states with the existing observer. It remains Source functional evidence, with no isolated resource acceptance. |
-| Stall, failure, stream change and recovery | Stall/failover now have qualified observer/state/cleanup attachments. Interior warning and healthy recovery remain separate. Actual application stream-change and finite-capacity results await separate publication; sustained accounting remains in progress. |
+| Stall, failure, stream change and recovery | Stall/failover now have qualified observer/state/cleanup attachments. Interior warning and healthy recovery remain separate. Actual admin POST stream-change and same-container sustained15/60/70 references now pass, separately scoped without CPU/memory acceptance. |
 | Import/EPG refresh during playback | Capture one real owned Source import/worker and playback workload concurrently, including worker cost and durable effects. Separate successful tests do not establish contention behavior. |
 | Sustained playback followed by disconnect | Reconcile same-run post-close retention/footprint evidence, or add that accounting to the declared sustained workload. An unrelated short cleanup run cannot substitute. |
 
@@ -63,3 +63,6 @@ The pinned Source deliberately keeps up to three warm database connections per w
 
 
 [The cumulative Source functional accounting attachment](../scripts/rust-playback-baseline/verified-source-accounting-1.json) covers mixed readers, stall, failover and warmed ten-channel playback. Existing observer/workloads remain scoped, incomplete/transition samples stay explicit, and callbacks record wall overhead rather than CPU cost. The exact many-channel replay ran after a fresh reviewed quiet cue; its earlier nonempty-output setup failure remains retained. All four scenarios reach zero final clients/upstreams. Absolute absent limits remain null; no Native or full M0/resource acceptance follows.
+
+
+New Source-only references cover [capacity1](rust-m0-finite-capacity.md), [capacity10 with an eleventh distinct-channel refusal](rust-m0-finite-ten.md), [real admin POST stream change](rust-m0-stream-change.md), and [one continuous sustained reader with same-container close/retention](rust-m0-sustained-accounting.md). They pass12/30/10 checks respectively and the declared sustained read/decode/retention conditions, with22 portable guards across the four new harnesses. The sustained sampler is disabled; it supplies no CPU/memory observations. Historical image47/image48 tools remain unchanged. Worker-inclusive resource accounting, budget/contract crosswalk and broader milestone gates remain open.
