@@ -12,7 +12,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | OpenAPI operations | 362 | Separate discovery view; do not add to route totals |
 | Static non-HTTP candidates | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
-| Operations with partial case bindings | 2 | 154 exact packaged GET comparisons; remaining role/input coverage stays open |
+| Operations with partial case bindings | 11 | 403 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
 
 Each operation has a contract ID, source handler/action, proposed milestone owner, explicit role-matrix state, fixture/assertion placeholders, coverage state and result. Module-associated test filenames are candidates only. An OpenAPI security declaration describes authentication, not authorization. Format variants and duplicate resolver occurrences keep separate IDs.

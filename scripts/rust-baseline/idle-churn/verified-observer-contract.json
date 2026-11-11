@@ -1,0 +1,112 @@
+{
+  "passed_observer_contract_only": true,
+  "scope": "Short Original-only observer functionality on busy host; no Native metrics, resource baseline, full three-repetition matrix or M0 acceptance",
+  "baseline_accepted": false,
+  "performance_verified": false,
+  "m0_closed": false,
+  "policy_sha256": "6984f5e73d31048f47ebac884c3936112e26b262da842e637645d363d99fbeab",
+  "policy_bytes_identical_to_draft2": true,
+  "offline_controls": 18,
+  "real_observer_samples": 10,
+  "census_coverage": {
+    "complete": 9,
+    "incomplete": 0,
+    "stable_complete": 6,
+    "total": 9
+  },
+  "services": [
+    "baseline",
+    "origin",
+    "source"
+  ],
+  "per_container_identity_groups": {
+    "baseline": 2,
+    "origin": 1,
+    "source": 1
+  },
+  "application_caps_or_cgroup_changes": false,
+  "TCP_tables_counted_once_per_container": true,
+  "socket_inodes_unioned_across_UID_groups": true,
+  "reader_count": 1,
+  "requests": 1,
+  "saved_prefix_bytes": 2097152,
+  "decoder_frames": 124,
+  "reader_errors": [],
+  "post_reader_cleanup": {
+    "elapsed_seconds": 6.895068487006938,
+    "passed": true,
+    "state": {
+      "clients": 0,
+      "origin_active": 0,
+      "provider_slots": 0
+    }
+  },
+  "independent_owned_cleanup": {
+    "containers": "",
+    "networks": "",
+    "volumes": ""
+  },
+  "result_sha256": "6cd1e7f7cc39415a74bcba7777cfdd47673d431fcbc9e86bdd2d7cbdc193a749",
+  "raw_samples_sha256": "fab73b61001e90b15dd7f26411eb9f96ee028cbb524ce0ca7f192dd79f0ad5e7",
+  "preexecution_seal_sha256": "c35bdd5b0c64e8c7dc9b47aee330026cbb64dfab9f382692db16acaba578c94c",
+  "retained_failures": [
+    {
+      "attempt": 3,
+      "classification": "crossUID fd PermissionError",
+      "result_sha256": "fd29b5a90c4ba404a017d123fdcfd9d0cd04d5d5c0e682df2aa12c6794b296b9",
+      "independent_owned_cleanup": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      }
+    },
+    {
+      "attempt": 4,
+      "classification": "private census code mount PermissionError",
+      "result_sha256": "71a4f7753fbed40e94b62c4ca15d0bf1a25706a7d6b94f549943c8e5b949cc16",
+      "independent_owned_cleanup": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      }
+    },
+    {
+      "attempt": 5,
+      "classification": "strict all-observation completeness rejected2 accurately flagged PID races",
+      "result_sha256": "99054928f6eec550cd7311925febd1e81ce0ec822c2064e40aac1d7e45f7aea8",
+      "independent_owned_cleanup": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      }
+    }
+  ],
+  "runtime_controller_files": {
+    "run.py": {
+      "selected_sha256": "01fd56a8dcc518670182ec90664cfba177c8773d07b96a84d636433a2ba25c21",
+      "executed_frozen_sha256": "01fd56a8dcc518670182ec90664cfba177c8773d07b96a84d636433a2ba25c21",
+      "bytes_equal": true
+    },
+    "proc_snapshot.py": {
+      "selected_sha256": "490eb6ecb3acac436f0a15d8a2641584adff175440afa225f1e2de6a6ede934b",
+      "executed_frozen_sha256": "490eb6ecb3acac436f0a15d8a2641584adff175440afa225f1e2de6a6ede934b",
+      "bytes_equal": true
+    },
+    "policy.json": {
+      "selected_sha256": "6984f5e73d31048f47ebac884c3936112e26b262da842e637645d363d99fbeab",
+      "executed_frozen_sha256": "6984f5e73d31048f47ebac884c3936112e26b262da842e637645d363d99fbeab",
+      "bytes_equal": true
+    },
+    "test_controls.py": {
+      "selected_sha256": "a1380d6323dd119d381ab34eea26a43865015f727d63e0bebcb8daaf28043827",
+      "executed_frozen_sha256": "a1380d6323dd119d381ab34eea26a43865015f727d63e0bebcb8daaf28043827",
+      "bytes_equal": true
+    },
+    "README.md": {
+      "selected_sha256": "a4e9940d3e657644b770dfc454096aeca536b0e8c56bbf734421120cd9fe9e11",
+      "executed_frozen_sha256": "fe6a187f5785d9df400617b4207f989cba4b074926a97f4583b3b224a1abe2df",
+      "bytes_equal": false
+    }
+  },
+  "full_M0_remaining": "Separate Root quiet cue; three full repetitions; minimum5 complete stable-phase samples per20s idle; all unchanged resource/growth/decode/cleanup gates; incomplete/transition samples retained and excluded from idle acceptance; missing samples fail."
+}
