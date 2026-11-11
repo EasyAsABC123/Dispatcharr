@@ -74,7 +74,7 @@ fn oversized_decimal_digits(raw:&str)->Option<usize>{
     }
     (previous_digit&&digits>4300).then_some(digits)
 }
-fn integer(raw: &str) -> Result<BigInt, QueryFault> {
+pub(super) fn integer(raw: &str) -> Result<BigInt, QueryFault> {
     if let Some(value)=dispatcharr_ingest_core::source_integer_literal(raw).and_then(|v|v.parse().ok()){return Ok(value);}
     if let Some(digits)=oversized_decimal_digits(raw){
         return Err(QueryFault::View(format!("Exceeds the limit (4300 digits) for integer string conversion: value has {digits} digits; use sys.set_int_max_str_digits() to increase the limit")));

@@ -61,3 +61,32 @@ mod vod_api_actions_peer;
 #[cfg(test)]
 #[path="vod_api_actions_schedule.rs"]
 mod vod_api_actions_schedule;
+
+#[allow(dead_code)]
+#[path="vod_api_provider_artwork.rs"]
+mod vod_api_provider_artwork;
+
+#[allow(dead_code)]
+#[path="vod_api_provider_info_dto.rs"]
+mod vod_api_provider_info_dto;
+
+#[cfg(test)]
+#[allow(dead_code)]
+#[path="vod_api_provider_info_tests.rs"]
+mod vod_api_provider_info_tests;
+
+#[allow(dead_code)]
+#[path="vod_api_provider_info_policy.rs"]
+mod vod_api_provider_info_policy;
+
+#[allow(dead_code)]
+#[path="vod_api_provider_info_sql.rs"]
+mod vod_api_provider_info_sql;
+
+#[allow(dead_code)]
+#[path="vod_api_provider_info_read.rs"]
+mod vod_api_provider_info_read;
+
+#[cfg(test)]
+#[path="vod_api_provider_info_peer.rs"]
+mod vod_api_provider_info_peer;

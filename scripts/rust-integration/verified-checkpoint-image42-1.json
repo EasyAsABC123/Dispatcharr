@@ -1,0 +1,298 @@
+{
+  "passed": true,
+  "scope": "Sixteen scoped packaged regression groups and same-source calendar/cached-info/input/recovery controls. Full application and milestone parity remain incomplete.",
+  "credit": "All application and algorithm credit remains with original Dispatcharr authors and contributors; AGPL retained.",
+  "image_id": "sha256:153bc6646a7b36c977c37ca827e5b2826496ce3f3f4d5a81bf5e300f730fdee3",
+  "source_tree_sha256": "1b955df976d41a9839168c2bea93b9c0af9aa7205d82e98e1064d35444a30748",
+  "build_manifest": {
+    "path": "artifacts/rust/candidate-build-combined-calendar-cached-core-image42-1/build.json",
+    "sha256": "ac40322b5b16d11b1fb63355c3589f195e9634cbc1aa60a70ae8576f1a74f787"
+  },
+  "Rust_inputs": 674,
+  "same_exact_Rust_inputs_across_image_and_all_component_proofs": true,
+  "default_workspace_tests": 376,
+  "external_fixture_tests_ignored": 541,
+  "strict_wholeworkspace_clippy": true,
+  "gates": [
+    {
+      "name": "integration-full",
+      "passed": true,
+      "evidence": "artifacts/rust/integration-full-image42-1/integration.json",
+      "evidence_sha256": "2ab4c542a95eca2910bd933b36ffeaeed1f68191fd857c92eddd027d5cee5885",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "proxy-auth",
+      "passed": true,
+      "evidence": "artifacts/rust/proxy-auth-image42-1/integration.json",
+      "evidence_sha256": "d312bf93b2c9ce63976df88997f87c06553c0da00c13ad0ccbbfd4ecf3c63fc8",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "auth-hash",
+      "passed": true,
+      "evidence": "artifacts/rust/auth-hash-image42-1/integration.json",
+      "evidence_sha256": "9bd9a7ae87a57a49a6ac5ca639b16d28e7c8034ee1a5537caf95c36fcf1a164e",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "user-agent",
+      "passed": true,
+      "evidence": "artifacts/rust/user-agent-image42-1/integration.json",
+      "evidence_sha256": "fcb9c3b16e20a57a20da100354ce21ea08812fb39d8ab09a4834e7c98497a796",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "output-profile",
+      "passed": true,
+      "evidence": "artifacts/rust/output-profile-image42-1/integration.json",
+      "evidence_sha256": "374b42b89effce510475b68dc6615e5a94cd6a87ca5977a82f29a04f4b654aab",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "profile-restart",
+      "passed": true,
+      "evidence": "artifacts/rust/profile-restart-image42-1/integration.json",
+      "evidence_sha256": "3240b1d08d5c3f1207201bf5d0d733b1a812a236e3e5b39edd20956be6910d9d",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "guide-grid-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/guide-grid-packaged-image42-1/integration.json",
+      "evidence_sha256": "b38eee60b9eb2a79085aa8c2c2fe93230119bdd2703c2e9d7b326914efc71a8e",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "current-packaged",
+      "passed": true,
+      "evidence": "artifacts/rust/current-packaged-image42-1/integration.json",
+      "evidence_sha256": "98b008b7c6a4ce7780ac06c371eb97d4c7d79b1df8000eeb1642c45f676415c1",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "m4-functional",
+      "passed": true,
+      "evidence": "artifacts/rust/m4-functional-image42-1/result.json",
+      "evidence_sha256": "764e39ccf9bfb4e6ff83d6227cc084e24d99c66ef3f0164d364bc8675b1ca638",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "clean-install",
+      "passed": true,
+      "evidence": "artifacts/rust/clean-install-image42-1/integration.json",
+      "evidence_sha256": "959ff2747cfb67444573b80fe87b4e4d869f410b1f9c4e5a2198ccea0a7ac7be",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "category-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/category-browser-image42-1/http/source-run.json",
+      "evidence_sha256": "9bc277e5a9ffa74069d357fcd09c881722b088c40129172aac4333bfdc0a9eb8",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "unified-HTML-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/unified-HTML-browser-image42-1/http/source-run.json",
+      "evidence_sha256": "4edb90ebf41a72a33e1142dcc509094e392db247f5525b2b514e6ddf63a73668",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "complete-refresh",
+      "passed": true,
+      "evidence": "artifacts/rust/complete-refresh-image42-1/integration.json",
+      "evidence_sha256": "40cd2fba6244caba16f799be8792a5906d0798edb49651e6f10ff8d52e4029dd",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "static-Chrome-HTML-browser",
+      "passed": true,
+      "evidence": "artifacts/rust/combined-static-HTML-browser-image42-1/http/source-run.json",
+      "evidence_sha256": "dd71057317afafc73a610f7a10b21e3db35e6ea9917b89855796270cf3c5fb79",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "packaged-provider-actions",
+      "passed": true,
+      "evidence": "artifacts/rust/vod-provider-actions-packaged-image42-2/http/source-run.json",
+      "evidence_sha256": "d3219dd8401e7a826d5661090f351334e5a5a8581c4fbc4f3ccbf83fbb5fcce7",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "packaged-cached-provider-info",
+      "passed": true,
+      "evidence": "artifacts/rust/cached-provider-info-packaged-image42-1/http/source-run.json",
+      "evidence_sha256": "568199964d8608c2d19d517f45106f841b2cb7aa0ee00b6f87ffe191ba4721b3",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    }
+  ],
+  "scheduler_components": [
+    {
+      "name": "calendar",
+      "passed": true,
+      "checks": 157,
+      "evidence": "artifacts/rust/combined-calendar-cached-core-calendar-1/integration.json",
+      "evidence_sha256": "0890b3a8a1a056f73dbe2a34457c60bd974cf63108b23b818998e821e75b418d",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "calendar-worker",
+      "passed": true,
+      "checks": 54,
+      "evidence": "artifacts/rust/combined-calendar-cached-core-calendar-worker-1/integration.json",
+      "evidence_sha256": "a7d1ef8c47b2f26b86569725dc30753b79077b40a1621388b8fc77da81e6e912",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "vectors",
+      "passed": true,
+      "checks": 123,
+      "evidence": "artifacts/rust/combined-calendar-cached-core-vectors-1/integration.json",
+      "evidence_sha256": "71713c6dd7ad0dd143ee77ea04c4019918b2f6b35e2f42fdeb360efcfb756b3b",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "single",
+      "passed": true,
+      "checks": 108,
+      "evidence": "artifacts/rust/combined-calendar-cached-core-single-1/integration.json",
+      "evidence_sha256": "e8391a7eb77776eb96de86afff976fe5677c2f870afbb8d39be34d2db71f4845",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "multi",
+      "passed": true,
+      "checks": 184,
+      "evidence": "artifacts/rust/combined-calendar-cached-core-multi-1/integration.json",
+      "evidence_sha256": "5d15f460b043ccc41a6335458119bf62dc83a66bca71e798b7170adf836608c5",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "multi-worker",
+      "passed": true,
+      "checks": 58,
+      "evidence": "artifacts/rust/combined-calendar-cached-core-multi-worker-1/integration.json",
+      "evidence_sha256": "93af82055583d2d51405c6a1a83c631da6c1777add19c0e536e94a347a945740",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    },
+    {
+      "name": "physical",
+      "passed": true,
+      "checks": 47,
+      "evidence": "artifacts/rust/combined-calendar-cached-core-physical-1/integration.json",
+      "evidence_sha256": "595bf06cea81689828a7cce58583382f75a123bc3406fe9425588a397bde482f",
+      "independent_remaining_owned_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      }
+    }
+  ],
+  "scheduler_physical_tests": 6,
+  "scheduler_physical_log_sha256": "6fe3a2e801a9d500aeb88acdebae7805a6e428d3b15be69ce9e945c02f192fcd",
+  "input_storage_actual_tests": 14,
+  "recovery_actual_tests": 79,
+  "cached_provider_info_actual_responses": 90,
+  "cached_provider_info_actual_Main_responses": 90,
+  "cached_provider_info_host_evidence_sha256": "9cc86a23ba13178ea0b655a4e1edc1a995a434e3acbf463b5df4058e81a7f99b",
+  "runtime_attribution_matches_build_and_contains_exact_TZdb_notice": true,
+  "remaining": [
+    "Calendar authority limited to five captured 2026e zones, 1970\u20132037 and known numeric grammar; scheduler unregistered",
+    "Stale/forced provider refresh, actual image routes, broader query/HTML and provider modal workflows",
+    "Full public-idle/retired/audit recovery; recovery remains default OFF",
+    "Core and remaining per-milestone performance comparisons, full service soak and cutover"
+  ],
+  "performance_verified": false,
+  "whole_application_verified": false,
+  "full_milestone_complete": false,
+  "historical_performance": "Prior image36 workload measurements retain their original source/image bindings; no transfer to image42."
+}

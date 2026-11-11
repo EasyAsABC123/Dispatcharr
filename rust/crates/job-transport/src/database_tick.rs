@@ -129,13 +129,46 @@ fn interval(entry: &Entry) -> Result<Interval, Error> {
     Interval::new((*every).try_into().map_err(|_| Error::Unsupported)?, unit)
         .map_err(|_| Error::Capacity)
 }
+fn validate_schedule(entry: &Entry) -> Result<(), Error> {
+    if entry.interval.is_some() {
+        interval(entry)?;
+    } else {
+        calendar_schedule::Calendar::parse(entry.crontab.as_ref().ok_or(Error::Unsupported)?)?;
+    }
+    Ok(())
+}
 fn decision(
     entry: &Entry,
     now: DateTime<Utc>,
 ) -> Result<crate::interval_schedule::DueDecision, Error> {
-    IntervalEntry {
+    let calendar = entry.interval.is_none();
+    if calendar && entry.enabled {
+        if let Some(start) = entry.start_time.filter(|start| now < *start) {
+            let parsed = calendar_schedule::Calendar::parse(
+                entry.crontab.as_ref().ok_or(Error::Unsupported)?,
+            )?;
+            let aligned = parsed.due_start(start, now)?;
+            let micros =
+                i128::from(aligned.timestamp_micros()) - i128::from(now.timestamp_micros());
+            if micros.unsigned_abs() > 9_007_199_254_740_992 {
+                return Err(Error::Capacity);
+            }
+            return Ok(crate::interval_schedule::DueDecision {
+                due: false,
+                next_seconds: (micros as f64 / 1_000_000.0).ceil(),
+                persistence: PersistenceEffect::Unchanged,
+            });
+        }
+    }
+    let value = IntervalEntry {
         enabled: entry.enabled,
-        last_run_at_micros: entry.last_run_at.timestamp_micros(),
+        // A zero interval with last=now extracts only the already-proven
+        // ModelEntry start/expiry/oneoff guards before calendar calculation.
+        last_run_at_micros: if calendar {
+            now.timestamp_micros()
+        } else {
+            entry.last_run_at.timestamp_micros()
+        },
         start_at_micros: entry.start_time.map(|v| v.timestamp_micros()),
         expires_at_micros: entry.expires.map(|v| v.timestamp_micros()),
         one_off: entry.one_off,
@@ -143,11 +176,27 @@ fn decision(
             .total_run_count
             .try_into()
             .map_err(|_| Error::Unsupported)?,
-        interval: interval(entry)?,
+        interval: if calendar {
+            Interval::new(0, IntervalUnit::Seconds).map_err(|_| Error::Capacity)?
+        } else {
+            interval(entry)?
+        },
     }
     .evaluate(now.timestamp_micros())
-    .map_err(|_| Error::Capacity)
+    .map_err(|_| Error::Capacity)?;
+    if !calendar || !value.due || value.persistence != PersistenceEffect::Unchanged {
+        return Ok(value);
+    }
+    let parsed =
+        calendar_schedule::Calendar::parse(entry.crontab.as_ref().ok_or(Error::Unsupported)?)?;
+    let (due, next_seconds) = parsed.due(entry.last_run_at, now)?;
+    Ok(crate::interval_schedule::DueDecision {
+        due,
+        next_seconds,
+        persistence: PersistenceEffect::Unchanged,
+    })
 }
+
 impl DatabaseSchedule {
     fn when(&self, next: f64) -> Result<f64, Error> {
         let now = (self.inner.heap_clock)();
@@ -198,7 +247,7 @@ impl DatabaseSchedule {
         // Fail before heap/model effects if this cohort exceeds the known
         // task authority. Installing defaults never grants their execution.
         for entry in state.entries.values() {
-            interval(entry)?;
+            validate_schedule(entry)?;
             if entry.enabled {
                 if !matches!(
                     entry.task.as_str(),

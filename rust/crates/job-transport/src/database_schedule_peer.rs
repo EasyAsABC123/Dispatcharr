@@ -93,6 +93,61 @@ async fn native_database_scheduler_peer() {
         let action = command["action"].as_str().unwrap();
         let mut out = serde_json::json!({"action":action});
         match action {
+            "calendar-start" => {
+                let text = |name: &str| command[name].as_str().unwrap().to_owned();
+                let spec = (
+                    text("minute"),
+                    text("hour"),
+                    text("day_of_week"),
+                    text("day_of_month"),
+                    text("month_of_year"),
+                    text("timezone"),
+                );
+                let calendar = calendar_schedule::Calendar::parse(&spec).unwrap();
+                let start = text("start_time")
+                    .parse::<DateTime<chrono::FixedOffset>>()
+                    .unwrap()
+                    .with_timezone(&Utc);
+                let now = text("now")
+                    .parse::<DateTime<chrono::FixedOffset>>()
+                    .unwrap()
+                    .with_timezone(&Utc);
+                let aligned = calendar.due_start(start, now).unwrap();
+                out["aligned_start"] = serde_json::json!(aligned.to_rfc3339());
+                out["next_seconds"] = serde_json::json!(((aligned.timestamp_micros()
+                    - now.timestamp_micros())
+                    as f64
+                    / 1_000_000.0)
+                    .ceil());
+            }
+            "calendar-evaluate" => {
+                let text = |name: &str| command[name].as_str().unwrap().to_owned();
+                let spec = (
+                    text("minute"),
+                    text("hour"),
+                    text("day_of_week"),
+                    text("day_of_month"),
+                    text("month_of_year"),
+                    text("timezone"),
+                );
+                let calendar = calendar_schedule::Calendar::parse(&spec).unwrap();
+                let last = text("last_run_at")
+                    .parse::<DateTime<chrono::FixedOffset>>()
+                    .unwrap()
+                    .with_timezone(&Utc);
+                let now = text("now")
+                    .parse::<DateTime<chrono::FixedOffset>>()
+                    .unwrap();
+                let (due, next) = if command["mode"] == "legacy-fixed-offset" {
+                    calendar.legacy_due(last, now).unwrap()
+                } else {
+                    calendar.due(last, now.with_timezone(&Utc)).unwrap()
+                };
+                out["due"] = Value::Bool(due);
+                out["next_seconds"] = serde_json::json!(next);
+                out["query_hour_offset_2023"] =
+                    serde_json::json!(calendar_schedule::query_hour_offset(&spec.5).unwrap());
+            }
             "heap-clock" => {
                 let fixed = command["now"]
                     .as_str()
@@ -191,7 +246,7 @@ async fn native_database_scheduler_peer() {
                 let entries = service.refresh(now, Arc::new(())).await.unwrap();
                 out["entries"]=Value::Array(entries.into_iter().map(|v|serde_json::json!({"id":v.id,"name":v.name,"task":v.task,"enabled":v.enabled,"args":v.args,"kwargs":v.kwargs,"last_run_at":v.last_run_at.to_rfc3339(),"count":v.total_run_count,"interval":v.interval,"crontab":v.crontab})).collect());
             }
-            "tick" | "driver-start" => {
+            "tick" | "tick-observe" | "driver-start" => {
                 if publisher.is_none() {
                     let broker = std::env::var("CELERY_BROKER_URL").unwrap();
                     let backend = std::env::var("CELERY_RESULT_BACKEND").unwrap();
@@ -248,8 +303,17 @@ async fn native_database_scheduler_peer() {
                         active,
                         Arc::new(()),
                     )
-                    .await
-                    .unwrap();
+                    .await;
+                let value = match value {
+                    Ok(value) => value,
+                    Err(error) if action == "tick-observe" => {
+                        out["error"] = serde_json::json!(format!("{error:?}"));
+                        println!("NATIVE_DATABASE_SCHEDULER_JSON={out}");
+                        std::io::stdout().flush().unwrap();
+                        continue;
+                    }
+                    Err(error) => panic!("Guarded native tick error: {error:?}"),
+                };
                 if let Some((mode, marker)) = &crash {
                     if mode == "after-sync" {
                         std::fs::write(marker, "after-sync").unwrap();

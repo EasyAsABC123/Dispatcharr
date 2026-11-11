@@ -21,10 +21,12 @@ pub(super) enum Action {
     MovieProviders,
     SeriesProviders,
     SeriesEpisodes,
+    MovieInfo,
+    SeriesInfo,
 }
 impl Action {
     fn resource(self) -> Resource {
-        if matches!(self, Self::MovieProviders) {
+        if matches!(self, Self::MovieProviders|Self::MovieInfo) {
             Resource::Movie
         } else {
             Resource::Series
@@ -32,13 +34,15 @@ impl Action {
     }
     fn relation(self) -> RelationKind {
         match self {
-            Self::MovieProviders => RelationKind::Movie,
-            Self::SeriesProviders => RelationKind::Series,
+            Self::MovieProviders|Self::MovieInfo => RelationKind::Movie,
+            Self::SeriesProviders|Self::SeriesInfo => RelationKind::Series,
             Self::SeriesEpisodes => RelationKind::Episode,
         }
     }
     fn options(self) -> Value {
         let (name, description) = match self {
+            Self::MovieInfo => ("Provider info","Get detailed movie information from the original provider, throttled to 24h."),
+            Self::SeriesInfo => ("Series info","Get detailed series information, refreshing from provider if needed"),
             Self::MovieProviders => (
                 "Get providers",
                 "Get all providers (M3U accounts) that have this movie",
@@ -112,6 +116,7 @@ impl ActionReads {
                 } else {
                     guard
                 };
+                let origin=crate::logos::origin(&state.auth,peer.ip(),&headers);
                 let user = state
                     .auth
                     .clone()
@@ -172,6 +177,11 @@ impl ActionReads {
                     }
                     if rows[0].try_get::<bool, _>("oversized")? {
                         return Err(ReadError::Capacity);
+                    }
+                    if matches!(action,Action::MovieInfo|Action::SeriesInfo){
+                        let value=super::vod_api_provider_info_read::read(&work,&mut connection,matches!(action,Action::SeriesInfo),id,&rows[0],&query,&origin).await?;
+                        serde_json::to_writer(&mut document,&value).map_err(output)?;
+                        return Ok(document.finish());
                     }
                     drop(rows);
                     let mut context = account::SerializerContext::default();

@@ -16,3 +16,19 @@ python3 scripts/rust-core-contracts/run_source.py --output artifacts/rust/core-s
 M1 remains open. Next: native assembly/storage/runtime comparison of the same traces, held slow readers and final-owner accounting; then predeclare an equivalent paired shared-buffer resource matrix using common retention and successful full-byte work. Existing TS-stamping comparisons and Rust-only Arc fanout are separate evidence.
 
 The later [mark-boundary component](verified-core-mark-components-1.json) adds a13th actual Original observation. After one incoming batch fills a stored chunk, a new PID in the pending remainder is already stamped in Original. The old native accumulator left it unmarked. Source mode now disarms stamping after the complete incoming frame, retaining the existing bounded one-chunk publication window. Exact captured bytes pass both the production assembly helper and a real local HTTP source-switch/flush test; strict workspace Clippy and369 default tests pass on630 exact inputs. The original12-record report remains historical evidence. No full native Redis/core comparison or performance gain is claimed.
+
+The [same-owner expiry policy](verified-input-expiry-image42-1.json) now has14 real-Redis controls on the combined
+674-input checkpoint (including existing ownership, GC and retention tests).
+After the payload and temporary producer key expire, Source continues its local
+index without an extra discontinuity. Native Source mode now preserves that
+era only when the live coordinator owner and persistent publication/catalog
+receipts match the last published index. Foreign, missing and corrupt receipts
+do not grant that continuity. The legacy policy remains available. Main uses
+this policy only with its existing Source-initialization setting.
+
+The separate development workload has also compared actual Original
+StreamBuffer/Redis with production Rust assembly/InputStore/Channel/History
+at1,10 and100 readers, checking every delivered byte and final sequence.
+Those short functional runs are not a comparative performance result. M1
+remains open pending the optimized, source-bound core benchmark, held-reader
+and final-owner controls, and the remaining application parity gates.

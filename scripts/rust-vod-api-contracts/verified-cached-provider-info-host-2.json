@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "scope": "Host component cached provider info only, not canonical app or full modal/refresh/image acceptance",
+  "Source_authority": "actual Original TCP90, local provider-deny trap no attempts",
+  "Source90_sha256": "d7ca219c2005e03c90e2d5bd205125bb6db6a2ac2b7fb0bd042ba4740762c6e9",
+  "native3": {
+    "actualTCP": 90,
+    "Source_simultaneous": 10,
+    "native_simultaneous": 10,
+    "strict_alltargets": "19.21s PASS",
+    "build_test": "24.20s +3.55s execution PASS",
+    "state": "18 exact SQL fingerprints unchanged per request and initial metadata restored after replay",
+    "physical": {
+      "passed": true,
+      "workers": 2,
+      "memory_bytes": 201326592,
+      "shared_final_frame_clone": true,
+      "retained_frame_credits": 2880,
+      "canceled_expired_waiter_no_worker": true,
+      "actual_SQL_lock_abort_owns_68MiB_until_reply_rollback": true,
+      "shutdown_waits_SQL_and_final_frame_remains_owned": true,
+      "output_cap_503_not_partial200": true
+    }
+  },
+  "retained_negative": {
+    "artifact": "artifacts/rust/vod-cached-provider-info-native-1",
+    "scope": "16 query-only mismatches caused by captured path+query duplicated by peer; no runtime change to fix",
+    "native2": "corrected replay all90 passed"
+  },
+  "source_selection": "artifacts/rust/vod-cached-provider-info-stageable-1/selection-2.json",
+  "registration": "requires previous provider-action availability closure; extends same provider_router, ActionReads, HttpGate, ReadRuntime; no Main/Cargo/second memory pool",
+  "no_gain_transfer": true,
+  "prior_actions_same_source": {
+    "passed": true,
+    "inputs": 645,
+    "all_input_hashes_match_cached_native3": true,
+    "strict_alltargets": "18.03s PASS",
+    "actual_tests": "4PASS,8.28s execution",
+    "reports": {
+      "provider-actions-native.json": {
+        "path": "artifacts/rust/vod-cached-provider-info-actions-regression-1/http/provider-actions-native.json",
+        "sha256": "e6710447441de4a6a7542845f267911285e7c55b4772b1fe11d420fae8702c0f",
+        "passed": true
+      },
+      "provider-actions-schedule-native.json": {
+        "path": "artifacts/rust/vod-cached-provider-info-actions-regression-1/http/provider-actions-schedule-native.json",
+        "sha256": "1f393d37e5165ed1c01336fe65b844412a8e34bd3b70a2eba9adedf20ed54d90",
+        "passed": true
+      },
+      "provider-actions-cron-native.json": {
+        "path": "artifacts/rust/vod-cached-provider-info-actions-regression-1/http/provider-actions-cron-native.json",
+        "sha256": "310de4558f39273d075d15906548d9ea5e44755976fb4bf4a447025ed24af1a9",
+        "passed": true
+      },
+      "provider-actions-resources.json": {
+        "path": "artifacts/rust/vod-cached-provider-info-actions-regression-1/http/provider-actions-resources.json",
+        "sha256": "657e800e7f9fd0a6cecd29bb9873ca83f9fc5469e0b2a5f71dfbd60138b54e4f",
+        "passed": true
+      }
+    },
+    "actual150": 150,
+    "fresh25": 25,
+    "phase_source_type": "Original Factory+real SQL controlled mutation versus nativeTCP, not Source network",
+    "cron": "actual Original/nativeTCP2",
+    "mixed": "actual Source10/native10 and shared/cancellation/frame/shutdown/capacity controls"
+  }
+}

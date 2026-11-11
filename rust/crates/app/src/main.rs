@@ -241,6 +241,7 @@ async fn run() -> Result<(), String> {
         max_read_bytes: positive("RUST_INPUT_READ_BYTES", 64 * 1024 * 1024)?,
         max_operations: positive("RUST_INPUT_OPERATIONS", 16)?,
         chunk_ttl: config.retention,
+        preserve_source_era: config.source_initialization,
         ..Default::default()
     };
     let lease_config = LeaseConfig::default();

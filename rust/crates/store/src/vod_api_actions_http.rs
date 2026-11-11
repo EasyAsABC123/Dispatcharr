@@ -41,6 +41,8 @@ impl ActionHttp {
     pub(super) fn router(&self) -> Router {
         let mut router = Router::new();
         for (path, action) in [
+            ("/api/vod/movies/{id}/provider-info/", Action::MovieInfo),
+            ("/api/vod/series/{id}/provider-info/", Action::SeriesInfo),
             ("/api/vod/movies/{id}/providers/", Action::MovieProviders),
             ("/api/vod/series/{id}/providers/", Action::SeriesProviders),
             ("/api/vod/series/{id}/episodes/", Action::SeriesEpisodes),

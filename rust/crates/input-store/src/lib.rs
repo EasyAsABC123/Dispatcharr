@@ -18,6 +18,9 @@ pub struct InputConfig {
     pub max_queued_operations: usize,
     pub command_timeout: Duration,
     pub chunk_ttl: Duration,
+    /// Match Source across payload expiry only when the persistent receipt
+    /// proves this same live coordinator owner and last published index.
+    pub preserve_source_era: bool,
 }
 impl Default for InputConfig {
     fn default() -> Self {
@@ -31,6 +34,7 @@ impl Default for InputConfig {
             max_queued_operations: 1024,
             command_timeout: Duration::from_secs(3),
             chunk_ttl: Duration::from_secs(60),
+            preserve_source_era: false,
         }
     }
 }
@@ -224,6 +228,7 @@ impl InputStore {
                     if discontinuity { b"1" } else { b"0" },
                     channel.as_bytes(),
                     catalog_limit.as_bytes(),
+                    if config.preserve_source_era { b"1" } else { b"0" },
                 ],
                 (),
             )
@@ -400,7 +405,21 @@ if redis.call('HEXISTS',KEYS[7],ARGV[8])==0 and redis.call('HLEN',KEYS[7])>=tonu
 if redis.call('STRLEN',KEYS[3])>32 then return redis.error_reply('CORRUPT index') end
 local index=tonumber(redis.call('GET',KEYS[3]) or '0');if not index or index<0 or index>=9007199254740000 or index~=math.floor(index) then return redis.error_reply('CORRUPT index') end
 if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[5]) or redis.call('ZCARD',KEYS[5])>tonumber(ARGV[5]) then return redis.error_reply('CORRUPT cardinality') end
-local prior=redis.call('GET',KEYS[2]);local same=prior==ARGV[1];local all=redis.call('ZRANGE',KEYS[4],0,-1,'WITHSCORES');local total=0;local count=0;local records={}
+local prior=redis.call('GET',KEYS[2]);local same=prior==ARGV[1]
+-- Only the Source policy can bridge expiry, and only with the unchanged live
+-- coordinator owner plus matching persistent publication/catalog receipts.
+if ARGV[10]=='1' and not prior and index>0 then
+ local receipt=redis.call('GET',KEYS[9])
+ if receipt then
+  if string.len(receipt)>1024 then return redis.error_reply('CORRUPT publication receipt') end
+  local ok,row=pcall(cjson.decode,receipt)
+  if not ok or type(row)~='table' or type(row.owner)~='string' or type(row.index)~='string' then return redis.error_reply('CORRUPT publication receipt') end
+  if redis.call('HSTRLEN',KEYS[7],ARGV[8])>1024 then return redis.error_reply('CORRUPT publication receipt') end
+  if receipt~=redis.call('HGET',KEYS[7],ARGV[8]) or row.index~=string.format('%.0f',index) then return redis.error_reply('CORRUPT publication receipt') end
+  if row.owner==ARGV[1] then same=true end
+ end
+end
+local all=redis.call('ZRANGE',KEYS[4],0,-1,'WITHSCORES');local total=0;local count=0;local records={}
 for i=1,#all,2 do
  local seq=tonumber(all[i]);if not seq or seq<=0 or seq>index or seq~=math.floor(seq) then return redis.error_reply('CORRUPT sequence') end
  local size=redis.call('STRLEN',KEYS[6]..all[i]);table.insert(records,{id=all[i],size=size})

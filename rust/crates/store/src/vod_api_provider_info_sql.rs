@@ -1,0 +1,42 @@
+//! Source-derived cached provider-info extension and host controls.
+//! Actual Source90 TCP and owned-resource gates passed; canonical app,
+//! provider refresh, image serving and full React modal gates are separate.
+//! Original Dispatcharr authors retain application/algorithm credit.
+use super::{
+    vod_api_actions_sql as sql,
+    vod_api_owned_read::{OwnedConnection, ReadError, ReadWork},
+};
+use serde_json::Value;
+pub(super) async fn relation(
+    work: &ReadWork,
+    connection: &mut OwnedConnection,
+    series: bool,
+    content: i64,
+    relation: Option<i64>,
+) -> Result<Option<Value>, ReadError> {
+    let source = if series { SERIES_SOURCE } else { MOVIE_SOURCE };
+    let table = if series {
+        "vod_m3useriesrelation"
+    } else {
+        "vod_m3umovierelation"
+    };
+    let suffix = match relation {
+        Some(id) => format!(" AND \"{table}\".\"id\"={id} ORDER BY \"{table}\".\"id\" ASC LIMIT 1"),
+        None => {
+            format!(" ORDER BY \"m3u_m3uaccount\".\"priority\" DESC,\"{table}\".\"id\" ASC LIMIT 1")
+        }
+    };
+    let source = source.replace("/* relation-limit */", &suffix);
+    let mut rows = sql::snapshot(work, connection, &source, content, work.work_bytes() / 16)
+        .await?
+        .into_rows();
+    let Some(row) = rows.next() else {
+        return Ok(None);
+    };
+    if rows.next().is_some() {
+        return Err(ReadError::WorkerFailed);
+    }
+    sql::decode(work, &row).map(Some)
+}
+const MOVIE_SOURCE: &str = r#"WITH action_source AS MATERIALIZED (SELECT "vod_m3umovierelation"."id" AS "x0_id", "vod_m3umovierelation"."m3u_account_id" AS "x0_m3u_account_id", "vod_m3umovierelation"."movie_id" AS "x0_movie_id", "vod_m3umovierelation"."category_id" AS "x0_category_id", "vod_m3umovierelation"."stream_id" AS "x0_stream_id", "vod_m3umovierelation"."container_extension" AS "x0_container_extension", "vod_m3umovierelation"."custom_properties" AS "x0_custom_properties", "vod_m3umovierelation"."created_at" AS "x0_created_at", "vod_m3umovierelation"."updated_at" AS "x0_updated_at", "vod_m3umovierelation"."last_advanced_refresh" AS "x0_last_advanced_refresh", "vod_m3umovierelation"."last_seen" AS "x0_last_seen", "m3u_m3uaccount"."id" AS "x1_id", "m3u_m3uaccount"."name" AS "x1_name", "m3u_m3uaccount"."server_url" AS "x1_server_url", "m3u_m3uaccount"."file_path" AS "x1_file_path", "m3u_m3uaccount"."server_group_id" AS "x1_server_group_id", "m3u_m3uaccount"."max_streams" AS "x1_max_streams", "m3u_m3uaccount"."is_active" AS "x1_is_active", "m3u_m3uaccount"."created_at" AS "x1_created_at", "m3u_m3uaccount"."updated_at" AS "x1_updated_at", "m3u_m3uaccount"."status" AS "x1_status", "m3u_m3uaccount"."last_message" AS "x1_last_message", "m3u_m3uaccount"."user_agent_id" AS "x1_user_agent_id", "m3u_m3uaccount"."locked" AS "x1_locked", "m3u_m3uaccount"."stream_profile_id" AS "x1_stream_profile_id", "m3u_m3uaccount"."account_type" AS "x1_account_type", "m3u_m3uaccount"."username" AS "x1_username", "m3u_m3uaccount"."password" AS "x1_password", "m3u_m3uaccount"."custom_properties" AS "x1_custom_properties", "m3u_m3uaccount"."refresh_interval" AS "x1_refresh_interval", "m3u_m3uaccount"."refresh_task_id" AS "x1_refresh_task_id", "m3u_m3uaccount"."stale_stream_days" AS "x1_stale_stream_days", "m3u_m3uaccount"."priority" AS "x1_priority" FROM "vod_m3umovierelation" INNER JOIN "m3u_m3uaccount" ON ("vod_m3umovierelation"."m3u_account_id" = "m3u_m3uaccount"."id") WHERE ("m3u_m3uaccount"."is_active" AND "vod_m3umovierelation"."movie_id" = $1)/* relation-limit */) SELECT jsonb_build_object('relation',jsonb_build_object('id', "x0_id", 'm3u_account_id', "x0_m3u_account_id", 'movie_id', "x0_movie_id", 'category_id', "x0_category_id", 'stream_id', "x0_stream_id", 'container_extension', "x0_container_extension", 'custom_properties', "x0_custom_properties", 'created_at', "x0_created_at", 'updated_at', "x0_updated_at", 'last_advanced_refresh', "x0_last_advanced_refresh", 'last_seen', "x0_last_seen"),'account',jsonb_build_object('id', "x1_id", 'name', "x1_name", 'server_url', "x1_server_url", 'file_path', "x1_file_path", 'server_group_id', "x1_server_group_id", 'max_streams', "x1_max_streams", 'is_active', "x1_is_active", 'created_at', "x1_created_at", 'updated_at', "x1_updated_at", 'status', "x1_status", 'last_message', "x1_last_message", 'user_agent_id', "x1_user_agent_id", 'locked', "x1_locked", 'stream_profile_id', "x1_stream_profile_id", 'account_type', "x1_account_type", 'username', "x1_username", 'password', "x1_password", 'custom_properties', "x1_custom_properties", 'refresh_interval', "x1_refresh_interval", 'refresh_task_id', "x1_refresh_task_id", 'stale_stream_days', "x1_stale_stream_days", 'priority', "x1_priority")) AS payload FROM action_source"#;
+const SERIES_SOURCE: &str = r#"WITH action_source AS MATERIALIZED (SELECT "vod_m3useriesrelation"."id" AS "x0_id", "vod_m3useriesrelation"."m3u_account_id" AS "x0_m3u_account_id", "vod_m3useriesrelation"."series_id" AS "x0_series_id", "vod_m3useriesrelation"."category_id" AS "x0_category_id", "vod_m3useriesrelation"."external_series_id" AS "x0_external_series_id", "vod_m3useriesrelation"."custom_properties" AS "x0_custom_properties", "vod_m3useriesrelation"."created_at" AS "x0_created_at", "vod_m3useriesrelation"."updated_at" AS "x0_updated_at", "vod_m3useriesrelation"."last_episode_refresh" AS "x0_last_episode_refresh", "vod_m3useriesrelation"."last_seen" AS "x0_last_seen", "m3u_m3uaccount"."id" AS "x1_id", "m3u_m3uaccount"."name" AS "x1_name", "m3u_m3uaccount"."server_url" AS "x1_server_url", "m3u_m3uaccount"."file_path" AS "x1_file_path", "m3u_m3uaccount"."server_group_id" AS "x1_server_group_id", "m3u_m3uaccount"."max_streams" AS "x1_max_streams", "m3u_m3uaccount"."is_active" AS "x1_is_active", "m3u_m3uaccount"."created_at" AS "x1_created_at", "m3u_m3uaccount"."updated_at" AS "x1_updated_at", "m3u_m3uaccount"."status" AS "x1_status", "m3u_m3uaccount"."last_message" AS "x1_last_message", "m3u_m3uaccount"."user_agent_id" AS "x1_user_agent_id", "m3u_m3uaccount"."locked" AS "x1_locked", "m3u_m3uaccount"."stream_profile_id" AS "x1_stream_profile_id", "m3u_m3uaccount"."account_type" AS "x1_account_type", "m3u_m3uaccount"."username" AS "x1_username", "m3u_m3uaccount"."password" AS "x1_password", "m3u_m3uaccount"."custom_properties" AS "x1_custom_properties", "m3u_m3uaccount"."refresh_interval" AS "x1_refresh_interval", "m3u_m3uaccount"."refresh_task_id" AS "x1_refresh_task_id", "m3u_m3uaccount"."stale_stream_days" AS "x1_stale_stream_days", "m3u_m3uaccount"."priority" AS "x1_priority", "vod_vodcategory"."id" AS "x2_id", "vod_vodcategory"."name" AS "x2_name", "vod_vodcategory"."category_type" AS "x2_category_type", "vod_vodcategory"."created_at" AS "x2_created_at", "vod_vodcategory"."updated_at" AS "x2_updated_at" FROM "vod_m3useriesrelation" INNER JOIN "m3u_m3uaccount" ON ("vod_m3useriesrelation"."m3u_account_id" = "m3u_m3uaccount"."id") LEFT OUTER JOIN "vod_vodcategory" ON ("vod_m3useriesrelation"."category_id" = "vod_vodcategory"."id") WHERE ("m3u_m3uaccount"."is_active" AND "vod_m3useriesrelation"."series_id" = $1)/* relation-limit */) SELECT jsonb_build_object('relation',jsonb_build_object('id', "x0_id", 'm3u_account_id', "x0_m3u_account_id", 'series_id', "x0_series_id", 'category_id', "x0_category_id", 'external_series_id', "x0_external_series_id", 'custom_properties', "x0_custom_properties", 'created_at', "x0_created_at", 'updated_at', "x0_updated_at", 'last_episode_refresh', "x0_last_episode_refresh", 'last_seen', "x0_last_seen"),'account',jsonb_build_object('id', "x1_id", 'name', "x1_name", 'server_url', "x1_server_url", 'file_path', "x1_file_path", 'server_group_id', "x1_server_group_id", 'max_streams', "x1_max_streams", 'is_active', "x1_is_active", 'created_at', "x1_created_at", 'updated_at', "x1_updated_at", 'status', "x1_status", 'last_message', "x1_last_message", 'user_agent_id', "x1_user_agent_id", 'locked', "x1_locked", 'stream_profile_id', "x1_stream_profile_id", 'account_type', "x1_account_type", 'username', "x1_username", 'password', "x1_password", 'custom_properties', "x1_custom_properties", 'refresh_interval', "x1_refresh_interval", 'refresh_task_id', "x1_refresh_task_id", 'stale_stream_days', "x1_stale_stream_days", 'priority', "x1_priority"),'category',CASE WHEN "x2_id" IS NULL THEN NULL ELSE jsonb_build_object('id', "x2_id", 'name', "x2_name", 'category_type', "x2_category_type", 'created_at', "x2_created_at", 'updated_at', "x2_updated_at") END) AS payload FROM action_source"#;
