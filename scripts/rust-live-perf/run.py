@@ -16,7 +16,7 @@ def main():
  manifest=json.loads(a.build_manifest.read_bytes());assert manifest['passed'];tools=out/'tools';tools.mkdir()
  archive=subprocess.check_output(['git','-C',str(root),'archive','HEAD','docker','scripts','docs'])
  subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(tools)],input=archive,check=True)
- live=tools/'scripts/rust-live-perf';shutil.copytree(own,live,ignore=shutil.ignore_patterns('__pycache__'))
+ live=tools/'scripts/rust-live-perf';shutil.copytree(own,live,dirs_exist_ok=True,ignore=shutil.ignore_patterns('__pycache__'))
  sys.path.insert(0,str(tools/'scripts/rust-integration'));integration=module(tools/'scripts/rust-integration/run.py','_m2_controlled_integration');ports=module(tools/'scripts/rust-integration/fixture_ports.py','_m2_controlled_ports')
  plan=json.loads((live/'protocol.json').read_text());project='dispatcharr-m2-functional-'+uuid.uuid4().hex[:10]
  report={'passed':False,'project':project,'scope':'Actual authenticated live TS continuous delivery and bounded prefix decodes only; concurrent development/no resource sampling','performance_verified':False,'source_revision':REV,'candidate_image':manifest['image_id'],'phases':[],'protocol_sha256':hashlib.sha256((live/'protocol.json').read_bytes()).hexdigest(),'tool_base_commit':subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(),'tools_sha256':{str(x.relative_to(tools)):hashlib.sha256(x.read_bytes()).hexdigest()for x in tools.rglob('*')if x.is_file()and '__pycache__'not in x.parts}}

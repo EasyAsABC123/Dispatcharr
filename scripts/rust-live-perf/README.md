@@ -36,6 +36,12 @@ python3 scripts/rust-live-perf/run.py --repo . \
 python3 -m unittest discover -s scripts/rust-live-perf -p test_workload.py -v
 ```
 
+The [published-tree replay](verified-runner-public-replay-1.json) verifies the
+snapshot-copy correction with two fresh authenticated Source/native phases. The
+runner now merges its exact current tools into the committed archive's existing
+tool directory. The earlier222-capture evidence keeps its original binding; the
+correction changes no Rust application code.
+
 The output must be new. Default viewer cohorts are1,10,100. `--viewers 1` runs a
 small real preflight. The runner archives the pinned Original revision, freezes
 committed support plus its own exact tools, checks native image labels/source
