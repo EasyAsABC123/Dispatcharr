@@ -347,3 +347,18 @@ pub use vod_api_draft::source_browsable_csrf;
 pub mod operator_commands;
 
 pub mod operator_create;
+
+#[cfg(test)]
+mod scanner_float_peer;
+
+/// Python-compatible formatting reused by the bounded logo scanner only.
+/// No arbitrary/non-finite float or cached-marker grammar authority.
+pub fn source_scanner_epoch_string(value: f64) -> Option<String> {
+    if !value.is_finite() || !(100_000_000.0..10_000_000_000.0).contains(&value) {
+        return None;
+    }
+    // std::Display chooses the other shortest decimal on observed halfway
+    // cases. Existing serde_json's round-to-even formatter matches Source.
+    // Keep json_compat/cache formatting unchanged outside scanner authority.
+    serde_json::Number::from_f64(value).map(|number| number.to_string())
+}

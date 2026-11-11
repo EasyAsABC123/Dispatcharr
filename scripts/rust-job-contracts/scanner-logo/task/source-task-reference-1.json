@@ -1,0 +1,474 @@
+{
+  "passed": true,
+  "native_verified": false,
+  "checks": [
+    {
+      "name": "fresh-empty-m3us",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-epgs",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-logos",
+      "passed": true
+    },
+    {
+      "name": "default-celery-queue",
+      "passed": true
+    },
+    {
+      "name": "source-noarg-frame",
+      "passed": true
+    },
+    {
+      "name": "actual-earlyACK-before-SQL-reply",
+      "passed": true
+    },
+    {
+      "name": "actual-pending-while-body-blocked",
+      "passed": true
+    },
+    {
+      "name": "no-postrun-before-SQL-release",
+      "passed": true
+    },
+    {
+      "name": "initial-body-normal",
+      "passed": true
+    },
+    {
+      "name": "task-attributes",
+      "passed": true
+    },
+    {
+      "name": "periodic-header-actual-handler",
+      "passed": true
+    },
+    {
+      "name": "same-ID-body-reexecutes",
+      "passed": true
+    },
+    {
+      "name": "same-ID-oldSUCCESS-bytes-TTL",
+      "passed": true
+    },
+    {
+      "name": "same-ID-failed-body-preserves-oldSUCCESS",
+      "passed": true
+    },
+    {
+      "name": "same-ID-client-still-ready-null",
+      "passed": true
+    },
+    {
+      "name": "hardloss-task-earlyACK-PENDING",
+      "passed": true
+    },
+    {
+      "name": "hardloss-no-row-marker-result",
+      "passed": true
+    },
+    {
+      "name": "replacement-no-bounded-replay",
+      "passed": true
+    },
+    {
+      "name": "replacement-completes-fresh-task",
+      "passed": true
+    },
+    {
+      "name": "replacement-resets-process-first-state",
+      "passed": true
+    },
+    {
+      "name": "lost-still-PENDING-after-replacement",
+      "passed": true
+    },
+    {
+      "name": "only-five-owned-task-bodies",
+      "passed": true
+    },
+    {
+      "name": "no-unrelated-or-descendant-publications",
+      "passed": true
+    },
+    {
+      "name": "source-data-files-unchanged",
+      "passed": true
+    }
+  ],
+  "cases": [],
+  "scope": "Actual scanner default queue protocol, retained actual SQL block/earlyACK, duplicate execution+oldSUCCESS and hardloss/restart; logo-only inactive-source fixture. No Native claim.",
+  "fixed_scanner_clock": 1700000000.125,
+  "publications": [
+    {
+      "raw_base64": "eyJib2R5IjogIlcxdGRMQ0I3ZlN3Z2V5SmpZV3hzWW1GamEzTWlPaUJ1ZFd4c0xDQWlaWEp5WW1GamEzTWlPaUJ1ZFd4c0xDQWlZMmhoYVc0aU9pQnVkV3hzTENBaVkyaHZjbVFpT2lCdWRXeHNmVjA9IiwgImNvbnRlbnQtZW5jb2RpbmciOiAidXRmLTgiLCAiY29udGVudC10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiaGVhZGVycyI6IHsibGFuZyI6ICJweSIsICJ0YXNrIjogImNvcmUudGFza3Muc2Nhbl9hbmRfcHJvY2Vzc19maWxlcyIsICJpZCI6ICJmNzUxM2IwNi01ZDYxLTQ2M2ItYmU0YS1hMTRlMzRlODg2YjIiLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogW251bGwsIG51bGxdLCAicm9vdF9pZCI6ICJmNzUxM2IwNi01ZDYxLTQ2M2ItYmU0YS1hMTRlMzRlODg2YjIiLCAicGFyZW50X2lkIjogbnVsbCwgImFyZ3NyZXByIjogIigpIiwgImt3YXJnc3JlcHIiOiAie30iLCAib3JpZ2luIjogImdlbjM2N0BkYzZkYmVjMDllNjgiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fSwgInBlcmlvZGljX3Rhc2tfbmFtZSI6ICJydXN0LW93bmVkLXNjYW5uZXItc291cmNlLXByb3RvY29sIn0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICJmNzUxM2IwNi01ZDYxLTQ2M2ItYmU0YS1hMTRlMzRlODg2YjIiLCAicmVwbHlfdG8iOiAiOWRjYTlmN2UtZDdiOC0zYTc2LTg5YTYtYTY0NTM4OGNlYjNlIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogImVjNzBlYzVmLTdiMmMtNGIzYS05NjhjLTc1N2U1ZWJkNDkyZSJ9fQ==",
+      "sha256": "c9005d620f38f8bd5357f69a5906511123f15efb25bf13797e6d5e53490d48c8",
+      "message": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.scan_and_process_files",
+          "id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen367@dc6dbec09e68",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "periodic_task_name": "rust-owned-scanner-source-protocol"
+        },
+        "properties": {
+          "correlation_id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "reply_to": "9dca9f7e-d7b8-3a76-89a6-a645388ceb3e",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "ec70ec5f-7b2c-4b3a-968c-757e5ebd492e"
+        }
+      },
+      "body": [
+        [],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ]
+    },
+    {
+      "producer_signal": {
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.scan_and_process_files",
+          "id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen367@dc6dbec09e68",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "periodic_task_name": "rust-owned-scanner-source-protocol"
+        },
+        "body": [
+          [],
+          {},
+          {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          }
+        ],
+        "properties": {
+          "correlation_id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "reply_to": "9dca9f7e-d7b8-3a76-89a6-a645388ceb3e"
+        },
+        "exchange": "",
+        "routing_key": "celery"
+      },
+      "queue_observation": "already consumed before passive LRANGE"
+    },
+    {
+      "producer_signal": {
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.scan_and_process_files",
+          "id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen367@dc6dbec09e68",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "periodic_task_name": "rust-owned-scanner-source-protocol"
+        },
+        "body": [
+          [],
+          {},
+          {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          }
+        ],
+        "properties": {
+          "correlation_id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+          "reply_to": "9dca9f7e-d7b8-3a76-89a6-a645388ceb3e"
+        },
+        "exchange": "",
+        "routing_key": "celery"
+      },
+      "queue_observation": "already consumed before passive LRANGE"
+    },
+    {
+      "producer_signal": {
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.scan_and_process_files",
+          "id": "8813afd2-0e37-4a6b-bb09-29929506d3e3",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "8813afd2-0e37-4a6b-bb09-29929506d3e3",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen367@dc6dbec09e68",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "periodic_task_name": "rust-owned-scanner-source-protocol"
+        },
+        "body": [
+          [],
+          {},
+          {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          }
+        ],
+        "properties": {
+          "correlation_id": "8813afd2-0e37-4a6b-bb09-29929506d3e3",
+          "reply_to": "9dca9f7e-d7b8-3a76-89a6-a645388ceb3e"
+        },
+        "exchange": "",
+        "routing_key": "celery"
+      },
+      "queue_observation": "already consumed before passive LRANGE"
+    },
+    {
+      "raw_base64": "eyJib2R5IjogIlcxdGRMQ0I3ZlN3Z2V5SmpZV3hzWW1GamEzTWlPaUJ1ZFd4c0xDQWlaWEp5WW1GamEzTWlPaUJ1ZFd4c0xDQWlZMmhoYVc0aU9pQnVkV3hzTENBaVkyaHZjbVFpT2lCdWRXeHNmVjA9IiwgImNvbnRlbnQtZW5jb2RpbmciOiAidXRmLTgiLCAiY29udGVudC10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiaGVhZGVycyI6IHsibGFuZyI6ICJweSIsICJ0YXNrIjogImNvcmUudGFza3Muc2Nhbl9hbmRfcHJvY2Vzc19maWxlcyIsICJpZCI6ICI5YWZlMzdhNy1kZWMyLTQxM2MtYWVlYi02ODFkZmRmYmFhZGMiLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogW251bGwsIG51bGxdLCAicm9vdF9pZCI6ICI5YWZlMzdhNy1kZWMyLTQxM2MtYWVlYi02ODFkZmRmYmFhZGMiLCAicGFyZW50X2lkIjogbnVsbCwgImFyZ3NyZXByIjogIigpIiwgImt3YXJnc3JlcHIiOiAie30iLCAib3JpZ2luIjogImdlbjM2N0BkYzZkYmVjMDllNjgiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fSwgInBlcmlvZGljX3Rhc2tfbmFtZSI6ICJydXN0LW93bmVkLXNjYW5uZXItc291cmNlLXByb3RvY29sIn0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICI5YWZlMzdhNy1kZWMyLTQxM2MtYWVlYi02ODFkZmRmYmFhZGMiLCAicmVwbHlfdG8iOiAiOWRjYTlmN2UtZDdiOC0zYTc2LTg5YTYtYTY0NTM4OGNlYjNlIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogIjVhZWJjM2E0LTNiZDItNDk0Zi1iOTQ1LWNhYjgzMGE3Zjg2OCJ9fQ==",
+      "sha256": "b94051aa18fe622e1e9652e5d3bfb83075e60b3ed5e0ee43b816565fb49132e5",
+      "message": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.scan_and_process_files",
+          "id": "9afe37a7-dec2-413c-aeeb-681dfdfbaadc",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "9afe37a7-dec2-413c-aeeb-681dfdfbaadc",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen367@dc6dbec09e68",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "periodic_task_name": "rust-owned-scanner-source-protocol"
+        },
+        "properties": {
+          "correlation_id": "9afe37a7-dec2-413c-aeeb-681dfdfbaadc",
+          "reply_to": "9dca9f7e-d7b8-3a76-89a6-a645388ceb3e",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "5aebc3a4-3bd2-494f-b945-cab830a7f868"
+        }
+      },
+      "body": [
+        [],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ]
+    }
+  ],
+  "held_sql": {
+    "prerun": {
+      "task": "core.tasks.scan_and_process_files",
+      "id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+      "root_id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+      "parent_id": null,
+      "args": [],
+      "kwargs": {},
+      "first_scan_before": false,
+      "clock": 1700000000.125,
+      "uid": 0,
+      "marker_acl": false,
+      "request_headers": {
+        "periodic_task_name": "rust-owned-scanner-source-protocol"
+      },
+      "delivery_info": {
+        "exchange": "",
+        "routing_key": "celery",
+        "priority": 0,
+        "redelivered": false
+      },
+      "task_attributes": {
+        "acks_late": false,
+        "acks_on_failure_or_timeout": true,
+        "reject_on_worker_lost": null,
+        "ignore_result": false,
+        "track_started": false,
+        "max_retries": 3
+      }
+    },
+    "queue_count": 0,
+    "unacked_count": 0,
+    "backend_bytes": null,
+    "state": "PENDING"
+  },
+  "duplicates": {
+    "task_id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+    "actual_postruns": [
+      {
+        "task": "core.tasks.scan_and_process_files",
+        "id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+        "state": "SUCCESS",
+        "result": null,
+        "first_scan_after": true
+      },
+      {
+        "task": "core.tasks.scan_and_process_files",
+        "id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+        "state": "SUCCESS",
+        "result": null,
+        "first_scan_after": true
+      },
+      {
+        "task": "core.tasks.scan_and_process_files",
+        "id": "f7513b06-5d61-463b-be4a-a14e34e886b2",
+        "state": "FAILURE",
+        "result": "could not convert string to float: 'owned-invalid-float'",
+        "first_scan_after": true
+      }
+    ],
+    "preserved_metadata": {
+      "status": "SUCCESS",
+      "result": null,
+      "traceback": null,
+      "children": [],
+      "date_done": "2026-11-11T20:54:54.380350+00:00",
+      "task_id": "f7513b06-5d61-463b-be4a-a14e34e886b2"
+    },
+    "raw_sha256": "5679822798b71535d39865790d7206742c0089d3ae369fc57a478ab892139112",
+    "ttl": 120
+  },
+  "hardloss": {
+    "lost_task_id": "8813afd2-0e37-4a6b-bb09-29929506d3e3",
+    "fresh_task_id": "9afe37a7-dec2-413c-aeeb-681dfdfbaadc",
+    "bounded_replay_observation_seconds": 1,
+    "lost_state": "PENDING",
+    "fresh_metadata": {
+      "status": "SUCCESS",
+      "result": null,
+      "traceback": null,
+      "children": [],
+      "date_done": "2026-11-11T20:54:55.624166+00:00",
+      "task_id": "9afe37a7-dec2-413c-aeeb-681dfdfbaadc"
+    },
+    "fresh_prerun": {
+      "task": "core.tasks.scan_and_process_files",
+      "id": "9afe37a7-dec2-413c-aeeb-681dfdfbaadc",
+      "root_id": "9afe37a7-dec2-413c-aeeb-681dfdfbaadc",
+      "parent_id": null,
+      "args": [],
+      "kwargs": {},
+      "first_scan_before": false,
+      "clock": 1700000000.125,
+      "uid": 0,
+      "marker_acl": false,
+      "request_headers": {
+        "periodic_task_name": "rust-owned-scanner-source-protocol"
+      },
+      "delivery_info": {
+        "exchange": "",
+        "routing_key": "celery",
+        "priority": 0,
+        "redelivered": false
+      },
+      "task_attributes": {
+        "acks_late": false,
+        "acks_on_failure_or_timeout": true,
+        "reject_on_worker_lost": null,
+        "ignore_result": false,
+        "track_started": false,
+        "max_retries": 3
+      }
+    }
+  },
+  "remaining_queue_count": 0,
+  "result_key_count": 2,
+  "descendants_not_deleted_before_owned_project_cleanup": true
+}

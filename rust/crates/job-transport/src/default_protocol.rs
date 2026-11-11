@@ -11,6 +11,7 @@ use uuid::Uuid;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Kind {
     RedisBackendCleanup,
+    LogoScanner,
     RecurringMaintenance,
     InactiveAccountNotifications,
 }
@@ -18,6 +19,7 @@ impl Kind {
     pub fn name(self) -> &'static str {
         match self {
             Self::RedisBackendCleanup => "celery.backend_cleanup",
+            Self::LogoScanner => "core.tasks.scan_and_process_files",
             Self::InactiveAccountNotifications => "apps.m3u.tasks.check_account_expirations",
             Self::RecurringMaintenance => "apps.channels.tasks.maintain_recurring_recordings",
         }
@@ -25,6 +27,7 @@ impl Kind {
     fn from_name(name: &str) -> Option<Self> {
         [
             Self::RedisBackendCleanup,
+            Self::LogoScanner,
             Self::RecurringMaintenance,
             Self::InactiveAccountNotifications,
         ]
@@ -193,7 +196,7 @@ mod tests {
             );
             let good: Value = serde_json::from_slice(&encode(&message).unwrap()).unwrap();
             for (field, value) in [
-                ("task", json!("core.tasks.scan_and_process_files")),
+                ("task", json!("core.tasks.check_for_version_update")),
                 ("parent_id", json!(Uuid::new_v4().to_string())),
                 ("eta", json!("2026-11-11T04:00:00+00:00")),
                 ("expires", json!("2026-11-12T04:00:00+00:00")),
@@ -229,4 +232,23 @@ fn actual_captured_two_family_direct_envelopes_and_typed_results() {
         assert_eq!(source["metadata"]["status"], "SUCCESS");
         assert_eq!(source["metadata"]["result"], expected);
     }
+}
+
+#[cfg(test)]
+mod logo_protocol_tests{
+ use super::*;
+ use base64::Engine;
+ #[test]fn logo_noarg_identity_and_unqualified_headers_bodies_are_rejected(){
+  let message=Message{task_id:Uuid::new_v4(),kind:Kind::LogoScanner,expires:None};let raw=encode(&message).unwrap();assert_eq!(parse(&raw).unwrap(),message);
+  let original:Value=serde_json::from_slice(&raw).unwrap();
+  for variant in 0..5{
+   let mut frame=original.clone();match variant{
+    0=>{let bytes=base64::engine::general_purpose::STANDARD.decode(frame["body"].as_str().unwrap()).unwrap();let mut body:Value=serde_json::from_slice(&bytes).unwrap();body[0]=json!([1]);frame["body"]=json!(base64::engine::general_purpose::STANDARD.encode(serde_json::to_vec(&body).unwrap()));},
+    1=>{let bytes=base64::engine::general_purpose::STANDARD.decode(frame["body"].as_str().unwrap()).unwrap();let mut body:Value=serde_json::from_slice(&bytes).unwrap();body[1]=json!({"force":true});frame["body"]=json!(base64::engine::general_purpose::STANDARD.encode(serde_json::to_vec(&body).unwrap()));},
+    2=>frame["headers"]["parent_id"]=json!(Uuid::new_v4().to_string()),
+    3=>frame["headers"]["eta"]=json!("2026-11-11T12:00:00+00:00"),
+    _=>frame["headers"]["ignore_result"]=json!(true)
+   }assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err(),"variant {variant}");
+  }
+ }
 }

@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "scope": "CLI + corrected pending-follower + bounded logo-only scanner union; no packaged image/default worker activation/performance acceptance",
+  "base_revision": "8309fbe587f92a7f050c57ed14fec22a911f7122",
+  "rust_input_count": 762,
+  "source_map_sha256": "8564644b8f8dd9c4e129d4a23f6053d482cf90b67242d48a7a66bba3f9052858",
+  "strict_all_targets_clippy": true,
+  "default_tests": 476,
+  "ignored_tests": 667,
+  "logs_sha256": {
+    "workspace-test-1.log": "b8b03254e29760f8a859fc599299046d78f9dbd611420b2b736462ebdcb4622a",
+    "workspace-clippy-1.log": "b15ef4c6650a318788cc90263de539d2aaee6eba2f4f9ff732a8cf40c02c6eca"
+  },
+  "native_peers": {
+    "dispatcharr_store": {
+      "path": "artifacts/rust/integration-cli-follower-scanner762-1/dispatcharr_store-tests",
+      "sha256": "a13789aa36cb66c5b4254356bf64b56e477e1b8698900e04dc0499fe9e24070e"
+    },
+    "dispatcharr_job_transport": {
+      "path": "artifacts/rust/integration-cli-follower-scanner762-1/dispatcharr_job_transport-tests",
+      "sha256": "089f946ab57897e2903aed00b47b0158328bbc67f257070241a1885b5c61cfd0"
+    }
+  },
+  "actual_compose_replays": {
+    "scanner-task-union762-1": {
+      "report_sha256": "34447bfdaa613d4761062cb70548ed49830a2bf4110b59818e5c6e3e00d36b4d",
+      "checks": 85,
+      "physical_tests": 5,
+      "native_elf_sha256": "089f946ab57897e2903aed00b47b0158328bbc67f257070241a1885b5c61cfd0",
+      "default_database_unchanged": true,
+      "owned_cleanup": true
+    },
+    "scanner-ordinary-union762-1": {
+      "report_sha256": "ca5f62eaafd3c8f07af567311f2b8e15814dfea911b8c8c1d4175adf504f808d",
+      "checks": 5135,
+      "physical_tests": 4,
+      "native_elf_sha256": "089f946ab57897e2903aed00b47b0158328bbc67f257070241a1885b5c61cfd0",
+      "default_database_unchanged": true,
+      "owned_cleanup": true
+    },
+    "scanner-legacy-pair-union762-1": {
+      "report_sha256": "ba273345a0458a393d54a52caa62648d1a09df4d5eb246e1f91ed8e014e0a19f",
+      "checks": 58,
+      "physical_tests": null,
+      "native_elf_sha256": null,
+      "default_database_unchanged": true,
+      "owned_cleanup": true
+    },
+    "scanner-notification-http-union762-1": {
+      "report_sha256": "348c5c66087fbb3986cb047041c48d4e28ad038444f4615a72a6fc751a88f8c5",
+      "checks": 87,
+      "physical_tests": null,
+      "native_elf_sha256": null,
+      "default_database_unchanged": true,
+      "owned_cleanup": true
+    },
+    "scanner-expiry-union762-1": {
+      "report_sha256": "d7591c4e78c982cc454771b50576a27f4a1c6fce106c82f2b593385a1a88b95c",
+      "checks": 83,
+      "physical_tests": null,
+      "native_elf_sha256": null,
+      "default_database_unchanged": true,
+      "owned_cleanup": true
+    }
+  },
+  "vod_fixture_regressions": {
+    "checks": 54,
+    "case_counts": [
+      4,
+      5,
+      20,
+      9,
+      3,
+      13
+    ],
+    "report_sha256": "8e7b4631f95d667b31b60569d22f2d90ccdd9abbcb8b57923cb13fbd9612b743",
+    "main_sql_auth_gate": false
+  },
+  "runtime_default_enabled": false,
+  "performance_verified": false,
+  "accepted_packaged_image": "image48",
+  "image49_pending_main_gate_passed": false
+}

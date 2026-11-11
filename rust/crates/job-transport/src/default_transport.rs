@@ -170,3 +170,18 @@ impl Jobs {
         self.write_metadata(message.task_id, bytes, owner).await
     }
 }
+
+impl Jobs{
+ /// Variant/task pairing checked before entering the existing physical writer.
+ pub async fn write_default_task_terminal(&self,message:&Message,value:crate::default_task_terminal::Terminal,owner:std::sync::Arc<dyn Send+Sync>)->Result<bool,Error>{
+  use crate::default_task_terminal::Terminal;
+  match value{
+   Terminal::Normal(value)=>self.write_default_success(message,value,owner).await,
+   Terminal::Notification(value)=>self.write_default_terminal(message,crate::notification_terminal::Terminal::Raised(value),owner).await,
+   Terminal::Scanner(value)=>{
+    if !self.allows_defaults()||message.kind!=crate::default_protocol::Kind::LogoScanner{return Err(Error::UnsupportedTask)}
+    let date=chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string();let bytes=value.metadata(message.task_id,&date)?;self.write_metadata(message.task_id,bytes,owner).await
+   }
+  }
+ }
+}

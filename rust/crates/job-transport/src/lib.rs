@@ -121,3 +121,25 @@ pub mod notification_terminal;
 
 #[cfg(test)]
 mod notification_failure_resources;
+
+// Inert bounded prototype; no intake/task/result/Main registration.
+pub mod logo_scanner;
+pub mod logo_scanner_effects;
+#[cfg(test)]
+mod logo_scanner_tests;
+
+#[cfg(test)]
+mod logo_scanner_peer;
+
+#[cfg(test)]
+mod logo_scanner_resources;
+
+pub mod default_task_terminal;
+pub mod logo_task;
+pub mod logo_application;
+
+#[cfg(test)]
+mod logo_task_peer;
+
+#[cfg(test)]
+mod logo_task_resources;

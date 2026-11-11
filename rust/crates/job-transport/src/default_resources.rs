@@ -206,6 +206,7 @@ impl Domains for Stub {
             Ok(match kind {
                 Kind::RedisBackendCleanup | Kind::InactiveAccountNotifications => Normal::Null,
                 Kind::RecurringMaintenance => Normal::Zero,
+                Kind::LogoScanner => return Err(DomainError::Unsupported),
             })
         })
     }

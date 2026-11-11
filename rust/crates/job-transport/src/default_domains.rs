@@ -7,6 +7,7 @@ use std::sync::Arc;
 #[derive(Debug)]
 pub enum Error {
     Unsupported,
+    ScannerOperational,
     Sql(sqlx::Error),
     Panic,
     Event,
@@ -27,6 +28,11 @@ pub trait Domains: Send + Sync {
                 .await
                 .map(crate::notification_terminal::Terminal::Normal)
         })
+    }
+    /// Additive typed task terminal API. Existing domain implementations keep
+    /// their legacy method/behavior unchanged through this default adapter.
+    fn execute_task_terminal(&self,kind:Kind,owner:Arc<dyn Send+Sync>)->BoxFuture<'_,Result<crate::default_task_terminal::Terminal,Error>>{
+        Box::pin(async move{self.execute_terminal(kind,owner).await.map(Into::into)})
     }
     fn execute(
         &self,
@@ -112,6 +118,7 @@ impl KnownDomains {
             // Pinned RedisBackend.cleanup inherits the empty BaseBackend method.
             // Existing backend result keys/TTLs are never scanned or changed.
             Kind::RedisBackendCleanup => Ok(()),
+            Kind::LogoScanner => Err(Error::Unsupported),
             Kind::InactiveAccountNotifications => {
                 if self.sink.is_none() {
                     return Err(Error::Unsupported);
@@ -190,6 +197,7 @@ impl Domains for KnownDomains {
             Ok(match kind {
                 Kind::RedisBackendCleanup | Kind::InactiveAccountNotifications => Normal::Null,
                 Kind::RecurringMaintenance => Normal::Zero,
+                Kind::LogoScanner => return Err(Error::Unsupported),
             })
         })
     }
@@ -198,6 +206,7 @@ impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Unsupported => f.write_str("Unsupported"),
+            Self::ScannerOperational => f.write_str("ScannerOperational"),
             Self::Event => f.write_str("Event"),
             Self::Panic => f.write_str("Panic"),
             Self::Sql(error) => write!(

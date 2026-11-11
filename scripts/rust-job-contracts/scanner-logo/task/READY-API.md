@@ -1,0 +1,19 @@
+# Ready interface for Root review; no Main edit yet
+
+Private759 cumulative on public1c5196a0 exact748. Code normal inert, QA only cfg(test). No Cargo edge, Main flag/route, default schedule, automatic consumer or HTTP202 added.
+
+Prepare dependencies explicitly, reusing existing services:
+
+- `Jobs::connect_defaults(broker,result,Config)` grants only typed default transport. Index/Refresh/Series constructors still cannot create the logo worker.
+- Existing private SQL pool, `RedisTransport` for Source cache DB and existing `Arc<dyn UpdateEventSink>` are injected into `logo_scanner_effects::RetainedEffects::new`.
+- `logo_application::LogoApplication::prepare(jobs.clone(), effects, Roots{m3u,epg,logos}, Limits, Arc<dyn logo_task::Clock>, poll)` prepares scanner, exclusive worker and existing DefaultApplication. No intake occurs before explicit `start()`. Default root strings `/data/m3us`, `/data/epgs`, `/data/logos`; preserve lexical Logo URL strings. `/app/media` alias paths are not accepted as root symlinks. Normal system clock implementation exists; fixture clock injection is explicit.
+- Public `run_once(owner)` exposes the same prepared worker for shared-dispatch/fixture callers. Worker slot prevents concurrent manual/poller bodies. `state()` reports current existing lifecycle state. `first_scan_completed()` is read-only process-lifetime diagnostic.
+- `shutdown(timeout)` stops/drains worker/poller BEFORE closing scanner admission, using one absolute deadline. It DOES NOT close shared Jobs, SQL pool or cache. Root closes them only after every family has physically drained. Last owner uses existing DefaultApplication stop semantics.
+
+Intake authority is constructor-specific. Legacy DefaultWorker::new/new_fixture immediately refuse the scanner as UnsupportedHead, before revoked cache/expiry/domain/claim; actual notification DefaultApplication proof retains a genuine Source frame with no ACK/result/effects. Only new_logo_scanner enables it. The logo-only worker refuses other task kinds before expiry handling, including expired cleanup. No global default graph is enabled by protocol recognition.
+
+Known consumer domain: noargs/unparented/noETA/noexpiry Source JSON protocol; Source periodic marker supported by existing parser; stable owned UTF8 real directories and bounded files/paths, empty M3U/EPG watch dirs, no eligible missing/SQLNULL Index source, finite normal epoch mtimes and observed nonnegative decimal marker grammar. Read-only supervised preflight rejects unknown state before claim. Own observed invalid marker literal is admitted to its typed ValueError body failure. Other unsupported/fault domains remain operational/refused, not fabricated terminal success/failure.
+
+Result writer reuses existing physical metadata/oldSUCCESS/TTL/publication guard. Additive task-terminal sum carries legacy notification terminal unchanged; scanner ValueError has its OWN bounded args and honest native diagnostic, no Python frames or notification P0001 authority reuse. Source actual consumer and oldSUCCESS duplicates are qualified. PUBLISH-denial can store metadata before error in native Lua; that is operational and explicitly no Source pipeline-fault parity claim. No schema/callback/active helper/M3U/EPG/concurrency/fullfamily claim.
+
+Before Root image build/Main opt-in: review exact selected Rust/tool map; compose with current canonical sibling changes; same-source workspace and actual replay; coordinate Root Main ownership; explicit flag must remain default OFF. Packaged gate should use copied DB/Source aliases, existing sinks, UID65532/read-only root with writable managed data, real Source-producer→application→SourceAsyncResult and retained shutdown. No HTTP202 route is implied. Scheduler publication of this family remains separate from consumer preparation; no source default rows should be silently dropped.

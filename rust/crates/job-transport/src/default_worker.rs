@@ -39,6 +39,7 @@ struct Owner {
 }
 struct Inner {
     jobs: Jobs,
+    accepted_kind:Option<Kind>,
     domains: Arc<dyn Domains>,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
@@ -70,6 +71,12 @@ impl DefaultWorker {
     }
     /// Explicit worker only; no automatic intake or shared transport closure.
     pub fn new(jobs: Jobs, domains: Arc<dyn Domains>) -> Result<Self, Error> {
+        Self::new_scoped(jobs,domains,None)
+    }
+    /// The logo-only assembly must never revoke/consume another family, even
+    /// an expired cleanup message whose normal domain preflight is skipped.
+    pub fn new_logo_scanner(jobs:Jobs,domains:Arc<dyn Domains>)->Result<Self,Error>{Self::new_scoped(jobs,domains,Some(Kind::LogoScanner))}
+    fn new_scoped(jobs:Jobs,domains:Arc<dyn Domains>,accepted_kind:Option<Kind>)->Result<Self,Error>{
         if !jobs.allows_defaults() {
             return Err(Error::Configuration);
         }
@@ -78,6 +85,7 @@ impl DefaultWorker {
             _lifetime: Arc::new(Lifetime(stop.clone())),
             inner: Arc::new(Inner {
                 jobs,
+                accepted_kind,
                 domains,
                 slots: Arc::new(Semaphore::new(1)),
                 closed: AtomicBool::new(false),
@@ -118,6 +126,11 @@ impl DefaultWorker {
                     Err(error) => return Err(Error::Transport(error)),
                 };
                 let kind = candidate.message.kind;
+                // Preserve legacy intake authority/classification. Merely
+                // recognizing the new protocol must not activate this family.
+                // This check precedes revocation, expiry and domain callbacks.
+                if inner.accepted_kind.is_none()&&kind==Kind::LogoScanner{return Ok(Run::UnsupportedHead);}
+                if inner.accepted_kind.is_some_and(|accepted|accepted!=kind){return Ok(Run::Unsupported(kind));}
                 let cached = inner
                     .revoked
                     .lock()
@@ -253,13 +266,13 @@ impl DefaultWorker {
                     .map_err(Error::Transport)?;
                 let value = inner
                     .domains
-                    .execute_terminal(kind, owner.clone())
+                    .execute_task_terminal(kind, owner.clone())
                     .await
                     .map_err(Error::Domain)?;
                 let raised = value.raised();
                 let saved = inner
                     .jobs
-                    .write_default_terminal(&message, value, owner)
+                    .write_default_task_terminal(&message, value, owner)
                     .await
                     .map_err(Error::Transport)?;
                 Ok(if saved {
