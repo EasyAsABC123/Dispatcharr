@@ -2,7 +2,7 @@
 //! Original Dispatcharr authors retain full application credit.
 use dispatcharr_input_store::{Error, InputBytes, InputSnapshot, InputStore};
 use dispatcharr_stream_runtime::{FrameLease, OwnedChunk, OwnedDelivery, Viewer};
-use std::{io, time::Duration};
+use std::{io, sync::Arc, time::Duration};
 use tokio::time::{self, Instant};
 
 pub(super) struct History {
@@ -11,13 +11,14 @@ pub(super) struct History {
     pub owner: String,
     pub initial_behind_chunks: u64,
     pub read_timeout: Duration,
+    pub retained: Option<Arc<dyn Send + Sync>>,
 }
 
 pub(super) enum Payload {
     Cached(OwnedChunk),
     Historical {
         data: InputBytes,
-        _lease: FrameLease,
+        _lease: Arc<FrameLease>,
     },
 }
 impl Payload {
@@ -38,10 +39,18 @@ impl AsRef<[u8]> for Payload {
 }
 
 impl History {
-    async fn snapshot(&self, deadline: Instant) -> io::Result<InputSnapshot> {
+    async fn snapshot(
+        &self,
+        deadline: Instant,
+        admission: dispatcharr_stream_runtime::ViewerAdmission,
+    ) -> io::Result<InputSnapshot> {
         loop {
-            match self.store.snapshot(&self.channel).await {
-                Ok(snapshot) if snapshot.owner.as_deref() == Some(&self.owner) => {
+            match self
+                .store
+                .snapshot_retained(&self.channel, (admission.clone(), self.retained.clone()))
+                .await
+            {
+                Ok((snapshot, _scope)) if snapshot.owner.as_deref() == Some(&self.owner) => {
                     return Ok(snapshot)
                 }
                 Ok(_) => {
@@ -59,7 +68,12 @@ impl History {
     }
 
     pub async fn position(&self, viewer: &mut Viewer, behind: Duration) -> io::Result<()> {
-        let snapshot = self.snapshot(Instant::now() + self.read_timeout).await?;
+        let snapshot = self
+            .snapshot(
+                Instant::now() + self.read_timeout,
+                viewer.retain_admission(),
+            )
+            .await?;
         let cursor = if behind.is_zero() {
             snapshot.index
         } else {
@@ -80,7 +94,25 @@ pub(super) async fn next(
     loop {
         let requested = viewer.next_sequence();
         match viewer.next_owned().await {
-            OwnedDelivery::Chunk(chunk) => return Ok(Some(Payload::Cached(chunk))),
+            OwnedDelivery::Chunk(mut chunk) => {
+                if chunk.discontinuity {
+                    if let Some(history) = history {
+                        let (current, (retained, _scope)) = history
+                            .store
+                            .discontinuity_retained(
+                                &history.channel,
+                                &history.owner,
+                                chunk.sequence,
+                                (chunk, history.retained.clone()),
+                            )
+                            .await
+                            .map_err(|_| io::Error::other("Shared discontinuity unavailable"))?;
+                        chunk = retained;
+                        chunk.discontinuity = current;
+                    }
+                }
+                return Ok(Some(Payload::Cached(chunk)));
+            }
             OwnedDelivery::Cancelled | OwnedDelivery::Stopped => return Ok(None),
             OwnedDelivery::Lagged { .. } => {}
         }
@@ -90,14 +122,24 @@ pub(super) async fn next(
         viewer
             .seek_sequence(requested)
             .map_err(|_| io::Error::other("Viewer stopped"))?;
-        let lease = viewer
-            .reserve_frame()
-            .await
-            .map_err(|_| io::Error::other("Viewer stopped"))?;
+        let lease = Arc::new(
+            viewer
+                .reserve_frame()
+                .await
+                .map_err(|_| io::Error::other("Viewer stopped"))?,
+        );
         let deadline = Instant::now() + history.read_timeout;
         let data = loop {
-            match history.store.get(&history.channel, requested).await {
-                Ok(data) => break data,
+            match history
+                .store
+                .get_retained(
+                    &history.channel,
+                    requested,
+                    (lease.clone(), history.retained.clone()),
+                )
+                .await
+            {
+                Ok((data, _scope)) => break data,
                 Err(Error::Capacity) if Instant::now() < deadline => {
                     time::sleep(Duration::from_millis(25)).await
                 }
@@ -120,7 +162,17 @@ pub(super) async fn next(
             }));
         }
         drop(lease);
-        let snapshot = history.snapshot(deadline).await?;
+        let snapshot = history
+            .snapshot(deadline, viewer.retain_admission())
+            .await?;
+        if viewer.producer_finished()
+            && !snapshot
+                .chunks
+                .iter()
+                .any(|stamp| stamp.sequence >= requested)
+        {
+            return Ok(None);
+        }
         // Source generator recovery: first available chunk after the missing
         // cursor, or near the live head when no retained history remains.
         let next = snapshot
@@ -193,6 +245,7 @@ mod tests {
                 owner,
                 initial_behind_chunks: 4,
                 read_timeout: Duration::from_secs(2),
+                retained: None,
             },
             redis,
         )

@@ -195,6 +195,20 @@ impl InputStore {
         timestamp: f64,
         discontinuity: bool,
     ) -> Result<u64, Error> {
+        self.put_retained(channel, owner, data, timestamp, discontinuity, ())
+            .await
+            .map(|(value, ())| value)
+    }
+
+    pub async fn put_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        owner: &str,
+        data: &[u8],
+        timestamp: f64,
+        discontinuity: bool,
+        guard: G,
+    ) -> Result<(u64, G), Error> {
         let keys = gc::publication_keys(channel)?;
         let config = &self.inner.config;
         if !valid_owner(owner) {
@@ -212,7 +226,7 @@ impl InputStore {
         let count = config.max_chunks.to_string();
         let bytes = config.max_channel_bytes.to_string();
         let catalog_limit = config.max_catalog_entries.to_string();
-        let (result, ()): (i64, ()) = self
+        let (result, guard): (i64, G) = self
             .inner
             .transport
             .command(
@@ -228,20 +242,185 @@ impl InputStore {
                     if discontinuity { b"1" } else { b"0" },
                     channel.as_bytes(),
                     catalog_limit.as_bytes(),
-                    if config.preserve_source_era { b"1" } else { b"0" },
+                    if config.preserve_source_era {
+                        b"1"
+                    } else {
+                        b"0"
+                    },
                 ],
-                (),
+                guard,
             )
             .await?;
         if result > 0 {
-            Ok(result as u64)
+            Ok((result as u64, guard))
         } else if result == -1 {
             Err(Error::Capacity)
         } else {
             Err(Error::LostOwnership)
         }
     }
+    /// Source buffer lifecycle: sidecar boundaries are created by mark, not
+    /// recreated or kept alive merely by subsequent media publication.
+    pub async fn put_source(
+        &self,
+        channel: &str,
+        owner: &str,
+        data: &[u8],
+        timestamp: f64,
+    ) -> Result<(u64, bool), Error> {
+        self.put_source_retained(channel, owner, data, timestamp, ())
+            .await
+            .map(|(value, ())| value)
+    }
+
+    pub async fn put_source_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        owner: &str,
+        data: &[u8],
+        timestamp: f64,
+        guard: G,
+    ) -> Result<((u64, bool), G), Error> {
+        let keys = gc::publication_keys(channel)?;
+        let config = &self.inner.config;
+        if !valid_owner(owner) {
+            return Err(Error::InvalidKey);
+        }
+        if data.is_empty()
+            || !data.len().is_multiple_of(188)
+            || data.len() > config.max_chunk_bytes
+            || !timestamp.is_finite()
+        {
+            return Err(Error::InvalidChunk);
+        }
+        let time = timestamp.to_string();
+        let ttl = config.chunk_ttl.as_millis().to_string();
+        let count = config.max_chunks.to_string();
+        let bytes = config.max_channel_bytes.to_string();
+        let catalog_limit = config.max_catalog_entries.to_string();
+        let ((result, actual_discontinuity), guard): ((i64, bool), G) = self
+            .inner
+            .transport
+            .command(
+                PUT,
+                &keys,
+                &[
+                    owner.as_bytes(),
+                    data,
+                    time.as_bytes(),
+                    ttl.as_bytes(),
+                    count.as_bytes(),
+                    bytes.as_bytes(),
+                    b"source",
+                    channel.as_bytes(),
+                    catalog_limit.as_bytes(),
+                    if config.preserve_source_era {
+                        b"1"
+                    } else {
+                        b"0"
+                    },
+                ],
+                guard,
+            )
+            .await?;
+        if result > 0 {
+            Ok(((result as u64, actual_discontinuity), guard))
+        } else if result == -1 {
+            Err(Error::Capacity)
+        } else {
+            Err(Error::LostOwnership)
+        }
+    }
+    /// Read only the persistent sequence for a currently owned producer. This
+    /// does not grant access to media from an expired/foreign publication era.
+    pub async fn producer_index(&self, channel: &str, owner: &str) -> Result<u64, Error> {
+        self.producer_index_retained(channel, owner, ())
+            .await
+            .map(|(value, ())| value)
+    }
+
+    pub async fn producer_index_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        owner: &str,
+        guard: G,
+    ) -> Result<(u64, G), Error> {
+        let keys = keys(channel)?;
+        if !valid_owner(owner) {
+            return Err(Error::InvalidKey);
+        }
+        let (index, guard): (i64, G) = self
+            .inner
+            .transport
+            .command(
+                PRODUCER_INDEX,
+                &[keys[0].clone(), keys[2].clone()],
+                &[owner.as_bytes()],
+                guard,
+            )
+            .await?;
+        if index >= 0 {
+            Ok((index as u64, guard))
+        } else {
+            Err(Error::LostOwnership)
+        }
+    }
+
+    /// Publish the next discontinuity boundary before media exists, matching
+    /// StreamBuffer.mark_discontinuity while fencing the live producer owner.
+    pub async fn mark_next_discontinuity(&self, channel: &str, owner: &str) -> Result<u64, Error> {
+        self.mark_next_discontinuity_retained(channel, owner, ())
+            .await
+            .map(|(value, ())| value)
+    }
+
+    pub async fn mark_next_discontinuity_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        owner: &str,
+        guard: G,
+    ) -> Result<(u64, G), Error> {
+        let keys = keys(channel)?;
+        if !valid_owner(owner) {
+            return Err(Error::InvalidKey);
+        }
+        let ttl = self.inner.config.chunk_ttl.as_millis().to_string();
+        let limit = self.inner.config.max_chunks.to_string();
+        let (next, guard): (i64, G) = self
+            .inner
+            .transport
+            .command(
+                MARK_NEXT,
+                &[
+                    keys[0].clone(),
+                    keys[2].clone(),
+                    keys[4].clone(),
+                    keys[1].clone(),
+                ],
+                &[owner.as_bytes(), ttl.as_bytes(), limit.as_bytes()],
+                guard,
+            )
+            .await?;
+        if next > 0 {
+            Ok((next as u64, guard))
+        } else if next == -1 {
+            Err(Error::Capacity)
+        } else {
+            Err(Error::LostOwnership)
+        }
+    }
+
     pub async fn snapshot(&self, channel: &str) -> Result<InputSnapshot, Error> {
+        self.snapshot_retained(channel, ())
+            .await
+            .map(|(value, ())| value)
+    }
+
+    pub async fn snapshot_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        guard: G,
+    ) -> Result<(InputSnapshot, G), Error> {
         let keys = keys(channel)?;
         let maximum = self.inner.config.max_chunks.to_string();
         let size = self.inner.config.max_chunks * 512 + 1024;
@@ -252,10 +431,10 @@ impl InputStore {
             .try_acquire_many_owned(size as u32)
             .map_err(|_| Error::Capacity)?;
         type Wire = (String, u64, Vec<(u64, f64, bool)>);
-        let ((owner, index, chunks), mut budget): (Wire, OwnedSemaphorePermit) = self
+        let ((owner, index, chunks), (mut budget, guard)): (Wire, (OwnedSemaphorePermit, G)) = self
             .inner
             .transport
-            .command(SNAPSHOT, &keys, &[maximum.as_bytes()], budget)
+            .command(SNAPSHOT, &keys, &[maximum.as_bytes()], (budget, guard))
             .await?;
         if chunks.iter().any(|(_, stamp, _)| !stamp.is_finite()) {
             return Err(Error::Corrupt);
@@ -272,17 +451,31 @@ impl InputStore {
             chunks.capacity() * std::mem::size_of::<InputStamp>() + owner.capacity() + 512;
         let retained = budget.split(retained_size).ok_or(Error::Corrupt)?;
         drop(budget);
-        Ok(InputSnapshot {
-            owner: (!owner.is_empty()).then_some(owner),
-            index,
-            chunks: Arc::new(SnapshotEntries {
-                entries: chunks,
-                _budget: retained,
-            }),
-        })
+        Ok((
+            InputSnapshot {
+                owner: (!owner.is_empty()).then_some(owner),
+                index,
+                chunks: Arc::new(SnapshotEntries {
+                    entries: chunks,
+                    _budget: retained,
+                }),
+            },
+            guard,
+        ))
     }
 
     pub async fn get(&self, channel: &str, sequence: u64) -> Result<Option<InputBytes>, Error> {
+        self.get_retained(channel, sequence, ())
+            .await
+            .map(|(value, ())| value)
+    }
+
+    pub async fn get_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        sequence: u64,
+        guard: G,
+    ) -> Result<(Option<InputBytes>, G), Error> {
         if sequence > 9_007_199_254_740_000 {
             return Err(Error::InvalidKey);
         }
@@ -296,33 +489,67 @@ impl InputStore {
             .try_acquire_many_owned(self.inner.config.max_chunk_bytes as u32)
             .map_err(|_| Error::Capacity)?;
         type Wire = Option<(String, f64, bool, Vec<u8>)>;
-        let (data, mut budget): (Wire, OwnedSemaphorePermit) = self
+        let (data, (mut budget, guard)): (Wire, (OwnedSemaphorePermit, G)) = self
             .inner
             .transport
             .command(
                 GET,
                 &keys,
                 &[sequence_text.as_bytes(), maximum.as_bytes()],
-                budget,
+                (budget, guard),
             )
             .await?;
         let Some((owner, received_at, discontinuity, data)) = data else {
-            return Ok(None);
+            return Ok((None, guard));
         };
         if !received_at.is_finite() || !data.len().is_multiple_of(188) {
             return Err(Error::Corrupt);
         }
         let retained = budget.split(data.len()).ok_or(Error::Corrupt)?;
         drop(budget);
-        Ok(Some(InputBytes {
-            sequence,
-            owner,
-            received_at,
-            discontinuity,
-            data,
-            _budget: retained,
-        }))
+        Ok((
+            Some(InputBytes {
+                sequence,
+                owner,
+                received_at,
+                discontinuity,
+                data,
+                _budget: retained,
+            }),
+            guard,
+        ))
     }
+    /// Payload-free current Source sidecar status for an already cached frame.
+    /// The caller's frame/admission scope survives a detached physical reply.
+    pub async fn discontinuity_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        owner: &str,
+        sequence: u64,
+        guard: G,
+    ) -> Result<(bool, G), Error> {
+        if !valid_owner(owner) || sequence == 0 || sequence > 9_007_199_254_740_000 {
+            return Err(Error::InvalidKey);
+        }
+        let keys = keys(channel)?;
+        let seq = sequence.to_string();
+        let (flag, guard): (i64, G) = self
+            .inner
+            .transport
+            .command(
+                DISCONTINUITY,
+                &[keys[0].clone(), keys[1].clone(), keys[4].clone()],
+                &[owner.as_bytes(), seq.as_bytes()],
+                guard,
+            )
+            .await?;
+        if flag < 0 {
+            Err(Error::LostOwnership)
+        } else {
+            Ok((flag == 1, guard))
+        }
+    }
+
     /// Reclaim only a known Rust era after coordinator ownership is absent.
     /// A newly acquired owner makes this operation a no-op, even before its
     /// first publication. This never deletes coordinator/provider keys.
@@ -379,7 +606,7 @@ local owner=redis.call('GET',KEYS[1]);if not owner then return {'',0,{}} end
 if redis.call('GET',KEYS[2])~=owner then return {owner,0,{}} end
 if redis.call('STRLEN',KEYS[3])>32 then return redis.error_reply('CORRUPT index') end
 local index=tonumber(redis.call('GET',KEYS[3]) or '0');if not index or index<0 or index>9007199254740000 or index~=math.floor(index) then return redis.error_reply('CORRUPT index') end
-if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[1]) or redis.call('ZCARD',KEYS[5])>tonumber(ARGV[1]) then return redis.error_reply('CORRUPT cardinality') end
+if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[1]) or redis.call('ZCARD',KEYS[5])>tonumber(ARGV[1])+1 then return redis.error_reply('CORRUPT cardinality') end
 local raw=redis.call('ZRANGE',KEYS[4],0,-1,'WITHSCORES');local entries={}
 for i=1,#raw,2 do
  local seq=tonumber(raw[i]);if not seq or seq<=0 or seq>index or seq~=math.floor(seq) then return redis.error_reply('CORRUPT sequence') end
@@ -398,13 +625,16 @@ local disc=0;if redis.call('ZSCORE',KEYS[5],ARGV[1]) then disc=1 end
 return {owner,timestamp,disc,redis.call('GET',chunk)}
 "#;
 const PUT: &str = r#"
-if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end
+local source=ARGV[7]=='source'
+if source and (redis.call('STRLEN',KEYS[1])>256 or redis.call('STRLEN',KEYS[2])>256) then return redis.error_reply('CORRUPT owner') end
+local function result(n,d) if source then return {n,d or 0} else return n end end
+if redis.call('GET',KEYS[1])~=ARGV[1] then return result(0) end
 local ct=redis.call('TYPE',KEYS[7]).ok;local dt=redis.call('TYPE',KEYS[8]).ok;local mt=redis.call('TYPE',KEYS[9]).ok
 if (ct~='none' and ct~='hash') or (dt~='none' and dt~='zset') or (mt~='none' and mt~='string') then return redis.error_reply('CORRUPT GC catalog') end
-if redis.call('HEXISTS',KEYS[7],ARGV[8])==0 and redis.call('HLEN',KEYS[7])>=tonumber(ARGV[9]) then return -1 end
+if redis.call('HEXISTS',KEYS[7],ARGV[8])==0 and redis.call('HLEN',KEYS[7])>=tonumber(ARGV[9]) then return result(-1) end
 if redis.call('STRLEN',KEYS[3])>32 then return redis.error_reply('CORRUPT index') end
 local index=tonumber(redis.call('GET',KEYS[3]) or '0');if not index or index<0 or index>=9007199254740000 or index~=math.floor(index) then return redis.error_reply('CORRUPT index') end
-if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[5]) or redis.call('ZCARD',KEYS[5])>tonumber(ARGV[5]) then return redis.error_reply('CORRUPT cardinality') end
+if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[5]) or redis.call('ZCARD',KEYS[5])>tonumber(ARGV[5])+1 then return redis.error_reply('CORRUPT cardinality') end
 local prior=redis.call('GET',KEYS[2]);local same=prior==ARGV[1]
 -- Only the Source policy can bridge expiry, and only with the unchanged live
 -- coordinator owner plus matching persistent publication/catalog receipts.
@@ -438,9 +668,9 @@ if not same then redis.call('DEL',KEYS[4],KEYS[5]) end
 redis.call('SET',key,ARGV[2],'PX',ARGV[4]);redis.call('SET',KEYS[3],name)
 redis.call('SET',KEYS[2],ARGV[1],'PX',ARGV[4]);redis.call('ZADD',KEYS[4],ARGV[3],name);redis.call('PEXPIRE',KEYS[4],ARGV[4])
 if (not same and (prior or index>0 or #all>0)) or ARGV[7]=='1' then redis.call('ZADD',KEYS[5],name,name) end
-redis.call('PEXPIRE',KEYS[5],ARGV[4]);
+if not source or redis.call('PTTL',KEYS[5])==-1 then redis.call('PEXPIRE',KEYS[5],ARGV[4]) end;
 local entry=cjson.encode({owner=ARGV[1],index=name});local clock=redis.call('TIME');local due=tonumber(clock[1])*1000+math.floor(tonumber(clock[2])/1000)+tonumber(ARGV[4])+2000
-redis.call('HSET',KEYS[7],ARGV[8],entry);redis.call('ZADD',KEYS[8],due,ARGV[8]);redis.call('SET',KEYS[9],entry);return next
+redis.call('HSET',KEYS[7],ARGV[8],entry);redis.call('ZADD',KEYS[8],due,ARGV[8]);redis.call('SET',KEYS[9],entry);local disc=0;if redis.call('ZSCORE',KEYS[5],name) then disc=1 end;return result(next,disc)
 "#;
 const CLEANUP: &str = r#"
 if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('GET',KEYS[2])~=ARGV[1] then return 0 end
@@ -460,4 +690,33 @@ if (ct~='none' and ct~='hash') or (dt~='none' and dt~='zset') or (mt~='none' and
 local members=redis.call('ZRANGE',KEYS[4],0,-1);for _,member in ipairs(members) do redis.call('DEL',KEYS[6]..member) end
 redis.call('DEL',KEYS[2],KEYS[3],KEYS[4],KEYS[5]);
 local entry=redis.call('GET',KEYS[9]);if entry and entry==redis.call('HGET',KEYS[7],ARGV[3]) then redis.call('DEL',KEYS[9]);redis.call('HDEL',KEYS[7],ARGV[3]);redis.call('ZREM',KEYS[8],ARGV[3]) end;return 1
+"#;
+
+const MARK_NEXT: &str = r#"
+if redis.call('STRLEN',KEYS[1])>256 or redis.call('STRLEN',KEYS[4])>256 then return redis.error_reply('CORRUPT owner') end
+if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end
+if redis.call('STRLEN',KEYS[2])>32 then return redis.error_reply('CORRUPT index') end
+local index=tonumber(redis.call('GET',KEYS[2]) or '0')
+if not index or index<0 or index>=9007199254740000 or index~=math.floor(index) then return redis.error_reply('CORRUPT index') end
+if redis.call('ZCARD',KEYS[3])>tonumber(ARGV[3])+1 then return redis.error_reply('CORRUPT discontinuities') end
+local next=index+1;local name=string.format('%.0f',next)
+redis.call('ZREMRANGEBYSCORE',KEYS[3],'-inf',next-10000)
+if not redis.call('ZSCORE',KEYS[3],name) and redis.call('ZCARD',KEYS[3])>=tonumber(ARGV[3])+1 then return -1 end
+redis.call('ZADD',KEYS[3],next,name);redis.call('PEXPIRE',KEYS[3],ARGV[2]);
+if index==0 and not redis.call('GET',KEYS[4]) then redis.call('SET',KEYS[4],ARGV[1],'PX',ARGV[2]) end;return next
+"#;
+
+const PRODUCER_INDEX: &str = r#"
+if redis.call('STRLEN',KEYS[1])>256 then return redis.error_reply('CORRUPT owner') end
+if redis.call('GET',KEYS[1])~=ARGV[1] then return -1 end
+if redis.call('STRLEN',KEYS[2])>32 then return redis.error_reply('CORRUPT index') end
+local index=tonumber(redis.call('GET',KEYS[2]) or '0')
+if not index or index<0 or index>=9007199254740000 or index~=math.floor(index) then return redis.error_reply('CORRUPT index') end
+return index
+"#;
+
+const DISCONTINUITY: &str = r#"
+if redis.call('STRLEN',KEYS[1])>256 or redis.call('STRLEN',KEYS[2])>256 then return redis.error_reply('CORRUPT owner') end
+if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('GET',KEYS[2])~=ARGV[1] then return -1 end
+if redis.call('ZSCORE',KEYS[3],ARGV[2]) then return 1 end;return 0
 "#;

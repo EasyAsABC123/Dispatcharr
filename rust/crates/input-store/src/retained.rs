@@ -38,7 +38,7 @@ end
 if redis.call('STRLEN',KEYS[1])>256 or redis.call('STRLEN',KEYS[2])>256 or redis.call('STRLEN',KEYS[3])>32 then return redis.error_reply('CORRUPT retained metadata') end
 local owner=redis.call('GET',KEYS[1]) or '';local published=redis.call('GET',KEYS[2]) or ''
 local index=tonumber(redis.call('GET',KEYS[3]) or '0');if not index or index<0 or index>9007199254740000 or index~=math.floor(index) then return redis.error_reply('CORRUPT retained index') end
-local tracked=redis.call('ZCARD',KEYS[4]);if tracked>tonumber(ARGV[1]) or redis.call('ZCARD',KEYS[5])>tonumber(ARGV[1]) then return redis.error_reply('CORRUPT retained cardinality') end
+local tracked=redis.call('ZCARD',KEYS[4]);if tracked>tonumber(ARGV[1]) or redis.call('ZCARD',KEYS[5])>tonumber(ARGV[1])+1 then return redis.error_reply('CORRUPT retained cardinality') end
 local members=redis.call('ZRANGE',KEYS[4],0,-1);local logical=0;local retained=0;local allocated=0
 for _,member in ipairs(members) do
  local seq=tonumber(member);if not seq or seq<=0 or seq>index or seq~=math.floor(seq) then return redis.error_reply('CORRUPT retained sequence') end

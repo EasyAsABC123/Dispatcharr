@@ -12,6 +12,8 @@ use dispatcharr_stream_runtime::{Channel, Viewer};
 mod health;
 #[path = "history.rs"]
 mod history;
+#[path = "input_writer.rs"]
+mod input_writer;
 use futures_util::StreamExt;
 use serde::Serialize;
 use std::{
@@ -163,7 +165,7 @@ struct Session {
     reported_bytes: AtomicU64,
     last_bytes_report_bits: AtomicU64,
     reconnects: AtomicU64,
-    buffer_index: AtomicU64,
+    buffer_index: Arc<AtomicU64>,
     last_data_ms: AtomicU64,
     started_at: f64,
     current: Mutex<PlaybackCandidate>,
@@ -176,9 +178,9 @@ struct Session {
     upstream_admitted: AtomicBool,
     ready_requested: AtomicBool,
     metadata_wake: Notify,
-    publisher: Mutex<Option<(InputStore, String)>>,
+    publisher: Mutex<Option<input_writer::InputWriter>>,
     input_owner: Mutex<Option<String>>,
-    _permit: OwnedSemaphorePermit,
+    _permit: Arc<OwnedSemaphorePermit>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -417,7 +419,7 @@ impl StreamEngine {
                     reported_bytes: AtomicU64::new(0),
                     last_bytes_report_bits: AtomicU64::new(epoch_seconds().to_bits()),
                     reconnects: AtomicU64::new(0),
-                    buffer_index: AtomicU64::new(0),
+                    buffer_index: Arc::new(AtomicU64::new(0)),
                     last_data_ms: AtomicU64::new(0),
                     started_at: epoch_seconds(),
                     current,
@@ -434,7 +436,7 @@ impl StreamEngine {
                     metadata_wake: Notify::new(),
                     publisher: Mutex::new(None),
                     input_owner: Mutex::new(None),
-                    _permit: permit,
+                    _permit: Arc::new(permit),
                 });
                 sessions.insert(key.clone(), session.clone());
                 // Count before releasing the registry lock so shutdown cannot
@@ -535,6 +537,7 @@ impl StreamEngine {
                     .unwrap()
                     .clone()
                     .ok_or_else(|| PlaybackError::new(503, "Shared input owner unavailable"))?,
+                retained: Some(Arc::new((state._guard.clone(), state.client.clone()))),
                 initial_behind_chunks: self.inner.config.initial_buffer_chunks,
                 read_timeout: self.inner.config.read_timeout,
             }),
@@ -1142,7 +1145,22 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
         }
     }
     if let (Some(inputs), Some(lease)) = (&inner.inputs, &lease) {
-        *session.publisher.lock().unwrap() = Some((inputs.clone(), lease.token().to_owned()));
+        match input_writer::InputWriter::new(
+            inputs.clone(),
+            session.source.channel_id.clone(),
+            lease.token().to_owned(),
+            session.channel.clone(),
+            session.buffer_index.clone(),
+            inner.config.source_initialization,
+            Some(session._permit.clone()),
+        )
+        .await
+        {
+            Ok(writer) => *session.publisher.lock().unwrap() = Some(writer),
+            Err(_) => {
+                session.stop.send_replace(true);
+            }
+        }
         *session.input_owner.lock().unwrap() = Some(lease.token().to_owned());
     }
     let metadata_task = inner.clients.as_ref().map(|clients| {
@@ -1323,6 +1341,13 @@ async fn run_upstream(weak: Weak<Inner>, key: String, session: Arc<Session>) {
         // Waiting on controls performs no retry loop or payload allocation.
         tokio::select! {_=stop.changed()=>{},_=lost.changed()=>{}}
     }
+    if inner.config.source_initialization {
+        input.finish_position();
+    }
+    let publisher = session.publisher.lock().unwrap().clone();
+    if let Some(writer) = publisher {
+        let _ = writer.finish().await;
+    }
     session.channel.stop();
     session.stop.send_replace(true);
     if let Some(clients) = &inner.clients {
@@ -1405,36 +1430,17 @@ impl Session {
         discontinuity: bool,
     ) -> Result<u64, dispatcharr_stream_runtime::Error> {
         let publisher = self.publisher.lock().unwrap().clone();
-        let shared = if let Some((store, owner)) = &publisher {
-            match store
-                .put(
-                    &self.source.channel_id,
-                    owner,
-                    &data,
-                    epoch_seconds(),
-                    discontinuity,
-                )
-                .await
-            {
-                Ok(sequence) => Some(sequence),
-                Err(_) => {
+        let index = if let Some(writer) = publisher {
+            match writer.publish(data, discontinuity, epoch_seconds()).await {
+                Ok(sequence) => sequence,
+                Err(error) => {
                     self.stop.send_replace(true);
-                    return Err(dispatcharr_stream_runtime::Error::Stopped);
+                    return Err(error);
                 }
             }
         } else {
-            None
+            self.channel.publish_marked(data, discontinuity)?
         };
-        let local = match shared {
-            Some(sequence) => self.channel.publish_numbered(
-                data,
-                discontinuity,
-                Instant::now().into_std(),
-                sequence,
-            )?,
-            None => self.channel.publish_marked(data, discontinuity)?,
-        };
-        let index = shared.unwrap_or(local);
         self.buffer_index.store(index, Ordering::Relaxed);
         Ok(index)
     }
@@ -1623,6 +1629,28 @@ impl InputAccumulator {
             mark_chunk: false,
         }
     }
+    fn flush_for_switch(&mut self) -> Option<(Arc<[u8]>, bool)> {
+        if self.chunk.is_empty() {
+            return None;
+        }
+        Some((std::mem::take(&mut self.chunk).into(), self.mark_chunk))
+    }
+    fn reset_position(&mut self) {
+        self.chunk.clear();
+        self.assembler.reset();
+    }
+    fn finish_position(&mut self) {
+        // Source.stop clears a partial tail only when complete local packets
+        // were pending; an isolated partial packet remains until object drop.
+        if !self.chunk.is_empty() {
+            self.reset_position();
+        }
+    }
+    fn arm_switch(&mut self) {
+        self.reset_position();
+        self.marker.arm();
+        self.mark_chunk = true;
+    }
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -1639,23 +1667,21 @@ async fn drive_candidate(
 ) {
     if !inner.config.source_initialization {
         *input = InputAccumulator::new(inner.config.chunk_bytes);
-    } else if discontinuity && !input.chunk.is_empty() {
-        let data = std::mem::replace(
-            &mut input.chunk,
-            Vec::with_capacity(inner.config.chunk_bytes),
-        );
-        if session
-            .publish_data(data.into(), input.mark_chunk)
-            .await
-            .is_err()
-        {
-            return;
+    } else if discontinuity {
+        if let Some((data, mark)) = input.flush_for_switch() {
+            if session.publish_data(data, mark).await.is_err() {
+                return;
+            }
         }
     }
     if discontinuity {
-        input.assembler.reset();
-        input.marker.arm();
-        input.mark_chunk = true;
+        let writer = session.publisher.lock().unwrap().clone();
+        if let Some(writer) = writer {
+            if writer.mark_discontinuity().await.is_err() {
+                return;
+            }
+        }
+        input.arm_switch();
     }
     let Ok(attempt) =
         crate::upstream::Attempt::new(inner.config.connect_timeout, inner.config.read_timeout)
@@ -1820,3 +1846,7 @@ fn assemble_input_window(
 #[cfg(test)]
 #[path = "core_buffer_peer.rs"]
 mod core_buffer_peer;
+
+#[cfg(test)]
+#[path = "core_trace_peer.rs"]
+mod core_trace_peer;

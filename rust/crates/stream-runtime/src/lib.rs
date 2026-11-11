@@ -16,6 +16,7 @@ pub enum Error {
 
 struct State {
     buffer: Option<MediaBuffer>,
+    finished: bool,
 }
 
 struct Inner {
@@ -41,6 +42,7 @@ impl Channel {
         let inner = Arc::new(Inner {
             state: Mutex::new(State {
                 buffer: Some(buffer),
+                finished: false,
             }),
             changed: Notify::new(),
             stopped: Notify::new(),
@@ -78,6 +80,23 @@ impl Channel {
         Ok(Self { inner })
     }
 
+    /// Initialize only a fresh cache from the owned persistent input index.
+    pub fn initialize_position(&self, last_consumed: u64) -> Result<(), Error> {
+        let mut state = self.inner.state.lock().unwrap();
+        if state.finished {
+            return Err(Error::Stopped);
+        }
+        state
+            .buffer
+            .as_mut()
+            .ok_or(Error::Stopped)?
+            .initialize_position(last_consumed)
+            .map_err(Error::Buffer)?;
+        drop(state);
+        self.inner.changed.notify_waiters();
+        Ok(())
+    }
+
     pub fn publish(&self, data: Arc<[u8]>) -> Result<u64, Error> {
         self.publish_marked(data, false)
     }
@@ -96,6 +115,9 @@ impl Channel {
     ) -> Result<u64, Error> {
         let sequence = {
             let mut state = self.inner.state.lock().unwrap();
+            if state.finished {
+                return Err(Error::Stopped);
+            }
             state
                 .buffer
                 .as_mut()
@@ -115,16 +137,18 @@ impl Channel {
         received_at: std::time::Instant,
         sequence: u64,
     ) -> Result<u64, Error> {
-        let sequence = self
-            .inner
-            .state
-            .lock()
-            .unwrap()
-            .buffer
-            .as_mut()
-            .ok_or(Error::Stopped)?
-            .push_numbered(data, received_at, discontinuity, sequence)
-            .map_err(Error::Buffer)?;
+        let sequence = {
+            let mut state = self.inner.state.lock().unwrap();
+            if state.finished {
+                return Err(Error::Stopped);
+            }
+            state
+                .buffer
+                .as_mut()
+                .ok_or(Error::Stopped)?
+                .push_numbered(data, received_at, discontinuity, sequence)
+                .map_err(Error::Buffer)?
+        };
         self.inner.changed.notify_waiters();
         Ok(sequence)
     }
@@ -152,6 +176,14 @@ impl Channel {
             cancelled: Arc::new(AtomicBool::new(false)),
             _permit: Arc::new(permit),
         })
+    }
+
+    /// Close producer publication while retaining already published media and
+    /// viewer admission until ordinary expiry or explicit manager stop().
+    /// Pending readers return end-of-input after retained chunks are drained.
+    pub fn finish(&self) {
+        self.inner.state.lock().unwrap().finished = true;
+        self.inner.changed.notify_waiters();
     }
 
     /// Idempotent. Releases channel retention and wakes every pending read.
@@ -207,6 +239,11 @@ pub struct OwnedChunk {
 
 /// Carries the same single-frame and viewer admission as an owned cache chunk
 /// when a transport delivers history loaded from its authoritative backing store.
+#[derive(Clone)]
+pub struct ViewerAdmission {
+    _permit: Arc<OwnedSemaphorePermit>,
+}
+
 pub struct FrameLease {
     _delivery_permit: OwnedSemaphorePermit,
     _viewer_permit: Arc<OwnedSemaphorePermit>,
@@ -249,6 +286,16 @@ impl CancelHandle {
 
 impl Viewer {
     /// Next canonical sequence, including a cache miss before it is recovered.
+    /// Retain this admitted viewer across a supervised physical metadata read.
+    pub fn retain_admission(&self) -> ViewerAdmission {
+        ViewerAdmission {
+            _permit: self._permit.clone(),
+        }
+    }
+    pub fn producer_finished(&self) -> bool {
+        let state = self.inner.state.lock().unwrap();
+        state.finished || state.buffer.is_none()
+    }
     pub fn next_sequence(&self) -> u64 {
         self.sequence
     }
@@ -389,7 +436,12 @@ impl Viewer {
                     self.sequence = next_sequence;
                     return Advance::Lagged { next_sequence };
                 }
-                Read::Pending => changed.await,
+                Read::Pending => {
+                    if self.inner.state.lock().unwrap().finished {
+                        return Advance::Stopped;
+                    }
+                    changed.await
+                }
             }
         }
     }
@@ -403,6 +455,35 @@ mod tests {
 
     fn channel(bytes: usize, viewers: usize) -> Channel {
         Channel::new(bytes, Duration::from_secs(5), viewers).unwrap()
+    }
+
+    #[tokio::test]
+    async fn producer_finish_drains_retained_reads_without_manager_stop() {
+        let cache = Channel::new(4, Duration::from_millis(60), 2).unwrap();
+        let mut viewer = cache.subscribe(Duration::ZERO).unwrap();
+        cache.publish(Arc::from(&b"data"[..])).unwrap();
+        cache.finish();
+        assert_eq!(cache.publish(Arc::from(&b"late"[..])), Err(Error::Stopped));
+        let held = match viewer.next_owned().await {
+            OwnedDelivery::Chunk(data) => data,
+            _ => panic!("finish dropped retained bytes"),
+        };
+        assert_eq!(held.as_ref(), b"data");
+        assert!(time::timeout(Duration::from_millis(5), viewer.next_owned())
+            .await
+            .is_err());
+        drop(held);
+        assert!(matches!(viewer.next_owned().await, OwnedDelivery::Stopped));
+        let mut later = cache.subscribe(Duration::from_secs(1)).unwrap();
+        let later_frame = match later.next_owned().await {
+            OwnedDelivery::Chunk(data) => data,
+            _ => panic!("new reader lost retained history"),
+        };
+        drop(later_frame);
+        time::sleep(Duration::from_millis(80)).await;
+        assert_eq!(cache.retained_bytes(), 0);
+        cache.stop();
+        assert!(matches!(later.next_owned().await, OwnedDelivery::Stopped));
     }
 
     #[tokio::test]

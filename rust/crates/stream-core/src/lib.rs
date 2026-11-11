@@ -60,6 +60,22 @@ impl MediaBuffer {
         })
     }
 
+    /// Seed a fresh cache with the shared producer's last published sequence.
+    /// No media is manufactured; older cursors correctly take History fallback.
+    pub fn initialize_position(&mut self, last_consumed: u64) -> Result<(), BufferError> {
+        if !self.chunks.is_empty() || self.last_write.is_some() {
+            return Err(BufferError::InvalidSequence);
+        }
+        let next = last_consumed
+            .checked_add(1)
+            .ok_or(BufferError::SequenceExhausted)?;
+        if next < self.next_sequence {
+            return Err(BufferError::InvalidSequence);
+        }
+        self.next_sequence = next;
+        Ok(())
+    }
+
     pub fn push(&mut self, data: Arc<[u8]>, now: Instant) -> Result<u64, BufferError> {
         self.push_marked(data, now, false)
     }
