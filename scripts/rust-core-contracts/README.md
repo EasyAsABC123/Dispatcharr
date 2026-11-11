@@ -14,3 +14,5 @@ python3 scripts/rust-core-contracts/run_source.py --output artifacts/rust/core-s
 ```
 
 M1 remains open. Next: native assembly/storage/runtime comparison of the same traces, held slow readers and final-owner accounting; then predeclare an equivalent paired shared-buffer resource matrix using common retention and successful full-byte work. Existing TS-stamping comparisons and Rust-only Arc fanout are separate evidence.
+
+The later [mark-boundary component](verified-core-mark-components-1.json) adds a13th actual Original observation. After one incoming batch fills a stored chunk, a new PID in the pending remainder is already stamped in Original. The old native accumulator left it unmarked. Source mode now disarms stamping after the complete incoming frame, retaining the existing bounded one-chunk publication window. Exact captured bytes pass both the production assembly helper and a real local HTTP source-switch/flush test; strict workspace Clippy and369 default tests pass on630 exact inputs. The original12-record report remains historical evidence. No full native Redis/core comparison or performance gain is claimed.

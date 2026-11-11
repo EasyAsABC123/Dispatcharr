@@ -1714,25 +1714,17 @@ async fn drive_candidate(
                 // publish chunk. Await Redis before processing the next window;
                 // never accumulate an unbounded queue from a large HTTP frame.
                 for input in frame.chunks(inner.config.chunk_bytes){
-                    let mut ready=None;
-                    assembler.feed(input, |packet| {
-                        let mut packet = *packet;
-                        marker.stamp(&mut packet);
-                        chunk.extend_from_slice(&packet);
-                        if chunk.len() == inner.config.chunk_bytes {
-                            let data: Arc<[u8]> = std::mem::replace(chunk,
-                                Vec::with_capacity(inner.config.chunk_bytes)).into();
-                            debug_assert!(ready.is_none());
-                            ready=Some((data,*mark_chunk));
-                            *mark_chunk=false;
-                            marker.disarm();
-                        }
-                    });
+                    let ready = assemble_input_window(assembler, marker, mark_chunk, chunk, input, inner.config.chunk_bytes);
                     if let Some((data,discontinuity))=ready{
+                        if !inner.config.source_initialization { marker.disarm(); }
                         if session.publish_data(data,discontinuity).await.is_err(){failed=true;break;}
                         published=true;
                     }
                 }
+                // Original stamps every complete packet in one incoming batch
+                // before the first Redis publication disarms the next batch.
+                // Pending packets in this same frame must retain those flags.
+                if inner.config.source_initialization && published { marker.disarm(); }
                 if failed { break; }
             }
             _ = flush.tick(), if inner.config.flush_partial_chunks => {
@@ -1800,3 +1792,31 @@ fn remove_session(inner: &Inner, key: &str, session: &Arc<Session>) {
         sessions.remove(key);
     }
 }
+
+// The production bounded input window; also exercised by the captured Source peer.
+fn assemble_input_window(
+    assembler: &mut PacketAssembler,
+    marker: &mut DiscontinuityMarker,
+    mark_chunk: &mut bool,
+    chunk: &mut Vec<u8>,
+    input: &[u8],
+    chunk_bytes: usize,
+) -> Option<(Arc<[u8]>, bool)> {
+    let mut ready = None;
+    assembler.feed(input, |packet| {
+        let mut packet = *packet;
+        marker.stamp(&mut packet);
+        chunk.extend_from_slice(&packet);
+        if chunk.len() == chunk_bytes {
+            let data: Arc<[u8]> = std::mem::replace(chunk, Vec::with_capacity(chunk_bytes)).into();
+            debug_assert!(ready.is_none());
+            ready = Some((data, *mark_chunk));
+            *mark_chunk = false;
+        }
+    });
+    ready
+}
+
+#[cfg(test)]
+#[path = "core_buffer_peer.rs"]
+mod core_buffer_peer;

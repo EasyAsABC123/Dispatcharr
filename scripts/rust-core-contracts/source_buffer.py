@@ -95,6 +95,9 @@ try:
     state('mark_flushes_complete_drops_partial')
     assert buffer.add_chunk(packet(5) + packet(6) + packet(7, 258))
     state('post_mark_stamping_first_public_chunk')
+    buffer.mark_discontinuity()
+    state('second_mark_flushes_previously_stamped_pending_PID')
+    assert bytes.fromhex(records[-1]['chunks'][-1]['hex'])[5] == 128
     buffer.reset_buffer_position()
     state('reset_discards_local_leftovers')
     time.sleep(2.2)

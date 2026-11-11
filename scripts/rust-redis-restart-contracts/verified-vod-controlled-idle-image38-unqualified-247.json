@@ -1,0 +1,70 @@
+{
+  "passed": false,
+  "original_authors": "Original Dispatcharr authors retain application and algorithm credit.",
+  "scope": "Actual Source/image38 fresh per-backend public-idle qualification attempt; no idle defect inference because native first reopen503 prevented corresponding window.",
+  "proof": {
+    "path": "artifacts/rust/m4-vod-controlled-idle-image38-247/vod-contracts.json",
+    "sha256": "9b9f05d4aed50020b5d9908e0e3fcc64aa67b13ae005af135db7dc2140b0854f"
+  },
+  "source": {
+    "path": "artifacts/rust/m4-vod-controlled-idle-image38-247/vod-active-restart-source.json",
+    "sha256": "0f6d4dc59e2d66cad491d62986c15dc8708436a1ed030d7e5cfee5eaa94de362"
+  },
+  "native": {
+    "path": "artifacts/rust/m4-vod-controlled-idle-image38-247/vod-active-restart-native.json",
+    "sha256": "67fd8404433dc5eae08615d5071e7e562eb9723fc01f68630a54285e0bc847c8"
+  },
+  "tools": {
+    "path": "artifacts/rust/m4-vod-controlled-idle-image38-247/tool-source-sha256.json",
+    "sha256": "c7625193a07f27ddf0152b9dc44dae07180406707dff8b7ee5aa5e05ce9fee03"
+  },
+  "candidate": {
+    "image_id": "sha256:3f1395ae14ccc13404a546b5369f221110c1a610ad2712aac5ab9993af5807c8",
+    "source_tree_sha256": "3649bbf80270a0fcb8121a8be113647bb23135363159226152455cf083eaf535",
+    "build_manifest_sha256": "49b8b3f52cf6fdb6b64a8c01ca13e7ec2c25391727d78fe8da41990acbc5329a",
+    "container_id": "c7070cf8387cb873657bd2e785a3e6d242a13426642cf86f1331ed0df13a0229",
+    "started_at": "2026-11-11T01:35:11.345255139Z"
+  },
+  "cleanup_passed": true,
+  "source_idle": {
+    "qualified": true,
+    "attempted": true,
+    "read_to_request_ms": 0.0040000013541430235,
+    "before": {
+      "active_streams": "0",
+      "created_at": "1794360875.6681252",
+      "request_count": "2",
+      "user_id": "unknown",
+      "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+      "content_obj_type": "movie"
+    },
+    "wire": {
+      "status": 200,
+      "streaming": true,
+      "first_bytes": 8192,
+      "first_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+    },
+    "after": {
+      "active_streams": "1",
+      "created_at": "1794360875.6681252",
+      "request_count": "3",
+      "user_id": "unknown",
+      "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+      "content_obj_type": "movie"
+    },
+    "provider_after": "1"
+  },
+  "native_idle": {
+    "qualified": false,
+    "attempted": false
+  },
+  "first_reopen_status": {
+    "source": 200,
+    "native": 503
+  },
+  "additional_entry_status": {
+    "source": 200,
+    "native": 200
+  },
+  "interpretation": "Source active0 read followed immediately by sameSID200 preserves created_at and increments request2\u21923/provider1. Native did not reach the corresponding state: immediate reopen503, later entry200, hash already retired before old-close qualification. No unqualified native idle request was made.236 immediate200 remains true for that run, but224 optional read fix does not establish every rapid-reopen error path. Typed stage diagnosis remains necessary; no blind mutation retry."
+}

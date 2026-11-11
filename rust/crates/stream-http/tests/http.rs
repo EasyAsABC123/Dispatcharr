@@ -1738,3 +1738,90 @@ async fn memory_diagnostics_are_versioned_admin_only_and_do_not_resolve_playback
     assert_eq!(resolver.resolutions.load(Ordering::SeqCst), 0);
     assert!(engine.status().is_empty());
 }
+
+#[tokio::test]
+async fn native_source_switch_retains_stamp_in_pending_packet_from_same_http_batch() {
+    let (first_tx, first_rx) = tokio::sync::mpsc::channel::<Bytes>(2);
+    let (second_tx, second_rx) = tokio::sync::mpsc::channel::<Bytes>(2);
+    let first_rx = Arc::new(std::sync::Mutex::new(Some(first_rx)));
+    let second_rx = Arc::new(std::sync::Mutex::new(Some(second_rx)));
+    let app=Router::new().route("/first",get(move || {
+        let mut rx=first_rx.lock().unwrap().take().unwrap();
+        async move {Body::from_stream(async_stream::stream! {while let Some(data)=rx.recv().await {yield Ok::<_,Infallible>(data);}})}
+    })).route("/second",get(move || {
+        let mut rx=second_rx.lock().unwrap().take().unwrap();
+        async move {Body::from_stream(async_stream::stream! {while let Some(data)=rx.recv().await {yield Ok::<_,Infallible>(data);}})}
+    })).route("/third",get(||async {Body::from_stream(futures_util::stream::pending::<Result<Bytes,Infallible>>())}));
+    let (base, server) = serve(app).await;
+    let mut limits = config();
+    limits.source_initialization = true;
+    limits.initial_buffer_chunks = 1;
+    limits.flush_partial_chunks = false;
+    limits.read_timeout = Duration::from_secs(5);
+    let engine = StreamEngine::new(limits).unwrap();
+    let mut playback = source(format!("{base}/first"), "source-stamp-pending");
+    playback.startup_behind = Duration::from_secs(1);
+    for path in ["second", "third"] {
+        playback.alternates.push(PlaybackCandidate {
+            stream_id: 2,
+            provider_profile_id: None,
+            provider_max_streams: 0,
+            url: format!("{base}/{path}"),
+            user_agent: "Source boundary fixture".into(),
+            headers: vec![],
+            metadata: vec![],
+        });
+    }
+    let packet = |seed: u8, pid: u16| {
+        let mut bytes = vec![seed; 188];
+        bytes[..6].copy_from_slice(&[0x47, (pid >> 8) as u8, pid as u8, 0x30 | (seed % 16), 1, 0]);
+        bytes
+    };
+    let first = [packet(1, 256), packet(2, 257)].concat();
+    first_tx.send(Bytes::from(first.clone())).await.unwrap();
+    let mut body = time::timeout(Duration::from_secs(2), engine.play(playback))
+        .await
+        .unwrap()
+        .unwrap()
+        .into_body();
+    assert_eq!(
+        body.frame()
+            .await
+            .unwrap()
+            .unwrap()
+            .into_data()
+            .unwrap()
+            .as_ref(),
+        first
+    );
+    drop(first_tx);
+    second_tx
+        .send(Bytes::from(
+            [packet(5, 256), packet(6, 256), packet(7, 258)].concat(),
+        ))
+        .await
+        .unwrap();
+    drop(second_tx);
+    let source: serde_json::Value =
+        serde_json::from_str(include_str!("../datasets/source-core-mark-3.json")).unwrap();
+    let row = source["records"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|r| r["label"] == "second_mark_flushes_previously_stamped_pending_PID")
+        .unwrap();
+    for index in [2, 3] {
+        let bytes = time::timeout(Duration::from_secs(2), body.frame())
+            .await
+            .unwrap()
+            .unwrap()
+            .unwrap()
+            .into_data()
+            .unwrap();
+        let hex = bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
+        assert_eq!(hex, row["chunks"][index]["hex"].as_str().unwrap());
+    }
+    drop(body);
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
+    server.abort();
+}
