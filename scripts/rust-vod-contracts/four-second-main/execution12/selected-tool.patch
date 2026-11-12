@@ -1,0 +1,124 @@
+--- tools10/tools/observation.py
++++ tools11/tools/observation.py
+@@ -17,10 +17,17 @@
+  return{'observation_valid':True,'parity_passed':equal,'status_equal':s['status']==n['status'],'Source_status':s['status'],'native_status':n['status'],'full_M4_claim':False}
+ 
+ def finalize(report):
+- cleanup_valid=(not report.get('physical_cleanup_errors')and not any(report.get('remaining',{'missing':'UNKNOWN'}).values())and report.get('default_named_tables_sequences_unchanged')is True)
++ remaining=report.get('remaining')
++ inventory_valid=isinstance(remaining,dict)and set(remaining)=={'containers','networks','volumes'}and all(type(v)is str and v==''for v in remaining.values())
++ cleanup_valid=(not report.get('physical_cleanup_errors')and not report.get('observation_finalization_errors')and inventory_valid and report.get('default_named_tables_sequences_unchanged')is True and report.get('Source_signal_terminal_valid')is True)
+  for field in['proxy_terminal','Source_proxy_terminal']:
+   value=report.get(field)
+-  if not isinstance(value,dict)or value.get('invalid')or value.get('connections')!=0 or value.get('seen')!=1:cleanup_valid=False
++  if not isinstance(value,dict)or value.get('invalid')!=[]or type(value.get('connections'))is not int or value['connections']!=0 or type(value.get('seen'))is not int or value['seen']!=1:cleanup_valid=False
+  valid=bool(report.get('observation_valid')and cleanup_valid and not report.get('error_type'))
+  parity=bool(valid and report.get('parity_passed'))
+  return{'observation_valid':valid,'parity_passed':parity,'passed':bool(valid and parity and report.get('Source_reference_expectation_matched'))}
++
++
++def signal_evidence(status,rows,required_roles,validator):
++ if status.get('invalid')!=[]or type(status.get('rows'))is not int or status['rows']!=len(rows):raise ValueError('SignalStatusJournalMismatch')
++ return validator(rows,required_roles)
+--- tools10/tools/phase.py
++++ tools11/tools/phase.py
+@@ -14,7 +14,7 @@
+ from apps.m3u.models import M3UAccount,M3UAccountProfile
+ ROOT=Path('/evidence');seed=json.loads((ROOT/'pending-main-private.json').read_text());mode=os.environ['PENDING_MODE'];case=os.environ['PENDING_CASE'];assert mode in['source','native']and case in['success','busy']
+ base=os.environ['PENDING_BASE'];client=redis.Redis(host='127.0.0.1',port=int(os.environ['REDIS_PORT']),password='playback-fixture-only',decode_responses=True,socket_timeout=3,socket_connect_timeout=3);key='profile_connections:'+str(seed['provider_profile_id']);sid='fixture-pending-main-'+case;metadata='vod_persistent_connection:'+sid
+-responses=[];report={'observation_valid':False,'parity_passed':None,'scope':'Actual selected early HTTP/SQL/auth pending follower only; no full metadata/latebody/performance parity','backend':mode,'case':case,'observations':[],'source_control':'actual Original Redis INCR reply held'if mode=='source'else'actual Redis executed provider reply held'}
++responses=[];report={'observation_valid':False,'parity_passed':None,'scope':'Separate fixed4s HTTP/SQL/auth observation; validity and parity distinct; no full metadata/latebody/performance claim','backend':mode,'case':case,'observations':[],'source_control':'actual Original Redis INCR reply held'if mode=='source'else'actual Redis executed provider reply held'}
+ auth={'Authorization':'Bearer '+seed['access_token']}
+ def cap(value):
+  account=M3UAccount.objects.get(pk=seed['provider_account_id']);profile=M3UAccountProfile.objects.get(pk=seed['provider_profile_id']);assert account.server_url=='http://origin:8080/player_api.php';account.max_streams=value;account.save(update_fields=['max_streams']);profile.max_streams=value;profile.save(update_fields=['max_streams'])
+--- tools10/tools/request_observer.py
++++ tools11/tools/request_observer.py
+@@ -17,6 +17,7 @@
+   try:
+    raw=(json.dumps(row,sort_keys=True)+'\n').encode()
+    with self.lock:
++    if self.invalid:return False
+     if self.rows>=self.max_rows or len(raw)>4096 or self.used+len(raw)>self.max_bytes:self.fail('SignalJournalCapacity');return False
+     with self.path.open('ab')as stream:
+      if stream.write(raw)!=len(raw):raise OSError('ShortSignalWrite')
+@@ -60,7 +61,7 @@
+   end=finished[identity]
+   if (begin['role'],begin['sid_sha256'])!=(end['role'],end['sid_sha256'])or end['monotonic']<begin['monotonic']:raise ValueError('SignalCorrelation')
+  if set(x['role']for x in started.values())!=set(required_roles)or any(sum(x['role']==role for x in started.values())!=1 for role in required_roles):raise ValueError('SignalRoleCoverage')
+- return{'valid':True,'started':len(started),'finished':len(finished),'roles':sorted(required_roles),'scope':'Django response.close/request_finished, not provider body EOF/TCP close or daemon completion'}
++ return{'valid':True,'started':len(started),'finished':len(finished),'roles':sorted(required_roles),'scope':'Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion'}
+ def install(seed,output):
+  from django.core.signals import request_started,request_finished
+  from gevent.local import local
+--- tools10/tools/run.py
++++ tools11/tools/run.py
+@@ -20,7 +20,7 @@
+  guards=load(controller/'fixture_guards.py','pending_fixture_guards');observation=load(controller/'observation.py','four_second_comparison');signal_module=load(controller/'request_observer.py','Source_signal_validation')
+  ports=load(support/'scripts/rust-integration/fixture_ports.py','pending_ports');bounded=load(controller/'bounded_process.py','pending_bounded');results=[]
+  for case in['success','busy']:
+-  caseout=out/case;caseout.mkdir();project='dispatcharr-pending-main-'+uuid.uuid4().hex[:10];report={'passed':False,'observation_valid':False,'parity_passed':False,'case':case,'project':project,'performance_verified':False,'scope':'Main real SQL/Bearer/held-reply early follower only'};jobs={};index=0;nonce=uuid.uuid4().hex
++  caseout=out/case;caseout.mkdir();project='dispatcharr-pending-main-'+uuid.uuid4().hex[:10];report={'passed':False,'observation_valid':False,'parity_passed':False,'case':case,'project':project,'performance_verified':False,'scope':'separate fixed4s Main SQL/Bearer physical-reply observation; validity is not parity'};jobs={};index=0;nonce=uuid.uuid4().hex
+   database='rust_pending_'+uuid.uuid4().hex[:10];template=database+'_template';source_db=database+'_source';native_db=database+'_native'
+   env=dict(os.environ,BASELINE_SOURCE_DIR=str(original),BASELINE_EVIDENCE_DIR=str(caseout));overlay=caseout/'fixture.json'
+   save(overlay,{'services':{'baseline':{'volumes':[str(controller)+':/pending-tools:ro'],'environment':{'PENDING_MAIN_FIXTURE':'playback-fixture-only','PENDING_MAIN_NONCE':nonce}},'origin':{'environment':{'VOD_FIXTURE_BYTES_PER_SECOND':'32768'}},'candidate':{'image':args.candidate_image,'environment':{'DATABASE_URL':'postgresql://dispatch:playback-fixture-only@baseline:5432/'+native_db,'REDIS_URL':'redis://:playback-fixture-only@baseline:6381/0','RUST_VOD_REDIS_RECOVERY_ENABLED':'1','RUST_MAX_VOD_SESSIONS':'4','RUST_MAX_VOD_REQUESTS':'4'}}}})
+@@ -104,9 +104,9 @@
+       observer_status=json.loads(raw_status);report['Source_signal_status']=observer_status
+       if observer_status['invalid']or(caseout/'Source-request-signals-invalid.json').exists():raise ValueError('SourceSignalObserverInvalid')
+       try:
+-       signal_rows=[json.loads(line)for line in(caseout/'Source-request-signals.jsonl').read_text().splitlines()];report['Source_signal_coverage']=signal_module.validate(signal_rows,['initial','target','follower','other']if case=='busy'else['initial','target','follower']);break
++       signal_rows=[json.loads(line)for line in(caseout/'Source-request-signals.jsonl').read_text().splitlines()];report['Source_signal_coverage']=observation.signal_evidence(observer_status,signal_rows,['initial','target','follower','other']if case=='busy'else['initial','target','follower'],signal_module.validate);break
+       except (FileNotFoundError,ValueError)as error:
+-       if isinstance(error,ValueError)and str(error)not in['MissingSignalCompletion','SignalRoleCoverage']and not isinstance(error,json.JSONDecodeError):raise
++       if isinstance(error,ValueError)and str(error)not in['MissingSignalCompletion','SignalRoleCoverage','SignalStatusJournalMismatch']and not isinstance(error,json.JSONDecodeError):raise
+        if time.monotonic()>end:raise TimeoutError('SourceSignalCompletionCoverage')
+        time.sleep(.1)
+    report['comparison']=observation.compare(report['source'],report['native']);report['observation_valid']=report['comparison']['observation_valid'];report['parity_passed']=report['comparison']['parity_passed'];report['Source_reference_expectation_matched']=report['source']['Source_expected_reference_outcome_matched']
+@@ -115,6 +115,13 @@
+   finally:
+    try:run('stop','--timeout','15','candidate',timeout=30)
+    except Exception as error:report['passed']=False;report.setdefault('physical_cleanup_errors',[]).append('CandidateStop'+type(error).__name__)
++   if 'source-web'in jobs:
++    try:
++     raw_status=run('exec','-T','baseline','/dispatcharrpy/bin/python','-c',"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:6385/state',timeout=3); b=r.read(4097); assert len(b)<=4096; print(b.decode())",timeout=5)
++     final_status=json.loads(raw_status);final_rows=[json.loads(line)for line in(caseout/'Source-request-signals.jsonl').read_text().splitlines()]
++     if (caseout/'Source-request-signals-invalid.json').exists():raise ValueError('TerminalSourceSignalMarker')
++     report['Source_signal_terminal_coverage']=observation.signal_evidence(final_status,final_rows,['initial','target','follower','other']if case=='busy'else['initial','target','follower'],signal_module.validate);report['Source_signal_terminal_status']=final_status;report['Source_signal_terminal_valid']=True
++    except Exception as error:report['Source_signal_terminal_valid']=False;report.setdefault('observation_finalization_errors',[]).append('SourceSignalTerminal'+type(error).__name__)
+    for role in list(jobs):
+     try:finish(role)
+     except Exception as error:report['passed']=False;report.setdefault('physical_cleanup_errors',[]).append(type(error).__name__)
+--- tools10/tools/test_observation.py
++++ tools11/tools/test_observation.py
+@@ -61,7 +61,7 @@
+    for t in jobs:t.join(2);self.assertFalse(t.is_alive())
+    rows=[json.loads(x)for x in j.path.read_text().splitlines()];self.assertEqual(len({x['request']for x in rows}),2);self.assertFalse(j.invalid)
+  def test_cleanup_or_default_audit_failure_cannot_be_overwritten_as_pass(self):
+-  value={'observation_valid':True,'parity_passed':True,'Source_reference_expectation_matched':True,'remaining':{'containers':'','networks':'','volumes':''},'default_named_tables_sequences_unchanged':True,'proxy_terminal':{'invalid':[],'connections':0,'seen':1},'Source_proxy_terminal':{'invalid':[],'connections':0,'seen':1}}
++  value={'observation_valid':True,'parity_passed':True,'Source_reference_expectation_matched':True,'remaining':{'containers':'','networks':'','volumes':''},'default_named_tables_sequences_unchanged':True,'Source_signal_terminal_valid':True,'proxy_terminal':{'invalid':[],'connections':0,'seen':1},'Source_proxy_terminal':{'invalid':[],'connections':0,'seen':1}}
+   self.assertTrue(observation.finalize(value)['passed'])
+   for field in['default_named_tables_sequences_unchanged','proxy_terminal','Source_proxy_terminal','remaining']:
+    bad=copy.deepcopy(value)
+@@ -70,6 +70,23 @@
+    else:bad[field]['seen']=2
+    self.assertFalse(observation.finalize(bad)['observation_valid'])
+   value['parity_passed']=False;self.assertTrue(observation.finalize(value)['observation_valid']);self.assertFalse(observation.finalize(value)['passed'])
++ def test_sticky_invalid_retains_no_further_journal_rows(self):
++  with tempfile.TemporaryDirectory()as d:
++   j,o=self.fixture(d);j.fail('InjectedWriterFailure');before=j.snapshot();self.assertFalse(j.append({'anything':'ignored'}));self.assertEqual(j.rows,before['rows']);self.assertEqual(j.used,before['bytes']);self.assertFalse(j.path.exists())
++ def test_late_failure_or_truncated_journal_rejects_prior_complete_coverage(self):
++  rows=[{}];validator=mock.Mock(return_value={'valid':True})
++  self.assertTrue(observation.signal_evidence({'invalid':[],'rows':1},rows,['target'],validator)['valid'])
++  for status in[{'invalid':['LateFailure'],'rows':1},{'invalid':[],'rows':2},{'invalid':[],'rows':True}]:
++   with self.assertRaisesRegex(ValueError,'SignalStatusJournalMismatch'):observation.signal_evidence(status,rows,['target'],validator)
++  report={'observation_valid':True,'parity_passed':True,'Source_reference_expectation_matched':True,'remaining':{},'default_named_tables_sequences_unchanged':True,'proxy_terminal':{'invalid':[],'connections':0,'seen':1},'Source_proxy_terminal':{'invalid':[],'connections':0,'seen':1}}
++  self.assertFalse(observation.finalize(report)['observation_valid']);report['Source_signal_terminal_valid']=False;self.assertFalse(observation.finalize(report)['observation_valid'])
++ def test_missing_inventory_or_boolean_proxy_count_never_zero(self):
++  value={'observation_valid':True,'parity_passed':True,'Source_reference_expectation_matched':True,'remaining':{'containers':'','networks':'','volumes':''},'Source_signal_terminal_valid':True,'default_named_tables_sequences_unchanged':True,'proxy_terminal':{'invalid':[],'connections':0,'seen':1},'Source_proxy_terminal':{'invalid':[],'connections':0,'seen':1}}
++  self.assertTrue(observation.finalize(value)['passed'])
++  for remaining in[{},None,{'containers':'','networks':''}]:
++   bad=copy.deepcopy(value);bad['remaining']=remaining;self.assertFalse(observation.finalize(bad)['observation_valid'])
++  for field,wrong in[('seen',True),('connections',False),('invalid',None)]:
++   bad=copy.deepcopy(value);bad['proxy_terminal'][field]=wrong;self.assertFalse(observation.finalize(bad)['observation_valid'])
+  def test_controller_still_hardblocked_and_no_production_view_wrapping(self):
+   root=Path(__file__).parent;text=(root/'run.py').read_text();self.assertIn("raise RuntimeError('UNVALIDATED_MAIN_FIXTURE_DRAFT",text)
+   wsgi=(root/'source_wsgi.py').read_text();self.assertIn("WSGIServer(('127.0.0.1',5657),application",wsgi);self.assertNotIn('application=',wsgi);self.assertNotIn('client.incr=',wsgi)

@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "scope": "NEW fixed4s physical reply OBSERVATION; completion validity distinct from parity",
+  "fixture_execution_authorized": false,
+  "hardblock": "UNVALIDATED_MAIN_FIXTURE_DRAFT",
+  "candidate": {
+    "build_manifest": "artifacts/rust/candidate-build-retained-helper-image50-1/build.json",
+    "build_manifest_sha256": "ae2db432191678023544626ee473b047dbd8c34e88b6dabd406afc9f542050f9",
+    "image_id": "sha256:1907887b67d15dbb39af040176923de5f6583afc44ec9a3103eeb3334bcd1f0d",
+    "git_revision": "208598ee1872732cbe8a0d846efa5a40b59ae1d2",
+    "source_tree_sha256": "0177c2e8838db58cedb28012edcc7d583424c4af225a6c47568365feada9f7f4",
+    "status": "requires separateRootreview/freshcue; no execution authorized",
+    "source_archive": "artifacts/rust/candidate-build-retained-helper-image50-1/source.tar",
+    "source_archive_sha256": "e1e74d546661e788a6a7b08146f7058182c22bf50a27de93c6c955ba1206e560"
+  },
+  "cases": [
+    "success",
+    "busy"
+  ],
+  "per_case": {
+    "independent_owned_databases": [
+      "template",
+      "source",
+      "native"
+    ],
+    "named_table_count": 9,
+    "default_database_named_table_sequence_audit": true,
+    "dedicated_source_native_redis_ports": [
+      6390,
+      6391
+    ],
+    "native_proxy_port": 6381,
+    "local_origin_only": true,
+    "origin_preflight": {
+      "explicit_owned_compose_up": true,
+      "health_readiness": true,
+      "full_fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+      "range": "bytes=0-8191",
+      "required_status": 206,
+      "max_read_bytes": 8193,
+      "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+      "stats_max_bytes": 65536,
+      "direct_origin_request_count": 1
+    },
+    "dedicated_source_proxy": {
+      "listen": 6383,
+      "loopback_control": 6384,
+      "backend": 6390,
+      "target": "exact owned profile key, INCR or INCRBY increment1 only",
+      "Source_actual_client_socket_timeout": 60,
+      "Source_actual_client_connect_timeout": 5,
+      "no_client_method_replacement": true
+    }
+  },
+  "fixed_observations": {
+    "gate_hold_seconds": 4,
+    "existing_Main_observer_seconds": 3,
+    "early_body_bytes": 8192,
+    "early_body_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+    "source_gate": "actual Original Redis INCR/INCRBY reply read but not delivered; no method wrapper",
+    "native_gate": "actual Redis reserve-provider reply read but not delivered",
+    "reserve_script_sha1": "d757c8db4c0aa5a26a91e84d2dcbfb4047589be0",
+    "maximum_hold_seconds": 4.35,
+    "hold_boundary": "actual Source INCR reply read vsnative Lua reply read",
+    "release_boundary": "actual proxy reply release for each backend",
+    "control_work_must_finish_before_target": true,
+    "exact_pause_schedule_identity_claimed": false,
+    "reserve_reply_by_case": {
+      "success": 1,
+      "busy": -2
+    },
+    "unexpected_redis_error_or_type": "invalid, never held",
+    "stop_witness": "stop key exists after admin200 and early8192, no late100unit claim",
+    "busy_native_ownership": "same other movie owner+metadata token+ledger token/fence/profile/reserved1 and globalcount1 after followerclose; Source publiccounter separately observed",
+    "private_fence_schema": {
+      "type": "canonical positive decimal string",
+      "minimum": 1,
+      "maximum": 9223372036854775807,
+      "maximum_digits": 19,
+      "required_at_both_snapshots": true,
+      "unchanged": true
+    },
+    "source_reply_by_case": {
+      "success": 1,
+      "busy": 2
+    },
+    "native_reply_by_case": {
+      "success": 1,
+      "busy": -2
+    },
+    "Source_error_or_unexpected_type": "invalid/nohold, including NOSCRIPT (not meaningful for INCR)",
+    "control_work_deadline_seconds": 3.1,
+    "absolute_while_held_checkpoint_seconds": 3.1,
+    "post_close_seconds": [
+      1.5,
+      3,
+      6,
+      15
+    ],
+    "checkpoint_overshoot_seconds": 0.35,
+    "actual_target_header_time_recorded_inside_thread": true,
+    "immediate_target_outcome_state_recorded_inside_thread": true,
+    "target_status_acceptance": "record actual; native503 remains parityfailure versus Source200/429, never validity-pass\u21d2parity-pass",
+    "Source_reference_status_hypotheses": {
+      "success": 200,
+      "busy": 429
+    },
+    "explicit_consumer_socket_shutdown": true,
+    "HTTP_client_timeout_seconds": 8,
+    "observer_direct_Redis_read_timeout_seconds": 3,
+    "Source_method_or_view_replacement": false,
+    "snapshots_are_atomic": false,
+    "snapshot_interval_start_and_complete_captured": true,
+    "post_outcome_snapshot_max_delay_seconds": 0.35
+  },
+  "limits": {
+    "command_aggregate_bytes": 8388608,
+    "command_input_bytes": 1048576,
+    "resp_frame_bytes": 1048576,
+    "resp_line_bytes": 8192,
+    "resp_depth": 16,
+    "resp_array_items": 1024,
+    "proxy_connections": 64,
+    "pending_commands_per_connection": 128,
+    "proxy_trace_events": 1024,
+    "held_reply_seconds": 10,
+    "control_body_bytes": 4096,
+    "phase_seconds": 90
+  },
+  "remaining_open": [
+    "Source later-body timeout",
+    "Source post-close metadata",
+    "Source/native public counter divergence preserving other movie reservation",
+    "Main older-timer beyond3s",
+    "full headers/late body parity"
+  ],
+  "resource_sampling": false,
+  "performance_acceptance": false,
+  "full_M3_M4_acceptance": false,
+  "normal_recovery_default": "OFF, fixture explicitly opts in",
+  "Source_request_signal_observer": {
+    "journal_max_rows": 256,
+    "journal_max_bytes": 1048576,
+    "row_max_bytes": 4096,
+    "read_only_status_port": 6385,
+    "status_max_bytes": 4096,
+    "status_pool_connections": 2,
+    "finish_coverage_wait_seconds": 10,
+    "exact_roles_per_case": {
+      "success": [
+        "initial",
+        "target",
+        "follower"
+      ],
+      "busy": [
+        "initial",
+        "target",
+        "follower",
+        "other"
+      ]
+    },
+    "allowed_event_fields": [
+      "request",
+      "role",
+      "sid_sha256",
+      "kind",
+      "monotonic"
+    ],
+    "no_auth_header_cookie_environ_or_argv_persistence": true,
+    "failure_visibility": "sticky memory status plus durable bounded marker; invalidity never raisesintoDjango",
+    "claim": "Django request_finished after response-close resource-closer attempts, not necessarily successful generator-finally (Django may swallow closer exceptions), not providerEOF/TCPclose/daemoncompletion",
+    "genuine_dispatch_failure_contract_gate": "not executed; requiresRootreview beforefixture",
+    "provider_generator_normal_EOF_claimed": false,
+    "terminal_status_after_native_phase_required": true,
+    "sticky_invalid_stops_further_retention": true,
+    "role_rows_memory_count_must_match_file": true
+  },
+  "passed2_4_policy_unchanged": true,
+  "parity_separate_from_observation_validity": true,
+  "main_or_coordinator_budget_change": false
+}

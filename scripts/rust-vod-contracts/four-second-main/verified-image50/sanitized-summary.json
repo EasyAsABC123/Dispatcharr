@@ -1,0 +1,833 @@
+{
+  "schema": 1,
+  "scope": "Executed once-only separate fixed4s Source/native Main physical-reply observation on immutable image50",
+  "process_exit": 1,
+  "observation_valid": true,
+  "parity_passed": false,
+  "passed": false,
+  "cases": [
+    {
+      "case": "success",
+      "raw_report_sha256": "b54019fbd3e6250d7413f65863e653958a59ef049a5437767da1a509786f2590",
+      "observation_valid": true,
+      "parity_passed": false,
+      "Source_reference_expectation_matched": true,
+      "Source_terminal_signal_status": {
+        "invalid": [],
+        "rows": 6,
+        "bytes": 1046,
+        "maximum_rows": 256,
+        "maximum_bytes": 1048576
+      },
+      "Source_terminal_signal_coverage": {
+        "valid": true,
+        "started": 3,
+        "finished": 3,
+        "roles": [
+          "follower",
+          "initial",
+          "target"
+        ],
+        "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+      },
+      "default_named9tables_sequences_unchanged": true,
+      "remaining": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "phases": {
+        "source": {
+          "observation_valid": true,
+          "target_status": 200,
+          "request_to_headers_seconds": 6.012497217016062,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.000680655008182,
+            "overshoot_seconds": 0.0006806550081819296,
+            "control_seconds": 2.017197690991452
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.100059983000392
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 170379.943739637,
+            "completed_monotonic": 170379.944100446,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "metadata_present": true,
+            "active_streams": "2",
+            "request_count": "3"
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170373.942767031,
+                "completed_monotonic": 170373.943067129,
+                "atomic": false,
+                "provider": "1",
+                "stop": null,
+                "metadata_present": true,
+                "active_streams": "1",
+                "request_count": "1"
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170377.039779374,
+                "completed_monotonic": 170377.040061872,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170377.939787481,
+                "completed_monotonic": 170377.940075228,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170377.94092713,
+                "completed_monotonic": 170377.941148516,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170381.444337975,
+                "completed_monotonic": 170381.444693725,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "1",
+                "request_count": "3"
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170382.944316136,
+                "completed_monotonic": 170382.944660095,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "0",
+                "request_count": "3"
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170385.944320185,
+                "completed_monotonic": 170385.944603943,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170394.944317745,
+                "completed_monotonic": 170394.944581052,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 170371.922617049,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170371.92266837
+            },
+            {
+              "role": "target",
+              "close_begin": 170379.944155098,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 14,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170379.944212349
+            },
+            {
+              "role": "follower",
+              "close_begin": 170379.944214399,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170379.94424549
+            }
+          ]
+        },
+        "native": {
+          "observation_valid": true,
+          "target_status": 503,
+          "request_to_headers_seconds": 3.005392266990384,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.0006193880108185,
+            "overshoot_seconds": 0.0006193880108185112,
+            "control_seconds": 2.0135256290086545
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.1000682260200847
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 170402.815964545,
+            "completed_monotonic": 170402.816254273,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "metadata_present": true,
+            "active_streams": "2",
+            "request_count": "2"
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170399.822522522,
+                "completed_monotonic": 170399.822793369,
+                "atomic": false,
+                "provider": "1",
+                "stop": null,
+                "metadata_present": true,
+                "active_streams": "1",
+                "request_count": "1"
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170402.916024586,
+                "completed_monotonic": 170402.916287573,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170403.816018873,
+                "completed_monotonic": 170403.816265299,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170403.817330527,
+                "completed_monotonic": 170403.817582034,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170405.31776055,
+                "completed_monotonic": 170405.317980906,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170406.81777653,
+                "completed_monotonic": 170406.818075508,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170409.817753694,
+                "completed_monotonic": 170409.818118254,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170418.817756371,
+                "completed_monotonic": 170418.818069169,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 170399.795489902,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170399.795574874
+            },
+            {
+              "role": "target",
+              "close_begin": 170403.817601015,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 14,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170403.817632035
+            },
+            {
+              "role": "follower",
+              "close_begin": 170403.817633745,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170403.817684477
+            }
+          ],
+          "error_body_bytes": 29,
+          "error_body_sha256": "c15ff4dd53ee3cceb7ee671a9443285f920fff047c85d32d23ec50bd2166d753",
+          "error_body_hex": "7b226572726f72223a22526564697320756e617661696c61626c65227d"
+        }
+      }
+    },
+    {
+      "case": "busy",
+      "raw_report_sha256": "876425ae9be176b249ec716ac8ade06ba820c48b0889291acc168928b0f13559",
+      "observation_valid": true,
+      "parity_passed": false,
+      "Source_reference_expectation_matched": true,
+      "Source_terminal_signal_status": {
+        "invalid": [],
+        "rows": 8,
+        "bytes": 1392,
+        "maximum_rows": 256,
+        "maximum_bytes": 1048576
+      },
+      "Source_terminal_signal_coverage": {
+        "valid": true,
+        "started": 4,
+        "finished": 4,
+        "roles": [
+          "follower",
+          "initial",
+          "other",
+          "target"
+        ],
+        "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+      },
+      "default_named9tables_sequences_unchanged": true,
+      "remaining": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "phases": {
+        "source": {
+          "observation_valid": true,
+          "target_status": 429,
+          "request_to_headers_seconds": 4.010428684006911,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.0007906679820735,
+            "overshoot_seconds": 0.0007906679820735008,
+            "control_seconds": 2.0179430819989648
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.1000669619825203
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 170462.668115604,
+            "completed_monotonic": 170462.66836997,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "metadata_present": true,
+            "active_streams": "1",
+            "request_count": "2"
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170458.669179694,
+                "completed_monotonic": 170458.6694121,
+                "atomic": false,
+                "provider": "2",
+                "stop": null,
+                "metadata_present": true,
+                "active_streams": "1",
+                "request_count": "1"
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170461.76559663,
+                "completed_monotonic": 170461.765934119,
+                "atomic": false,
+                "provider": "2",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170462.665595877,
+                "completed_monotonic": 170462.665937306,
+                "atomic": false,
+                "provider": "2",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170462.666933292,
+                "completed_monotonic": 170462.667193459,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170464.168597593,
+                "completed_monotonic": 170464.168878411,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170465.668605738,
+                "completed_monotonic": 170465.668852315,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170468.668604639,
+                "completed_monotonic": 170468.668854366,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170477.668603113,
+                "completed_monotonic": 170477.668883641,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": null,
+                "request_count": null
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 170456.661383974,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170456.661452736
+            },
+            {
+              "role": "target",
+              "close_begin": 170462.668465523,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170462.668485424
+            },
+            {
+              "role": "follower",
+              "close_begin": 170462.668487224,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 16,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170462.668525325
+            },
+            {
+              "role": "other",
+              "close_begin": 170477.669017834,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 14,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170477.669082526
+            }
+          ],
+          "error_body_bytes": 37,
+          "error_body_sha256": "9cc0a1518ead11b8d9f290b0b83b10c1201d593b8e7ca4bbd3c641d2515fda5d",
+          "error_body_hex": "436f6e6e656374696f6e206c696d697420657863656564656420666f722070726f66696c65",
+          "other_global_after_close": 0
+        },
+        "native": {
+          "observation_valid": true,
+          "target_status": 503,
+          "request_to_headers_seconds": 3.0043338910036255,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.000735142006306,
+            "overshoot_seconds": 0.0007351420063059777,
+            "control_seconds": 2.0129336090176366
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.100061278004432
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 170488.47701733,
+            "completed_monotonic": 170488.477339649,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "metadata_present": true,
+            "active_streams": "2",
+            "request_count": "2"
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 170485.484087152,
+                "completed_monotonic": 170485.484316828,
+                "atomic": false,
+                "provider": "1",
+                "stop": null,
+                "metadata_present": true,
+                "active_streams": "1",
+                "request_count": "1"
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170488.576318971,
+                "completed_monotonic": 170488.576576328,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170489.476330717,
+                "completed_monotonic": 170489.476657066,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170489.477620752,
+                "completed_monotonic": 170489.477907229,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "2",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170490.978093523,
+                "completed_monotonic": 170490.978453082,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "0",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170492.478093099,
+                "completed_monotonic": 170492.478445849,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "0",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170495.478091623,
+                "completed_monotonic": 170495.478447613,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "0",
+                "request_count": "2"
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 170504.478091675,
+                "completed_monotonic": 170504.478443104,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "metadata_present": true,
+                "active_streams": "0",
+                "request_count": "2"
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 170485.457220327,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170485.45731932
+            },
+            {
+              "role": "target",
+              "close_begin": 170489.47792931,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170489.477969071
+            },
+            {
+              "role": "follower",
+              "close_begin": 170489.477970741,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 16,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170489.478021922
+            },
+            {
+              "role": "other",
+              "close_begin": 170504.478911397,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 14,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 170504.478992449
+            }
+          ],
+          "error_body_bytes": 29,
+          "error_body_sha256": "c15ff4dd53ee3cceb7ee671a9443285f920fff047c85d32d23ec50bd2166d753",
+          "error_body_hex": "7b226572726f72223a22526564697320756e617661696c61626c65227d",
+          "other_ownership_observation": {
+            "same_private_owner_ledger_identity": true,
+            "reserved": true,
+            "native_global_count": 1,
+            "full_Source_counter_parity_claimed": false
+          },
+          "other_global_after_close": 1
+        }
+      }
+    }
+  ],
+  "runtime_or_budget_changes": false,
+  "retry": false,
+  "resource_sampling": false,
+  "full_M4_acceptance": false,
+  "source_generator_finally_or_timer_completion_claimed": false,
+  "raw_summary_label_caveat": "Raw summary.scope inherits UNEXECUTED module documentation; retained unchanged. Actual phase requests/terminal reports and this explicitly executed summary identify observed run.",
+  "bindings": {
+    "selection_sha256": "1015c4191001c55c5cb62284d9f981323f8f74266a06de15725dce1bcc464297",
+    "policy_sha256": "0f744a1030295ac85eff1f803f1299849e3e631c67215ed0c4cb59c6180c797e",
+    "cue_sha256": "0738dee751ba7c24279ab016c0f469f2944ac6fc3e7ab60405f72f782da673aa",
+    "run_sha256": "94806e6ec74ec8046be10fc87e04b7265a4f5addf20139803ec3cc6887188eea",
+    "manifest_sha256": "ae2db432191678023544626ee473b047dbd8c34e88b6dabd406afc9f542050f9",
+    "image_id": "sha256:1907887b67d15dbb39af040176923de5f6583afc44ec9a3103eeb3334bcd1f0d"
+  },
+  "independent_cleanup_sha256": "0eafc57d7775925d720e457618d7a0c836f0dfe67f8d275845b7937f1f3daeda"
+}
