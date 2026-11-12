@@ -1,0 +1,215 @@
+{
+  "status": "predeclared before execution",
+  "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "factory_cases": [
+    {
+      "name": "missing-group",
+      "present": false,
+      "group": {},
+      "effective": []
+    },
+    {
+      "name": "empty-group",
+      "group": {},
+      "effective": []
+    },
+    {
+      "name": "nonobject-group",
+      "group": "owned-nonobject",
+      "effective": []
+    },
+    {
+      "name": "empty-array-group",
+      "group": [],
+      "effective": []
+    },
+    {
+      "name": "missing-key",
+      "group": {
+        "default_output_format": "mpegts"
+      },
+      "effective": []
+    },
+    {
+      "name": "null-key",
+      "group": {
+        "m3u_hash_key": null
+      },
+      "effective": []
+    },
+    {
+      "name": "empty-key",
+      "group": {
+        "m3u_hash_key": ""
+      },
+      "effective": []
+    },
+    {
+      "name": "blank-csv",
+      "group": {
+        "m3u_hash_key": " , \t "
+      },
+      "effective": []
+    },
+    {
+      "name": "url-key",
+      "group": {
+        "m3u_hash_key": "url"
+      },
+      "effective": [
+        "url"
+      ]
+    },
+    {
+      "name": "ordered-dedup-csv",
+      "group": {
+        "m3u_hash_key": " name,url,name "
+      },
+      "effective": [
+        "name",
+        "url"
+      ]
+    },
+    {
+      "name": "unknown-token",
+      "group": {
+        "m3u_hash_key": "tvg-id"
+      },
+      "effective": []
+    },
+    {
+      "name": "false-key",
+      "group": {
+        "m3u_hash_key": false
+      },
+      "effective": []
+    },
+    {
+      "name": "zero-key",
+      "group": {
+        "m3u_hash_key": 0
+      },
+      "effective": []
+    },
+    {
+      "name": "list-key-TypeError",
+      "group": {
+        "m3u_hash_key": [
+          "url"
+        ]
+      },
+      "error": "builtins.TypeError"
+    },
+    {
+      "name": "cached-url-over-empty-db",
+      "group": {
+        "m3u_hash_key": ""
+      },
+      "cached": {
+        "m3u_hash_key": "url"
+      },
+      "effective": [
+        "url"
+      ]
+    },
+    {
+      "name": "cached-empty-over-url-db",
+      "group": {
+        "m3u_hash_key": "url"
+      },
+      "cached": {
+        "m3u_hash_key": ""
+      },
+      "effective": []
+    },
+    {
+      "name": "cached-empty-map-over-url-db",
+      "group": {
+        "m3u_hash_key": "url"
+      },
+      "cached": {},
+      "effective": []
+    },
+    {
+      "name": "cached-nonobject-loads-url-db",
+      "group": {
+        "m3u_hash_key": "url"
+      },
+      "cached": [
+        "owned-nonobject"
+      ],
+      "effective": [
+        "url"
+      ]
+    },
+    {
+      "name": "account-url-override",
+      "group": {
+        "m3u_hash_key": ""
+      },
+      "custom": {
+        "hash_key": "url"
+      },
+      "effective": [
+        "url"
+      ]
+    },
+    {
+      "name": "unknown-override-falls-global",
+      "group": {
+        "m3u_hash_key": "url"
+      },
+      "custom": {
+        "hash_key": "unknown"
+      },
+      "effective": [
+        "url"
+      ]
+    },
+    {
+      "name": "null-override-falls-global",
+      "group": {
+        "m3u_hash_key": "url"
+      },
+      "custom": {
+        "hash_key": null
+      },
+      "effective": [
+        "url"
+      ]
+    },
+    {
+      "name": "list-override-TypeError",
+      "group": {
+        "m3u_hash_key": "url"
+      },
+      "custom": {
+        "hash_key": [
+          "url"
+        ]
+      },
+      "error": "builtins.TypeError"
+    }
+  ],
+  "held_cache": {
+    "cached": "url",
+    "DB": "",
+    "seconds_before_release": 4.2,
+    "pending_probe_after_seconds": 2.2,
+    "role": "actual Source model and real Redis, no task invocation"
+  },
+  "workers": [
+    "empty",
+    "url"
+  ],
+  "case_count": 25,
+  "scope": "model/SQL/cache type/default oracle +actual scanner/defaultchildren2, noNative/generalhashport",
+  "tools": {
+    "run_pair.py": "08782fa4215e613739cede9dd78f12a87081dfad06721cc93af637fc7ac455e6",
+    "periodic_worker_observer.py": "366d7a7efd61330a37ee251fb84a7b21d4bed437bef6a917390db879000ac557",
+    "owned_cache_reply_proxy.py": "e240f3bc6a0b55a97643c684eac1159a8a58792e4089c5536bd2ad886a2d7a38",
+    "source_pair.py": "1e3a0a5b727c670ed685348977830f4562397486e03c9b2fa63ffebafa1d74b7",
+    "test_source_plan.py": "06d93daf56dd6e8b14363d91f9129fa0d6fc46b6002b66549888cdcb6b7cd8ec"
+  },
+  "prelaunch_controls": 4
+}

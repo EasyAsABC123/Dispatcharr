@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "Source_only": true,
+  "native_verified": false,
+  "scope": "Pinned actual model/SQL/Redis lookup oracle22 +realRedis-held lookup1 +actual scanner/defaultchildren worker2; separate actualSingleNull worker1",
+  "checks": 70,
+  "cases": 25,
+  "null_worker_checks": 13,
+  "null_worker_cases": 1,
+  "provenance": {
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "packages": {
+      "Django": "6.0.9",
+      "django-redis": "7.0.0",
+      "celery": "5.6.3",
+      "kombu": "5.6.2"
+    },
+    "files": {
+      "/app/core/models.py": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "/app/apps/m3u/models.py": "f8e0cd0862d9c576cbd7ac6af71c195a1fde8eaa1b3ea5f225c3b8b56ead7219",
+      "/app/apps/m3u/utils.py": "9ddc50fe1e3916e6812007b1de9d7677341333b334850001128e1406d4ab91ae"
+    }
+  },
+  "key": "stream_settings/m3u_hash_key",
+  "observed_semantics": [
+    "cached dict authoritative including{} even when DBnonempty",
+    "missing/empty/nonobject SQLgroup uses stream defaults with hash emptystring",
+    "None is empty effectivekeys; CSVstr strips/dedups known name/url/tvg_id/m3u_id/group",
+    "list/tuple unsupported by Sourceparser; observedlist TypeError",
+    "account parsedoverride keys win;empty/invalid override falls globally",
+    "actualurl worker creates different streamhash from actualempty worker",
+    "actualNone worker completes normalSingle with emptyhash",
+    "actualcachedurl lookup held4.2s stillpendingafter2.2 thenreturnsurl"
+  ],
+  "roles_note": "Factory/model probes are not task executions; real worker cases explicitly labeled. Heldcache uses owned client route override to identical db0 through a relay, not altered model/task code.",
+  "native_guard_scope_plan": "minimal preACK readonly refusal; no generalhash parser port/cachefill/backend-outage parity claim",
+  "default_database_unchanged": true,
+  "cleanup_reported": true,
+  "credit": "Original Dispatcharr/Django/Celery/Redis/dependency authors retain credit/licenses.",
+  "independent_cleanup_projects": 2
+}

@@ -1,0 +1,343 @@
+{
+  "passed": true,
+  "native_verified": false,
+  "scope": "Actual pinned Source grouped-setting lookup oracle and real scanner children.\nModel/SQL/Redis factory probes are labeled separately from two actual workers.\nOriginal Dispatcharr/dependency authors retain code, algorithm and license credit.\n",
+  "checks": [
+    {
+      "name": "fresh-empty-/data/m3us",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/epgs",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/logos",
+      "passed": true
+    },
+    {
+      "name": "null-queue-start-empty",
+      "passed": true
+    },
+    {
+      "name": "null-real-parent-null",
+      "passed": true
+    },
+    {
+      "name": "null-two-real-parented-default-children",
+      "passed": true
+    },
+    {
+      "name": "null-actual-result-ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+      "passed": true
+    },
+    {
+      "name": "null-actual-result-a0d3eb87-1bb9-4cdf-8155-bf672ae3d568",
+      "passed": true
+    },
+    {
+      "name": "null-actual-result-73a7f3d0-d56a-4de8-8ad4-d89346c89814",
+      "passed": true
+    },
+    {
+      "name": "null-actual-one-stream",
+      "passed": true
+    },
+    {
+      "name": "null-actual-effective-setting",
+      "passed": true
+    },
+    {
+      "name": "null-empty-vs-url-real-hash",
+      "passed": true
+    },
+    {
+      "name": "exact-factory-worker-held-case-count",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "worker-null",
+      "role": "actual Original scanner+ordinary default-queue groups/single consumers",
+      "raw_setting": null,
+      "effective": [],
+      "parent_id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+      "frames": [
+        {
+          "body": "W1szXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.m3u.tasks.refresh_m3u_groups",
+            "id": "a0d3eb87-1bb9-4cdf-8155-bf672ae3d568",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+            "parent_id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+            "argsrepr": "(3,)",
+            "kwargsrepr": "{}",
+            "origin": "gen433@ff1f876b86ea",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "a0d3eb87-1bb9-4cdf-8155-bf672ae3d568",
+            "reply_to": "c0d5a7cc-174c-314c-99af-5574de18a1bb",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "2004198b-0be9-4b09-979e-cd4720fc955a"
+          }
+        },
+        {
+          "body": "W1szXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.m3u.tasks.refresh_single_m3u_account",
+            "id": "73a7f3d0-d56a-4de8-8ad4-d89346c89814",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              3600,
+              3500
+            ],
+            "root_id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+            "parent_id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+            "argsrepr": "(3,)",
+            "kwargsrepr": "{}",
+            "origin": "gen433@ff1f876b86ea",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "73a7f3d0-d56a-4de8-8ad4-d89346c89814",
+            "reply_to": "c0d5a7cc-174c-314c-99af-5574de18a1bb",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "f17fb56d-4433-484f-845f-d26122caecef"
+          }
+        }
+      ],
+      "postruns": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+          "state": "SUCCESS",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "id": "a0d3eb87-1bb9-4cdf-8155-bf672ae3d568",
+          "state": "SUCCESS",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-null.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "id": "73a7f3d0-d56a-4de8-8ad4-d89346c89814",
+          "state": "SUCCESS",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "results": {
+        "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a": {
+          "metadata": {
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [
+              [
+                [
+                  "a0d3eb87-1bb9-4cdf-8155-bf672ae3d568",
+                  null
+                ],
+                null
+              ],
+              [
+                [
+                  "73a7f3d0-d56a-4de8-8ad4-d89346c89814",
+                  null
+                ],
+                null
+              ]
+            ],
+            "date_done": "2026-11-12T09:37:24.101249+00:00",
+            "task_id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a"
+          },
+          "Original_get_type": "builtins.NoneType",
+          "ttl": 3595
+        },
+        "a0d3eb87-1bb9-4cdf-8155-bf672ae3d568": {
+          "metadata": {
+            "status": "SUCCESS",
+            "result": [
+              [
+                {
+                  "attributes": {
+                    "tvg-id": "owned.channel",
+                    "group-title": "Owned Group"
+                  },
+                  "display_name": "Owned stream",
+                  "name": "Owned stream",
+                  "url": "http://127.0.0.1:9/owned-null.ts"
+                }
+              ],
+              {
+                "Default Group": {},
+                "Owned Group": {}
+              }
+            ],
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-12T09:37:26.884337+00:00",
+            "parent_id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+            "task_id": "a0d3eb87-1bb9-4cdf-8155-bf672ae3d568"
+          },
+          "Original_get_type": "builtins.list",
+          "ttl": 3598
+        },
+        "73a7f3d0-d56a-4de8-8ad4-d89346c89814": {
+          "metadata": {
+            "status": "SUCCESS",
+            "result": "Dispatched jobs complete.",
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-12T09:37:27.152565+00:00",
+            "parent_id": "ae000364-9bb2-4ceb-9bda-e7f6a3f11f4a",
+            "task_id": "73a7f3d0-d56a-4de8-8ad4-d89346c89814"
+          },
+          "Original_get_type": "builtins.str",
+          "ttl": 3599
+        }
+      },
+      "account": [
+        {
+          "id": 3,
+          "name": "rust-owned-children-hash-null.m3u",
+          "server_url": null,
+          "file_path": "/data/m3us/rust-owned-children-hash-null.m3u",
+          "server_group_id": null,
+          "max_streams": 0,
+          "is_active": true,
+          "created_at": "2026-11-12 09:37:24.080474+00:00",
+          "updated_at": "2026-11-12 09:37:27.082776+00:00",
+          "status": "success",
+          "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+          "user_agent_id": null,
+          "locked": false,
+          "stream_profile_id": null,
+          "account_type": "STD",
+          "username": null,
+          "password": null,
+          "custom_properties": {},
+          "refresh_interval": 0,
+          "refresh_task_id": 2,
+          "stale_stream_days": 7,
+          "priority": 0
+        }
+      ],
+      "streams": [
+        {
+          "id": 2,
+          "name": "Owned stream",
+          "url": "http://127.0.0.1:9/owned-null.ts",
+          "m3u_account_id": 3,
+          "logo_url": "",
+          "tvg_id": "owned.channel",
+          "local_file": "",
+          "current_viewers": 0,
+          "updated_at": "2026-11-12 09:37:26.968661+00:00",
+          "channel_group_id": 3,
+          "stream_profile_id": null,
+          "is_custom": false,
+          "stream_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "last_seen": "2026-11-12 09:37:26.968443+00:00",
+          "is_stale": false,
+          "is_adult": false,
+          "custom_properties": {
+            "tvg-id": "owned.channel",
+            "group-title": "Owned Group"
+          },
+          "stream_id": null,
+          "stream_chno": null,
+          "stream_stats": null,
+          "stream_stats_updated_at": null,
+          "is_catchup": false,
+          "catchup_days": 0,
+          "is_radio": false
+        }
+      ],
+      "cache_after": {
+        "coresettings:group:stream_settings": {
+          "raw_base64": "gASVFAAAAAAAAAB9lIwMbTN1X2hhc2hfa2V5lE5zLg==",
+          "ttl": 298
+        },
+        "coresettings:groupver:stream_settings": {
+          "raw_base64": "MTc5NDQ3NjI0Mjk1Nzg1Nzk4OA==",
+          "ttl": -1
+        }
+      }
+    }
+  ],
+  "actual_worker_cases": 1,
+  "factory_cases": 0,
+  "held_cache_cases": 0,
+  "provenance": {
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "packages": {
+      "Django": "6.0.9",
+      "django-redis": "7.0.0",
+      "celery": "5.6.3",
+      "kombu": "5.6.2"
+    },
+    "files": {
+      "/app/core/models.py": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "/app/apps/m3u/models.py": "f8e0cd0862d9c576cbd7ac6af71c195a1fde8eaa1b3ea5f225c3b8b56ead7219",
+      "/app/apps/m3u/utils.py": "9ddc50fe1e3916e6812007b1de9d7677341333b334850001128e1406d4ab91ae"
+    }
+  }
+}
