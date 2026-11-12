@@ -104,7 +104,11 @@ async fn request(
         .collect::<serde_json::Map<_, _>>()
         .into();
     let bytes = response.bytes().await.unwrap().to_vec();
-    let value = serde_json::from_slice(&bytes).unwrap();
+    let value = if bytes.is_empty() {
+        Value::Null
+    } else {
+        serde_json::from_slice(&bytes).unwrap()
+    };
     (status, headers, value, bytes)
 }
 #[tokio::test]
@@ -397,15 +401,26 @@ async fn create_and_sequential_repeat_match_retained_source_effects() {
         extra.push((label, case, 200, change));
     }
     for (method, label) in [
-        ("PUT", "other-crud-put-stays-guarded"),
-        ("PATCH", "other-crud-patch-stays-guarded"),
-        ("DELETE", "other-crud-delete-stays-guarded"),
+        ("PUT", "mutation-put-requires-fields"),
+        ("PATCH", "mutation-empty-patch-touches-updated-at"),
+        ("DELETE", "mutation-delete-cascades-target"),
     ] {
         let mut case = original_create.clone();
         case["method"] = json!(method);
         case["path"] = json!("/api/core/notifications/1/");
         case["request_payload"] = json!({});
-        extra.push((label, case, 501, false));
+        extra.push((
+            label,
+            case,
+            if method == "PUT" {
+                400
+            } else if method == "PATCH" {
+                200
+            } else {
+                204
+            },
+            false,
+        ));
     }
     for (label, case, expected_status, action_update) in extra {
         let before = snapshot(&store).await;
@@ -417,7 +432,26 @@ async fn create_and_sequential_repeat_match_retained_source_effects() {
         save(&report_path, &report);
         assert_eq!(status, expected_status);
         assert_eq!(before["sequences"], after["sequences"]);
-        if action_update {
+        if label == "mutation-empty-patch-touches-updated-at" {
+            let mut expected = before.clone();
+            let observed = after["tables"]["core_systemnotification"][0]["updated_at"].clone();
+            assert!(began <= clock(&observed) && clock(&observed) <= completed);
+            expected["tables"]["core_systemnotification"][0]["updated_at"] = observed;
+            assert_eq!(expected, after);
+        } else if label == "mutation-delete-cascades-target" {
+            let mut expected = before.clone();
+            expected["tables"]["core_systemnotification"]
+                .as_array_mut()
+                .unwrap()
+                .retain(|r| r["id"] != 1);
+            expected["tables"]["core_notificationdismissal"]
+                .as_array_mut()
+                .unwrap()
+                .retain(|r| r["notification_id"] != 1);
+            assert_eq!(expected, after);
+            assert!(raw.is_empty());
+            assert!(body.is_null());
+        } else if action_update {
             let mut expected = before.clone();
             expected["tables"]["core_notificationdismissal"][0]["action_taken"] = json!("changed");
             assert_eq!(expected, after);

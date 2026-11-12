@@ -738,25 +738,146 @@ async fn create(
     // Source create serializes directly, even inactive/expired/developer rows.
     Ok((axum::http::StatusCode::CREATED, Json(serialize(row)?)))
 }
-async fn guarded_detail_write(
+/// Reuse the pinned serializer validators, then discard create-only defaults.
+/// PUT requires key/title/message; PATCH omits missing required fields as well.
+fn update_fields(
+    input: &Map<String, Value>,
+    partial: bool,
+) -> Result<CreateValidation, StoreError> {
+    let (mut fields, mut errors) = create_fields(input)?;
+    fields.retain(|name, _| input.contains_key(name));
+    if partial {
+        errors.retain(|name, _| input.contains_key(name));
+    }
+    Ok((fields, errors))
+}
+fn mutation_input(headers: &HeaderMap, body: &Bytes) -> Result<Map<String, Value>, StoreError> {
+    // Source does not parse request.data until after permissions and get_object.
+    let value = if body.is_empty() || !headers.contains_key("content-type") {
+        json!({})
+    } else {
+        let content_type = headers
+            .get("content-type")
+            .and_then(|v| v.to_str().ok())
+            .unwrap_or("");
+        if content_type.split(';').next().unwrap_or("").trim() != "application/json" {
+            return Err(StoreError::StatusBody(
+                415,
+                json!({"detail":format!("Unsupported media type \"{content_type}\" in request.")}),
+            ));
+        }
+        serde_json::from_slice(body).map_err(|error| StoreError::InvalidInput(json!({"detail":format!("JSON parse error - {}",crate::source_json_error(body,error))})))?
+    };
+    crate::admin_writes::body_object(Ok(Json(value)))
+}
+async fn mutation_target(
+    auth: &AuthService,
+    user: &User,
+    raw: String,
+) -> Result<Value, StoreError> {
+    // DRF get_object builds the complete developer-filtered queryset before
+    // converting/filtering pk. Preserve even unrelated developer shape errors.
+    let values = visible(auth, user, None).await?;
+    let id = key(raw)?;
+    values
+        .into_iter()
+        .find(|value| value["id"].as_i64() == Some(id))
+        .ok_or_else(missing)
+}
+async fn update(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     Path(raw): Path<String>,
     headers: HeaderMap,
     method: axum::http::Method,
-    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
+    body: Bytes,
 ) -> Result<Json<Value>, StoreError> {
+    let user = auth.account_user(peer, headers.clone(), true).await?;
+    let target = mutation_target(&auth, &user, raw).await?;
+    let id = target["id"].as_i64().expect("serialized notification id");
+    let input = mutation_input(&headers, &body)?;
+    let (changes, mut errors) = update_fields(&input, method == axum::http::Method::PATCH)?;
+    if let Some(key) = changes.get("notification_key").and_then(Value::as_str) {
+        let duplicate: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM core_systemnotification WHERE notification_key=$1 AND id<>$2)")
+            .bind(key).bind(id).fetch_one(auth.store.pool()).await?;
+        if duplicate {
+            errors.insert(
+                "notification_key".into(),
+                json!(["system notification with this notification key already exists."]),
+            );
+        }
+    }
+    if !errors.is_empty() {
+        return Err(StoreError::InvalidInput(Value::Object(errors)));
+    }
+    let mut fields = target
+        .as_object()
+        .expect("serialized notification object")
+        .clone();
+    fields.extend(changes);
+    let expires = fields["expires_at"]
+        .as_str()
+        .map(DateTime::parse_from_rfc3339)
+        .transpose()
+        .map_err(|_| failed())?
+        .map(|v| v.with_timezone(&Utc));
+    // Empty/readonly-only PATCH still saves and touches auto_now. Never allocate
+    // an identity/sequence, reset model defaults, or re-filter the saved row.
+    let updated_at = Utc::now();
+    let row = sqlx::query("UPDATE core_systemnotification SET notification_key=$1,notification_type=$2,priority=$3,source=$4,title=$5,message=$6,action_data=$7,is_active=$8,admin_only=$9,expires_at=$10,updated_at=$11 WHERE id=$12 RETURNING *,id::bigint AS object_id,EXISTS(SELECT 1 FROM core_notificationdismissal d WHERE d.notification_id=core_systemnotification.id AND d.user_id=$13) AS dismissed")
+        .bind(fields["notification_key"].as_str().expect("validated key"))
+        .bind(fields["notification_type"].as_str().expect("validated type"))
+        .bind(fields["priority"].as_str().expect("validated priority"))
+        .bind(fields["source"].as_str().expect("validated source"))
+        .bind(fields["title"].as_str().expect("validated title"))
+        .bind(fields["message"].as_str().expect("validated message"))
+        .bind(&fields["action_data"])
+        .bind(fields["is_active"].as_bool().expect("validated active"))
+        .bind(fields["admin_only"].as_bool().expect("validated admin_only"))
+        .bind(expires).bind(updated_at).bind(id).bind(user.id)
+        .fetch_optional(auth.store.pool()).await.map_err(|error| {
+            if matches!(&error, sqlx::Error::Database(e) if e.code().as_deref()==Some("23505") && e.constraint()==Some("core_systemnotification_notification_key_key")) {
+                failed()
+            } else { error.into() }
+        })?.ok_or_else(missing)?;
+    Ok(Json(serialize(row)?))
+}
+async fn destroy(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    headers: HeaderMap,
+) -> Result<axum::http::StatusCode, StoreError> {
     let user = auth.account_user(peer, headers, true).await?;
-    let id = key(raw)?;
-    if visible(&auth, &user, Some(id)).await?.is_empty() {
-        return Err(missing());
+    let target = mutation_target(&auth, &user, raw).await?;
+    let id = target["id"].as_i64().expect("serialized notification id");
+    // Source destroy never accesses request.data. Its ORM collector cascades
+    // dismissals transactionally; the PostgreSQL FK itself has no SQL cascade.
+    let mut transaction = auth.store.pool().begin().await?;
+    let deleted = async {
+        sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=$1")
+            .bind(id)
+            .execute(&mut *transaction)
+            .await?;
+        let result = sqlx::query("DELETE FROM core_systemnotification WHERE id=$1")
+            .bind(id)
+            .execute(&mut *transaction)
+            .await?;
+        Ok::<_, sqlx::Error>(result.rows_affected())
     }
-    if method != axum::http::Method::DELETE {
-        crate::admin_writes::body_object(body)?;
+    .await;
+    match deleted {
+        Ok(1) => transaction.commit().await?,
+        Ok(_) => {
+            transaction.rollback().await?;
+            return Err(missing());
+        }
+        Err(error) => {
+            transaction.rollback().await?;
+            return Err(error.into());
+        }
     }
-    Err(StoreError::Unsupported(
-        "Administrative notification production and scheduling have not been ported.",
-    ))
+    Ok(axum::http::StatusCode::NO_CONTENT)
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
@@ -765,10 +886,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route("/api/core/notifications/dismiss-all/", post(dismiss_all))
         .route(
             "/api/core/notifications/{id}/",
-            get(detail)
-                .put(guarded_detail_write)
-                .patch(guarded_detail_write)
-                .delete(guarded_detail_write),
+            get(detail).put(update).patch(update).delete(destroy),
         )
         .route("/api/core/notifications/{id}/dismiss/", post(dismiss))
         .with_state(auth)
@@ -776,6 +894,68 @@ pub(crate) fn router(auth: AuthService) -> Router {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn update_put_requires_fields_but_does_not_apply_optional_model_defaults() {
+        let (_, errors) = update_fields(&Map::new(), false).unwrap();
+        assert_eq!(errors.len(), 3);
+        let (fields, errors) = update_fields(
+            json!({"notification_key":" key ","title":" title ","message":" message "})
+                .as_object()
+                .unwrap(),
+            false,
+        )
+        .unwrap();
+        assert!(errors.is_empty());
+        assert_eq!(
+            Value::Object(fields),
+            json!({"notification_key":"key","title":"title","message":"message"})
+        );
+    }
+    #[test]
+    fn update_patch_empty_readonly_and_unknown_have_no_default_fields() {
+        for input in [
+            json!({}),
+            json!({"id":999,"created_at":"invalid","updated_at":"invalid","is_dismissed":false,"unknown":"ignored"}),
+        ] {
+            let (fields, errors) = update_fields(input.as_object().unwrap(), true).unwrap();
+            assert!(fields.is_empty());
+            assert!(errors.is_empty());
+        }
+    }
+    #[test]
+    fn update_patch_validates_explicit_fields_and_preserves_json_replacement() {
+        let (_, errors) = update_fields(
+            json!({"notification_key":null,"priority":"urgent"})
+                .as_object()
+                .unwrap(),
+            true,
+        )
+        .unwrap();
+        assert_eq!(errors.len(), 2);
+        assert!(errors.contains_key("notification_key"));
+        assert!(errors.contains_key("priority"));
+        let (fields, errors) = update_fields(
+            json!({"title":123,"action_data":[1,{"x":true}],"expires_at":null,"admin_only":0})
+                .as_object()
+                .unwrap(),
+            true,
+        )
+        .unwrap();
+        assert!(errors.is_empty());
+        assert_eq!(
+            Value::Object(fields),
+            json!({"title":"123","action_data":[1,{"x":true}],"expires_at":null,"admin_only":false})
+        );
+    }
+    #[test]
+    fn update_parser_retains_source_json_error_after_target_lookup() {
+        let mut headers = HeaderMap::new();
+        headers.insert("content-type", "application/json".parse().unwrap());
+        let error = mutation_input(&headers, &Bytes::from_static(b"{")).unwrap_err();
+        assert!(
+            matches!(error,StoreError::InvalidInput(value)if value==json!({"detail":"JSON parse error - Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"}))
+        );
+    }
     #[test]
     fn create_uses_model_defaults_and_ignores_readonly_input() {
         let (fields, errors) = create_fields(json!({"notification_key":" key ","title":" Hello ","message":" World ","id":999,"created_at":"invalid","is_dismissed":true,"updated_at":"invalid","unknown":"ignored"}).as_object().unwrap()).unwrap();
