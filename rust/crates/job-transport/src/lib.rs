@@ -154,3 +154,12 @@ mod logo_spool_peer;
 
 #[cfg(test)]
 mod logo_spool_resources;
+
+pub mod scanner_files_protocol;
+pub mod scanner_files;
+pub mod scanner_files_worker;
+#[cfg(test)]
+mod scanner_files_peer;
+
+#[cfg(test)]
+mod scanner_files_resources;

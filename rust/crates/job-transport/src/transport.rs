@@ -1354,3 +1354,7 @@ mod default_transport;
 #[path = "cleanup_reservation_transport.rs"]
 mod cleanup_reservation_transport;
 pub(crate) use cleanup_reservation_transport::Reservation as CleanupReservation;
+
+#[path="scanner_files_io.rs"]
+mod scanner_files_io;
+pub use scanner_files_io::{ScannerFilesPorts,ScannerRoute,ScannerServer,ScannerIoError};

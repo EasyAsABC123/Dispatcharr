@@ -194,8 +194,9 @@ impl Jobs{
 /// the scanner helper. Lost/ambiguous replies never become Source null.
 use crate::scanner_index_helper::Publication as ScannerIndexPublication;
 impl Jobs{
- pub(crate) async fn publish_scanner_index(&self,parent:uuid::Uuid,source:i64,owner:std::sync::Arc<dyn Send+Sync>)->Result<ScannerIndexPublication,Error>{
-  self.require_default()?;if source<=0{return Err(Error::Protocol)}let id=uuid::Uuid::new_v4();let bytes=crate::refresh_dispatch::encode_child(&crate::refresh_dispatch::ChildPublication::ProgrammeIndex{source_id:source},id,parent,parent,uuid::Uuid::new_v4(),uuid::Uuid::new_v4(),"rust@scanner-index").map_err(|_|Error::Protocol)?;crate::refresh_dispatch::parse_native_child(&bytes).map_err(|_|Error::Protocol)?;let limit=self.inner.config.max_queued_jobs.to_string();match self.inner.broker.command_classified::<i64,_>(PUBLISH,&["celery".into(),"_kombu.binding.celery".into()],&[&bytes,limit.as_bytes()],self.lease(owner)?).await{
+ pub(crate) async fn publish_scanner_index(&self,parent:uuid::Uuid,source:i64,owner:std::sync::Arc<dyn Send+Sync>)->Result<ScannerIndexPublication,Error>{self.publish_scanner_index_scoped(parent,source,uuid::Uuid::new_v4(),"rust@scanner-index",owner).await}
+ pub(crate) async fn publish_scanner_index_scoped(&self,parent:uuid::Uuid,source:i64,reply:uuid::Uuid,origin:&str,owner:std::sync::Arc<dyn Send+Sync>)->Result<ScannerIndexPublication,Error>{
+  self.require_default()?;if source<=0{return Err(Error::Protocol)}let id=uuid::Uuid::new_v4();let bytes=crate::refresh_dispatch::encode_child(&crate::refresh_dispatch::ChildPublication::ProgrammeIndex{source_id:source},id,parent,parent,reply,uuid::Uuid::new_v4(),origin).map_err(|_|Error::Protocol)?;crate::refresh_dispatch::parse_native_child(&bytes).map_err(|_|Error::Protocol)?;let limit=self.inner.config.max_queued_jobs.to_string();match self.inner.broker.command_classified::<i64,_>(PUBLISH,&["celery".into(),"_kombu.binding.celery".into()],&[&bytes,limit.as_bytes()],self.lease(owner)?).await{
    Ok((n,_))if n>0=>Ok(ScannerIndexPublication::Committed(id)),Ok((-2,_))=>Err(Error::Capacity),Ok(_)=>Err(Error::Corrupt),Err(ClassifiedError::Server)=>Ok(ScannerIndexPublication::CaughtServer),Err(ClassifiedError::Backend)=>Err(Error::AmbiguousPublication(id)),Err(error)=>Err(map(error))
   }
  }

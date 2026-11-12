@@ -225,3 +225,7 @@ fn inspect_into<F:FnMut(File)->Result<(),Error>>(roots:Roots,limits:Limits,mut e
  }
  walk(&roots.logos,limits,&mut count,&mut bytes,&mut directories,&mut emit)?;Ok(count)
 }
+
+pub(crate) fn scanner_files_receipt(owner:Owner)->(Arc<Receipt>,oneshot::Receiver<()>){
+ let semaphore=Arc::new(Semaphore::new(1));let slot=Arc::new(semaphore.try_acquire_owned().expect("fresh private receipt slot"));let(tx,rx)=oneshot::channel();(Arc::new(Receipt{_owner:owner,_slot:slot,done:Some(tx)}),rx)
+}

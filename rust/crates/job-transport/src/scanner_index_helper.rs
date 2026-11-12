@@ -12,8 +12,9 @@ const SELECT:&str="SELECT s.id::bigint FROM epg_epgsource s LEFT OUTER JOIN epg_
 #[derive(Debug)]
 pub struct Children{ids:Vec<Uuid>}
 impl Children{pub fn ids(&self)->&[Uuid]{&self.ids}}
-struct Helper{pool:PgPool,jobs:Jobs}
+pub(crate) struct Helper{pool:PgPool,jobs:Jobs,publication:Option<(Uuid,&'static str)>}
 impl Helper{
+ pub(crate) fn new_scoped(pool:PgPool,jobs:Jobs,reply:Uuid,origin:&'static str)->Self{Self{pool,jobs,publication:Some((reply,origin))}}
  async fn sources(&self,receipt:Arc<Receipt>)->Result<Option<Vec<i64>>,Error>{
   let _receipt=receipt;let mut connection=self.pool.acquire().await.map_err(|_|Error::Operational)?.detach();
   let result=sqlx::query_scalar::<_,i64>(SELECT).fetch_all(&mut connection).await;
@@ -29,10 +30,10 @@ impl Helper{
   }
  }
 }
-struct Execution{helper:Arc<Helper>,parent:Uuid,children:Mutex<Vec<Uuid>>}
+pub(crate) struct Execution{helper:Arc<Helper>,parent:Uuid,children:Mutex<Vec<Uuid>>}
 impl Execution{
- fn new(helper:Arc<Helper>,parent:Uuid)->Self{Self{helper,parent,children:Mutex::new(Vec::new())}}
- fn children(&self)->Result<Children,Error>{Ok(Children{ids:self.children.lock().map_err(|_|Error::Operational)?.clone()})}
+ pub(crate) fn new(helper:Arc<Helper>,parent:Uuid)->Self{Self{helper,parent,children:Mutex::new(Vec::new())}}
+ pub(crate) fn children(&self)->Result<Children,Error>{Ok(Children{ids:self.children.lock().map_err(|_|Error::Operational)?.clone()})}
 }
 impl FirstScanHook for Execution{
  fn admit<'a>(&'a self,receipt:Arc<Receipt>)->std::pin::Pin<Box<dyn std::future::Future<Output=Result<(),Error>>+Send+'a>>{Box::pin(async move{self.helper.sources(receipt).await.map(|_|())})}
@@ -41,7 +42,8 @@ impl FirstScanHook for Execution{
   for source in ids{
    // Preserve database iteration; the Source query has no global ORDER BY.
    // The same receipt remains owned through each actual Redis reply.
-   match self.helper.jobs.publish_scanner_index(self.parent,source,receipt.clone()).await{
+   let publication=match self.helper.publication{Some((reply,origin))=>self.helper.jobs.publish_scanner_index_scoped(self.parent,source,reply,origin,receipt.clone()).await,None=>self.helper.jobs.publish_scanner_index(self.parent,source,receipt.clone()).await};
+   match publication{
     Ok(Publication::Committed(id))=>{let mut children=self.children.lock().map_err(|_|Error::Operational)?;if children.len()==MAX_SOURCES{return Err(Error::Operational)}children.push(id)},
     Ok(Publication::CaughtServer)=>break,
     Err(_)=>return Err(Error::Operational)
@@ -78,11 +80,11 @@ pub struct IndexedLogoApplication{scanner:Scanner,application:DefaultApplication
 impl IndexedLogoApplication{
  pub fn prepare(jobs:Jobs,pool:PgPool,effects:Arc<dyn Effects>,roots:Roots,limits:Limits,clock:Arc<dyn Clock>,poll:Duration)->Result<Self,Error>{
   if !jobs.allows_defaults(){return Err(Error::Unsupported)}
-  let scanner=Scanner::new(effects,roots,limits)?;let helper=Arc::new(Helper{pool,jobs:jobs.clone()});let domain=Arc::new(Domain{scanner:scanner.clone(),helper,clock});let worker=DefaultWorker::new_logo_scanner(jobs,domain).map_err(|_|Error::Unsupported)?;let application=DefaultApplication::prepare(worker,poll).map_err(|_|Error::Unsupported)?;Ok(Self{scanner,application})
+  let scanner=Scanner::new(effects,roots,limits)?;let helper=Arc::new(Helper{pool,jobs:jobs.clone(),publication:None});let domain=Arc::new(Domain{scanner:scanner.clone(),helper,clock});let worker=DefaultWorker::new_logo_scanner(jobs,domain).map_err(|_|Error::Unsupported)?;let application=DefaultApplication::prepare(worker,poll).map_err(|_|Error::Unsupported)?;Ok(Self{scanner,application})
  }
  /// Same helper authority with an explicitly prepared bounded disk spool.
  pub fn prepare_spooled(jobs:Jobs,pool:PgPool,effects:Arc<dyn Effects>,options:crate::logo_scanner::SpoolOptions,clock:Arc<dyn Clock>,poll:Duration)->Result<Self,Error>{
-  if !jobs.allows_defaults(){return Err(Error::Unsupported)}let scanner=Scanner::new_spooled(effects,options.roots,options.limits,options.scratch)?;let helper=Arc::new(Helper{pool,jobs:jobs.clone()});let domain=Arc::new(Domain{scanner:scanner.clone(),helper,clock});let worker=DefaultWorker::new_logo_scanner(jobs,domain).map_err(|_|Error::Unsupported)?;let application=DefaultApplication::prepare(worker,poll).map_err(|_|Error::Unsupported)?;Ok(Self{scanner,application})
+  if !jobs.allows_defaults(){return Err(Error::Unsupported)}let scanner=Scanner::new_spooled(effects,options.roots,options.limits,options.scratch)?;let helper=Arc::new(Helper{pool,jobs:jobs.clone(),publication:None});let domain=Arc::new(Domain{scanner:scanner.clone(),helper,clock});let worker=DefaultWorker::new_logo_scanner(jobs,domain).map_err(|_|Error::Unsupported)?;let application=DefaultApplication::prepare(worker,poll).map_err(|_|Error::Unsupported)?;Ok(Self{scanner,application})
  }
  pub fn start(&self)->Result<(),crate::default_application::LifecycleError>{self.application.start()}
  pub fn state(&self)->crate::default_application::State{self.application.state()}
