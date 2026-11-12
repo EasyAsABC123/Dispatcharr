@@ -1,0 +1,121 @@
+{
+  "state": "SINGLE_ATTEMPT_PRESERVED_WITH_INDEPENDENT_CLEANUP_RECOVERY",
+  "controller_passed": false,
+  "controller_actual_exit": 1,
+  "controller_execution": {
+    "path": "artifacts/rust/m0-notifications-correct-route-source-1/execution.json",
+    "bytes": 787,
+    "sha256": "01964e8c1c45bf0d62da2cc686d7a9a41e2c98e65f78e077bc34862947519d72"
+  },
+  "controller_exit_receipt": {
+    "path": "artifacts/rust/m0-notifications-correct-route-controller-1/source-execution-once.exit",
+    "bytes": 2,
+    "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "Source_capture_complete": true,
+  "actual_requests": 8,
+  "actual_statuses": [
+    {
+      "name": "anonymous-list",
+      "role": "anonymous",
+      "method": "GET",
+      "path": "/api/core/notifications/",
+      "actual_status": 401
+    },
+    {
+      "name": "standard-list",
+      "role": "standard",
+      "method": "GET",
+      "path": "/api/core/notifications/",
+      "actual_status": 200
+    },
+    {
+      "name": "standard-create-denied",
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/core/notifications/",
+      "actual_status": 403
+    },
+    {
+      "name": "standard-dismiss",
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/core/notifications/1/dismiss/",
+      "actual_status": 200
+    },
+    {
+      "name": "standard-dismiss-repeat",
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/core/notifications/1/dismiss/",
+      "actual_status": 200
+    },
+    {
+      "name": "standard-list-after-dismiss",
+      "role": "standard",
+      "method": "GET",
+      "path": "/api/core/notifications/",
+      "actual_status": 200
+    },
+    {
+      "name": "admin-list-independent",
+      "role": "admin",
+      "method": "GET",
+      "path": "/api/core/notifications/",
+      "actual_status": 200
+    },
+    {
+      "name": "admin-create-positive",
+      "role": "admin",
+      "method": "POST",
+      "path": "/api/core/notifications/",
+      "actual_status": 201
+    }
+  ],
+  "effect_checks": 213,
+  "effect_checks_passed": 213,
+  "Source_effect_validation": {
+    "path": "artifacts/rust/m0-notifications-correct-route-source-1/effect-validation.json",
+    "bytes": 21395,
+    "sha256": "1234eda3787ff4378dbb21228e56a4e8d5a0ef543723f8576b7eda23867fd31d"
+  },
+  "default_eleven_named_tables_and_sequences_exact": true,
+  "default_before": {
+    "path": "artifacts/rust/m0-notifications-correct-route-source-1/default-before-private.json",
+    "bytes": 2777,
+    "sha256": "f5e88184d8ba810fa5dda3544ad9c22769e7885312d05ada9d435f72547330ff"
+  },
+  "default_after": {
+    "path": "artifacts/rust/m0-notifications-correct-route-source-1/default-after-private.json",
+    "bytes": 2777,
+    "sha256": "f5e88184d8ba810fa5dda3544ad9c22769e7885312d05ada9d435f72547330ff"
+  },
+  "cleanup_assertion_mismatch": {
+    "expected_case_sensitive_stderr_fragment": "No such object",
+    "actual_stderr": "error: no such object: 906682ce8908b1a21d9337624ac0b68ef9aa634c8a9b95cb6774c63e3686b832\n",
+    "interpretation": "Original sealed controller retained exit1 because Docker emits lower-case no such object. Read-only exact-ID and label checks independently prove absence; no controller input or original result changed."
+  },
+  "independent_container_network_volume_absence": true,
+  "independent_recorded_process_PIDs_absent": 8,
+  "cleanup_inspection": {
+    "path": "artifacts/rust/m0-notifications-correct-route-source-1/independent-cleanup-inspection.json",
+    "bytes": 1504,
+    "sha256": "5f5779031a233a49479cdc1c0e7b1dbef594e9b81cadcacdf9782d416fd3f603"
+  },
+  "process_absence": {
+    "path": "artifacts/rust/m0-notifications-correct-route-source-1/independent-owned-process-absence.json",
+    "bytes": 435,
+    "sha256": "2c54eadf9797e1c7fea4d44a0355917ff306a476f30da78d47971e36c878201d"
+  },
+  "sealed_inputs_unchanged": true,
+  "postexecution_local_seal_check": {
+    "path": "artifacts/rust/m0-notifications-correct-route-source-1/postexecution-seal-check.json",
+    "bytes": 154,
+    "sha256": "daf6a801d4718a39dbc1d745b7ce550a8a2e6f2ddc397ffa51c9970362c8298d"
+  },
+  "new_Source_attempts": 1,
+  "Source_fixture_retries": 0,
+  "sealed_input_edits": 0,
+  "registration_changes": 0,
+  "Native_credential_TCP_performance_or_full_endpoint_acceptance": false
+}

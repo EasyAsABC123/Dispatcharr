@@ -1,0 +1,55 @@
+{
+  "services": {
+    "baseline": {
+      "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "pull_policy": "never",
+      "platform": "linux/amd64",
+      "working_dir": "/app",
+      "entrypoint": [
+        "bash",
+        "/notification-tools/start.sh"
+      ],
+      "environment": {
+        "DISPATCHARR_ENV": "aio",
+        "DJANGO_SECRET_KEY": "notification-fixture-only",
+        "POSTGRES_DB": "dispatcharr",
+        "POSTGRES_USER": "dispatch",
+        "POSTGRES_PASSWORD": "playback-fixture-only",
+        "POSTGRES_HOST": "/var/run/postgresql",
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_DIR": "/data/db",
+        "REDIS_HOST": "127.0.0.1",
+        "REDIS_PORT": "6379",
+        "REDIS_PASSWORD": "playback-fixture-only",
+        "REDISCLI_AUTH": "playback-fixture-only",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONPATH": "/notification-tools:/app",
+        "PUID": "1000",
+        "PGID": "1000",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      },
+      "volumes": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-correct-route-source-1/source:/app:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-correct-route-controller-1/controller:/notification-tools:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-correct-route-source-1:/evidence"
+      ],
+      "tmpfs": [
+        "/data:mode=1777,size=2147483648",
+        "/app/media:mode=1777,size=67108864",
+        "/tmp:mode=1777,size=536870912"
+      ],
+      "cpus": 1,
+      "mem_limit": "1g",
+      "pids_limit": 256,
+      "networks": [
+        "default"
+      ]
+    }
+  },
+  "networks": {
+    "default": {
+      "internal": true
+    }
+  }
+}

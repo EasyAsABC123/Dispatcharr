@@ -1,0 +1,9 @@
+PID                 COMMAND             COMMAND
+3301159             sleep               sleep infinity
+3301363             postgres            /usr/lib/postgresql/17/bin/postgres -D /data/db
+3301364             postgres            postgres: checkpointer
+3301365             postgres            postgres: background writer
+3301367             postgres            postgres: walwriter
+3301368             postgres            postgres: autovacuum launcher
+3301369             postgres            postgres: logical replication launcher
+3301399             redis-server        redis-server 127.0.0.1:6379

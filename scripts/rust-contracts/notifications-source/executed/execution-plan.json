@@ -1,0 +1,129 @@
+{
+  "state": "UNEXECUTED_PREDICTIONS_ONLY",
+  "Source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "fixed_request_count": 8,
+  "cases": [
+    {
+      "name": "anonymous-list",
+      "role": "anonymous",
+      "method": "GET",
+      "path": "/api/core/notifications/",
+      "expected_status_hypothesis": 401,
+      "authority": "IsAuthenticated plus default first JWT authentication; status remains hypothesis until actual Source capture",
+      "effects": "No fixture notification/dismissal mutation"
+    },
+    {
+      "name": "standard-list",
+      "role": "standard",
+      "method": "GET",
+      "path": "/api/core/notifications/",
+      "expected_status_hypothesis": 200,
+      "authority": "same existing Source test assertion, now actual URL dispatch",
+      "effects": "owned active system notice visible, is_dismissed=false; original list fields notifications/count/unread_count captured"
+    },
+    {
+      "name": "standard-create-denied",
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/core/notifications/",
+      "payload": "reuse Original evil/Phish/Click/is_active=True fixture body",
+      "expected_status_hypothesis": 403,
+      "authority": "same existing Source test assertion, now actual URL dispatch",
+      "effects": "exact notification/dismissal rows+sequences unchanged by denied request"
+    },
+    {
+      "name": "standard-dismiss",
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/core/notifications/<actual-seeded-pk>/dismiss/",
+      "payload": {},
+      "expected_status_hypothesis": 200,
+      "authority": "same existing Source test assertion; Source get_or_create defaults None",
+      "effects": "exactly one NotificationDismissal for standard+seednotice, action_taken=None; notification row unchanged; response success/message/key captured"
+    },
+    {
+      "name": "standard-dismiss-repeat",
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/core/notifications/<actual-seeded-pk>/dismiss/",
+      "payload": {},
+      "expected_status_hypothesis": 200,
+      "authority": "Source get_or_create and conditional save action_taken branch",
+      "effects": "no duplicate; same dismissal PK/dismissed_at/action_taken; do not assume sequence state without capture"
+    },
+    {
+      "name": "standard-list-after-dismiss",
+      "role": "standard",
+      "method": "GET",
+      "path": "/api/core/notifications/",
+      "expected_status_hypothesis": 200,
+      "authority": "Source list excludes current-user dismissal by default",
+      "effects": "seednotice absent; with isolated one-notice seed count/unread_count0; full observed response retained"
+    },
+    {
+      "name": "admin-list-independent",
+      "role": "admin",
+      "method": "GET",
+      "path": "/api/core/notifications/",
+      "expected_status_hypothesis": 200,
+      "authority": "Source get_queryset/user-specific dismissal filter",
+      "effects": "same seednotice visible and is_dismissed=false; no admin dismissal inferred"
+    },
+    {
+      "name": "admin-create-positive",
+      "role": "admin",
+      "method": "POST",
+      "path": "/api/core/notifications/",
+      "payload": {
+        "notification_key": "<owned-prefix>.created",
+        "title": "Hello",
+        "message": "World",
+        "is_active": true
+      },
+      "expected_status_hypothesis": 201,
+      "authority": "Source ModelViewSet create/serializer, implementation-derived prediction not prior named-test evidence",
+      "effects": "one new owned SystemNotification; actual info/normal/system/default action_data/admin_only/expiry fields and created_at own-clock interval captured"
+    }
+  ],
+  "operation_ids_are_candidates_only": [
+    "route-025c0d74fa99218d4728:GET",
+    "route-025c0d74fa99218d4728:POST",
+    "route-1577c7cc68b36d7ee6f4:POST"
+  ],
+  "wrong_route_original_tests_unchanged": true,
+  "register_or_execute_before_Root_review": false,
+  "startup_refinement": "Source-only local PostgreSQL/Redis bootstrap, migrations then idle; never starts web/workers/media instead of starting and stopping a playback supervisor. Actual Django management initialization unchanged.",
+  "phases": [
+    "verify exact reviewed seal and every input hash; local-only default invocation stops here",
+    "new output and random initially absent project",
+    "unpack pinned Original archive; internal network; image pull forbidden; Source read-only",
+    "owned PG/Redis migration bootstrap; no web/workers/media/external I/O",
+    "read-only default eleven-table/sequence audit",
+    "CREATE new rust_probe_notif_<10hex> TEMPLATE dispatcharr",
+    "guarded management-shell actual resolver/preflight/seed/eight APIClient requests",
+    "preserve raw response/SQL/cache/clock evidence and compare effects offline",
+    "outer finally default audit even after partial Source failure",
+    "owned project stop/down and independent exact-ID/label/host-child/pipe cleanup; no retry"
+  ],
+  "bounds": {
+    "controller_command_output_bytes": 1048576,
+    "controller_command_timeout_seconds": 180,
+    "audit_command_timeout_seconds": 120,
+    "cleanup_timeout_seconds": 60,
+    "SQL_row_bytes": 131072,
+    "SQL_audit_rows_per_table": 10000,
+    "SQL_audit_total_row_bytes": 8388608,
+    "response_body_bytes": 65536,
+    "cache_scan_rounds": 128,
+    "cache_keys": 1000,
+    "cache_raw_value_bytes": 65536,
+    "cache_total_bytes_per_snapshot": 1048576,
+    "Source_report_bytes": 67108864,
+    "container_CPUs": 1,
+    "container_memory_bytes": 1073741824,
+    "container_PIDs": 256
+  },
+  "local_controls_only": true,
+  "Source_requests_executed": 0,
+  "retained_preparation_error": "First local unittest discovery stopped on a test-helper typo (else0); corrected to else 0. No app import, Docker or Source execution occurred."
+}

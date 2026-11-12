@@ -1,0 +1,64 @@
+[
+  {
+    "argv": [
+      "docker",
+      "inspect",
+      "906682ce8908b1a21d9337624ac0b68ef9aa634c8a9b95cb6774c63e3686b832"
+    ],
+    "returncode": 1,
+    "stdout_hex": "5b5d0a",
+    "stderr_hex": "6572726f723a206e6f2073756368206f626a6563743a20393036363832636538393038623161323164393333373632346163306236386566396161363334633861396239356362363737346336336533363836623833320a",
+    "stdout_text": "[]\n",
+    "stderr_text": "error: no such object: 906682ce8908b1a21d9337624ac0b68ef9aa634c8a9b95cb6774c63e3686b832\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "container",
+      "ls",
+      "-a",
+      "--no-trunc",
+      "--filter",
+      "label=com.docker.compose.project=dispatcharr-notif-source-6380fe41f2",
+      "--format",
+      "{{.ID}}"
+    ],
+    "returncode": 0,
+    "stdout_hex": "",
+    "stderr_hex": "",
+    "stdout_text": "",
+    "stderr_text": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "network",
+      "ls",
+      "--filter",
+      "label=com.docker.compose.project=dispatcharr-notif-source-6380fe41f2",
+      "--format",
+      "{{.ID}}"
+    ],
+    "returncode": 0,
+    "stdout_hex": "",
+    "stderr_hex": "",
+    "stdout_text": "",
+    "stderr_text": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "volume",
+      "ls",
+      "--filter",
+      "label=com.docker.compose.project=dispatcharr-notif-source-6380fe41f2",
+      "--format",
+      "{{.Name}}"
+    ],
+    "returncode": 0,
+    "stdout_hex": "",
+    "stderr_hex": "",
+    "stdout_text": "",
+    "stderr_text": ""
+  }
+]

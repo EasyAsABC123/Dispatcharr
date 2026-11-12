@@ -1,0 +1,11 @@
+--- a/controller/run.py
++++ b/controller/run.py
+@@ -141,7 +141,7 @@
+                     # Exact former PID namespace's container ID absent, independently
+                     # of label selectors; docker inspect must fail with no object.
+                     probe=subprocess.run([args.docker,'inspect',container],env=environment,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=15)
+-                    require(probe.returncode!=0 and probe.stdout.strip()==b'[]' and b'No such object'in probe.stderr,'ExactOwnedContainerAbsent')
++                    require(probe.returncode!=0 and probe.stdout.strip()==b'[]' and b'no such object'in probe.stderr.lower(),'ExactOwnedContainerAbsent')
+                 require(all(job.physically_settled or(job.process.poll()is not None and not any(t.is_alive()for t in job.threads))for job in jobs),'OwnedHostChildrenAndPipesSettled')
+                 report['owned_cleanup_independently_verified']=True
+             except BaseException as error:

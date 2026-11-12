@@ -42,3 +42,8 @@ scripts/rust-job-contracts/scanner-logo/m3u-url-reference/pinned/core/tasks.py -
 
 # Byte-exact Original test authority: six pre-existing trailing spaces.
 scripts/rust-contracts/proxy-plugin/original/apps/timeshift/tests/test_views.py -whitespace
+
+# Preserve immutable notification Source evidence and Original EOF bytes.
+scripts/rust-contracts/notifications-source/raw/bootstrap.log -text -whitespace
+scripts/rust-contracts/notifications-source/executed/inputs/original/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notifications-source/executed/inputs/original/core/apps.py -text whitespace=-blank-at-eof

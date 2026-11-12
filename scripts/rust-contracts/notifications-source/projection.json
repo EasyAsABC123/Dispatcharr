@@ -1,0 +1,327 @@
+{
+  "format_version": 1,
+  "scope": "One Source-only in-process real-resolver APIClient attempt; force-auth framework routing/permissions/SQL/cache observations only",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "executed_seal_sha256": "2004c823a728d3ecdb7f7750867b0b0d3385fdac5779b4a074afb899b892ba59",
+  "observation_capture_complete": true,
+  "request_count": 8,
+  "effect_comparison_success": true,
+  "recomputed_effect_checks": 213,
+  "executed_controller_success": false,
+  "executed_controller_exit": 1,
+  "controller_cleanup_assertion": "ValueError:ExactOwnedContainerAbsent",
+  "independent_cleanup_recovered": true,
+  "Docker_capitalization_limitation": "Executed case-sensitive No such object check rejected actual lower-case error: no such object; executed result remains exit1",
+  "default_named_audit": {
+    "tables": 11,
+    "sequences": 11,
+    "before_after_exact": true,
+    "dataset_sha256": "0ba7af1e55f3951fb3ea1118a431192b4243ec96c23074b62ea4f36b44a78637",
+    "full_database_audit": false
+  },
+  "raw_cache_scope": "Owned Django Redis database DUMP/PTTL observations including unrelated timezone/group activity; no global silence or Channels/Celery delivery claim",
+  "actual_database": "rust_probe_notif_6380fe41f2",
+  "actual_project": "dispatcharr-notif-source-6380fe41f2",
+  "actual_container_id": "906682ce8908b1a21d9337624ac0b68ef9aa634c8a9b95cb6774c63e3686b832",
+  "recorded_container_PIDs_absent": [
+    3301159,
+    3301363,
+    3301364,
+    3301365,
+    3301367,
+    3301368,
+    3301369,
+    3301399
+  ],
+  "cases": [
+    {
+      "case_index": 0,
+      "name": "anonymous-list",
+      "role": "anonymous",
+      "authentication": "anonymous APIClient",
+      "method": "GET",
+      "path_exact": "/api/core/notifications/",
+      "resolver_action": "list",
+      "actual_status": 401,
+      "body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "raw_evidence_pointer": "raw/source-observations.json#/requests/0",
+      "notification_rows_before_after": [
+        1,
+        1
+      ],
+      "dismissal_rows_before_after": [
+        0,
+        0
+      ],
+      "cache_keys_before_after": [
+        1,
+        2
+      ],
+      "Source_clock_interval": [
+        "2026-11-12T13:33:29.537447+00:00",
+        "2026-11-12T13:33:29.542048+00:00"
+      ]
+    },
+    {
+      "case_index": 1,
+      "name": "standard-list",
+      "role": "standard",
+      "authentication": "real owned user with force_authenticate; JWT/API-key backend bypassed",
+      "method": "GET",
+      "path_exact": "/api/core/notifications/",
+      "resolver_action": "list",
+      "actual_status": 200,
+      "body_bytes": 321,
+      "body_sha256": "208cb4e8b98fc4d03584d4cc4e79c350410c3f1e4ea6346a858193906beca242",
+      "raw_evidence_pointer": "raw/source-observations.json#/requests/1",
+      "notification_rows_before_after": [
+        1,
+        1
+      ],
+      "dismissal_rows_before_after": [
+        0,
+        0
+      ],
+      "cache_keys_before_after": [
+        2,
+        2
+      ],
+      "Source_clock_interval": [
+        "2026-11-12T13:33:29.548768+00:00",
+        "2026-11-12T13:33:29.554856+00:00"
+      ]
+    },
+    {
+      "case_index": 2,
+      "name": "standard-create-denied",
+      "role": "standard",
+      "authentication": "real owned user with force_authenticate; JWT/API-key backend bypassed",
+      "method": "POST",
+      "path_exact": "/api/core/notifications/",
+      "resolver_action": "create",
+      "actual_status": 403,
+      "body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "raw_evidence_pointer": "raw/source-observations.json#/requests/2",
+      "notification_rows_before_after": [
+        1,
+        1
+      ],
+      "dismissal_rows_before_after": [
+        0,
+        0
+      ],
+      "cache_keys_before_after": [
+        2,
+        2
+      ],
+      "Source_clock_interval": [
+        "2026-11-12T13:33:29.561459+00:00",
+        "2026-11-12T13:33:29.562048+00:00"
+      ]
+    },
+    {
+      "case_index": 3,
+      "name": "standard-dismiss",
+      "role": "standard",
+      "authentication": "real owned user with force_authenticate; JWT/API-key backend bypassed",
+      "method": "POST",
+      "path_exact": "/api/core/notifications/1/dismiss/",
+      "resolver_action": "dismiss",
+      "actual_status": 200,
+      "body_bytes": 83,
+      "body_sha256": "25c384f1c57e4364799c35b3834a236decd70fe58b3d89c91e277957b4a372f6",
+      "raw_evidence_pointer": "raw/source-observations.json#/requests/3",
+      "notification_rows_before_after": [
+        1,
+        1
+      ],
+      "dismissal_rows_before_after": [
+        0,
+        1
+      ],
+      "cache_keys_before_after": [
+        2,
+        2
+      ],
+      "Source_clock_interval": [
+        "2026-11-12T13:33:29.568380+00:00",
+        "2026-11-12T13:33:29.570790+00:00"
+      ]
+    },
+    {
+      "case_index": 4,
+      "name": "standard-dismiss-repeat",
+      "role": "standard",
+      "authentication": "real owned user with force_authenticate; JWT/API-key backend bypassed",
+      "method": "POST",
+      "path_exact": "/api/core/notifications/1/dismiss/",
+      "resolver_action": "dismiss",
+      "actual_status": 200,
+      "body_bytes": 83,
+      "body_sha256": "25c384f1c57e4364799c35b3834a236decd70fe58b3d89c91e277957b4a372f6",
+      "raw_evidence_pointer": "raw/source-observations.json#/requests/4",
+      "notification_rows_before_after": [
+        1,
+        1
+      ],
+      "dismissal_rows_before_after": [
+        1,
+        1
+      ],
+      "cache_keys_before_after": [
+        2,
+        2
+      ],
+      "Source_clock_interval": [
+        "2026-11-12T13:33:29.577194+00:00",
+        "2026-11-12T13:33:29.578883+00:00"
+      ]
+    },
+    {
+      "case_index": 5,
+      "name": "standard-list-after-dismiss",
+      "role": "standard",
+      "authentication": "real owned user with force_authenticate; JWT/API-key backend bypassed",
+      "method": "GET",
+      "path_exact": "/api/core/notifications/",
+      "resolver_action": "list",
+      "actual_status": 200,
+      "body_bytes": 47,
+      "body_sha256": "75c0076193c345f15aff1eda197809eb0959242a8e50d83c7228cab20813659f",
+      "raw_evidence_pointer": "raw/source-observations.json#/requests/5",
+      "notification_rows_before_after": [
+        1,
+        1
+      ],
+      "dismissal_rows_before_after": [
+        1,
+        1
+      ],
+      "cache_keys_before_after": [
+        2,
+        2
+      ],
+      "Source_clock_interval": [
+        "2026-11-12T13:33:29.585275+00:00",
+        "2026-11-12T13:33:29.587023+00:00"
+      ]
+    },
+    {
+      "case_index": 6,
+      "name": "admin-list-independent",
+      "role": "admin",
+      "authentication": "real owned user with force_authenticate; JWT/API-key backend bypassed",
+      "method": "GET",
+      "path_exact": "/api/core/notifications/",
+      "resolver_action": "list",
+      "actual_status": 200,
+      "body_bytes": 321,
+      "body_sha256": "208cb4e8b98fc4d03584d4cc4e79c350410c3f1e4ea6346a858193906beca242",
+      "raw_evidence_pointer": "raw/source-observations.json#/requests/6",
+      "notification_rows_before_after": [
+        1,
+        1
+      ],
+      "dismissal_rows_before_after": [
+        1,
+        1
+      ],
+      "cache_keys_before_after": [
+        2,
+        2
+      ],
+      "Source_clock_interval": [
+        "2026-11-12T13:33:29.593582+00:00",
+        "2026-11-12T13:33:29.595968+00:00"
+      ]
+    },
+    {
+      "case_index": 7,
+      "name": "admin-create-positive",
+      "role": "admin",
+      "authentication": "real owned user with force_authenticate; JWT/API-key backend bypassed",
+      "method": "POST",
+      "path_exact": "/api/core/notifications/",
+      "resolver_action": "create",
+      "actual_status": 201,
+      "body_bytes": 288,
+      "body_sha256": "cc373fae5ae62271cc351340f4c0c2330c3db9d81070996763251be00f56f5a1",
+      "raw_evidence_pointer": "raw/source-observations.json#/requests/7",
+      "notification_rows_before_after": [
+        1,
+        2
+      ],
+      "dismissal_rows_before_after": [
+        1,
+        1
+      ],
+      "cache_keys_before_after": [
+        2,
+        2
+      ],
+      "Source_clock_interval": [
+        "2026-11-12T13:33:29.602507+00:00",
+        "2026-11-12T13:33:29.604412+00:00"
+      ]
+    }
+  ],
+  "candidate_operations_unregistered": [
+    {
+      "candidate_contract_id": "route-025c0d74fa99218d4728:GET",
+      "pattern_exact": "api/core/^notifications/$",
+      "method": "GET",
+      "source_handler": "core.api_views.SystemNotificationViewSet",
+      "source_action": "list",
+      "case_indices": [
+        0,
+        1,
+        5,
+        6
+      ],
+      "registered": false,
+      "fully_verified": false
+    },
+    {
+      "candidate_contract_id": "route-025c0d74fa99218d4728:POST",
+      "pattern_exact": "api/core/^notifications/$",
+      "method": "POST",
+      "source_handler": "core.api_views.SystemNotificationViewSet",
+      "source_action": "create",
+      "case_indices": [
+        2,
+        7
+      ],
+      "registered": false,
+      "fully_verified": false
+    },
+    {
+      "candidate_contract_id": "route-1577c7cc68b36d7ee6f4:POST",
+      "pattern_exact": "api/core/^notifications/(?P<pk>[^/.]+)/dismiss/$",
+      "method": "POST",
+      "source_handler": "core.api_views.SystemNotificationViewSet",
+      "source_action": "dismiss",
+      "case_indices": [
+        3,
+        4
+      ],
+      "registered": false,
+      "fully_verified": false
+    }
+  ],
+  "new_Source_attempts": 1,
+  "automatic_retries": 0,
+  "registered_operations": 0,
+  "fully_verified_added": 0,
+  "acceptance": {
+    "credentials": false,
+    "HTTP_TCP": false,
+    "Native": false,
+    "performance": false,
+    "full_role_matrix": false,
+    "full_endpoint": false,
+    "M0_M1": false
+  }
+}
