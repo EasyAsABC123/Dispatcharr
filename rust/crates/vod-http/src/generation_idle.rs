@@ -1,6 +1,8 @@
 //! Source255/265 normal public-idle transition; bounded pending followers use their own body receipts.
 //! Original Dispatcharr authors retain application and algorithm credit.
 use super::*;
+#[path = "generation_idle_observer.rs"]
+mod observation;
 use dispatcharr_coordination::{Error as CoordinationError, ProviderReservation};
 
 // All writes require the same private owner, public generation, identity,
@@ -146,6 +148,8 @@ impl LocalScope {
             .ok_or(Error::Configuration)?;
         let body = body.clone();
         let inner = self.inner.clone();
+        let observer = observation::Observer::new(inner.recovery.inner.observer_timeout);
+        let phase_observer = observer.clone();
         let task = tokio::spawn(async move {
             let _pending = pending;
             let guard = control(&inner).await?;
@@ -248,6 +252,8 @@ impl LocalScope {
                     .pending_followers
                     .store(!body.is_closed(), Ordering::Release);
             }
+            // Publish the typed physical phase before polling the mutation.
+            let reservation_phase = phase_observer.reserve();
             let reserve = gen
                 .lease
                 .reserve_provider_retained_result(ProviderReservation {
@@ -257,6 +263,7 @@ impl LocalScope {
                 })
                 .await;
             gen.lease.settlement().wait().await;
+            drop(reservation_phase);
             let transition_serial = inner.serial.clone().lock_owned().await;
             if let Err(error) = reserve {
                 let definite_full = error == CoordinationError::ProfileFull;
@@ -311,9 +318,6 @@ impl LocalScope {
             }
             Ok(())
         });
-        tokio::time::timeout(self.inner.recovery.inner.observer_timeout, task)
-            .await
-            .map_err(|_| Error::ObserverTimeout)?
-            .map_err(|_| Error::Backend)?
+        observer.observe(task).await
     }
 }

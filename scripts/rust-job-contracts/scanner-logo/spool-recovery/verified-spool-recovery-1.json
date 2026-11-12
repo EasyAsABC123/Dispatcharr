@@ -1,0 +1,239 @@
+{
+  "status": "PASS: exact770 production-library path, bounded process-loss recovery and fresh portable replay; Main/default off",
+  "base": "208598ee1872732cbe8a0d846efa5a40b59ae1d2",
+  "inputs": 770,
+  "source_map_sha256": "12962db7a6625169ee76d274151aee808ce6369b368e755a0a939ce61beea550",
+  "native_elf_sha256": "5aa93d969011f08bd8c1ebf5fe0991630debe456af88216892cac73ed0c7d5f1",
+  "main_default_enabled": false,
+  "performance_verified": false,
+  "workspace": {
+    "passed": 486,
+    "ignored": 688,
+    "suites": 170,
+    "strict_alltargets": true,
+    "non_test_check": true,
+    "logs": [
+      {
+        "path": "artifacts/rust/scanner-recovery-private-1/workspace-clippy-1.log",
+        "sha256": "01a5bda1474f05f036659b4337addb6366addc72598d1c63c63c0dcde0059ad5"
+      },
+      {
+        "path": "artifacts/rust/scanner-recovery-private-1/workspace-tests-2.log",
+        "sha256": "b92fb2964e36b66f59057ec2e7fc1a6b6572a1bdad08dba257bb78d542d1d911"
+      },
+      {
+        "path": "artifacts/rust/scanner-recovery-private-1/workspace-check-1.log",
+        "sha256": "7cf18a76b9218953ebd8dc8b4aa85c98ebad8c37133ea77589be0e52d4fb6211"
+      }
+    ]
+  },
+  "runtime_process_tests": {
+    "passed": 10,
+    "ignored_child_peer": 1,
+    "log": {
+      "path": "artifacts/rust/scanner-recovery-private-1/scratch-tests-2.log",
+      "sha256": "c16442f275108242e0ba201f7dee9b2be9b51556664df8c57b2e9d30e82da661"
+    }
+  },
+  "gates": {
+    "spool_service": {
+      "path": "artifacts/rust/scanner-recovery-service-source-native-1/integration.json",
+      "sha256": "f04a9a5cd2fb8c06e5134cf90646925232d1550b00077eeebd86ce8f7a32d41b",
+      "checks": 544,
+      "physical_tests": 4,
+      "scope": "Actual Source259-file reference\u2192native bounded spool service SQL/cache/event comparison; no task/Main/ACK/performance claim",
+      "tools_sha256": {
+        "run_pair.py": "2e1622227978571760f17a52d6f631d29138de3e5e79d78bd5917e8047aa257f",
+        "source_pair.py": "1bc3516c7bde81f37264b7fd7944ced30cd76cfaa625ca07f93c7531c9426783",
+        "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+      }
+    },
+    "spool_task_and_hardloss": {
+      "path": "artifacts/rust/scanner-recovery-task-source-native-3/integration.json",
+      "sha256": "51f184ebb2984f1dad767e0a87b9af0efde68e506a23a6e0b0f5bd7c448e8b1d",
+      "checks": 560,
+      "physical_tests": 0,
+      "scope": "Actual Source producer\u2192normal native spooled LogoApplication\u2192Original AsyncResult plus Source259-file effects; no Main/fullscanner/ACK timing/performance claim",
+      "tools_sha256": {
+        "run_pair.py": "030bb3913e31fec317d804fe85cfd5e4d5a1e4ca9a776871173d9bab611097ed",
+        "source_pair.py": "d5b00096d33a5c09522de898b328e7bfb8517cdb1f00c96a34364a66b289b903",
+        "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+      }
+    },
+    "spooled_helper": {
+      "path": "artifacts/rust/scanner-recovery-helper-source-native-1/integration.json",
+      "sha256": "4d7fdf749de1f478a818e536c5be5954332083002c061e7644251084d3d77a8d",
+      "checks": 80,
+      "physical_tests": 4,
+      "scope": "Actual Source producer\u2192normal native first-index helper with real Index intake\u2192Original AsyncResult; no Main/M3U/EPG/large-native/SQL-admission-ACK parity",
+      "tools_sha256": {
+        "run_pair.py": "6290c974d0f1d07555aa838a63f7e2a7690a2d7d51d812db94631fcd5b2a3f19",
+        "source_pair.py": "fec312f4ce623ccf83a1df0e42d9a9ec70d48cb434c8368db09b404b1c393520",
+        "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+      },
+      "physical_scope": "Four existing helper physical tests use the legacy memory scanner; spooled service separately proves physical SQL/cache/Channels/lostreply ownership."
+    },
+    "legacy_scanner_task": {
+      "path": "artifacts/rust/scanner-recovery-legacy-task-1/integration.json",
+      "sha256": "47596676112cb27b0e3264936f97d64a20e8e8a35a983710aa110a03ee869323",
+      "checks": 85,
+      "physical_tests": 5,
+      "scope": "Actual Source producer\u2192inert native logo task worker/application\u2192Original AsyncResult, scoped effects/knownValueError/earlyACK/duplicates/hardloss/physical ownership",
+      "tools_sha256": {
+        "run_pair.py": "2f7f252a96a20bd7e6f379dca7de6132ca6a9b8e9c10854a9432315a2c470fb0",
+        "source_pair.py": "c9eccb39a17a7132bf1aefbd23cd582ea6e34a3d75fc37d13a0068bc0c13562b",
+        "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+      }
+    },
+    "ordinary_timestamps": {
+      "path": "artifacts/rust/scanner-recovery-ordinary-1/integration.json",
+      "sha256": "d7b13c020fac31adf841a0dab67167b518eb11334977915ccc1e95a158bdb796",
+      "checks": 5135,
+      "physical_tests": 4,
+      "scope": "Native bounded logo-only component effects against frozen Original12 reference; real SQL/Redis/Channels and same-file stat differential; no task consumer or scanner terminal writer",
+      "tools_sha256": {
+        "run_pair.py": "4f920d59be79c24c4d0d7035c44355d6279126134d721dcd1701b2d20a1d7ec2",
+        "source_pair.py": "e412f6cde25d95bf67d346c71b5fe651d1f0c3efe0f4838d198f45cc2489cc43",
+        "periodic_worker_observer.py": "b96ab6bf66d96207f478a095abb5e35e5e37de6df3db844292796a5da8af8993"
+      }
+    },
+    "legacy_families": {
+      "path": "artifacts/rust/scanner-recovery-legacy-1/integration.json",
+      "sha256": "965c176720464e3d614ee9e9898774024a61f3406442cb221369fe23beffba64",
+      "checks": 58,
+      "physical_tests": 0,
+      "scope": "Fixture-only real Original/native cleanup-null and disabled recurring0 worker/result interoperability; no Main/default expiry/active recordings",
+      "tools_sha256": {
+        "run_pair.py": "4f513ff605cae3f8d6eb230a16190c4af3753018f8d8929266b3f2c20f49fbef",
+        "source_pair.py": "1b4a22c27bedd174b16e7e2ec98982e07350d148ed8b982dbae2dbfa7e1b3f6d",
+        "periodic_worker_observer.py": "d8e6e0a02a3ff52bcf900313557e8146165d3c48421ffe2aaa87d25e379c7a15"
+      }
+    },
+    "notification": {
+      "path": "artifacts/rust/scanner-recovery-notification-2/integration.json",
+      "sha256": "1089734ee65c12ba594d3fbb16798eb4279806ac6df4f2c73923300388dd12d4",
+      "checks": 87,
+      "physical_tests": 5,
+      "scope": "Actual Original/native production single-active-profile notification subset; known settled P0001 failures use typedProgrammingError; opaque native diagnostics differ from Python frames and title overflow unsupported",
+      "tools_sha256": {
+        "run_native.py": "2cfae360c8b656c2adc0e741f74554f48ee7a8b21aac2f393860d03d05117722",
+        "source_active_native.py": "80f82520cab52d7b850f43ffa615541f1aaf1843eec6c196817b89d0498f9e34",
+        "periodic_worker_observer.py": "dce10fb934f3a2a753a7c35448bfb19a6b438336f8b185bae58011dc731c9f96"
+      }
+    },
+    "expiry": {
+      "path": "artifacts/rust/scanner-recovery-expiry-1/integration.json",
+      "sha256": "d228c61d3527a7af57eef3496cb93ee806de1a4da7777354fa0db47c8a08fa88",
+      "checks": 83,
+      "physical_tests": 15,
+      "scope": "Actual Original/native production cleanup-only expiry/REVOKED/result/ACK; no Main/default intake",
+      "tools_sha256": {
+        "run_pair.py": "d41973678b971b26db2f863c57bb762c4f8d214138fd04fcd2e989a4e32c6aee",
+        "source_pair.py": "0b85ebc1e63780294b3a0ca95afffe22751fe288125781d8f3e88ab4599a3138",
+        "periodic_worker_observer.py": "086edc29bc304bc25ff9f771b1a31142439c1c2b8cbfc54cbf10f49e7b3f2126",
+        "expiry_observer_extra.py": "0ba0fef21e1b8314d5990a69f25c87d5a9161780014724a602136bc37ef7f019"
+      }
+    }
+  },
+  "controls": {
+    "reconstruction": 11,
+    "builder": 5,
+    "runner": 2
+  },
+  "source_selection": {
+    "path": "artifacts/rust/scanner-recovery-private-1/delta-selection-1.json",
+    "sha256": "ea2d34b64ac194dbf97af86482bdf7c3eae6ce7a1d0e5ddb2ed70f4f7df0f371"
+  },
+  "source_map": {
+    "path": "artifacts/rust/scanner-recovery-private-1/inputs-1.json",
+    "sha256": "12962db7a6625169ee76d274151aee808ce6369b368e755a0a939ce61beea550"
+  },
+  "independent_cleanup": {
+    "path": "artifacts/rust/scanner-recovery-private-1/independent-owned-cleanup-1.json",
+    "sha256": "8ba7b636f270d62ee910fbf423d23cd1a3ce17b3059e2ecb8cc93da33af0971a"
+  },
+  "portable": {
+    "controls": [
+      {
+        "path": "artifacts/rust/scanner-recovery-private-1/portable-reconstruct-controls-1.log",
+        "sha256": "5c5950da09c4a5c054dc492ad26860e6e51730b6908c66f26cc6841ee41597e0"
+      },
+      {
+        "path": "artifacts/rust/scanner-recovery-private-1/portable-build-controls-1.log",
+        "sha256": "997a34a466826b7f688b3754b37f78bc6f0aed555186a0eb111b777850eebf09"
+      },
+      {
+        "path": "artifacts/rust/scanner-recovery-private-1/portable-runner-controls-1.log",
+        "sha256": "3d38282c751732c9af3f486d091e6fa34e0ebb84d1c7f998396144e5ec25a4f7"
+      }
+    ],
+    "build": {
+      "path": "artifacts/rust/scanner-recovery-portable-1/build/build.json",
+      "sha256": "84cbef7e41b07974a29b8b18e9d262f9c09860beffa1e1ef7d80b4a59d3e8f5f"
+    },
+    "reconstructed_all770_exact": true,
+    "source_strategy": "Immutable committed Git base plus exact packaged SHA/Git-blob-bound source overlays; no private fallback",
+    "unit_process_tests": {
+      "path": "artifacts/rust/scanner-recovery-private-1/portable-scratch-tests-1.log",
+      "sha256": "29cdff901fedd680e9f6a795445438f5713dca65a232f3cbe5539d770c4318fb"
+    },
+    "gates": {
+      "task": {
+        "path": "artifacts/rust/scanner-recovery-portable-task-1/integration.json",
+        "sha256": "73b16db3a62a1e368f7419952d99b4bea6442cc67129b181b2277c5838216465",
+        "checks": 560,
+        "physical_tests": 0,
+        "native_elf_sha256": "4044685f18450d6007ccf93f14d178854dc2e552b20501f1782b1ea585051a7b",
+        "tools_sha256": {
+          "run_pair.py": "2f0aeeb2d47e4fbf027840096a07706e468a6d80d51c7e814102e66ea2a843d9",
+          "source_pair.py": "d5b00096d33a5c09522de898b328e7bfb8517cdb1f00c96a34364a66b289b903",
+          "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+        }
+      },
+      "service": {
+        "path": "artifacts/rust/scanner-recovery-portable-service-1/integration.json",
+        "sha256": "cfe540ba890eaadf14a06784655db9ab04d6af7dfdf74f4364eb6a753fdcd897",
+        "checks": 544,
+        "physical_tests": 4,
+        "native_elf_sha256": "4044685f18450d6007ccf93f14d178854dc2e552b20501f1782b1ea585051a7b",
+        "tools_sha256": {
+          "run_pair.py": "2f0aeeb2d47e4fbf027840096a07706e468a6d80d51c7e814102e66ea2a843d9",
+          "source_pair.py": "d5b00096d33a5c09522de898b328e7bfb8517cdb1f00c96a34364a66b289b903",
+          "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+        }
+      }
+    }
+  },
+  "retained_failures": [
+    {
+      "path": "artifacts/rust/scanner-recovery-private-1/clippy-1.log",
+      "sha256": "38254401e8c9afadedb7c35caf62ea5795e353b94ec06461bb7b3d23398edda1"
+    },
+    {
+      "path": "artifacts/rust/scanner-recovery-private-1/workspace-tests-1.log",
+      "sha256": "b832bca05255e041aba38c808953c255d29924d108dc84fc5d4df822de84e2d1"
+    },
+    {
+      "path": "artifacts/rust/scanner-recovery-private-1/notification-1.log",
+      "sha256": "48fad354e79ac1309cb8b281ade21b37a4598a2dfba1ceb05177d3affa815b92"
+    },
+    {
+      "path": "artifacts/rust/scanner-recovery-task-source-native-1/integration.json",
+      "sha256": "17155eb513db68d645dc0f5daacdd52f4bcd19e57cdc8ee4b1ed1e590ef5d626"
+    },
+    {
+      "path": "artifacts/rust/scanner-recovery-task-source-native-2/integration.json",
+      "sha256": "5edae6e0a643d376340a3b249e6b9e819099940e9ce7ef7d06977a1128b6dede"
+    }
+  ],
+  "unsupported": [
+    "Partial initial control bootstrap recovery",
+    "Power loss/reboot/NFS",
+    "External directory mutation or hostile-directory race security",
+    "Multiple independent application first-scan parity",
+    "Packaged image50/read-only-root application transfer",
+    "M3U/EPG scanner branches and broader helper domains",
+    "Unbounded non-replay/visibility-timeout claim",
+    "General Python traceback equivalence"
+  ]
+}

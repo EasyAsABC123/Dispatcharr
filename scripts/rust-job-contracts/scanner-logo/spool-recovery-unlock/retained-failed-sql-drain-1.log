@@ -1,0 +1,18 @@
+
+running 4 tests
+test logo_spool_resources::a_actual_sql_lock_keeps_spool_caller_and_admission_until_close ... FAILED
+test logo_spool_resources::b_actual_cache_reply_keeps_spool_caller_and_admission_until_close ... ok
+test logo_spool_resources::c_actual_channels_reply_after_commits_keeps_spool_until_delivery_settles ... ok
+test logo_spool_resources::d_lost_cache_reply_is_operational_with_spool_closed_no_guessed_effects ... ok
+
+failures:
+
+failures:
+    logo_spool_resources::a_actual_sql_lock_keeps_spool_caller_and_admission_until_close
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 162 filtered out; finished in 19.94s
+
+
+thread 'logo_spool_resources::a_actual_sql_lock_keeps_spool_caller_and_admission_until_close' panicked at crates/job-transport/src/logo_spool_resources.rs:170:724:
+assertion failed: scanner.shutdown(Duration::from_secs(10)).await
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

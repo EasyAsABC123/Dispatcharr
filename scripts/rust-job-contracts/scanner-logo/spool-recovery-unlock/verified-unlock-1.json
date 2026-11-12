@@ -1,0 +1,188 @@
+{
+  "status": "PASS bounded owned-flock release revision; historical SQL-drain miss unresolved and retained",
+  "scope": "Normal inert scanner library; no Main/default intake/performance/wholeM6 claim",
+  "base": "94c6389f8554f46967c7621bfae0870645b2cd28",
+  "inputs": 771,
+  "source_map": {
+    "path": "artifacts/rust/scanner-lock-diagnostic-1/inputs-final-1.json",
+    "sha256": "d967b7455a720413304c96fc1ccaf650b605ba7fd7ac6ceab480774ad5c47786"
+  },
+  "one_file_delta": {
+    "path": "artifacts/rust/scanner-lock-diagnostic-1/delta-final-1.json",
+    "sha256": "c093751fc1aa3000c8587aa7f4c430a41e2bcb555b36151864b2d56595f6b50b"
+  },
+  "native_elf": {
+    "path": "artifacts/rust/scanner-lock-diagnostic-1/job-peer-after-4",
+    "sha256": "9d42063906292c4d5db84853d2c37d2145348fdc2559006ec9bfc6b3e4af2c08"
+  },
+  "production_has_new_unsafe": false,
+  "confirmed_mechanism": {
+    "before": {
+      "path": "artifacts/rust/scanner-lock-diagnostic-1/inheritance-before-1.log",
+      "sha256": "42554ae11cfe460c8bebb8ab04eff5abdb98e17c985d8f1a026f96b1ea24431c"
+    },
+    "description": "Controlled child retained inherited CLOEXEC descriptor beforeexec; parentoriginalFDclosed, typed reacquireCapacity, then immediate success afterchildexec",
+    "historical_root_failure_exact_cause_retroactively_proven": false
+  },
+  "fixed_parallel_cohorts": {
+    "path": "artifacts/rust/scanner-lock-diagnostic-1/cohorts-fixed-1.json",
+    "sha256": "c46af11d22ceb22280be04b038876f9f8d472a10c598bf8e492a6274ec7a7b85"
+  },
+  "parallel_control_executions": 600,
+  "workspace": {
+    "passed": 488,
+    "ignored": 689,
+    "suites": 170,
+    "strict_alltargets": {
+      "path": "artifacts/rust/scanner-lock-diagnostic-1/workspace-clippy-final-1.log",
+      "sha256": "a06f6daa4d67d228eb2754aea71e2fe167c32c9d60c7e13ea08346a3df57af58"
+    },
+    "defaults": {
+      "path": "artifacts/rust/scanner-lock-diagnostic-1/workspace-tests-final-1.log",
+      "sha256": "9577e3151039c51b0677683e7577dd7e3b753a489876007a0fe4cf28266e432f"
+    }
+  },
+  "known_failed_attempts": [
+    {
+      "report": {
+        "path": "artifacts/rust/scanner-lock-fixed-service-1/integration.json",
+        "sha256": "a0ad675f9298adb197074ed346e52a39a052e2fec7746aad7406cc7ef7f0fc71"
+      },
+      "physical_log": {
+        "path": "artifacts/rust/scanner-lock-fixed-service-1/physical-private.log",
+        "sha256": "7ffe592f4ec51c518dbc3f96e11421023bcce51b74ee986e83836a6df9dd8f4b"
+      },
+      "reason": "Unchanged10s drain assertion after SQL-unblock failed; cause unobserved; not relabeled pressure or accepted as pass"
+    },
+    {
+      "log": {
+        "path": "artifacts/rust/scanner-lock-diagnostic-1/scratch-after-cohort-007.log",
+        "sha256": "070072ee5549e81cb77df745d7335b77baf908dc64a17041bf86bd618afbbc9c"
+      },
+      "reason": "Stoppedfirst7-cohort gate: diagnostic tested rawFD number existence; concurrentFD reuse invalidated QA assertion while runtime reacquirewasOk. FixedQA compares control dev/inode."
+    }
+  ],
+  "actual_fixed_elf_gates": {
+    "task": {
+      "path": "artifacts/rust/scanner-lock-fixed-task-1/integration.json",
+      "sha256": "85be88bff362d2c3361d768b1e7ccc5bd72144b4556868cf4fa48d3fe0e62bb4",
+      "checks": 560,
+      "physical_tests": 0,
+      "tools": {
+        "run_pair.py": "2f0aeeb2d47e4fbf027840096a07706e468a6d80d51c7e814102e66ea2a843d9",
+        "source_pair.py": "d5b00096d33a5c09522de898b328e7bfb8517cdb1f00c96a34364a66b289b903",
+        "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+      }
+    },
+    "helper": {
+      "path": "artifacts/rust/scanner-lock-fixed-helper-1/integration.json",
+      "sha256": "d9afdd4ea296f8192b5a3b429e69944a81f1bf8553af912d28b1ae12a9b6232f",
+      "checks": 80,
+      "physical_tests": 4,
+      "tools": {
+        "run_pair.py": "6290c974d0f1d07555aa838a63f7e2a7690a2d7d51d812db94631fcd5b2a3f19",
+        "source_pair.py": "fec312f4ce623ccf83a1df0e42d9a9ec70d48cb434c8368db09b404b1c393520",
+        "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+      }
+    },
+    "service_monitored": {
+      "path": "artifacts/rust/scanner-lock-fixed-service-monitored-2/integration.json",
+      "sha256": "b17b08788b21330efeb1fa88eb2bc0b82705cac625e5b243867d5f5d41bc4179",
+      "checks": 544,
+      "physical_tests": 4,
+      "tools": {
+        "run_pair.py": "2f0aeeb2d47e4fbf027840096a07706e468a6d80d51c7e814102e66ea2a843d9",
+        "source_pair.py": "129fc950dfd6ce65de35b4f073691694d22a859a6e1b8129f1afe3d31c09f925",
+        "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+      }
+    }
+  },
+  "portable": {
+    "controls": {
+      "reconstruction": 11,
+      "builder": 5,
+      "runner": 2
+    },
+    "control_logs": [
+      {
+        "path": "artifacts/rust/scanner-lock-diagnostic-1/reconstruct-controls-unlock-1.log",
+        "sha256": "0c32cf53d54e7f3cf8ca6ca72bf6cc1fe469704e92add4cb7d29f722dfceae0d"
+      },
+      {
+        "path": "artifacts/rust/scanner-lock-diagnostic-1/build-controls-unlock-1.log",
+        "sha256": "c34e386c55df552d0ce49cf299d43e284ba623f41c24a891ad38fe40e49351c3"
+      },
+      {
+        "path": "artifacts/rust/scanner-lock-diagnostic-1/runner-controls-unlock-final-1.log",
+        "sha256": "11779e7fb102bcbb64688c4f75dbbbfc4537cca356e705f5f38e2e55622a6ff2"
+      }
+    ],
+    "build": {
+      "path": "artifacts/rust/scanner-unlock-portable-1/build/build.json",
+      "sha256": "c922d1bfddf38ece655f3d3b10243d43b6e60dfc688ce2fc93ce5154b8716937"
+    },
+    "scratch_control_log": {
+      "path": "artifacts/rust/scanner-lock-diagnostic-1/portable-controls-unlock-1.log",
+      "sha256": "85afb810d37a82efb16b1f2c63a43aea6857fde05f95d2f05dc2299c22f396b2"
+    },
+    "scratch_controls": 12,
+    "fresh_cohort_attempts": 1,
+    "gates": {
+      "task": {
+        "path": "artifacts/rust/scanner-unlock-portable-task-1/integration.json",
+        "sha256": "9fdc5cb0cbced205535f2ea5aafcd8e10972210306ec5c7a1bd2175ca9fa8dfc",
+        "checks": 560,
+        "physical_tests": 0,
+        "elf_sha256": "0bf34f8cb9947c292f147e6647d74827acd72fb24c17519a700ece5e8e043e1c",
+        "tools_sha256": {
+          "run_pair.py": "c62b0bbfe4d37e1136cacfe50c86c59bd15fe588d472ca90d1b75c4bdfbd0db6",
+          "source_pair.py": "ab2bca5d9ce24500f8be4c81837356792ad4a784448d56a3d043c64ec1b39546",
+          "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+        }
+      },
+      "service": {
+        "path": "artifacts/rust/scanner-unlock-portable-service-1/integration.json",
+        "sha256": "f931fa46d982048b66599c0752086964eabbad35eb638ec281ccf30e747eaf30",
+        "checks": 544,
+        "physical_tests": 4,
+        "elf_sha256": "0bf34f8cb9947c292f147e6647d74827acd72fb24c17519a700ece5e8e043e1c",
+        "tools_sha256": {
+          "run_pair.py": "c62b0bbfe4d37e1136cacfe50c86c59bd15fe588d472ca90d1b75c4bdfbd0db6",
+          "source_pair.py": "ab2bca5d9ce24500f8be4c81837356792ad4a784448d56a3d043c64ec1b39546",
+          "periodic_worker_observer.py": "80d72f6e083a05ecf78370d848e9941225e99d50200119eee82cf940bb4b1dd4"
+        }
+      }
+    },
+    "physical_monitor": {
+      "scope": "Diagnostic copied-DB activity/row progress only; no resource/performance measurement",
+      "poll_seconds": 0.2,
+      "max_snapshots": 128,
+      "max_activity_rows": 16,
+      "session_lock_timeout_ms": 50,
+      "session_statement_timeout_ms": 250,
+      "native_SQL_drain_budget_seconds_unchanged": 10,
+      "query_elapsed_seconds": 0.07332112698350102,
+      "query_errors": 0,
+      "snapshots": 103
+    },
+    "physical_progress": {
+      "path": "artifacts/rust/scanner-unlock-portable-service-1/physical-progress-private.json",
+      "sha256": "1c14596162d8d74027cc062765beb014750590f97dcfa5608c01a2ad370f3f91"
+    }
+  },
+  "independent_cleanup": {
+    "path": "artifacts/rust/scanner-lock-diagnostic-1/owned-cleanup-final-1.json",
+    "sha256": "daf9deb838888eeb5113adb98c7e954d2243e8aa8aeb2dc75553050796d31c2e"
+  },
+  "main_default_enabled": false,
+  "unsupported": [
+    "Partial initial bootstrap recovery",
+    "Power loss, reboot and NFS",
+    "External directory mutation and hostile directory races",
+    "Multiple application first-scan parity",
+    "M3U/EPG scanner branches",
+    "Unbounded non-replay or visibility-timeout claim",
+    "Packaged image, runtime or performance transfer"
+  ],
+  "historical_770_packet_unchanged": true
+}

@@ -80,6 +80,10 @@ impl IndexedLogoApplication{
   if !jobs.allows_defaults(){return Err(Error::Unsupported)}
   let scanner=Scanner::new(effects,roots,limits)?;let helper=Arc::new(Helper{pool,jobs:jobs.clone()});let domain=Arc::new(Domain{scanner:scanner.clone(),helper,clock});let worker=DefaultWorker::new_logo_scanner(jobs,domain).map_err(|_|Error::Unsupported)?;let application=DefaultApplication::prepare(worker,poll).map_err(|_|Error::Unsupported)?;Ok(Self{scanner,application})
  }
+ /// Same helper authority with an explicitly prepared bounded disk spool.
+ pub fn prepare_spooled(jobs:Jobs,pool:PgPool,effects:Arc<dyn Effects>,options:crate::logo_scanner::SpoolOptions,clock:Arc<dyn Clock>,poll:Duration)->Result<Self,Error>{
+  if !jobs.allows_defaults(){return Err(Error::Unsupported)}let scanner=Scanner::new_spooled(effects,options.roots,options.limits,options.scratch)?;let helper=Arc::new(Helper{pool,jobs:jobs.clone()});let domain=Arc::new(Domain{scanner:scanner.clone(),helper,clock});let worker=DefaultWorker::new_logo_scanner(jobs,domain).map_err(|_|Error::Unsupported)?;let application=DefaultApplication::prepare(worker,poll).map_err(|_|Error::Unsupported)?;Ok(Self{scanner,application})
+ }
  pub fn start(&self)->Result<(),crate::default_application::LifecycleError>{self.application.start()}
  pub fn state(&self)->crate::default_application::State{self.application.state()}
  pub fn first_scan_completed(&self)->bool{self.scanner.first_scan_completed()}

@@ -10,6 +10,10 @@ impl LogoApplication{
  pub fn prepare(jobs:Jobs,effects:Arc<dyn Effects>,roots:Roots,limits:Limits,clock:Arc<dyn Clock>,poll:Duration)->Result<Self,Error>{
   let scanner=Scanner::new(effects,roots,limits).map_err(Error::Scanner)?;let domain=Arc::new(LogoTask::new(scanner.clone(),clock));let worker=DefaultWorker::new_logo_scanner(jobs,domain).map_err(Error::Worker)?;let application=DefaultApplication::prepare(worker.clone(),poll).map_err(Error::Lifecycle)?;Ok(Self{scanner,worker,application})
  }
+ /// Explicit bounded disk-spool profile; old prepare() remains128 files.
+ pub fn prepare_spooled(jobs:Jobs,effects:Arc<dyn Effects>,options:crate::logo_scanner::SpoolOptions,clock:Arc<dyn Clock>,poll:Duration)->Result<Self,Error>{
+  let scanner=Scanner::new_spooled(effects,options.roots,options.limits,options.scratch).map_err(Error::Scanner)?;let domain=Arc::new(LogoTask::new(scanner.clone(),clock));let worker=DefaultWorker::new_logo_scanner(jobs,domain).map_err(Error::Worker)?;let application=DefaultApplication::prepare(worker.clone(),poll).map_err(Error::Lifecycle)?;Ok(Self{scanner,worker,application})
+ }
  pub fn start(&self)->Result<(),LifecycleError>{self.application.start()}
  pub fn first_scan_completed(&self)->bool{self.scanner.first_scan_completed()}
  pub fn state(&self)->crate::default_application::State{self.application.state()}

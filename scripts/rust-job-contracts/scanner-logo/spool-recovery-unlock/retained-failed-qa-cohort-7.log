@@ -1,0 +1,28 @@
+
+running 13 tests
+test logo_scanner::spool::scratch::process_tests::recovery_child ... ignored
+test logo_scanner::spool::scratch::tests::bounded_slots_reject_corruption_and_generation_conflicts ... ok
+test logo_scanner::spool::scratch::process_tests::stable_control_inode_and_same_process_contention ... ok
+test logo_scanner::spool::scratch::process_tests::settled_cleanup_releases_and_stale_lease_cannot_reenter ... ok
+test logo_scanner::spool::tests::foreign_scratch_entry_is_retained_without_any_effect ... ok
+test logo_scanner::spool::tests::disk_cap_refuses_all_effects_and_does_not_mark_first ... ok
+test logo_scanner::spool::scratch::process_tests::unknown_and_invalid_owned_shapes_refuse_without_any_deletion ... ok
+test logo_scanner::spool::tests::malformed_length_truncation_and_trailing_bytes_are_bounded_errors ... ok
+test logo_scanner::spool::tests::scratch_is_private_and_alias_is_refused ... ok
+test logo_scanner::spool::scratch::inheritance_diagnostic::explicit_release_preserves_active_guard_then_releases_despite_inherited_descriptor ... FAILED
+test logo_scanner::spool::tests::batches_preserve_unsorted_inspected_order_and_are_bounded ... ok
+test logo_scanner::spool::tests::all_paths_spooled_and_flushed_before_first_effect_then_cleaned ... ok
+test logo_scanner::spool::scratch::process_tests::actual_active_owner_and_sigkill_windows_recover_only_recorded_scratch ... ok
+
+failures:
+
+failures:
+    logo_scanner::spool::scratch::inheritance_diagnostic::explicit_release_preserves_active_guard_then_releases_despite_inherited_descriptor
+
+test result: FAILED. 11 passed; 1 failed; 1 ignored; 0 measured; 153 filtered out; finished in 0.02s
+
+INHERITED_FLOCK_WITNESS parent_fd_closed=false child_fd_open=true active_guard_denied=true typed_reacquire=Ok post_exec_reacquire=true child_exit=exit status: 0
+
+thread 'logo_scanner::spool::scratch::inheritance_diagnostic::explicit_release_preserves_active_guard_then_releases_despite_inherited_descriptor' panicked at crates/job-transport/src/logo_scratch.rs:191:241:
+assertion failed: parent_closed && inherited && active && released && after_ok && exit.success()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

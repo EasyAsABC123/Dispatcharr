@@ -1,0 +1,19 @@
+START retained_reserve retained_
+END retained_reserve 6 0
+START retained_reserve ordinary_two_second_
+END retained_reserve 1 0
+START lease_physical 
+END lease_physical 13 0
+START idle_entry pending_follower_
+END idle_entry 4 0
+START idle_entry idle_entry_
+END idle_entry 5 0
+START generation_scope local_scope_
+END generation_scope 20 0
+START generation_scope_physical local_physical_
+END generation_scope_physical 9 0
+START pending_follower_http pending_http_
+END pending_follower_http 9 0
+START http_recovery actual_http_
+END http_recovery 13 0
+{"passed": true, "tests": [{"target": "retained_reserve", "filter": "retained_", "returncode": 0, "passed_count": 6, "log_sha256": "c004c3f2db1cfe2bff2cb45a5a220765a4957dfa6afa31bb236ea4a96126ef9f"}, {"target": "retained_reserve", "filter": "ordinary_two_second_", "returncode": 0, "passed_count": 1, "log_sha256": "00cf2cb472211075ca43e303d6e2aa79041ad92d9b268db1dd917e8e68f17f7b"}, {"target": "lease_physical", "filter": "", "returncode": 0, "passed_count": 13, "log_sha256": "a295ac2287504137ce7ac3b659102f606255afacaebd32ddba78aeeee7393b0f"}, {"target": "idle_entry", "filter": "pending_follower_", "returncode": 0, "passed_count": 4, "log_sha256": "2fc2b83ce16ff67118b3a9ba8a069c04a292671c9c14325ccc49afd33f72a3a5"}, {"target": "idle_entry", "filter": "idle_entry_", "returncode": 0, "passed_count": 5, "log_sha256": "41ddfd4c5fba79abcf44efe49cabcbf208d1a9adf24765ca3c9a6b2f6e7da93e"}, {"target": "generation_scope", "filter": "local_scope_", "returncode": 0, "passed_count": 20, "log_sha256": "0f4ba01d561f0b039d43467434e1593dca54a621818a9ca96dea065be1431678"}, {"target": "generation_scope_physical", "filter": "local_physical_", "returncode": 0, "passed_count": 9, "log_sha256": "807fc6ae7f5ad418aa1dab31397264fac9ea3e8d303eb6a815743e801e81a4d7"}, {"target": "pending_follower_http", "filter": "pending_http_", "returncode": 0, "passed_count": 9, "log_sha256": "1dcc99bb15f929dcf7d42c7744ec232964ef859fc75b62d9387087982fb6c09c"}, {"target": "http_recovery", "filter": "actual_http_", "returncode": 0, "passed_count": 13, "log_sha256": "5077db8baa298d3c5ee5657466ad358dd67c24a994f5034cff632b994819db57"}], "error": null}

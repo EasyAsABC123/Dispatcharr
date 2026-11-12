@@ -1,0 +1,31 @@
+
+running 13 tests
+test cancelled_clear_provider_retains_command_budget ... PHYSICAL_LEASE operation=Clear dropped=false early_idle=false effects=1 outcome=cancelled
+ok
+test cancelled_heartbeat_retains_command_budget ... PHYSICAL_LEASE operation=Heartbeat dropped=false early_idle=false effects=1 outcome=cancelled
+ok
+test cancelled_release_retains_command_budget ... PHYSICAL_LEASE operation=Release dropped=false early_idle=false effects=1 outcome=cancelled
+ok
+test cancelled_reserve_provider_retains_command_budget ... PHYSICAL_LEASE operation=Reserve dropped=false early_idle=false effects=1 outcome=cancelled
+ok
+test held_clear_provider_retains_command_budget ... PHYSICAL_LEASE operation=Clear dropped=false early_idle=false effects=1 outcome=Err(RedisUnavailable)
+ok
+test held_drop_release_retains_command_budget ... PHYSICAL_LEASE operation=DropRelease dropped=false early_idle=false effects=1 outcome=drop
+ok
+test held_explicit_release_retains_command_budget ... PHYSICAL_LEASE operation=Release dropped=false early_idle=false effects=1 outcome=Err(RedisUnavailable)
+ok
+test held_heartbeat_retains_command_budget ... PHYSICAL_LEASE operation=Heartbeat dropped=false early_idle=false effects=1 outcome=Err(RedisUnavailable)
+ok
+test held_reserve_provider_retains_command_budget ... PHYSICAL_LEASE operation=Reserve dropped=false early_idle=false effects=1 outcome=Err(RedisUnavailable)
+ok
+test lost_clear_provider_is_not_replayed ... PHYSICAL_LEASE operation=Clear dropped=true early_idle=true effects=1 outcome=Err(RedisUnavailable)
+ok
+test lost_explicit_release_is_not_replayed ... PHYSICAL_LEASE operation=Release dropped=true early_idle=true effects=1 outcome=Err(RedisUnavailable)
+ok
+test lost_heartbeat_is_not_replayed ... PHYSICAL_LEASE operation=Heartbeat dropped=true early_idle=true effects=1 outcome=Err(RedisUnavailable)
+ok
+test lost_reserve_provider_is_not_replayed ... PHYSICAL_LEASE operation=Reserve dropped=true early_idle=true effects=1 outcome=Err(RedisUnavailable)
+ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.38s
+

@@ -1,0 +1,17 @@
+    Finished `test` profile [unoptimized] target(s) in 0.10s
+     Running unittests src/lib.rs (artifacts/rust/m4-vod-idle-phase-observer-prototype-2/target/debug/deps/dispatcharr_vod_http-c14e0b763675d66f)
+
+running 10 tests
+test recovery_generation::local::idle::observation::tests::first_read_window_has_its_own_finite_boundary ... ok
+test recovery_generation::local::idle::observation::tests::completed_overlimit_reserve_is_sticky_after_coalesced_start_end ... ok
+test recovery_generation::local::idle::observation::tests::late_reserve_transition_cannot_rescue_expired_control ... ok
+test recovery_generation::local::idle::observation::tests::reserve_time_never_replenishes_control_budget ... ok
+test recovery_generation::local::idle::observation::tests::caller_loss_drops_only_observation_not_physical_job ... ok
+test recovery_generation::local::idle::observation::tests::actual_error_after_reserve_is_not_inferred_success ... ok
+test recovery_generation::local::idle::observation::tests::pre_reserve_deadline_is_not_extended ... ok
+test recovery_generation::local::idle::observation::tests::coalesced_phase_notifications_keep_actual_result ... ok
+test recovery_generation::local::idle::observation::tests::observer_expiry_does_not_abort_physical_job ... ok
+test recovery_generation::local::idle::observation::tests::post_reserve_deadline_uses_only_remaining_budget ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 22 filtered out; finished in 0.08s
+

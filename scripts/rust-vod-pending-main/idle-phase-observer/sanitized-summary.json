@@ -1,0 +1,134 @@
+{
+  "scope": "Git208598ee frozen767 Source-derived idle phase observer component; no packaged Main",
+  "base_revision": "208598ee1872732cbe8a0d846efa5a40b59ae1d2",
+  "rust_inputs": 767,
+  "inputs_sha256": "fb9be427e02a08b314872b469dc3ce7718e781039d3c5c6dc221decbd4666bd0",
+  "selection_sha256": "5a5fcf5a4c87c8fc69fbd2464e46032790d91957de167a817d922d99f7d7660c",
+  "pure_controls_passed": 10,
+  "prior_pure_controls_preserved": 9,
+  "sticky_completed60_61_scalar_control_passed": true,
+  "strict_coordination_vod_all_targets_passed": true,
+  "actual_component_tests_passed": 80,
+  "actual_new4s_HTTP_cases": [
+    "success200",
+    "busy429_foreign_reservation_preserved",
+    "client_loss_retains_follower_and_settlement"
+  ],
+  "old_actual77_replayed_on_new_ELFs": true,
+  "tests": [
+    {
+      "target": "retained_reserve",
+      "filter": "retained_",
+      "returncode": 0,
+      "passed_count": 6,
+      "log_sha256": "c004c3f2db1cfe2bff2cb45a5a220765a4957dfa6afa31bb236ea4a96126ef9f"
+    },
+    {
+      "target": "retained_reserve",
+      "filter": "ordinary_two_second_",
+      "returncode": 0,
+      "passed_count": 1,
+      "log_sha256": "00cf2cb472211075ca43e303d6e2aa79041ad92d9b268db1dd917e8e68f17f7b"
+    },
+    {
+      "target": "lease_physical",
+      "filter": "",
+      "returncode": 0,
+      "passed_count": 13,
+      "log_sha256": "a295ac2287504137ce7ac3b659102f606255afacaebd32ddba78aeeee7393b0f"
+    },
+    {
+      "target": "idle_entry",
+      "filter": "pending_follower_",
+      "returncode": 0,
+      "passed_count": 4,
+      "log_sha256": "2fc2b83ce16ff67118b3a9ba8a069c04a292671c9c14325ccc49afd33f72a3a5"
+    },
+    {
+      "target": "idle_entry",
+      "filter": "idle_entry_",
+      "returncode": 0,
+      "passed_count": 5,
+      "log_sha256": "41ddfd4c5fba79abcf44efe49cabcbf208d1a9adf24765ca3c9a6b2f6e7da93e"
+    },
+    {
+      "target": "generation_scope",
+      "filter": "local_scope_",
+      "returncode": 0,
+      "passed_count": 20,
+      "log_sha256": "0f4ba01d561f0b039d43467434e1593dca54a621818a9ca96dea065be1431678"
+    },
+    {
+      "target": "generation_scope_physical",
+      "filter": "local_physical_",
+      "returncode": 0,
+      "passed_count": 9,
+      "log_sha256": "807fc6ae7f5ad418aa1dab31397264fac9ea3e8d303eb6a815743e801e81a4d7"
+    },
+    {
+      "target": "pending_follower_http",
+      "filter": "pending_http_",
+      "returncode": 0,
+      "passed_count": 9,
+      "log_sha256": "1dcc99bb15f929dcf7d42c7744ec232964ef859fc75b62d9387087982fb6c09c"
+    },
+    {
+      "target": "http_recovery",
+      "filter": "actual_http_",
+      "returncode": 0,
+      "passed_count": 13,
+      "log_sha256": "5077db8baa298d3c5ee5657466ad358dd67c24a994f5034cff632b994819db57"
+    }
+  ],
+  "binary_sha256": {
+    "lease_physical": "14783ad2d9bedb6ab30ccc5db4d7ce823b100d72fd4475860048ef8bec29a69a",
+    "retained_reserve": "6c45d61954887260ab909bd58e6da7956505a94e03429bb295240bbc9a1e5397",
+    "pending_follower_http": "2e8a99d6275c3536711f5aa8af909af3459c2a87ac5983dbe37c87fe44a9e8be",
+    "http_recovery": "5be3ebd32fedf760c6a6d8f343be4e4924b3a2d99d7ab803452a5971c11400b1",
+    "generation_scope": "23d6548db7d9105870728e9b1dc8e0ad073f0777ef8c60db07531d1d2951be22",
+    "idle_entry": "8917353690a32ffd31e891315ce2c7608860dbc4e250ad423e41ff1992f81771",
+    "generation_scope_physical": "a392d6faa6e56c9b5edd189388027d89007b6ec15535915c4c4b40b5632d240c"
+  },
+  "media": {
+    "sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "bytes": 4299455,
+    "first_8192_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+  },
+  "negative_actual_controls": [
+    "ordinary2s observer remains unchanged",
+    "actual Redis error never success",
+    "lost reply never inferred or replayed",
+    "caller observer loss retains physical admission",
+    "outer observer expiry retains physical settlement",
+    "held claim/commit/reply shutdown ownership"
+  ],
+  "cleanup": {
+    "runner_acknowledged_removed": true,
+    "independent_exact_bind_passed": true,
+    "proof_sha256": "ad795c1789bc0837e43be0d8726d96f579d77a51150f13c1fbc3683d82768c6c"
+  },
+  "Main_executed": false,
+  "actual_Source60s_timeout_retry_parity_qualified": false,
+  "resource_measurements": false,
+  "full_M4_acceptance": false,
+  "prototype1_preserved": {
+    "selection_sha256": "bfb7adbb1cc5716429dbfa961784a7860e3ee09055c89123287f2b1ae0031a5b",
+    "known_hole": "completed over60s reserve duration forgotten after phase drop; repaired in revision2"
+  },
+  "log_sha256": {
+    "compile.log": "66b77ba34f06fe3fcefc46bf05e14f9a28e05c3d0feb519886f09d50f4b150bd",
+    "pure-tests.log": "5f6d49038954221c93dd74121aee83255635438d0179873ffa40aa96a23f6ff3",
+    "strict-clippy.log": "ac4c05ba3f561ae92402e6f784b3cb7e62ab60da6ad3a952864cb06aaf1a1f40",
+    "regression-execution.log": "b2410a7429ff4ab0bf7e980293b88960350d1567d234ba1866eca12f0d2e113d",
+    "media-generation.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retained_reserve-retained_tests.log": "c004c3f2db1cfe2bff2cb45a5a220765a4957dfa6afa31bb236ea4a96126ef9f",
+    "retained_reserve-ordinary_two_second_tests.log": "00cf2cb472211075ca43e303d6e2aa79041ad92d9b268db1dd917e8e68f17f7b",
+    "lease_physical-tests.log": "a295ac2287504137ce7ac3b659102f606255afacaebd32ddba78aeeee7393b0f",
+    "idle_entry-pending_follower_tests.log": "2fc2b83ce16ff67118b3a9ba8a069c04a292671c9c14325ccc49afd33f72a3a5",
+    "idle_entry-idle_entry_tests.log": "41ddfd4c5fba79abcf44efe49cabcbf208d1a9adf24765ca3c9a6b2f6e7da93e",
+    "generation_scope-local_scope_tests.log": "0f4ba01d561f0b039d43467434e1593dca54a621818a9ca96dea065be1431678",
+    "generation_scope_physical-local_physical_tests.log": "807fc6ae7f5ad418aa1dab31397264fac9ea3e8d303eb6a815743e801e81a4d7",
+    "pending_follower_http-pending_http_tests.log": "1dcc99bb15f929dcf7d42c7744ec232964ef859fc75b62d9387087982fb6c09c",
+    "http_recovery-actual_http_tests.log": "5077db8baa298d3c5ee5657466ad358dd67c24a994f5034cff632b994819db57"
+  }
+}

@@ -148,3 +148,9 @@ mod logo_task_resources;
 pub mod scanner_index_helper;
 #[cfg(test)]
 mod scanner_index_peer;
+
+#[cfg(test)]
+mod logo_spool_peer;
+
+#[cfg(test)]
+mod logo_spool_resources;

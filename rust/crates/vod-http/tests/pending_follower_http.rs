@@ -520,3 +520,19 @@ async fn retained_pending_http_busy_2_4s() {
 async fn retained_pending_http_client_loss_2_4s() {
     actual_pending_timed(false, true, 2, 2400).await;
 }
+
+#[tokio::test]
+#[ignore = "Source4s physical reply: ordinary Coordinator2s unchanged; idle result200 retained"]
+async fn retained_pending_http_success_4s() {
+    actual_pending_timed(false, false, 2, 4000).await;
+}
+#[tokio::test]
+#[ignore = "Source4s physical busy reply:429 and other private reservation retained"]
+async fn retained_pending_http_busy_4s() {
+    actual_pending_timed(true, false, 2, 4000).await;
+}
+#[tokio::test]
+#[ignore = "caller loss during4s physical idle reply retains original job and follower"]
+async fn retained_pending_http_client_loss_4s() {
+    actual_pending_timed(false, true, 2, 4000).await;
+}

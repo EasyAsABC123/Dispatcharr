@@ -49,15 +49,37 @@ pub trait FirstScanHook: Send+Sync {
  fn finish<'a>(&'a self,receipt:Arc<Receipt>)->FutureResult<'a,()>;
 }
 #[derive(Clone)]
-pub struct Scanner { effects:Arc<dyn Effects>, roots:Roots, limits:Limits, slot:Arc<Semaphore>, first:Arc<AtomicBool> }
+pub struct Scanner { effects:Arc<dyn Effects>, roots:Roots, limits:Limits, slot:Arc<Semaphore>, first:Arc<AtomicBool>, spool:Option<SpoolConfig> }
+/// Explicit managed scratch profile; the legacy constructor remains128 files.
+#[derive(Clone)]
+pub struct SpoolConfig{pub directory:PathBuf,pub max_bytes:usize}
+#[derive(Clone)]
+pub struct SpoolOptions{pub roots:Roots,pub limits:Limits,pub scratch:SpoolConfig}
+#[path="logo_spool.rs"]
+mod spool;
+enum Inspected{Memory{files:std::vec::IntoIter<File>,count:usize},Disk(Option<spool::Disk>)}
+impl Inspected{
+ fn count(&self)->usize{match self{Self::Memory{count,..}=>*count,Self::Disk(Some(v))=>v.count(),Self::Disk(None)=>0}}
+ async fn batch(&mut self)->Result<Vec<File>,Error>{match self{Self::Memory{files,..}=>Ok(files.by_ref().take(32).collect()),Self::Disk(value)=>{let mut disk=value.take().ok_or(Error::Operational)?;let(disk,result)=tokio::task::spawn_blocking(move||{let result=disk.batch();(disk,result)}).await.map_err(|_|Error::Operational)?;*value=Some(disk);result}}}
+ async fn close(self)->Result<(),Error>{match self{Self::Memory{..}=>Ok(()),Self::Disk(Some(disk))=>tokio::task::spawn_blocking(move||disk.close()).await.map_err(|_|Error::Operational)?,Self::Disk(None)=>Err(Error::Operational)}}
+}
 #[derive(Clone)]
 pub struct Roots {pub m3u:PathBuf,pub epg:PathBuf,pub logos:PathBuf}
 #[derive(Debug,Default,PartialEq,Eq)]
 pub struct Counts {pub processed:usize,pub skipped:usize,pub errors:usize,pub total_files:usize}
 struct File {path:String,stem:String,supported:bool,mtime:f64}
 impl Scanner {
- pub fn new(effects:Arc<dyn Effects>,roots:Roots,limits:Limits)->Result<Self,Error>{
-  if limits.files==0||limits.files>128||limits.directories==0||limits.directories>32||limits.path_bytes==0||limits.path_bytes>4096||limits.total_path_bytes==0||limits.total_path_bytes>65536{return Err(Error::Unsupported)}
+ pub fn new(effects:Arc<dyn Effects>,roots:Roots,limits:Limits)->Result<Self,Error>{Self::construct(effects,roots,limits,None)}
+ pub fn new_spooled(effects:Arc<dyn Effects>,roots:Roots,limits:Limits,spool:SpoolConfig)->Result<Self,Error>{
+  if spool.max_bytes<128||spool.max_bytes>256*1024{return Err(Error::Unsupported)}
+  if spool.directory.as_os_str().len()>4096||[&roots.m3u,&roots.epg,&roots.logos].iter().any(|p|p.as_os_str().len()>limits.path_bytes){return Err(Error::Unsupported)}
+  let normal:PathBuf=spool.directory.components().collect();if !spool.directory.is_absolute()||normal.as_os_str()!=spool.directory.as_os_str()||spool.directory.to_str().is_none()||spool.directory.components().any(|v|matches!(v,std::path::Component::ParentDir|std::path::Component::CurDir)){return Err(Error::Unsupported)}
+  if [&roots.m3u,&roots.epg,&roots.logos].iter().any(|root|root.starts_with(&spool.directory)||spool.directory.starts_with(root)){return Err(Error::Unsupported)}
+  Self::construct(effects,roots,limits,Some(spool))
+ }
+ fn construct(effects:Arc<dyn Effects>,roots:Roots,limits:Limits,spool:Option<SpoolConfig>)->Result<Self,Error>{
+  let max_files=if spool.is_some(){4096}else{128};
+  if limits.files==0||limits.files>max_files||limits.directories==0||limits.directories>32||limits.path_bytes==0||limits.path_bytes>4096||limits.total_path_bytes==0||limits.total_path_bytes>65536{return Err(Error::Unsupported)}
   let paths=[&roots.m3u,&roots.epg,&roots.logos];
   for (index,path) in paths.iter().enumerate(){
    // Admission restriction, not Original path normalization. Reject lexical
@@ -66,7 +88,10 @@ impl Scanner {
    if !path.is_absolute()||path.to_str().is_none()||normal.as_os_str()!=path.as_os_str()||path.components().any(|c|matches!(c,std::path::Component::ParentDir|std::path::Component::CurDir)){return Err(Error::Unsupported)}
    if paths.iter().skip(index+1).any(|other|path.starts_with(other)||other.starts_with(path)){return Err(Error::Unsupported)}
   }
-  Ok(Self{effects,roots,limits,slot:Arc::new(Semaphore::new(1)),first:Arc::new(AtomicBool::new(false))})
+  Ok(Self{effects,roots,limits,slot:Arc::new(Semaphore::new(1)),first:Arc::new(AtomicBool::new(false)),spool})
+ }
+ async fn inspect_files(&self,owner:Owner,slot:Arc<tokio::sync::OwnedSemaphorePermit>)->Result<Inspected,Error>{
+  let roots=self.roots.clone();let limits=self.limits;let spool=self.spool.clone();let keep:Owner=Arc::new((owner,slot));tokio::task::spawn_blocking(move||match spool{Some(config)=>spool::Disk::enumerate(roots,limits,config,keep).map(|v|Inspected::Disk(Some(v))),None=>{let _keep=keep;let files=inspect(roots,limits)?;let count=files.len();Ok(Inspected::Memory{files:files.into_iter(),count})}}).await.map_err(|_|Error::Operational)?
  }
  pub fn first_scan_completed(&self)->bool{self.first.load(Ordering::Acquire)}
  fn receipt(&self,owner:Owner,slot:Arc<tokio::sync::OwnedSemaphorePermit>)->(Arc<Receipt>,oneshot::Receiver<()>){let(tx,rx)=oneshot::channel();(Arc::new(Receipt{_owner:owner,_slot:slot,done:Some(tx)}),rx)}
@@ -93,10 +118,10 @@ impl Scanner {
   let this=self.clone();let(tx,rx)=oneshot::channel();tokio::spawn(async move{
    let result=async{
     let(receipt,done)=this.receipt(owner.clone(),slot.clone());let result=if let Some(hook)=&hook{hook.admit(receipt.clone()).await.map(|_|true)}else{this.effects.no_index_sources(receipt.clone()).await};drop(receipt);done.await.map_err(|_|Error::Operational)?;if !result?{return Err(Error::Unsupported)}
-    let roots=this.roots.clone();let limits=this.limits;let keep=(owner.clone(),slot.clone());let files=tokio::task::spawn_blocking(move||{let _keep=keep;inspect(roots,limits)}).await.map_err(|_|Error::Operational)??;
-    for file in files{if !file.supported{continue}let(receipt,done)=this.receipt(owner.clone(),slot.clone());let result=this.effects.marker(&file.path,receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;
+    let mut files=this.inspect_files(owner.clone(),slot.clone()).await?;
+    let result=async{loop{let batch=files.batch().await?;if batch.is_empty(){break}for file in batch{if !file.supported{continue}let(receipt,done)=this.receipt(owner.clone(),slot.clone());let result=this.effects.marker(&file.path,receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;
      if let Some(value)=result?{if !value.is_empty(){match parse_marker(&value){Ok(_)|Err(Error::InvalidMarker)=>{},Err(error)=>return Err(error)}}}
-    }Ok(())
+    }}Ok(())}.await;files.close().await?;result
    }.await;let _=tx.send(result);
   });rx.await.map_err(|_|Error::Operational)?
  }
@@ -109,10 +134,9 @@ impl Scanner {
   // Bounded admission checks precede every mutation. This intentionally excludes
   // concurrent changes and first-scan children; it is not full scanner parity.
   if let Some(hook)=&hook{let(receipt,done)=self.receipt(owner.clone(),slot.clone());let result=hook.admit(receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;result?;}else if !physical!(no_index_sources()){return Err(Error::Unsupported)}
-  let roots=self.roots.clone();let limits=self.limits;let keep=(owner.clone(),slot.clone());
-  let files=tokio::task::spawn_blocking(move||{let _keep=keep;inspect(roots,limits)}).await.map_err(|_|Error::Operational)??;
-  let mut counts=Counts{total_files:files.len(),..Counts::default()};
-  for file in files {
+  let mut files=self.inspect_files(owner.clone(),slot.clone()).await?;
+  let result=async{let mut counts=Counts{total_files:files.count(),..Counts::default()};
+  loop{let batch=files.batch().await?;if batch.is_empty(){break}for file in batch {
    if !file.supported {counts.skipped+=1;continue}
    // Original tests the truth value of decoded GET: both absent and empty
    // string enter the old-existing branch and bypass float conversion.
@@ -131,13 +155,16 @@ impl Scanner {
    match physical!(get_or_create(&file.path,&file.stem)){FileEffect::CaughtServerError=>{counts.errors+=1;continue},FileEffect::Settled(())=>{}}
    match physical!(set_marker(&file.path,&marker_bytes(file.mtime))){FileEffect::CaughtServerError=>{counts.errors+=1;continue},FileEffect::Settled(())=>{}}
    counts.processed+=1;
-  }
+  }}
   if counts.processed>0||counts.errors>0 {
    let data=json!({"type":"update","data":{"success":true,"type":"logo_processing_summary","processed":counts.processed,"skipped":counts.skipped,"errors":counts.errors,"total_files":counts.total_files,"message":format!("Logo processing complete: {} processed, {} skipped, {} errors",counts.processed,counts.skipped,counts.errors)}});
    let _settled=physical!(summary(data));
   }
-  if !self.first_scan_completed(){if let Some(hook)=hook{let(receipt,done)=self.receipt(owner.clone(),slot.clone());let result=hook.finish(receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;result?;}else if !physical!(no_index_sources()){return Err(Error::Unsupported)}self.first.store(true,Ordering::Release);}
-  Ok(counts)
+  let complete_first=!self.first_scan_completed();if complete_first{if let Some(hook)=hook{let(receipt,done)=self.receipt(owner.clone(),slot.clone());let result=hook.finish(receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;result?;}else if !physical!(no_index_sources()){return Err(Error::Unsupported)}}
+  Ok((counts,complete_first))}.await;
+  // Even known failure metadata must wait for physical scratch close/unlink.
+  // A cleanup failure remains operational, never a fabricated Source terminal.
+  files.close().await?;let(counts,complete_first)=result?;if complete_first{self.first.store(true,Ordering::Release)}Ok(counts)
  }
  pub async fn shutdown(&self,timeout:Duration)->bool{
   self.slot.close();tokio::time::timeout(timeout,async{loop{if self.slot.available_permits()==1{break}tokio::time::sleep(Duration::from_millis(1)).await;}}).await.is_ok()
@@ -151,7 +178,8 @@ fn parse_marker(value:&str)->Result<f64,Error>{
  if !value.is_finite(){return Err(Error::Unsupported)}Ok(value)
 }
 fn marker_bytes(value:f64)->String{dispatcharr_store::source_scanner_epoch_string(value).expect("filesystem preflight bounds finite epoch")}
-fn inspect(roots:Roots,limits:Limits)->Result<Vec<File>,Error>{
+fn inspect(roots:Roots,limits:Limits)->Result<Vec<File>,Error>{let mut files=Vec::new();inspect_into(roots,limits,|file|{files.push(file);Ok(())})?;Ok(files)}
+fn inspect_into<F:FnMut(File)->Result<(),Error>>(roots:Roots,limits:Limits,mut emit:F)->Result<usize,Error>{
  fn empty(path:&Path)->Result<bool,Error>{Ok(std::fs::read_dir(path).map_err(|_|Error::Filesystem)?.next().is_none())}
  // Validate roots and ancestors without following symlinks before opening
  // watch directories. Concurrent replacement after this check is unsupported;
@@ -163,8 +191,8 @@ fn inspect(roots:Roots,limits:Limits)->Result<Vec<File>,Error>{
   }
  }
  if !empty(&roots.m3u)?||!empty(&roots.epg)?{return Err(Error::Unsupported)}
- let mut files=Vec::new();let mut bytes=0;let mut directories=0;
- fn walk(root:&Path,limits:Limits,files:&mut Vec<File>,bytes:&mut usize,directories:&mut usize)->Result<(),Error>{
+ let mut count=0;let mut bytes=0;let mut directories=0;
+ fn walk<F:FnMut(File)->Result<(),Error>>(root:&Path,limits:Limits,count:&mut usize,bytes:&mut usize,directories:&mut usize,emit:&mut F)->Result<(),Error>{
   *directories+=1;if *directories>limits.directories{return Err(Error::Unsupported)}
   let mut dirs=Vec::new();
   // No sorting: preserve this filesystem's observed read_dir order. Cross-
@@ -177,12 +205,12 @@ fn inspect(roots:Roots,limits:Limits)->Result<Vec<File>,Error>{
    *bytes=bytes.checked_add(text.len()).ok_or(Error::Unsupported)?;if *bytes>limits.total_path_bytes{return Err(Error::Unsupported)}
    if meta.is_dir(){dirs.push(path);if dirs.len()>limits.directories{return Err(Error::Unsupported)}continue}
    if !meta.is_file(){return Err(Error::Unsupported)}
-   if files.len()==limits.files{return Err(Error::Unsupported)}
+   if *count==limits.files{return Err(Error::Unsupported)}
    let extension=path.extension().and_then(|s|s.to_str()).unwrap_or("").to_ascii_lowercase();
    let supported=matches!(extension.as_str(),"jpg"|"jpeg"|"png"|"gif"|"webp"|"bmp"|"svg");
    // Source checks isfile, then extension, before getmtime/GET/name handling.
    // Unsupported extensions still consume the common file/path memory budget.
-   if !supported{files.push(File{path:text.to_owned(),stem:String::new(),supported:false,mtime:0.0});continue}
+   if !supported{emit(File{path:text.to_owned(),stem:String::new(),supported:false,mtime:0.0})?;*count+=1;continue}
    let modified=meta.modified().map_err(|_|Error::Filesystem)?.duration_since(UNIX_EPOCH).map_err(|_|Error::Unsupported)?;
    // Normal finite epoch nanoseconds are admitted. Source/native stat-bit
    // and formatter vectors are separately bound; no special marker grammar
@@ -191,9 +219,9 @@ fn inspect(roots:Roots,limits:Limits)->Result<Vec<File>,Error>{
    if !(100_000_000.0..10_000_000_000.0).contains(&mtime){return Err(Error::Unsupported)}
    let stem=path.file_stem().and_then(|s|s.to_str()).ok_or(Error::Unsupported)?.to_owned();
    if stem.chars().count()>255{return Err(Error::Unsupported)}
-   files.push(File{path:text.to_owned(),stem,supported:true,mtime});
+   emit(File{path:text.to_owned(),stem,supported:true,mtime})?;*count+=1;
   }
-  for dir in dirs{walk(&dir,limits,files,bytes,directories)?}Ok(())
+  for dir in dirs{walk(&dir,limits,count,bytes,directories,emit)?}Ok(())
  }
- walk(&roots.logos,limits,&mut files,&mut bytes,&mut directories)?;Ok(files)
+ walk(&roots.logos,limits,&mut count,&mut bytes,&mut directories,&mut emit)?;Ok(count)
 }

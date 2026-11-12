@@ -1,0 +1,3 @@
+# Pinned API and actual-gate distinction
+
+The tagged official [Rust1.90 fs API](https://raw.githubusercontent.com/rust-lang/rust/1.90.0/library/std/src/fs.rs) defines File::try_lock returning Result<(), TryLockError>, stable since1.89. The [Linux implementation](https://raw.githubusercontent.com/rust-lang/rust/1.90.0/library/std/src/sys/fs/unix.rs) supplies a nonblocking exclusive flock. Locks belong to open handles; this design never replaces the locked inode or clones that handle. These source facts informed the design; actual contention, SIGKILL and retained-ownership claims rely on the separate executed tests bound in the summary. No Rust standard-library implementation text is copied.

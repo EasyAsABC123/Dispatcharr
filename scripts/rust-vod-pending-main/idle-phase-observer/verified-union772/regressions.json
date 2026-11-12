@@ -1,0 +1,84 @@
+{
+  "passed": true,
+  "scope": "Exact Root reviewed772 union ELFs; old77 plus4s componentHTTP3; realRedis/fixture resolver only; no packaged Main/SQL/auth acceptance",
+  "tests": [
+    {
+      "target": "retained_reserve",
+      "filter": "retained_",
+      "returncode": 0,
+      "passed_count": 6,
+      "log_sha256": "dc1e2546f96b98a756b0e2795820b2c4fc2a7aa03e50cbacb4c2bfaa1b8d5ec9"
+    },
+    {
+      "target": "retained_reserve",
+      "filter": "ordinary_two_second_",
+      "returncode": 0,
+      "passed_count": 1,
+      "log_sha256": "00cf2cb472211075ca43e303d6e2aa79041ad92d9b268db1dd917e8e68f17f7b"
+    },
+    {
+      "target": "lease_physical",
+      "filter": "",
+      "returncode": 0,
+      "passed_count": 13,
+      "log_sha256": "6b212eb1e56be35f4c1508a416c6db066568f2e51cb8bc2d4a1c64d723adaf8c"
+    },
+    {
+      "target": "idle_entry",
+      "filter": "pending_follower_",
+      "returncode": 0,
+      "passed_count": 4,
+      "log_sha256": "2fc2b83ce16ff67118b3a9ba8a069c04a292671c9c14325ccc49afd33f72a3a5"
+    },
+    {
+      "target": "idle_entry",
+      "filter": "idle_entry_",
+      "returncode": 0,
+      "passed_count": 5,
+      "log_sha256": "0e3c088e5cdd83931a446d00a7cb63bcbd3d695136abe98baf3c8aabdf805502"
+    },
+    {
+      "target": "generation_scope",
+      "filter": "local_scope_",
+      "returncode": 0,
+      "passed_count": 20,
+      "log_sha256": "0f4ba01d561f0b039d43467434e1593dca54a621818a9ca96dea065be1431678"
+    },
+    {
+      "target": "generation_scope_physical",
+      "filter": "local_physical_",
+      "returncode": 0,
+      "passed_count": 9,
+      "log_sha256": "c2a325e034e0962457953e667f497a882b37c883697697d3e2542a24dbb657e4"
+    },
+    {
+      "target": "pending_follower_http",
+      "filter": "pending_http_",
+      "returncode": 0,
+      "passed_count": 9,
+      "log_sha256": "789dfb5c1bf0d3314325990f831bd5c35166979adf3557085f648df659bdc0ea"
+    },
+    {
+      "target": "http_recovery",
+      "filter": "actual_http_",
+      "returncode": 0,
+      "passed_count": 13,
+      "log_sha256": "6e47768feb75929d3d456edbf27504a047c54800ba26ecc9fb998cb62a649b7b"
+    }
+  ],
+  "binary_sha256": {
+    "pending_follower_http": "775b2b865334dd737f593f0ce26af6348004dabd6c966e144fc850775f705ca3",
+    "generation_scope": "fd9baa962b03018e124a514d8987bd8203f5a4549a689a8ed619e709a7980bcd",
+    "lease_physical": "c0033b2fa8e59002433ccfad649c279c54084f314d1713136d7e743c49ebc116",
+    "http_recovery": "a2b078031031f6df54f844547f43f033e32e29785b0e48c85e023d2d191332ce",
+    "generation_scope_physical": "cf1e6cd8a5d21d306bfd2b623f308289a27176276bb038d3f1edc73eb4be82d6",
+    "idle_entry": "6c9f051765863894619b9867c993b7c2fb242aad0c0f244de0c4100b3c608ec0",
+    "retained_reserve": "29d766505196cc495a5c6b4f479ef129214a2168d2a3b76d48c7a8d4c19ee04d"
+  },
+  "media": {
+    "sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "bytes": 4299455,
+    "first_8192_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+  },
+  "owned_containers_removed": true
+}
