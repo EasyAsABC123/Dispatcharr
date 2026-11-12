@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "docker",
+    "compose",
+    "-p",
+    "dispatcharr-notif-native-33b4422ad3",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-native-sql-1/compose.json",
+    "exec",
+    "-T",
+    "-e",
+    "NOTIFICATION_NATIVE_FIXTURE=owned-native-only",
+    "-e",
+    "NOTIFICATION_NATIVE_DATABASE=rust_probe_notif_native_33b4422ad3",
+    "-e",
+    "NOTIFICATION_NATIVE_REPORT=/evidence/native-notification-report.json",
+    "-e",
+    "DATABASE_TEST_URL=postgres://dispatch:playback-fixture-only@127.0.0.1:5432/rust_probe_notif_native_33b4422ad3",
+    "-e",
+    "REDIS_TEST_URL=redis://:playback-fixture-only@127.0.0.1:6379/0",
+    "baseline",
+    "/native-inputs/notifications-sql-test",
+    "create_and_sequential_repeat_match_retained_source_effects",
+    "--exact",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "kind": "Native-SQL-test",
+  "timeout_seconds": 240
+}

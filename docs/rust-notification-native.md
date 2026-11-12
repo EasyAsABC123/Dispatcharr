@@ -1,0 +1,9 @@
+# Notification create and repeated dismissal
+
+Rust now returns 201 for the tested administrator notification creation workflow. A sequential repeated dismissal reads the existing record before considering an insert, preserving its ID, dismissal time and PostgreSQL sequence. Truthy action updates preserve that identity; ordinary duplicate-key rejection occurs before insertion. Original Dispatcharr authors and contributors retain full application, algorithm and licensing credit.
+
+The [qualification packet](../scripts/rust-contracts/notifications-native/README.md) retains eight Original framework observations and compares eight Rust requests plus eight additional controls. Both the standalone component and the combined 791-input snapshot pass. Stable response/SQL fields, request and cross-request clock semantics, default eleven-table/eleven-sequence audits and owned cleanup are checked independently. The unchanged Store library also passes 184 tests, with 58 fixture-dependent tests explicitly ignored. Earlier setup and sandbox failures remain preserved.
+
+The [Source input supplement](../scripts/rust-contracts/notifications-source/README-EXECUTABLE.md) reconstructs every input of the original 29-file fixture using pinned local Git objects. Its default check performs no application execution. The original Source controller exit 1 remains recorded, alongside its eight observations, 213 effect checks and independently recovered cleanup.
+
+Source used forced authentication; Rust used ordinary fixture API keys and local HTTP. These results do not establish paired Source credential/TCP behavior. Other roles, developer/expiry cases and complete endpoint behavior remain open. PUT/PATCH/DELETE still return the existing guarded 501. Main/default activation and M5 completion remain pending. There is no new notification or whole-application performance claim.

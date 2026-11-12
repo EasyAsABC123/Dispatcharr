@@ -1,0 +1,65 @@
+{
+  "state": "PREDECLARED_NATIVE2_QA_ONLY_CORRECTION_BEFORE_ANY_NATIVE2_RESULT",
+  "Native_builds": "see Native2 build records; no Native2 SQL fixture until exact seal review",
+  "Native_fixture_runs": 0,
+  "new_Source_capture": 0,
+  "Source_fixture": {
+    "path": "source/rust/crates/store/tests/fixtures/notification-source8.json",
+    "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+    "raw_Source_timestamps_retained": true,
+    "controller_exit": 1,
+    "Source_actual_requests": 8,
+    "Source_successful_effect_checks": 213
+  },
+  "Native_QA": {
+    "new_database_pattern": "rust_probe_notif_native_<10lowerhex>",
+    "authority": "NOTIFICATION_NATIVE_FIXTURE=owned-native-only",
+    "Redis_precondition": "GET rust-probe-notification-native-owner equals exact owned database before NotificationCache use",
+    "bootstrap": "unchanged initialize_empty_database into the guarded new native database; no Source application or migration code edits",
+    "Source_user_IDs_copied": [
+      1,
+      2
+    ],
+    "Source_notice_seed_ID_copied": 1,
+    "Native_initial_ID_sequences": "Copy seed positions before measured requests only: user2/true, notice1/true, dismissal1/false. No resets during or between observed requests.",
+    "Native_measured_dismissal_ID": 1,
+    "Native_measured_created_notice_ID": 2,
+    "seed_clock_comparison": "Compare Source and native seed created_at/updated_at as exact instants; preserve both raw encodings.",
+    "generated_clock_comparison": "For first dismissal and admin create, retain full raw native clocks and require began_native_UTC <= SQL/response generated timestamp <= completed_native_UTC. Do not compare a newly generated Native instant to the old Source instant.",
+    "repeat_comparison": "Native dismissal row ID/dismissed_at/action and sequence values exact before versus after sequential repeat; no normalization.",
+    "JSON_comparison": "Every Source8 stable JSON field equals captured Source value; admin create created_at uses explicit own-clock predicate. Actual response bytes and SQL timestamps saved unchanged before assertions.",
+    "SQL_comparison": "Compare notification/dismissal non-clock fields and explicit IDs to captured Source rows; copied seed clocks exact. New Native generated clocks obey own bounds; all other named table/sequence effects unchanged.",
+    "Source8_requests": 8,
+    "extra_definition_derived_requests": 8,
+    "extra_cases": [
+      "duplicate-key400/no sequence use",
+      "required-fields400/no mutation",
+      "standard malformed-body403 permission precedence",
+      "repeat truthy action200 UPDATE only",
+      "repeat falsey action200 retains action",
+      "other CRUD PUT501 remains guarded",
+      "other CRUD PATCH501 remains guarded",
+      "other CRUD DELETE501 remains guarded"
+    ],
+    "unit_tests": 4,
+    "concurrent_race_exact_sequence_count_claimed": false,
+    "raw_reports": "NOTIFICATION_NATIVE_REPORT must be new; save each response body_hex/body/headers, UTC begin/end and all11 table/sequence snapshots before asserting; final pass only after own server abort/pool close.",
+    "external_controller_required_before_execution": "Reviewed owned project setup/default11-table audit/cleanup orchestration and native build scheduling remain Root-controlled; none executed here."
+  },
+  "no_registration_or_Main_default_graph_change": true,
+  "previous_native1_negative_preserved": "artifacts/rust/m0-notifications-native-sql-1/outcome.json",
+  "QA_only_correction": {
+    "runtime_defaults_changed": false,
+    "source_fixture_changed": false,
+    "file": "rust/crates/store/tests/notifications_sql.rs",
+    "source_actual_initial_rows": {
+      "notifications": [],
+      "dismissals": []
+    },
+    "native_initialized_rows": "Retain all raw initialized notification/dismissal rows, including native builtin developer notice, before mutation.",
+    "operation": "Inside a transaction bound by current_database() to exact rust_probe_notif_native_<nonce>, DELETE dismissal then notification rows before fixed Source-ID seed. No default/sentinel DB mutation.",
+    "retained_after_isolation": "Save empty owned notification/dismissal rows and compare to actual Source initial isolated state.",
+    "retained_after_seed": "Save native seed rows and compare stable fields/seed timestamp instants to full Source seed; save sequence. All raw timestamps retained.",
+    "capture_order": "Create passed:false report before isolation/seed so setup failures also retain initial proof."
+  }
+}

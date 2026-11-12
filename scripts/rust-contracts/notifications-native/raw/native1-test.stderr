@@ -1,0 +1,4 @@
+
+thread 'create_and_sequential_repeat_match_retained_source_effects' panicked at crates/store/tests/notifications_sql.rs:167:145:
+called `Result::unwrap()` on an `Err` value: Database(PgDatabaseError { severity: Error, code: "23505", message: "duplicate key value violates unique constraint \"core_systemnotification_pkey\"", detail: Some("Key (id)=(1) already exists."), hint: None, position: None, where: None, schema: Some("public"), table: Some("core_systemnotification"), column: None, data_type: None, constraint: Some("core_systemnotification_pkey"), file: Some("nbtinsert.c"), line: Some(666), routine: Some("_bt_check_unique") })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

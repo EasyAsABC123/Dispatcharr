@@ -1,0 +1,249 @@
+    Finished `test` profile [unoptimized] target(s) in 0.12s
+     Running unittests src/lib.rs (/tmp/dispatcharr-notifications-native-target-2/debug/deps/dispatcharr_store-41d5cfe0cddb433e)
+
+running 242 tests
+test accounts::tests::datetime_matches_django_utc_microseconds_and_null ... ok
+test app_data::tests::namespaces_and_structure_follow_source_error_codes ... ok
+test auth::tests::api_key_no_credentials_remains_anonymous_without_database_query ... ok
+test admin_writes::tests::admin_fields_are_normalized_and_unknown_or_readonly_fields_ignored ... ok
+test account_writes::tests::omitted_properties_preserve_legacy_sql_and_json_null ... ok
+test admin_writes::tests::admin_validation_collects_required_and_invalid_fields ... ok
+test admin_writes::tests::group_full_and_partial_requests_preserve_required_relation_contract ... ok
+test admin_writes::tests::timestamps_accept_source_common_iso_forms_and_nullable_last_login ... ok
+test account_writes::tests::invalid_navigation_email_and_names_fail_validation ... ok
+test auth::tests::dedicated_pool_identity_matches_clones_not_equal_configuration ... ok
+test account_writes::tests::python_json_size_counts_escaping_and_unicode_like_source ... ok
+test account_writes::tests::owner_cannot_change_admin_fields_or_admin_managed_properties ... ok
+test admin_writes::tests::admin_custom_properties_accept_valid_credentials_and_reject_bad_profile_allowlists ... ok
+test app_data::tests::content_length_validation_is_bounded_and_source_shaped ... ok
+test auth::tests::local_login_budget_counts_attempts_but_api_budget_only_failures ... ok
+test auth::tests::forwarded_headers_follow_only_trusted_peer_and_rightmost_untrusted_hop ... ok
+test auth::tests::minted_tokens_have_simplejwt_types_lifetimes_and_unique_ids ... ok
+test auth::tests::signature_algorithm_expiry_and_future_issued_at_are_enforced ... ok
+test auth::tests::mapped_ipv4_is_normalized_for_acl_rate_limits_and_client_metadata ... ok
+test backup_files::tests::original_job_free_backup_file_contracts ... ignored, Requires guarded original backup HTTP fixture and real PostgreSQL/Redis; no jobs
+test auth_throttle::tests::failed_auth_null_disables_budget_but_login_null_is_source_error ... ok
+test backup_files::tests::signed_token_rfc_and_original_vector ... ok
+test cache_codec::tests::django_counter_bytes_are_distinct_from_boolean_and_float_pickles ... ok
+test django_pickle::tests::pinned_boolean_vectors_and_rejected_executable_opcodes ... ok
+test backup_jobs_status::tests::captured_source_entities_match_exactly ... ok
+test epg_current::tests::null_and_empty_id_families_retain_original_branch_meaning ... ok
+test django_pickle::tests::primitive_round_trip_keeps_large_integer_and_float_types ... ok
+test core_stream_writes::tests::locked_profile_only_accepts_user_agent ... ok
+test channel_relations::tests::integer_delta_filter_preserves_python_semantics ... ok
+test epg_current::tests::reply_serialization_bounds_escaping_and_repeated_programmes ... ok
+test backup_files::tests::private_spool_cleanup_outside_runtime_retains_lease_until_unlink ... ok
+test epg_current::tests::original_int_conversion_precedes_the_fifty_id_slice ... ok
+test core_utilities::tests::source_pagination_retains_empty_negative_slice ... ok
+test auth::tests::malformed_bearer_matches_actual_simplejwt_code_before_database_work ... ok
+test django_pickle::tests::source_protocol4_dictionary_vectors_include_memo_aliases ... ok
+test channel_memberships::tests::bulk_plain_integer_field_keeps_large_values_and_rejects_boolean_ids ... ok
+test channels::tests::search_quoting_and_commas_match_pinned_drf_vectors ... ok
+test channel_memberships::tests::bulk_errors_collect_nested_required_fields_and_boolean_coercions ... ok
+test epg_current::tests::expired_batch_deadline_rejects_the_next_query ... ok
+test core_utilities::tests::pinned_zones_are_sorted_grouped_and_complete ... ok
+test epg_grid_helpers::tests::frame_capacity_rejects_large_escaped_values_and_count_overflow ... ok
+test backup_jobs_status::tests::code_derived_completed_echo_and_typed_errors_are_not_new_wire_claims ... ok
+test epg_current::tests::retained_first_programme_bytes_cannot_exceed_output_budget ... ok
+test backup_files::multipart_guard::tests::body_limit_applies_even_after_closing_boundary ... ok
+test backup_files::multipart_guard::tests::every_chunk_split_preserves_payload_boundary_overlap_and_header_count ... ok
+test backup_files::tests::filename_decoding_keeps_query_delimiters_literal_and_decodes_once ... ok
+test epg_program_http::tests::cloned_response_bytes_retain_admission_until_last_allocation_reference ... ok
+test json_float_peer::actual_finite_float_peer ... ignored
+test notifications::notification_restart_peer::persistent_notification_owner_protocol ... ignored, owned restart protocol fixture only
+test notifications::tests::cache_and_user_agent_server_error_classifications_stay_distinct ... ignored, actual owned Redis wrongtype/ACL distinguishes generic503 and UAserver500
+test notifications::tests::cache_cancelled_burst_cannot_reuse_sixteen_pending_slots ... ignored, actual owned Redis cancellation storm with bounded physical/queued admission
+test notifications::tests::cache_logical_timeout_retains_pending_reply_and_composed_scopes ... ignored, actual owned Redis delayed reply beyond logical cache deadline
+test notifications::tests::cache_waiter_bound_and_cancelled_queue_restore_admission ... ignored, actual owned Redis physical16/queue256 hard admission and cancelled waiters
+test epg_program_http::tests::escaped_json_expansion_cannot_exceed_serialization_allocation_budget ... ok
+test auth_throttle::tests::django_wait_divides_available_slots_and_expiry_is_inclusive ... ok
+test notifications::tests::cancelled_cache_command_retains_physical_slot_and_scope ... ignored, actual owned Redis pause/caller cancellation and scoped admission
+test import_groups::tests::preserves_python_numeric_equality_legacy_strings_and_nonobject_unchanged_values ... ok
+test json_compat::tests::overflow_floats_reject_and_underflow_matches_python_zero ... ok
+test image_proxy::tests::sniff_magic_and_active_html_boundaries ... ok
+test backup_files::multipart_guard::tests::huge_headers_reject_at_a_fixed_bound_across_every_chunk_split ... ok
+test ip_lookup::tests::source_public_ip_validation_retains_original_value_types ... ok
+test image_proxy::tests::response_bytes_keep_admission_until_final_clone_dropped ... ok
+test json_compat::tests::numeric_equality_matches_python_without_losing_large_integer_precision ... ok
+test json_compat::tests::python_float_formats_and_arbitrary_integer_bytes_are_preserved ... ok
+test notifications::tests::conditions_preserve_source_iterable_and_hashability_rules ... ok
+test image_proxy::tests::bounded_waiters_cancel_without_leaking_admission ... ok
+test notifications::tests::redis_cache_interoperates_with_original_python_and_bounds_values ... ignored, requires isolated REDIS_TEST_URL and original Python cache fixtures
+test notifications::tests::create_uses_model_defaults_and_ignores_readonly_input ... ok
+test notifications::tests::known_condition_uses_literal_network_membership ... ok
+test operator_commands::tests::grammar ... ok
+test operator_commands::tests::typed_membership ... ok
+test operator_create::tests::environment_missing_and_empty_password_are_distinct_and_redacted ... ok
+test logos::tests::original_id_filter_ignores_invalid_but_digit_conversion_failure_empties ... ok
+test operator_create::tests::environment_precedence_and_refusal ... ok
+test output_profile_writes::tests::original_output_profile_serializer_delete_scrub_and_cache ... ignored, requires disposable original HTTP capture and PostgreSQL/Redis; must be explicitly run after Source capture
+test output_profile_writes::tests::original_profile_delete_cache_survives_same_service_redis_restart ... ignored, requires explicit disposable Original HTTP/SQL fixture and owned Redis restart
+test notifications::tests::create_character_limits_count_unicode_and_keep_message_unbounded ... ok
+test notifications::tests::create_preserves_json_choices_boolean_and_nullable_expiry_fields ... ok
+test output_profile_writes::tests::cached_settings_ids_follow_python_int_before_comparison ... ok
+test notifications::tests::create_collects_required_and_independent_field_errors ... ok
+test output_profile_writes::tests::locked_model_order_differs_from_serializer_order ... ok
+test passwords::tests::django_pbkdf2_vectors_and_unusable_hashes ... ok
+test playback::output_tests::invalid_output_profile_query_suppresses_user_preference ... ok
+test passwords::tests::pinned_original_upgrade_policy_counts_unicode_salt_characters ... ok
+test playback::output_tests::query_aliases_and_user_global_precedence_match_original_helpers ... ok
+test password_scrypt::tests::unsupported_work_bounds_and_integer_overflow_reject_before_allocation ... ok
+test provider_reads::tests::profile_expiration_retains_microseconds_but_account_tooltips_truncate ... ok
+test provider_reads::tests::legacy_group_profile_ids_keep_python_integer_coercion ... ok
+test provider_mutations::tests::filter_validation_uses_serializer_defaults_not_model_clean_and_preserves_json_types ... ok
+test passwords::tests::oversized_inputs_and_wrong_digest_lengths_fail_before_expensive_work ... ok
+test scanner_float_peer::native_scanner_float_peer ... ignored
+test schema::tests::default_failure_after_all_ddl_rolls_back_and_retry_initializes ... ignored, requires owned empty DATABASE_FAILURE_URL plus SCHEMA_DISPOSABLE_FIXTURE
+test realtime::tests::query_selection_matches_parse_qs_first_nonblank_value ... ok
+test realtime::tests::connection_envelope_and_per_event_restrictions_match_source ... ok
+test provider_mutations::tests::server_group_source_validation_required_partial_length_types_and_readonly_fields ... ok
+test settings_groups::tests::system_defaults_match_original_fixed_django_timezone_and_logging ... ok
+test startup::tests::bootstrap_exact_ip_and_local_defaults_follow_source ... ok
+test passwords::tests::original_full_encoding_comparison_rejects_noncanonical_parameter_spellings ... ok
+test startup::tests::proxy_identity_header_has_source_ascii_length_rules ... ok
+test provider_reads::tests::provider_router_registers_nested_routes_without_capture_conflicts ... ok
+test vod_api_draft::vod_api_actions_peer::actual_source150_modal_actions ... ignored, Requires owned actual Original PostgreSQL/Redis action fixture
+test vod_api_draft::vod_api_actions_peer::controlled_source_snapshot_phases ... ignored, Requires owned Source Factory/realSQL controlled phase reference
+test vod_api_draft::vod_api_actions_peer::cron_actual_source2 ... ignored, Requires owned Original network nonempty-cron reference
+test vod_api_draft::vod_api_actions_peer::resources::shared_actions_mixed_frames_cancel_sql_and_shutdown ... ignored, Requires owned actual PostgreSQL/Redis +Original HTTP fixture
+test stream_validation::tests::original_pinned_validator_vectors_include_nonstandard_accepted_forms ... ok
+test vod_api_draft::vod_api_categories::tests::account_fk_schedule_matches_source ... ignored, actual original category FK schedule and sameDB SQL plan witness
+test vod_api_draft::vod_api_categories::tests::boolean_default_successes_and_existing_links_match_source ... ignored, original category default effects vs actual native get_or_create
+test vod_api_draft::vod_api_categories::tests::captured_category_rows_and_effects_match_original ... ignored, guarded actual original database/corpus category comparison
+test vod_api_draft::vod_api_categories::tests::category_network_methods_and_permissions ... ignored, actual original network versus independent category TCP HTTP methods/permissions
+test vod_api_draft::vod_api_categories::tests::default_boolean_fault_wire_matches_source ... ignored, actual original/native network BooleanField/default fault wire
+test vod_api_draft::vod_api_categories::tests::initial_fault_keeps_source_wire_and_committed_prefix ... ignored, actual original/network category initial DB fault and committed prefix
+test image_proxy::tests::image_buffer_capacity_never_grows_past_limit ... ok
+test vod_api_draft::vod_api_categories::tests::ordinary_and_category_share_admission_and_memory ... ignored, actual original/native mixed ordinary/category shared admission
+test vod_api_draft::vod_api_categories::tests::owned_category_reads_keep_admission_until_sql_reply_and_frame_drop ... ignored, actual category PostgreSQL lock/caller deadline and detached frame admission
+test settings_groups::tests::stream_defaults_match_original_get_stream_settings ... ok
+test tests::networks_fail_closed_and_normalize_mapped_v4 ... ok
+test passwords::tests::unicode_and_legacy_sha1_match_python_vectors ... ok
+test startup::tests::identity_requires_explicit_peer_trust_even_when_private_default_trusts_forwarding ... ok
+test vod_api_draft::vod_api_categories::tests::reverse_order_reuses_original_relation_join_and_multiplicity ... ignored, actual original category reverse-order SQL combinations
+test password_scrypt::tests::original_captured_low_cost_scrypt_utf8_and_empty_password_vectors ... ok
+test vod_api_draft::vod_api_actions_dto::tests::captured_nonmapping_quality_fault_and_declared_episode_position ... ok
+test vod_api_draft::vod_api_fair_budget::tests::cancel_removes_waiter_without_partial_credit ... ok
+test app_data::tests::per_value_limit_uses_compact_utf8_bytes_and_python_float_format ... ok
+test vod_api_draft::vod_api_fair_budget::tests::deadline_does_not_leak_queue_or_resources ... ok
+test vod_api_draft::vod_api_fair_budget::tests::ordinary_only_ledger_does_not_require_refresh_headroom ... ok
+test vod_api_draft::vod_api_fair_budget::tests::closing_cancels_new_but_allows_existing_physical_continuation ... ok
+test vod_api_draft::vod_api_fair_budget::tests::cheap_queue_leaves_ordinary_room_with_held_frame ... ok
+test vod_api_draft::vod_api_fair_budget::tests::nonfitting_ordinary_cannot_deadlock_eligible_resume ... ok
+test vod_api_draft::vod_api_fair_budget::tests::ownership_split_and_wrong_ledger_are_checked ... ok
+test vod_api_draft::vod_api_fair_budget::tests::queued_cap_reserves_full_hot_state ... ok
+test vod_api_draft::vod_api_fair_budget::tests::receiver_abort_after_grant_returns_every_dimension ... ok
+test vod_api_draft::vod_api_fair_budget::tests::wrong_ledger_combine_keeps_both_owners ... ok
+test vod_api_draft::vod_api_fair_budget::tests::two_paused_work_claims_leave_ordinary_capacity ... ok
+test vod_api_draft::vod_api_fair_budget::tests::split_cannot_orphan_queued_bytes_from_their_memory ... ok
+test vod_api_draft::vod_api_images_peer::image_metadata_sql_keeps_shared_read_owner ... ignored, Actual shared VOD metadata PG lock, caller abort and shutdown fence
+test vod_api_draft::vod_api_fair_budget::tests::oldest_eligible_is_granted_before_newer ... ok
+test vod_api_draft::vod_api_images_peer::image_shutdown_and_retained_frames ... ignored, Actual SQL shutdown and real remote/local retained image frames
+test vod_api_draft::vod_api_images_peer::image_sql_and_file_abort_retain_physical_owner ... ignored, Actual owned SQL fallback lock and local FIFO opener cancellation
+test vod_api_draft::vod_api_images_peer::image_user_agent_abort_retains_physical_owner ... ignored, Owned actual Redis pending cache reply, no remote provider traffic
+test vod_api_draft::vod_api_http::tests::bounded_formatter_preserves_nested_string_syntax_and_capacity ... ok
+test vod_api_draft::vod_api_images_peer::native_images_http_server ... ignored, Native image HTTP component runs in owned Original container network
+test vod_api_draft::vod_api_native_tests::cached_authorizer_fallback_retains_request_until_physical_redis_reply ... ignored, requires guarded originalPG/Redis; real cachedAuth logical fallback retains VOD slot
+test vod_api_draft::vod_api_native_tests::category_lazy_defaults_partial_failure_and_retained_owner ... ignored, requires guarded original category effects and actualPG injectedfailure
+test vod_api_draft::vod_api_native_tests::http_frames_and_cancelled_cached_authorization_keep_admission ... ignored, actual owned PG/Redis delayed cached-auth and independent HTTP error-frame ownership
+test vod_api_draft::vod_api_native_tests::ordinary_native_http_methods_headers_and_permissions ... ignored, actual original HTTP corpus + isolated native TCP HTTP/PG/Redis comparison
+test vod_api_draft::vod_api_native_tests::ordinary_source_database_rows_permissions_and_serialization ... ignored, requires guarded fresh actual Source PG/HTTP fixture and private corpus
+test vod_api_draft::vod_api_fair_budget::tests::failed_atomic_replace_keeps_old_claim ... ok
+test vod_api_draft::vod_api_native_tests::owned_sql_caller_abort_and_detached_frame_are_bounded ... ignored, requires guarded realPG; callerabort/blocking SQL/finalclone ownership
+test vod_api_draft::vod_api_native_tests::owned_sql_logical_deadline_does_not_release_pending_reply ... ignored, requires guarded realPG; logicaldeadline retains pending physical query
+test vod_api_draft::vod_api_native_tests::selected_logo_snapshot_and_fresh_metadata_follow_source_schedule ... ignored, requires guarded actual Source page/serializer interleaving fixture
+test vod_api_draft::vod_api_owned_read::fair::physical_tests::actual_cache_caller_abort_and_shutdown_keep_late_reply_owner ... ignored, Requires explicit fresh owned Redis; caller abort/shutdown after logical cache timeout
+test vod_api_draft::vod_api_owned_read::fair::physical_tests::actual_cache_late_reply_prevents_fresh_epoch_header_credit_loan ... ignored, Requires explicit fresh owned Redis; production NotificationCache logical timeout and late real reply
+test vod_api_draft::vod_api_owned_read::fair::physical_tests::actual_cache_late_reply_prevents_refresh_credit_loan ... ignored, Requires explicit fresh owned Redis; production NotificationCache logical timeout and late real reply
+test vod_api_draft::vod_api_owned_read::fair::physical_tests::actual_sql_deadline_abort_retains_phase_until_reply_and_cleanup ... ignored, Requires explicit fresh owned PostgreSQL/Redis fixture; actual pending SQL reply
+test vod_api_draft::vod_api_fair_budget::tests::oversized_third_snapshot_does_not_take_ordinary_headroom ... ok
+test html_filename::tests::original_named_numeric_and_invalid_references ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::atomic_scope_cannot_enter_legacy_runtime ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::foreign_http_scope_is_rejected_before_work ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::cloned_http_scope_cannot_start_a_second_actor ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::formerly_valid_minimum_ordinary_configuration_remains_legacy_capable ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::frozen_snapshot_owner_outlives_actor_without_releasing_work ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::ordinary_result_keeps_only_paid_frame_and_input ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::late_physical_child_keeps_work_until_actual_release ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::shutdown_rejects_unstarted_scope_without_pinning_work_to_error_body ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::snapshot_from_another_request_cannot_transfer_or_release_its_owner ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::canceled_third_refresh_releases_cheap_snapshot_without_stopping_admitted_sessions ... ok
+test vod_api_draft::vod_api_phase_children::tests::another_epoch_cannot_authorize_resource_loan ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::raw_component_capacity_matches_existing_legacy_contract ... ok
+test vod_api_draft::vod_api_owned_read::refresh_deadline_tests::only_source_admitted_refresh_extends_existing_request ... ok
+test vod_api_draft::vod_api_phase_children::tests::erased_clones_keep_explicit_registration_and_parent ... ok
+test vod_api_draft::vod_api_phase_children::tests::registered_child_limit_is_bounded ... ok
+test vod_api_draft::vod_api_phase_children::tests::held_document_vetoes_loan_until_drop ... ok
+test vod_api_draft::vod_api_phase_children::tests::logical_timeout_does_not_unseal_or_fake_quiescence ... ok
+test vod_api_draft::vod_api_phase_scope::tests::auth_attempt_marker_requires_quiesced_header_phase_and_owned_session ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::two_full_work_header_waits_allow_ordinary_result ... ok
+test python_action::tests::source_python_collection_vectors_and_limit ... ok
+test vod_api_draft::vod_api_phase_scope::tests::headers_keep_full_work_and_lend_active_dimensions ... ok
+test vod_api_draft::vod_api_phase_scope::tests::late_activation_grant_cannot_reanimate_ended_claim ... ok
+test vod_api_draft::vod_api_phase_scope::tests::late_body_resume_grant_cannot_reanimate_ended_claim ... ok
+test vod_api_draft::vod_api_provider_info_peer::actual_source90_cached_info ... ignored, Requires disposable actual Original cached-info PostgreSQL/Redis fixture
+test vod_api_draft::vod_api_phase_scope::tests::response_materialization_vetoes_header_loan ... ok
+test vod_api_draft::vod_api_phase_scope::tests::late_refresh_admission_cannot_reanimate_ended_claim ... ok
+test vod_api_draft::vod_api_phase_scope::tests::physical_auth_subtask_prevents_premature_lending ... ok
+test vod_api_draft::vod_api_phase_scope::tests::frame_holds_only_response_input_http_after_subtasks_settle ... ok
+test vod_api_draft::vod_api_provider_refresh_http::tests::native_refresh_http_peer ... ignored, Owned Original local-provider protocol fixture only
+test vod_api_draft::vod_api_phase_scope::tests::third_waiter_is_cheap_and_large_descriptor_rejected_before_loan ... ok
+test vod_api_draft::vod_api_provider_refresh_peer::native_refresh_http_server ... ignored, Owned actual provider refresh HTTP fixture
+test vod_api_draft::vod_api_provider_refresh_peer::native_refresh_movie_actor_peer ... ignored, Owned local-provider Original SQL mutation fixture only
+test vod_api_draft::vod_api_owned_read::refresh_deadline_tests::expired_request_cannot_promote_late ... ok
+test vod_api_draft::vod_api_owned_read::refresh_deadline_tests::ordinary_deadline_and_physical_ownership_stay_unchanged ... ok
+test vod_api_draft::vod_api_provider_refresh_http::tests::node_admission_precedes_retained_tree ... ok
+test vod_api_draft::vod_api_provider_refresh_http::tests::source_observed_charset_replacement_and_nonfinite_partial_sql_values ... ok
+test vod_api_draft::vod_api_unified_html::tests::bounded_html_escaping_and_unknown_linkification_never_silently_truncate ... ok
+test vod_api_draft::vod_api_unified_html::tests::csrf_fresh_mask_unmask_cookie_reuse_and_legacy64_are_consistent ... ok
+test vod_api_draft::vod_api_unified_http::tests::a000_edge_source_tests::actual_original_000_json_edges_repr_digitlimit_userprops ... ignored, Requires fresh actual Source40 edges and owned PostgreSQL/Redis
+test vod_api_draft::vod_api_unified_http::tests::actual_original_auth_priority_network_matrix ... ignored, Requires owned Source priority matrix and actual PostgreSQL/Redis
+test vod_api_draft::vod_api_unified_http::tests::actual_original_browsable_html_cookies_heads_and_roles ... ignored, Requires actual Original HTML56observations, owned PostgreSQL/Redis
+test vod_api_draft::vod_api_unified_http::tests::actual_original_unified_http_auth_methods_json_and_errors ... ignored, Requires actual Original network VOD corpus, owned PostgreSQL/Redis
+test vod_api_draft::vod_api_unified_http::tests::shared_movie_category_unified_queue_frames_and_cached_auth ... ignored, Requires actual Original10-request mixed burst and owned Redis/PG fixture
+test vod_api_draft::vod_api_provider_refresh_http::tests::source_xc_endpoint_shapes ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::full_cheap_metadata_does_not_consume_reserved_ordinary_input_lane ... ok
+test vod_api_draft::vod_api_unified_query::tests::actual_source_querydict_integer_and_disabled_branch_vectors ... ok
+test vod_api_draft::vod_api_unified_read::phase_tests::physical_sql_abort_timeout_capacity_and_shutdown ... ignored, Requires owned real PostgreSQL relation locks and read-runtime accounting
+test vod_api_draft::vod_api_unified_read::phase_tests::raw_logo_id_python_truth_not_option_presence ... ignored, Requires actual Original zero-logo-ID SQL fixture
+test vod_api_draft::vod_api_unified_read::phase_tests::source_large_page_no_row_clamp_and_owned_frame_capacity ... ignored, Requires actual owned Source229-row fixture/reference
+test vod_api_draft::vod_api_unified_read::phase_tests::source_materialized_page_fresh_count_and_error_priority ... ignored, Requires owned actual Source/PG schedule reference
+test vod_api_draft::vod_api_unified_read::phase_tests::tied_raw_page_source_shape_explain_and_ordinals ... ignored, Requires captured actual SourceSQL and tied-page PostgreSQL fixture
+test vod_api_draft::vod_api_unified_read::tests::actual_source_unified_page_projection_then_count ... ignored, Requires uniquely owned actual Source SQL fixture and captured unified corpus
+test xc_auth::tests::failure_history_null_expiry_and_failed_only_trip_shape ... ok
+test image_proxy::tests::source_policy_boundary_vectors ... ok
+test xc_auth::tests::retry_headers_floor_and_clamp_original_wait ... ok
+test xc_auth::tests::source_global_networks_are_strict_but_user_lists_tighten_leniently ... ok
+test vod_api_draft::vod_api_http::tests::scheduler_observer_tracks_this_http_runtime_and_held_scope ... ok
+test vod_api_draft::vod_api_owned_read::fair::tests::shutdown_waits_header_session_and_observer_loss_does_not_drop_resume ... ok
+test vod_api_draft::vod_api_phase_scope::tests::shutdown_closes_new_but_resumes_existing_session_then_waits_it ... ok
+test vod_api_draft::vod_api_provider_refresh_movie::tests::original_movie_phase_conversions ... ok
+test vod_api_draft::vod_api_unified_query::edge_source_tests::captured_source_repr_digits_and_error_priority ... ok
+test username::tests::every_original_nfkc_changed_codepoint_and_boundary_string_matches ... ok
+test vod_api_draft::vod_api_provider_refresh_value::tests::original_refresh_helper_vectors ... ok
+test vod_api_draft::vod_api_unified_html::tests::four_actual_source_variants_and_head_lengths_preserve_every_deterministic_byte ... ok
+test vod_api_draft::vod_api_provider_refresh_series_value::tests::original_series_metadata_vectors ... ok
+test vod_api_draft::vod_api_provider_info_tests::source_cached_movie_projection ... ok
+test epg_grid_window::tests::original_grid_window_corpus ... ok
+test backup_jobs_status::tests::oversized_or_unobserved_data_never_becomes_fake_success ... ok
+test vod_api_draft::vod_api_provider_refresh_value::equality_tests::original_python_field_equality ... ok
+test vod_api_draft::vod_api_provider_info_tests::source_cached_info_eligibility_and_series_errors ... ok
+test vod_api_draft::vod_api_provider_info_tests::source_cached_series_header_projection ... ok
+test vod_api_draft::vod_api_unified_query::builtin_source_tests::pinned_original_python_eighty_builtin_decimal_and_repr_witnesses ... ok
+test vod_api_draft::vod_api_actions_dto::tests::actual_source150_nested_relation_occurrences ... ok
+test vod_api_draft::vod_api_provider_refresh_body::tests::actual_capacity_reply_waits_for_body_completion_without_decode_on_discard ... ok
+test vod_api_draft::vod_api_provider_refresh_body::tests::actual_chunked_wire_cap_retains_owner_after_join_cancel_until_body_completion ... ok
+test vod_api_draft::vod_api_provider_refresh_body::tests::actual_gzip_expansion_cap_retains_owner_after_join_cancel_until_body_completion ... ok
+test vod_api_draft::vod_api_source_tests::original_category_projection_and_relative_nested_logo ... ok
+test vod_api_draft::vod_api_source_tests::original_pagination_and_literal_false_visibility ... ok
+test vod_api_draft::vod_api_source_tests::original_page_link_query_rewrite ... ok
+test vod_api_draft::vod_api_source_tests::original_ordinary_raw_filter_subset_and_action_demands ... ok
+test vod_api_draft::vod_api_provider_refresh_episode_sql::tests::prepared_encoding_quota_rejects_before_reserving_bind_rows ... ok
+test vod_api_draft::vod_api_source_tests::original_dto_field_order_nulls_and_nested_context ... ok
+test epg_grid_window::tests::original_compiled_python_and_django_iso_grammar ... ok
+test epg_grid_helpers::tests::actual_original_grid_profile_span_row_encoding_and_batch_boundaries ... ok
+test vod_api_draft::vod_api_provider_refresh_body::tests::actual_body_ready_waits_for_held_http_frames_and_survives_observer_abort ... ok
+test username::tests::source_changed_maps_and_unchanged_defaults_cover_all_unicode_scalars ... ok
+
+test result: ok. 184 passed; 0 failed; 58 ignored; 0 measured; 0 filtered out; finished in 1.64s
+

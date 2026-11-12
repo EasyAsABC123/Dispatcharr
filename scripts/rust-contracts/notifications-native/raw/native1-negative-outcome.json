@@ -1,0 +1,121 @@
+{
+  "state": "SEALED_NATIVE_ONCE_SETUP_FAILURE_PRESERVED_NO_RETRY",
+  "passed": false,
+  "controller_actual_exit": 1,
+  "native_process_actual_exit": 101,
+  "stage": "owned Native target seed before HTTP server/report creation",
+  "failure": "Notice INSERT id1 collides with native initialized core_systemnotification_pkey id1",
+  "classification": "Fixture seed omitted isolation of the initialized owned notification rows. No handler or Source-parity result follows; business runtime was not exercised.",
+  "canonical_pinned_default_row": {
+    "file": "rust/crates/store/schema/original-1241b3-defaults.sql",
+    "id": 1,
+    "notification_key": "network_security_m3u_epg",
+    "source": "developer",
+    "admin_only": true,
+    "sequence": {
+      "last_value": 1,
+      "is_called": true
+    },
+    "definition": {
+      "path": "artifacts/rust/m0-notifications-native-implementation-1/source/rust/crates/store/schema/original-1241b3-defaults.sql",
+      "sha256": "80840dd0cb88d692153a8f7fe9b9dc465c57785b7d5883f091a181988bc0526b",
+      "bytes": 91543
+    }
+  },
+  "native_router_requests_reached": 0,
+  "request_count_basis": "Static sealed QA ordering plus retained seed panic; no wire request counter is claimed. HTTP listener/client and initial request report are constructed after the failing seed INSERT.",
+  "native_notification_report_created": false,
+  "raw_user_credential_rows": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/native-credential-rows-after.json",
+    "sha256": "ae67fcd7be2b6e0ed9a552ec38585da170df2614ca0df3e4a20ba28cadcd3f78",
+    "bytes": 2075
+  },
+  "native_users_seeded": 2,
+  "native_credential_event_rows": 0,
+  "cache_before": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/native-cache-before.json",
+    "sha256": "a243e01e7e3ec359d206a378b45b002dea4f022f86d9f7b8e10d1783f40f87fb",
+    "bytes": 526
+  },
+  "cache_after": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/native-cache-after.json",
+    "sha256": "a243e01e7e3ec359d206a378b45b002dea4f022f86d9f7b8e10d1783f40f87fb",
+    "bytes": 526
+  },
+  "default_eleven_tables_sequences_exact": true,
+  "default_before": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/default-before.json",
+    "sha256": "d6546b55f9e41d013cfd2ba4f1f02c641c4e9cdb51ee82f5ab25fb7d4189172d",
+    "bytes": 3074
+  },
+  "default_after": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/default-after.json",
+    "sha256": "d6546b55f9e41d013cfd2ba4f1f02c641c4e9cdb51ee82f5ab25fb7d4189172d",
+    "bytes": 3074
+  },
+  "owned_cleanup_independently_verified": true,
+  "cleanup_labels": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/cleanup-label-inventories.json",
+    "sha256": "1ad187a6487df270243fc4248f54fe993fb67520dfd51843dad5e76049969660",
+    "bytes": 55
+  },
+  "cleanup_exact_ID": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/cleanup-exact-ID.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "cleanup_PIDs": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/cleanup-PID-absence.json",
+    "sha256": "772d7c5a1b472ac10dc2d36406d5564393531cc0206c8dbd847331936c238a07",
+    "bytes": 987
+  },
+  "recorded_original_processes_absent": 8,
+  "actual_native_command_and_logs": [
+    {
+      "path": "artifacts/rust/m0-notifications-native-sql-1/command-012.json",
+      "sha256": "a241091eff731f4b971fb3400502af4364d10a4ef618f4a288d8a607edee2d8b",
+      "bytes": 924
+    },
+    {
+      "path": "artifacts/rust/m0-notifications-native-sql-1/command-012.stdout",
+      "sha256": "865b398fd86c7a13b3df1af2dcc12e4a446784f9357ae07d1cb392f0bf00ef69",
+      "bytes": 276
+    },
+    {
+      "path": "artifacts/rust/m0-notifications-native-sql-1/command-012.stderr",
+      "sha256": "b936a4a79ebcadcbf06d59633a7063de9e5423ed2bbf633b18a0a07052962df5",
+      "bytes": 717
+    }
+  ],
+  "execution_report": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/execution.json",
+    "sha256": "20f3d7e6cfd0b4361a71822516570f7dd7ef7dce948b5961011fbd6a9fe9554c",
+    "bytes": 1142
+  },
+  "native_exit": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/native-process-exit.json",
+    "sha256": "9b7c47f1af02badc4d50e10a579e942eb215cc190dce536542c2476b4e82a6e2",
+    "bytes": 54
+  },
+  "controller_exit": {
+    "path": "artifacts/rust/m0-notifications-native-fixture-plan-1/execution-once.exit",
+    "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "bytes": 2
+  },
+  "controller_stdout": {
+    "path": "artifacts/rust/m0-notifications-native-fixture-plan-1/execution-once.log",
+    "sha256": "71f74c0867f4be221c57045ece00168d5c75235b332bf35a761f45ac3f3f27f7",
+    "bytes": 154
+  },
+  "postexecution_seal_check": {
+    "path": "artifacts/rust/m0-notifications-native-sql-1/postexecution-seal-check.json",
+    "sha256": "6723e660cb85392b505f6f733448bdb9941742da38f74c8211e0455152655bad",
+    "bytes": 144
+  },
+  "seal_inputs_and_external790_map_unchanged": true,
+  "input_edits": 0,
+  "automatic_retry": false,
+  "Source_application_or_capture_runs": 0,
+  "Main_or_registration_changes": 0,
+  "Native_endpoint_credential_TCP_performance_acceptance": false
+}

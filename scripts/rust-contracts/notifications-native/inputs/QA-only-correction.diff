@@ -1,0 +1,93 @@
+--- Native1/tests/notifications_sql.rs
++++ Native2/tests/notifications_sql.rs
+@@ -149,6 +149,51 @@
+         .unwrap();
+     let source: Value =
+         serde_json::from_str(include_str!("fixtures/notification-source8.json")).unwrap();
++    let mut report = json!({"passed":false,"scope":"Native-only router/SQL checks against retained Source framework evidence, not paired Source credentials or TCP","database":expected,"Source_fixture_raw_sha256":format!("{:x}",Sha256::digest(include_bytes!("fixtures/notification-source8.json"))),"Source_controller_exit_preserved":1,"normalization":"none: raw Source and Native clocks retained; only declared own-clock comparisons differ","cases":[],"extra_cases":[]});
++    save(&report_path, &report);
++    // Source explicitly isolates notices/dismissals inside its owned database.
++    // Native initialization legitimately includes a developer notice. Retain
++    // those initial rows, then clear only this guarded target before fixed IDs.
++    let initialized = snapshot(&store).await;
++    report["native_initialized_notification_rows_before_isolation"] = json!({
++        "notifications":notification_rows(&initialized),
++        "dismissals":dismissal_rows(&initialized)
++    });
++    report["source_initial_notification_rows_before_isolation"] =
++        source["owned_rows_before_isolation"].clone();
++    save(&report_path, &report);
++    let mut isolation = store.pool().begin().await.unwrap();
++    assert_eq!(
++        sqlx::query_scalar::<_, String>("SELECT current_database()")
++            .fetch_one(&mut *isolation)
++            .await
++            .unwrap(),
++        expected
++    );
++    sqlx::query("DELETE FROM core_notificationdismissal")
++        .execute(&mut *isolation)
++        .await
++        .unwrap();
++    sqlx::query("DELETE FROM core_systemnotification")
++        .execute(&mut *isolation)
++        .await
++        .unwrap();
++    isolation.commit().await.unwrap();
++    let isolated = snapshot(&store).await;
++    report["owned_notification_rows_after_isolation"] = json!({
++        "notifications":notification_rows(&isolated),
++        "dismissals":dismissal_rows(&isolated)
++    });
++    report["isolation_database"] = json!(expected);
++    save(&report_path, &report);
++    assert_eq!(
++        report["owned_notification_rows_after_isolation"],
++        json!({"notifications":[],"dismissals":[]})
++    );
++    assert_eq!(
++        source["owned_rows_before_isolation"],
++        json!({"notifications":[],"dismissals":[]})
++    );
+     let mut keys = BTreeMap::new();
+     for (index, role) in ["standard", "admin"].into_iter().enumerate() {
+         let actor = &source["seed_users"][index];
+@@ -172,6 +217,29 @@
+         .execute(store.pool())
+         .await
+         .unwrap();
++    let seeded = snapshot(&store).await;
++    report["native_seed_notification_rows_before_requests"] = json!({
++        "notifications":notification_rows(&seeded),
++        "dismissals":dismissal_rows(&seeded)
++    });
++    report["source_seed_notification_rows"] = source["seed_rows"].clone();
++    report["native_seed_notice_sequence"] = seeded["sequences"]["core_systemnotification"].clone();
++    save(&report_path, &report);
++    assert_rows(
++        &notification_rows(&seeded),
++        &source["seed_rows"]["notifications"],
++        None,
++    );
++    assert_rows(
++        &dismissal_rows(&seeded),
++        &source["seed_rows"]["dismissals"],
++        None,
++    );
++    assert_eq!(
++        report["native_seed_notice_sequence"],
++        source["setup_after_seed_named_audit"]["sequences"]
++            ["public.core_systemnotification_id_seq"]
++    );
+     let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+     let mut ownership = redis::Client::open(redis_url.as_str())
+         .unwrap()
+@@ -212,8 +280,6 @@
+         .build()
+         .unwrap();
+     let base = format!("http://{address}");
+-    let mut report = json!({"passed":false,"scope":"Native-only router/SQL checks against retained Source framework evidence, not paired Source credentials or TCP","database":expected,"Source_fixture_raw_sha256":format!("{:x}",Sha256::digest(include_bytes!("fixtures/notification-source8.json"))),"Source_controller_exit_preserved":1,"normalization":"none: raw Source and Native clocks retained; only declared own-clock comparisons differ","cases":[],"extra_cases":[]});
+-    save(&report_path, &report);
+     let mut dismissal_time = None;
+     for (index, case) in source["requests"].as_array().unwrap().iter().enumerate() {
+         assert_eq!(

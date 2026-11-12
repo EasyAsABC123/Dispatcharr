@@ -502,8 +502,32 @@ async fn dismiss(
     {
         return Err(failed());
     }
-    let result=sqlx::query("INSERT INTO core_notificationdismissal(user_id,notification_id,dismissed_at,action_taken) VALUES($1,$2,now(),$3) ON CONFLICT(user_id,notification_id) DO UPDATE SET action_taken=CASE WHEN $4 THEN EXCLUDED.action_taken ELSE core_notificationdismissal.action_taken END").bind(user.id).bind(id).bind(text).bind(truthy(Some(action))).execute(auth.store.pool()).await;
-    result?;
+    // Source get_or_create first reads the pair. A normal sequential repeat
+    // must not attempt INSERT: PostgreSQL nextval survives ON CONFLICT.
+    let mut dismissal: Option<i64> = sqlx::query_scalar(
+        "SELECT id::bigint FROM core_notificationdismissal WHERE user_id=$1 AND notification_id=$2",
+    )
+    .bind(user.id)
+    .bind(id)
+    .fetch_optional(auth.store.pool())
+    .await?;
+    let mut created = false;
+    if dismissal.is_none() {
+        dismissal = sqlx::query_scalar("INSERT INTO core_notificationdismissal(user_id,notification_id,dismissed_at,action_taken) VALUES($1,$2,now(),$3) ON CONFLICT(user_id,notification_id) DO NOTHING RETURNING id::bigint")
+            .bind(user.id).bind(id).bind(&text).fetch_optional(auth.store.pool()).await?;
+        created = dismissal.is_some();
+        if !created {
+            // A concurrent winner is read in a fresh statement/snapshot.
+            // Source may allocate a losing sequence value in this race too.
+            dismissal = sqlx::query_scalar("SELECT id::bigint FROM core_notificationdismissal WHERE user_id=$1 AND notification_id=$2")
+                .bind(user.id).bind(id).fetch_optional(auth.store.pool()).await?;
+        }
+    }
+    let dismissal = dismissal.ok_or_else(failed)?;
+    if !created && truthy(Some(action)) {
+        sqlx::query("UPDATE core_notificationdismissal SET action_taken=$1 WHERE id=$2 AND user_id=$3 AND notification_id=$4")
+            .bind(&text).bind(dismissal).bind(user.id).bind(id).execute(auth.store.pool()).await?;
+    }
     Ok(Json(
         json!({"success":true,"message":"Notification dismissed","notification_key":value["notification_key"]}),
     ))
@@ -525,17 +549,194 @@ async fn dismiss_all(
     }
     Ok(Json(json!({"success":true,"dismissed_count":ids.len()})))
 }
-async fn guarded_write(
+fn create_field_error(field: &str, message: &str) -> StoreError {
+    StoreError::InvalidInput(json!({field:[message]}))
+}
+fn create_field(
+    fields: &mut Map<String, Value>,
+    errors: &mut Map<String, Value>,
+    name: &str,
+    result: Result<Value, StoreError>,
+) -> Result<(), StoreError> {
+    match result {
+        Ok(value) => {
+            fields.insert(name.into(), value);
+        }
+        Err(StoreError::InvalidInput(Value::Object(messages))) => errors.extend(messages),
+        Err(error) => return Err(error),
+    }
+    Ok(())
+}
+fn create_choice(name: &str, value: &Value, allowed: &[&str]) -> Result<Value, StoreError> {
+    if value.is_null() {
+        return Err(create_field_error(name, "This field may not be null."));
+    }
+    if value.as_str().is_some_and(|v| allowed.contains(&v)) {
+        return Ok(value.clone());
+    }
+    let text = match value {
+        Value::String(text) => text.clone(),
+        Value::Null => unreachable!(),
+        Value::Bool(value) => if *value { "True" } else { "False" }.into(),
+        Value::Number(value) => {
+            if value.is_f64() {
+                crate::json_compat::float_string(value.as_f64().ok_or_else(failed)?)
+            } else {
+                value.to_string()
+            }
+        }
+        Value::Array(_) | Value::Object(_) => {
+            crate::python_action::collection_text(value, 2 * 1024 * 1024).ok_or_else(failed)?
+        }
+    };
+    Err(create_field_error(
+        name,
+        &format!("\"{text}\" is not a valid choice."),
+    ))
+}
+/// Pinned SystemNotificationSerializer JSON write fields; readonly/unknown
+/// inputs never become SQL columns. Return field errors for uniqueness to join.
+type CreateValidation = (Map<String, Value>, Map<String, Value>);
+fn create_fields(input: &Map<String, Value>) -> Result<CreateValidation, StoreError> {
+    let mut fields = Map::new();
+    let mut errors = Map::new();
+    for (name, max) in [
+        ("notification_key", Some(255)),
+        ("title", Some(255)),
+        ("message", None),
+    ] {
+        if let Some(value) = input.get(name) {
+            create_field(
+                &mut fields,
+                &mut errors,
+                name,
+                crate::admin_writes::character(name, value, max, false).map(Value::String),
+            )?;
+        } else {
+            errors.insert(name.into(), json!(["This field is required."]));
+        }
+    }
+    for (name, default, choices) in [
+        (
+            "notification_type",
+            "info",
+            &[
+                "version_update",
+                "setting_recommendation",
+                "announcement",
+                "warning",
+                "info",
+            ][..],
+        ),
+        (
+            "priority",
+            "normal",
+            &["low", "normal", "high", "critical"][..],
+        ),
+        ("source", "system", &["system", "developer"][..]),
+    ] {
+        create_field(
+            &mut fields,
+            &mut errors,
+            name,
+            input
+                .get(name)
+                .map_or_else(|| Ok(json!(default)), |v| create_choice(name, v, choices)),
+        )?;
+    }
+    for (name, default) in [("is_active", true), ("admin_only", false)] {
+        create_field(
+            &mut fields,
+            &mut errors,
+            name,
+            input.get(name).map_or_else(
+                || Ok(json!(default)),
+                |v| crate::admin_writes::boolean(name, v).map(Value::Bool),
+            ),
+        )?;
+    }
+    create_field(
+        &mut fields,
+        &mut errors,
+        "action_data",
+        match input.get("action_data") {
+            Some(Value::Null) => Err(create_field_error(
+                "action_data",
+                "This field may not be null.",
+            )),
+            Some(value) => Ok(value.clone()),
+            None => Ok(json!({})),
+        },
+    )?;
+    create_field(
+        &mut fields,
+        &mut errors,
+        "expires_at",
+        match input.get("expires_at") {
+            Some(value) => crate::admin_writes::parse_datetime("expires_at", value, true)
+                .map(|value| value.map_or(Value::Null, date)),
+            None => Ok(Value::Null),
+        },
+    )?;
+    Ok((fields, errors))
+}
+async fn create(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<(axum::http::StatusCode, Json<Value>), StoreError> {
+    // Source dispatch checks IsAdmin (including UI policy) before request.data.
     auth.account_user(peer, headers, true).await?;
-    crate::admin_writes::body_object(body)?;
-    Err(StoreError::Unsupported(
-        "Administrative notification production and scheduling have not been ported.",
-    ))
+    let input = crate::admin_writes::body_object(body)?;
+    let (fields, mut errors) = create_fields(&input)?;
+    if let Some(key) = fields.get("notification_key").and_then(Value::as_str) {
+        let exists: bool = sqlx::query_scalar(
+            "SELECT EXISTS(SELECT 1 FROM core_systemnotification WHERE notification_key=$1)",
+        )
+        .bind(key)
+        .fetch_one(auth.store.pool())
+        .await?;
+        if exists {
+            errors.insert(
+                "notification_key".into(),
+                json!(["system notification with this notification key already exists."]),
+            );
+        }
+    }
+    if !errors.is_empty() {
+        return Err(StoreError::InvalidInput(Value::Object(errors)));
+    }
+    let expires = fields["expires_at"]
+        .as_str()
+        .map(DateTime::parse_from_rfc3339)
+        .transpose()
+        .map_err(|_| failed())?
+        .map(|v| v.with_timezone(&Utc));
+    // Django supplies model defaults and auto_now[_add], not SQL DEFAULTs.
+    // These timestamps belong to this request, never an older transaction.
+    let created_at = Utc::now();
+    let updated_at = Utc::now();
+    let row = sqlx::query("INSERT INTO core_systemnotification(notification_key,notification_type,priority,source,title,message,action_data,is_active,admin_only,expires_at,created_at,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *,id::bigint AS object_id,false AS dismissed")
+        .bind(fields["notification_key"].as_str().expect("validated key"))
+        .bind(fields["notification_type"].as_str().expect("validated type"))
+        .bind(fields["priority"].as_str().expect("validated priority"))
+        .bind(fields["source"].as_str().expect("validated source"))
+        .bind(fields["title"].as_str().expect("validated title"))
+        .bind(fields["message"].as_str().expect("validated message"))
+        .bind(&fields["action_data"])
+        .bind(fields["is_active"].as_bool().expect("validated active"))
+        .bind(fields["admin_only"].as_bool().expect("validated admin_only"))
+        .bind(expires).bind(created_at).bind(updated_at)
+        .fetch_one(auth.store.pool()).await.map_err(|error| {
+            // A real race after UniqueValidator's preflight can still fail in
+            // Source ModelSerializer.create. Do not overwrite or retry it.
+            if matches!(&error, sqlx::Error::Database(e) if e.code().as_deref()==Some("23505") && e.constraint()==Some("core_systemnotification_notification_key_key")) {
+                failed()
+            } else { error.into() }
+        })?;
+    // Source create serializes directly, even inactive/expired/developer rows.
+    Ok((axum::http::StatusCode::CREATED, Json(serialize(row)?)))
 }
 async fn guarded_detail_write(
     State(auth): State<AuthService>,
@@ -559,7 +760,7 @@ async fn guarded_detail_write(
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
-        .route("/api/core/notifications/", get(list).post(guarded_write))
+        .route("/api/core/notifications/", get(list).post(create))
         .route("/api/core/notifications/count/", get(count))
         .route("/api/core/notifications/dismiss-all/", post(dismiss_all))
         .route(
@@ -575,6 +776,56 @@ pub(crate) fn router(auth: AuthService) -> Router {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn create_uses_model_defaults_and_ignores_readonly_input() {
+        let (fields, errors) = create_fields(json!({"notification_key":" key ","title":" Hello ","message":" World ","id":999,"created_at":"invalid","is_dismissed":true,"updated_at":"invalid","unknown":"ignored"}).as_object().unwrap()).unwrap();
+        assert!(errors.is_empty());
+        assert_eq!(
+            Value::Object(fields),
+            json!({"notification_key":"key","title":"Hello","message":"World","notification_type":"info","priority":"normal","source":"system","action_data":{},"is_active":true,"admin_only":false,"expires_at":null})
+        );
+    }
+    #[test]
+    fn create_collects_required_and_independent_field_errors() {
+        let (_, errors) = create_fields(json!({"title":" ","message":null,"priority":"NORMAL","is_active":null,"action_data":null}).as_object().unwrap()).unwrap();
+        assert_eq!(
+            Value::Object(errors),
+            json!({"notification_key":["This field is required."],"title":["This field may not be blank."],"message":["This field may not be null."],"priority":["\"NORMAL\" is not a valid choice."],"is_active":["This field may not be null."],"action_data":["This field may not be null."]})
+        );
+    }
+    #[test]
+    fn create_preserves_json_choices_boolean_and_nullable_expiry_fields() {
+        for action in [
+            json!([]),
+            json!([1, true]),
+            json!(false),
+            json!("scalar"),
+            json!(17),
+        ] {
+            let (fields, errors) = create_fields(json!({"notification_key":12,"title":34,"message":56,"source":"developer","priority":"high","notification_type":"warning","action_data":action,"is_active":"off","admin_only":"1","expires_at":"2026-11-12T14:00:00+01:00"}).as_object().unwrap()).unwrap();
+            assert!(errors.is_empty());
+            assert_eq!(fields["notification_key"], "12");
+            assert_eq!(fields["title"], "34");
+            assert_eq!(fields["message"], "56");
+            assert_eq!(fields["action_data"], action);
+            assert_eq!(fields["source"], "developer");
+            assert_eq!(fields["is_active"], false);
+            assert_eq!(fields["admin_only"], true);
+            assert_eq!(fields["expires_at"], "2026-11-12T13:00:00Z");
+        }
+    }
+    #[test]
+    fn create_character_limits_count_unicode_and_keep_message_unbounded() {
+        let (fields, errors) = create_fields(json!({"notification_key":"東".repeat(255),"title":"京".repeat(255),"message":"x".repeat(4096)}).as_object().unwrap()).unwrap();
+        assert!(errors.is_empty());
+        assert_eq!(fields["message"].as_str().unwrap().len(), 4096);
+        let (_, errors) = create_fields(json!({"notification_key":"東".repeat(256),"title":true,"message":"a\u{0000}b","expires_at":"bad"}).as_object().unwrap()).unwrap();
+        assert_eq!(errors.len(), 4);
+        assert!(errors.contains_key("notification_key"));
+        assert!(errors.contains_key("title"));
+        assert!(errors.contains_key("message"));
+        assert!(errors.contains_key("expires_at"));
+    }
     #[test]
     fn known_condition_uses_literal_network_membership() {
         assert!(network_insecure(&json!({"M3U_EPG":"127.0.0.1, ::/0 "})));

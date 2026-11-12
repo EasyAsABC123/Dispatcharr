@@ -47,3 +47,8 @@ scripts/rust-contracts/proxy-plugin/original/apps/timeshift/tests/test_views.py 
 scripts/rust-contracts/notifications-source/raw/bootstrap.log -text -whitespace
 scripts/rust-contracts/notifications-source/executed/inputs/original/core/api_views.py -text whitespace=-blank-at-eof
 scripts/rust-contracts/notifications-source/executed/inputs/original/core/apps.py -text whitespace=-blank-at-eof
+
+# Preserve exact notification test output, including recorded whitespace.
+scripts/rust-contracts/notifications-native/raw/legacy-store-lib-sandbox.log -text -whitespace
+scripts/rust-contracts/notifications-native/raw/legacy-store-lib-host-loopback.log -text whitespace=-blank-at-eof
+scripts/rust-contracts/notifications-native/raw/native1-test.stdout -text whitespace=-blank-at-eof

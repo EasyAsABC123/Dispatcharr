@@ -1,0 +1,43 @@
+{
+  "state": "QA_ONLY_NATIVE2_READY_FOR_EXACT_FIXTURE_REVIEW",
+  "base_revision": "98e447186af099dd17496539aec46312f6cf4f62",
+  "canonical788_map_sha256": "3317c253b340304836b9a14de6e9575ea6ac3fb6de8fc59a0e6f6841fec856e8",
+  "native1_map_sha256": "1632a926237249776a39a54ec52578e1fdd8668e5f106b48e882ba664a805bc9",
+  "after790_map_sha256": "c3b6a496827d4d595bad2b881a684aa96827cdfc5a3344d4eb118a9298808b38",
+  "files": [
+    {
+      "path": "rust/crates/store/src/notifications.rs",
+      "source": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-native-implementation-2/source/rust/crates/store/src/notifications.rs",
+      "sha256": "6e7fbad1aeb4dca15b98f15e0cdca3cf924c699882249bd67b1c1f890e89099c",
+      "before_sha256": "ea1640b5d4db6acb0590517c59662daee94809a3a461f99ad1c8caa41a228f00",
+      "bytes": 45751
+    },
+    {
+      "path": "rust/crates/store/tests/notifications_sql.rs",
+      "source": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-native-implementation-2/source/rust/crates/store/tests/notifications_sql.rs",
+      "sha256": "c2225a2983979fb29ec886458f1e0a88fc4fdfd64e88f52f1950202b82974e11",
+      "before_sha256": null,
+      "bytes": 18592
+    },
+    {
+      "path": "rust/crates/store/tests/fixtures/notification-source8.json",
+      "source": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-native-implementation-2/source/rust/crates/store/tests/fixtures/notification-source8.json",
+      "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+      "before_sha256": null,
+      "bytes": 104544
+    }
+  ],
+  "Native1_immutable": "artifacts/rust/m0-notifications-native-sql-1/outcome.json",
+  "only_delta_from_Native1": "QA seed/report isolation in notifications_sql.rs; no business runtime/defaults/Source fixture changes",
+  "QA_diff": {
+    "path": "artifacts/rust/m0-notifications-native-implementation-2/QA-only-correction.diff",
+    "sha256": "576051cc51c8e3103c109c9bf088c79c6957c1198a91280226e9f268a1ae0a5f"
+  },
+  "predeclared_QA": {
+    "path": "artifacts/rust/m0-notifications-native-implementation-2/QA-PREDECLARED-native2.json",
+    "sha256": "a1737c141b0b45f3d20ec9da2b0db97309759c6fd4c3427ed686606cf3a52f5c"
+  },
+  "canonical_index_or_refs_modified": false,
+  "new_Source_app_or_capture_runs": 0,
+  "Native2_SQL_fixture_runs": 0
+}

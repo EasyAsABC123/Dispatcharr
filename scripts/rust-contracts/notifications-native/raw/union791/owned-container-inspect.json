@@ -1,0 +1,297 @@
+[
+  {
+    "Id": "0f76c4ba103bb08282ffd0777fd894b369ed85f01a65998833a63c0501d24232",
+    "Created": "2026-11-12T15:21:08.465145315Z",
+    "Path": "bash",
+    "Args": [
+      "/native-tools/start.sh"
+    ],
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 3692418,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-11-12T15:21:08.542987163Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "ResolvConfPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/0f76c4ba103bb08282ffd0777fd894b369ed85f01a65998833a63c0501d24232/resolv.conf",
+    "HostnamePath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/0f76c4ba103bb08282ffd0777fd894b369ed85f01a65998833a63c0501d24232/hostname",
+    "HostsPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/0f76c4ba103bb08282ffd0777fd894b369ed85f01a65998833a63c0501d24232/hosts",
+    "LogPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/0f76c4ba103bb08282ffd0777fd894b369ed85f01a65998833a63c0501d24232/0f76c4ba103bb08282ffd0777fd894b369ed85f01a65998833a63c0501d24232-json.log",
+    "Name": "/dispatcharr-notif-native-b90c3e6026-baseline-1",
+    "RestartCount": 0,
+    "Driver": "overlayfs",
+    "Platform": "linux",
+    "MountLabel": "",
+    "ProcessLabel": "",
+    "AppArmorProfile": "",
+    "ExecIDs": null,
+    "HostConfig": {
+      "Binds": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-fixture-plan-1/inputs:/native-inputs:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/integration-url-notifications-union791-1/source:/native-source:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-sql-1:/evidence:rw",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-fixture-plan-1/controller:/native-tools:ro",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-fixture-plan-1/inputs/pg-init:/pg-bootstrap:ro"
+      ],
+      "ContainerIDFile": "",
+      "LogConfig": {
+        "Type": "json-file",
+        "Config": {}
+      },
+      "NetworkMode": "dispatcharr-notif-native-b90c3e6026_default",
+      "PortBindings": {},
+      "RestartPolicy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      },
+      "AutoRemove": false,
+      "VolumeDriver": "",
+      "VolumesFrom": null,
+      "ConsoleSize": [
+        0,
+        0
+      ],
+      "CapAdd": null,
+      "CapDrop": null,
+      "CgroupnsMode": "private",
+      "Dns": null,
+      "DnsOptions": null,
+      "DnsSearch": null,
+      "ExtraHosts": [],
+      "GroupAdd": null,
+      "IpcMode": "private",
+      "Cgroup": "",
+      "Links": null,
+      "OomScoreAdj": 200,
+      "PidMode": "",
+      "Privileged": false,
+      "PublishAllPorts": false,
+      "ReadonlyRootfs": false,
+      "SecurityOpt": null,
+      "Tmpfs": {
+        "/data": "mode=1777,size=2147483648",
+        "/tmp": "mode=1777,size=536870912"
+      },
+      "UTSMode": "",
+      "UsernsMode": "",
+      "ShmSize": 67108864,
+      "Runtime": "runc",
+      "Isolation": "",
+      "CpuShares": 0,
+      "Memory": 1073741824,
+      "NanoCpus": 1000000000,
+      "CgroupParent": "",
+      "BlkioWeight": 0,
+      "BlkioWeightDevice": null,
+      "BlkioDeviceReadBps": null,
+      "BlkioDeviceWriteBps": null,
+      "BlkioDeviceReadIOps": null,
+      "BlkioDeviceWriteIOps": null,
+      "CpuPeriod": 0,
+      "CpuQuota": 0,
+      "CpuRealtimePeriod": 0,
+      "CpuRealtimeRuntime": 0,
+      "CpusetCpus": "",
+      "CpusetMems": "",
+      "Devices": null,
+      "DeviceCgroupRules": null,
+      "DeviceRequests": null,
+      "MemoryReservation": 0,
+      "MemorySwap": 2147483648,
+      "MemorySwappiness": null,
+      "OomKillDisable": null,
+      "PidsLimit": 256,
+      "Ulimits": null,
+      "CpuCount": 0,
+      "CpuPercent": 0,
+      "IOMaximumIOps": 0,
+      "IOMaximumBandwidth": 0,
+      "MaskedPaths": [
+        "/proc/acpi",
+        "/proc/asound",
+        "/proc/interrupts",
+        "/proc/kcore",
+        "/proc/keys",
+        "/proc/latency_stats",
+        "/proc/sched_debug",
+        "/proc/scsi",
+        "/proc/timer_list",
+        "/proc/timer_stats",
+        "/sys/devices/virtual/powercap",
+        "/sys/firmware"
+      ],
+      "ReadonlyPaths": [
+        "/proc/bus",
+        "/proc/fs",
+        "/proc/irq",
+        "/proc/sys",
+        "/proc/sysrq-trigger"
+      ]
+    },
+    "Storage": {
+      "RootFS": {
+        "Snapshot": {
+          "Name": "overlayfs"
+        }
+      }
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-sql-1",
+        "Destination": "/evidence",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-fixture-plan-1/inputs",
+        "Destination": "/native-inputs",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/home/justin/github/Dispatcharr/artifacts/rust/integration-url-notifications-union791-1/source",
+        "Destination": "/native-source",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-fixture-plan-1/controller",
+        "Destination": "/native-tools",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-fixture-plan-1/inputs/pg-init",
+        "Destination": "/pg-bootstrap",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      }
+    ],
+    "Config": {
+      "Hostname": "0f76c4ba103b",
+      "Domainname": "",
+      "User": "",
+      "AttachStdin": false,
+      "AttachStdout": true,
+      "AttachStderr": true,
+      "Tty": false,
+      "OpenStdin": false,
+      "StdinOnce": false,
+      "Env": [
+        "LC_ALL=C.UTF-8",
+        "POSTGRES_DIR=/data/db",
+        "DISPATCHARR_ENV=aio",
+        "PUID=1000",
+        "POSTGRES_DB=dispatcharr",
+        "POSTGRES_USER=dispatch",
+        "LANG=C.UTF-8",
+        "POSTGRES_PORT=5432",
+        "REDISCLI_AUTH=playback-fixture-only",
+        "PGID=1000",
+        "POSTGRES_HOST=/var/run/postgresql",
+        "REDIS_PASSWORD=playback-fixture-only",
+        "POSTGRES_PASSWORD=playback-fixture-only",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+        "NVIDIA_VISIBLE_DEVICES=all",
+        "LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri",
+        "DEBIAN_FRONTEND=noninteractive",
+        "UV_PROJECT_ENVIRONMENT=/dispatcharrpy",
+        "VIRTUAL_ENV=/dispatcharrpy",
+        "UV_COMPILE_BYTECODE=1",
+        "UV_LINK_MODE=copy"
+      ],
+      "Cmd": null,
+      "Image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "Volumes": null,
+      "WorkingDir": "/tmp",
+      "Entrypoint": [
+        "bash",
+        "/native-tools/start.sh"
+      ],
+      "Labels": {
+        "build_version": "DispatcharrBase version: base-20261103010601",
+        "com.docker.compose.config-hash": "7e78a60ff2b862947ba0d74a9884ddc19aaa94eea04aaf0b2cbd682b9cef3c0b",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "dispatcharr-notif-native-b90c3e6026",
+        "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-sql-1/compose.json",
+        "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/m0-notifications-union791-sql-1",
+        "com.docker.compose.service": "baseline",
+        "com.docker.compose.version": "2.40.3",
+        "maintainer": "SergeantPanda",
+        "org.opencontainers.image.authors": "SergeantPanda",
+        "org.opencontainers.image.created": "20261103010601",
+        "org.opencontainers.image.description": "Your ultimate IPTV & stream Management companion.",
+        "org.opencontainers.image.documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+        "org.opencontainers.image.licenses": "See repository",
+        "org.opencontainers.image.revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "org.opencontainers.image.source": "https://github.com/Dispatcharr/Dispatcharr",
+        "org.opencontainers.image.title": "dispatcharr",
+        "org.opencontainers.image.url": "https://github.com/Dispatcharr/Dispatcharr",
+        "org.opencontainers.image.vendor": "dispatcharr",
+        "org.opencontainers.image.version": "base-20261103010601"
+      }
+    },
+    "NetworkSettings": {
+      "SandboxID": "b141c31c5d03b4a5ce0faa64b77e71a9180d22c841ac039bbe5ee91bfc8cc8fc",
+      "SandboxKey": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-exec/netns/b141c31c5d03",
+      "Ports": {},
+      "Networks": {
+        "dispatcharr-notif-native-b90c3e6026_default": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": [
+            "dispatcharr-notif-native-b90c3e6026-baseline-1",
+            "baseline"
+          ],
+          "DriverOpts": null,
+          "GwPriority": 0,
+          "NetworkID": "a2aef80c847c972775cf524f9a0c4e5f2cdeba8fb4f80bb36e30e5db2e23df88",
+          "EndpointID": "c31c66333d550d3df8108a337396be58baed3095db6eb49f2ddc3b87ff217b1c",
+          "Gateway": "",
+          "IPAddress": "172.18.0.2",
+          "MacAddress": "5a:44:54:4d:4a:f9",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "DNSNames": [
+            "dispatcharr-notif-native-b90c3e6026-baseline-1",
+            "baseline",
+            "0f76c4ba103b"
+          ]
+        }
+      }
+    },
+    "ImageManifestDescriptor": {
+      "mediaType": "application/vnd.oci.image.manifest.v1+json",
+      "digest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "size": 3544,
+      "platform": {
+        "architecture": "amd64",
+        "os": "linux"
+      }
+    }
+  }
+]
