@@ -1,0 +1,565 @@
+{
+  "Source_started": false,
+  "app_imports": false,
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+      ],
+      "exit": 0,
+      "stdout": "[\n    {\n        \"Id\": \"sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\",\n        \"RepoTags\": [\n            \"ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\"\n        ],\n        \"RepoDigests\": [\n            \"ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\"\n        ],\n        \"Comment\": \"buildkit.dockerfile.v0\",\n        \"Created\": \"2026-11-03T01:13:57.378990379Z\",\n        \"Config\": {\n            \"Env\": [\n                \"PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n                \"LANG=C.UTF-8\",\n                \"LC_ALL=C.UTF-8\",\n                \"NVIDIA_DRIVER_CAPABILITIES=compute,video,utility\",\n                \"NVIDIA_VISIBLE_DEVICES=all\",\n                \"LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri\",\n                \"DEBIAN_FRONTEND=noninteractive\",\n                \"UV_PROJECT_ENVIRONMENT=/dispatcharrpy\",\n                \"VIRTUAL_ENV=/dispatcharrpy\",\n                \"UV_COMPILE_BYTECODE=1\",\n                \"UV_LINK_MODE=copy\"\n            ],\n            \"Entrypoint\": [\n                \"/app/docker/entrypoint.sh\"\n            ],\n            \"Labels\": {\n                \"build_version\": \"DispatcharrBase version: base-20261103010601\",\n                \"maintainer\": \"SergeantPanda\",\n                \"org.opencontainers.image.authors\": \"SergeantPanda\",\n                \"org.opencontainers.image.created\": \"20261103010601\",\n                \"org.opencontainers.image.description\": \"Your ultimate IPTV & stream Management companion.\",\n                \"org.opencontainers.image.documentation\": \"https://dispatcharr.github.io/Dispatcharr-Docs/\",\n                \"org.opencontainers.image.licenses\": \"See repository\",\n                \"org.opencontainers.image.revision\": \"1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430\",\n                \"org.opencontainers.image.source\": \"https://github.com/Dispatcharr/Dispatcharr\",\n                \"org.opencontainers.image.title\": \"dispatcharr\",\n                \"org.opencontainers.image.url\": \"https://github.com/Dispatcharr/Dispatcharr\",\n                \"org.opencontainers.image.vendor\": \"dispatcharr\",\n                \"org.opencontainers.image.version\": \"base-20261103010601\"\n            }\n        },\n        \"Architecture\": \"amd64\",\n        \"Os\": \"linux\",\n        \"Size\": 3759857023,\n        \"RootFS\": {\n            \"Type\": \"layers\",\n            \"Layers\": [\n                \"sha256:5cac300e390e2fd748b258618f403b7813229929ad6de903b0c52a210a930824\",\n                \"sha256:5f4be2c3badedfd7149d008a4902427c98e708c70031dc19b4264160a545df19\",\n                \"sha256:56b3674b895175f0b0275472201f2f0c72a48c31f3bcba6d90f54193db45d259\",\n                \"sha256:878e2383561be36a277643b52d374ba10a86f1c3036f0ebe3ee6fe0ffd0564a9\",\n                \"sha256:376da22d3f9e5b696220c1c30ccb93ce6e761b37a5380c6ed38382542a7f4ffd\",\n                \"sha256:4e7f8cb8982f4ca0d16f02963e040c9fb66f73e7e62ed33ac1bf30dbeecba921\",\n                \"sha256:0020b9b05de1f7565ea4b72ef9196415949a56f2690046ef5c37b8a1045e6af1\",\n                \"sha256:d058dd2a763687709a3e0d24f4fe33575a73a79977e6b92f25fb35f5a7a3880f\",\n                \"sha256:ca8d488e1f47565be03938cd3a04844a891046a01b0f44792e9745c8e493631b\",\n                \"sha256:a9e792219c66e0c5cb03333576ee7091af2d256ced3e5ebea6d4cc72b17fe77f\",\n                \"sha256:f2d27d7e9899a668a2411101e62716af9da94d8033d356e68c3805d9fe79b9d2\",\n                \"sha256:774a5f48a4e00cd9783d80c0f0bf716cb7191672278af6ffb45af216f1b309a8\",\n                \"sha256:c0018f818afaa613dc6443ea14f3abde8ed14d16b9f0e169f8fb82ba080db16d\",\n                \"sha256:b01089d17f9aed8f89d806dae525ce6af20d2659559ae1f327ecdc6570e83fdc\",\n                \"sha256:7824257717a876a44732648508c69ee261f860d6ce3963c075db48f279d3fb75\",\n                \"sha256:a0fae146213956c1142ef8a6f2fa0bd6db5cb0b1934fc036f614f32eb2e62143\",\n                \"sha256:b2e120a03e4e579b05633e59d187208079a9e935e192813e657859aca711b4ea\"\n            ]\n        },\n        \"Metadata\": {\n            \"LastTagTime\": \"2026-11-10T03:10:24.970777552Z\"\n        },\n        \"Descriptor\": {\n            \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",\n            \"digest\": \"sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\",\n            \"size\": 3544\n        },\n        \"Identity\": {\n            \"Pull\": [\n                {\n                    \"Repository\": \"ghcr.io/dispatcharr/dispatcharr\"\n                }\n            ]\n        }\n    }\n]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "create",
+        "--pull",
+        "never",
+        "--network",
+        "none",
+        "--read-only",
+        "--name",
+        "dispatcharr-notifmut-deps-9f059249ef",
+        "--label",
+        "dispatcharr.notifmut.static=true",
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "/bin/false"
+      ],
+      "exit": 0,
+      "stdout": "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa"
+      ],
+      "exit": 0,
+      "stdout": "[\n    {\n        \"Id\": \"a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa\",\n        \"Created\": \"2026-11-12T16:08:11.177395946Z\",\n        \"Path\": \"/app/docker/entrypoint.sh\",\n        \"Args\": [\n            \"/bin/false\"\n        ],\n        \"State\": {\n            \"Status\": \"created\",\n            \"Running\": false,\n            \"Paused\": false,\n            \"Restarting\": false,\n            \"OOMKilled\": false,\n            \"Dead\": false,\n            \"Pid\": 0,\n            \"ExitCode\": 0,\n            \"Error\": \"\",\n            \"StartedAt\": \"0001-01-01T00:00:00Z\",\n            \"FinishedAt\": \"0001-01-01T00:00:00Z\"\n        },\n        \"Image\": \"sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\",\n        \"ResolvConfPath\": \"\",\n        \"HostnamePath\": \"\",\n        \"HostsPath\": \"\",\n        \"LogPath\": \"\",\n        \"Name\": \"/dispatcharr-notifmut-deps-9f059249ef\",\n        \"RestartCount\": 0,\n        \"Driver\": \"overlayfs\",\n        \"Platform\": \"linux\",\n        \"MountLabel\": \"\",\n        \"ProcessLabel\": \"\",\n        \"AppArmorProfile\": \"\",\n        \"ExecIDs\": null,\n        \"HostConfig\": {\n            \"Binds\": null,\n            \"ContainerIDFile\": \"\",\n            \"LogConfig\": {\n                \"Type\": \"json-file\",\n                \"Config\": {}\n            },\n            \"NetworkMode\": \"none\",\n            \"PortBindings\": {},\n            \"RestartPolicy\": {\n                \"Name\": \"no\",\n                \"MaximumRetryCount\": 0\n            },\n            \"AutoRemove\": false,\n            \"VolumeDriver\": \"\",\n            \"VolumesFrom\": null,\n            \"ConsoleSize\": [\n                0,\n                0\n            ],\n            \"CapAdd\": null,\n            \"CapDrop\": null,\n            \"CgroupnsMode\": \"private\",\n            \"Dns\": null,\n            \"DnsOptions\": [],\n            \"DnsSearch\": [],\n            \"ExtraHosts\": null,\n            \"GroupAdd\": null,\n            \"IpcMode\": \"private\",\n            \"Cgroup\": \"\",\n            \"Links\": null,\n            \"OomScoreAdj\": 0,\n            \"PidMode\": \"\",\n            \"Privileged\": false,\n            \"PublishAllPorts\": false,\n            \"ReadonlyRootfs\": true,\n            \"SecurityOpt\": null,\n            \"UTSMode\": \"\",\n            \"UsernsMode\": \"\",\n            \"ShmSize\": 67108864,\n            \"Runtime\": \"runc\",\n            \"Isolation\": \"\",\n            \"CpuShares\": 0,\n            \"Memory\": 0,\n            \"NanoCpus\": 0,\n            \"CgroupParent\": \"\",\n            \"BlkioWeight\": 0,\n            \"BlkioWeightDevice\": [],\n            \"BlkioDeviceReadBps\": [],\n            \"BlkioDeviceWriteBps\": [],\n            \"BlkioDeviceReadIOps\": [],\n            \"BlkioDeviceWriteIOps\": [],\n            \"CpuPeriod\": 0,\n            \"CpuQuota\": 0,\n            \"CpuRealtimePeriod\": 0,\n            \"CpuRealtimeRuntime\": 0,\n            \"CpusetCpus\": \"\",\n            \"CpusetMems\": \"\",\n            \"Devices\": [],\n            \"DeviceCgroupRules\": null,\n            \"DeviceRequests\": null,\n            \"MemoryReservation\": 0,\n            \"MemorySwap\": 0,\n            \"MemorySwappiness\": null,\n            \"OomKillDisable\": false,\n            \"PidsLimit\": null,\n            \"Ulimits\": null,\n            \"CpuCount\": 0,\n            \"CpuPercent\": 0,\n            \"IOMaximumIOps\": 0,\n            \"IOMaximumBandwidth\": 0,\n            \"MaskedPaths\": [\n                \"/proc/acpi\",\n                \"/proc/asound\",\n                \"/proc/interrupts\",\n                \"/proc/kcore\",\n                \"/proc/keys\",\n                \"/proc/latency_stats\",\n                \"/proc/sched_debug\",\n                \"/proc/scsi\",\n                \"/proc/timer_list\",\n                \"/proc/timer_stats\",\n                \"/sys/devices/virtual/powercap\",\n                \"/sys/firmware\"\n            ],\n            \"ReadonlyPaths\": [\n                \"/proc/bus\",\n                \"/proc/fs\",\n                \"/proc/irq\",\n                \"/proc/sys\",\n                \"/proc/sysrq-trigger\"\n            ]\n        },\n        \"Storage\": {\n            \"RootFS\": {\n                \"Snapshot\": {\n                    \"Name\": \"overlayfs\"\n                }\n            }\n        },\n        \"Mounts\": [],\n        \"Config\": {\n            \"Hostname\": \"a16c192065a8\",\n            \"Domainname\": \"\",\n            \"User\": \"\",\n            \"AttachStdin\": false,\n            \"AttachStdout\": true,\n            \"AttachStderr\": true,\n            \"Tty\": false,\n            \"OpenStdin\": false,\n            \"StdinOnce\": false,\n            \"Env\": [\n                \"PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n                \"LANG=C.UTF-8\",\n                \"LC_ALL=C.UTF-8\",\n                \"NVIDIA_DRIVER_CAPABILITIES=compute,video,utility\",\n                \"NVIDIA_VISIBLE_DEVICES=all\",\n                \"LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri\",\n                \"DEBIAN_FRONTEND=noninteractive\",\n                \"UV_PROJECT_ENVIRONMENT=/dispatcharrpy\",\n                \"VIRTUAL_ENV=/dispatcharrpy\",\n                \"UV_COMPILE_BYTECODE=1\",\n                \"UV_LINK_MODE=copy\"\n            ],\n            \"Cmd\": [\n                \"/bin/false\"\n            ],\n            \"Image\": \"ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\",\n            \"Volumes\": null,\n            \"WorkingDir\": \"\",\n            \"Entrypoint\": [\n                \"/app/docker/entrypoint.sh\"\n            ],\n            \"Labels\": {\n                \"build_version\": \"DispatcharrBase version: base-20261103010601\",\n                \"dispatcharr.notifmut.static\": \"true\",\n                \"maintainer\": \"SergeantPanda\",\n                \"org.opencontainers.image.authors\": \"SergeantPanda\",\n                \"org.opencontainers.image.created\": \"20261103010601\",\n                \"org.opencontainers.image.description\": \"Your ultimate IPTV & stream Management companion.\",\n                \"org.opencontainers.image.documentation\": \"https://dispatcharr.github.io/Dispatcharr-Docs/\",\n                \"org.opencontainers.image.licenses\": \"See repository\",\n                \"org.opencontainers.image.revision\": \"1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430\",\n                \"org.opencontainers.image.source\": \"https://github.com/Dispatcharr/Dispatcharr\",\n                \"org.opencontainers.image.title\": \"dispatcharr\",\n                \"org.opencontainers.image.url\": \"https://github.com/Dispatcharr/Dispatcharr\",\n                \"org.opencontainers.image.vendor\": \"dispatcharr\",\n                \"org.opencontainers.image.version\": \"base-20261103010601\"\n            }\n        },\n        \"NetworkSettings\": {\n            \"SandboxID\": \"\",\n            \"SandboxKey\": \"\",\n            \"Ports\": {},\n            \"Networks\": {\n                \"none\": {\n                    \"IPAMConfig\": null,\n                    \"Links\": null,\n                    \"Aliases\": null,\n                    \"DriverOpts\": null,\n                    \"GwPriority\": 0,\n                    \"NetworkID\": \"\",\n                    \"EndpointID\": \"\",\n                    \"Gateway\": \"\",\n                    \"IPAddress\": \"\",\n                    \"MacAddress\": \"\",\n                    \"IPPrefixLen\": 0,\n                    \"IPv6Gateway\": \"\",\n                    \"GlobalIPv6Address\": \"\",\n                    \"GlobalIPv6PrefixLen\": 0,\n                    \"DNSNames\": null\n                }\n            }\n        },\n        \"ImageManifestDescriptor\": {\n            \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",\n            \"digest\": \"sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\",\n            \"size\": 3544,\n            \"platform\": {\n                \"architecture\": \"amd64\",\n                \"os\": \"linux\"\n            }\n        }\n    }\n]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/rest_framework/mixins.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/rest_framework/mixins.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/rest_framework/serializers.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/rest_framework/serializers.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/rest_framework/fields.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/rest_framework/fields.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/rest_framework/validators.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/rest_framework/validators.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/rest_framework/generics.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/rest_framework/generics.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/rest_framework/utils/field_mapping.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/rest_framework/utils/field_mapping.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/django/db/models/base.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/django/db/models/fields/__init__.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/django/db/models/fields/__init__.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "cp",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa:/dispatcharrpy/lib/python3.13/site-packages/django/db/models/deletion.py",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-1/inputs/actual-image/django/db/models/deletion.py"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa"
+      ],
+      "exit": 0,
+      "stdout": "[\n    {\n        \"Id\": \"a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa\",\n        \"Created\": \"2026-11-12T16:08:11.177395946Z\",\n        \"Path\": \"/app/docker/entrypoint.sh\",\n        \"Args\": [\n            \"/bin/false\"\n        ],\n        \"State\": {\n            \"Status\": \"created\",\n            \"Running\": false,\n            \"Paused\": false,\n            \"Restarting\": false,\n            \"OOMKilled\": false,\n            \"Dead\": false,\n            \"Pid\": 0,\n            \"ExitCode\": 0,\n            \"Error\": \"\",\n            \"StartedAt\": \"0001-01-01T00:00:00Z\",\n            \"FinishedAt\": \"0001-01-01T00:00:00Z\"\n        },\n        \"Image\": \"sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\",\n        \"ResolvConfPath\": \"\",\n        \"HostnamePath\": \"\",\n        \"HostsPath\": \"\",\n        \"LogPath\": \"\",\n        \"Name\": \"/dispatcharr-notifmut-deps-9f059249ef\",\n        \"RestartCount\": 0,\n        \"Driver\": \"overlayfs\",\n        \"Platform\": \"linux\",\n        \"MountLabel\": \"\",\n        \"ProcessLabel\": \"\",\n        \"AppArmorProfile\": \"\",\n        \"ExecIDs\": null,\n        \"HostConfig\": {\n            \"Binds\": null,\n            \"ContainerIDFile\": \"\",\n            \"LogConfig\": {\n                \"Type\": \"json-file\",\n                \"Config\": {}\n            },\n            \"NetworkMode\": \"none\",\n            \"PortBindings\": {},\n            \"RestartPolicy\": {\n                \"Name\": \"no\",\n                \"MaximumRetryCount\": 0\n            },\n            \"AutoRemove\": false,\n            \"VolumeDriver\": \"\",\n            \"VolumesFrom\": null,\n            \"ConsoleSize\": [\n                0,\n                0\n            ],\n            \"CapAdd\": null,\n            \"CapDrop\": null,\n            \"CgroupnsMode\": \"private\",\n            \"Dns\": null,\n            \"DnsOptions\": [],\n            \"DnsSearch\": [],\n            \"ExtraHosts\": null,\n            \"GroupAdd\": null,\n            \"IpcMode\": \"private\",\n            \"Cgroup\": \"\",\n            \"Links\": null,\n            \"OomScoreAdj\": 0,\n            \"PidMode\": \"\",\n            \"Privileged\": false,\n            \"PublishAllPorts\": false,\n            \"ReadonlyRootfs\": true,\n            \"SecurityOpt\": null,\n            \"UTSMode\": \"\",\n            \"UsernsMode\": \"\",\n            \"ShmSize\": 67108864,\n            \"Runtime\": \"runc\",\n            \"Isolation\": \"\",\n            \"CpuShares\": 0,\n            \"Memory\": 0,\n            \"NanoCpus\": 0,\n            \"CgroupParent\": \"\",\n            \"BlkioWeight\": 0,\n            \"BlkioWeightDevice\": [],\n            \"BlkioDeviceReadBps\": [],\n            \"BlkioDeviceWriteBps\": [],\n            \"BlkioDeviceReadIOps\": [],\n            \"BlkioDeviceWriteIOps\": [],\n            \"CpuPeriod\": 0,\n            \"CpuQuota\": 0,\n            \"CpuRealtimePeriod\": 0,\n            \"CpuRealtimeRuntime\": 0,\n            \"CpusetCpus\": \"\",\n            \"CpusetMems\": \"\",\n            \"Devices\": [],\n            \"DeviceCgroupRules\": null,\n            \"DeviceRequests\": null,\n            \"MemoryReservation\": 0,\n            \"MemorySwap\": 0,\n            \"MemorySwappiness\": null,\n            \"OomKillDisable\": false,\n            \"PidsLimit\": null,\n            \"Ulimits\": null,\n            \"CpuCount\": 0,\n            \"CpuPercent\": 0,\n            \"IOMaximumIOps\": 0,\n            \"IOMaximumBandwidth\": 0,\n            \"MaskedPaths\": [\n                \"/proc/acpi\",\n                \"/proc/asound\",\n                \"/proc/interrupts\",\n                \"/proc/kcore\",\n                \"/proc/keys\",\n                \"/proc/latency_stats\",\n                \"/proc/sched_debug\",\n                \"/proc/scsi\",\n                \"/proc/timer_list\",\n                \"/proc/timer_stats\",\n                \"/sys/devices/virtual/powercap\",\n                \"/sys/firmware\"\n            ],\n            \"ReadonlyPaths\": [\n                \"/proc/bus\",\n                \"/proc/fs\",\n                \"/proc/irq\",\n                \"/proc/sys\",\n                \"/proc/sysrq-trigger\"\n            ]\n        },\n        \"Storage\": {\n            \"RootFS\": {\n                \"Snapshot\": {\n                    \"Name\": \"overlayfs\"\n                }\n            }\n        },\n        \"Mounts\": [],\n        \"Config\": {\n            \"Hostname\": \"a16c192065a8\",\n            \"Domainname\": \"\",\n            \"User\": \"\",\n            \"AttachStdin\": false,\n            \"AttachStdout\": true,\n            \"AttachStderr\": true,\n            \"Tty\": false,\n            \"OpenStdin\": false,\n            \"StdinOnce\": false,\n            \"Env\": [\n                \"PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n                \"LANG=C.UTF-8\",\n                \"LC_ALL=C.UTF-8\",\n                \"NVIDIA_DRIVER_CAPABILITIES=compute,video,utility\",\n                \"NVIDIA_VISIBLE_DEVICES=all\",\n                \"LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri\",\n                \"DEBIAN_FRONTEND=noninteractive\",\n                \"UV_PROJECT_ENVIRONMENT=/dispatcharrpy\",\n                \"VIRTUAL_ENV=/dispatcharrpy\",\n                \"UV_COMPILE_BYTECODE=1\",\n                \"UV_LINK_MODE=copy\"\n            ],\n            \"Cmd\": [\n                \"/bin/false\"\n            ],\n            \"Image\": \"ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\",\n            \"Volumes\": null,\n            \"WorkingDir\": \"\",\n            \"Entrypoint\": [\n                \"/app/docker/entrypoint.sh\"\n            ],\n            \"Labels\": {\n                \"build_version\": \"DispatcharrBase version: base-20261103010601\",\n                \"dispatcharr.notifmut.static\": \"true\",\n                \"maintainer\": \"SergeantPanda\",\n                \"org.opencontainers.image.authors\": \"SergeantPanda\",\n                \"org.opencontainers.image.created\": \"20261103010601\",\n                \"org.opencontainers.image.description\": \"Your ultimate IPTV & stream Management companion.\",\n                \"org.opencontainers.image.documentation\": \"https://dispatcharr.github.io/Dispatcharr-Docs/\",\n                \"org.opencontainers.image.licenses\": \"See repository\",\n                \"org.opencontainers.image.revision\": \"1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430\",\n                \"org.opencontainers.image.source\": \"https://github.com/Dispatcharr/Dispatcharr\",\n                \"org.opencontainers.image.title\": \"dispatcharr\",\n                \"org.opencontainers.image.url\": \"https://github.com/Dispatcharr/Dispatcharr\",\n                \"org.opencontainers.image.vendor\": \"dispatcharr\",\n                \"org.opencontainers.image.version\": \"base-20261103010601\"\n            }\n        },\n        \"NetworkSettings\": {\n            \"SandboxID\": \"\",\n            \"SandboxKey\": \"\",\n            \"Ports\": {},\n            \"Networks\": {\n                \"none\": {\n                    \"IPAMConfig\": null,\n                    \"Links\": null,\n                    \"Aliases\": null,\n                    \"DriverOpts\": null,\n                    \"GwPriority\": 0,\n                    \"NetworkID\": \"\",\n                    \"EndpointID\": \"\",\n                    \"Gateway\": \"\",\n                    \"IPAddress\": \"\",\n                    \"MacAddress\": \"\",\n                    \"IPPrefixLen\": 0,\n                    \"IPv6Gateway\": \"\",\n                    \"GlobalIPv6Address\": \"\",\n                    \"GlobalIPv6PrefixLen\": 0,\n                    \"DNSNames\": null\n                }\n            }\n        },\n        \"ImageManifestDescriptor\": {\n            \"mediaType\": \"application/vnd.oci.image.manifest.v1+json\",\n            \"digest\": \"sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f\",\n            \"size\": 3544,\n            \"platform\": {\n                \"architecture\": \"amd64\",\n                \"os\": \"linux\"\n            }\n        }\n    }\n]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa"
+      ],
+      "exit": 0,
+      "stdout": "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa\n",
+      "stderr": ""
+    }
+  ],
+  "passed": true,
+  "image_inspect": [
+    {
+      "Id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "RepoTags": [
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+      ],
+      "RepoDigests": [
+        "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+      ],
+      "Comment": "buildkit.dockerfile.v0",
+      "Created": "2026-11-03T01:13:57.378990379Z",
+      "Config": {
+        "Env": [
+          "PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "LANG=C.UTF-8",
+          "LC_ALL=C.UTF-8",
+          "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+          "NVIDIA_VISIBLE_DEVICES=all",
+          "LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri",
+          "DEBIAN_FRONTEND=noninteractive",
+          "UV_PROJECT_ENVIRONMENT=/dispatcharrpy",
+          "VIRTUAL_ENV=/dispatcharrpy",
+          "UV_COMPILE_BYTECODE=1",
+          "UV_LINK_MODE=copy"
+        ],
+        "Entrypoint": [
+          "/app/docker/entrypoint.sh"
+        ],
+        "Labels": {
+          "build_version": "DispatcharrBase version: base-20261103010601",
+          "maintainer": "SergeantPanda",
+          "org.opencontainers.image.authors": "SergeantPanda",
+          "org.opencontainers.image.created": "20261103010601",
+          "org.opencontainers.image.description": "Your ultimate IPTV & stream Management companion.",
+          "org.opencontainers.image.documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+          "org.opencontainers.image.licenses": "See repository",
+          "org.opencontainers.image.revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "org.opencontainers.image.source": "https://github.com/Dispatcharr/Dispatcharr",
+          "org.opencontainers.image.title": "dispatcharr",
+          "org.opencontainers.image.url": "https://github.com/Dispatcharr/Dispatcharr",
+          "org.opencontainers.image.vendor": "dispatcharr",
+          "org.opencontainers.image.version": "base-20261103010601"
+        }
+      },
+      "Architecture": "amd64",
+      "Os": "linux",
+      "Size": 3759857023,
+      "RootFS": {
+        "Type": "layers",
+        "Layers": [
+          "sha256:5cac300e390e2fd748b258618f403b7813229929ad6de903b0c52a210a930824",
+          "sha256:5f4be2c3badedfd7149d008a4902427c98e708c70031dc19b4264160a545df19",
+          "sha256:56b3674b895175f0b0275472201f2f0c72a48c31f3bcba6d90f54193db45d259",
+          "sha256:878e2383561be36a277643b52d374ba10a86f1c3036f0ebe3ee6fe0ffd0564a9",
+          "sha256:376da22d3f9e5b696220c1c30ccb93ce6e761b37a5380c6ed38382542a7f4ffd",
+          "sha256:4e7f8cb8982f4ca0d16f02963e040c9fb66f73e7e62ed33ac1bf30dbeecba921",
+          "sha256:0020b9b05de1f7565ea4b72ef9196415949a56f2690046ef5c37b8a1045e6af1",
+          "sha256:d058dd2a763687709a3e0d24f4fe33575a73a79977e6b92f25fb35f5a7a3880f",
+          "sha256:ca8d488e1f47565be03938cd3a04844a891046a01b0f44792e9745c8e493631b",
+          "sha256:a9e792219c66e0c5cb03333576ee7091af2d256ced3e5ebea6d4cc72b17fe77f",
+          "sha256:f2d27d7e9899a668a2411101e62716af9da94d8033d356e68c3805d9fe79b9d2",
+          "sha256:774a5f48a4e00cd9783d80c0f0bf716cb7191672278af6ffb45af216f1b309a8",
+          "sha256:c0018f818afaa613dc6443ea14f3abde8ed14d16b9f0e169f8fb82ba080db16d",
+          "sha256:b01089d17f9aed8f89d806dae525ce6af20d2659559ae1f327ecdc6570e83fdc",
+          "sha256:7824257717a876a44732648508c69ee261f860d6ce3963c075db48f279d3fb75",
+          "sha256:a0fae146213956c1142ef8a6f2fa0bd6db5cb0b1934fc036f614f32eb2e62143",
+          "sha256:b2e120a03e4e579b05633e59d187208079a9e935e192813e657859aca711b4ea"
+        ]
+      },
+      "Metadata": {
+        "LastTagTime": "2026-11-10T03:10:24.970777552Z"
+      },
+      "Descriptor": {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "size": 3544
+      },
+      "Identity": {
+        "Pull": [
+          {
+            "Repository": "ghcr.io/dispatcharr/dispatcharr"
+          }
+        ]
+      }
+    }
+  ],
+  "container_id": "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa",
+  "created_inspect": {
+    "Id": "a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa",
+    "Created": "2026-11-12T16:08:11.177395946Z",
+    "Path": "/app/docker/entrypoint.sh",
+    "Args": [
+      "/bin/false"
+    ],
+    "State": {
+      "Status": "created",
+      "Running": false,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 0,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "0001-01-01T00:00:00Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "ResolvConfPath": "",
+    "HostnamePath": "",
+    "HostsPath": "",
+    "LogPath": "",
+    "Name": "/dispatcharr-notifmut-deps-9f059249ef",
+    "RestartCount": 0,
+    "Driver": "overlayfs",
+    "Platform": "linux",
+    "MountLabel": "",
+    "ProcessLabel": "",
+    "AppArmorProfile": "",
+    "ExecIDs": null,
+    "HostConfig": {
+      "Binds": null,
+      "ContainerIDFile": "",
+      "LogConfig": {
+        "Type": "json-file",
+        "Config": {}
+      },
+      "NetworkMode": "none",
+      "PortBindings": {},
+      "RestartPolicy": {
+        "Name": "no",
+        "MaximumRetryCount": 0
+      },
+      "AutoRemove": false,
+      "VolumeDriver": "",
+      "VolumesFrom": null,
+      "ConsoleSize": [
+        0,
+        0
+      ],
+      "CapAdd": null,
+      "CapDrop": null,
+      "CgroupnsMode": "private",
+      "Dns": null,
+      "DnsOptions": [],
+      "DnsSearch": [],
+      "ExtraHosts": null,
+      "GroupAdd": null,
+      "IpcMode": "private",
+      "Cgroup": "",
+      "Links": null,
+      "OomScoreAdj": 0,
+      "PidMode": "",
+      "Privileged": false,
+      "PublishAllPorts": false,
+      "ReadonlyRootfs": true,
+      "SecurityOpt": null,
+      "UTSMode": "",
+      "UsernsMode": "",
+      "ShmSize": 67108864,
+      "Runtime": "runc",
+      "Isolation": "",
+      "CpuShares": 0,
+      "Memory": 0,
+      "NanoCpus": 0,
+      "CgroupParent": "",
+      "BlkioWeight": 0,
+      "BlkioWeightDevice": [],
+      "BlkioDeviceReadBps": [],
+      "BlkioDeviceWriteBps": [],
+      "BlkioDeviceReadIOps": [],
+      "BlkioDeviceWriteIOps": [],
+      "CpuPeriod": 0,
+      "CpuQuota": 0,
+      "CpuRealtimePeriod": 0,
+      "CpuRealtimeRuntime": 0,
+      "CpusetCpus": "",
+      "CpusetMems": "",
+      "Devices": [],
+      "DeviceCgroupRules": null,
+      "DeviceRequests": null,
+      "MemoryReservation": 0,
+      "MemorySwap": 0,
+      "MemorySwappiness": null,
+      "OomKillDisable": false,
+      "PidsLimit": null,
+      "Ulimits": null,
+      "CpuCount": 0,
+      "CpuPercent": 0,
+      "IOMaximumIOps": 0,
+      "IOMaximumBandwidth": 0,
+      "MaskedPaths": [
+        "/proc/acpi",
+        "/proc/asound",
+        "/proc/interrupts",
+        "/proc/kcore",
+        "/proc/keys",
+        "/proc/latency_stats",
+        "/proc/sched_debug",
+        "/proc/scsi",
+        "/proc/timer_list",
+        "/proc/timer_stats",
+        "/sys/devices/virtual/powercap",
+        "/sys/firmware"
+      ],
+      "ReadonlyPaths": [
+        "/proc/bus",
+        "/proc/fs",
+        "/proc/irq",
+        "/proc/sys",
+        "/proc/sysrq-trigger"
+      ]
+    },
+    "Storage": {
+      "RootFS": {
+        "Snapshot": {
+          "Name": "overlayfs"
+        }
+      }
+    },
+    "Mounts": [],
+    "Config": {
+      "Hostname": "a16c192065a8",
+      "Domainname": "",
+      "User": "",
+      "AttachStdin": false,
+      "AttachStdout": true,
+      "AttachStderr": true,
+      "Tty": false,
+      "OpenStdin": false,
+      "StdinOnce": false,
+      "Env": [
+        "PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "LANG=C.UTF-8",
+        "LC_ALL=C.UTF-8",
+        "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+        "NVIDIA_VISIBLE_DEVICES=all",
+        "LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri",
+        "DEBIAN_FRONTEND=noninteractive",
+        "UV_PROJECT_ENVIRONMENT=/dispatcharrpy",
+        "VIRTUAL_ENV=/dispatcharrpy",
+        "UV_COMPILE_BYTECODE=1",
+        "UV_LINK_MODE=copy"
+      ],
+      "Cmd": [
+        "/bin/false"
+      ],
+      "Image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "Volumes": null,
+      "WorkingDir": "",
+      "Entrypoint": [
+        "/app/docker/entrypoint.sh"
+      ],
+      "Labels": {
+        "build_version": "DispatcharrBase version: base-20261103010601",
+        "dispatcharr.notifmut.static": "true",
+        "maintainer": "SergeantPanda",
+        "org.opencontainers.image.authors": "SergeantPanda",
+        "org.opencontainers.image.created": "20261103010601",
+        "org.opencontainers.image.description": "Your ultimate IPTV & stream Management companion.",
+        "org.opencontainers.image.documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+        "org.opencontainers.image.licenses": "See repository",
+        "org.opencontainers.image.revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "org.opencontainers.image.source": "https://github.com/Dispatcharr/Dispatcharr",
+        "org.opencontainers.image.title": "dispatcharr",
+        "org.opencontainers.image.url": "https://github.com/Dispatcharr/Dispatcharr",
+        "org.opencontainers.image.vendor": "dispatcharr",
+        "org.opencontainers.image.version": "base-20261103010601"
+      }
+    },
+    "NetworkSettings": {
+      "SandboxID": "",
+      "SandboxKey": "",
+      "Ports": {},
+      "Networks": {
+        "none": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "DriverOpts": null,
+          "GwPriority": 0,
+          "NetworkID": "",
+          "EndpointID": "",
+          "Gateway": "",
+          "IPAddress": "",
+          "MacAddress": "",
+          "IPPrefixLen": 0,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "DNSNames": null
+        }
+      }
+    },
+    "ImageManifestDescriptor": {
+      "mediaType": "application/vnd.oci.image.manifest.v1+json",
+      "digest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "size": 3544,
+      "platform": {
+        "architecture": "amd64",
+        "os": "linux"
+      }
+    }
+  },
+  "files": [
+    {
+      "path": "inputs/actual-image/rest_framework/mixins.py",
+      "bytes": 2936,
+      "sha256": "701287aa9709e365577b39cb2f651c93f675eced7a41227a0989796640247da7",
+      "upstream_tag_sha256": "701287aa9709e365577b39cb2f651c93f675eced7a41227a0989796640247da7",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/encode/django-rest-framework/3.18.3/rest_framework/mixins.py"
+    },
+    {
+      "path": "inputs/actual-image/rest_framework/serializers.py",
+      "bytes": 72512,
+      "sha256": "d2ebe00d3b11079cc4de2cd0715ff7f80e6870df3a8b192a6d2a23178a18b9ac",
+      "upstream_tag_sha256": "d2ebe00d3b11079cc4de2cd0715ff7f80e6870df3a8b192a6d2a23178a18b9ac",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/encode/django-rest-framework/3.18.3/rest_framework/serializers.py"
+    },
+    {
+      "path": "inputs/actual-image/rest_framework/fields.py",
+      "bytes": 72044,
+      "sha256": "45525c12f86f294efea3ab3bac85f49c5f78f6f51ff2732769b5e7827888d188",
+      "upstream_tag_sha256": "45525c12f86f294efea3ab3bac85f49c5f78f6f51ff2732769b5e7827888d188",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/encode/django-rest-framework/3.18.3/rest_framework/fields.py"
+    },
+    {
+      "path": "inputs/actual-image/rest_framework/validators.py",
+      "bytes": 16240,
+      "sha256": "8d24d41c50ba6e2a40cd57d84005518405282429fe84930845e2eb95aa97bd11",
+      "upstream_tag_sha256": "8d24d41c50ba6e2a40cd57d84005518405282429fe84930845e2eb95aa97bd11",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/encode/django-rest-framework/3.18.3/rest_framework/validators.py"
+    },
+    {
+      "path": "inputs/actual-image/rest_framework/generics.py",
+      "bytes": 10163,
+      "sha256": "7ad3311a1f9aae8e5ce42824c211efd089ae2c555bce2326dca5254b30a8352d",
+      "upstream_tag_sha256": "7ad3311a1f9aae8e5ce42824c211efd089ae2c555bce2326dca5254b30a8352d",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/encode/django-rest-framework/3.18.3/rest_framework/generics.py"
+    },
+    {
+      "path": "inputs/actual-image/rest_framework/utils/field_mapping.py",
+      "bytes": 12768,
+      "sha256": "8a6f19588df4aa68dcc28ece264d21141282cab5970762cf5e721c71be6db186",
+      "upstream_tag_sha256": "8a6f19588df4aa68dcc28ece264d21141282cab5970762cf5e721c71be6db186",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/encode/django-rest-framework/3.18.3/rest_framework/utils/field_mapping.py"
+    },
+    {
+      "path": "inputs/actual-image/django/db/models/base.py",
+      "bytes": 97655,
+      "sha256": "3a387fb69469d93a7a1e27e16d93d5258d2e4c5e637bca8dbfb767a851e154ab",
+      "upstream_tag_sha256": "3a387fb69469d93a7a1e27e16d93d5258d2e4c5e637bca8dbfb767a851e154ab",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/django/django/6.0.9/django/db/models/base.py"
+    },
+    {
+      "path": "inputs/actual-image/django/db/models/fields/__init__.py",
+      "bytes": 98663,
+      "sha256": "a3e34e9156a619030257c4f99bd9eb984b6225016a0ef93a9263a2488056ebf5",
+      "upstream_tag_sha256": "a3e34e9156a619030257c4f99bd9eb984b6225016a0ef93a9263a2488056ebf5",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/django/django/6.0.9/django/db/models/fields/__init__.py"
+    },
+    {
+      "path": "inputs/actual-image/django/db/models/deletion.py",
+      "bytes": 21015,
+      "sha256": "27d04ac8ec534f337eb0b257d89f6b59ded830b6c3bc752e2030e818380db18a",
+      "upstream_tag_sha256": "27d04ac8ec534f337eb0b257d89f6b59ded830b6c3bc752e2030e818380db18a",
+      "byte_equal": true,
+      "upstream_url": "https://raw.githubusercontent.com/django/django/6.0.9/django/db/models/deletion.py"
+    }
+  ],
+  "all_nine_equal": true,
+  "final_before_remove": {
+    "Status": "created",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "0001-01-01T00:00:00Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "absence_probe": {
+    "exit": 1,
+    "stdout": "[]\n",
+    "stderr": "error: no such object: a16c192065a869e241a08dfb5a1aad2764dc0d8d5cf36c94f154e9ac688a06aa\n"
+  },
+  "exact_container_absent": true
+}

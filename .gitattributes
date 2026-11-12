@@ -58,3 +58,24 @@ scripts/rust-vod-contracts/worker-identity/union791/logs/*.log -text whitespace=
 
 # Preserve exact Docker SDK execution output bytes.
 scripts/rust-integration/sdk9175/raw/compose.log -text -whitespace
+
+# Preserve exact Original notification mutation evidence and historical whitespace.
+scripts/rust-contracts/notification-mutations-source/definition/inputs/original/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/definition/inputs/original/core/apps.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/executed/executor1/inputs/original/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/executed/executor1/inputs/original/core/apps.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/executed/executor2/inputs/original/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/executed/executor2/inputs/original/core/apps.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/executed/executor3/inputs/original/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/executed/executor3/inputs/original/core/apps.py -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/raw/Source1/bootstrap-private.log -text -whitespace
+scripts/rust-contracts/notification-mutations-source/raw/Source1/command-008.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/raw/Source1/command-011.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/raw/Source1/command-012.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/raw/Source1/command-013.stdout -text -whitespace
+scripts/rust-contracts/notification-mutations-source/raw/Source2/bootstrap-private.log -text -whitespace
+scripts/rust-contracts/notification-mutations-source/raw/Source2/command-008.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/raw/Source2/command-012.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/notification-mutations-source/raw/Source2/command-013.stdout -text -whitespace
+scripts/rust-contracts/notification-mutations-source/raw/executor-review-2/correction.diff -text -whitespace
+scripts/rust-contracts/notification-mutations-source/raw/executor-review-3/correction.diff -text -whitespace

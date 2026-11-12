@@ -1,0 +1,383 @@
+{
+  "actual_request_count": 48,
+  "status_counts": {
+    "401": 3,
+    "403": 6,
+    "404": 9,
+    "200": 12,
+    "400": 15,
+    "204": 2,
+    "500": 1
+  },
+  "requests": [
+    {
+      "index": 0,
+      "name": "anonymous-put-denied",
+      "status": 401,
+      "transport": "http_response"
+    },
+    {
+      "index": 1,
+      "name": "standard-put-denied",
+      "status": 403,
+      "transport": "http_response"
+    },
+    {
+      "index": 2,
+      "name": "adminDenied-put-denied",
+      "status": 403,
+      "transport": "http_response"
+    },
+    {
+      "index": 3,
+      "name": "anonymous-patch-denied",
+      "status": 401,
+      "transport": "http_response"
+    },
+    {
+      "index": 4,
+      "name": "standard-patch-denied",
+      "status": 403,
+      "transport": "http_response"
+    },
+    {
+      "index": 5,
+      "name": "adminDenied-patch-denied",
+      "status": 403,
+      "transport": "http_response"
+    },
+    {
+      "index": 6,
+      "name": "anonymous-delete-denied",
+      "status": 401,
+      "transport": "http_response"
+    },
+    {
+      "index": 7,
+      "name": "standard-delete-denied",
+      "status": 403,
+      "transport": "http_response"
+    },
+    {
+      "index": 8,
+      "name": "adminDenied-delete-denied",
+      "status": 403,
+      "transport": "http_response"
+    },
+    {
+      "index": 9,
+      "name": "missing-before-invalid-json",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 10,
+      "name": "inactive-not-writable",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 11,
+      "name": "expired-not-deletable",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 12,
+      "name": "condition-hidden-not-writable",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 13,
+      "name": "malformed-pk-not-found",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 14,
+      "name": "unknown-condition-visible-after-prior-cache-miss",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 15,
+      "name": "put-required-fields",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 16,
+      "name": "patch-unique-collision",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 17,
+      "name": "reject-notification_key-16",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 18,
+      "name": "reject-title-17",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 19,
+      "name": "reject-message-18",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 20,
+      "name": "reject-notification_type-19",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 21,
+      "name": "reject-priority-20",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 22,
+      "name": "reject-source-21",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 23,
+      "name": "reject-is_active-22",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 24,
+      "name": "reject-admin_only-23",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 25,
+      "name": "reject-expires_at-24",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 26,
+      "name": "reject-action_data-25",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 27,
+      "name": "reject-title-26",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 28,
+      "name": "reject-notification_key-27",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 29,
+      "name": "valid-target-invalid-json",
+      "status": 400,
+      "transport": "http_response"
+    },
+    {
+      "index": 30,
+      "name": "put-required-only-retains-optionals",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 31,
+      "name": "readonly-unknown-patch-still-saves",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 32,
+      "name": "empty-patch-still-saves",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 33,
+      "name": "normalize-json-string-number-bool-offset",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 34,
+      "name": "replace-json-object-not-merge",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 35,
+      "name": "json-array-valid-system-notice",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 36,
+      "name": "json-scalar-valid-system-notice",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 37,
+      "name": "restore-object-null-expiry-and-source",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 38,
+      "name": "inactive-transition-returns-saved-row",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 39,
+      "name": "inactive-cannot-reactivate",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 40,
+      "name": "inactive-cannot-delete",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 41,
+      "name": "delete-cascade-ignores-malformed-body",
+      "status": 204,
+      "transport": "http_response"
+    },
+    {
+      "index": 42,
+      "name": "repeat-delete-not-found",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 43,
+      "name": "expiry-transition-returns-saved-row",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 44,
+      "name": "expired-put-cannot-restore",
+      "status": 404,
+      "transport": "http_response"
+    },
+    {
+      "index": 45,
+      "name": "visible-developer-delete-retains-cache-observation",
+      "status": 204,
+      "transport": "http_response"
+    },
+    {
+      "index": 46,
+      "name": "set-truthy-nonobject-developer-action-data",
+      "status": 200,
+      "transport": "http_response"
+    },
+    {
+      "index": 47,
+      "name": "global-developer-shape-error-before-target-lookup",
+      "status": 500,
+      "transport": "http_response"
+    }
+  ],
+  "final_exception": {
+    "type": "builtins.AttributeError",
+    "message": "'list' object has no attribute 'get'",
+    "complete": true,
+    "message_bytes": 36,
+    "traceback_bytes": 2078
+  },
+  "seed_aliases": {
+    "A": 1,
+    "B": 2,
+    "C": 3,
+    "I": 4,
+    "E": 5,
+    "H": 6,
+    "V": 7,
+    "D": 8,
+    "U": 9
+  },
+  "seed_binding_passed": true,
+  "proxy_signals_loaded": false,
+  "signal_slot_counts": {
+    "pre_save": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "post_save": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ],
+    "pre_delete": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "post_delete": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4
+    ]
+  },
+  "notification_source_raw_sha256": "68542935c46471505dfbc9e1442e45fa9cbe498ef2c587fe0c257fb2ebd8b1bd",
+  "effect_validation_sha256": "ee10d86584b88e42bb947b440b309086d71d927a2e98c03c2f51e613030bb76b",
+  "source1_preserved": true,
+  "deployment_or_credentials_or_Native_verified": false
+}

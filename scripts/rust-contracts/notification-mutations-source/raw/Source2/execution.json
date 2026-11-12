@@ -1,0 +1,163 @@
+{
+  "passed": true,
+  "state": "ACTUAL_EXECUTION_ATTEMPT",
+  "project": "dispatcharr-notifmut-source-17d24cd5f5",
+  "copied_database": "rust_probe_notifmut_17d24cd5f5",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "reviewed_seal_sha256": "eb03c0eea0f8eef75c8d7bfae8e51352ce866c60c5a6275fc6c6c0e5418f6237",
+  "Source_only": true,
+  "real_credentials": false,
+  "real_TCP": false,
+  "registered": false,
+  "performance_claimed": false,
+  "web_workers_media_started": false,
+  "Source_process_command_next": 11,
+  "effects_passed": true,
+  "actual_request_count": 48,
+  "default_eleven_named_tables_and_sequences_unchanged": true,
+  "owned_cleanup_independently_verified": true,
+  "controller_exit": 0,
+  "host_children": [
+    {
+      "pid": 4039932,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4039935,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4039953,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4039971,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4039989,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4040393,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4040445,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4040468,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4040612,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4040685,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4040758,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4041086,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4041204,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4041259,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4041285,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4042148,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4042169,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    },
+    {
+      "pid": 4042190,
+      "exit": 0,
+      "physically_settled": true,
+      "pipes_settled": true
+    }
+  ],
+  "Source_process_result": {
+    "argv": [
+      "docker",
+      "compose",
+      "-p",
+      "dispatcharr-notifmut-source-17d24cd5f5",
+      "-f",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-2/compose.json",
+      "exec",
+      "-T",
+      "-e",
+      "POSTGRES_DB=rust_probe_notifmut_17d24cd5f5",
+      "-e",
+      "NOTIFICATION_FIXTURE_DATABASE=rust_probe_notifmut_17d24cd5f5",
+      "-e",
+      "NOTIFICATION_FIXTURE_STAGE=exercise",
+      "-e",
+      "NOTIFICATION_FIXTURE_AUTHORITY=owned-source-only",
+      "-e",
+      "REDIS_DB=1",
+      "baseline",
+      "/dispatcharrpy/bin/python",
+      "manage.py",
+      "shell",
+      "-c",
+      "import runpy; runpy.run_path('/notification-tools/source_fixture.py',run_name='__main__')"
+    ],
+    "pid": 4040758,
+    "exit": 0,
+    "physically_settled": true,
+    "pipe_threads_settled": true
+  }
+}

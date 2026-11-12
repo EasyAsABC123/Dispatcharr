@@ -1,0 +1,162 @@
+--- executor2/README.md
++++ executor3/README.md
+@@ -88,3 +88,26 @@
+ 
+ Exact48 inputs, methods, order, predicted statuses, clocks and resource/capture budgets
+ are unchanged. There is no Source/Native/runtime behavior change or app execution.
++
++## Executor3 receiver serialization correction (unexecuted)
++
++Executor2 seal39c38c1b6e718fac38b6fe3822af4e714fac8150591302818d67d95516091388
++and its Source1 negative attempt are immutable. Source1 shell/controller exited1
++before seed/requests: the third signal-registration tuple slot was a weak reference,
++which the old snapshot incorrectly treated as a JSON async value. Both default11
++audits and independent all-project/exact-container/host-PID cleanup passed.
++
++This executor changes ONLY registration snapshot serialization and its pure controls.
++Each actual receiver row retains its tuple/list container type, slot count and full
++slot order/index. Every slot records its qualified Python type and safe literal
++value, recursively ordered tuple/list items, byte hex, weakref identity/alive/referent
++type/module/qualname metadata, or explicit opaque-object identity/type metadata.
++No slot is named or interpreted as an async flag. Builtin weakref dereference only
++resolves referent metadata; receivers/callable objects and custom repr hooks are
++never invoked. Unknown objects are explicitly metadata-only rather than an invented
++literal or dynamic representation. The exact weakref third-slot failure shape plus
++later boolean/no-later-boolean variants serialize through the real pure report save.
++
++Original48 plan, bootstrap, run.py, effects/seed binding, exception capture policy,
++resource/time/capture budgets and requests remain byte-identical to executor2. No
++Source2 execution is authorized until Root reviews this new exact seal.
+--- executor2/controller/source_fixture.py
++++ executor3/controller/source_fixture.py
+@@ -106,8 +106,48 @@
+     return {'type':typ.__module__+'.'+typ.__qualname__,'message':message,'traceback':trace,
+             'message_evidence':m,'traceback_evidence':t,'complete':m['complete']and t['complete']}
+ 
++def signal_slot(value,depth=0):
++    """Typed JSON-safe literal/identity metadata; never calls a receiver or repr hook."""
++    import types,weakref
++    require(depth<=16,'SignalSlotDepthCapacity')
++    cls=type(value);kind=type.__getattribute__(cls,'__module__')+'.'+type.__getattribute__(cls,'__qualname__')
++    out={'type':kind}
++    if value is None or cls in (bool,int,str):out.update(kind='literal',value=value)
++    elif cls is float:out.update(kind='float-hex',value=float.hex(value))
++    elif cls is bytes:out.update(kind='bytes-hex',value=value.hex())
++    elif cls in (tuple,list):out.update(kind='ordered-slots',length=len(value),items=[signal_slot(v,depth+1)for v in value])
++    elif isinstance(value,weakref.ReferenceType):
++        # Invoke only the builtin weak-reference dereference, never its referent.
++        referent=weakref.ReferenceType.__call__(value)
++        if isinstance(value,weakref.WeakMethod):
++            function=weakref.ReferenceType.__call__(object.__getattribute__(value,'_func_ref'))
++            out['bound_method_function']=None if function is None else signal_entity(function)
++        out.update(kind='weak-reference',identity=id(value),alive=referent is not None,
++                   referent=None if referent is None else signal_entity(referent))
++    elif cls in (types.FunctionType,types.BuiltinFunctionType,types.MethodType)or isinstance(value,type):
++        out.update(kind='callable-or-type-metadata',entity=signal_entity(value))
++    else:out.update(kind='opaque-object-metadata',identity=id(value),object_type=kind)
++    return out
++
++def signal_entity(value):
++    """Resolve callable/type labels without invoking callable or custom repr."""
++    import types
++    cls=type(value);result={'identity':id(value),'type':type.__getattribute__(cls,'__module__')+'.'+type.__getattribute__(cls,'__qualname__')}
++    if isinstance(value,type):
++        result.update(module=type.__getattribute__(value,'__module__'),qualname=type.__getattribute__(value,'__qualname__'))
++    elif cls is types.MethodType:
++        function=object.__getattribute__(value,'__func__');owner=object.__getattribute__(value,'__self__')
++        result.update(module=object.__getattribute__(function,'__module__'),qualname=object.__getattribute__(function,'__qualname__'),bound_self_identity=id(owner))
++    elif cls in (types.FunctionType,types.BuiltinFunctionType):
++        result.update(module=object.__getattribute__(value,'__module__'),qualname=object.__getattribute__(value,'__qualname__'))
++    return result
++
++def signal_registration(row):
++    require(type(row)in (tuple,list),'SignalRegistrationOrderedTupleOrList')
++    return {'container_type':type(row).__name__,'slot_count':len(row),
++            'slots':[{'index':i,**signal_slot(value)}for i,value in enumerate(row)]}
++
+ def runtime_snapshot():
+-    import weakref
+     from django.apps import apps
+     from django.db.models import signals
+     proxy=apps.get_app_config('proxy');runtimes={}
+@@ -119,8 +159,7 @@
+     for name in ['pre_save','post_save','pre_delete','post_delete']:
+         result[name]=[]
+         for row in getattr(signals,name).receivers:
+-            receiver=row[1]()if isinstance(row[1],weakref.ReferenceType)else row[1]
+-            result[name].append({'lookup_key':repr(row[0]),'receiver':None if receiver is None else receiver.__module__+'.'+getattr(receiver,'__qualname__',type(receiver).__qualname__),'async':row[2]if len(row)>2 else None})
++            result[name].append(signal_registration(row))
+     return {'runtimes':runtimes,'receivers':result,'proxy_signals_loaded':'apps.proxy.signals'in sys.modules}
+ 
+ def main():
+--- executor2/controller/test_controls.py
++++ executor3/controller/test_controls.py
+@@ -152,4 +152,48 @@
+             out=Path(d)/'not-created';p=subprocess.run([sys.executable,str(ROOT/'controller/run.py'),'--execute-reviewed-seal','0'*64,'--output',str(out),'--docker','/this-does-not-exist'],capture_output=True,timeout=10)
+             self.assertNotEqual(p.returncode,0);self.assertFalse(out.exists());self.assertIn(b'ReviewedSealHashBinding',p.stderr)
+ 
++class SignalSerializationControls(unittest.TestCase):
++    def test_Django6_third_slot_weakref_roundtrip(self):
++        import weakref
++        from source_fixture import signal_registration
++        called=[]
++        def receiver(*args,**kwargs):called.append(True);raise AssertionError('must never invoke receiver')
++        class Sender:pass
++        # Source1 failed because third tuple slot was ReferenceType; preserve it,
++        # plus any later bool slot, without assigning slot-index meanings.
++        row=((id(receiver),id(Sender)),weakref.ref(receiver),weakref.ref(Sender),False)
++        value=signal_registration(row);encoded=json.dumps(value,sort_keys=True);decoded=json.loads(encoded)
++        self.assertEqual(decoded['slot_count'],4);self.assertEqual([v['index']for v in decoded['slots']],[0,1,2,3])
++        self.assertEqual(decoded['slots'][2]['type'],'weakref.ReferenceType');self.assertEqual(decoded['slots'][2]['kind'],'weak-reference');self.assertTrue(decoded['slots'][2]['alive'])
++        self.assertTrue(decoded['slots'][2]['referent']['qualname'].endswith('Sender'));self.assertEqual(decoded['slots'][3]['value'],False);self.assertNotIn('async',decoded);self.assertFalse(called)
++        import tempfile
++        from source_fixture import save
++        with tempfile.TemporaryDirectory()as d:
++            path=Path(d)/'snapshot.json';snapshot={'runtime_before_isolation':{'runtimes':{'live_proxy':{'present':False,'manager_keys':[]}},'receivers':{'pre_delete':[value]},'proxy_signals_loaded':False}}
++            save(path,snapshot);self.assertEqual(json.loads(path.read_text()),snapshot)
++    def test_three_slots_with_no_async_assumption(self):
++        import weakref
++        from source_fixture import signal_registration
++        class Sender:pass
++        value=signal_registration(((1,2),None,weakref.ref(Sender)));self.assertEqual(value['slot_count'],3);self.assertEqual(value['slots'][1]['value'],None);json.dumps(value)
++    def test_bound_method_metadata_without_invocation(self):
++        import weakref
++        from source_fixture import signal_registration
++        class Receiver:
++            def receive(self):raise AssertionError('must not invoke method')
++        obj=Receiver();value=signal_registration(((1,2),obj.receive,weakref.WeakMethod(obj.receive)))
++        self.assertTrue(value['slots'][1]['entity']['qualname'].endswith('Receiver.receive'));self.assertTrue(value['slots'][2]['bound_method_function']['qualname'].endswith('Receiver.receive'));json.dumps(value)
++    def test_dead_weakref_is_explicit(self):
++        import weakref,gc
++        from source_fixture import signal_registration
++        class Sender:pass
++        obj=Sender();ref=weakref.ref(obj);del obj;gc.collect()
++        value=signal_registration(((1,2),ref,True));self.assertFalse(value['slots'][1]['alive']);self.assertIsNone(value['slots'][1]['referent']);json.dumps(value)
++    def test_no_custom_repr_or_callable_invocation(self):
++        from source_fixture import signal_registration
++        class Receiver:
++            def __repr__(self):raise AssertionError('repr must not run')
++            def __call__(self):raise AssertionError('call must not run')
++        value=signal_registration((('uid',2),Receiver(),b'raw'));self.assertEqual(value['slots'][1]['kind'],'opaque-object-metadata');self.assertEqual(value['slots'][2]['value'],'726177');json.dumps(value)
++
+ if __name__=='__main__':unittest.main()
+--- executor2/execution-plan.json
++++ executor3/execution-plan.json
+@@ -36,11 +36,12 @@
+     "if cleanup uncertain retain failure and exact IDs; no automatic request rerun"
+   ],
+   "no_automatic_retry": true,
+-  "executor_revision": 2,
++  "executor_revision": 3,
+   "predecessor_unexecuted_seal": "6263a866c2d76d51cbbf7b237ff787d8f20a4c1ab755ab110aa6320e10bd433f",
+   "correction_scope": [
+-    "exact seed and actor/dismissal binding before requests and offline",
+-    "target ID bound to reviewed alias or derived missing/literal malformed",
+-    "exception byte/hash/completeness metadata; incomplete text invalidates capture"
+-  ]
++    "receiver registrations retain full ordered typed JSON-safe slots; no index-based async assumption",
++    "weakref dereference and callable/type metadata only; never invoke receiver or repr",
++    "pure actual-failure-shape and full nested-report JSON save controls"
++  ],
++  "predecessor_executed_negative_seal": "39c38c1b6e718fac38b6fe3822af4e714fac8150591302818d67d95516091388"
+ }

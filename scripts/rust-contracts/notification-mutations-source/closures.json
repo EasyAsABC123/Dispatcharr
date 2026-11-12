@@ -1,0 +1,48 @@
+{
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "archive": {
+    "bytes": 16609280,
+    "sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "git_args": [
+      "-c",
+      "tar.umask=0002",
+      "-c",
+      "core.attributesFile=/dev/null",
+      "archive",
+      "--format=tar",
+      "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+    ]
+  },
+  "executors": {
+    "1": {
+      "path": "executed/executor1",
+      "seal_sha256": "6263a866c2d76d51cbbf7b237ff787d8f20a4c1ab755ab110aa6320e10bd433f",
+      "input_count": 43,
+      "state": "unexecuted"
+    },
+    "2": {
+      "path": "executed/executor2",
+      "seal_sha256": "39c38c1b6e718fac38b6fe3822af4e714fac8150591302818d67d95516091388",
+      "input_count": 44,
+      "state": "executed Source1 failed preflight"
+    },
+    "3": {
+      "path": "executed/executor3",
+      "seal_sha256": "eb03c0eea0f8eef75c8d7bfae8e51352ce866c60c5a6275fc6c6c0e5418f6237",
+      "input_count": 44,
+      "state": "executed Source2 passed48"
+    }
+  },
+  "definition_seal_sha256": "5ead3404e018f8e217f209040e510c564e9d9583bfc2aab46348b92d51ab5485",
+  "gzip_raw": [
+    {
+      "path": "raw/Source2/notification-source-private.json.gz",
+      "uncompressed_bytes": 11031976,
+      "uncompressed_sha256": "68542935c46471505dfbc9e1442e45fa9cbe498ef2c587fe0c257fb2ebd8b1bd",
+      "gzip_mtime": 0
+    }
+  ],
+  "Source_replays": 0,
+  "operation_registrations": 0,
+  "Original_authors_credit": "Original Dispatcharr authors retain full credit for Python application, algorithms, serializer/models and tests; this packet retains observations and independent Rust migration contract tooling."
+}

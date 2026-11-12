@@ -1,0 +1,66 @@
+2026-11-12 17:09:48,103 WARNING django.request Unauthorized: /api/core/notifications/1/
+2026-11-12 17:09:48,121 WARNING django.request Forbidden: /api/core/notifications/1/
+2026-11-12 17:09:48,139 WARNING django.request Forbidden: /api/core/notifications/1/
+2026-11-12 17:09:48,158 WARNING django.request Unauthorized: /api/core/notifications/1/
+2026-11-12 17:09:48,178 WARNING django.request Forbidden: /api/core/notifications/1/
+2026-11-12 17:09:48,200 WARNING django.request Forbidden: /api/core/notifications/1/
+2026-11-12 17:09:48,227 WARNING django.request Unauthorized: /api/core/notifications/1/
+2026-11-12 17:09:48,251 WARNING django.request Forbidden: /api/core/notifications/1/
+2026-11-12 17:09:48,278 WARNING django.request Forbidden: /api/core/notifications/1/
+2026-11-12 17:09:48,309 WARNING core.developer_notifications Unknown condition: owned_unknown_condition_for_mutation_probe
+2026-11-12 17:09:48,310 WARNING django.request Not Found: /api/core/notifications/100009/
+2026-11-12 17:09:48,340 WARNING django.request Not Found: /api/core/notifications/4/
+2026-11-12 17:09:48,373 WARNING django.request Not Found: /api/core/notifications/5/
+2026-11-12 17:09:48,406 WARNING django.request Not Found: /api/core/notifications/6/
+2026-11-12 17:09:48,439 WARNING django.request Not Found: /api/core/notifications/not-an-integer/
+2026-11-12 17:09:48,514 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,556 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,596 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,638 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,682 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,732 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,781 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,832 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,886 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:48,944 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:49,003 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:49,061 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:49,119 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:49,178 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:49,237 WARNING django.request Bad Request: /api/core/notifications/1/
+2026-11-12 17:09:49,890 WARNING django.request Not Found: /api/core/notifications/1/
+2026-11-12 17:09:49,961 WARNING django.request Not Found: /api/core/notifications/1/
+2026-11-12 17:09:50,114 WARNING django.request Not Found: /api/core/notifications/3/
+2026-11-12 17:09:50,285 WARNING django.request Not Found: /api/core/notifications/2/
+2026-11-12 17:09:50,550 ERROR django.request Internal Server Error: /api/core/notifications/100009/
+Traceback (most recent call last):
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/mixins.py", line 82, in partial_update
+    return self.update(request, *args, **kwargs)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/mixins.py", line 65, in update
+    instance = self.get_object()
+  File "/dispatcharrpy/lib/python3.13/site-packages/rest_framework/generics.py", line 87, in get_object
+    queryset = self.filter_queryset(self.get_queryset())
+                                    ~~~~~~~~~~~~~~~~~^^
+  File "/app/core/api_views.py", line 720, in get_queryset
+    conditions = action_data.get('condition', [])
+                 ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'

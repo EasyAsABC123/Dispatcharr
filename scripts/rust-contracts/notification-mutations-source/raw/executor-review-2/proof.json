@@ -1,0 +1,63 @@
+{
+  "seal_sha256": "39c38c1b6e718fac38b6fe3822af4e714fac8150591302818d67d95516091388",
+  "sealed_files": 44,
+  "controls": 52,
+  "runs": [
+    {
+      "name": "read-only-seal",
+      "exit": 0,
+      "stdout_sha256": "54e37971c1b615d14b4eef4e4db88677900fe71fc1d71713fea73e9bae154d5b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "pure-controls",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "4413297823af2bfedc7508f286d6e7c1f2fa4abb22695c5bbab10c45c21f4b0b"
+    },
+    {
+      "name": "executor1-preserved",
+      "exit": 0,
+      "stdout_sha256": "d6720d69ddef214d52481218800d11a8db198c2583e79c193703a4d2b0818178",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "changes": [
+    {
+      "path": "README.md",
+      "old_sha256": "86c7c9df9f10d7027a7b01d5344194d92a08c61f5b64d15bf139ab30cc1d71ae",
+      "new_sha256": "37fdcbc1cafccf82c62328f50085c4c60752f6f2384336c8564fc40320d1ac2a"
+    },
+    {
+      "path": "controller/effects.py",
+      "old_sha256": "248d80438385daf1ac144f218316bb5954135db147510c0c72af03fa8661abc6",
+      "new_sha256": "2e99607010f594823e5aff161ede44461313302a82b223713cf22a1617fe9d45"
+    },
+    {
+      "path": "controller/seed_binding.py",
+      "old_sha256": null,
+      "new_sha256": "ebbc98a08a933a919e84ea77756a89ce77ca39209d6f86d16826c989737e08fb"
+    },
+    {
+      "path": "controller/source_fixture.py",
+      "old_sha256": "d9d6fb529c8e0ffacb004bb5583d3127cfcf1ce668fa56f82721c6c3cb0cc430",
+      "new_sha256": "be4b0ed90230c5a656ab12c0e7c02185ad7c3ac26420c9d30e6f1357e72fcfe1"
+    },
+    {
+      "path": "controller/test_controls.py",
+      "old_sha256": "659f16b4b0a638a081eaab8acb7e77b3ed4348c8e260c974d2eb126a25ebc247",
+      "new_sha256": "ef077eb9527fa86b7a512e54703f6be2ad74bffe12967c79167e65fc15675abb"
+    },
+    {
+      "path": "execution-plan.json",
+      "old_sha256": "2b025b2d5925b824554a2f45af091e14c1b50960767e94f67af3fa2d00589525",
+      "new_sha256": "3b9e83d92b9efd72a2fe453d3081bc1f2b97434a01b8a9a1a34a113561a70168"
+    }
+  ],
+  "exact48_plan_unchanged": true,
+  "plan_sha256": "fe2f80cee17e477676f9e65e094a4242bbe123f397baa350c16d9f3822f65566",
+  "executor1_preserved_seal": "6263a866c2d76d51cbbf7b237ff787d8f20a4c1ab755ab110aa6320e10bd433f",
+  "Source_requests_executed": 0,
+  "Native_or_Docker_execution": false,
+  "preseal_control_attempt": "Prior attempt before regenerating copied seal failed three seal controls (CompleteSealedInputInventory), no app; Root independently retained Root-controls.log. Final sealed rerun passes all52."
+}

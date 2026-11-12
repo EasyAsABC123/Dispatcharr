@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "docker",
+    "compose",
+    "-p",
+    "dispatcharr-notifmut-source-17d24cd5f5",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-2/compose.json",
+    "exec",
+    "-T",
+    "baseline",
+    "psql",
+    "-h",
+    "/var/run/postgresql",
+    "-U",
+    "dispatch",
+    "-d",
+    "postgres",
+    "-v",
+    "ON_ERROR_STOP=1",
+    "-c",
+    "CREATE DATABASE rust_probe_notifmut_17d24cd5f5 TEMPLATE dispatcharr"
+  ],
+  "pid": 4040685,
+  "exit": 0,
+  "physically_settled": true,
+  "pipe_threads_settled": true
+}

@@ -1,0 +1,1021 @@
+{
+  "schema": 1,
+  "state": "UNEXECUTED_DEFINITION_REVIEW_ONLY",
+  "Source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "workspace_head_at_plan": "9175d2c56aff107174444e8518bc31700e756a6b",
+  "fixture_requests_executed": 0,
+  "execution_authorized": false,
+  "controller_present": false,
+  "Native_or_TCP_or_credentials_claim": false,
+  "scope": "Source APIClient real resolver, forced persisted active actors, no credential acceptance; no Source app execution performed by local validation",
+  "candidate_methods": {
+    "PUT": "update",
+    "PATCH": "partial_update",
+    "DELETE": "destroy"
+  },
+  "route": "/api/core/notifications/<actual-seed-pk>/",
+  "excluded": [
+    "format suffix aliases",
+    "GET/POST/dismiss/list operations",
+    "inactive credential acceptance",
+    "real concurrent writes",
+    "actual websocket/Celery delivery",
+    "full-database silence",
+    "all serializer equivalence beyond finite bodies"
+  ],
+  "cases": [
+    {
+      "index": 0,
+      "name": "anonymous-put-denied",
+      "method": "PUT",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "anonymous",
+      "body": "{",
+      "predicted_status": 401,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 1,
+      "name": "standard-put-denied",
+      "method": "PUT",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "standard",
+      "body": "{",
+      "predicted_status": 403,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 2,
+      "name": "adminDenied-put-denied",
+      "method": "PUT",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "adminDenied",
+      "body": "{",
+      "predicted_status": 403,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 3,
+      "name": "anonymous-patch-denied",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "anonymous",
+      "body": "{",
+      "predicted_status": 401,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 4,
+      "name": "standard-patch-denied",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "standard",
+      "body": "{",
+      "predicted_status": 403,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 5,
+      "name": "adminDenied-patch-denied",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "adminDenied",
+      "body": "{",
+      "predicted_status": 403,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 6,
+      "name": "anonymous-delete-denied",
+      "method": "DELETE",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "anonymous",
+      "body": "{",
+      "predicted_status": 401,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 7,
+      "name": "standard-delete-denied",
+      "method": "DELETE",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "standard",
+      "body": "{",
+      "predicted_status": 403,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 8,
+      "name": "adminDenied-delete-denied",
+      "method": "DELETE",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "adminDenied",
+      "body": "{",
+      "predicted_status": 403,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 9,
+      "name": "missing-before-invalid-json",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{missing}/",
+      "target": "missing",
+      "actor": "admin",
+      "body": "{",
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 10,
+      "name": "inactive-not-writable",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{I}/",
+      "target": "I",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 11,
+      "name": "expired-not-deletable",
+      "method": "DELETE",
+      "path": "/api/core/notifications/{E}/",
+      "target": "E",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 12,
+      "name": "condition-hidden-not-writable",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{H}/",
+      "target": "H",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 13,
+      "name": "malformed-pk-not-found",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{malformed}/",
+      "target": "malformed",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 14,
+      "name": "unknown-condition-visible-after-prior-cache-miss",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{U}/",
+      "target": "U",
+      "actor": "admin",
+      "body": {
+        "title": "U updated"
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "update",
+      "hypothesis": "U/admin key absent at seed; first authorized get_queryset (missing-before-invalid-json) invokes actual unknown-condition fail-open and caches300 even though target404. This request later verifies U remains visible; retain cache evidence at both requests. No helper substitution."
+    },
+    {
+      "index": 15,
+      "name": "put-required-fields",
+      "method": "PUT",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 16,
+      "name": "patch-unique-collision",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "notification_key": "@B.notification_key"
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 17,
+      "name": "reject-notification_key-16",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "notification_key": null
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 18,
+      "name": "reject-title-17",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "title": "   "
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 19,
+      "name": "reject-message-18",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "message": ""
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 20,
+      "name": "reject-notification_type-19",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "notification_type": "invalid"
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 21,
+      "name": "reject-priority-20",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "priority": "urgent"
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 22,
+      "name": "reject-source-21",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "source": "invalid"
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 23,
+      "name": "reject-is_active-22",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "is_active": null
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 24,
+      "name": "reject-admin_only-23",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "admin_only": "maybe"
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 25,
+      "name": "reject-expires_at-24",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "expires_at": "not-a-date"
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 26,
+      "name": "reject-action_data-25",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "action_data": null
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 27,
+      "name": "reject-title-26",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 28,
+      "name": "reject-notification_key-27",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "notification_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 29,
+      "name": "valid-target-invalid-json",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": "{",
+      "predicted_status": 400,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 30,
+      "name": "put-required-only-retains-optionals",
+      "method": "PUT",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "notification_key": "@A.notification_key",
+        "title": " Put title ",
+        "message": " Put message "
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "save-required-only"
+    },
+    {
+      "index": 31,
+      "name": "readonly-unknown-patch-still-saves",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "id": 99999,
+        "created_at": "2001-01-01T00:00:00Z",
+        "updated_at": "2001-01-01T00:00:00Z",
+        "is_dismissed": false,
+        "unknown": "ignored"
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "save-no-fields"
+    },
+    {
+      "index": 32,
+      "name": "empty-patch-still-saves",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "save-no-fields"
+    },
+    {
+      "index": 33,
+      "name": "normalize-json-string-number-bool-offset",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "notification_key": "  @prefix.renamed  ",
+        "title": 123,
+        "message": "  trimmed message  ",
+        "is_active": "true",
+        "admin_only": 0,
+        "expires_at": "2099-02-03T04:05:06+02:00",
+        "notification_type": "warning",
+        "priority": "critical"
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "normalize"
+    },
+    {
+      "index": 34,
+      "name": "replace-json-object-not-merge",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "action_data": {
+          "new": [
+            "v",
+            null,
+            false,
+            1
+          ]
+        }
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "replace-json"
+    },
+    {
+      "index": 35,
+      "name": "json-array-valid-system-notice",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "action_data": [
+          1,
+          {
+            "x": true
+          }
+        ]
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "replace-json"
+    },
+    {
+      "index": 36,
+      "name": "json-scalar-valid-system-notice",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "action_data": "text"
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "replace-json"
+    },
+    {
+      "index": 37,
+      "name": "restore-object-null-expiry-and-source",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "action_data": {},
+        "expires_at": null,
+        "source": "system",
+        "admin_only": true,
+        "priority": "normal",
+        "notification_type": "info"
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "update"
+    },
+    {
+      "index": 38,
+      "name": "inactive-transition-returns-saved-row",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "is_active": false
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "hide-inactive"
+    },
+    {
+      "index": 39,
+      "name": "inactive-cannot-reactivate",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {
+        "is_active": true
+      },
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 40,
+      "name": "inactive-cannot-delete",
+      "method": "DELETE",
+      "path": "/api/core/notifications/{A}/",
+      "target": "A",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 41,
+      "name": "delete-cascade-ignores-malformed-body",
+      "method": "DELETE",
+      "path": "/api/core/notifications/{C}/",
+      "target": "C",
+      "actor": "admin",
+      "body": "{",
+      "predicted_status": 204,
+      "prediction_unmeasured": true,
+      "effect_class": "delete-cascade",
+      "body_encoding": "raw-invalid-json"
+    },
+    {
+      "index": 42,
+      "name": "repeat-delete-not-found",
+      "method": "DELETE",
+      "path": "/api/core/notifications/{C}/",
+      "target": "C",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 43,
+      "name": "expiry-transition-returns-saved-row",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{B}/",
+      "target": "B",
+      "actor": "admin",
+      "body": {
+        "expires_at": "2000-01-01T00:00:00Z"
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "hide-expired"
+    },
+    {
+      "index": 44,
+      "name": "expired-put-cannot-restore",
+      "method": "PUT",
+      "path": "/api/core/notifications/{B}/",
+      "target": "B",
+      "actor": "admin",
+      "body": {
+        "notification_key": "@B.notification_key",
+        "title": "B",
+        "message": "B"
+      },
+      "predicted_status": 404,
+      "prediction_unmeasured": true,
+      "effect_class": "none"
+    },
+    {
+      "index": 45,
+      "name": "visible-developer-delete-retains-cache-observation",
+      "method": "DELETE",
+      "path": "/api/core/notifications/{V}/",
+      "target": "V",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 204,
+      "prediction_unmeasured": true,
+      "effect_class": "delete-developer"
+    },
+    {
+      "index": 46,
+      "name": "set-truthy-nonobject-developer-action-data",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{D}/",
+      "target": "D",
+      "actor": "admin",
+      "body": {
+        "source": "developer",
+        "action_data": [
+          1
+        ]
+      },
+      "predicted_status": 200,
+      "prediction_unmeasured": true,
+      "effect_class": "poison-developer"
+    },
+    {
+      "index": 47,
+      "name": "global-developer-shape-error-before-target-lookup",
+      "method": "PATCH",
+      "path": "/api/core/notifications/{missing}/",
+      "target": "missing",
+      "actor": "admin",
+      "body": {},
+      "predicted_status": 500,
+      "prediction_unmeasured": true,
+      "effect_class": "none",
+      "hypothesis": "Unmeasured expected framework error from developer action_data.get. With declared client raise_request_exception=False a returned500 is predicted, not guaranteed; preserve literal returned response and attached exc_info, or literal raised exception without inventing an HTTP status. No WSGI/ASGI/TCP inference."
+    }
+  ],
+  "fixed_request_count": 48,
+  "seed": {
+    "users": {
+      "admin": {
+        "user_level": 10,
+        "is_active": true,
+        "UI": "127.0.0.1/32"
+      },
+      "standard": {
+        "user_level": 1,
+        "is_active": true,
+        "UI": "127.0.0.1/32"
+      },
+      "adminDenied": {
+        "user_level": 10,
+        "is_active": true,
+        "UI": "192.0.2.0/24"
+      },
+      "anonymous": null
+    },
+    "notifications": {
+      "A": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.A",
+        "title": "A title",
+        "message": "A message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "system",
+        "action_data": {
+          "old": {
+            "nested": 1
+          },
+          "keep": true
+        },
+        "is_active": true,
+        "admin_only": true,
+        "expires_at": "@seed.future"
+      },
+      "B": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.B",
+        "title": "B title",
+        "message": "B message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "system",
+        "action_data": {
+          "old": {
+            "nested": 1
+          },
+          "keep": true
+        },
+        "is_active": true,
+        "admin_only": true,
+        "expires_at": "@seed.future"
+      },
+      "C": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.C",
+        "title": "C title",
+        "message": "C message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "system",
+        "action_data": {
+          "old": {
+            "nested": 1
+          },
+          "keep": true
+        },
+        "is_active": true,
+        "admin_only": true,
+        "expires_at": "@seed.future"
+      },
+      "I": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.I",
+        "title": "I title",
+        "message": "I message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "system",
+        "action_data": {
+          "old": {
+            "nested": 1
+          },
+          "keep": true
+        },
+        "is_active": false,
+        "admin_only": false,
+        "expires_at": "@seed.future"
+      },
+      "E": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.E",
+        "title": "E title",
+        "message": "E message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "system",
+        "action_data": {
+          "old": {
+            "nested": 1
+          },
+          "keep": true
+        },
+        "is_active": true,
+        "admin_only": false,
+        "expires_at": "@seed.past"
+      },
+      "H": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.H",
+        "title": "H title",
+        "message": "H message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "developer",
+        "action_data": {
+          "condition": [
+            "owned_unknown_condition_for_mutation_probe"
+          ]
+        },
+        "is_active": true,
+        "admin_only": true,
+        "expires_at": "@seed.future"
+      },
+      "V": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.V",
+        "title": "V title",
+        "message": "V message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "developer",
+        "action_data": {
+          "condition": [
+            "owned_unknown_condition_for_mutation_probe"
+          ]
+        },
+        "is_active": true,
+        "admin_only": true,
+        "expires_at": "@seed.future"
+      },
+      "D": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.D",
+        "title": "D title",
+        "message": "D message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "system",
+        "action_data": {
+          "old": {
+            "nested": 1
+          },
+          "keep": true
+        },
+        "is_active": true,
+        "admin_only": true,
+        "expires_at": "@seed.future"
+      },
+      "U": {
+        "id": "returned by ORM, never guessed",
+        "notification_key": "@prefix.U",
+        "title": "U title",
+        "message": "V message",
+        "notification_type": "announcement",
+        "priority": "high",
+        "source": "developer",
+        "action_data": {
+          "condition": [
+            "owned_unknown_condition_for_mutation_probe"
+          ]
+        },
+        "is_active": true,
+        "admin_only": true,
+        "expires_at": "@seed.future"
+      }
+    },
+    "dismissals": [
+      [
+        "admin",
+        "A",
+        "accepted"
+      ],
+      [
+        "standard",
+        "A",
+        null
+      ],
+      [
+        "standard",
+        "B",
+        "ignored"
+      ],
+      [
+        "admin",
+        "C",
+        "accepted"
+      ],
+      [
+        "standard",
+        "C",
+        null
+      ]
+    ],
+    "cache": {
+      "H/admin": false,
+      "V/admin": true,
+      "U/admin": "ABSENT after seed; first authorized missing-target request evaluates/caches it before PK lookup; later U request observes cached visibility"
+    },
+    "clock": "Capture one timezone.now() seed anchor; expired=anchor-1day, future=anchor+1day; all raw values retained; separate input2099 timestamp deliberately far future"
+  },
+  "audit_tables": [
+    "accounts_user",
+    "m3u_m3uaccount",
+    "m3u_m3uaccountprofile",
+    "vod_movie",
+    "vod_m3umovierelation",
+    "vod_series",
+    "vod_episode",
+    "vod_m3uepisoderelation",
+    "core_coresettings",
+    "core_systemnotification",
+    "core_notificationdismissal"
+  ],
+  "database_guard": {
+    "regex": "^rust_probe_notifmut_[0-9a-f]{10}$",
+    "deny": [
+      "dispatcharr",
+      "postgres",
+      "template0",
+      "template1"
+    ],
+    "require": [
+      "current_database equals expected before ANY fixture mutation",
+      "new name proven absent; CREATE DATABASE TEMPLATE dispatcharr in owned project",
+      "read-only default before/after audits even if Source fails",
+      "owned notices+dismissals isolated before seed; retain initialization rows and sequence state",
+      "atomic seed with connection guard; no global network-settings mutation"
+    ]
+  },
+  "cache_scope": "Owned Django Redis DB raw key+DUMP+PTTL before/after every request; no TTL exact-equality prediction; retain timezone/group keys; H/V cached condition exact keys use actual PK/user IDs. No flush, no monkeypatch. Refuse setup if intended keys cannot be distinguished.",
+  "capture": [
+    "resolver func.cls + actions method map/name/kwargs per request",
+    "persisted actor raw row before/after including custom_properties; force_authenticate bypass explicit",
+    "raw response bytes/base64+sha256+headers+status+JSON or parse error",
+    "exception traceback with APIClient.raise_request_exception=False; Source report flush after each case",
+    "raw request wall clocks before/after + monotonic elapsed ONLY diagnosis",
+    "all notification columns including created_at/updated_at + all dismissal rows before/after",
+    "eleven named table digests+eleven sequences every request; SQL/schema FK definitions retained",
+    "cache raw bounded DUMP/PTTL before/after",
+    "actual initialized notice/dismissal rows, owned isolation snapshot, exact seed rows",
+    "actual loaded Django/DRF versions and dependency file hashes",
+    "live/HLS runtime state and raw registered pre/post-save/delete receivers pre/post",
+    "actual controller/process exit + partial reports + default audit + independent cleanup"
+  ],
+  "effect_rules": {
+    "refusal": "Every one of11 tables and sequences unchanged, except cache observations separately retained; do not silently waive account/CoreSettings effects",
+    "update": "Only target notification may change; created_at/id preserved; dismissals exact; other10 tables and all11 sequences exact; ignored/missing fields retain; updated_at inside own request bounds, no strict-increase assertion",
+    "response": "Direct serializer fields recorded; is_dismissed must match actual admin dismissal. Readonly input ignored. No normalization of raw timestamp/error/body bytes",
+    "delete": "Target notice and its actual dismissal children only; all other9 tables and all11 sequences exact;204 body empty; repeated delete404; cache key deletion/invalidation measured separately",
+    "unexpected": "Do not regenerate expected data or rerun; preserve raw response/SQL/cache/exception and continue finite requests if ownership/liveness/capture guards hold. Failed predictions remain failures, not measurements relabeled as success"
+  },
+  "startup": "Reuse separately copied, reviewed Source-only controller lifecycle; shell startup skip verified; no supervisor/web/worker/media; internal isolated PG+Redis project, no published ports, no pulls/external I/O, image network only owned project services",
+  "preexecution_gates": [
+    "Root reviews this finite definition before controller construction or any app execution",
+    "Freeze actual controller/input closure and Source-only executor separately after definition approval; second exact seal review required",
+    "Compare upstream-tag dependency authorities against exact pinned-image bytes before executing; do not claim upstream tags prove image contents",
+    "Capture actual receiver registrations in shell and require no proxy manager state; no monkeypatch receivers; global pre_delete cleanup receiver presence is raw evidence not assumed side-effect-free",
+    "Fresh initially absent output/project/DB; fixed resource/time/capture caps; exact reviewed hash separate --execute-reviewed-seal argument; default invocation read-only",
+    "Finite real resolver preflight checks exact detail route class/actions before any request; invalid-pk case separately checked; no operation registration until retained result review"
+  ],
+  "lifecycle": [
+    "verify frozen inputs before Docker use; record local image ID/digest without pull",
+    "new owned internal project PG+Redis idle Source shell only",
+    "read-only default11 audit before clone",
+    "clone new owned DB; guarded retain/isolate/seed + raw preflight",
+    "exact finite cases once; immediate raw report flush after each",
+    "outer finally read-only default11 audit including partialfailure",
+    "stop/down exact owned project, independent exactID/projectlabels/hostPID absence, structured inspect status no capitalization text matching",
+    "if cleanup uncertain retain failure and exact IDs; no automatic request rerun"
+  ],
+  "bounds": {
+    "requests": 48,
+    "container_cpu": 1,
+    "memory_bytes": 1073741824,
+    "pids": 256,
+    "source_seconds": 240,
+    "cleanup_seconds": 60,
+    "audit_rows_per_table": 10000,
+    "audit_total_bytes": 8388608,
+    "response_body_bytes": 65536,
+    "cache_keys": 1000,
+    "cache_bytes": 1048576,
+    "report_bytes": 134217728
+  },
+  "candidate_contract_ids": [
+    "route-06ad6f49ab1bfa0a7ea3:PUT",
+    "route-06ad6f49ab1bfa0a7ea3:PATCH",
+    "route-06ad6f49ab1bfa0a7ea3:DELETE"
+  ],
+  "rendering": {
+    "path": "Replace {A..V/U/D} with actual ORM returned decimal PK, missing with max seeded PK+100000 (verify absent), malformed with not-an-integer; no path interpolation from untrusted values",
+    "body": "JSON recursively replace exact @A.notification_key/@B.notification_key with raw seed key; replace literal substring @prefix with fixed random owned prefix, retaining input whitespace; request.body_encoding raw-invalid-json sends literal UTF8 { and application/json",
+    "network": "REMOTE_ADDR127.0.0.1; persisted per-user custom_properties.allowed_networks.UI, verified actual network_access_allowed before dispatch; no request helper/view/auth evaluator patched"
+  },
+  "exception_policy": {
+    "client": "Set actual APIClient.raise_request_exception=False, retain its value; use normal Original resolver/middleware/exception handling, no overridden handler or monkeypatch",
+    "request_result": "Record transport_kind=http_response only if response object returned, raw status/body/headers/contenttype and response.exc_info original type/message/traceback if attached. Otherwise transport_kind=framework_exception with original exception type/message/traceback and no invented HTTP body/status. Expected500 remains hypothesis and cannot substitute for missing response.",
+    "fixture_outer_catch": "Separate source_fixture_exception record identifies setup/request/capture/teardown phase and current index; process/controller outcomes distinct from request results. Preserve partial report and flush it; ownership/capacity or fixture errors may stop sequence; do not pretend all48 executed. finally default audit/cleanup still attempted.",
+    "deployment": "Framework APIClient response or exception is not a deployed WSGI/ASGI/TCP status claim."
+  }
+}

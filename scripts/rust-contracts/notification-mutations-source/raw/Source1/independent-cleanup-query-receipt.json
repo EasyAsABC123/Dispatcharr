@@ -1,0 +1,148 @@
+{
+  "timestamp_utc": "2026-11-12T17:04:23.719874+00:00",
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifmut-source-04c73fa173",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifmut-source-04c73fa173",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifmut-source-04c73fa173",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "5213690ed1c203f023e53298515c9a98a6ddc8a90a857aefba87381187bc599c"
+      ],
+      "exit": 1,
+      "stdout": "[]\n",
+      "stderr": "error: no such object: 5213690ed1c203f023e53298515c9a98a6ddc8a90a857aefba87381187bc599c\n"
+    }
+  ],
+  "host_PID_absence": [
+    {
+      "pid": 4001233,
+      "proc_present": false
+    },
+    {
+      "pid": 4001232,
+      "proc_present": false
+    },
+    {
+      "pid": 4001234,
+      "proc_present": false
+    },
+    {
+      "pid": 4001237,
+      "proc_present": false
+    },
+    {
+      "pid": 4001255,
+      "proc_present": false
+    },
+    {
+      "pid": 4001272,
+      "proc_present": false
+    },
+    {
+      "pid": 4001290,
+      "proc_present": false
+    },
+    {
+      "pid": 4001838,
+      "proc_present": false
+    },
+    {
+      "pid": 4001896,
+      "proc_present": false
+    },
+    {
+      "pid": 4001913,
+      "proc_present": false
+    },
+    {
+      "pid": 4002030,
+      "proc_present": false
+    },
+    {
+      "pid": 4002100,
+      "proc_present": false
+    },
+    {
+      "pid": 4002173,
+      "proc_present": false
+    },
+    {
+      "pid": 4002339,
+      "proc_present": false
+    },
+    {
+      "pid": 4002471,
+      "proc_present": false
+    },
+    {
+      "pid": 4002524,
+      "proc_present": false
+    },
+    {
+      "pid": 4002550,
+      "proc_present": false
+    },
+    {
+      "pid": 4003189,
+      "proc_present": false
+    },
+    {
+      "pid": 4003207,
+      "proc_present": false
+    },
+    {
+      "pid": 4003224,
+      "proc_present": false
+    }
+  ],
+  "all_project_lists_empty": true,
+  "exact_CID_absent": true,
+  "all_known_host_PIDs_absent": true,
+  "default_before_after_exact": true,
+  "default_dataset_sha256": "45acb31242996156e19a791431fbd0841b80d8244fe084560cc331a59032349b",
+  "retained_Source_process_exit": 1,
+  "retained_controller_exit": 1,
+  "no_retry": true
+}

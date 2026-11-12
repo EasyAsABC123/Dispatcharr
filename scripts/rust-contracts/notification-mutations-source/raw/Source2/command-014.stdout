@@ -1,0 +1,9 @@
+PID                 COMMAND             COMMAND
+4040103             sleep               sleep infinity
+4040200             postgres            /usr/lib/postgresql/17/bin/postgres -D /data/db
+4040201             postgres            postgres: checkpointer
+4040202             postgres            postgres: background writer
+4040204             postgres            postgres: walwriter
+4040205             postgres            postgres: autovacuum launcher
+4040206             postgres            postgres: logical replication launcher
+4040237             redis-server        redis-server 127.0.0.1:6379

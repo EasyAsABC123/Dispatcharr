@@ -1,0 +1,32 @@
+{
+  "argv": [
+    "docker",
+    "compose",
+    "-p",
+    "dispatcharr-notifmut-source-04c73fa173",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-1/compose.json",
+    "exec",
+    "-T",
+    "-e",
+    "POSTGRES_DB=rust_probe_notifmut_04c73fa173",
+    "-e",
+    "NOTIFICATION_FIXTURE_DATABASE=rust_probe_notifmut_04c73fa173",
+    "-e",
+    "NOTIFICATION_FIXTURE_STAGE=exercise",
+    "-e",
+    "NOTIFICATION_FIXTURE_AUTHORITY=owned-source-only",
+    "-e",
+    "REDIS_DB=1",
+    "baseline",
+    "/dispatcharrpy/bin/python",
+    "manage.py",
+    "shell",
+    "-c",
+    "import runpy; runpy.run_path('/notification-tools/source_fixture.py',run_name='__main__')"
+  ],
+  "pid": 4002173,
+  "exit": 1,
+  "physically_settled": true,
+  "pipe_threads_settled": true
+}

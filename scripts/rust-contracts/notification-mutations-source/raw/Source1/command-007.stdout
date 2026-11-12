@@ -1,0 +1,293 @@
+[
+    {
+        "Id": "5213690ed1c203f023e53298515c9a98a6ddc8a90a857aefba87381187bc599c",
+        "Created": "2026-11-12T17:03:18.497826785Z",
+        "Path": "bash",
+        "Args": [
+            "/notification-tools/start.sh"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 4001397,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-12T17:03:18.710871287Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "ResolvConfPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/5213690ed1c203f023e53298515c9a98a6ddc8a90a857aefba87381187bc599c/resolv.conf",
+        "HostnamePath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/5213690ed1c203f023e53298515c9a98a6ddc8a90a857aefba87381187bc599c/hostname",
+        "HostsPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/5213690ed1c203f023e53298515c9a98a6ddc8a90a857aefba87381187bc599c/hosts",
+        "LogPath": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-data/containers/5213690ed1c203f023e53298515c9a98a6ddc8a90a857aefba87381187bc599c/5213690ed1c203f023e53298515c9a98a6ddc8a90a857aefba87381187bc599c-json.log",
+        "Name": "/dispatcharr-notifmut-source-04c73fa173-baseline-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-1/source:/app:ro",
+                "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-2/controller:/notification-tools:ro",
+                "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-2/inputs:/notification-inputs:ro",
+                "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-1:/evidence:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "dispatcharr-notifmut-source-04c73fa173_default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 200,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "Tmpfs": {
+                "/app/media": "mode=1777,size=67108864",
+                "/data": "mode=1777,size=2147483648",
+                "/tmp": "mode=1777,size=536870912"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 1073741824,
+            "NanoCpus": 1000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 2147483648,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 256,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-1/source",
+                "Destination": "/app",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-1",
+                "Destination": "/evidence",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-2/inputs",
+                "Destination": "/notification-inputs",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-executor-2/controller",
+                "Destination": "/notification-tools",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "5213690ed1c2",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "POSTGRES_HOST=/var/run/postgresql",
+                "REDIS_PORT=6379",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "LANG=C.UTF-8",
+                "REDIS_HOST=127.0.0.1",
+                "REDISCLI_AUTH=playback-fixture-only",
+                "DJANGO_SECRET_KEY=notification-fixture-only",
+                "PGID=1000",
+                "POSTGRES_PORT=5432",
+                "LC_ALL=C.UTF-8",
+                "REDIS_PASSWORD=playback-fixture-only",
+                "POSTGRES_USER=dispatch",
+                "POSTGRES_DB=dispatcharr",
+                "POSTGRES_PASSWORD=playback-fixture-only",
+                "DISPATCHARR_ENV=aio",
+                "PUID=1000",
+                "POSTGRES_DIR=/data/db",
+                "PYTHONPATH=/notification-tools:/app",
+                "PATH=/dispatcharrpy/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,video,utility",
+                "NVIDIA_VISIBLE_DEVICES=all",
+                "LIBVA_DRIVERS_PATH=/usr/local/lib/x86_64-linux-gnu/dri:/usr/local/lib/aarch64-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri:/usr/lib/aarch64-linux-gnu/dri",
+                "DEBIAN_FRONTEND=noninteractive",
+                "UV_PROJECT_ENVIRONMENT=/dispatcharrpy",
+                "VIRTUAL_ENV=/dispatcharrpy",
+                "UV_COMPILE_BYTECODE=1",
+                "UV_LINK_MODE=copy"
+            ],
+            "Cmd": null,
+            "Image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "bash",
+                "/notification-tools/start.sh"
+            ],
+            "Labels": {
+                "build_version": "DispatcharrBase version: base-20261103010601",
+                "com.docker.compose.config-hash": "0a2ae9812ba8976cd811ff0c18ea525a1703ef6ad125b3445778cf7a0406339a",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "dispatcharr-notifmut-source-04c73fa173",
+                "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-1/compose.json",
+                "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-source-1",
+                "com.docker.compose.service": "baseline",
+                "com.docker.compose.version": "2.40.3",
+                "maintainer": "SergeantPanda",
+                "org.opencontainers.image.authors": "SergeantPanda",
+                "org.opencontainers.image.created": "20261103010601",
+                "org.opencontainers.image.description": "Your ultimate IPTV & stream Management companion.",
+                "org.opencontainers.image.documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+                "org.opencontainers.image.licenses": "See repository",
+                "org.opencontainers.image.revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "org.opencontainers.image.source": "https://github.com/Dispatcharr/Dispatcharr",
+                "org.opencontainers.image.title": "dispatcharr",
+                "org.opencontainers.image.url": "https://github.com/Dispatcharr/Dispatcharr",
+                "org.opencontainers.image.vendor": "dispatcharr",
+                "org.opencontainers.image.version": "base-20261103010601"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "6b6667d8735f8803505a07ac45a06a6362b9d950becadfd7f72b8092045936e7",
+            "SandboxKey": "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker-exec/netns/6b6667d8735f",
+            "Ports": {},
+            "Networks": {
+                "dispatcharr-notifmut-source-04c73fa173_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "dispatcharr-notifmut-source-04c73fa173-baseline-1",
+                        "baseline"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "bb6ac30811efeda5ae5fff14f5d77c7fc33be4a68b64796b56efb299792a2a2b",
+                    "EndpointID": "4a0125812a3d26cf53108df3d4b23926afb5e1929e527eb38b72880c8456d3cb",
+                    "Gateway": "",
+                    "IPAddress": "172.18.0.2",
+                    "MacAddress": "76:3c:e3:68:c4:2d",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "dispatcharr-notifmut-source-04c73fa173-baseline-1",
+                        "baseline",
+                        "5213690ed1c2"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "size": 3544,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

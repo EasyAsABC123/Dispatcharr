@@ -1,0 +1,69 @@
+{
+  "seal_sha256": "eb03c0eea0f8eef75c8d7bfae8e51352ce866c60c5a6275fc6c6c0e5418f6237",
+  "sealed_files": 44,
+  "controls": 57,
+  "runs": [
+    {
+      "name": "read-only-seal",
+      "exit": 0,
+      "stdout_sha256": "2e4c47c16b11e960c48110bcd5c3d5fc4a410a32dced2b1b43efa8c936b981d6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "pure-controls",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "baefb0271a9b00a2121f895236de275143b7e12de1bbb0e2a25a2db5b7aadb07"
+    },
+    {
+      "name": "executor2-preserved",
+      "exit": 0,
+      "stdout_sha256": "54e37971c1b615d14b4eef4e4db88677900fe71fc1d71713fea73e9bae154d5b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "changes": [
+    {
+      "path": "README.md",
+      "old_sha256": "37fdcbc1cafccf82c62328f50085c4c60752f6f2384336c8564fc40320d1ac2a",
+      "new_sha256": "2375e033cef9c594724ca5419bb8c4be7ad2f9caa61aae01aadc3d2934aab6be"
+    },
+    {
+      "path": "controller/source_fixture.py",
+      "old_sha256": "be4b0ed90230c5a656ab12c0e7c02185ad7c3ac26420c9d30e6f1357e72fcfe1",
+      "new_sha256": "146a3d55287c8d31b2af26baa7aef9668de67be1effd6eeaf1fa9e7ac74c3d8c"
+    },
+    {
+      "path": "controller/test_controls.py",
+      "old_sha256": "ef077eb9527fa86b7a512e54703f6be2ad74bffe12967c79167e65fc15675abb",
+      "new_sha256": "e759f464e1b07d97ff30dde6655bc37fb12a9ed424a8f83f157c46761d84fb5a"
+    },
+    {
+      "path": "execution-plan.json",
+      "old_sha256": "3b9e83d92b9efd72a2fe453d3081bc1f2b97434a01b8a9a1a34a113561a70168",
+      "new_sha256": "db49b518c8176e42196264883ef9e3abe51dca06d81c78842c4cec380d374964"
+    }
+  ],
+  "explicit_unchanged_paths": {
+    "controller/run.py": true,
+    "controller/start.sh": true,
+    "controller/bounded_process.py": true,
+    "controller/fixture_guards.py": true,
+    "controller/seed_binding.py": true,
+    "controller/effects.py": true,
+    "inputs/plan.json": true
+  },
+  "exact48_plan_sha256": "fe2f80cee17e477676f9e65e094a4242bbe123f397baa350c16d9f3822f65566",
+  "executor2_preserved_seal": "39c38c1b6e718fac38b6fe3822af4e714fac8150591302818d67d95516091388",
+  "Source1_preserved": {
+    "execution.json": "547d6476f71bfcbfd58c9cd14b85aa32313b607265f81b48d2103b07a587fa55",
+    "command-011.stderr": "81804d3f3e6638f96efd67f161305188a12af63ee1ddaeb01383922a2aa8a412",
+    "default-before-private.json": "bca95b1ceff89888c42a466b9f06d23d70083e10be4eb71adab542de9c742399",
+    "default-after-private.json": "bca95b1ceff89888c42a466b9f06d23d70083e10be4eb71adab542de9c742399",
+    "independent-cleanup-query-receipt.json": "ba3b150935569f90ac51c4770bcc8f8d0c32ee161f094f71ddb86fb1618c11c0"
+  },
+  "Source2_requests_executed": 0,
+  "Native_or_Docker_execution": false,
+  "canonical_or_index_changes": false,
+  "second_execution_review_required": true
+}

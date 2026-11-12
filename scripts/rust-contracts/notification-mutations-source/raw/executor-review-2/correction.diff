@@ -1,0 +1,261 @@
+--- executor1/README.md
++++ executor2/README.md
+@@ -67,3 +67,24 @@
+ 
+ This packet does not register operations or modify any qualified historical packet,
+ Native runtime, canonical files or index. Root owns review and publication.
++
++## Executor2 correction (unexecuted)
++
++Executor1 remains immutable/unexecuted at seal6263a866c2d76d51cbbf7b237ff787d8f20a4c1ab755ab110aa6320e10bd433f.
++This packet changes only fixture/QA validation: pure seed_binding.py validates every
++reviewed seed field, rendered key/expiry, unique actual alias/actor IDs, exact role
++level/active/network attributes and dismissal user-notification-action triples before
++requests. Offline validation repeats that check and binds each target to its plan
++alias, max-seeded-PK+100000 or literal not-an-integer before path/kwargs checks.
++No Source IDs are guessed and no sequence is reset. Seed auto timestamps are retained
++inside captured setup bounds; the single seed clock anchor still defines expiries.
++
++Exception records now retain original UTF8 byte counts/SHA256, captured bytes/hex/hash
++and complete/truncated flags for message and traceback at existing4096/65536 byte
++caps. Oversized text is explicitly incomplete; the request record is flushed with
++capture_complete=false and triggers a distinct outer ExceptionCaptureCapacity failure.
++No truncated exception is accepted as a complete capture. Original full text hashes
++remain retained even when only a bounded prefix fits. Raw HTTP bodies remain untouched.
++
++Exact48 inputs, methods, order, predicted statuses, clocks and resource/capture budgets
++are unchanged. There is no Source/Native/runtime behavior change or app execution.
+--- executor1/controller/effects.py
++++ executor2/controller/effects.py
+@@ -1,5 +1,6 @@
+ """Pure offline48-case SQL/response/effect validator; no Django or Docker imports."""
+ import copy,datetime,hashlib,json
++from seed_binding import validate_seed,expected_target
+ from fixture_guards import TABLES,dataset
+ NOTICE='core_systemnotification';DISMISS='core_notificationdismissal'
+ FIELDS={'id','notification_key','notification_type','priority','title','message','action_data','is_active','admin_only','expires_at','created_at','is_dismissed','source'}
+@@ -45,14 +46,15 @@
+         check(actual['network_preflight']=={'admin':True,'standard':True,'adminDenied':False},'actual-network-boundaries')
+         check(all(v is False for v in actual['client_raise_request_exception'].values()),'explicit-client-exception-policy')
+         check(len(actual['actual_dependency_hashes'])==9,'actual-nine-dependencies')
+-        aliases=actual['seed_aliases'];seed={k:next(x for x in actual['seed_rows']['notifications']if x['id']==v)for k,v in aliases.items()}
+-        check(len(seed)==9 and len(actual['seed_rows']['dismissals'])==5,'exact-nine-five-seed')
++        binding=validate_seed(actual,plan);aliases=binding['aliases'];seed=binding['seed'];actor_ids=binding['actors']
++        check(actual['seed_binding_passed']is True and exact(actual['seed_binding'],binding),'exact-reviewed-seed-binding')
+         check(actual['owned_rows_after_isolation']=={'notifications':[],'dismissals':[]},'owned-isolation-retained')
+-        actor_ids={u['username'].split('_')[1]:u['id']for u in actual['seed_users']}
+         previous=actual['seed_rows']
+         for row,case in zip(actual['requests'],plan['cases']):
+             tag=str(case['index'])+':'+case['name']+':'
+             check(row['index']==case['index']and row['name']==case['name']and row['role']==case['actor']and row['method']==case['method'],'case-binding:'+tag)
++            target_expected=expected_target(case,aliases)
++            check(type(row['target_id'])is type(target_expected)and row['target_id']==target_expected,'target-bound-to-reviewed-alias:'+tag)
+             check(row['path']=='/api/core/notifications/'+str(row['target_id'])+'/'and row['resolver']['kwargs']=={'pk':str(row['target_id'])}and row['resolver']['url_name']=='systemnotification-detail'and row['resolver']['namespaces']==['api','core'],'exact-resolved-path-and-kwargs:'+tag)
+             check(row['resolver']['class']=='core.api_views.SystemNotificationViewSet'and row['resolver']['actions'][case['method'].lower()]==plan['candidate_methods'][case['method']],'actual-resolver:'+tag)
+             check(row['client_raise_request_exception']is False and row['capture_complete']is True,'complete-explicit-policy:'+tag)
+@@ -74,6 +76,13 @@
+             check(row['runtime_before']==row['runtime_after'],'receiver-state-unchanged:'+tag)
+             check(instant(row['began_utc'])<=instant(row['completed_utc']),'request-clock-order:'+tag)
+             transport=row['transport_kind'];check(transport in ['http_response','framework_exception'],'literal-transport-kind:'+tag)
++            if row.get('framework_exception')is not None:
++                exc=row['framework_exception'];check(exc['complete']is True,'complete-literal-exception:'+tag)
++                for name,limit in [('message',4096),('traceback',65536)]:
++                    e=exc[name+'_evidence'];captured=bytes.fromhex(e['captured_hex'])
++                    check(len(captured)==e['captured_bytes']<=limit and hashlib.sha256(captured).hexdigest()==e['captured_sha256'],'exception-captured-byte-hash:'+name+':'+tag)
++                    check(e['complete']is True and e['truncated']is False and e['original_bytes']==len(captured)and e['original_sha256']==e['captured_sha256'],'exception-no-silent-truncation:'+name+':'+tag)
++                    check(captured.decode('utf-8')==exc[name],'exception-text-binds-raw-bytes:'+name+':'+tag)
+             if transport=='http_response':
+                 raw=bytes.fromhex(row['body_hex']);check(len(raw)==row['body_bytes']<=65536 and hashlib.sha256(raw).hexdigest()==row['body_sha256'],'raw-body-binding:'+tag)
+                 try:parsed=json.loads(raw)
+--- executor1/controller/seed_binding.py
++++ executor2/controller/seed_binding.py
+@@ -0,0 +1,49 @@
++"""Pure exact reviewed-plan seed/actor/target binding; no application imports."""
++import datetime,json
++from fixture_guards import database,dataset,require
++
++def exact(a,b):return json.dumps(a,sort_keys=True,separators=(',',':'))==json.dumps(b,sort_keys=True,separators=(',',':'))
++def instant(v):return datetime.datetime.fromisoformat(v.replace('Z','+00:00')).astimezone(datetime.timezone.utc)
++def positive(v):return type(v)is int and v>0
++
++def validate_seed(actual,plan):
++    db=database(actual['database']);suffix=db.removeprefix('rust_probe_notifmut_');prefix='owned.notifmut.'+suffix
++    require(actual['seed_prefix']==prefix,'ExactOwnedSeedPrefix')
++    aliases=actual['seed_aliases'];require(set(aliases)==set(plan['seed']['notifications']),'ExactSeedAliasSet')
++    require(all(positive(x)for x in aliases.values())and len(set(aliases.values()))==len(aliases),'DistinctPositiveAliasIDs')
++    rows=actual['seed_rows']['notifications'];require(len(rows)==len(aliases)and [x['id']for x in rows]==sorted(aliases.values()),'ExactOrderedNotificationIDs')
++    lookup={x['id']:x for x in rows};anchor=instant(actual['seed_anchor_utc']);started=instant(actual['seed_started_utc']);completed=instant(actual['seed_completed_utc'])
++    require(started<=anchor<=completed,'SeedClockBounds')
++    for alias,attrs in plan['seed']['notifications'].items():
++        row=lookup[aliases[alias]];expected=dict(attrs);expected['id']=aliases[alias]
++        expected['notification_key']=expected['notification_key'].replace('@prefix',prefix)
++        expected['expires_at']=(anchor+datetime.timedelta(days=-1 if attrs['expires_at']=='@seed.past'else 1)).isoformat()
++        require(set(row)==set(expected)|{'created_at','updated_at'},'ExactSeedColumnSet:'+alias)
++        require(all(instant(row[k])==instant(v)if k=='expires_at'else exact(row[k],v)for k,v in expected.items()),'ExactReviewedSeedFields:'+alias)
++        require(all(started<=instant(row[k])<=completed for k in ['created_at','updated_at']),'SeedAutoClock:'+alias)
++    declared={k:v for k,v in plan['seed']['users'].items()if v is not None};users=actual['seed_users']
++    require(len(users)==len(declared)and all(positive(u['id'])for u in users)and len({u['id']for u in users})==len(users),'ExactDistinctSeedActors')
++    actor_ids={}
++    for role,attrs in declared.items():
++        expected_name='notifmut_'+role+'_'+suffix;found=[u for u in users if u['username']==expected_name]
++        require(len(found)==1,'ExactSeedUsernameRole:'+role);u=found[0]
++        require(type(u['user_level'])is int and u['user_level']==attrs['user_level']and u['is_active']is attrs['is_active'],'ExactSeedRoleLevelActive:'+role)
++        require(exact(u['custom_properties'],{'allowed_networks':{'UI':attrs['UI']}}),'ExactSeedRoleNetworks:'+role)
++        actor_ids[role]=u['id']
++    require([u['id']for u in users]==sorted(actor_ids.values()),'OrderedSeedActorRows')
++    dismiss=actual['seed_rows']['dismissals'];declared_pairs={(actor_ids[role],aliases[alias]):action for role,alias,action in plan['seed']['dismissals']}
++    require(len(dismiss)==len(plan['seed']['dismissals'])and len(declared_pairs)==len(dismiss),'ExactDismissalCount')
++    require(all(positive(d['id'])for d in dismiss)and len({d['id']for d in dismiss})==len(dismiss)and [d['id']for d in dismiss]==sorted(d['id']for d in dismiss),'DistinctOrderedDismissalIDs')
++    require({(d['user_id'],d['notification_id'])for d in dismiss}==set(declared_pairs),'ExactReviewedDismissalPairs')
++    for d in dismiss:
++        require(set(d)=={'id','user_id','notification_id','dismissed_at','action_taken'},'ExactDismissalColumns')
++        require(exact(d['action_taken'],declared_pairs[d['user_id'],d['notification_id']]),'ExactDismissalAction')
++        require(started<=instant(d['dismissed_at'])<=completed,'SeedDismissalClock')
++    audit=actual['seed_audit'];dataset(audit,db)
++    require(audit['tables']['core_systemnotification']['rows']==len(rows)and audit['tables']['core_notificationdismissal']['rows']==len(dismiss),'SeedAuditCountsBound')
++    return {'actors':actor_ids,'aliases':aliases,'seed':{a:lookup[i]for a,i in aliases.items()}}
++
++def expected_target(case,aliases):
++    if case['target']=='malformed':return 'not-an-integer'
++    if case['target']=='missing':return max(aliases.values())+100000
++    return aliases[case['target']]
+--- executor1/controller/source_fixture.py
++++ executor2/controller/source_fixture.py
+@@ -97,8 +97,14 @@
+ def exception_record(info):
+     if not info:return None
+     typ,value,tb=info
+-    return {'type':typ.__module__+'.'+typ.__qualname__,'message':str(value)[:4096],
+-            'traceback':''.join(traceback.format_exception(typ,value,tb))[-65536:]}
++    def evidence(text,limit):
++        raw=text.encode('utf-8');captured=raw[:limit]
++        return captured.decode('utf-8',errors='replace'),{'original_bytes':len(raw),'original_sha256':hashlib.sha256(raw).hexdigest(),
++            'captured_bytes':len(captured),'captured_sha256':hashlib.sha256(captured).hexdigest(),'captured_hex':captured.hex(),
++            'complete':len(raw)<=limit,'truncated':len(raw)>limit}
++    message,m=evidence(str(value),4096);trace,t=evidence(''.join(traceback.format_exception(typ,value,tb)),65536)
++    return {'type':typ.__module__+'.'+typ.__qualname__,'message':message,'traceback':trace,
++            'message_evidence':m,'traceback_evidence':t,'complete':m['complete']and t['complete']}
+ 
+ def runtime_snapshot():
+     import weakref
+@@ -166,7 +172,7 @@
+         suffix=expected.removeprefix('rust_probe_notifmut_');prefix='owned.notifmut.'+suffix
+         report['fixture_phase']='owned-isolation-and-seed';flush()
+         def guard():require(connected_database(connection)==owned_database(expected),'OwnedMutationDatabaseBinding')
+-        User=get_user_model();actors={};notices={};seedtime=timezone.now()
++        User=get_user_model();actors={};notices={};seedtime=timezone.now();report['seed_started_utc']=seedtime.isoformat()
+         with transaction.atomic():
+             guard();NotificationDismissal.objects.all().delete();guard();SystemNotification.objects.all().delete()
+             report['owned_rows_after_isolation']=notice_rows(SystemNotification,NotificationDismissal)
+@@ -179,10 +185,13 @@
+                 guard();notices[alias]=SystemNotification.objects.create(**data)
+             for role,alias,action in plan['seed']['dismissals']:
+                 guard();NotificationDismissal.objects.create(user=actors[role],notification=notices[alias],action_taken=action)
++        report['seed_completed_utc']=timezone.now().isoformat()
+         report['seed_anchor_utc']=seedtime.isoformat();report['seed_aliases']={k:v.pk for k,v in notices.items()};report['seed_prefix']=prefix
+         report['seed_rows']=notice_rows(SystemNotification,NotificationDismissal)
+         report['seed_users']=literal(list(User.objects.filter(pk__in=[u.pk for u in actors.values()]).order_by('id').values()))
+         report['seed_audit']=audit(connection)
++        from seed_binding import validate_seed,expected_target
++        report['seed_binding']=validate_seed(report,plan);report['seed_binding_passed']=True;flush()
+         beforekeys=cache_snapshot();report['cache_before_setup']=beforekeys
+         for alias,value in [('H',False),('V',True)]:cache.set(f'dev_notif_condition_{notices[alias].pk}_{actors["admin"].pk}',value,timeout=300)
+         require(cache.get(f'dev_notif_condition_{notices["U"].pk}_{actors["admin"].pk}')is None,'UnknownConditionKeyInitiallyAbsent')
+@@ -210,6 +219,7 @@
+         for case in plan['cases']:
+             guard();report['current_case_index']=case['index'];alias=case['target']
+             pk='not-an-integer'if alias=='malformed'else missing if alias=='missing'else notices[alias].pk
++            require(type(pk)is type(expected_target(case,report['seed_aliases']))and pk==expected_target(case,report['seed_aliases']),'ReviewedCaseTargetBinding')
+             path='/api/core/notifications/'+str(pk)+'/'
+             require(reverse('api:core:systemnotification-detail',kwargs={'pk':pk})==path,'DetailReverse')
+             matched=resolve(path);method=case['method'].lower();action=plan['candidate_methods'][case['method']]
+@@ -230,8 +240,9 @@
+                 if sys.exc_info()[0]is ValueError and str(sys.exc_info()[1])=='FullResponseCaptureCapacity':raise
+             finally:
+                 row['completed_utc']=timezone.now().isoformat()
+-            row.update(after=notice_rows(SystemNotification,NotificationDismissal),after_named_audit=audit(connection),after_cache=cache_snapshot(),after_condition_cache=named_cache(),after_users=literal(list(User.objects.filter(pk__in=[u.pk for u in actors.values()]).order_by('id').values())),runtime_after=runtime_snapshot(),capture_complete=True)
++            row.update(after=notice_rows(SystemNotification,NotificationDismissal),after_named_audit=audit(connection),after_cache=cache_snapshot(),after_condition_cache=named_cache(),after_users=literal(list(User.objects.filter(pk__in=[u.pk for u in actors.values()]).order_by('id').values())),runtime_after=runtime_snapshot(),capture_complete=row.get('framework_exception')is None or row['framework_exception']['complete'])
+             report['actual_request_count']+=1;flush()
++            require(row['capture_complete'],'ExceptionCaptureCapacity')
+         report.update(capture_valid=True,fixture_phase='complete',effect_qualification='PENDING_OFFLINE_VALIDATOR')
+     except BaseException:
+         report['fixture_outer_exception']={'phase':report['fixture_phase'],'index':report.get('current_case_index'),'exception':exception_record(sys.exc_info())}
+--- executor1/controller/test_controls.py
++++ executor2/controller/test_controls.py
+@@ -14,15 +14,22 @@
+     sequences={'public.'+t+'_id_seq':{'last_value':20,'is_called':True}for t in TABLES};v={'database':db,'tables':tables,'sequences':sequences}
+     v['dataset_sha256']=hashlib.sha256(json.dumps({'tables':tables,'sequences':sequences},sort_keys=True).encode()).hexdigest();return v
+ def rehash(v):v['dataset_sha256']=hashlib.sha256(json.dumps({'tables':v['tables'],'sequences':v['sequences']},sort_keys=True).encode()).hexdigest()
++def synthetic_exception():
++    from source_fixture import exception_record
++    exc=AttributeError("'list' object has no attribute 'get'");return exception_record((AttributeError,exc,None))
++
+ def synthetic():
+     prefix='owned.notifmut.0123456789';aliases={k:i+1 for i,k in enumerate(PLAN['seed']['notifications'])};rows=[]
+     for k,v in PLAN['seed']['notifications'].items():
+-        row=copy.deepcopy(v);row.update(id=aliases[k],notification_key=prefix+'.'+k,expires_at='2026-11-11T00:00:00+00:00'if k=='E'else'2026-11-13T00:00:00+00:00',created_at='2026-11-10T00:00:00+00:00',updated_at='2026-11-10T00:00:00+00:00');rows.append(row)
+-    users=[{'id':n,'username':'notifmut_'+role+'_0123456789','user_level':attrs['user_level'],'is_active':True}for n,(role,attrs)in enumerate((x for x in PLAN['seed']['users'].items()if x[1]),1)]
++        row=copy.deepcopy(v);row.update(id=aliases[k],notification_key=prefix+'.'+k,expires_at='2026-11-11T00:00:00+00:00'if k=='E'else'2026-11-13T00:00:00+00:00',created_at='2026-11-12T00:00:00+00:00',updated_at='2026-11-12T00:00:00+00:00');rows.append(row)
++    users=[{'id':n,'username':'notifmut_'+role+'_0123456789','user_level':attrs['user_level'],'is_active':True,'custom_properties':{'allowed_networks':{'UI':attrs['UI']}}}for n,(role,attrs)in enumerate((x for x in PLAN['seed']['users'].items()if x[1]),1)]
+     ids={u['username'].split('_')[1]:u['id']for u in users}
+-    dismiss=[{'id':i+1,'notification_id':aliases[a],'user_id':ids[u],'action_taken':action,'dismissed_at':'2026-11-10T00:00:00+00:00'}for i,(u,a,action)in enumerate(PLAN['seed']['dismissals'])]
++    dismiss=[{'id':i+1,'notification_id':aliases[a],'user_id':ids[u],'action_taken':action,'dismissed_at':'2026-11-12T00:00:00+00:00'}for i,(u,a,action)in enumerate(PLAN['seed']['dismissals'])]
+     state={'notifications':rows,'dismissals':dismiss};seed={k:copy.deepcopy(rows[v-1])for k,v in aliases.items()};runtime={'runtimes':{'live_proxy':{'present':False,'manager_keys':[]},'hls_proxy':{'present':False,'manager_keys':[]}},'receivers':{},'proxy_signals_loaded':False};cache={'rows':[],'capture_bytes':0}
+     out={'scope':'SYNTHETIC CONTROL NEVER MEASURED','database':'rust_probe_notifmut_0123456789','forced_auth_framework_only':True,'credentials_or_TCP_verified':False,'capture_valid':True,'actual_request_count':48,'connections_close_called':True,'network_preflight':{'admin':True,'standard':True,'adminDenied':False},'client_raise_request_exception':{k:False for k in PLAN['seed']['users']},'actual_dependency_hashes':[{}for _ in range(9)],'seed_aliases':aliases,'seed_rows':copy.deepcopy(state),'seed_prefix':prefix,'seed_users':users,'owned_rows_after_isolation':{'notifications':[],'dismissals':[]},'requests':[]}
++    out.update(seed_anchor_utc=timestamp(0),seed_started_utc=timestamp(0),seed_completed_utc=timestamp(0),seed_audit=audit(out['seed_rows'],out['database']),seed_binding_passed=True)
++    from seed_binding import validate_seed
++    out['seed_binding']=validate_seed(out,PLAN)
+     changes={'unknown-condition-visible-after-prior-cache-miss':{'title':'U updated'},'put-required-only-retains-optionals':{'notification_key':prefix+'.A','title':'Put title','message':'Put message'},'normalize-json-string-number-bool-offset':{'notification_key':prefix+'.renamed','title':'123','message':'trimmed message','is_active':True,'admin_only':False,'expires_at':'2099-02-03T02:05:06+00:00','notification_type':'warning','priority':'critical'},'replace-json-object-not-merge':{'action_data':{'new':['v',None,False,1]}},'json-array-valid-system-notice':{'action_data':[1,{'x':True}]},'json-scalar-valid-system-notice':{'action_data':'text'},'restore-object-null-expiry-and-source':{'action_data':{},'expires_at':None,'source':'system','admin_only':True,'priority':'normal','notification_type':'info'},'inactive-transition-returns-saved-row':{'is_active':False},'expiry-transition-returns-saved-row':{'expires_at':'2000-01-01T00:00:00+00:00'},'set-truthy-nonobject-developer-action-data':{'source':'developer','action_data':[1]}}
+     for case in PLAN['cases']:
+         before=copy.deepcopy(state);target=aliases.get(case['target'],100009 if case['target']=='missing'else'not-an-integer');effect=case['effect_class'];i=case['index']
+@@ -34,7 +41,7 @@
+             n=next(x for x in state['notifications']if x['id']==target);body={k:v for k,v in n.items()if k!='updated_at'};body['is_dismissed']=any(d['notification_id']==target and d['user_id']==ids[case['actor']]for d in state['dismissals'])
+         else:body={'detail':'synthetic error'}
+         raw=b''if case['predicted_status']==204 else json.dumps(body).encode()
+-        row={'index':i,'name':case['name'],'role':case['actor'],'method':case['method'],'path':'/api/core/notifications/'+str(target)+'/','target_id':target,'request_payload':render(case['body'],prefix,seed),'resolver':{'kwargs':{'pk':str(target)},'url_name':'systemnotification-detail','namespaces':['api','core'],'class':'core.api_views.SystemNotificationViewSet','actions':{m.lower():a for m,a in PLAN['candidate_methods'].items()}},'client_raise_request_exception':False,'capture_complete':True,'before':before,'after':copy.deepcopy(state),'before_named_audit':audit(before,out['database']),'after_named_audit':audit(state,out['database']),'before_users':users,'after_users':users,'runtime_before':runtime,'runtime_after':runtime,'before_cache':cache,'after_cache':cache,'before_condition_cache':{'H':False,'V':True,'U':True,'D':None},'after_condition_cache':{'H':False,'V':True,'U':True,'D':None},'began_utc':timestamp(i),'completed_utc':timestamp(i),'transport_kind':'http_response','actual_status':case['predicted_status'],'body_hex':raw.hex(),'body_sha256':hashlib.sha256(raw).hexdigest(),'body_bytes':len(raw),'json':None if not raw else body,'framework_exception':{'type':'builtins.AttributeError','message':"'list' object has no attribute 'get'",'traceback':'synthetic'}if i==47 else None}
++        row={'index':i,'name':case['name'],'role':case['actor'],'method':case['method'],'path':'/api/core/notifications/'+str(target)+'/','target_id':target,'request_payload':render(case['body'],prefix,seed),'resolver':{'kwargs':{'pk':str(target)},'url_name':'systemnotification-detail','namespaces':['api','core'],'class':'core.api_views.SystemNotificationViewSet','actions':{m.lower():a for m,a in PLAN['candidate_methods'].items()}},'client_raise_request_exception':False,'capture_complete':True,'before':before,'after':copy.deepcopy(state),'before_named_audit':audit(before,out['database']),'after_named_audit':audit(state,out['database']),'before_users':users,'after_users':users,'runtime_before':runtime,'runtime_after':runtime,'before_cache':cache,'after_cache':cache,'before_condition_cache':{'H':False,'V':True,'U':True,'D':None},'after_condition_cache':{'H':False,'V':True,'U':True,'D':None},'began_utc':timestamp(i),'completed_utc':timestamp(i),'transport_kind':'http_response','actual_status':case['predicted_status'],'body_hex':raw.hex(),'body_sha256':hashlib.sha256(raw).hexdigest(),'body_bytes':len(raw),'json':None if not raw else body,'framework_exception':synthetic_exception()if i==47 else None}
+         out['requests'].append(row)
+     return out
+ class EffectControls(unittest.TestCase):
+@@ -57,6 +64,25 @@
+         self.corrupt(f)
+     def test_wrong_route_action(self):self.corrupt(lambda v:v['requests'][4]['resolver']['actions'].update(patch='create'))
+     def test_payload_changed(self):self.corrupt(lambda v:v['requests'][30].update(request_payload={'title':'wrong'}))
++    def test_swapped_seed_alias(self):
++        def f(v):a=v['seed_aliases'];a['A'],a['B']=a['B'],a['A']
++        self.corrupt(f)
++    def test_self_consistent_wrong_target(self):
++        def f(v):r=v['requests'][0];r['target_id']=v['seed_aliases']['B'];r['path']='/api/core/notifications/'+str(r['target_id'])+'/';r['resolver']['kwargs']={'pk':str(r['target_id'])}
++        self.corrupt(f)
++    def test_wrong_derived_missing(self):
++        def f(v):r=v['requests'][9];r['target_id']+=1;r['path']='/api/core/notifications/'+str(r['target_id'])+'/';r['resolver']['kwargs']={'pk':str(r['target_id'])}
++        self.corrupt(f)
++    def test_changed_seed_field(self):self.corrupt(lambda v:v['seed_rows']['notifications'][0].update(title='wrong seed'))
++    def test_changed_seed_user_level(self):self.corrupt(lambda v:v['seed_users'][1].update(user_level=10))
++    def test_changed_seed_network(self):self.corrupt(lambda v:v['seed_users'][2]['custom_properties']['allowed_networks'].update(UI='127.0.0.1/32'))
++    def test_changed_seed_dismissal_pair(self):self.corrupt(lambda v:v['seed_rows']['dismissals'][0].update(notification_id=v['seed_aliases']['D']))
++    def test_changed_seed_dismissal_action(self):self.corrupt(lambda v:v['seed_rows']['dismissals'][0].update(action_taken='wrong'))
++    def test_exception_hash_corruption(self):self.corrupt(lambda v:v['requests'][-1]['framework_exception']['message_evidence'].update(original_sha256='0'*64))
++    def test_exception_marked_truncated(self):self.corrupt(lambda v:v['requests'][-1]['framework_exception']['traceback_evidence'].update(complete=False,truncated=True))
++    def test_unicode_exception_byte_metadata(self):
++        from source_fixture import exception_record
++        exc=ValueError('é'*3000);r=exception_record((ValueError,exc,None));e=r['message_evidence'];self.assertEqual(e['original_bytes'],6000);self.assertEqual(e['original_sha256'],hashlib.sha256(('é'*3000).encode()).hexdigest());self.assertEqual(e['captured_bytes'],4096);self.assertTrue(e['truncated']);self.assertFalse(e['complete']);self.assertFalse(r['complete'])
+     def test_wrong_detail_path(self):self.corrupt(lambda v:v['requests'][0].update(path='/api/system/notifications/1/'))
+     def test_JSON_boolean_not_integer(self):self.corrupt(lambda v:v['requests'][34]['after']['notifications'][0]['action_data']['new'].__setitem__(2,0))
+     def test_status_changed(self):self.corrupt(lambda v:v['requests'][0].update(actual_status=200))
+--- executor1/execution-plan.json
++++ executor2/execution-plan.json
+@@ -35,5 +35,12 @@
+     "stop/down exact owned project, independent exactID/projectlabels/hostPID absence, structured inspect status no capitalization text matching",
+     "if cleanup uncertain retain failure and exact IDs; no automatic request rerun"
+   ],
+-  "no_automatic_retry": true
++  "no_automatic_retry": true,
++  "executor_revision": 2,
++  "predecessor_unexecuted_seal": "6263a866c2d76d51cbbf7b237ff787d8f20a4c1ab755ab110aa6320e10bd433f",
++  "correction_scope": [
++    "exact seed and actor/dismissal binding before requests and offline",
++    "target ID bound to reviewed alias or derived missing/literal malformed",
++    "exception byte/hash/completeness metadata; incomplete text invalidates capture"
++  ]
+ }

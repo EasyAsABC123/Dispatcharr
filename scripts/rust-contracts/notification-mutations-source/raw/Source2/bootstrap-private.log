@@ -1,0 +1,264 @@
+baseline-1  | Group ubuntu with GID 1000 renamed to dispatch
+baseline-1  | ℹ️ /dev/dri/renderD128 not found. GPU acceleration may not be available.
+baseline-1  | The files belonging to this database system will be owned by user "dispatch".
+baseline-1  | This user must also own the server process.
+baseline-1  | 
+baseline-1  | The database cluster will be initialized with locale "C.UTF-8".
+baseline-1  | The default text search configuration will be set to "english".
+baseline-1  | 
+baseline-1  | Data page checksums are disabled.
+baseline-1  | 
+baseline-1  | fixing permissions on existing directory /data/db ... ok
+baseline-1  | creating subdirectories ... ok
+baseline-1  | selecting dynamic shared memory implementation ... posix
+baseline-1  | selecting default "max_connections" ... 100
+baseline-1  | selecting default "shared_buffers" ... 128MB
+baseline-1  | selecting default time zone ... UTC
+baseline-1  | creating configuration files ... ok
+baseline-1  | running bootstrap script ... ok
+baseline-1  | performing post-bootstrap initialization ... ok
+baseline-1  | syncing data to disk ... ok
+baseline-1  | 
+baseline-1  | 
+baseline-1  | initdb: warning: enabling "trust" authentication for local connections
+baseline-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+baseline-1  | Success. You can now start the database server using:
+baseline-1  | 
+baseline-1  |     /usr/lib/postgresql/17/bin/pg_ctl -D /data/db -l logfile start
+baseline-1  | 
+baseline-1  | waiting for server to start....2026-11-12 17:09:40.742 UTC [76] LOG:  starting PostgreSQL 17.11 (Ubuntu 17.11-1.pgdg26.04+2) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0, 64-bit
+baseline-1  | 2026-11-12 17:09:40.742 UTC [76] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+baseline-1  | 2026-11-12 17:09:40.742 UTC [76] LOG:  listening on IPv6 address "::", port 5432
+baseline-1  | 2026-11-12 17:09:40.775 UTC [76] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+baseline-1  | 2026-11-12 17:09:40.776 UTC [79] LOG:  database system was shut down at 2026-11-12 17:09:40 UTC
+baseline-1  | 2026-11-12 17:09:40.779 UTC [76] LOG:  database system is ready to accept connections
+baseline-1  |  done
+baseline-1  | server started
+baseline-1  | Ensuring application role is configured...
+baseline-1  | DO
+baseline-1  | ✅ Application role configured.
+baseline-1  | Application database 'dispatcharr' not found — creating...
+baseline-1  | ✅ Database 'dispatcharr' created.
+baseline-1  | System check identified some issues:
+baseline-1  | 
+baseline-1  | WARNINGS:
+baseline-1  | ?: (staticfiles.W004) The directory '/app/frontend/dist' in the STATICFILES_DIRS setting does not exist.
+baseline-1  | Operations to perform:
+baseline-1  |   Apply all migrations: accounts, admin, auth, contenttypes, core, dashboard, dispatcharr_channels, dispatcharr_connect, django_celery_beat, epg, hdhr, m3u, plugins, sessions, vod
+baseline-1  | Running migrations:
+baseline-1  |   Applying epg.0001_initial... OK
+baseline-1  |   Applying epg.0002_epgsource_file_path... OK
+baseline-1  |   Applying epg.0003_alter_epgdata_tvg_id... OK
+baseline-1  |   Applying epg.0004_epgdata_epg_source_alter_epgdata_tvg_id... OK
+baseline-1  |   Applying core.0001_initial... OK
+baseline-1  |   Applying m3u.0001_initial... OK
+baseline-1  |   Applying m3u.0002_m3uaccount_locked... OK
+baseline-1  |   Applying core.0002_preload_user_agents... OK
+baseline-1  |   Applying core.0003_preload_stream_profiles... OK
+baseline-1  |   Applying core.0004_preload_core_settings... OK
+baseline-1  |   Applying m3u.0003_create_custom_account... OK
+baseline-1  |   Applying dispatcharr_channels.0001_initial... OK
+baseline-1  |   Applying dispatcharr_channels.0002_rename_channel_name_channel_name_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0003_channel_uuid... OK
+baseline-1  |   Applying dispatcharr_channels.0004_stream_is_custom... OK
+baseline-1  |   Applying dispatcharr_channels.0005_stream_channel_group_stream_last_seen_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0006_migrate_stream_groups... OK
+baseline-1  |   Applying dispatcharr_channels.0007_remove_stream_group_name... OK
+baseline-1  |   Applying dispatcharr_channels.0008_stream_stream_hash... OK
+baseline-1  |   Applying dispatcharr_channels.0009_remove_channel_tvg_name_channel_epg_data... OK
+baseline-1  |   Applying dispatcharr_channels.0010_stream_custom_properties... OK
+baseline-1  |   Applying dispatcharr_channels.0011_logo_remove_channel_logo_file_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0012_channelprofile_channelprofilemembership... OK
+baseline-1  |   Applying dispatcharr_channels.0013_alter_logo_url... OK
+baseline-1  |   Applying dispatcharr_channels.0014_recording... OK
+baseline-1  |   Applying dispatcharr_channels.0015_recording_custom_properties... OK
+baseline-1  |   Applying dispatcharr_channels.0016_channelstream_unique_channel_stream... OK
+baseline-1  |   Applying dispatcharr_channels.0017_alter_channelgroup_name... OK
+baseline-1  |   Applying dispatcharr_channels.0018_channelgroupm3uaccount_custom_properties_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0019_channel_tvc_guide_stationid... OK
+baseline-1  |   Applying dispatcharr_channels.0020_alter_channel_channel_number... OK
+baseline-1  |   Applying dispatcharr_channels.0021_channel_user_level... OK
+baseline-1  |   Applying contenttypes.0001_initial... OK
+baseline-1  |   Applying contenttypes.0002_remove_content_type_name... OK
+baseline-1  |   Applying auth.0001_initial... OK
+baseline-1  |   Applying auth.0002_alter_permission_name_max_length... OK
+baseline-1  |   Applying auth.0003_alter_user_email_max_length... OK
+baseline-1  |   Applying auth.0004_alter_user_username_opts... OK
+baseline-1  |   Applying auth.0005_alter_user_last_login_null... OK
+baseline-1  |   Applying auth.0006_require_contenttypes_0002... OK
+baseline-1  |   Applying auth.0007_alter_validators_add_error_messages... OK
+baseline-1  |   Applying auth.0008_alter_user_username_max_length... OK
+baseline-1  |   Applying auth.0009_alter_user_last_name_max_length... OK
+baseline-1  |   Applying auth.0010_alter_group_name_max_length... OK
+baseline-1  |   Applying auth.0011_update_proxy_permissions... OK
+baseline-1  |   Applying auth.0012_alter_user_first_name_max_length... OK
+baseline-1  |   Applying accounts.0001_initial... OK
+baseline-1  |   Applying accounts.0002_remove_user_channel_groups_user_channel_profiles_and_more... OK
+baseline-1  |   Applying accounts.0003_alter_user_custom_properties... OK
+baseline-1  |   Applying accounts.0004_user_api_key... OK
+baseline-1  |   Applying accounts.0005_alter_user_managers... OK
+baseline-1  |   Applying accounts.0006_user_stream_limit... OK
+baseline-1  |   Applying accounts.0007_user_app_data... OK
+baseline-1  |   Applying accounts.0008_userappdata_and_remove_user_app_data... OK
+baseline-1  |   Applying admin.0001_initial... OK
+baseline-1  |   Applying admin.0002_logentry_remove_auto_add... OK
+baseline-1  |   Applying admin.0003_logentry_add_action_flag_choices... OK
+baseline-1  |   Applying core.0005_streamprofile_locked_alter_streamprofile_command_and_more... OK
+baseline-1  |   Applying core.0006_set_locked_stream_profiles... OK
+baseline-1  |   Applying core.0007_create_proxy_and_redirect_stream_profiles... OK
+baseline-1  |   Applying core.0008_rename_profile_name_streamprofile_name_and_more... OK
+baseline-1  |   Applying core.0009_m3u_hash_settings... OK
+baseline-1  |   Applying core.0010_reload_additional_settings... OK
+baseline-1  |   Applying core.0011_fix_stream_profiles_and_user_agents... OK
+baseline-1  |   Applying core.0012_default_active_m3u_accounts... OK
+baseline-1  |   Applying core.0013_default_network_access_settings... OK
+baseline-1  |   Applying core.0014_default_proxy_settings... OK
+baseline-1  |   Applying core.0015_dvr_templates... OK
+baseline-1  |   Applying core.0016_update_dvr_template_paths...Updated DVR TV Template: TV_Shows/{show}/S{season:02d}E{episode:02d}.mkv
+baseline-1  | Updated DVR Movie Template: Movies/{title} ({year}).mkv
+baseline-1  | Updated DVR TV Fallback Template: TV_Shows/{show}/{start}.mkv
+baseline-1  | Updated DVR Movie Fallback Template: Movies/{start}.mkv
+baseline-1  |  OK
+baseline-1  |   Applying core.0017_systemevent... OK
+baseline-1  |   Applying core.0018_alter_systemevent_event_type... OK
+baseline-1  |   Applying core.0019_add_vlc_stream_profile... OK
+baseline-1  |   Applying core.0020_change_coresettings_value_to_jsonfield... OK
+baseline-1  |   Applying core.0021_systemnotification_notificationdismissal... OK
+baseline-1  |   Applying core.022_default_user_limit_settings... OK
+baseline-1  |   Applying core.0023_alter_systemevent_event_type... OK
+baseline-1  |   Applying core.0024_outputprofile... OK
+baseline-1  |   Applying core.0025_move_preferred_region_and_auto_import_to_system_settings... OK
+baseline-1  |   Applying core.0026_add_channel_client_wait_period... OK
+baseline-1  |   Applying core.0027_vlc_play_and_exit... OK
+baseline-1  |   Applying core.0028_alter_systemevent_event_type... OK
+baseline-1  |   Applying core.0029_update_default_stream_and_output_profiles... OK
+baseline-1  |   Applying core.0030_rename_default_stream_profile_names... OK
+baseline-1  |   Applying core.0031_default_reverse_proxy_auth_settings... OK
+baseline-1  |   Applying core.0032_limit_default_interleave_delta... OK
+baseline-1  |   Applying dashboard.0001_initial... OK
+baseline-1  |   Applying m3u.0004_m3uaccount_stream_profile... OK
+baseline-1  |   Applying django_celery_beat.0001_initial... OK
+baseline-1  |   Applying django_celery_beat.0002_auto_20161118_0346... OK
+baseline-1  |   Applying django_celery_beat.0003_auto_20161209_0049... OK
+baseline-1  |   Applying django_celery_beat.0004_auto_20170221_0000... OK
+baseline-1  |   Applying django_celery_beat.0005_add_solarschedule_events_choices... OK
+baseline-1  |   Applying django_celery_beat.0006_auto_20180322_0932... OK
+baseline-1  |   Applying django_celery_beat.0007_auto_20180521_0826... OK
+baseline-1  |   Applying django_celery_beat.0008_auto_20180914_1922... OK
+baseline-1  |   Applying django_celery_beat.0006_auto_20180210_1226... OK
+baseline-1  |   Applying django_celery_beat.0006_periodictask_priority... OK
+baseline-1  |   Applying django_celery_beat.0009_periodictask_headers... OK
+baseline-1  |   Applying django_celery_beat.0010_auto_20190429_0326... OK
+baseline-1  |   Applying django_celery_beat.0011_auto_20190508_0153... OK
+baseline-1  |   Applying django_celery_beat.0012_periodictask_expire_seconds... OK
+baseline-1  |   Applying django_celery_beat.0013_auto_20200609_0727... OK
+baseline-1  |   Applying django_celery_beat.0014_remove_clockedschedule_enabled... OK
+baseline-1  |   Applying django_celery_beat.0015_edit_solarschedule_events_choices... OK
+baseline-1  |   Applying django_celery_beat.0016_alter_crontabschedule_timezone... OK
+baseline-1  |   Applying django_celery_beat.0017_alter_crontabschedule_month_of_year... OK
+baseline-1  |   Applying django_celery_beat.0018_improve_crontab_helptext... OK
+baseline-1  |   Applying django_celery_beat.0019_alter_periodictasks_options... OK
+baseline-1  |   Applying m3u.0005_m3uaccount_custom_properties_and_more... OK
+baseline-1  |   Applying m3u.0006_populate_periodic_tasks... OK
+baseline-1  |   Applying m3u.0007_remove_m3uaccount_uploaded_file_m3uaccount_file_path... OK
+baseline-1  |   Applying m3u.0008_m3uaccount_stale_stream_days... OK
+baseline-1  |   Applying m3u.0009_m3uaccount_account_type_m3uaccount_password_and_more... OK
+baseline-1  |   Applying m3u.0010_add_status_fields_and_remove_auto_now... OK
+baseline-1  |   Applying m3u.0011_alter_m3uaccount_status... OK
+baseline-1  |   Applying m3u.0012_alter_m3uaccount_refresh_interval... OK
+baseline-1  |   Applying m3u.0013_alter_m3ufilter_filter_type... OK
+baseline-1  |   Applying m3u.0014_alter_m3ufilter_options_m3ufilter_order... OK
+baseline-1  |   Applying m3u.0015_alter_m3ufilter_options_m3ufilter_custom_properties... OK
+baseline-1  |   Applying m3u.0016_m3uaccount_priority... OK
+baseline-1  |   Applying m3u.0017_alter_m3uaccount_custom_properties_and_more... OK
+baseline-1  |   Applying m3u.0018_add_profile_custom_properties... OK
+baseline-1  |   Applying m3u.0019_m3uaccountprofile_exp_date... OK
+baseline-1  |   Applying epg.0005_programdata_custom_properties_and_more... OK
+baseline-1  |   Applying epg.0006_epgsource_refresh_interval_epgsource_refresh_task... OK
+baseline-1  |   Applying epg.0007_populate_periodic_tasks... OK
+baseline-1  |   Applying epg.0008_epgsource_created_at_epgsource_updated_at... OK
+baseline-1  |   Applying epg.0009_alter_epgsource_created_at_and_more... OK
+baseline-1  |   Applying epg.0007_epgsource_status_epgsource_last_error... OK
+baseline-1  |   Applying epg.0010_merge_20250503_2147... OK
+baseline-1  |   Applying epg.0011_update_epgsource_fields... OK
+baseline-1  |   Applying epg.0012_alter_epgsource_status... OK
+baseline-1  |   Applying epg.0013_alter_epgsource_refresh_interval... OK
+baseline-1  |   Applying epg.0014_epgsource_extracted_file_path... OK
+baseline-1  |   Applying epg.0015_alter_programdata_custom_properties... OK
+baseline-1  |   Applying epg.0016_epgdata_icon_url... OK
+baseline-1  |   Applying epg.0017_alter_epgsource_url... OK
+baseline-1  |   Applying epg.0018_epgsource_custom_properties_and_more... OK
+baseline-1  |   Applying epg.0019_alter_programdata_sub_title... OK
+baseline-1  |   Applying epg.0020_migrate_time_to_starttime_placeholders...No dummy EPG sources needed placeholder updates.
+baseline-1  |  OK
+baseline-1  |   Applying epg.0021_epgsource_priority... OK
+baseline-1  |   Applying epg.0022_alter_epgdata_name... OK
+baseline-1  |   Applying dispatcharr_channels.0022_channel_auto_created_channel_auto_created_by_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0023_stream_stream_stats_stream_stream_stats_updated_at... OK
+baseline-1  |   Applying dispatcharr_channels.0024_alter_channelgroupm3uaccount_channel_group... OK
+baseline-1  |   Applying dispatcharr_channels.0025_alter_channelgroupm3uaccount_custom_properties_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0026_recurringrecordingrule... OK
+baseline-1  |   Applying dispatcharr_channels.0027_recurringrecordingrule_end_date_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0028_channel_created_at_channel_updated_at... OK
+baseline-1  |   Applying dispatcharr_channels.0029_backfill_custom_stream_hashes...No custom streams needed stream_hash backfill
+baseline-1  |  OK
+baseline-1  |   Applying dispatcharr_channels.0030_alter_stream_url... OK
+baseline-1  |   Applying dispatcharr_channels.0031_channelgroupm3uaccount_is_stale_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0032_channel_is_adult_stream_is_adult... OK
+baseline-1  | 2026-11-12 17:09:43,834 INFO apps.channels.migrations.0033_stream_id_stream_chno Using hash keys: ['url']
+baseline-1  | 2026-11-12 17:09:43,834 INFO apps.channels.migrations.0033_stream_id_stream_chno Found 0 XC accounts
+baseline-1  | 2026-11-12 17:09:43,835 INFO apps.channels.migrations.0033_stream_id_stream_chno Processing 0 total streams
+baseline-1  | 2026-11-12 17:09:43,837 INFO apps.channels.migrations.0033_stream_id_stream_chno Migration complete: 0 streams updated, 0 duplicates removed
+baseline-1  |   Applying dispatcharr_channels.0033_stream_id_stream_chno... OK
+baseline-1  |   Applying dispatcharr_channels.0034_remove_stream_dispatcharr_stream_id_idx_and_more... OK
+baseline-1  |   Applying dispatcharr_channels.0035_alter_channel_name_alter_stream_name... OK
+baseline-1  |   Applying dispatcharr_channels.0036_alter_stream_name... OK
+baseline-1  |   Applying dispatcharr_channels.0037_auto_sync_overhaul... OK
+baseline-1  |   Applying dispatcharr_channels.0038_add_catchup_fields... OK
+baseline-1  |   Applying dispatcharr_channels.0039_add_radio_fields... OK
+baseline-1  |   Applying dispatcharr_channels.0040_channelgroup_custom_relation... OK
+baseline-1  |   Applying dispatcharr_connect.0001_initial... OK
+baseline-1  |   Applying dispatcharr_connect.0002_alter_eventsubscription_event... OK
+baseline-1  |   Applying dispatcharr_connect.0003_alter_eventsubscription_event... OK
+baseline-1  |   Applying dispatcharr_connect.0004_alter_eventsubscription_event... OK
+baseline-1  |   Applying dispatcharr_connect.0005_alter_eventsubscription_event... OK
+baseline-1  |   Applying epg.0023_epgsource_programme_index... OK
+baseline-1  |   Applying epg.0024_remove_epgsource_api_key_epgsource_password_and_more... OK
+baseline-1  |   Applying epg.0025_programdata_epg_id_index... OK
+baseline-1  |   Applying epg.0026_epgsourceindex... OK
+baseline-1  |   Applying epg.0027_programdata_epg_start_end_index... OK
+baseline-1  |   Applying epg.0028_programdata_epg_end_index... OK
+baseline-1  |   Applying hdhr.0001_initial... OK
+baseline-1  |   Applying plugins.0001_initial... OK
+baseline-1  |   Applying plugins.0002_pluginrepo... OK
+baseline-1  |   Applying plugins.0003_update_official_repo_url... OK
+baseline-1  |   Applying plugins.0004_plugin_schedule_ownership... OK
+baseline-1  |   Applying sessions.0001_initial... OK
+baseline-1  |   Applying vod.0001_initial... OK
+baseline-1  |   Applying vod.0002_add_last_seen_with_default... OK
+baseline-1  |   Applying vod.0003_vodlogo_alter_movie_logo_alter_series_logo...
+baseline-1  | ================================================================================
+baseline-1  | Starting VOD logo migration...
+baseline-1  | ================================================================================
+baseline-1  | Copying logos to VODLogo table...
+baseline-1  | Created VODLogo entries
+baseline-1  | Updating movie references...
+baseline-1  | Updated 0 movies with new VOD logo references
+baseline-1  | Updating series references...
+baseline-1  | Updated 0 series with new VOD logo references
+baseline-1  | ================================================================================
+baseline-1  | VOD logo migration completed successfully!
+baseline-1  | Summary: Updated 0 movies and 0 series
+baseline-1  | ================================================================================
+baseline-1  | 
+baseline-1  | 
+baseline-1  | ================================================================================
+baseline-1  | Cleaning up migrated Logo entries...
+baseline-1  | ================================================================================
+baseline-1  | ✓ Deleted 0 migrated Logo entries (not used by channels)
+baseline-1  | ================================================================================
+baseline-1  | 
+baseline-1  |  OK
+baseline-1  |   Applying vod.0004_m3uepisoderelation_series_relation... OK
+baseline-1  |   Applying vod.0005_movie_is_adult... OK
+baseline-1  |   Applying vod.0006_movie_series_language... OK
