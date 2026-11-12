@@ -1,0 +1,227 @@
+--- tools6/expected-runtime.json
++++ tools8/expected-runtime.json
+@@ -1,5 +1,6 @@
+ {
+   "rust/crates/vod-http/src/generation_scope.rs": "732c7b5537ef7be25507d5366b2a0cd77fc86193f72cb9a6abeb1ef1ff32df84",
+-  "rust/crates/vod-http/src/generation_idle.rs": "e33cbafab4a7aa4bb62e8f650ea84d11ae2cf9b76ff7ee436d809a4631e77553",
+-  "rust/crates/vod-http/src/sessions.rs": "81c016e782086b1bb6251885768b070f4ddc916db6c45a8e785d8dc55c9575e0"
++  "rust/crates/vod-http/src/generation_idle.rs": "ba4146187dcd7786bdb0fc3d54a0117f8e8be8294f5629c343ca8a07b46843f6",
++  "rust/crates/vod-http/src/sessions.rs": "81c016e782086b1bb6251885768b070f4ddc916db6c45a8e785d8dc55c9575e0",
++  "rust/crates/coordination/src/lib.rs": "68ed4ca4e3b24c7a61887892a7f1058b4f6896bee116420144e7fb46d36ba68a"
+ }
+--- tools6/phase.py
++++ tools8/phase.py
+@@ -13,7 +13,7 @@
+ from apps.m3u.models import M3UAccount,M3UAccountProfile
+ ROOT=Path('/evidence');seed=json.loads((ROOT/'pending-main-private.json').read_text());mode=os.environ['PENDING_MODE'];case=os.environ['PENDING_CASE'];assert mode in['source','native']and case in['success','busy','abort']
+ base=os.environ['PENDING_BASE'];client=redis.Redis(host='127.0.0.1',port=int(os.environ['REDIS_PORT']),password='playback-fixture-only',decode_responses=True);key='profile_connections:'+str(seed['provider_profile_id']);sid='fixture-pending-main-'+case;metadata='vod_persistent_connection:'+sid
+-responses=[];report={'passed':False,'scope':'Actual selected early HTTP/SQL/auth pending follower only; no full metadata/latebody/performance parity','backend':mode,'case':case,'observations':[],'source_control':'post-INCR method-return hook'if mode=='source'else'actual Redis executed provider reply held'}
++responses=[];report={'passed':False,'scope':'Actual selected early HTTP/SQL/auth pending follower only; no full metadata/latebody/performance parity','backend':mode,'case':case,'observations':[],'source_control':'actual Original Redis INCR reply held'if mode=='source'else'actual Redis executed provider reply held'}
+ auth={'Authorization':'Bearer '+seed['access_token']}
+ def cap(value):
+  account=M3UAccount.objects.get(pk=seed['provider_account_id']);profile=M3UAccountProfile.objects.get(pk=seed['provider_profile_id']);assert account.server_url=='http://origin:8080/player_api.php';account.max_streams=value;account.save(update_fields=['max_streams']);profile.max_streams=value;profile.save(update_fields=['max_streams'])
+@@ -24,12 +24,9 @@
+   time.sleep(.01)
+  raise TimeoutError('OwnedPhaseDeadline')
+ def gate(action):
+- if mode=='source':
+-  data={'profile_key':key,'target_agent':'owned-pending-target'}if action=='arm'else None
+-  return requests.post('http://127.0.0.1:5657/__owned_fixture/'+action,json=data,timeout=3).json()
+- with socket.create_connection(('127.0.0.1',6382),timeout=3)as connection:
++ with socket.create_connection(('127.0.0.1',6384 if mode=='source'else 6382),timeout=3)as connection:
+   value={'action':action}
+-  if action=='arm':value.update(profile_key=key,expected_reply=-2 if case=='busy'else 1)
++  if action=='arm':value.update(profile_key=key,expected_reply=(2 if mode=='source'else -2)if case=='busy'else 1)
+   connection.sendall((json.dumps(value)+'\n').encode());raw=connection.makefile('rb').readline(1048577)
+   if len(raw)>1048576:raise ValueError('GateControlCapacity')
+   return json.loads(raw)
+@@ -48,7 +45,6 @@
+  return{'owner_key':owner_key,'owner_token':token,'owner_confirm':confirm,'ledger_key':ledger_key,'ledger':{k:ledger.get(k)for k in['token','owner','profile','reserved','fence']},'metadata':{k:meta.get(k)for k in['content_uuid','user_id','m3u_profile_id','active_streams','created_at','rust_owner_token']}}
+ def physical_boundary():
+  value=gate('state')
+- if mode=='source':return value['reached_monotonic']
+  rows=[r for r in value['rows']if r['kind']=='backend-target-reply-read-held']
+  if len(rows)!=1:raise ValueError('UniqueActualReplyBoundary')
+  return rows[0]['monotonic']
+@@ -80,7 +76,7 @@
+   stop=requests.post(base+'/proxy/vod/stop_client/',headers=auth,json={'client_id':sid},timeout=5);report['admin_stop']={'status':stop.status_code,'raw_body':stop.text,'headers':dict(stop.headers)};assert stop.status_code==200
+   report['early_stop_after_admin']=snapshot();assert early_stop(report['early_stop_after_admin'])
+   follower=get(seed['movie_uuid'],sid,{'User-Agent':'owned-pending-follower'});assert follower.status_code==200;bodyhash=prefix(follower);assert bodyhash=='02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f';report['follower']={'status':200,'prefix_bytes':8192,'prefix_sha256':bodyhash,'headers':dict(follower.headers),'state':snapshot()};assert report['follower']['state']['metadata']['active_streams']=='2';assert report['follower']['state']['metadata']['request_count']=='2';assert report['follower']['state']['metadata']['user_id']==str(seed['real_user_id']);assert report['follower']['state']['metadata']['created_at']==created;assert early_stop(report['follower']['state']);report['early_stop_preserved_after_8192']=True
+-  # Fresh Source authority and Main use the same predeclared2.4s pause.
++  # Both gates now hold actual Redis replies for predeclared2.4s.
+   # Historical Source2704s remains separate; Main's3s observer is unchanged.
+   # Main older-timer proof remains open; component1.2s/1s proof is separate.
+   hold=2.4;control_complete=time.monotonic()
+@@ -94,7 +90,6 @@
+   gate('release')
+   def released_boundary():
+    value=gate('state')
+-   if mode=='source':return value.get('released_monotonic')
+    rows=[r for r in value['rows']if r['kind']=='backend-target-reply-released']
+    return rows[0]['monotonic']if len(rows)==1 else None
+   wait(lambda:released_boundary()is not None,2)
+--- tools6/run.py
++++ tools8/run.py
+@@ -77,14 +77,23 @@
+       assert run('exec','-T','baseline','redis-cli','-p',str(port),'-a','playback-fixture-only','PING').strip().endswith(b'PONG');break
+      except bounded.CollectionFailure:time.sleep(.1)
+     else:raise TimeoutError('OwnedDedicatedRedisReady')
+-   child('source-web',['/dispatcharrpy/bin/python','/pending-tools/source_wsgi.py'],source_db,6390)
+    child('gate',['/dispatcharrpy/bin/python','/pending-tools/resp_gate.py','--script-sha1',proof['reserve_script_sha1'],'--backend-port','6391','--evidence','/evidence/proxy-private.json'])
++   child('source-gate',['/dispatcharrpy/bin/python','/pending-tools/source_resp_gate.py','--evidence','/evidence/source-proxy-private.json'])
++   for proxy_port in[6381,6383]:
++    end=time.monotonic()+10
++    while time.monotonic()<end:
++     try:assert run('exec','-T','baseline','redis-cli','-p',str(proxy_port),'-a','playback-fixture-only','PING').strip().endswith(b'PONG');break
++     except bounded.CollectionFailure:time.sleep(.1)
++    else:raise TimeoutError('OwnedPhysicalReplyProxyReady')
++   child('source-web',['/dispatcharrpy/bin/python','/pending-tools/source_wsgi.py'],source_db,6383)
+    # Explicitly verify server/control readiness and all fingerprints immediately
+    # before phases; no copied Source-mutated rows feed the native candidate.
+    for mode,db,port,base in[('source',source_db,6390,'http://127.0.0.1:5657'),('native',native_db,6391,'http://candidate:9192')]:
+     if mode=='native':
+      run('up','-d','--no-build','candidate');cid=run('ps','-q','candidate').decode().strip();inspection=json.loads(command(['docker','inspect',cid]))[0];assert inspection['Image']==proof['image_id'];report['actual_Main_image_id']=inspection['Image']
+     internal_ready(base+'/api/core/version/')
++    if mode=='source':
++     report['Source_actual_client_config']=json.loads((caseout/'Source-client-config.json').read_text());assert report['Source_actual_client_config']['proxy_port']==6383 and report['Source_actual_client_config']['socket_timeout']==60
+     phase_fingerprint=helper(db,'fingerprint',port);assert phase_fingerprint['dataset_sha256']==before['dataset_sha256'];report[mode+'_before']=phase_fingerprint
+     argv=['exec','-T','-e','POSTGRES_DB='+db,'-e','REDIS_PORT='+str(port),'-e','PENDING_MODE='+mode,'-e','PENDING_CASE='+case,'-e','PENDING_BASE='+base,'baseline','/dispatcharrpy/bin/python','/pending-tools/phase.py'];run(*argv,timeout=90)
+     report[mode]=json.loads((caseout/('pending-main-'+mode+'-'+case+'-private.json')).read_text());assert report[mode]['passed']
+@@ -102,6 +111,11 @@
+     default_after=helper('dispatcharr','default-audit');report['default_database_after']=default_after;report['default_named_tables_sequences_unchanged']=default_after==default_before
+     if default_after!=default_before:report['passed']=False
+    except Exception as error:report['passed']=False;report.setdefault('physical_cleanup_errors',[]).append('DefaultAudit'+type(error).__name__)
++   source_proxy_file=caseout/'source-proxy-private.json'
++   if source_proxy_file.exists():
++    source_proxy=json.loads(source_proxy_file.read_text());report['Source_proxy_terminal']=source_proxy
++    if source_proxy['invalid']or source_proxy['connections']!=0 or source_proxy['seen']!=1:report['passed']=False
++   elif 'source-gate'in jobs:report['passed']=False;report['Source_proxy_terminal_missing']=True
+    proxy_file=caseout/'proxy-private.json'
+    if proxy_file.exists():
+     proxy_result=json.loads(proxy_file.read_text());report['proxy_terminal']=proxy_result
+--- tools6/source_resp_gate.py
++++ tools8/source_resp_gate.py
+@@ -0,0 +1,41 @@
++"""Source-only actual INCR reply gate. No Original client/method is replaced."""
++import argparse,json,os,re,signal,socket,threading
++from pathlib import Path
++from resp_gate import Gate,Proxy,Handler,Control
++class SourceGate(Gate):
++ def __init__(self,evidence):super().__init__('unused-Source-command',evidence)
++ def arm(self,profile,expected_reply=1):
++  if not re.fullmatch(r'profile_connections:[0-9]{1,16}',profile):raise ValueError('OwnedProfileShape')
++  if type(expected_reply)is not int or expected_reply not in[1,2]:raise ValueError('DeclaredSourceINCRReply')
++  with self.lock:
++   if self.armed:raise ValueError('AlreadyArmed')
++   self.profile=profile.encode();self.armed=True;self.seen=0;self.expected_reply=expected_reply;self.release.clear()
++ def target(self,args):
++  with self.lock:
++   if not self.armed:return False
++   return len(args)==2 and args[0].upper()==b'INCR'and args[1]==self.profile or len(args)==3 and args[0].upper()==b'INCRBY'and args[1]==self.profile and args[2]==b'1'
++ def response(self,target,raw):
++  with self.lock:
++   if target and self.armed and raw!=(':'+str(self.expected_reply)+'\r\n').encode():
++    self.invalid.append('UnexpectedSourceINCRReplySchema');raise ValueError('UnexpectedSourceINCRReplySchema')
++  return super().response(target,raw)
++ def snapshot(self):return{**super().snapshot(),'witness':'actual Original Redis INCR reply held','expected_reply':self.expected_reply}
++def main():
++ if os.environ.get('PENDING_MAIN_FIXTURE')!='playback-fixture-only':raise RuntimeError('OwnedSourceProxyRequired')
++ p=argparse.ArgumentParser();p.add_argument('--evidence',type=Path,required=True);a=p.parse_args()
++ if not str(a.evidence).startswith('/evidence/'):raise ValueError('OwnedEvidencePath')
++ gate=SourceGate(a.evidence);server=Proxy(('0.0.0.0',6383),Handler);control=Proxy(('127.0.0.1',6384),Control);server.gate=control.gate=gate;server.backend_port=6390;stop=threading.Event()
++ for event in[signal.SIGINT,signal.SIGTERM]:signal.signal(event,lambda *_:stop.set())
++ threads=[threading.Thread(target=v.serve_forever)for v in[server,control]]
++ for thread in threads:thread.start()
++ try:stop.wait()
++ finally:
++  gate.release.set()
++  with gate.lock:gate.closed=True;active=list(gate.sockets)
++  for connection in active:
++   try:connection.shutdown(socket.SHUT_RDWR)
++   except OSError:pass
++  for service in[control,server]:service.shutdown();service.server_close()
++  for thread in threads:thread.join(15)
++  a.evidence.write_text(json.dumps(gate.snapshot(),indent=2)+'\n')
++if __name__=='__main__':main()
+--- tools6/source_wsgi.py
++++ tools8/source_wsgi.py
+@@ -1,34 +1,15 @@
+-"""Actual Original Django TCP response with explicit post-INCR scheduling hook.
+-No task/SQL/provider mutation is replaced. Not a withheld Redis transport proof.
+-"""
++"""Genuine Original Django/gevent TCP application; no Redis/task method replaced."""
+ from gevent import monkey;monkey.patch_all()
+-import json,os,sys,time
++import json,os,sys
++from pathlib import Path
++if os.environ.get('PENDING_MAIN_FIXTURE')!='playback-fixture-only':raise RuntimeError('OwnedSourceMainRequired')
+ sys.path.insert(0,'/app');sys.argv.append('shell');os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
+ import django;django.setup()
+-from dispatcharr.wsgi import application as original
+ from core.utils import RedisClient
+-from gevent.event import Event
+-from gevent.local import local
++from django.conf import settings
++client=RedisClient.get_client();params=client.connection_pool.connection_kwargs
++if params.get('port')!=6383 or params.get('socket_timeout')!=60 or params.get('socket_connect_timeout')!=5 or params.get('retry_on_timeout')is not True:raise RuntimeError('GenuineSourceProxyTimeoutBinding')
++Path('/evidence/Source-client-config.json').write_text(json.dumps({'socket_timeout':params['socket_timeout'],'connect_timeout':params['socket_connect_timeout'],'retry_on_timeout':params['retry_on_timeout'],'proxy_port':params['port'],'settings_socket_timeout':settings.REDIS_SOCKET_TIMEOUT,'method_replaced':False,'scope':'actual Original Source WSGI client configuration'},indent=2)+'\n')
++from dispatcharr.wsgi import application
+ from gevent.pywsgi import WSGIServer
+-state={'armed':False,'reached':False};released=Event();context=local();client=RedisClient.get_client();real_incr=client.incr
+-
+-def incr(name,*args,**kwargs):
+- value=real_incr(name,*args,**kwargs)
+- if state['armed']and not state['reached']and name==state['profile_key']and getattr(context,'agent',None)==state['target_agent']:
+-  state['reached_monotonic']=time.monotonic();state['reached']=True
+-  if not released.wait(timeout=12):raise TimeoutError('Owned actualTCP post-INCR gate')
+- return value
+-client.incr=incr
+-
+-def application(environ,start_response):
+- path=environ.get('PATH_INFO','')
+- if path.startswith('/__owned_fixture/'):
+-  if environ.get('REMOTE_ADDR')!='127.0.0.1':raise RuntimeError('Owned loopback control only')
+-  if path.endswith('/arm'):
+-   size=int(environ.get('CONTENT_LENGTH')or 0);assert 0<=size<=4096;data=json.loads(environ['wsgi.input'].read(size));assert set(data)=={'profile_key','target_agent'};state.update(data,armed=True,reached=False,reached_monotonic=None,released_monotonic=None);released.clear()
+-  elif path.endswith('/release'):state['released_monotonic']=time.monotonic();released.set();state['armed']=False
+-  elif not path.endswith('/state'):raise RuntimeError('Unknown gate')
+-  payload=json.dumps({'reached':state['reached'],'armed':state['armed'],'reached_monotonic':state.get('reached_monotonic'),'released_monotonic':state.get('released_monotonic')}).encode();start_response('200 OK',[('Content-Type','application/json'),('Content-Length',str(len(payload)))]);return[payload]
+- context.agent=environ.get('HTTP_USER_AGENT')
+- return original(environ,start_response)
+ WSGIServer(('127.0.0.1',5657),application,log=None,error_log=None).serve_forever()
+--- tools6/test_controls.py
++++ tools8/test_controls.py
+@@ -2,6 +2,7 @@
+ import copy,hashlib,io,json,os,sys,tarfile,tempfile,threading,unittest
+ from pathlib import Path
+ import candidate_inputs as ci,fixture_guards as fg,resp_gate as rg,origin_guard as og
++from source_resp_gate import SourceGate
+ from unittest import mock
+ from bounded_process import Collected,CollectionFailure
+ class FakeSocket:
+@@ -145,6 +146,25 @@
+   for value in['1','9223372036854775807']:
+    before=copy.deepcopy(row);before['ledger']['fence']=value
+    self.assertTrue(fg.other_reservation(before,copy.deepcopy(before),'profile_connections:4','other',5,1)['reserved'])
++ def test_Source_actual_INCR_target_is_exact(self):
++  gate=SourceGate(None);self.assertFalse(gate.target([b'INCRBY',b'profile_connections:4',b'1']));gate.arm('profile_connections:4')
++  for args in[[b'INCR',b'profile_connections:4'],[b'INCRBY',b'profile_connections:4',b'1']]:self.assertTrue(gate.target(args))
++  for args in[[b'INCRBY',b'profile_connections:5',b'1'],[b'INCRBY',b'profile_connections:4',b'2'],[b'INCRBY',b'profile_connections:4',b'+1'],[b'HINCRBY',b'profile_connections:4',b'x',b'1'],[b'INCR',b'profile_connections:4',b'extra'],[b'EVALSHA',b'a'*40,b'1',b'profile_connections:4']]:self.assertFalse(gate.target(args))
++ def test_Source_busy_is_actual_integer_two_native_is_minus_two(self):
++  gate=SourceGate(None);gate.arm('profile_connections:4',2);gate.release.set();gate.response(True,b':2\r\n');self.assertEqual(gate.seen,1)
++  for value in[0,-2,True,'2']:
++   with self.assertRaises(ValueError):SourceGate(None).arm('profile_connections:4',value)
++  native=rg.Gate('a'*40,None);native.arm('profile_connections:4',-2);native.release.set();native.response(True,b':-2\r\n');self.assertEqual(native.seen,1)
++ def test_Source_rejects_all_error_and_wrong_schema_without_hold(self):
++  for code in[1,2]:
++   for raw in[b'-NOSCRIPT impossible for INCR\r\n',b'-ERR error\r\n',b'+OK\r\n',b'$1\r\n2\r\n',b'*1\r\n:2\r\n',b':0\r\n',b':-2\r\n',b':3\r\n']:
++    gate=SourceGate(None);gate.arm('profile_connections:4',code)
++    with self.assertRaisesRegex(ValueError,'UnexpectedSourceINCRReplySchema'):gate.response(True,raw)
++    self.assertEqual(gate.seen,0);self.assertEqual(gate.rows,[])
++ def test_Source_has_no_method_return_wrapper_and_routes_to_own_proxy(self):
++  text=(Path(__file__).parent/'source_wsgi.py').read_text();self.assertNotIn('real_incr',text);self.assertNotIn('client.incr=',text);self.assertNotIn('__owned_fixture',text);self.assertIn('params.get(\'socket_timeout\')!=60',text)
++  runner=(Path(__file__).parent/'run.py').read_text();self.assertIn("],source_db,6383)",runner);self.assertLess(runner.index("child('source-gate'"),runner.index("child('source-web'"))
++  phase=(Path(__file__).parent/'phase.py').read_text();self.assertIn("6384 if mode=='source'else 6382",phase);self.assertNotIn('reached_monotonic',phase);self.assertNotIn('__owned_fixture',phase)
+  def test_fixture_still_hardblocked(self):
+   source=(Path(__file__).parent/'run.py').read_text();self.assertIn("raise RuntimeError('UNVALIDATED_MAIN_FIXTURE_DRAFT",source)
+ if __name__=='__main__':unittest.main(verbosity=2)

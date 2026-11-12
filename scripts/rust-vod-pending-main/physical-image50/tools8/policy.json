@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "scope": "actual packaged Main opt-in pending-follower early wire/identity/physical reply functional gate",
+  "fixture_execution_authorized": false,
+  "hardblock": "UNVALIDATED_MAIN_FIXTURE_DRAFT",
+  "candidate": {
+    "build_manifest": "artifacts/rust/candidate-build-retained-helper-image50-1/build.json",
+    "manifest_sha256": null,
+    "image_id": null,
+    "source_tree_sha256": null,
+    "git_revision": "208598ee1872732cbe8a0d846efa5a40b59ae1d2",
+    "binding_status": "BLOCKED until immutable build and Rootreview/cue"
+  },
+  "cases": [
+    "success",
+    "busy",
+    "abort"
+  ],
+  "per_case": {
+    "independent_owned_databases": [
+      "template",
+      "source",
+      "native"
+    ],
+    "named_table_count": 9,
+    "default_database_named_table_sequence_audit": true,
+    "dedicated_source_native_redis_ports": [
+      6390,
+      6391
+    ],
+    "native_proxy_port": 6381,
+    "local_origin_only": true,
+    "origin_preflight": {
+      "explicit_owned_compose_up": true,
+      "health_readiness": true,
+      "full_fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+      "range": "bytes=0-8191",
+      "required_status": 206,
+      "max_read_bytes": 8193,
+      "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+      "stats_max_bytes": 65536,
+      "direct_origin_request_count": 1
+    },
+    "dedicated_source_proxy": {
+      "listen": 6383,
+      "loopback_control": 6384,
+      "backend": 6390,
+      "target": "exact owned profile key, INCR or INCRBY increment1 only",
+      "Source_actual_client_socket_timeout": 60,
+      "Source_actual_client_connect_timeout": 5,
+      "no_client_method_replacement": true
+    }
+  },
+  "fixed_observations": {
+    "gate_hold_seconds": 2.4,
+    "existing_Main_observer_seconds": 3,
+    "early_body_bytes": 8192,
+    "early_body_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+    "source_gate": "actual Original Redis INCR/INCRBY reply read but not delivered; no method wrapper",
+    "native_gate": "actual Redis reserve-provider reply read but not delivered",
+    "reserve_script_sha1": "d757c8db4c0aa5a26a91e84d2dcbfb4047589be0",
+    "maximum_hold_seconds": 2.75,
+    "hold_boundary": "actual Source INCR reply read vsnative Lua reply read",
+    "release_boundary": "actual proxy reply release for each backend",
+    "control_work_must_finish_before_target": true,
+    "exact_pause_schedule_identity_claimed": false,
+    "reserve_reply_by_case": {
+      "success": 1,
+      "busy": -2,
+      "abort": 1
+    },
+    "unexpected_redis_error_or_type": "invalid, never held",
+    "stop_witness": "stop key exists after admin200 and early8192, no late100unit claim",
+    "busy_native_ownership": "same other movie owner+metadata token+ledger token/fence/profile/reserved1 and globalcount1 after followerclose; Source publiccounter separately observed",
+    "private_fence_schema": {
+      "type": "canonical positive decimal string",
+      "minimum": 1,
+      "maximum": 9223372036854775807,
+      "maximum_digits": 19,
+      "required_at_both_snapshots": true,
+      "unchanged": true
+    },
+    "source_reply_by_case": {
+      "success": 1,
+      "busy": 2,
+      "abort": 1
+    },
+    "native_reply_by_case": {
+      "success": 1,
+      "busy": -2,
+      "abort": 1
+    },
+    "Source_error_or_unexpected_type": "invalid/nohold, including NOSCRIPT (not meaningful for INCR)"
+  },
+  "limits": {
+    "command_aggregate_bytes": 8388608,
+    "command_input_bytes": 1048576,
+    "resp_frame_bytes": 1048576,
+    "resp_line_bytes": 8192,
+    "resp_depth": 16,
+    "resp_array_items": 1024,
+    "proxy_connections": 64,
+    "pending_commands_per_connection": 128,
+    "proxy_trace_events": 1024,
+    "held_reply_seconds": 10,
+    "control_body_bytes": 4096,
+    "phase_seconds": 90
+  },
+  "remaining_open": [
+    "Source later-body timeout",
+    "Source post-close metadata",
+    "Source/native public counter divergence preserving other movie reservation",
+    "Main older-timer beyond3s",
+    "full headers/late body parity"
+  ],
+  "resource_sampling": false,
+  "performance_acceptance": false,
+  "full_M3_M4_acceptance": false,
+  "normal_recovery_default": "OFF, fixture explicitly opts in"
+}

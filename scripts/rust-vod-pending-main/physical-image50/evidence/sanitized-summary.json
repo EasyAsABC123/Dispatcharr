@@ -1,0 +1,441 @@
+{
+  "passed": true,
+  "scope": "exact three-case genuine Original Main physical INCR reply versus packaged native Main retained reservation reply, controlled early wire/identity/ownership",
+  "case_count": 3,
+  "Source_phase_count": 3,
+  "native_phase_count": 3,
+  "candidate_image": "sha256:1907887b67d15dbb39af040176923de5f6583afc44ec9a3103eeb3334bcd1f0d",
+  "candidate_manifest_sha256": "ae2db432191678023544626ee473b047dbd8c34e88b6dabd406afc9f542050f9",
+  "candidate_source_tree_sha256": "0177c2e8838db58cedb28012edcc7d583424c4af225a6c47568365feada9f7f4",
+  "candidate_source_archive_sha256": "e1e74d546661e788a6a7b08146f7058182c22bf50a27de93c6c955ba1206e560",
+  "candidate_git_revision": "208598ee1872732cbe8a0d846efa5a40b59ae1d2",
+  "reviewed_selection_sha256": "34f4cf1aad0bff78a7da1a39a2332ba2df7d682180e444571981c1f66cd90c8d",
+  "reviewed_policy_sha256": "c681192a5f221320e674b3f653f015f23dd998ef86e5790f4a5f2fd83178a5f7",
+  "execution_activation": "artifacts/rust/m4-vod-pending-main-execution-9/activation.json",
+  "run_exit_code": 0,
+  "cases": [
+    {
+      "case": "success",
+      "passed": true,
+      "origin_preflight_passed": true,
+      "independent_DB_clones_equal": true,
+      "full_DB_hash_claimed": false,
+      "default_nine_tables_sequences_unchanged": true,
+      "actual_Main_image_id": "sha256:1907887b67d15dbb39af040176923de5f6583afc44ec9a3103eeb3334bcd1f0d",
+      "Source_actual_client_config": {
+        "socket_timeout": 60,
+        "connect_timeout": 5,
+        "retry_on_timeout": true,
+        "proxy_port": 6383,
+        "settings_socket_timeout": 60,
+        "method_replaced": false,
+        "scope": "actual Original Source WSGI client configuration"
+      },
+      "proxy_terminal": {
+        "source": {
+          "seen": 1,
+          "expected_reply": 1,
+          "invalid": [],
+          "connections": 0
+        },
+        "native": {
+          "seen": 1,
+          "expected_reply": 1,
+          "invalid": [],
+          "connections": 0
+        }
+      },
+      "phases": {
+        "source": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "source_control": "actual Original Redis INCR reply held",
+          "target_status": 200,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.4006313790159766,
+            "control_work_seconds": 2.0169974640011787,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0006313790159766519,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "actual_target_client_socket_closed": false,
+          "server_handler_cancellation_inferred": null,
+          "private_other_reservation_witness": null,
+          "post_close_literal": {
+            "checkpoint": "after target outcome/clientclose, followerclose then1.5s sleep; not proof body/server handler fullysettled",
+            "active_streams": "2",
+            "request_count": "3",
+            "profile_counter": "1",
+            "stop": "true"
+          }
+        },
+        "native": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "source_control": "actual Redis executed provider reply held",
+          "target_status": 200,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.4006012080062646,
+            "control_work_seconds": 2.013798483007122,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0006012080062647307,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "actual_target_client_socket_closed": false,
+          "server_handler_cancellation_inferred": null,
+          "private_other_reservation_witness": null,
+          "post_close_literal": {
+            "checkpoint": "after target outcome/clientclose, followerclose then1.5s sleep; not proof body/server handler fullysettled",
+            "active_streams": null,
+            "request_count": null,
+            "profile_counter": "0",
+            "stop": "true"
+          }
+        }
+      },
+      "physical_cleanup_errors": []
+    },
+    {
+      "case": "busy",
+      "passed": true,
+      "origin_preflight_passed": true,
+      "independent_DB_clones_equal": true,
+      "full_DB_hash_claimed": false,
+      "default_nine_tables_sequences_unchanged": true,
+      "actual_Main_image_id": "sha256:1907887b67d15dbb39af040176923de5f6583afc44ec9a3103eeb3334bcd1f0d",
+      "Source_actual_client_config": {
+        "socket_timeout": 60,
+        "connect_timeout": 5,
+        "retry_on_timeout": true,
+        "proxy_port": 6383,
+        "settings_socket_timeout": 60,
+        "method_replaced": false,
+        "scope": "actual Original Source WSGI client configuration"
+      },
+      "proxy_terminal": {
+        "source": {
+          "seen": 1,
+          "expected_reply": 2,
+          "invalid": [],
+          "connections": 0
+        },
+        "native": {
+          "seen": 1,
+          "expected_reply": -2,
+          "invalid": [],
+          "connections": 0
+        }
+      },
+      "phases": {
+        "source": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "source_control": "actual Original Redis INCR reply held",
+          "target_status": 429,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.400886299001286,
+            "control_work_seconds": 2.0167663899774197,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0008862990012858951,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "actual_target_client_socket_closed": false,
+          "server_handler_cancellation_inferred": null,
+          "private_other_reservation_witness": null,
+          "post_close_literal": {
+            "checkpoint": "after target outcome/clientclose, followerclose then1.5s sleep; not proof body/server handler fullysettled",
+            "active_streams": "1",
+            "request_count": "2",
+            "profile_counter": "1",
+            "stop": "true"
+          }
+        },
+        "native": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "source_control": "actual Redis executed provider reply held",
+          "target_status": 429,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.400616921018809,
+            "control_work_seconds": 2.012294551997911,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0006169210188091689,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "actual_target_client_socket_closed": false,
+          "server_handler_cancellation_inferred": null,
+          "private_other_reservation_witness": {
+            "same_private_owner_ledger_identity": true,
+            "reserved": true,
+            "native_global_count": 1,
+            "full_Source_counter_parity_claimed": false
+          },
+          "post_close_literal": {
+            "checkpoint": "after target outcome/clientclose, followerclose then1.5s sleep; not proof body/server handler fullysettled",
+            "active_streams": null,
+            "request_count": null,
+            "profile_counter": "1",
+            "stop": "true"
+          }
+        }
+      },
+      "physical_cleanup_errors": []
+    },
+    {
+      "case": "abort",
+      "passed": true,
+      "origin_preflight_passed": true,
+      "independent_DB_clones_equal": true,
+      "full_DB_hash_claimed": false,
+      "default_nine_tables_sequences_unchanged": true,
+      "actual_Main_image_id": "sha256:1907887b67d15dbb39af040176923de5f6583afc44ec9a3103eeb3334bcd1f0d",
+      "Source_actual_client_config": {
+        "socket_timeout": 60,
+        "connect_timeout": 5,
+        "retry_on_timeout": true,
+        "proxy_port": 6383,
+        "settings_socket_timeout": 60,
+        "method_replaced": false,
+        "scope": "actual Original Source WSGI client configuration"
+      },
+      "proxy_terminal": {
+        "source": {
+          "seen": 1,
+          "expected_reply": 1,
+          "invalid": [],
+          "connections": 0
+        },
+        "native": {
+          "seen": 1,
+          "expected_reply": 1,
+          "invalid": [],
+          "connections": 0
+        }
+      },
+      "phases": {
+        "source": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "source_control": "actual Original Redis INCR reply held",
+          "target_status": null,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.40077442699112,
+            "control_work_seconds": 2.0168210430128966,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.0007744269911200696,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "actual_target_client_socket_closed": true,
+          "server_handler_cancellation_inferred": false,
+          "private_other_reservation_witness": null,
+          "post_close_literal": {
+            "checkpoint": "after target outcome/clientclose, followerclose then1.5s sleep; not proof body/server handler fullysettled",
+            "active_streams": "2",
+            "request_count": "3",
+            "profile_counter": "1",
+            "stop": "true"
+          }
+        },
+        "native": {
+          "passed": true,
+          "actual_SQL_Bearer_user_verified": true,
+          "source_control": "actual Redis executed provider reply held",
+          "target_status": null,
+          "follower_status": 200,
+          "prefix_bytes": 8192,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "early_stop_preserved_after_8192": true,
+          "hold_observation": {
+            "actual_seconds": 2.400722146005137,
+            "control_work_seconds": 2.0144678150245454,
+            "declared_target_seconds": 2.4,
+            "maximum_seconds": 2.75,
+            "overshoot_seconds": 0.000722146005136981,
+            "control_completed_within_target": true,
+            "within_declared_bound": true,
+            "same_declared_target": true,
+            "exact_pause_identity_claimed": false
+          },
+          "actual_target_client_socket_closed": true,
+          "server_handler_cancellation_inferred": false,
+          "private_other_reservation_witness": null,
+          "post_close_literal": {
+            "checkpoint": "after target outcome/clientclose, followerclose then1.5s sleep; not proof body/server handler fullysettled",
+            "active_streams": null,
+            "request_count": null,
+            "profile_counter": "0",
+            "stop": "true"
+          }
+        }
+      },
+      "physical_cleanup_errors": []
+    }
+  ],
+  "busy_counter_checkpoints": {
+    "source": {
+      "idle_before_target": {
+        "captured": true,
+        "counter": 1
+      },
+      "actual_reply_held": {
+        "captured": true,
+        "counter": 2
+      },
+      "immediately_before_reply_release": {
+        "captured": true,
+        "counter": 2
+      },
+      "immediately_after_reply_release": {
+        "captured": false,
+        "counter": null
+      },
+      "immediately_after_target_outcome_before_follower_close": {
+        "captured": false,
+        "counter": null
+      },
+      "target_outcome_status": 429,
+      "after_target_outcome_and_follower_close_plus_1_5s": {
+        "captured": true,
+        "counter": 1
+      },
+      "later_other_body_still_readable": true,
+      "full_counter_parity_claimed": false
+    },
+    "native": {
+      "idle_before_target": {
+        "captured": true,
+        "counter": 1
+      },
+      "actual_reply_held": {
+        "captured": true,
+        "counter": 1
+      },
+      "immediately_before_reply_release": {
+        "captured": true,
+        "counter": 1
+      },
+      "immediately_after_reply_release": {
+        "captured": false,
+        "counter": null
+      },
+      "immediately_after_target_outcome_before_follower_close": {
+        "captured": false,
+        "counter": null
+      },
+      "target_outcome_status": 429,
+      "after_target_outcome_and_follower_close_plus_1_5s": {
+        "captured": true,
+        "counter": 1
+      },
+      "later_other_body_still_readable": true,
+      "full_counter_parity_claimed": false
+    }
+  },
+  "busy_counter_interpretation": "Only literal checkpoint values above; immediately after release/outcome were not captured. Current post-close values1/1 are not a general counter-parity claim; historical post-method undercount evidence stays separate. No Sourcefix inference.",
+  "private_raw_phase_sha256": {
+    "success/pending-main-source-success-private.json": "78156a544f14b39f785c1390baf4cd827f578d4b9ab00df03cb4abfc5e9ae459",
+    "success/pending-main-native-success-private.json": "c7b50cb649d5bb650be0ffaffcf311963b3234d0c73a0e44f64d40cedd3b1009",
+    "busy/pending-main-source-busy-private.json": "a8896bbe48ef50608e601c8b887469b60a984f3c2a57f407c64dafb9b324bcd1",
+    "busy/pending-main-native-busy-private.json": "cf4a0e808eea208eb17c9ec8030b903d7e04d01176eee869bc93f1342c24712a",
+    "abort/pending-main-source-abort-private.json": "c47dbf0e5c0d98e0f45bcc9bb19487e584b4a14210dafe32fa307dc4f3085244",
+    "abort/pending-main-native-abort-private.json": "e9f63876a0687dc26c28e516fbcba38d9071b74400e9ad6baeb37651a8420a1b"
+  },
+  "independent_cleanup": {
+    "passed": true,
+    "inventories": [
+      {
+        "case": "success",
+        "project": "dispatcharr-pending-main-fd215ca9f4",
+        "remaining": {
+          "containers": "",
+          "networks": "",
+          "volumes": ""
+        },
+        "passed": true
+      },
+      {
+        "case": "busy",
+        "project": "dispatcharr-pending-main-0e068ddf14",
+        "remaining": {
+          "containers": "",
+          "networks": "",
+          "volumes": ""
+        },
+        "passed": true
+      },
+      {
+        "case": "abort",
+        "project": "dispatcharr-pending-main-6d6be91938",
+        "remaining": {
+          "containers": "",
+          "networks": "",
+          "volumes": ""
+        },
+        "passed": true
+      }
+    ],
+    "scope": "exact owned Compose project labels, read-only independent final inventory"
+  },
+  "same_fixed_hold_policy": true,
+  "global_ordinary_timeout_seconds": 2,
+  "outer_Main_idle_observer_seconds": 3,
+  "adaptive_retries": 0,
+  "method_wrapper_used": false,
+  "resource_sampling": false,
+  "performance_acceptance": false,
+  "full_M3_M4_acceptance": false,
+  "remaining_limits": [
+    "Main greater-than3s held reply boundary unqualified in actualMain",
+    "old finalizer callback/generation/event ordering not directly observed; nominal Source andMain idlegrace1s distinct from3s observer",
+    "onlyearly8192 stop observation, not full100unit/latebody parity",
+    "literal Source/native postclose lifecycle differences below, not normalized or labeled defect",
+    "historical Sourcecounter undercount frompostmethod schedule nottransferred tothisphysicalSource run",
+    "rawheader observations retained, notfullheaderparity claim",
+    "default recovery remainsOFF outside opt-in fixture"
+  ],
+  "timer_static_authority": {
+    "Original": "apps/proxy/vod_proxy/multi_worker_connection_manager.py1596 sleep1",
+    "native_committed208598ee": "VodConfig.default idle_grace1; sessions Recovery observer3",
+    "current_actual2_4_hold": "spans nominal1s; no directoldcallback execution witness, no implication timer is3s"
+  }
+}
