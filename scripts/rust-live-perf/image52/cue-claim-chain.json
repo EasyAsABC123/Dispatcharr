@@ -1,0 +1,45 @@
+{
+  "scope": "Sanitized consumed historical authority hashes, not replayable cues",
+  "stages": [
+    {
+      "stage": "image52-live-functional-1",
+      "cue_sha256": "30930691d1b3a7c3a661467288395b38582f5f34df9cbf5c04fcc09cb3111eaa",
+      "exclusive_claim_sha256": "365230da9ffd6ca5d6c7c150770677c68154e087af8616ee5710ed04a700b300",
+      "action": "image52-six-phase-functional-once",
+      "authority_window_seconds": 1800.0,
+      "candidate_manifest_sha256": "6b5ab542dfc6cda4f9a2187d1669f06ccd007ee7f43a1359e7812ff353afa549",
+      "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+      "once_only": true,
+      "no_retry": true,
+      "boot_PID_host_paths_and_actual_argv_omitted": true
+    },
+    {
+      "stage": "image52-live-source-qualification-1",
+      "cue_sha256": "41a877a2ae29de318fc9932f550e77a92ce5454e0eb4f8ba28d70879d536b854",
+      "exclusive_claim_sha256": "3aa95bc7f16acc6fa2a8db841154c72e1b15a527afd8bafa982b8973e654f77b",
+      "action": "qualify",
+      "authority_window_seconds": 1800.0,
+      "candidate_manifest_sha256": "6b5ab542dfc6cda4f9a2187d1669f06ccd007ee7f43a1359e7812ff353afa549",
+      "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+      "once_only": true,
+      "no_retry": true,
+      "boot_PID_host_paths_and_actual_argv_omitted": true
+    },
+    {
+      "stage": "image52-live-paired-measurement-1",
+      "cue_sha256": "6359ac24ddd5404c0b5dc0dc99621384f1bf896ce32291ef1bf2463c4ceb82d4",
+      "exclusive_claim_sha256": "7e02e8732ffd4c786bc701a91250d19341d6ad91e35cd5728ab38a17453d3439",
+      "action": "measure",
+      "authority_window_seconds": 1800.0,
+      "candidate_manifest_sha256": "6b5ab542dfc6cda4f9a2187d1669f06ccd007ee7f43a1359e7812ff353afa549",
+      "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+      "once_only": true,
+      "no_retry": true,
+      "boot_PID_host_paths_and_actual_argv_omitted": true
+    }
+  ],
+  "Source_report_sha256": "2d14c79fa33365118e669f060d44442262503c3febaa6d4527cc402988db4723",
+  "Source_Root_review_sha256": "b6706321749876c84a378597a0cea8cdb0d937f055dabb7c36b1d8722f66c9d5",
+  "measurement_parent_review_sha256": "034e83e81408463f68e44fa43399bfc62ef91e2a6582c3680da7ea91c65b1b33",
+  "no_private_auth_boot_PID_or_host_argv_published": true
+}

@@ -1,8 +1,9 @@
 # Image52 performance measurement plan
 
-Status: planned. Image52 has no measured CPU or memory gain yet. Original
-Dispatcharr authors and contributors retain full application and algorithm
-credit and their licenses.
+Status: completed for the scoped live workload. The [verified results](rust-image52-live-performance.md)
+include nine passing pairs and independent validation. The steps below retain the
+predeclared measurement plan. Original Dispatcharr authors and contributors retain
+full application and algorithm credit and their licenses.
 
 The candidate is Git `98e447186af099dd17496539aec46312f6cf4f62`, Docker image
 `sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44`.

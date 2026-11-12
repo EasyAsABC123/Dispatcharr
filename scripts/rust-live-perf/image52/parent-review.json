@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "raw_live_report_sha256": "17acb39d5914c619032813225afbf549fd5b7c4a22d49b5c44399bee5d504ac3",
+  "result": {
+    "passed": true,
+    "pairs": 9,
+    "phases": 18,
+    "samples": 1062,
+    "summaries": [
+      {
+        "viewers": 1,
+        "pairs": 3,
+        "median_paired_CPU_reduction_percent": 69.06617054885473,
+        "median_paired_working_memory_reduction_percent": 51.63106211419108,
+        "minimum_measured_throughput_ratio": 1.0014821758848718
+      },
+      {
+        "viewers": 10,
+        "pairs": 3,
+        "median_paired_CPU_reduction_percent": 78.92507080340225,
+        "median_paired_working_memory_reduction_percent": 46.55857335786888,
+        "minimum_measured_throughput_ratio": 0.9861793922126071
+      },
+      {
+        "viewers": 100,
+        "pairs": 3,
+        "median_paired_CPU_reduction_percent": 91.15673517236125,
+        "median_paired_working_memory_reduction_percent": 49.23704520396913,
+        "minimum_measured_throughput_ratio": 0.9845203551725427
+      }
+    ],
+    "scope": "Image52 authenticated live backend plus commonPGRedis/origin only; no full application/milestone acceptance"
+  },
+  "media_and_both_decoder_transcripts_hash_verified": 666,
+  "actual_execution_tool_hashes_verified": 1978,
+  "tool_base_commit": "28122faf28a0acf1c136ca0d0831961e786cb686",
+  "project": "dispatcharr-m2-functional-8e9ebc8d25",
+  "remaining": {
+    "containers": "",
+    "networks": "",
+    "volumes": ""
+  },
+  "Root_all_Docker_containers_empty": true,
+  "quiet_released_after_this_review": true,
+  "scope": "Image52 liveHTTP+commonPGRedis/localorigin only; no fullM2, fullgraph or rewrite acceptance"
+}

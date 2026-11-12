@@ -1,0 +1,36 @@
+{
+  "scope": "Post-run publication checks only; no new workload execution",
+  "passed": true,
+  "checks": [
+    {
+      "name": "raw30.log",
+      "sha256": "6adc94655ed6f6337966e2f69ea3454fbbf1552c33dd265c526d8db6e02428bc",
+      "corruptions_or_complete_matrix_tests": 30,
+      "skipped": 0
+    },
+    {
+      "name": "public-wrapper.log",
+      "sha256": "02365cf36f64a389cfbf99ff07a4714053eb6f71e5db81de99efa54f3b52c8a4",
+      "corruptions_or_complete_matrix_tests": 30,
+      "skipped": 0
+    },
+    {
+      "name": "prerequisite-controls.log",
+      "sha256": "3c148cd8a85482278cb52364fea4a2c48e09df2eb3dc0b89c998f32e3dca4843",
+      "corruptions_or_complete_matrix_tests": 12,
+      "skipped": 0
+    },
+    {
+      "name": "projection-controls.log",
+      "sha256": "0420ea7a485b9b374f72145a10968560ca17b0578cddbf39837ccda77fa02803",
+      "corruptions_or_complete_matrix_tests": 6,
+      "skipped": 0
+    }
+  ],
+  "raw30_uses_actual_completed_report": true,
+  "public_wrapper30_uses_only_public_projection": true,
+  "prerequisite_corruption_cases": 12,
+  "projection_corruption_cases": 6,
+  "startup_tool_failure": "Initial new prerequisite verifier had SyntaxError before execution; corrected and failure log retained privately. Original workload/publisher tools unchanged.",
+  "publication_tools_selection_sha256": "7b1650755ee56c2d976b13975dba6179092d81ead62bb7e32857a2153014187d"
+}
