@@ -1,0 +1,116 @@
+{
+  "scope": "FAILED setup-only once attempt, no declared playback/import workflow or supplementalRSS/PSS points; no Sourcegrowth inference",
+  "process_exit": 1,
+  "error_type": "ValueError",
+  "error_message": "OwnedRedisEndpointRequired",
+  "failure_stage": "constructing RedisInfoSession before open; Redis-owned close records NOT_CREATED",
+  "supplemental_points": 0,
+  "declared_6task_44check_workflow_started": false,
+  "playback_started": false,
+  "prework_observer_smoke": {
+    "passed": true,
+    "samples": 10,
+    "services": [
+      "baseline",
+      "origin",
+      "source",
+      "worker"
+    ],
+    "functional_cadence_seconds": 10.000066499022068,
+    "maximum_sample_observer_seconds": 0.005246568995062262,
+    "cli_memory_comparisons": [
+      {
+        "service": "baseline",
+        "difference_bytes": 25395.19999998808,
+        "tolerance_bytes": 3131555.84,
+        "passed": true
+      },
+      {
+        "service": "source",
+        "difference_bytes": 9830.40000000596,
+        "tolerance_bytes": 5255659.5200000005,
+        "passed": true
+      },
+      {
+        "service": "origin",
+        "difference_bytes": 295731.1999999881,
+        "tolerance_bytes": 3280322.56,
+        "passed": true
+      },
+      {
+        "service": "worker",
+        "difference_bytes": 1503232.0,
+        "tolerance_bytes": 3115663.36,
+        "passed": true
+      }
+    ],
+    "limits_verified": true,
+    "monotonic_counters_verified": true,
+    "memory_metric": "Docker working-memory sum, exactSourceweb+Originalworker+PGRedis+origin",
+    "cpu_metric": "Sum of complete-window cgroup usage_usec/time per selected service",
+    "performance_verified": false,
+    "scope": "10s four-service capability check only; no workload resource acceptance"
+  },
+  "prework_census_complete_by_role": {
+    "baseline": true,
+    "source": true,
+    "origin": true,
+    "worker": true
+  },
+  "Source_metric_observation_validity": "NOT_RUN, not zero and not Sourcebudgetfailure",
+  "default_database_unchanged": true,
+  "all_8_terminal_actions_ok": true,
+  "all_61_host_commands_drained": true,
+  "owned_independent_cleanup_empty": true,
+  "endpoint_diagnosis": {
+    "declared_mapping": "127.0.0.1:64570:6379",
+    "mapping_present": true,
+    "compose_port_command": 55,
+    "compose_port_exit": 0,
+    "compose_port_retained_output_bytes": 3,
+    "actual_stdout": "NOT_RETAINED",
+    "invalid_host_or_port_guard_raised": true,
+    "exact_endpoint_and_cause": "UNKNOWN; no causal claim from missing stdout",
+    "default_network_internal": true,
+    "no_relaxed_hostguard_or_Source_retry": true
+  },
+  "raw_bindings": [
+    {
+      "path": "artifacts/rust/m0-supplemental-metrics-source-1/integration.json",
+      "sha256": "6601042a767f872814b941be81e76ba079da33bfeb9a12259845ec501a83d57d"
+    },
+    {
+      "path": "artifacts/rust/m0-supplemental-metrics-source-1/independent-cleanup.json",
+      "sha256": "9af0544fc0449162d310f311e0dc6f241ba31a37ce3b12d218755748f8fc05b3"
+    },
+    {
+      "path": "artifacts/rust/m0-supplemental-metrics-source-1/ports.yml",
+      "sha256": "e9e326beda582781a0580b2561216f0e6a9ff07684fb9953475b2407ecec2f8b"
+    },
+    {
+      "path": "artifacts/rust/m0-supplemental-metrics-source-1/fixture.json",
+      "sha256": "b4e47fd91404f29200a3900d89c3d5ae7f8a077a666befdd5eacf207b858e2a6"
+    },
+    {
+      "path": "artifacts/rust/m0-supplemental-metrics-source-1/seal.json",
+      "sha256": "288ba0b743e196f7c1c39637a29f57c1fdff82e2d68259981d0ab57f5aa67f42"
+    },
+    {
+      "path": "artifacts/rust/m0-supplemental-metrics-source-1/Root-functional-cue.json",
+      "sha256": "876de29bb0e17620ba532ec4dfc45eba6bfb36d2cde7c7989842f4028fa2d486"
+    },
+    {
+      "path": "artifacts/rust/m0-supplemental-metrics-source-1/launcher-receipt.json",
+      "sha256": "25508dcab57ef70aee4ef22ad43e680f87caa9e215c39bf4a218efbf6f2595d9"
+    },
+    {
+      "path": "artifacts/rust/m0-supplemental-normal-execution-prep-1/once-console.log",
+      "sha256": "d99cd5f2d770b16120382800ed52302d0aa1d20cc6a19cadaa8f7f7c7f8c62ba"
+    }
+  ],
+  "Source_budget_acceptance": null,
+  "Native_comparison": false,
+  "M0_complete": false,
+  "no_retry": true,
+  "Source1_stdout_remains_UNKNOWN": true
+}

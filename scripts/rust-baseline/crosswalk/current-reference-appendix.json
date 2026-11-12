@@ -1,0 +1,629 @@
+{
+  "scope": "Current reference APPENDIX preserving immutablehistory; Source2actual, RootboundedM0decisionpending",
+  "based_on_commit": "8ed056087851b84a6e9e70451d9f7c9eb5dc0f82",
+  "historical_crosswalk_path": "scripts/rust-baseline/crosswalk/crosswalk.json",
+  "historical_crosswalk_sha256": "4bb1f1e895874bb83d9d8f910e6806000ed81c52147a43cd9703d8fa60a46e71",
+  "historical8scenario_records_UNCHANGED": true,
+  "registry_counts_and_IDs_UNCHANGED": {
+    "runtime_routes": 592,
+    "routes_with_unresolved_methods": 322,
+    "methodless_routes_with_runtime_handler_candidates": 166,
+    "runtime_operation_work_items": 798,
+    "OpenAPI_operations": 362,
+    "static_non_HTTP_candidates": 250,
+    "fully_verified_route_operations": 0,
+    "scoped_evidence_requiring_case_mapping": 16,
+    "operations_with_partial_case_bindings": 11,
+    "mapped_packaged_case_observations": 403
+  },
+  "fully_verified_route_operations": 0,
+  "historical_8_budget_presence": [
+    {
+      "scenario": "corrected_original_idle_churn_3rep",
+      "status": "historical capture unchanged; see originalcrosswalk for actualscope",
+      "required_budget_fields": {
+        "minimum_media_throughput": 100000,
+        "maximum_error_count": 0,
+        "startup_p95_absolute_ceiling_ms": 15000,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 45,
+        "post_cleanup_growth_ceiling": {
+          "post_idle_process_growth": 0,
+          "post_idle_thread_growth": 4,
+          "post_idle_fd_growth": 16,
+          "post_idle_socket_growth": 16,
+          "post_idle_memory_growth_bytes": 67108864,
+          "post_idle_memory_growth_fraction": 0.1
+        }
+      },
+      "captured_declared_fields": {
+        "literal_declared_growth_budgets": {
+          "post_idle_process_growth": 0,
+          "post_idle_thread_growth": 4,
+          "post_idle_fd_growth": 16,
+          "post_idle_socket_growth": 16,
+          "post_idle_memory_growth_bytes": 67108864,
+          "post_idle_memory_growth_fraction": 0.1
+        }
+      },
+      "Source_budget_acceptance": false,
+      "no_null_to_pass_or_retroactive_freeze": true
+    },
+    {
+      "scenario": "many_unlimited",
+      "status": "historical capture unchanged; see originalcrosswalk for actualscope",
+      "required_budget_fields": {
+        "minimum_media_throughput": null,
+        "maximum_error_count": 0,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 60,
+        "post_cleanup_growth_ceiling": null
+      },
+      "captured_declared_fields": {
+        "literal_budgets": {
+          "resource_samples_minimum": 3,
+          "HTTP_errors": 0,
+          "empty_responses": 0,
+          "viewers_without_data": 0
+        },
+        "absolute_CPU_ceiling": null,
+        "absolute_memory_ceiling": null,
+        "growth_ceiling": null
+      },
+      "Source_budget_acceptance": null,
+      "no_null_to_pass_or_retroactive_freeze": true
+    },
+    {
+      "scenario": "mixed9fast1slow",
+      "status": "historical capture unchanged; see originalcrosswalk for actualscope",
+      "required_budget_fields": {
+        "minimum_media_throughput": {
+          "fast_floor_Bps": 225000,
+          "slow_rate_floor": null
+        },
+        "maximum_error_count": null,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 60,
+        "post_cleanup_growth_ceiling": null
+      },
+      "captured_declared_fields": {
+        "literal_budgets": {
+          "fast_floor_Bps": 225000,
+          "slow_recv_buffer": 4096,
+          "slow_read_bytes": 1024,
+          "slow_delay_s": 0.25,
+          "warmup_s": 15,
+          "active_s": 30
+        },
+        "absolute_CPU_ceiling": null,
+        "absolute_memory_ceiling": null,
+        "growth_ceiling": null
+      },
+      "Source_budget_acceptance": null,
+      "no_null_to_pass_or_retroactive_freeze": true
+    },
+    {
+      "scenario": "stall_failover",
+      "status": "historical capture unchanged; see originalcrosswalk for actualscope",
+      "required_budget_fields": {
+        "minimum_media_throughput": null,
+        "maximum_error_count": null,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 60,
+        "post_cleanup_growth_ceiling": null
+      },
+      "captured_declared_fields": {
+        "literal_budgets": {
+          "timeout_s": 45,
+          "stall_s": 2,
+          "prefault_bytes": 250000,
+          "recovery_observation_s": 7,
+          "capture_max_bytes": 33554432
+        },
+        "absolute_CPU_ceiling": null,
+        "absolute_memory_ceiling": null,
+        "growth_ceiling": null
+      },
+      "Source_budget_acceptance": null,
+      "no_null_to_pass_or_retroactive_freeze": true
+    },
+    {
+      "scenario": "finite_provider1_and10",
+      "status": "historical capture unchanged; see originalcrosswalk for actualscope",
+      "required_budget_fields": {
+        "minimum_media_throughput": {
+          "first_media_bytes": 750000,
+          "rate_floor_Bps": null
+        },
+        "maximum_error_count": null,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 60,
+        "post_cleanup_growth_ceiling": null
+      },
+      "captured_declared_fields": {
+        "absolute_CPU_ceiling": null,
+        "absolute_memory_ceiling": null,
+        "growth_ceiling": null
+      },
+      "Source_budget_acceptance": null,
+      "no_null_to_pass_or_retroactive_freeze": true,
+      "functional_deadlines_distinct_from_startup_p95": {
+        "first_media_s": 25,
+        "postclose_slot_s": 30,
+        "refusal_HTTP_s": 10
+      }
+    },
+    {
+      "scenario": "sustained_source1reader",
+      "status": "historical capture unchanged; see originalcrosswalk for actualscope",
+      "required_budget_fields": {
+        "minimum_media_throughput": {
+          "positive_measured_bytes": true,
+          "rate_floor_Bps": null
+        },
+        "maximum_error_count": 0,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 60,
+        "post_cleanup_growth_ceiling": null
+      },
+      "captured_declared_fields": {
+        "absolute_CPU_ceiling": null,
+        "absolute_memory_ceiling": null,
+        "growth_ceiling": null
+      },
+      "Source_budget_acceptance": null,
+      "no_null_to_pass_or_retroactive_freeze": true,
+      "inherited_ratio_values_not_exercised_with_sampler_disabled": {
+        "max_CPU_ratio": 0.9,
+        "max_memory_ratio": 0.95
+      }
+    },
+    {
+      "scenario": "worker_inclusive_normal",
+      "status": "historical capture unchanged; see originalcrosswalk for actualscope",
+      "required_budget_fields": {
+        "minimum_media_throughput": 100000,
+        "maximum_error_count": 0,
+        "startup_p95_absolute_ceiling_ms": 15000,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 45,
+        "post_cleanup_growth_ceiling": null
+      },
+      "captured_declared_fields": {
+        "absolute_CPU_ceiling": null,
+        "absolute_memory_ceiling": null,
+        "growth_ceiling": null
+      },
+      "Source_budget_acceptance": null,
+      "no_null_to_pass_or_retroactive_freeze": true
+    },
+    {
+      "scenario": "resource_controller5",
+      "status": "historical capture unchanged; see originalcrosswalk for actualscope",
+      "required_budget_fields": {
+        "minimum_media_throughput": null,
+        "maximum_error_count": null,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": null,
+        "post_cleanup_growth_ceiling": null
+      },
+      "captured_declared_fields": {
+        "proposed_budgets_not_yet_approved_for_four_roles": {
+          "idle_cpu_percent_one_core": 50,
+          "whole_stack_cpu_percent_one_core": 500,
+          "post_idle_memory_growth_bytes": 67108864,
+          "post_idle_memory_growth_fraction": 0.1,
+          "post_idle_process_growth": 0,
+          "post_idle_thread_growth": 4,
+          "post_idle_fd_growth": 16,
+          "post_idle_socket_growth": 16,
+          "tcp_time_wait_ceiling": 1024,
+          "oom_events": 0
+        }
+      },
+      "Source_budget_acceptance": null,
+      "no_null_to_pass_or_retroactive_freeze": true
+    }
+  ],
+  "current_reference_records": [
+    {
+      "name": "warmed_live_image48_Source_cohort",
+      "state": "RECORDED_Source_arm_of_fixed_comparison",
+      "scope": "1/10/100,3repetitions each,15warm/60active;333Source readers/531Source samples; no workergraph",
+      "registered_contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+      "observed_method": "GET",
+      "registered_method": null,
+      "observed_role": "owned authenticated fixture user; not complete rolematrix",
+      "required_budget_fields": {
+        "minimum_media_throughput": null,
+        "maximum_error_count": 0,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": 0.9,
+        "memory_ratio_ceiling": 0.95,
+        "cleanup_deadline_seconds": 60,
+        "post_cleanup_growth_ceiling": null
+      },
+      "declared_relative_fields": {
+        "max_CPU_ratio": 0.9,
+        "max_memory_ratio": 0.95,
+        "max_first_byte_ratio": 1.1,
+        "first_byte_floor_ms": 50,
+        "minimum_throughput_ratio": 0.95,
+        "minimum_viewer_rate_fraction": 0.9,
+        "maximum_viewer_rate_fraction": 1.1,
+        "minimum_samples": 50,
+        "maximum_errors": 0,
+        "maximum_OOM_events": 0,
+        "cleanup_seconds": 60
+      },
+      "absolute_startup_p95_ceiling": null,
+      "missing_absolute_startup_or_growth_not_fabricated": true,
+      "Native_numbers_remain_bound_to_image48_only": true
+    },
+    {
+      "name": "Resource7_fixed3_Original",
+      "state": "OBSERVATION_VALID_SOURCE_BUDGET_NEGATIVE",
+      "scope": "fourroles/15warm120active/imports5&60/70retention/postidle,3fixedruns",
+      "registered_contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+      "observed_method": "GET",
+      "registered_method": null,
+      "task_candidates": [
+        "candidate-442405cebe0695fa65ba",
+        "candidate-ec9fbf9e83b49892cea2",
+        "candidate-1bcc1e26e1c56f58d30a"
+      ],
+      "required_budget_fields": {
+        "minimum_media_throughput": 100000,
+        "maximum_error_count": 0,
+        "startup_p95_absolute_ceiling_ms": 15000,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 45,
+        "post_cleanup_growth_ceiling": {
+          "idle_cpu_percent_one_core": 50,
+          "whole_stack_cpu_percent_one_core": 500,
+          "post_idle_memory_growth_bytes": 67108864,
+          "post_idle_memory_growth_fraction": 0.1,
+          "post_idle_process_growth": 0,
+          "post_idle_thread_growth": 4,
+          "post_idle_fd_growth": 16,
+          "post_idle_socket_growth": 16,
+          "tcp_time_wait_ceiling": 1024,
+          "oom_events": 0
+        }
+      },
+      "literal_startup_policy_label": "startup_p95_ms; actual one-viewer firstbyte checkperrun, not a p95distribution",
+      "declared_absolute_CPU_percent_one_core": {
+        "idle": 50,
+        "whole_stack": 500
+      },
+      "CPU_ratio_and_memory_ratio_not_applicable_to_Source_only": null,
+      "observed_process_FD_socket_growth_each": [
+        1,
+        144,
+        18
+      ],
+      "declared_process_FD_socket_growth": [
+        0,
+        16,
+        16
+      ],
+      "Source_budget_acceptance": false,
+      "counts": {
+        "resource_rows": 774,
+        "censuses": 342,
+        "eligible_censuses": 335,
+        "interval_checks": 45,
+        "actual_task_executions": 18,
+        "durable_check_executions": 132
+      },
+      "public_reference": "scripts/rust-baseline/concurrent-resource/reference/README.md",
+      "historical_policy_status_string_not_rewritten": true
+    },
+    {
+      "name": "settings_derived_prolonged_outage_once",
+      "state": "OBSERVATION_VALID_PROCESS_REPORTING_EXIT1",
+      "scope": "oneOriginalwarmedbody;bothownedcandidates503102s;primaryrestore88s;separatefreshbody;70sretention",
+      "registered_contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+      "observed_method": "GET",
+      "registered_method": null,
+      "required_budget_fields": {
+        "minimum_media_throughput": null,
+        "maximum_error_count": null,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": null,
+        "post_cleanup_growth_ceiling": null
+      },
+      "functional_frozen_fields": {
+        "warm_s": 15,
+        "outage_s": 102,
+        "restore_observation_s": 88,
+        "retention_s": 70,
+        "original_and_fresh_AV_min_frames": 25,
+        "bounded_prefix_bytes": 2097152
+      },
+      "process_exit": 1,
+      "stored_report_passed": true,
+      "reporting_failure": "fixture context final report JSON serialization AFTER atomic terminal persistence, not finalscalarconsoleprint",
+      "original_body_outcome": "configured observer50sreadTimeout, NOT SourceEOF or provenoriginalrecovery",
+      "Source_budget_acceptance": null,
+      "no_guaranteed_recovery_ceiling_or_new_throughput_requirement": true,
+      "public_reference": "scripts/rust-baseline/prolonged-outage/reference/verified-source-once-1.json"
+    },
+    {
+      "name": "supplemental_Source1",
+      "state": "FAILED_SETUP_ZERO_PSS_NO_WORKFLOW",
+      "scope": "preworksmoke/censusonly; endpointguardbeforeRedisopen/playback/declaredtasks",
+      "Source_budget_acceptance": null,
+      "actual_Sourcesnapshot_coverage": null,
+      "public_reference": "scripts/rust-baseline/supplemental-metrics/verified-setup-negative-1.json",
+      "not_performance_or_Sourcebudgetnegative": true
+    },
+    {
+      "name": "supplemental_Redis_and_endpoint_helpers",
+      "state": "PREREQUISITES_ONLY",
+      "scope": "ownedRedisINFO/counterreset/close and two-topology binding; noSourceworkflow",
+      "Source_budget_acceptance": null,
+      "public_references": [
+        "scripts/rust-baseline/supplemental-metrics/verified-redis-info-1.json",
+        "scripts/rust-baseline/supplemental-metrics/verified-endpoint-reproduction-1.json"
+      ],
+      "does_not_fill_Source2_fields": true
+    },
+    {
+      "name": "supplemental_Source2",
+      "state": "OBSERVATION_VALID_SOURCE_METRIC_ATTACHMENT_PASS",
+      "scope": "exact28Source5/oneNORMAL15warm120active/imports5&60/6tasks44/3separate2MiBprefixes/70minimum",
+      "registered_contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+      "observed_method": "GET",
+      "registered_method": null,
+      "required_budget_fields": {
+        "minimum_media_throughput": 100000,
+        "maximum_error_count": 0,
+        "startup_p95_absolute_ceiling_ms": 15000,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 45,
+        "post_cleanup_growth_ceiling": null
+      },
+      "observer_quality_not_Source_budget": {
+        "ordered_points": 4,
+        "roles_each": 4,
+        "minimum_complete_role_points": 16,
+        "denied_or_raced_incomplete_invalid": true
+      },
+      "Source_budget_acceptance": null,
+      "actual_RSS_PSS_rows": 75,
+      "actual_Redis_workload_deltas": [
+        {
+          "label": "before-reader",
+          "server": {
+            "total_commands_processed": 310,
+            "total_net_input_bytes": 20985,
+            "total_net_output_bytes": 12010,
+            "run_id": "36ac49fdaffdeaf70cb2ff9b05e6b008aca0f148"
+          },
+          "delta": {
+            "server_protocol_counters_including_observer": {
+              "total_commands_processed": 3,
+              "total_net_input_bytes": 184,
+              "total_net_output_bytes": 6810
+            },
+            "application_only_attribution": false,
+            "observer_subtraction_performed": false
+          }
+        },
+        {
+          "label": "after-warm-before-window",
+          "server": {
+            "total_commands_processed": 3244,
+            "total_net_input_bytes": 5410368,
+            "total_net_output_bytes": 5203182,
+            "run_id": "36ac49fdaffdeaf70cb2ff9b05e6b008aca0f148"
+          },
+          "delta": {
+            "server_protocol_counters_including_observer": {
+              "total_commands_processed": 2934,
+              "total_net_input_bytes": 5389383,
+              "total_net_output_bytes": 5191172
+            },
+            "application_only_attribution": false,
+            "observer_subtraction_performed": false
+          }
+        },
+        {
+          "label": "after-physical-close",
+          "server": {
+            "total_commands_processed": 20876,
+            "total_net_input_bytes": 37549006,
+            "total_net_output_bytes": 35680603,
+            "run_id": "36ac49fdaffdeaf70cb2ff9b05e6b008aca0f148"
+          },
+          "delta": {
+            "server_protocol_counters_including_observer": {
+              "total_commands_processed": 17632,
+              "total_net_input_bytes": 32138638,
+              "total_net_output_bytes": 30477421
+            },
+            "application_only_attribution": false,
+            "observer_subtraction_performed": false
+          }
+        },
+        {
+          "label": "retention",
+          "server": {
+            "total_commands_processed": 21739,
+            "total_net_input_bytes": 38911030,
+            "total_net_output_bytes": 35960857,
+            "run_id": "36ac49fdaffdeaf70cb2ff9b05e6b008aca0f148"
+          },
+          "delta": {
+            "server_protocol_counters_including_observer": {
+              "total_commands_processed": 863,
+              "total_net_input_bytes": 1362024,
+              "total_net_output_bytes": 280254
+            },
+            "application_only_attribution": false,
+            "observer_subtraction_performed": false
+          }
+        }
+      ],
+      "actual_media_identities": {
+        "observed_known_media_processes": [],
+        "unknown_wrappers_not_inferred": true
+      },
+      "actual_three_prefix_discontinuity_fields": {
+        "0.ts": {
+          "packets": 11155,
+          "sync_errors": 0,
+          "transport_errors": 0,
+          "discontinuity_indicators": 0,
+          "CC_mismatches": 0,
+          "duplicate_payload_packets": 0,
+          "malformed_adaptation": 0,
+          "partial_tail_bytes": 12,
+          "tracked_PIDs": 5,
+          "dropped_packets_inferred": null,
+          "scope": "observed188-byte packet fields, no whole-stream zero-loss inference"
+        },
+        "0-import1.ts": {
+          "packets": 11155,
+          "sync_errors": 0,
+          "transport_errors": 0,
+          "discontinuity_indicators": 0,
+          "CC_mismatches": 0,
+          "duplicate_payload_packets": 0,
+          "malformed_adaptation": 0,
+          "partial_tail_bytes": 12,
+          "tracked_PIDs": 5,
+          "dropped_packets_inferred": null,
+          "scope": "observed188-byte packet fields, no whole-stream zero-loss inference"
+        },
+        "0-import2.ts": {
+          "packets": 11155,
+          "sync_errors": 0,
+          "transport_errors": 0,
+          "discontinuity_indicators": 0,
+          "CC_mismatches": 0,
+          "duplicate_payload_packets": 0,
+          "malformed_adaptation": 0,
+          "partial_tail_bytes": 12,
+          "tracked_PIDs": 5,
+          "dropped_packets_inferred": null,
+          "scope": "observed188-byte packet fields, no whole-stream zero-loss inference"
+        }
+      },
+      "observed_callback_overhead": [
+        0.9780256590165664,
+        0.9986960200185422,
+        1.0084025230025873,
+        0.9983765140059404
+      ],
+      "physical_cleanup_and_DB": {
+        "default_database_unchanged": true,
+        "eight_terminal_actions": true,
+        "commands_drained": 157,
+        "physical_body_socket_closed": true,
+        "actual_retention_s": 71.17133491497952,
+        "retention_lateness_s": 1.171334914979525,
+        "owned_containers_networks_volumes_empty": true
+      },
+      "fixture_topology_change": "baseline adds observeringress, allSourcecaps/workload/policy/hostguard unchanged",
+      "snapshot_scope_not_peakPSS_or_allstreamloss": true,
+      "public_reference": "scripts/rust-baseline/supplemental-metrics/source2/verified-source2.json",
+      "actual_complete_role_points": 16,
+      "actual_workload": {
+        "tasks": 6,
+        "durable_checks": 44,
+        "active_bytes": 29936556,
+        "AV_frames": [
+          124,
+          111,
+          118
+        ],
+        "reader_open_to_window_s": 20.76566408202052
+      },
+      "public_reference_sha256": "b502841e02d62f02b63394a1642b7a09565da193116731e8ae8ed7fe9dcbc691",
+      "raw_integration_sha256": "dd8145275f69ed66adb281cd2f91802282efb7d7f4f24f870986b42f32f47995",
+      "retained_audit_sha256": "46fbc20a61641ff626d44d78b71429c836809e0f2ea975e3c994512062085a9a",
+      "public_numeric_controls": 31,
+      "deep_raw_and_controller_authorities": 42,
+      "source1_failed_history_unchanged": true
+    },
+    {
+      "name": "application_stream_change",
+      "state": "RECORDED_SOURCE_FUNCTIONAL",
+      "registered_contract_id": "route-211afdb7c19d0ea91286:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "method_role_observations": [
+        {
+          "method": "POST",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "role": "admin",
+          "status": 405
+        },
+        {
+          "method": "POST",
+          "role": "anonymous",
+          "status": 401
+        }
+      ],
+      "required_budget_fields": {
+        "minimum_media_throughput": {
+          "initial_and_continuation_bytes": 750000,
+          "rate_floor_Bps": null
+        },
+        "maximum_error_count": null,
+        "startup_p95_absolute_ceiling_ms": null,
+        "CPU_ratio_ceiling": null,
+        "memory_ratio_ceiling": null,
+        "cleanup_deadline_seconds": 60,
+        "post_cleanup_growth_ceiling": null
+      },
+      "functional_first_media_and_switch_deadlines_s": {
+        "first_media": 25,
+        "switch": 15,
+        "continuity": 15
+      },
+      "Source_budget_acceptance": null,
+      "performance_sampler": false,
+      "no_method_resolution_or_role_completion": true
+    }
+  ],
+  "budget_rule": "null is genuinely absent/notapplicable; neverpassed/retroactivelyfrozen; exactratios onlywherecomparisonpolicyexists",
+  "task_candidates_unchanged": [
+    "candidate-442405cebe0695fa65ba",
+    "candidate-ec9fbf9e83b49892cea2",
+    "candidate-1bcc1e26e1c56f58d30a"
+  ],
+  "M0_complete": false,
+  "M1_formal_pass": false,
+  "M1_technical_gate": "already passed; formal prerequisiteM0pending",
+  "no_new_ceilings_repetitions_or_Native_prerequisites": true,
+  "M0_acceptance_recommendation": "Recommend boundedSourcebaseline acceptance afterRootindependentreview/publication/reproduction+explicit residualscope disposition; NOT automatic status",
+  "remaining_acceptance_review": [
+    "Rootreview/publication of numericSource2 and needed exacttools/defaultportableverification",
+    "Explicit boundedmetric scope: pointPSS, sampledheaders, knownmediaexecutables, daemoncounters; nopeak/allstreamloss/inventedceilings",
+    "Finalledger/reproduction reconciliation; Rootalone decidesM0 andthenM1formal"
+  ]
+}

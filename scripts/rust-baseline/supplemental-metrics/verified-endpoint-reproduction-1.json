@@ -1,0 +1,192 @@
+{
+  "scope": "ONE Redis-only two-topology reproduction; NOT Source1stdout recovery or Source2retry",
+  "passed": true,
+  "process_exit": 0,
+  "allocator_authority": {
+    "revision": "21a152a27a5800592c66e412a7fac67509a5d485",
+    "sha256": "cc62c838e0842effe49a5e929ca45f8c893383c3c3f66035475e9509125a6aa5"
+  },
+  "captured_allocator_return": {
+    "host_range": [
+      61000,
+      65000
+    ],
+    "kernel_ephemeral_range": [
+      32768,
+      60999
+    ],
+    "services": {
+      "baseline": [
+        {
+          "host": 61704,
+          "container": 6379
+        }
+      ]
+    },
+    "selection": "bind probes held together until overlay is written; released before Docker starts"
+  },
+  "cases": [
+    {
+      "case": "internal-only",
+      "container_id": "4319dd727213d983312c8c173f4498fbbf5c6ac2c1038c8bdb66ef17a22f373d",
+      "actual_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "actual_user": "65532:65532",
+      "actual_networks": [
+        "dispatcharr-m0-redis-endpoint-5b26596db3_default"
+      ],
+      "HostConfig_PortBindings": {
+        "6379/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "61704"
+          }
+        ]
+      },
+      "NetworkSettings_Ports": {
+        "6379/tcp": null
+      },
+      "compose_port_stdout_hex": "3a300a",
+      "compose_port_stdout_text": ":0\n",
+      "parsed": {
+        "host": null,
+        "port": 0,
+        "strict_guard_accepts": false
+      },
+      "declared_allocator_host": "127.0.0.1",
+      "declared_allocator_port": 61704,
+      "caps": {
+        "ReadonlyRootfs": true,
+        "NanoCpus": 250000000,
+        "Memory": 134217728,
+        "PidsLimit": 32,
+        "Tmpfs": {
+          "/tmp": "rw,noexec,nosuid,size=16777216,mode=1777"
+        }
+      },
+      "actual_effective_binding_matches_allocator": false,
+      "allocated_loopback_TCP_connect": false,
+      "TCP_error_type": "ConnectionRefusedError"
+    },
+    {
+      "case": "internal-plus-observer-ingress",
+      "container_id": "3ffe69e4a5f95654b44cd51a1433cf74a886ba3e392bf8d9092e71bccde68bc3",
+      "actual_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "actual_user": "65532:65532",
+      "actual_networks": [
+        "dispatcharr-m0-redis-endpoint-5b26596db3_default",
+        "dispatcharr-m0-redis-endpoint-5b26596db3_ingress"
+      ],
+      "HostConfig_PortBindings": {
+        "6379/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "61704"
+          }
+        ]
+      },
+      "NetworkSettings_Ports": {
+        "6379/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "61704"
+          }
+        ]
+      },
+      "compose_port_stdout_hex": "3132372e302e302e313a36313730340a",
+      "compose_port_stdout_text": "127.0.0.1:61704\n",
+      "parsed": {
+        "host": "127.0.0.1",
+        "port": 61704,
+        "strict_guard_accepts": true
+      },
+      "declared_allocator_host": "127.0.0.1",
+      "declared_allocator_port": 61704,
+      "caps": {
+        "ReadonlyRootfs": true,
+        "NanoCpus": 250000000,
+        "Memory": 134217728,
+        "PidsLimit": 32,
+        "Tmpfs": {
+          "/tmp": "rw,noexec,nosuid,size=16777216,mode=1777"
+        }
+      },
+      "actual_effective_binding_matches_allocator": true,
+      "allocated_loopback_TCP_connect": true,
+      "INFO_open": {
+        "prime": {
+          "label": "prime-before-first-callback",
+          "begin_monotonic": 173800.123592705,
+          "end_monotonic": 173800.123912334,
+          "server": {
+            "total_commands_processed": 1,
+            "total_net_input_bytes": 67,
+            "total_net_output_bytes": 5,
+            "run_id": "1de6638f5a7e932110413670bf8b6cc10a9f228e"
+          },
+          "delta_from_previous": null,
+          "observer_INFO_commands": 1,
+          "observer_commands_total": 2,
+          "observer_outbound_RESP_bytes": 67,
+          "observer_inbound_RESP_bytes": 6501,
+          "scope": "whole-daemon Redis counters including observers; current INFO reply need not be reflected in its own reported output counter"
+        },
+        "AUTH_commands": 1,
+        "credential_recorded": false,
+        "reconnect_supported": false
+      },
+      "INFO_succeeded": true,
+      "INFO_local_socket_closed": true
+    }
+  ],
+  "cleanup": {
+    "down-all-owned": {
+      "passed": true,
+      "result": ""
+    },
+    "containers": {
+      "passed": true,
+      "result": {
+        "empty": true
+      }
+    },
+    "networks": {
+      "passed": true,
+      "result": {
+        "empty": true
+      }
+    },
+    "volumes": {
+      "passed": true,
+      "result": {
+        "empty": true
+      }
+    }
+  },
+  "independent_cleanup": {
+    "scope": "independent exact-owned minimal Redis endpoint fixture inventory only",
+    "project": "dispatcharr-m0-redis-endpoint-5b26596db3",
+    "recorded_UTC": "2026-11-12T03:20:34.907082+00:00",
+    "inventories": {
+      "containers": {
+        "returncode": 0,
+        "ids": [],
+        "empty": true
+      },
+      "networks": {
+        "returncode": 0,
+        "ids": [],
+        "empty": true
+      },
+      "volumes": {
+        "returncode": 0,
+        "ids": [],
+        "empty": true
+      }
+    },
+    "all_empty": true,
+    "integration_sha256": "4aca3a5883928e8a507985290c599ea99adc0f91097fdf4c8cfe9214c3b9d1a6"
+  },
+  "raw_report_sha256": "4aca3a5883928e8a507985290c599ea99adc0f91097fdf4c8cfe9214c3b9d1a6",
+  "tool_sha256": "1c8f8caa502c92dcab55c4fd87f6d8616e8d3fab6cacf7b6daad3973556a30d7",
+  "Source1_exact_stdout_not_retained": true
+}

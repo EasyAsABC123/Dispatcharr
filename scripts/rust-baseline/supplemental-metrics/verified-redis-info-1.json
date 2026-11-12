@@ -1,0 +1,257 @@
+{
+  "scope": "ONE owned Redis-only functional witness, not Source/PSS/workload",
+  "passed": true,
+  "process_exit": 0,
+  "container_identity": {
+    "Id": "b5bdbc42a1d1b3259610e98f991f0ca178a99b421af53c4c9c98e569a5f72a4b",
+    "Image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "User": "65532:65532",
+    "Entrypoint": [
+      "/usr/bin/redis-server"
+    ],
+    "ReadonlyRootfs": true,
+    "NanoCpus": 250000000,
+    "Memory": 134217728,
+    "PidsLimit": 32,
+    "Tmpfs": {
+      "/tmp": "rw,noexec,nosuid,size=16777216,mode=1777"
+    },
+    "bindings": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "33021"
+      }
+    ]
+  },
+  "actual_daemon_credentials": {
+    "uids": [
+      65532,
+      65532,
+      65532,
+      65532
+    ],
+    "gids": [
+      65532,
+      65532,
+      65532,
+      65532
+    ],
+    "name": "redis-server"
+  },
+  "normal_INFO_snapshots": [
+    {
+      "label": "prime-before-first-callback",
+      "begin_monotonic": 172010.463878615,
+      "end_monotonic": 172010.464248216,
+      "server": {
+        "total_commands_processed": 1,
+        "total_net_input_bytes": 67,
+        "total_net_output_bytes": 5,
+        "run_id": "a9be4fdc4481c8c4f786a4bf31954c5a5c1fa0c5"
+      },
+      "delta_from_previous": null,
+      "observer_INFO_commands": 1,
+      "observer_commands_total": 2,
+      "observer_outbound_RESP_bytes": 67,
+      "observer_inbound_RESP_bytes": 6513,
+      "scope": "whole-daemon Redis counters including observers; current INFO reply need not be reflected in its own reported output counter"
+    },
+    {
+      "label": "before-reader",
+      "begin_monotonic": 172010.465287996,
+      "end_monotonic": 172010.465493642,
+      "server": {
+        "total_commands_processed": 6,
+        "total_net_input_bytes": 253,
+        "total_net_output_bytes": 13975,
+        "run_id": "a9be4fdc4481c8c4f786a4bf31954c5a5c1fa0c5"
+      },
+      "delta_from_previous": {
+        "server_protocol_counters_including_observer": {
+          "total_commands_processed": 5,
+          "total_net_input_bytes": 186,
+          "total_net_output_bytes": 13970
+        },
+        "application_only_attribution": false,
+        "observer_subtraction_performed": false
+      },
+      "observer_INFO_commands": 2,
+      "observer_commands_total": 4,
+      "observer_outbound_RESP_bytes": 160,
+      "observer_inbound_RESP_bytes": 13039,
+      "scope": "whole-daemon Redis counters including observers; current INFO reply need not be reflected in its own reported output counter"
+    },
+    {
+      "label": "after-warm-before-window",
+      "begin_monotonic": 172010.465495552,
+      "end_monotonic": 172010.465691448,
+      "server": {
+        "total_commands_processed": 7,
+        "total_net_input_bytes": 267,
+        "total_net_output_bytes": 20496,
+        "run_id": "a9be4fdc4481c8c4f786a4bf31954c5a5c1fa0c5"
+      },
+      "delta_from_previous": {
+        "server_protocol_counters_including_observer": {
+          "total_commands_processed": 1,
+          "total_net_input_bytes": 14,
+          "total_net_output_bytes": 6521
+        },
+        "application_only_attribution": false,
+        "observer_subtraction_performed": false
+      },
+      "observer_INFO_commands": 3,
+      "observer_commands_total": 5,
+      "observer_outbound_RESP_bytes": 174,
+      "observer_inbound_RESP_bytes": 19559,
+      "scope": "whole-daemon Redis counters including observers; current INFO reply need not be reflected in its own reported output counter"
+    },
+    {
+      "label": "after-physical-close",
+      "begin_monotonic": 172010.465692908,
+      "end_monotonic": 172010.465881094,
+      "server": {
+        "total_commands_processed": 8,
+        "total_net_input_bytes": 281,
+        "total_net_output_bytes": 27016,
+        "run_id": "a9be4fdc4481c8c4f786a4bf31954c5a5c1fa0c5"
+      },
+      "delta_from_previous": {
+        "server_protocol_counters_including_observer": {
+          "total_commands_processed": 1,
+          "total_net_input_bytes": 14,
+          "total_net_output_bytes": 6520
+        },
+        "application_only_attribution": false,
+        "observer_subtraction_performed": false
+      },
+      "observer_INFO_commands": 4,
+      "observer_commands_total": 6,
+      "observer_outbound_RESP_bytes": 188,
+      "observer_inbound_RESP_bytes": 26081,
+      "scope": "whole-daemon Redis counters including observers; current INFO reply need not be reflected in its own reported output counter"
+    },
+    {
+      "label": "retention",
+      "begin_monotonic": 172010.465882344,
+      "end_monotonic": 172010.466071609,
+      "server": {
+        "total_commands_processed": 9,
+        "total_net_input_bytes": 295,
+        "total_net_output_bytes": 33538,
+        "run_id": "a9be4fdc4481c8c4f786a4bf31954c5a5c1fa0c5"
+      },
+      "delta_from_previous": {
+        "server_protocol_counters_including_observer": {
+          "total_commands_processed": 1,
+          "total_net_input_bytes": 14,
+          "total_net_output_bytes": 6522
+        },
+        "application_only_attribution": false,
+        "observer_subtraction_performed": false
+      },
+      "observer_INFO_commands": 5,
+      "observer_commands_total": 7,
+      "observer_outbound_RESP_bytes": 202,
+      "observer_inbound_RESP_bytes": 32606,
+      "scope": "whole-daemon Redis counters including observers; current INFO reply need not be reflected in its own reported output counter"
+    }
+  ],
+  "normal_physical_close": {
+    "local_descriptor": -1,
+    "exact_server_client_absent": true,
+    "before": [
+      {
+        "id": 4,
+        "name": "dispatcharr-m0-redis-info-4c4e7e2e0c-normal"
+      },
+      {
+        "id": 6,
+        "name": ""
+      }
+    ],
+    "after": [
+      {
+        "id": 6,
+        "name": ""
+      }
+    ]
+  },
+  "reset_witness": {
+    "before": {
+      "total_commands_processed": 12,
+      "total_net_input_bytes": 388,
+      "total_net_output_bytes": 40519,
+      "run_id": "a9be4fdc4481c8c4f786a4bf31954c5a5c1fa0c5"
+    },
+    "after_actual_owned_CONFIG_RESETSTAT": {
+      "total_commands_processed": 1,
+      "total_net_input_bytes": 14,
+      "total_net_output_bytes": 5,
+      "run_id": "a9be4fdc4481c8c4f786a4bf31954c5a5c1fa0c5"
+    },
+    "same_run_id": true,
+    "adapter_rejected_exactly": "RedisCounterReset",
+    "future_operation_rejected": true
+  },
+  "cleanup": {
+    "close_all_owned_INFO_sockets": {
+      "passed": true,
+      "result": {
+        "all_local_sockets_closed": true
+      }
+    },
+    "actual_daemon_stop_PID_zero": {
+      "passed": true,
+      "result": {
+        "Running": false,
+        "Pid": 0
+      }
+    },
+    "logs": {
+      "passed": true,
+      "result": {
+        "sha256": "fb0933e782b454aa86acb873ef728b3b795945e7d12ddc98f12bee853f3f70e5"
+      }
+    },
+    "remove_owned_container": {
+      "passed": true,
+      "result": "b5bdbc42a1d1b3259610e98f991f0ca178a99b421af53c4c9c98e569a5f72a4b"
+    },
+    "independent_label_inventory": {
+      "passed": true,
+      "result": {
+        "empty": true
+      }
+    }
+  },
+  "independent_cleanup": {
+    "scope": "independent exact-owned Redis-only inventory; shared bridge/image untouched",
+    "recorded_UTC": "2026-11-12T02:48:46.673542+00:00",
+    "name": "dispatcharr-m0-redis-info-4c4e7e2e0c",
+    "inventories": {
+      "containers": {
+        "returncode": 0,
+        "ids": [],
+        "empty": true
+      },
+      "networks": {
+        "returncode": 0,
+        "ids": [],
+        "empty": true
+      },
+      "volumes": {
+        "returncode": 0,
+        "ids": [],
+        "empty": true
+      }
+    },
+    "all_empty": true,
+    "no_Source_or_resource_probe": true,
+    "integration_sha256": "dbab48019e4cd26d18a3ec50598d7e7cbd501583bcce874ff4bcb2cd4e0300ce"
+  },
+  "tool_sha256": "4fee145d3d9efb1cff56c21528d50b682a83711ce0bb537f23e73936bd9c68b4",
+  "raw_report_sha256": "dbab48019e4cd26d18a3ec50598d7e7cbd501583bcce874ff4bcb2cd4e0300ce",
+  "no_Source_or_resource_window": true,
+  "reset_ONLY_disposable_owned_daemon": true
+}
