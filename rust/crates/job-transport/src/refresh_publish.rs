@@ -85,10 +85,7 @@ async fn native_refresh_publication_peer() {
     let caller = Arc::new(());
     let weak = Arc::downgrade(&caller);
     let audit = if input["action"] == "read" {
-        let record = jobs
-            .read_refresh(id, source_id, caller)
-            .await
-            .unwrap();
+        let record = jobs.read_refresh(id, source_id, caller).await.unwrap();
         match record {
             None => json!({"present":false}),
             Some(value) => {

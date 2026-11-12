@@ -2,76 +2,143 @@
 //! Original Dispatcharr authors retain all application/algorithm credit.
 //! Captured SQL/HTTP/physical ownership gates passed; canonical app acceptance
 //! is separate. Category/unified/provider/action routes remain unwired.
-use super::{vod_api_dto::LogoContext,vod_api_owned_read::{ReadError,ReadLimits,ReadRuntime},
-    vod_api_pagination::{ordinary,page_url},vod_api_projection::visibility,
-    vod_api_sql::{Resource,project_fresh},vod_api_query::{self,QueryError}};
-use axum::http::{HeaderMap,Method,Uri};
+use super::{
+    vod_api_dto::LogoContext,
+    vod_api_owned_read::{ReadError, ReadLimits, ReadRuntime},
+    vod_api_pagination::{ordinary, page_url},
+    vod_api_projection::visibility,
+    vod_api_query::{self, QueryError},
+    vod_api_sql::{project_fresh, Resource},
+};
+use axum::http::{HeaderMap, Method, Uri};
 use bytes::Bytes;
 use dispatcharr_contracts::BoxFuture;
 use serde_json::json;
-use sqlx::{PgPool,Row};
-use std::{io::Write,net::SocketAddr,sync::Arc,time::Duration};
+use sqlx::{PgPool, Row};
+use std::{io::Write, net::SocketAddr, sync::Arc, time::Duration};
 
 /// Deliberate integration seam, not a fake authenticated-user implementation.
 /// The shared AuthService adapter carries this guard through its physical
 /// SQL/Redis/cache/publication work, including replies after logical timeout.
 /// Simple `account_user(...).await` alone is insufficient if an internal
 /// logical cache timeout returns before its owned Redis reply completes.
-pub(crate) trait RetainedUiAuthorizer:Send+Sync {
-    fn authorize<'a>(&'a self,peer:SocketAddr,headers:HeaderMap,guard:Arc<dyn Send+Sync>)
-        ->BoxFuture<'a,Result<crate::User,crate::StoreError>>;
+pub(crate) trait RetainedUiAuthorizer: Send + Sync {
+    fn authorize<'a>(
+        &'a self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        guard: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<crate::User, crate::StoreError>>;
 }
 /// Shared authentication bridge uses existing policy/cache/sink on a scoped
 /// request clone. Real paused-Redis/fallback/cancellation tests retain ownership
 /// through actual replies; canonical app validation remains separate.
 struct ScopedUiAuth(crate::AuthService);
 impl RetainedUiAuthorizer for ScopedUiAuth {
-    fn authorize<'a>(&'a self,peer:SocketAddr,headers:HeaderMap,guard:Arc<dyn Send+Sync>)
-        ->BoxFuture<'a,Result<crate::User,crate::StoreError>> {
-        let scoped=self.0.clone().with_retained_scope(guard);
-        Box::pin(async move {scoped.account_user(peer,headers,false).await})
+    fn authorize<'a>(
+        &'a self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        guard: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<crate::User, crate::StoreError>> {
+        let scoped = self.0.clone().with_retained_scope(guard);
+        Box::pin(async move { scoped.account_user(peer, headers, false).await })
     }
 }
 pub(crate) struct ReadRequest {
-    pub peer:SocketAddr,pub headers:HeaderMap,pub resource:Resource,pub detail:Option<i64>,
-    pub query:Vec<(String,String)>,pub origin:String,pub path:String,
+    pub peer: SocketAddr,
+    pub headers: HeaderMap,
+    pub resource: Resource,
+    pub detail: Option<i64>,
+    pub query: Vec<(String, String)>,
+    pub origin: String,
+    pub path: String,
 }
 #[derive(Clone)]
 pub(crate) struct HttpRead {
-    pub method:Method,pub uri:Uri,pub raw_detail:Option<String>,pub scope:Option<super::vod_api_owned_read::HttpScope>,pub deadline:tokio::time::Instant,
+    pub method: Method,
+    pub uri: Uri,
+    pub raw_detail: Option<String>,
+    pub scope: Option<super::vod_api_owned_read::HttpScope>,
+    pub deadline: tokio::time::Instant,
 }
-type PageHook=Arc<dyn Fn()->BoxFuture<'static,Result<(),ReadError>>+Send+Sync>;
+type PageHook = Arc<dyn Fn() -> BoxFuture<'static, Result<(), ReadError>> + Send + Sync>;
 #[derive(Clone)]
-pub(crate) struct SqlReads {pool:PgPool,auth:Arc<dyn RetainedUiAuthorizer>,runtime:ReadRuntime,
-    after_page:Option<PageHook>}
-fn missing(resource:Resource)->ReadError {
-    let name=match resource {Resource::Movie=>"Movie",Resource::Series=>"Series",Resource::Episode=>"Episode"};
-    ReadError::Source(crate::StoreError::StatusBody(404,json!({"detail":format!("No {name} matches the given query.")})))
+pub(crate) struct SqlReads {
+    pool: PgPool,
+    auth: Arc<dyn RetainedUiAuthorizer>,
+    runtime: ReadRuntime,
+    after_page: Option<PageHook>,
 }
-fn invalid_page()->ReadError {ReadError::Source(crate::StoreError::StatusBody(404,json!({"detail":"Invalid page."})))}
-fn output_error(_:impl std::fmt::Display)->ReadError {ReadError::Capacity}
+fn missing(resource: Resource) -> ReadError {
+    let name = match resource {
+        Resource::Movie => "Movie",
+        Resource::Series => "Series",
+        Resource::Episode => "Episode",
+    };
+    ReadError::Source(crate::StoreError::StatusBody(
+        404,
+        json!({"detail":format!("No {name} matches the given query.")}),
+    ))
+}
+fn invalid_page() -> ReadError {
+    ReadError::Source(crate::StoreError::StatusBody(
+        404,
+        json!({"detail":"Invalid page."}),
+    ))
+}
+fn output_error(_: impl std::fmt::Display) -> ReadError {
+    ReadError::Capacity
+}
 impl SqlReads {
     /// Uses real cached UI authentication with per-request physical ownership.
-    pub fn from_auth(auth:crate::AuthService,limits:ReadLimits)->Result<Self,ReadError> {
-        Self::new(auth.store.pool().clone(),Arc::new(ScopedUiAuth(auth)),limits)
+    pub fn from_auth(auth: crate::AuthService, limits: ReadLimits) -> Result<Self, ReadError> {
+        Self::new(
+            auth.store.pool().clone(),
+            Arc::new(ScopedUiAuth(auth)),
+            limits,
+        )
     }
-    pub fn new(pool:PgPool,auth:Arc<dyn RetainedUiAuthorizer>,limits:ReadLimits)->Result<Self,ReadError> {
-        Ok(Self {pool,auth,runtime:ReadRuntime::new_fair(limits)?,after_page:None})
+    pub fn new(
+        pool: PgPool,
+        auth: Arc<dyn RetainedUiAuthorizer>,
+        limits: ReadLimits,
+    ) -> Result<Self, ReadError> {
+        Ok(Self {
+            pool,
+            auth,
+            runtime: ReadRuntime::new_fair(limits)?,
+            after_page: None,
+        })
     }
-    pub fn with_page_hook(mut self,hook:PageHook)->Self {self.after_page=Some(hook);self}
+    pub fn with_page_hook(mut self, hook: PageHook) -> Self {
+        self.after_page = Some(hook);
+        self
+    }
     /// Ordinary Movie/Series/Episode component input, not a routed HTTP API.
     /// Filter normalization runs after authentication/permission/visibility,
     /// including for disabled-access empty querysets, before count/pagination.
     /// Unsupported grammar is explicit and must pass Source2 before expansion.
-    pub async fn read(&self,request:ReadRequest)->Result<Bytes,ReadError> {
-        self.dispatch(request,None).await
+    pub async fn read(&self, request: ReadRequest) -> Result<Bytes, ReadError> {
+        self.dispatch(request, None).await
     }
     /// Ordinary HTTP dispatch validated against captured original network
     /// representations and physical resource gates; app packaging is separate.
-    pub async fn dispatch(&self,mut request:ReadRequest,http:Option<HttpRead>)->Result<Bytes,ReadError> {
-        let state=self.clone();
-        let input=request.input_bytes()?.checked_add(http.as_ref().and_then(|h|h.uri.query()).map_or(0,str::len)).ok_or(ReadError::Capacity)?;
-        let deadline=http.as_ref().map(|h|h.deadline);
+    pub async fn dispatch(
+        &self,
+        mut request: ReadRequest,
+        http: Option<HttpRead>,
+    ) -> Result<Bytes, ReadError> {
+        let state = self.clone();
+        let input = request
+            .input_bytes()?
+            .checked_add(
+                http.as_ref()
+                    .and_then(|h| h.uri.query())
+                    .map_or(0, str::len),
+            )
+            .ok_or(ReadError::Capacity)?;
+        let deadline = http.as_ref().map(|h| h.deadline);
         self.runtime.run_scoped(input,deadline,http.as_ref().and_then(|h|h.scope.clone()),move |work|async move {
             let indent=http.as_ref().and_then(|_|super::vod_api_http::json_indent(&request.headers));
             let result=async {
@@ -165,21 +232,45 @@ impl SqlReads {
             match (result,indent) {(Ok(data),Some(indent))=>super::vod_api_http::pretty_document(&data,indent,work.document()),(result,_)=>result}
         }).await
     }
-    pub async fn provider_info(&self)->Result<Bytes,ReadError> {
+    pub async fn provider_info(&self) -> Result<Bytes, ReadError> {
         // Never substitute a cached-only or empty success for Source on-demand
         // provider refresh. Fresh/stale/forced action gates remain separate.
-        Err(ReadError::Unsupported("VOD provider-info refresh/actions not implemented by ordinary SQL component"))
+        Err(ReadError::Unsupported(
+            "VOD provider-info refresh/actions not implemented by ordinary SQL component",
+        ))
     }
-    pub async fn shutdown(&self,budget:Duration)->bool {self.runtime.shutdown(budget).await}
-    pub(super) fn shared_runtime(&self)->ReadRuntime {self.runtime.clone()}
-    pub fn physical_workers(&self)->usize {self.runtime.physical_workers()}
-    pub fn retained_memory_bytes(&self)->usize {self.runtime.retained_memory_bytes()}
+    pub async fn shutdown(&self, budget: Duration) -> bool {
+        self.runtime.shutdown(budget).await
+    }
+    pub(super) fn shared_runtime(&self) -> ReadRuntime {
+        self.runtime.clone()
+    }
+    pub fn physical_workers(&self) -> usize {
+        self.runtime.physical_workers()
+    }
+    pub fn retained_memory_bytes(&self) -> usize {
+        self.runtime.retained_memory_bytes()
+    }
 }
 impl ReadRequest {
-    fn input_bytes(&self)->Result<usize,ReadError> {
-        let mut total=self.origin.len().checked_add(self.path.len()).ok_or(ReadError::Capacity)?;
-        for (name,value) in &self.headers {total=total.checked_add(name.as_str().len()).and_then(|n|n.checked_add(value.as_bytes().len())).ok_or(ReadError::Capacity)?;}
-        for (name,value) in &self.query {total=total.checked_add(name.len()).and_then(|n|n.checked_add(value.len())).ok_or(ReadError::Capacity)?;}
+    fn input_bytes(&self) -> Result<usize, ReadError> {
+        let mut total = self
+            .origin
+            .len()
+            .checked_add(self.path.len())
+            .ok_or(ReadError::Capacity)?;
+        for (name, value) in &self.headers {
+            total = total
+                .checked_add(name.as_str().len())
+                .and_then(|n| n.checked_add(value.as_bytes().len()))
+                .ok_or(ReadError::Capacity)?;
+        }
+        for (name, value) in &self.query {
+            total = total
+                .checked_add(name.len())
+                .and_then(|n| n.checked_add(value.len()))
+                .ok_or(ReadError::Capacity)?;
+        }
         Ok(total)
     }
 }

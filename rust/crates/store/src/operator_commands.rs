@@ -63,8 +63,13 @@ impl OperatorCommand {
     /// Python traceback or claim that native help is manage.py help.
     pub fn parse(args: &[String]) -> Result<Self, OperatorError> {
         if args.first().is_some_and(|s| s == "createsuperuser") {
-            if args.len() == 2 && args[1] == "--help" { return Ok(Self::Help("createsuperuser")); }
-            return crate::operator_create::CreateSuperuser::parse(&args[1..], |key| std::env::var(key).ok()).map(Self::CreateSuperuser);
+            if args.len() == 2 && args[1] == "--help" {
+                return Ok(Self::Help("createsuperuser"));
+            }
+            return crate::operator_create::CreateSuperuser::parse(&args[1..], |key| {
+                std::env::var(key).ok()
+            })
+            .map(Self::CreateSuperuser);
         }
         match args {
             [name, flag] if flag == "--help" && name == "reset_network_access" => {

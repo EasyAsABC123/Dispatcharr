@@ -32,7 +32,11 @@ pub(super) enum QueryFault {
 /// Unicode codepoints, even inside an escape or before its closing quote.
 /// Quote selection must inspect the entire input before emitting a prefix.
 fn integer_error_repr(raw: &str) -> String {
-    let quote = if raw.contains('\'') && !raw.contains('"') { '"' } else { '\'' };
+    let quote = if raw.contains('\'') && !raw.contains('"') {
+        '"'
+    } else {
+        '\''
+    };
     let mut result = String::with_capacity(800);
     result.push(quote);
     let mut used = 1;
@@ -45,48 +49,87 @@ fn integer_error_repr(raw: &str) -> String {
             c if c == quote => format!("\\{c}"),
             c if !crate::python_action::printable(c) => {
                 let n = c as u32;
-                if n <= 0xff { format!("\\x{n:02x}") }
-                else if n <= 0xffff { format!("\\u{n:04x}") }
-                else { format!("\\U{n:08x}") }
+                if n <= 0xff {
+                    format!("\\x{n:02x}")
+                } else if n <= 0xffff {
+                    format!("\\u{n:04x}")
+                } else {
+                    format!("\\U{n:08x}")
+                }
             }
             c => c.to_string(),
         };
         for part in fragment.chars() {
-            if used == 200 { return result; }
+            if used == 200 {
+                return result;
+            }
             result.push(part);
             used += 1;
         }
     }
-    if used < 200 { result.push(quote); }
+    if used < 200 {
+        result.push(quote);
+    }
     result
 }
 /// Existing Core parser intentionally exposes Option only. Distinguish its
 /// captured valid-decimal >4300 failure without changing any Core callers.
 /// Unicode digits reuse the pinned Source15.1 Core decoder, not Rust's newer
 /// Unicode numeric predicate. ASCII fastpath avoids allocation perASCII digit.
-fn oversized_decimal_digits(raw:&str)->Option<usize>{
-    let raw=raw.split('\0').next().unwrap_or(raw).trim_matches(char::is_whitespace);let raw=raw.strip_prefix(['+','-']).unwrap_or(raw);
-    let mut digits=0usize;let mut previous_digit=false;
-    for c in raw.chars(){
-        if c=='_' {if !previous_digit{return None;}previous_digit=false;continue;}
-        let digit=c.is_ascii_digit()||(!c.is_ascii()&&{let mut bytes=[0;4];dispatcharr_ingest_core::source_integer_literal(c.encode_utf8(&mut bytes)).is_some()});
-        if !digit{return None;}digits+=1;previous_digit=true;
+fn oversized_decimal_digits(raw: &str) -> Option<usize> {
+    let raw = raw
+        .split('\0')
+        .next()
+        .unwrap_or(raw)
+        .trim_matches(char::is_whitespace);
+    let raw = raw.strip_prefix(['+', '-']).unwrap_or(raw);
+    let mut digits = 0usize;
+    let mut previous_digit = false;
+    for c in raw.chars() {
+        if c == '_' {
+            if !previous_digit {
+                return None;
+            }
+            previous_digit = false;
+            continue;
+        }
+        let digit = c.is_ascii_digit()
+            || (!c.is_ascii() && {
+                let mut bytes = [0; 4];
+                dispatcharr_ingest_core::source_integer_literal(c.encode_utf8(&mut bytes)).is_some()
+            });
+        if !digit {
+            return None;
+        }
+        digits += 1;
+        previous_digit = true;
     }
-    (previous_digit&&digits>4300).then_some(digits)
+    (previous_digit && digits > 4300).then_some(digits)
 }
 pub(super) fn integer(raw: &str) -> Result<BigInt, QueryFault> {
-    if let Some(value)=dispatcharr_ingest_core::source_integer_literal(raw).and_then(|v|v.parse().ok()){return Ok(value);}
-    if let Some(digits)=oversized_decimal_digits(raw){
+    if let Some(value) =
+        dispatcharr_ingest_core::source_integer_literal(raw).and_then(|v| v.parse().ok())
+    {
+        return Ok(value);
+    }
+    if let Some(digits) = oversized_decimal_digits(raw) {
         return Err(QueryFault::View(format!("Exceeds the limit (4300 digits) for integer string conversion: value has {digits} digits; use sys.set_int_max_str_digits() to increase the limit")));
     }
-    Err(QueryFault::View(format!("invalid literal for int() with base 10: {}",integer_error_repr(raw))))
+    Err(QueryFault::View(format!(
+        "invalid literal for int() with base 10: {}",
+        integer_error_repr(raw)
+    )))
 }
 /// A different captured CPython error occurs when a valid input int grows
 /// past4300decimal digits during offset arithmetic or next-link construction.
 /// Conversion stays at the original logger/link phase, rather than prevalidating later
 /// values and changing page/projection/count/error priority.
-pub(super) fn decimal_text(value:&BigInt)->Result<String,QueryFault>{
-    let raw=value.to_string();if raw.trim_start_matches('-').len()>4300{return Err(QueryFault::View("Exceeds the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit".into()));}Ok(raw)
+pub(super) fn decimal_text(value: &BigInt) -> Result<String, QueryFault> {
+    let raw = value.to_string();
+    if raw.trim_start_matches('-').len() > 4300 {
+        return Err(QueryFault::View("Exceeds the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit".into()));
+    }
+    Ok(raw)
 }
 impl UnifiedQuery {
     /// Both access flags disabled returns before parsing in the actual view.
@@ -250,19 +293,58 @@ mod tests {
 mod edge_source_tests {
     use super::*;
     #[test]
-    fn captured_source_repr_digits_and_error_priority(){
-        let data:Value=serde_json::from_str(include_str!("../datasets/vod-unified-integer-errors-source-1.json")).unwrap();
-        for case in data["records"].as_array().unwrap(){
-            let properties=if case["both_flags_disabled"]==true{serde_json::json!({"vod_movies_enabled":false,"vod_series_enabled":false})}else{serde_json::json!({})};
-            let visible=super::super::vod_api_projection::visibility(&properties,1).unwrap();
-            let pairs=case["query_pairs"].as_array().unwrap().iter().map(|item|(item[0].as_str().unwrap().to_owned(),item[1].as_str().unwrap().to_owned())).collect::<Vec<_>>();
-            let message=match UnifiedQuery::parse(&pairs,&visible){
-                Ok(None)=>{assert_eq!(case["both_flags_disabled"],true);assert_eq!(case["expected"]["json"],serde_json::json!({"count":0,"next":null,"previous":null,"results":[]}));continue;},
-                Ok(Some(query))=>match query.page(&visible,128*1024){Err(QueryFault::View(message))=>message,other=>panic!("Expectedcapturedparameterconversionerror, got {}",if other.is_ok(){"success"}else{"differenterror"})},
-                Err(QueryFault::View(message))=>message,
-                Err(other)=>panic!("Expected SourceView error, got {other:?}"),
+    fn captured_source_repr_digits_and_error_priority() {
+        let data: Value = serde_json::from_str(include_str!(
+            "../datasets/vod-unified-integer-errors-source-1.json"
+        ))
+        .unwrap();
+        for case in data["records"].as_array().unwrap() {
+            let properties = if case["both_flags_disabled"] == true {
+                serde_json::json!({"vod_movies_enabled":false,"vod_series_enabled":false})
+            } else {
+                serde_json::json!({})
             };
-            assert_eq!(Some(message.as_str()),case["expected"]["json"]["error"].as_str(),"Sourcecase{}",case["source_index"]);
+            let visible = super::super::vod_api_projection::visibility(&properties, 1).unwrap();
+            let pairs = case["query_pairs"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|item| {
+                    (
+                        item[0].as_str().unwrap().to_owned(),
+                        item[1].as_str().unwrap().to_owned(),
+                    )
+                })
+                .collect::<Vec<_>>();
+            let message = match UnifiedQuery::parse(&pairs, &visible) {
+                Ok(None) => {
+                    assert_eq!(case["both_flags_disabled"], true);
+                    assert_eq!(
+                        case["expected"]["json"],
+                        serde_json::json!({"count":0,"next":null,"previous":null,"results":[]})
+                    );
+                    continue;
+                }
+                Ok(Some(query)) => match query.page(&visible, 128 * 1024) {
+                    Err(QueryFault::View(message)) => message,
+                    other => panic!(
+                        "Expectedcapturedparameterconversionerror, got {}",
+                        if other.is_ok() {
+                            "success"
+                        } else {
+                            "differenterror"
+                        }
+                    ),
+                },
+                Err(QueryFault::View(message)) => message,
+                Err(other) => panic!("Expected SourceView error, got {other:?}"),
+            };
+            assert_eq!(
+                Some(message.as_str()),
+                case["expected"]["json"]["error"].as_str(),
+                "Sourcecase{}",
+                case["source_index"]
+            );
         }
     }
 }
@@ -270,15 +352,35 @@ mod edge_source_tests {
 #[cfg(test)]
 mod builtin_source_tests {
     use super::*;
-    use sha2::{Digest,Sha256};
+    use sha2::{Digest, Sha256};
     #[test]
-    fn pinned_original_python_eighty_builtin_decimal_and_repr_witnesses(){
-        let data:Value=serde_json::from_str(include_str!("../datasets/vod-unified-integer-builtins-source-2.json")).unwrap();assert_eq!(data["int_max_str_digits"],4300);
-        for case in data["records"].as_array().unwrap(){
-            let actual=integer(case["raw"].as_str().unwrap());
-            if case["parse_ok"]==true {
-                let value=actual.unwrap();let decimal=decimal_text(&value).unwrap();assert_eq!(Some(format!("{:x}",Sha256::digest(decimal.as_bytes())).as_str()),case["decimal_sha256"].as_str(),"{}",case["label"]);
-            }else{assert_eq!(actual.err(),Some(QueryFault::View(case["parse_message"].as_str().unwrap().to_owned())),"{}",case["label"]);}
+    fn pinned_original_python_eighty_builtin_decimal_and_repr_witnesses() {
+        let data: Value = serde_json::from_str(include_str!(
+            "../datasets/vod-unified-integer-builtins-source-2.json"
+        ))
+        .unwrap();
+        assert_eq!(data["int_max_str_digits"], 4300);
+        for case in data["records"].as_array().unwrap() {
+            let actual = integer(case["raw"].as_str().unwrap());
+            if case["parse_ok"] == true {
+                let value = actual.unwrap();
+                let decimal = decimal_text(&value).unwrap();
+                assert_eq!(
+                    Some(format!("{:x}", Sha256::digest(decimal.as_bytes())).as_str()),
+                    case["decimal_sha256"].as_str(),
+                    "{}",
+                    case["label"]
+                );
+            } else {
+                assert_eq!(
+                    actual.err(),
+                    Some(QueryFault::View(
+                        case["parse_message"].as_str().unwrap().to_owned()
+                    )),
+                    "{}",
+                    case["label"]
+                );
+            }
         }
     }
 }

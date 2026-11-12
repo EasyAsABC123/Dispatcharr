@@ -14,7 +14,19 @@ fn trim(value: &str) -> &str {
 pub(super) fn text(value: &Value) -> Result<String, Fault> {
     match value {
         Value::String(text) => Ok(text.clone()),
-        Value::Number(number) if matches!(number.to_string().as_str(),"NaN"|"Infinity"|"-Infinity")=>Ok(match number.to_string().as_str(){"NaN"=>"nan","Infinity"=>"inf",_=>"-inf"}.into()),
+        Value::Number(number)
+            if matches!(
+                number.to_string().as_str(),
+                "NaN" | "Infinity" | "-Infinity"
+            ) =>
+        {
+            Ok(match number.to_string().as_str() {
+                "NaN" => "nan",
+                "Infinity" => "inf",
+                _ => "-inf",
+            }
+            .into())
+        }
         _ => crate::python_action::collection_text(value, 256 * 1024).ok_or(Fault::Capacity),
     }
 }
@@ -220,7 +232,7 @@ pub(super) fn equal(left: &Value, right: &Value) -> bool {
         match (integral(left), integral(right)) {
             (Some(a), Some(b)) => return a == b,
             (Some(_), None) | (None, Some(_)) => return false,
-            (None, None) => {},
+            (None, None) => {}
         }
         return match (left.as_f64(), right.as_f64()) {
             (Some(a), Some(b)) if a.fract() != 0.0 && b.fract() != 0.0 => a == b,

@@ -235,20 +235,48 @@ fn actual_captured_two_family_direct_envelopes_and_typed_results() {
 }
 
 #[cfg(test)]
-mod logo_protocol_tests{
- use super::*;
- use base64::Engine;
- #[test]fn logo_noarg_identity_and_unqualified_headers_bodies_are_rejected(){
-  let message=Message{task_id:Uuid::new_v4(),kind:Kind::LogoScanner,expires:None};let raw=encode(&message).unwrap();assert_eq!(parse(&raw).unwrap(),message);
-  let original:Value=serde_json::from_slice(&raw).unwrap();
-  for variant in 0..5{
-   let mut frame=original.clone();match variant{
-    0=>{let bytes=base64::engine::general_purpose::STANDARD.decode(frame["body"].as_str().unwrap()).unwrap();let mut body:Value=serde_json::from_slice(&bytes).unwrap();body[0]=json!([1]);frame["body"]=json!(base64::engine::general_purpose::STANDARD.encode(serde_json::to_vec(&body).unwrap()));},
-    1=>{let bytes=base64::engine::general_purpose::STANDARD.decode(frame["body"].as_str().unwrap()).unwrap();let mut body:Value=serde_json::from_slice(&bytes).unwrap();body[1]=json!({"force":true});frame["body"]=json!(base64::engine::general_purpose::STANDARD.encode(serde_json::to_vec(&body).unwrap()));},
-    2=>frame["headers"]["parent_id"]=json!(Uuid::new_v4().to_string()),
-    3=>frame["headers"]["eta"]=json!("2026-11-11T12:00:00+00:00"),
-    _=>frame["headers"]["ignore_result"]=json!(true)
-   }assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err(),"variant {variant}");
-  }
- }
+mod logo_protocol_tests {
+    use super::*;
+    use base64::Engine;
+    #[test]
+    fn logo_noarg_identity_and_unqualified_headers_bodies_are_rejected() {
+        let message = Message {
+            task_id: Uuid::new_v4(),
+            kind: Kind::LogoScanner,
+            expires: None,
+        };
+        let raw = encode(&message).unwrap();
+        assert_eq!(parse(&raw).unwrap(), message);
+        let original: Value = serde_json::from_slice(&raw).unwrap();
+        for variant in 0..5 {
+            let mut frame = original.clone();
+            match variant {
+                0 => {
+                    let bytes = base64::engine::general_purpose::STANDARD
+                        .decode(frame["body"].as_str().unwrap())
+                        .unwrap();
+                    let mut body: Value = serde_json::from_slice(&bytes).unwrap();
+                    body[0] = json!([1]);
+                    frame["body"] = json!(base64::engine::general_purpose::STANDARD
+                        .encode(serde_json::to_vec(&body).unwrap()));
+                }
+                1 => {
+                    let bytes = base64::engine::general_purpose::STANDARD
+                        .decode(frame["body"].as_str().unwrap())
+                        .unwrap();
+                    let mut body: Value = serde_json::from_slice(&bytes).unwrap();
+                    body[1] = json!({"force":true});
+                    frame["body"] = json!(base64::engine::general_purpose::STANDARD
+                        .encode(serde_json::to_vec(&body).unwrap()));
+                }
+                2 => frame["headers"]["parent_id"] = json!(Uuid::new_v4().to_string()),
+                3 => frame["headers"]["eta"] = json!("2026-11-11T12:00:00+00:00"),
+                _ => frame["headers"]["ignore_result"] = json!(true),
+            }
+            assert!(
+                parse(&serde_json::to_vec(&frame).unwrap()).is_err(),
+                "variant {variant}"
+            );
+        }
+    }
 }

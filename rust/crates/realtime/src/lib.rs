@@ -4,10 +4,10 @@
 mod bus;
 pub mod codec;
 pub use bus::{BusConfig, Incoming, Membership, RealtimeBus};
-mod hub;
 mod gateway;
+mod hub;
 pub use gateway::{GatewayConfig, PreviewHandler, RealtimeGateway};
 pub mod policy;
 
 mod statistics;
-pub use statistics::{LiveStatistics,StatisticsConfig};
+pub use statistics::{LiveStatistics, StatisticsConfig};

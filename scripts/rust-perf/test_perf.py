@@ -25,7 +25,8 @@ class PerformanceTests(unittest.TestCase):
         began = time.monotonic()
         calls = []
 
-        def viewer(url, deadline, *_):
+        def viewer(url, deadline, *_, physical_close=False):
+            self.assertFalse(physical_close)
             calls.append((url, time.monotonic() - began, deadline))
             time.sleep(max(0, deadline - time.monotonic()))
             return dict(bytes=1, requests=1, errors=0, empty_responses=0, first_byte_ms=[1])

@@ -13,7 +13,10 @@ pub mod vod;
 pub use hls::HlsSessionInfo;
 
 use dispatcharr_contracts::PlaybackViewer;
-use redis::{aio::{ConnectionManager, ConnectionManagerConfig}, Script};
+use redis::{
+    aio::{ConnectionManager, ConnectionManagerConfig},
+    Script,
+};
 use serde_json::json;
 use std::{
     collections::{BTreeMap, HashMap},
@@ -374,7 +377,11 @@ return 1
         let client = redis::Client::open(url).map_err(|_| Error::InvalidConfiguration)?;
         let connection = time::timeout(
             config.command_timeout,
-            client.get_connection_manager_with_config(ConnectionManagerConfig::new().set_number_of_retries(0).set_connection_timeout(config.command_timeout)),
+            client.get_connection_manager_with_config(
+                ConnectionManagerConfig::new()
+                    .set_number_of_retries(0)
+                    .set_connection_timeout(config.command_timeout),
+            ),
         )
         .await
         .map_err(|_| Error::RedisUnavailable)?
@@ -674,10 +681,17 @@ async fn flush(inner: &Inner, clients: &[Arc<ClientInner>]) -> Result<(), Error>
             if error.kind() == redis::ErrorKind::NoScriptError {
                 let loaded: String = time::timeout(
                     inner.config.command_timeout,
-                    redis::cmd("SCRIPT").arg("LOAD").arg(scripts::HEARTBEAT).query_async(&mut connection),
-                ).await.map_err(|_| Error::RedisUnavailable)?
-                    .map_err(|_| Error::RedisUnavailable)?;
-                if loaded != inner.heartbeat_sha { return Err(Error::RedisUnavailable); }
+                    redis::cmd("SCRIPT")
+                        .arg("LOAD")
+                        .arg(scripts::HEARTBEAT)
+                        .query_async(&mut connection),
+                )
+                .await
+                .map_err(|_| Error::RedisUnavailable)?
+                .map_err(|_| Error::RedisUnavailable)?;
+                if loaded != inner.heartbeat_sha {
+                    return Err(Error::RedisUnavailable);
+                }
             }
             return Err(Error::RedisUnavailable);
         }

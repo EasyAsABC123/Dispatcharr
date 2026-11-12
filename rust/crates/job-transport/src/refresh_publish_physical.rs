@@ -224,8 +224,7 @@ async fn refresh_result_read_abort_retains_owner_until_real_reply() {
     let caller = Arc::new(Caller);
     let weak = Arc::downgrade(&caller);
     let copy = jobs.clone();
-    let task =
-        tokio::spawn(async move { copy.read_refresh(Uuid::new_v4(), 1, caller).await });
+    let task = tokio::spawn(async move { copy.read_refresh(Uuid::new_v4(), 1, caller).await });
     tokio::time::timeout(Duration::from_secs(3), proxy.blocked.wait_for(|v| *v))
         .await
         .unwrap()

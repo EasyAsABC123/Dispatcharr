@@ -32,16 +32,28 @@ impl AuthService {
 impl AuthService {
     /// REST/UI permission context. XC calls retain their own JSON error DTOs.
     pub(crate) async fn source_ui_network_allowed(
-        &self, ip: IpAddr, user: Option<&User>,
+        &self,
+        ip: IpAddr,
+        user: Option<&User>,
     ) -> Result<bool, StoreError> {
         let policy = match self.notification_cache.as_ref() {
-            Some(cache) => cache.settings_group("network_access", || self.store.source_group_value("network_access")).await?,
+            Some(cache) => {
+                cache
+                    .settings_group("network_access", || {
+                        self.store.source_group_value("network_access")
+                    })
+                    .await?
+            }
             None => self.store.source_group_value("network_access").await?,
         };
-        let allowed = crate::xc_auth::system_allowed(&policy, "UI", ip)
-            .map_err(ui_permission_error)?;
-        if !allowed { return Ok(false); }
-        user.map_or(Ok(true), |user| crate::xc_auth::user_allowed(user, "UI", ip).map_err(ui_permission_error))
+        let allowed =
+            crate::xc_auth::system_allowed(&policy, "UI", ip).map_err(ui_permission_error)?;
+        if !allowed {
+            return Ok(false);
+        }
+        user.map_or(Ok(true), |user| {
+            crate::xc_auth::user_allowed(user, "UI", ip).map_err(ui_permission_error)
+        })
     }
 }
 fn ui_permission_error(error: StoreError) -> StoreError {

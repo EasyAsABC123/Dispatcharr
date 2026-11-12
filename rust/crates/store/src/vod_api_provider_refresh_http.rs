@@ -171,12 +171,27 @@ fn json_nonfinite(bytes: &[u8], maximum: usize) -> Result<(Vec<u8>, String), Fau
             (at + 8, Some("Infinity"))
         } else if bytes[at].is_ascii_digit() || bytes[at] == b'-' {
             let mut end = at + 1;
-            while end < bytes.len() && (bytes[end].is_ascii_digit() || matches!(bytes[end], b'.' | b'e' | b'E' | b'+' | b'-')) { end += 1; }
+            while end < bytes.len()
+                && (bytes[end].is_ascii_digit()
+                    || matches!(bytes[end], b'.' | b'e' | b'E' | b'+' | b'-'))
+            {
+                end += 1;
+            }
             let token = &bytes[at..end];
             let overflow = token.iter().any(|byte| matches!(byte, b'.' | b'e' | b'E'))
                 && serde_json::from_slice::<serde_json::Number>(token).is_ok()
-                && std::str::from_utf8(token).ok().and_then(|value|value.parse::<f64>().ok()).is_some_and(f64::is_infinite);
-            (end, overflow.then_some(if token.first() == Some(&b'-') { "-Infinity" } else { "Infinity" }))
+                && std::str::from_utf8(token)
+                    .ok()
+                    .and_then(|value| value.parse::<f64>().ok())
+                    .is_some_and(f64::is_infinite);
+            (
+                end,
+                overflow.then_some(if token.first() == Some(&b'-') {
+                    "-Infinity"
+                } else {
+                    "Infinity"
+                }),
+            )
         } else {
             (at + 1, None)
         };
@@ -748,7 +763,9 @@ pub(super) async fn fetch_admitted(
     // Requests omits an empty params mapping entirely. query_pairs_mut creates
     // a bare '?' even when both optional credentials are None; remove that one
     // empty query without changing explicit empty-string credential values.
-    if url.query() == Some("") { url.set_query(None); }
+    if url.query() == Some("") {
+        url.set_query(None);
+    }
     let auth = session.json(&url).await?;
     if !auth
         .as_object()
@@ -917,7 +934,10 @@ mod tests {
         // Actual Source9 movie/series overflow-float cases save rating="inf"
         // before later Source SQL phases. Retain the Python nonfinite value.
         let overflow = bounded_json(br#"1e309"#, 4096).unwrap();
-        assert_eq!(super::super::vod_api_provider_refresh_value::text(&overflow).unwrap(), "inf");
+        assert_eq!(
+            super::super::vod_api_provider_refresh_value::text(&overflow).unwrap(),
+            "inf"
+        );
         assert!(matches!(
             bounded_json(br#"{bad}"#, 4096),
             Err(Fault::Remote)

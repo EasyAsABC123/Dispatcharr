@@ -21,10 +21,9 @@ fn main() {
         let store = Store::connect(&database, 2)
             .await
             .map_err(|_| OperatorError::Unavailable)?;
-        let events = if args
-            .first()
-            .is_some_and(|s| s == "reset_network_access" || s == "reset_user_network" || s == "createsuperuser")
-        {
+        let events = if args.first().is_some_and(|s| {
+            s == "reset_network_access" || s == "reset_user_network" || s == "createsuperuser"
+        }) {
             dispatcharr_realtime::RealtimeBus::connect(&redis, Default::default())
                 .await
                 .ok()

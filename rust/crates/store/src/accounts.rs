@@ -88,8 +88,8 @@ impl AuthService {
         // Source Authenticated evaluates network/custom properties before
         // the derived IsAdmin/IsStandardUser role predicate.
         if !self
-                .source_ui_network_allowed(self.client_ip(request), Some(&user))
-                .await?
+            .source_ui_network_allowed(self.client_ip(request), Some(&user))
+            .await?
             || (admin && user.user_level < 10)
         {
             return Err(StoreError::PermissionDenied);

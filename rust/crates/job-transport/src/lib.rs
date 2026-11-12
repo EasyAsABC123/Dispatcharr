@@ -76,11 +76,11 @@ pub mod database_schedule;
 mod periodic_headers;
 
 #[cfg(test)]
+mod stats_peer;
+#[cfg(test)]
 mod stats_protocol;
 #[cfg(test)]
 mod stats_worker;
-#[cfg(test)]
-mod stats_peer;
 
 #[cfg(test)]
 mod stats_resources;
@@ -135,8 +135,8 @@ mod logo_scanner_peer;
 mod logo_scanner_resources;
 
 pub mod default_task_terminal;
-pub mod logo_task;
 pub mod logo_application;
+pub mod logo_task;
 
 #[cfg(test)]
 mod logo_task_peer;
@@ -155,11 +155,11 @@ mod logo_spool_peer;
 #[cfg(test)]
 mod logo_spool_resources;
 
-pub mod scanner_files_protocol;
 pub mod scanner_files;
-pub mod scanner_files_worker;
 #[cfg(test)]
 mod scanner_files_peer;
+pub mod scanner_files_protocol;
+pub mod scanner_files_worker;
 
 #[cfg(test)]
 mod scanner_files_resources;

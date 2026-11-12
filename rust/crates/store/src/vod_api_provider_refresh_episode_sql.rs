@@ -93,7 +93,8 @@ fn prepared_row<T>(
     binds: usize,
     output: &mut Vec<T>,
 ) -> Result<(), ReadError> {
-    let encoded=super::vod_api_provider_refresh_budget::encoded_bytes(model,work.work_bytes()/8)?;
+    let encoded =
+        super::vod_api_provider_refresh_budget::encoded_bytes(model, work.work_bytes() / 8)?;
     let charge = super::vod_api_actions_account::heap(model)?
         .checked_add(encoded.checked_mul(2).ok_or(ReadError::Capacity)?)
         .and_then(|n| n.checked_add(std::mem::size_of::<T>() * 2))

@@ -489,111 +489,396 @@ async fn shared_movie_category_unified_queue_frames_and_cached_auth() {
 }
 
 #[tokio::test]
-#[ignore="Requires actual Original HTML56observations, owned PostgreSQL/Redis"]
-async fn actual_original_browsable_html_cookies_heads_and_roles(){
+#[ignore = "Requires actual Original HTML56observations, owned PostgreSQL/Redis"]
+async fn actual_original_browsable_html_cookies_heads_and_roles() {
     super::super::vod_api_unified_html::compare_original_network().await;
 }
 
 #[tokio::test]
 #[ignore = "Requires owned Source priority matrix and actual PostgreSQL/Redis"]
 async fn actual_original_auth_priority_network_matrix() {
-    assert_eq!(std::env::var("VOD_API_NATIVE_FIXTURE").as_deref(), Ok("playback-fixture-only"));
-    let evidence=std::path::PathBuf::from(std::env::var("VOD_NATIVE_EVIDENCE").unwrap());
-    let source:Value=serde_json::from_slice(&std::fs::read(evidence.join("shared-auth-priority-source.json")).unwrap()).unwrap();
-    let base:Value=serde_json::from_slice(&std::fs::read(std::env::var("VOD_SOURCE_CORPUS").unwrap()).unwrap()).unwrap();
-    let url=std::env::var("DATABASE_URL").unwrap();assert!(url.contains("playback-fixture-only"));
-    let pool=PgPoolOptions::new().max_connections(8).connect(&url).await.unwrap();
-    let redis_url=std::env::var("REDIS_TEST_URL").unwrap();assert!(redis_url.contains("playback-fixture-only"));
-    let cache=crate::NotificationCache::connect(&redis_url).await.unwrap();
-    let auth=crate::AuthService::new(crate::Store::from_pool(pool.clone()),crate::AuthConfig::new("playback-fixture-only".into()).unwrap()).with_notification_cache(cache.clone());
-    let ordinary=VodReads::new(auth.clone(),ReadLimits::default()).unwrap();
-    let router=auth.clone().router().merge(ordinary.router()).merge(ordinary.category_router()).merge(ordinary.unified_router());
-    let listener=tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();let address=listener.local_addr().unwrap();
-    let server=tokio::spawn(async move { axum::serve(listener,router.into_make_service_with_connect_info::<SocketAddr>()).await.unwrap(); });
-    let client=reqwest::Client::builder().no_proxy().http1_only().timeout(Duration::from_secs(8)).build().unwrap();
-    let mut connection=redis::Client::open(redis_url).unwrap().get_multiplexed_async_connection().await.unwrap();
-    const KEY:&str=":1:coresettings:group:network_access";
-    let saved:Option<Vec<u8>>=redis::cmd("GET").arg(KEY).query_async(&mut connection).await.unwrap();
-    let ttl:i64=redis::cmd("PTTL").arg(KEY).query_async(&mut connection).await.unwrap();let started=std::time::Instant::now();
-    let mut users=std::collections::BTreeMap::new();
-    for role in ["basic","standard","admin"] {
-        let row=sqlx::query("SELECT id::bigint AS id,custom_properties FROM accounts_user WHERE username=$1").bind(format!("rust-probe-vod-rest-{role}")).fetch_one(&pool).await.unwrap();
-        users.insert(role.to_owned(),(row.get::<i64,_>("id"),row.get::<Value,_>("custom_properties")));
+    assert_eq!(
+        std::env::var("VOD_API_NATIVE_FIXTURE").as_deref(),
+        Ok("playback-fixture-only")
+    );
+    let evidence = std::path::PathBuf::from(std::env::var("VOD_NATIVE_EVIDENCE").unwrap());
+    let source: Value = serde_json::from_slice(
+        &std::fs::read(evidence.join("shared-auth-priority-source.json")).unwrap(),
+    )
+    .unwrap();
+    let base: Value = serde_json::from_slice(
+        &std::fs::read(std::env::var("VOD_SOURCE_CORPUS").unwrap()).unwrap(),
+    )
+    .unwrap();
+    let url = std::env::var("DATABASE_URL").unwrap();
+    assert!(url.contains("playback-fixture-only"));
+    let pool = PgPoolOptions::new()
+        .max_connections(8)
+        .connect(&url)
+        .await
+        .unwrap();
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    assert!(redis_url.contains("playback-fixture-only"));
+    let cache = crate::NotificationCache::connect(&redis_url).await.unwrap();
+    let auth = crate::AuthService::new(
+        crate::Store::from_pool(pool.clone()),
+        crate::AuthConfig::new("playback-fixture-only".into()).unwrap(),
+    )
+    .with_notification_cache(cache.clone());
+    let ordinary = VodReads::new(auth.clone(), ReadLimits::default()).unwrap();
+    let router = auth
+        .clone()
+        .router()
+        .merge(ordinary.router())
+        .merge(ordinary.category_router())
+        .merge(ordinary.unified_router());
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let server = tokio::spawn(async move {
+        axum::serve(
+            listener,
+            router.into_make_service_with_connect_info::<SocketAddr>(),
+        )
+        .await
+        .unwrap();
+    });
+    let client = reqwest::Client::builder()
+        .no_proxy()
+        .http1_only()
+        .timeout(Duration::from_secs(8))
+        .build()
+        .unwrap();
+    let mut connection = redis::Client::open(redis_url)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    const KEY: &str = ":1:coresettings:group:network_access";
+    let saved: Option<Vec<u8>> = redis::cmd("GET")
+        .arg(KEY)
+        .query_async(&mut connection)
+        .await
+        .unwrap();
+    let ttl: i64 = redis::cmd("PTTL")
+        .arg(KEY)
+        .query_async(&mut connection)
+        .await
+        .unwrap();
+    let started = std::time::Instant::now();
+    let mut users = std::collections::BTreeMap::new();
+    for role in ["basic", "standard", "admin"] {
+        let row = sqlx::query(
+            "SELECT id::bigint AS id,custom_properties FROM accounts_user WHERE username=$1",
+        )
+        .bind(format!("rust-probe-vod-rest-{role}"))
+        .fetch_one(&pool)
+        .await
+        .unwrap();
+        users.insert(
+            role.to_owned(),
+            (
+                row.get::<i64, _>("id"),
+                row.get::<Value, _>("custom_properties"),
+            ),
+        );
     }
-    let mut records=Vec::new();let mut differences=Vec::new();let mut invalid_peer_source_only=0;
-    for (index,case) in source["records"].as_array().unwrap().iter().enumerate() {
-        if case["global_profile"]=="invalid-REMOTE_ADDR" {
-            assert_eq!(case["expected"]["status"],403);assert!("not-an-ip".parse::<std::net::IpAddr>().is_err());invalid_peer_source_only+=1;continue;
+    let mut records = Vec::new();
+    let mut differences = Vec::new();
+    let mut invalid_peer_source_only = 0;
+    for (index, case) in source["records"].as_array().unwrap().iter().enumerate() {
+        if case["global_profile"] == "invalid-REMOTE_ADDR" {
+            assert_eq!(case["expected"]["status"], 403);
+            assert!("not-an-ip".parse::<std::net::IpAddr>().is_err());
+            invalid_peer_source_only += 1;
+            continue;
         }
-        let role=case["role"].as_str().unwrap();let (id,_) = &users[role];
-        sqlx::query("UPDATE accounts_user SET custom_properties=$1 WHERE id=$2").bind(&case["custom_properties"]).bind(id).execute(&pool).await.unwrap();
+        let role = case["role"].as_str().unwrap();
+        let (id, _) = &users[role];
+        sqlx::query("UPDATE accounts_user SET custom_properties=$1 WHERE id=$2")
+            .bind(&case["custom_properties"])
+            .bind(id)
+            .execute(&pool)
+            .await
+            .unwrap();
         cache.set_for(KEY,&json!({"UI":if case["global_profile"]=="deny" {"192.0.2.0/24"}else{"0.0.0.0/0,::/0"}}),120).await.unwrap();
-        let token=base["cases"].as_array().unwrap().iter().find(|row|row["role"]==role&&row["path"]=="/api/vod/movies/"&&row["method"]=="GET").unwrap()["headers"]["HTTP_AUTHORIZATION"].as_str().unwrap();
-        let mut request=client.get(format!("http://{address}{}",case["path"].as_str().unwrap())).header("Host","localhost").header("Accept","application/json").header("Authorization",token);
-        if case["global_profile"]=="invalid-forwarded" {request=request.header("X-Real-IP","not-an-ip").header("X-Forwarded-For","not-an-ip");}
-        let response=request.send().await.unwrap();let status=response.status().as_u16();let headers=response.headers().clone();let body=response.bytes().await.unwrap();
-        let expected=&case["expected"];let content_type=headers.get("content-type").and_then(|v|v.to_str().ok());let hash=format!("{:x}",Sha256::digest(&body));
-        let same=status==expected["status"].as_u64().unwrap()as u16&&content_type==expected["content_type"].as_str()&&hash==expected["body_sha256"].as_str().unwrap();
-        let fault_headers=if status==500 {headers.get("allow").is_none()&&headers.get("www-authenticate").is_none()&&headers.get("vary").and_then(|v|v.to_str().ok())==Some("origin")}else{true};
-        let record=json!({"index":index,"role":role,"profile":case["global_profile"],"path":case["path"],"status":status,"body_sha256":hash,"same_status_body_MIME":same,"generic500_selected_headers":fault_headers});
-        if !same||!fault_headers {differences.push(record.clone());}records.push(record);
+        let token = base["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|row| {
+                row["role"] == role && row["path"] == "/api/vod/movies/" && row["method"] == "GET"
+            })
+            .unwrap()["headers"]["HTTP_AUTHORIZATION"]
+            .as_str()
+            .unwrap();
+        let mut request = client
+            .get(format!(
+                "http://{address}{}",
+                case["path"].as_str().unwrap()
+            ))
+            .header("Host", "localhost")
+            .header("Accept", "application/json")
+            .header("Authorization", token);
+        if case["global_profile"] == "invalid-forwarded" {
+            request = request
+                .header("X-Real-IP", "not-an-ip")
+                .header("X-Forwarded-For", "not-an-ip");
+        }
+        let response = request.send().await.unwrap();
+        let status = response.status().as_u16();
+        let headers = response.headers().clone();
+        let body = response.bytes().await.unwrap();
+        let expected = &case["expected"];
+        let content_type = headers.get("content-type").and_then(|v| v.to_str().ok());
+        let hash = format!("{:x}", Sha256::digest(&body));
+        let same = status == expected["status"].as_u64().unwrap() as u16
+            && content_type == expected["content_type"].as_str()
+            && hash == expected["body_sha256"].as_str().unwrap();
+        let fault_headers = if status == 500 {
+            headers.get("allow").is_none()
+                && headers.get("www-authenticate").is_none()
+                && headers.get("vary").and_then(|v| v.to_str().ok()) == Some("origin")
+        } else {
+            true
+        };
+        let record = json!({"index":index,"role":role,"profile":case["global_profile"],"path":case["path"],"status":status,"body_sha256":hash,"same_status_body_MIME":same,"generic500_selected_headers":fault_headers});
+        if !same || !fault_headers {
+            differences.push(record.clone());
+        }
+        records.push(record);
     }
     // Cross-prototype authority: pre-view UI faults must bypass the new
     // documenting renderer, retain generic145bytes and never create CSRF.
-    let mut html_pre_view_faults=Vec::new();
-    for role in ["basic","standard","admin"] {
-        let(id,_)=&users[role];sqlx::query("UPDATE accounts_user SET custom_properties=$1 WHERE id=$2").bind(json!(true)).bind(id).execute(&pool).await.unwrap();
-        cache.set_for(KEY,&json!({"UI":"0.0.0.0/0,::/0"}),120).await.unwrap();
-        let token=base["cases"].as_array().unwrap().iter().find(|row|row["role"]==role&&row["path"]=="/api/vod/movies/"&&row["method"]=="GET").unwrap()["headers"]["HTTP_AUTHORIZATION"].as_str().unwrap();
-        let mut observations=Vec::new();for origin in [std::env::var("VOD_UNIFIED_ORIGINAL_HTTP_BASE").unwrap(),format!("http://{address}")] {
-            let response=client.get(format!("{origin}/api/vod/all/")).header("Host","localhost").header("Accept","text/html").header("Authorization",token).send().await.unwrap();let status=response.status().as_u16();let h=response.headers().clone();let body=response.bytes().await.unwrap();
+    let mut html_pre_view_faults = Vec::new();
+    for role in ["basic", "standard", "admin"] {
+        let (id, _) = &users[role];
+        sqlx::query("UPDATE accounts_user SET custom_properties=$1 WHERE id=$2")
+            .bind(json!(true))
+            .bind(id)
+            .execute(&pool)
+            .await
+            .unwrap();
+        cache
+            .set_for(KEY, &json!({"UI":"0.0.0.0/0,::/0"}), 120)
+            .await
+            .unwrap();
+        let token = base["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|row| {
+                row["role"] == role && row["path"] == "/api/vod/movies/" && row["method"] == "GET"
+            })
+            .unwrap()["headers"]["HTTP_AUTHORIZATION"]
+            .as_str()
+            .unwrap();
+        let mut observations = Vec::new();
+        for origin in [
+            std::env::var("VOD_UNIFIED_ORIGINAL_HTTP_BASE").unwrap(),
+            format!("http://{address}"),
+        ] {
+            let response = client
+                .get(format!("{origin}/api/vod/all/"))
+                .header("Host", "localhost")
+                .header("Accept", "text/html")
+                .header("Authorization", token)
+                .send()
+                .await
+                .unwrap();
+            let status = response.status().as_u16();
+            let h = response.headers().clone();
+            let body = response.bytes().await.unwrap();
             observations.push(json!({"status":status,"body_bytes":body.len(),"body_sha256":format!("{:x}",Sha256::digest(&body)),"MIME":h.get("content-type").and_then(|v|v.to_str().ok()),"Vary":h.get("vary").and_then(|v|v.to_str().ok()),"Allow":h.get("allow").and_then(|v|v.to_str().ok()),"WWW":h.get("www-authenticate").and_then(|v|v.to_str().ok()),"SetCookie":h.get("set-cookie").is_some()}));
         }
-        let exact=observations[0]==observations[1]&&observations[0]["status"]==500&&observations[0]["body_bytes"]==145&&observations[0]["SetCookie"]==false;
+        let exact = observations[0] == observations[1]
+            && observations[0]["status"] == 500
+            && observations[0]["body_bytes"] == 145
+            && observations[0]["SetCookie"] == false;
         html_pre_view_faults.push(json!({"role":role,"exact_Source_native":exact,"Source":observations[0],"native":observations[1]}));
     }
-    let mut category_controls=Vec::new();
-    for case in source["records"].as_array().unwrap().iter().filter(|case|case["path"]=="/api/vod/movies/"&&case["global_profile"]!="invalid-REMOTE_ADDR") {
-        let role=case["role"].as_str().unwrap();let(id,_)=&users[role];
-        sqlx::query("UPDATE accounts_user SET custom_properties=$1 WHERE id=$2").bind(&case["custom_properties"]).bind(id).execute(&pool).await.unwrap();
+    let mut category_controls = Vec::new();
+    for case in source["records"].as_array().unwrap().iter().filter(|case| {
+        case["path"] == "/api/vod/movies/" && case["global_profile"] != "invalid-REMOTE_ADDR"
+    }) {
+        let role = case["role"].as_str().unwrap();
+        let (id, _) = &users[role];
+        sqlx::query("UPDATE accounts_user SET custom_properties=$1 WHERE id=$2")
+            .bind(&case["custom_properties"])
+            .bind(id)
+            .execute(&pool)
+            .await
+            .unwrap();
         cache.set_for(KEY,&json!({"UI":if case["global_profile"]=="deny"{"192.0.2.0/24"}else{"0.0.0.0/0,::/0"}}),120).await.unwrap();
-        let token=base["cases"].as_array().unwrap().iter().find(|row|row["role"]==role&&row["path"]=="/api/vod/movies/"&&row["method"]=="GET").unwrap()["headers"]["HTTP_AUTHORIZATION"].as_str().unwrap();
-        let original_base=std::env::var("VOD_UNIFIED_ORIGINAL_HTTP_BASE").unwrap();let mut pair=Vec::new();
-        for origin in [original_base,format!("http://{address}")] {
-            let mut request=client.get(format!("{origin}/api/vod/categories/")).header("Host","localhost").header("Accept","application/json").header("Authorization",token);
-            if case["global_profile"]=="invalid-forwarded"{request=request.header("X-Real-IP","not-an-ip").header("X-Forwarded-For","not-an-ip");}
-            let response=request.send().await.unwrap();let status=response.status().as_u16();let headers=response.headers().clone();let body=response.bytes().await.unwrap();
+        let token = base["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|row| {
+                row["role"] == role && row["path"] == "/api/vod/movies/" && row["method"] == "GET"
+            })
+            .unwrap()["headers"]["HTTP_AUTHORIZATION"]
+            .as_str()
+            .unwrap();
+        let original_base = std::env::var("VOD_UNIFIED_ORIGINAL_HTTP_BASE").unwrap();
+        let mut pair = Vec::new();
+        for origin in [original_base, format!("http://{address}")] {
+            let mut request = client
+                .get(format!("{origin}/api/vod/categories/"))
+                .header("Host", "localhost")
+                .header("Accept", "application/json")
+                .header("Authorization", token);
+            if case["global_profile"] == "invalid-forwarded" {
+                request = request
+                    .header("X-Real-IP", "not-an-ip")
+                    .header("X-Forwarded-For", "not-an-ip");
+            }
+            let response = request.send().await.unwrap();
+            let status = response.status().as_u16();
+            let headers = response.headers().clone();
+            let body = response.bytes().await.unwrap();
             pair.push(json!({"status":status,"MIME":headers.get("content-type").and_then(|v|v.to_str().ok()),"body_sha256":format!("{:x}",Sha256::digest(&body))}));
         }
         category_controls.push(json!({"role":role,"profile":case["global_profile"],"custom_properties":case["custom_properties"],"exact_status_body_MIME":pair[0]==pair[1],"Source":pair[0],"native":pair[1]}));
     }
-    for (id,props) in users.values(){sqlx::query("UPDATE accounts_user SET custom_properties=$1 WHERE id=$2").bind(props).bind(id).execute(&pool).await.unwrap();}
+    for (id, props) in users.values() {
+        sqlx::query("UPDATE accounts_user SET custom_properties=$1 WHERE id=$2")
+            .bind(props)
+            .bind(id)
+            .execute(&pool)
+            .await
+            .unwrap();
+    }
     match &saved {
-        Some(raw)=>{let mut cmd=redis::cmd("SET");cmd.arg(KEY).arg(raw);if ttl>=0 {cmd.arg("PX").arg(ttl.saturating_sub(started.elapsed().as_millis()as i64).max(1));}cmd.query_async::<()>(&mut connection).await.unwrap();},
-        None=>{redis::cmd("DEL").arg(KEY).query_async::<i64>(&mut connection).await.unwrap();}
+        Some(raw) => {
+            let mut cmd = redis::cmd("SET");
+            cmd.arg(KEY).arg(raw);
+            if ttl >= 0 {
+                cmd.arg("PX").arg(
+                    ttl.saturating_sub(started.elapsed().as_millis() as i64)
+                        .max(1),
+                );
+            }
+            cmd.query_async::<()>(&mut connection).await.unwrap();
+        }
+        None => {
+            redis::cmd("DEL")
+                .arg(KEY)
+                .query_async::<i64>(&mut connection)
+                .await
+                .unwrap();
+        }
     }
     // Independent existing serializer bug: preserve first raw12 failures,
     // then compare nonempty Source/native events on the SAME owned SQL rows.
-    let sequence=sqlx::query("SELECT last_value,is_called FROM core_systemevent_id_seq").fetch_one(&pool).await.unwrap();
+    let sequence = sqlx::query("SELECT last_value,is_called FROM core_systemevent_id_seq")
+        .fetch_one(&pool)
+        .await
+        .unwrap();
     let event:i64=sqlx::query_scalar("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) VALUES('login_success','2026-11-10 12:34:56.123456+00',NULL,'rust-probe-vod-rest-auth-priority',$1) RETURNING id::bigint").bind(json!({"fixture":"auth-priority","number":7})).fetch_one(&pool).await.unwrap();
-    cache.set_for(KEY,&json!({"UI":"0.0.0.0/0,::/0"}),120).await.unwrap();
-    let admin=base["cases"].as_array().unwrap().iter().find(|row|row["role"]=="admin"&&row["path"]=="/api/vod/movies/"&&row["method"]=="GET").unwrap()["headers"]["HTTP_AUTHORIZATION"].as_str().unwrap();
-    let mut events_controls=Vec::new();
-    for query in ["limit=1","limit=1&offset=1","event_type=login_success","limit=0","limit=5000","event_type=fixture-no-events"] {
-        let path=format!("/api/core/system-events/?{query}");let original_base=std::env::var("VOD_UNIFIED_ORIGINAL_HTTP_BASE").unwrap();
-        let original=client.get(format!("{original_base}{path}")).header("Host","localhost").header("Accept","application/json").header("Authorization",admin).send().await.unwrap();let original_status=original.status();let original_body=original.bytes().await.unwrap();
-        let native=client.get(format!("http://{address}{path}")).header("Host","localhost").header("Accept","application/json").header("Authorization",admin).send().await.unwrap();let native_status=native.status();let native_body=native.bytes().await.unwrap();
-        let same=original_status==native_status&&original_body==native_body;
+    cache
+        .set_for(KEY, &json!({"UI":"0.0.0.0/0,::/0"}), 120)
+        .await
+        .unwrap();
+    let admin = base["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|row| {
+            row["role"] == "admin" && row["path"] == "/api/vod/movies/" && row["method"] == "GET"
+        })
+        .unwrap()["headers"]["HTTP_AUTHORIZATION"]
+        .as_str()
+        .unwrap();
+    let mut events_controls = Vec::new();
+    for query in [
+        "limit=1",
+        "limit=1&offset=1",
+        "event_type=login_success",
+        "limit=0",
+        "limit=5000",
+        "event_type=fixture-no-events",
+    ] {
+        let path = format!("/api/core/system-events/?{query}");
+        let original_base = std::env::var("VOD_UNIFIED_ORIGINAL_HTTP_BASE").unwrap();
+        let original = client
+            .get(format!("{original_base}{path}"))
+            .header("Host", "localhost")
+            .header("Accept", "application/json")
+            .header("Authorization", admin)
+            .send()
+            .await
+            .unwrap();
+        let original_status = original.status();
+        let original_body = original.bytes().await.unwrap();
+        let native = client
+            .get(format!("http://{address}{path}"))
+            .header("Host", "localhost")
+            .header("Accept", "application/json")
+            .header("Authorization", admin)
+            .send()
+            .await
+            .unwrap();
+        let native_status = native.status();
+        let native_body = native.bytes().await.unwrap();
+        let same = original_status == native_status && original_body == native_body;
         events_controls.push(json!({"query":query,"Source_status":original_status.as_u16(),"native_status":native_status.as_u16(),"exact_raw_body":same,"Source_body_sha256":format!("{:x}",Sha256::digest(&original_body)),"native_body_sha256":format!("{:x}",Sha256::digest(&native_body))}));
     }
-    sqlx::query("DELETE FROM core_systemevent WHERE id=$1").bind(event).execute(&pool).await.unwrap();
-    sqlx::query("SELECT setval('core_systemevent_id_seq',$1,$2)").bind(sequence.get::<i64,_>("last_value")).bind(sequence.get::<bool,_>("is_called")).execute(&pool).await.unwrap();
-    match &saved {Some(raw)=>{let mut cmd=redis::cmd("SET");cmd.arg(KEY).arg(raw);if ttl>=0{cmd.arg("PX").arg(ttl.saturating_sub(started.elapsed().as_millis()as i64).max(1));}cmd.query_async::<()>(&mut connection).await.unwrap();},None=>{redis::cmd("DEL").arg(KEY).query_async::<i64>(&mut connection).await.unwrap();}}
-    assert!(ordinary.shutdown(Duration::from_secs(2)).await);server.abort();pool.close().await;
-    let event_pass=events_controls.iter().all(|value|value["exact_raw_body"]==true)&&category_controls.iter().all(|value|value["exact_status_body_MIME"]==true)&&html_pre_view_faults.iter().all(|value|value["exact_Source_native"]==true);
-    let report=json!({"passed":differences.is_empty()&&event_pass,"SystemEvents_nonempty_same_DB_exact_raw_controls":events_controls,"cross_prototype_HTML_pre_view_faults":html_pre_view_faults,"additional_Category_Source_native_TCP_controls":category_controls,"scope":"297 actual Original/native TCP status/body/MIME +generic500 selectedheaders.99 invalid REMOTE_ADDR remain Source Factory authority plus native parser rejection, NOT nativeHTTP invalidsocket parity","compared_real_HTTP":records.len(),"invalid_peer_Source_Factory_only":invalid_peer_source_only,"records":records,"differences":differences,"owned_user_properties_and_cache_restored":true});
-    std::fs::write(evidence.join("shared-ui-auth-priority-native.json"),serde_json::to_vec_pretty(&report).unwrap()).unwrap();assert_eq!(report["compared_real_HTTP"],297);assert_eq!(invalid_peer_source_only,99);assert_eq!(report["passed"],true,"shared UI permission matrix mismatch");
+    sqlx::query("DELETE FROM core_systemevent WHERE id=$1")
+        .bind(event)
+        .execute(&pool)
+        .await
+        .unwrap();
+    sqlx::query("SELECT setval('core_systemevent_id_seq',$1,$2)")
+        .bind(sequence.get::<i64, _>("last_value"))
+        .bind(sequence.get::<bool, _>("is_called"))
+        .execute(&pool)
+        .await
+        .unwrap();
+    match &saved {
+        Some(raw) => {
+            let mut cmd = redis::cmd("SET");
+            cmd.arg(KEY).arg(raw);
+            if ttl >= 0 {
+                cmd.arg("PX").arg(
+                    ttl.saturating_sub(started.elapsed().as_millis() as i64)
+                        .max(1),
+                );
+            }
+            cmd.query_async::<()>(&mut connection).await.unwrap();
+        }
+        None => {
+            redis::cmd("DEL")
+                .arg(KEY)
+                .query_async::<i64>(&mut connection)
+                .await
+                .unwrap();
+        }
+    }
+    assert!(ordinary.shutdown(Duration::from_secs(2)).await);
+    server.abort();
+    pool.close().await;
+    let event_pass = events_controls
+        .iter()
+        .all(|value| value["exact_raw_body"] == true)
+        && category_controls
+            .iter()
+            .all(|value| value["exact_status_body_MIME"] == true)
+        && html_pre_view_faults
+            .iter()
+            .all(|value| value["exact_Source_native"] == true);
+    let report = json!({"passed":differences.is_empty()&&event_pass,"SystemEvents_nonempty_same_DB_exact_raw_controls":events_controls,"cross_prototype_HTML_pre_view_faults":html_pre_view_faults,"additional_Category_Source_native_TCP_controls":category_controls,"scope":"297 actual Original/native TCP status/body/MIME +generic500 selectedheaders.99 invalid REMOTE_ADDR remain Source Factory authority plus native parser rejection, NOT nativeHTTP invalidsocket parity","compared_real_HTTP":records.len(),"invalid_peer_Source_Factory_only":invalid_peer_source_only,"records":records,"differences":differences,"owned_user_properties_and_cache_restored":true});
+    std::fs::write(
+        evidence.join("shared-ui-auth-priority-native.json"),
+        serde_json::to_vec_pretty(&report).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(report["compared_real_HTTP"], 297);
+    assert_eq!(invalid_peer_source_only, 99);
+    assert_eq!(
+        report["passed"], true,
+        "shared UI permission matrix mismatch"
+    );
 }
 
-#[path="vod_api_unified_edge_http_peer.rs"]
+#[path = "vod_api_unified_edge_http_peer.rs"]
 mod a000_edge_source_tests;

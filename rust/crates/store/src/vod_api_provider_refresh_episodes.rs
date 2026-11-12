@@ -40,7 +40,9 @@ fn index(value: &Value) -> Result<Value, source::Fault> {
         Value::Number(number) => {
             let text = number.to_string();
             // Source catches int(NaN/Infinity) and defaults episode_num to zero.
-            if matches!(text.as_str(), "NaN" | "Infinity" | "-Infinity") { return Ok(0.into()); }
+            if matches!(text.as_str(), "NaN" | "Infinity" | "-Infinity") {
+                return Ok(0.into());
+            }
             if text.contains(['.', 'e', 'E']) {
                 let n = number
                     .as_f64()
@@ -225,13 +227,34 @@ fn metadata(body: &Value) -> Result<(Value, Option<i64>, bool), source::Fault> {
     }
     Ok((
         Value::Object(serde_json::Map::from_iter([
-            ("name".into(), body.get("title").cloned().unwrap_or_else(||"Unknown Episode".into())),
+            (
+                "name".into(),
+                body.get("title")
+                    .cloned()
+                    .unwrap_or_else(|| "Unknown Episode".into()),
+            ),
             ("description".into(), description),
-            ("rating".into(), source::rating(info.get("rating").unwrap_or(&Value::Null))?.into()),
+            (
+                "rating".into(),
+                source::rating(info.get("rating").unwrap_or(&Value::Null))?.into(),
+            ),
             ("air_date".into(), date.unwrap_or(Value::Null)),
-            ("tmdb_id".into(), info.get("tmdb_id").cloned().unwrap_or(Value::Null)),
-            ("imdb_id".into(), info.get("imdb_id").cloned().unwrap_or(Value::Null)),
-            ("custom_properties".into(), if props.is_empty(){Value::Null}else{props.into()}),
+            (
+                "tmdb_id".into(),
+                info.get("tmdb_id").cloned().unwrap_or(Value::Null),
+            ),
+            (
+                "imdb_id".into(),
+                info.get("imdb_id").cloned().unwrap_or(Value::Null),
+            ),
+            (
+                "custom_properties".into(),
+                if props.is_empty() {
+                    Value::Null
+                } else {
+                    props.into()
+                },
+            ),
         ])),
         source::duration_seconds(info.get("duration_secs").unwrap_or(&Value::Null)),
         date_fault,
@@ -273,7 +296,9 @@ pub(super) fn prepare(
     for entry in flat.entries {
         // Bound one row before metadata/date conversions can copy its strings.
         // This is an actual byte/node bound, never a truncated episode count.
-        if account::heap(entry.body)?>work.work_bytes()/32{return Err(ReadError::Capacity);}
+        if account::heap(entry.body)? > work.work_bytes() / 32 {
+            return Err(ReadError::Capacity);
+        }
         let prepared = (|| {
             let number = index(entry.body.get("episode_num").unwrap_or(&json!(0)))?;
             let metadata = metadata(entry.body)?;
@@ -363,7 +388,10 @@ pub(super) fn prepare(
             .unwrap_or_else(|| "mp4".into());
         let mut info = entry.body.clone();
         info["_season_number"] = entry.season.clone();
-        relation.model["custom_properties"] = Value::Object(serde_json::Map::from_iter([("info".into(),info),("season_number".into(),entry.season)]));
+        relation.model["custom_properties"] = Value::Object(serde_json::Map::from_iter([
+            ("info".into(), info),
+            ("season_number".into(), entry.season),
+        ]));
         relation.model["last_seen"] = clock.stamp().into();
         let charge = charged(&relation.model)?;
         charge_change(

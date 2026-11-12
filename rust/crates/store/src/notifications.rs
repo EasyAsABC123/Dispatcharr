@@ -9,11 +9,17 @@ use axum::{
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
-use redis::{aio::{ConnectionManager, ConnectionManagerConfig}, FromRedisValue};
+use redis::{
+    aio::{ConnectionManager, ConnectionManagerConfig},
+    FromRedisValue,
+};
 use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Row};
 use std::{net::SocketAddr, sync::Arc, time::Duration};
-use tokio::{sync::{OwnedSemaphorePermit, Semaphore}, time::timeout};
+use tokio::{
+    sync::{OwnedSemaphorePermit, Semaphore},
+    time::timeout,
+};
 
 #[derive(Clone)]
 pub struct NotificationCache {
@@ -39,7 +45,11 @@ impl NotificationCache {
         let client = redis::Client::open(url).map_err(|_| unavailable())?;
         let connection = timeout(
             Duration::from_secs(5),
-            client.get_connection_manager_with_config(ConnectionManagerConfig::new().set_number_of_retries(0).set_connection_timeout(Duration::from_secs(5))),
+            client.get_connection_manager_with_config(
+                ConnectionManagerConfig::new()
+                    .set_number_of_retries(0)
+                    .set_connection_timeout(Duration::from_secs(5)),
+            ),
         )
         .await
         .map_err(|_| unavailable())?
@@ -67,10 +77,14 @@ impl NotificationCache {
                 // Bound futures waiting for physical admission as well as the
                 // operations themselves. Exhaustion keeps the existing cache
                 // unavailable classification rather than an unbounded queue.
-                let _queued = self.queued.clone().try_acquire_owned()
+                let _queued = self
+                    .queued
+                    .clone()
+                    .try_acquire_owned()
                     .map_err(|_| CacheOperationError::Admission)?;
                 timeout(Duration::from_secs(2), self.permits.clone().acquire_owned())
-                    .await.map_err(|_| CacheOperationError::Admission)?
+                    .await
+                    .map_err(|_| CacheOperationError::Admission)?
                     .map_err(|_| CacheOperationError::Admission)?
             }
         };
@@ -91,7 +105,8 @@ impl NotificationCache {
             (result, permit, scope)
         });
         let (result, _permit, _scope) = timeout(Duration::from_secs(2), task)
-            .await.map_err(|_| CacheOperationError::Timeout)?
+            .await
+            .map_err(|_| CacheOperationError::Timeout)?
             .map_err(|_| CacheOperationError::Task)?;
         result.map_err(CacheOperationError::Redis)
     }
@@ -100,7 +115,9 @@ impl NotificationCache {
         cmd: redis::Cmd,
     ) -> Result<T, StoreError> {
         let permit = self.admit().await.map_err(|_| unavailable())?;
-        self.query_admitted(cmd, permit).await.map_err(|_| unavailable())
+        self.query_admitted(cmd, permit)
+            .await
+            .map_err(|_| unavailable())
     }
     #[cfg(test)]
     pub(crate) fn physical_operations(&self) -> usize {
@@ -114,26 +131,35 @@ impl NotificationCache {
     pub(crate) async fn invalidate_user_agent(&self, version: &str) -> Result<(), StoreError> {
         // CoreSettings signals ignore connectivity/timeout errors, but do not
         // swallow authentication, permission or server command failures.
-        let Ok(permit) = self.admit().await else { return Ok(()); };
+        let Ok(permit) = self.admit().await else {
+            return Ok(());
+        };
         let mut delete = redis::cmd("DEL");
         delete.arg(":1:coresettings:default_user_agent");
         let mut bump = redis::cmd("SET");
-        bump.arg(":1:coresettings:default_user_agent:ver").arg(version);
+        bump.arg(":1:coresettings:default_user_agent:ver")
+            .arg(version);
         for command in [delete, bump] {
             // Both original logical attempts share one operation slot. Each
             // physical command retains a clone, so a late first response does
             // not release admission while the second command is still queued.
-            match self.query_admitted::<redis::Value>(command, permit.clone()).await {
-                Ok(_) => {},
+            match self
+                .query_admitted::<redis::Value>(command, permit.clone())
+                .await
+            {
+                Ok(_) => {}
                 Err(CacheOperationError::Timeout | CacheOperationError::Admission) => {
                     tracing::warn!("Default User-Agent cache invalidation timed out")
                 }
-                Err(CacheOperationError::Redis(error)) if error.is_io_error() || error.is_timeout() => {
+                Err(CacheOperationError::Redis(error))
+                    if error.is_io_error() || error.is_timeout() =>
+                {
                     tracing::warn!("Default User-Agent cache invalidation backend unavailable")
                 }
                 Err(_) => {
                     return Err(StoreError::StatusBody(
-                        500, json!({"detail":"Default User-Agent cache invalidation failed."}),
+                        500,
+                        json!({"detail":"Default User-Agent cache invalidation failed."}),
                     ))
                 }
             }
@@ -648,33 +674,66 @@ mod tests {
     // Prepared during GRID quiet; do not execute until the coordinator's
     // explicit release. These require actual paused disposable Redis replies.
     async fn scoped_fixture() -> (NotificationCache, redis::aio::MultiplexedConnection, String) {
-        assert_eq!(std::env::var("NOTIFICATION_SCOPE_FIXTURE").as_deref(), Ok("playback-fixture-only"));
+        assert_eq!(
+            std::env::var("NOTIFICATION_SCOPE_FIXTURE").as_deref(),
+            Ok("playback-fixture-only")
+        );
         let url = std::env::var("REDIS_TEST_URL").expect("owned Redis required");
         assert!(url.contains("playback-fixture-only"));
         let cache = NotificationCache::connect(&url).await.unwrap();
-        let control = redis::Client::open(url).unwrap().get_multiplexed_async_connection().await.unwrap();
-        let key = format!("rust-probe-notification-scope-{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos());
+        let control = redis::Client::open(url)
+            .unwrap()
+            .get_multiplexed_async_connection()
+            .await
+            .unwrap();
+        let key = format!(
+            "rust-probe-notification-scope-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        );
         (cache, control, key)
     }
     async fn pause_scope(control: &mut redis::aio::MultiplexedConnection, millis: u64) {
-        let _: () = redis::cmd("CLIENT").arg("PAUSE").arg(millis).arg("ALL").query_async(control).await.unwrap();
+        let _: () = redis::cmd("CLIENT")
+            .arg("PAUSE")
+            .arg(millis)
+            .arg("ALL")
+            .query_async(control)
+            .await
+            .unwrap();
     }
     async fn wait_scope(cache: &NotificationCache, operations: usize) {
         tokio::time::timeout(Duration::from_secs(6), async {
-            while cache.physical_operations() != operations { tokio::time::sleep(Duration::from_millis(5)).await; }
-        }).await.unwrap();
+            while cache.physical_operations() != operations {
+                tokio::time::sleep(Duration::from_millis(5)).await;
+            }
+        })
+        .await
+        .unwrap();
     }
     #[tokio::test]
     #[ignore = "actual owned Redis pause/caller cancellation and scoped admission"]
     async fn cancelled_cache_command_retains_physical_slot_and_scope() {
         let (cache, mut control, key) = scoped_fixture().await;
-        let _: () = redis::cmd("SET").arg(&key).arg("owned").arg("EX").arg(60).query_async(&mut control).await.unwrap();
+        let _: () = redis::cmd("SET")
+            .arg(&key)
+            .arg("owned")
+            .arg("EX")
+            .arg(60)
+            .query_async(&mut control)
+            .await
+            .unwrap();
         let owner = Arc::new(Semaphore::new(1));
-        let scoped = cache.clone().with_retained_scope(Arc::new(owner.clone().acquire_owned().await.unwrap()));
+        let scoped = cache
+            .clone()
+            .with_retained_scope(Arc::new(owner.clone().acquire_owned().await.unwrap()));
         pause_scope(&mut control, 400).await;
         let task = tokio::spawn(async move { scoped.get(&key).await });
         wait_scope(&cache, 1).await;
-        task.abort(); let _ = task.await;
+        task.abort();
+        let _ = task.await;
         assert_eq!(cache.physical_operations(), 1);
         assert_eq!(owner.available_permits(), 0);
         wait_scope(&cache, 0).await;
@@ -686,7 +745,8 @@ mod tests {
         let (cache, mut control, key) = scoped_fixture().await;
         let first = Arc::new(Semaphore::new(1));
         let second = Arc::new(Semaphore::new(1));
-        let scoped = cache.clone()
+        let scoped = cache
+            .clone()
             .with_retained_scope(Arc::new(first.clone().acquire_owned().await.unwrap()))
             .with_retained_scope(Arc::new(second.clone().acquire_owned().await.unwrap()));
         pause_scope(&mut control, 4000).await;
@@ -705,13 +765,21 @@ mod tests {
         let (cache, mut control, key) = scoped_fixture().await;
         pause_scope(&mut control, 1200).await;
         let mut tasks = Vec::new();
-        for _ in 0..16 {let cache=cache.clone();let key=key.clone();tasks.push(tokio::spawn(async move {cache.get(&key).await}));}
+        for _ in 0..16 {
+            let cache = cache.clone();
+            let key = key.clone();
+            tasks.push(tokio::spawn(async move { cache.get(&key).await }));
+        }
         wait_scope(&cache, 16).await;
-        for task in tasks {task.abort();let _=task.await;}
+        for task in tasks {
+            task.abort();
+            let _ = task.await;
+        }
         assert_eq!(cache.physical_operations(), 16);
-        let queued=cache.queued.available_permits();assert_eq!(queued,256);
-        wait_scope(&cache,0).await;
-        assert_eq!(cache.queued.available_permits(),256);
+        let queued = cache.queued.available_permits();
+        assert_eq!(queued, 256);
+        wait_scope(&cache, 0).await;
+        assert_eq!(cache.queued.available_permits(), 256);
         // Admission error/type/error wire regression is a separate original
         // API/cache/UA case matrix; a resource witness does not prove it.
     }
@@ -719,40 +787,103 @@ mod tests {
     #[tokio::test]
     #[ignore = "actual owned Redis physical16/queue256 hard admission and cancelled waiters"]
     async fn cache_waiter_bound_and_cancelled_queue_restore_admission() {
-        let (cache, mut control, key)=scoped_fixture().await;
-        pause_scope(&mut control,4000).await;
-        let mut active=Vec::new();
-        for _ in 0..16 {let cache=cache.clone();let key=key.clone();active.push(tokio::spawn(async move {cache.get(&key).await}));}
-        wait_scope(&cache,16).await;
-        let mut queued=Vec::new();
-        for _ in 0..256 {let cache=cache.clone();let key=key.clone();queued.push(tokio::spawn(async move {cache.get(&key).await}));}
-        tokio::time::timeout(Duration::from_secs(1),async {while cache.queued.available_permits()!=0 {tokio::time::sleep(Duration::from_millis(1)).await;}}).await.unwrap();
-        let began=tokio::time::Instant::now();assert!(cache.get(&key).await.is_err());assert!(began.elapsed()<Duration::from_millis(500));
-        assert_eq!(cache.physical_operations(),16);
-        for task in queued {task.abort();let _=task.await;}
-        assert_eq!(cache.queued.available_permits(),256);
-        for task in active {task.abort();let _=task.await;}
-        assert_eq!(cache.physical_operations(),16);
-        wait_scope(&cache,0).await;
+        let (cache, mut control, key) = scoped_fixture().await;
+        pause_scope(&mut control, 4000).await;
+        let mut active = Vec::new();
+        for _ in 0..16 {
+            let cache = cache.clone();
+            let key = key.clone();
+            active.push(tokio::spawn(async move { cache.get(&key).await }));
+        }
+        wait_scope(&cache, 16).await;
+        let mut queued = Vec::new();
+        for _ in 0..256 {
+            let cache = cache.clone();
+            let key = key.clone();
+            queued.push(tokio::spawn(async move { cache.get(&key).await }));
+        }
+        tokio::time::timeout(Duration::from_secs(1), async {
+            while cache.queued.available_permits() != 0 {
+                tokio::time::sleep(Duration::from_millis(1)).await;
+            }
+        })
+        .await
+        .unwrap();
+        let began = tokio::time::Instant::now();
+        assert!(cache.get(&key).await.is_err());
+        assert!(began.elapsed() < Duration::from_millis(500));
+        assert_eq!(cache.physical_operations(), 16);
+        for task in queued {
+            task.abort();
+            let _ = task.await;
+        }
+        assert_eq!(cache.queued.available_permits(), 256);
+        for task in active {
+            task.abort();
+            let _ = task.await;
+        }
+        assert_eq!(cache.physical_operations(), 16);
+        wait_scope(&cache, 0).await;
     }
     #[tokio::test]
     #[ignore = "actual owned Redis wrongtype/ACL distinguishes generic503 and UAserver500"]
     async fn cache_and_user_agent_server_error_classifications_stay_distinct() {
-        let (cache,mut control,key)=scoped_fixture().await;
-        let _:()=redis::cmd("RPUSH").arg(&key).arg("owned").query_async(&mut control).await.unwrap();
-        assert!(matches!(cache.get(&key).await,Err(StoreError::StatusBody(503,_))));
-        let name=format!("rust-probe-cache-acl-{}",std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos());
-        let _:()=redis::cmd("ACL").arg("SETUSER").arg(&name).arg("on").arg(">playback-fixture-only").arg("~*").arg("+@all").arg("-set").query_async(&mut control).await.unwrap();
-        let mut url=url::Url::parse(&std::env::var("REDIS_TEST_URL").unwrap()).unwrap();url.set_username(&name).unwrap();
-        let restricted=NotificationCache::connect(url.as_str()).await.unwrap();
-        let mut command=redis::cmd("SET");command.arg(&key).arg("denied");
-        assert!(matches!(restricted.command::<()>(command).await,Err(StoreError::StatusBody(503,_))));
-        assert!(matches!(restricted.invalidate_user_agent("owned-version").await,Err(StoreError::StatusBody(500,_))));
-        assert_eq!(restricted.physical_operations(),0);drop(restricted);
-        let _:()=redis::cmd("ACL").arg("DELUSER").arg(name).query_async(&mut control).await.unwrap();
-        let _:()=redis::cmd("DEL").arg(key).query_async(&mut control).await.unwrap();
+        let (cache, mut control, key) = scoped_fixture().await;
+        let _: () = redis::cmd("RPUSH")
+            .arg(&key)
+            .arg("owned")
+            .query_async(&mut control)
+            .await
+            .unwrap();
+        assert!(matches!(
+            cache.get(&key).await,
+            Err(StoreError::StatusBody(503, _))
+        ));
+        let name = format!(
+            "rust-probe-cache-acl-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        );
+        let _: () = redis::cmd("ACL")
+            .arg("SETUSER")
+            .arg(&name)
+            .arg("on")
+            .arg(">playback-fixture-only")
+            .arg("~*")
+            .arg("+@all")
+            .arg("-set")
+            .query_async(&mut control)
+            .await
+            .unwrap();
+        let mut url = url::Url::parse(&std::env::var("REDIS_TEST_URL").unwrap()).unwrap();
+        url.set_username(&name).unwrap();
+        let restricted = NotificationCache::connect(url.as_str()).await.unwrap();
+        let mut command = redis::cmd("SET");
+        command.arg(&key).arg("denied");
+        assert!(matches!(
+            restricted.command::<()>(command).await,
+            Err(StoreError::StatusBody(503, _))
+        ));
+        assert!(matches!(
+            restricted.invalidate_user_agent("owned-version").await,
+            Err(StoreError::StatusBody(500, _))
+        ));
+        assert_eq!(restricted.physical_operations(), 0);
+        drop(restricted);
+        let _: () = redis::cmd("ACL")
+            .arg("DELUSER")
+            .arg(name)
+            .query_async(&mut control)
+            .await
+            .unwrap();
+        let _: () = redis::cmd("DEL")
+            .arg(key)
+            .query_async(&mut control)
+            .await
+            .unwrap();
     }
-
 }
 
 #[cfg(test)]

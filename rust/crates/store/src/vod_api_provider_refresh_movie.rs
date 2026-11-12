@@ -116,7 +116,13 @@ pub(super) fn before_identity(movie: &Value, details: &Details) -> Result<Parent
     }
     // Source IDs can be arbitrary provider JSON, but a retained duplicate must
     // fit the already existing text-conversion budget before it is cloned.
-    for key in ["tmdb_id","imdb_id"]{if super::vod_api_actions_account::heap(&info[key]).map_err(|_|Fault::Capacity)?>256*1024{return Err(Fault::Capacity);}}
+    for key in ["tmdb_id", "imdb_id"] {
+        if super::vod_api_actions_account::heap(&info[key]).map_err(|_| Fault::Capacity)?
+            > 256 * 1024
+        {
+            return Err(Fault::Capacity);
+        }
+    }
     phase.tmdb = (truthy(&info["tmdb_id"]) && info["tmdb_id"] != phase.movie["tmdb_id"])
         .then(|| info["tmdb_id"].clone());
     phase.imdb = (truthy(&info["imdb_id"]) && info["imdb_id"] != phase.movie["imdb_id"])

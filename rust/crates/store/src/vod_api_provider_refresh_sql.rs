@@ -11,8 +11,8 @@ use sqlx::Row;
 /// Bound the serialized model before SQLx allocates its JSON argument buffer.
 /// The count-only pass allocates no model-sized output and keeps server-side
 /// JSON/constraint failures in their original physical statement group.
-fn encoded_model(work:&ReadWork,value:&Value)->Result<(),ReadError>{
-    super::vod_api_provider_refresh_budget::encoded_bytes(value,work.work_bytes()/8).map(|_|())
+fn encoded_model(work: &ReadWork, value: &Value) -> Result<(), ReadError> {
+    super::vod_api_provider_refresh_budget::encoded_bytes(value, work.work_bytes() / 8).map(|_| ())
 }
 async fn one(
     work: &ReadWork,

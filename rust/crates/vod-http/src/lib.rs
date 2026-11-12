@@ -23,5 +23,7 @@ pub async fn source_statistics_retained(
 ) -> serde_json::Value {
     statistics::snapshot(store, transport, now, caller)
         .await
-        .unwrap_or_else(|_| serde_json::json!({"vod_connections":[],"total_connections":0,"timestamp":now}))
+        .unwrap_or_else(
+            |_| serde_json::json!({"vod_connections":[],"total_connections":0,"timestamp":now}),
+        )
 }

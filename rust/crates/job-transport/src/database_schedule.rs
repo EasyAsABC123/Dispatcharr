@@ -314,11 +314,15 @@ impl DatabaseSchedule {
                     (0..24).any(|h| hour == h.to_string() || (h < 10 && hour == format!("{h:02}")));
                 if numeric {
                     let h: i32 = hour.parse().map_err(|_| Error::Unsupported)?;
-                    let shift=calendar_schedule::query_hour_offset(timezone.as_deref().ok_or(Error::Unsupported)?)?;
-                    let adjusted=(h+shift+24)%24;
+                    let shift = calendar_schedule::query_hour_offset(
+                        timezone.as_deref().ok_or(Error::Unsupported)?,
+                    )?;
+                    let adjusted = (h + shift + 24) % 24;
                     use chrono::Timelike;
                     let server = now.hour() as i32;
-                    if adjusted != 4 && !(0..5).any(|offset| (server + 22 + offset) % 24 == adjusted) {
+                    if adjusted != 4
+                        && !(0..5).any(|offset| (server + 22 + offset) % 24 == adjusted)
+                    {
                         continue;
                     }
                 }
@@ -432,7 +436,7 @@ pub mod driver;
 #[path = "database_heap.rs"]
 mod heap;
 
-#[path = "calendar_tz.rs"]
-mod calendar_tz;
 #[path = "calendar_schedule.rs"]
 mod calendar_schedule;
+#[path = "calendar_tz.rs"]
+mod calendar_tz;

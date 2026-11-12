@@ -47,10 +47,14 @@ impl StreamEngine {
         let mut bytes = 0usize;
         loop {
             let page = match retained.as_ref() {
-                Some(caller) => store.channel_statistics_page_retained(cursor, caller.clone()).await,
+                Some(caller) => {
+                    store
+                        .channel_statistics_page_retained(cursor, caller.clone())
+                        .await
+                }
                 None => store.channel_statistics_page(cursor).await,
             }
-                .map_err(|_| PlaybackError::new(503, "Live metadata unavailable"))?;
+            .map_err(|_| PlaybackError::new(503, "Live metadata unavailable"))?;
             pages += 1;
             examined = examined.saturating_add(page.examined);
             bytes = bytes.saturating_add(page.payload_bytes.saturating_sub(1024));

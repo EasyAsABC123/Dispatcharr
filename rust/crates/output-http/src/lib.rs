@@ -5,7 +5,7 @@ mod csrf;
 pub mod epg_dummy;
 pub mod epg_grid;
 mod epg_grid_http;
-pub use epg_grid_http::{GridGateway,GridReadLimits};
+pub use epg_grid_http::{GridGateway, GridReadLimits};
 pub mod epg_window;
 mod gateway;
 pub mod reader;

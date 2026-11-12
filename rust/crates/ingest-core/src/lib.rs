@@ -22,9 +22,9 @@ pub fn source_integer_literal(value: &str) -> Option<String> {
 pub fn source_float_literal(value: &str) -> Option<f64> {
     projection::decimal(value)
 }
+mod cache;
 #[cfg(test)]
 mod source_numeric_tests;
-mod cache;
 pub use cache::{CacheDownload, CacheError, DownloadStats};
 mod uploads;
 pub use uploads::{with_uploaded_playlist, UploadError, UploadLimits};

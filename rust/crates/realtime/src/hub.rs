@@ -38,13 +38,19 @@ pub struct Hub {
     publisher: AsyncMutex<()>,
 }
 
-pub(super) fn serialize(message:&Value,maximum:usize)->Result<Box<[u8]>,UpdateEventError> {
-    let mut output=BoundedWriter {data:Vec::new(),maximum};
-    serde_json::to_writer(&mut output,message).map_err(|_|UpdateEventError::InvalidMessage)?;
+pub(super) fn serialize(message: &Value, maximum: usize) -> Result<Box<[u8]>, UpdateEventError> {
+    let mut output = BoundedWriter {
+        data: Vec::new(),
+        maximum,
+    };
+    serde_json::to_writer(&mut output, message).map_err(|_| UpdateEventError::InvalidMessage)?;
     Ok(output.data.into_boxed_slice())
 }
-pub(super) fn leased_wire(data:Box<[u8]>,budget:OwnedSemaphorePermit)->Bytes {
-    Bytes::from_owner(WireOwner {data,_budget:budget})
+pub(super) fn leased_wire(data: Box<[u8]>, budget: OwnedSemaphorePermit) -> Bytes {
+    Bytes::from_owner(WireOwner {
+        data,
+        _budget: budget,
+    })
 }
 struct State {
     events: VecDeque<Arc<Packet>>,
@@ -156,7 +162,7 @@ impl Hub {
         if recipients.is_empty() {
             return Ok(());
         }
-        let wire=serialize(message,self.config.max_wire_bytes)?;
+        let wire = serialize(message, self.config.max_wire_bytes)?;
         let recipients = recipients.into_boxed_slice();
         let weight = wire.len()
             + recipients.len() * std::mem::size_of::<String>()

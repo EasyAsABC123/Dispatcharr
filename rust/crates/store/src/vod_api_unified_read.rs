@@ -336,15 +336,45 @@ async fn read_with_hooks(
 }
 
 fn links(
-    origin:&str,path:&str,pairs:&[(String,String)],page:&UnifiedPage,count:i64,
-)->Result<(Option<String>,Option<String>),QueryFault>{
-    let next=if &page.offset+&page.size<BigInt::from(count){Some(page_link(origin,path,pairs,Some(&(&page.number+1)))?)}else{None};
-    let previous=if page.number>BigInt::from(1){let prior=&page.number-1;Some(page_link(origin,path,pairs,(prior!=BigInt::from(1)).then_some(&prior))?)}else{None};
-    Ok((next,previous))
+    origin: &str,
+    path: &str,
+    pairs: &[(String, String)],
+    page: &UnifiedPage,
+    count: i64,
+) -> Result<(Option<String>, Option<String>), QueryFault> {
+    let next = if &page.offset + &page.size < BigInt::from(count) {
+        Some(page_link(origin, path, pairs, Some(&(&page.number + 1)))?)
+    } else {
+        None
+    };
+    let previous = if page.number > BigInt::from(1) {
+        let prior = &page.number - 1;
+        Some(page_link(
+            origin,
+            path,
+            pairs,
+            (prior != BigInt::from(1)).then_some(&prior),
+        )?)
+    } else {
+        None
+    };
+    Ok((next, previous))
 }
-fn page_link(origin:&str,path:&str,pairs:&[(String,String)],page:Option<&BigInt>)->Result<String,QueryFault>{
-    let page=page.map(super::vod_api_unified_query::decimal_text).transpose()?;
-    Ok(super::vod_api_pagination::page_url_text(origin,path,pairs,page.as_deref()))
+fn page_link(
+    origin: &str,
+    path: &str,
+    pairs: &[(String, String)],
+    page: Option<&BigInt>,
+) -> Result<String, QueryFault> {
+    let page = page
+        .map(super::vod_api_unified_query::decimal_text)
+        .transpose()?;
+    Ok(super::vod_api_pagination::page_url_text(
+        origin,
+        path,
+        pairs,
+        page.as_deref(),
+    ))
 }
 
 #[cfg(test)]

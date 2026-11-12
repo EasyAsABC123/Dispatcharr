@@ -449,7 +449,10 @@ fn playback_error(error: StoreError) -> PlaybackError {
             body: crate::xc_auth::failure_body(status),
         },
         StoreError::InvalidInput(body) => PlaybackError { status: 400, body },
-        StoreError::UiPermissionFault => PlaybackError { status:500, body:serde_json::json!({"detail":"UI permission failed"}) },
+        StoreError::UiPermissionFault => PlaybackError {
+            status: 500,
+            body: serde_json::json!({"detail":"UI permission failed"}),
+        },
         StoreError::StatusBody(status, body) => PlaybackError { status, body },
     }
 }

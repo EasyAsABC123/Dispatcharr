@@ -14,7 +14,10 @@ use bytes::Bytes;
 use serde_json::json;
 use std::{net::SocketAddr, sync::Arc};
 
-pub(super) struct UnifiedReply {pub bytes:Bytes,pub html:Option<super::vod_api_unified_html::ReplyHeaders>}
+pub(super) struct UnifiedReply {
+    pub bytes: Bytes,
+    pub html: Option<super::vod_api_unified_html::ReplyHeaders>,
+}
 pub(super) struct UnifiedRequest {
     pub peer: SocketAddr,
     pub headers: HeaderMap,
@@ -51,7 +54,8 @@ impl UnifiedReads {
             )
             .ok_or(ReadError::Capacity)?;
         let state = self.clone();
-        let metadata=Arc::new(std::sync::Mutex::new(None));let completed=metadata.clone();
+        let metadata = Arc::new(std::sync::Mutex::new(None));
+        let completed = metadata.clone();
         let bytes=self.runtime.run_scoped(input,Some(http.deadline),http.scope.clone(),move |work| async move {
             let indent=json_indent(&request.headers);
             let html=super::vod_api_unified_html::requested(&request.headers);
@@ -131,7 +135,7 @@ impl UnifiedReads {
                 (result,_)=>result,
             }
         }).await?;
-        let html=completed.lock().unwrap().take();
-        Ok(UnifiedReply{bytes,html})
+        let html = completed.lock().unwrap().take();
+        Ok(UnifiedReply { bytes, html })
     }
 }

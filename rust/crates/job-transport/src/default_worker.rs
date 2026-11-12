@@ -39,7 +39,7 @@ struct Owner {
 }
 struct Inner {
     jobs: Jobs,
-    accepted_kind:Option<Kind>,
+    accepted_kind: Option<Kind>,
     domains: Arc<dyn Domains>,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
@@ -71,12 +71,18 @@ impl DefaultWorker {
     }
     /// Explicit worker only; no automatic intake or shared transport closure.
     pub fn new(jobs: Jobs, domains: Arc<dyn Domains>) -> Result<Self, Error> {
-        Self::new_scoped(jobs,domains,None)
+        Self::new_scoped(jobs, domains, None)
     }
     /// The logo-only assembly must never revoke/consume another family, even
     /// an expired cleanup message whose normal domain preflight is skipped.
-    pub fn new_logo_scanner(jobs:Jobs,domains:Arc<dyn Domains>)->Result<Self,Error>{Self::new_scoped(jobs,domains,Some(Kind::LogoScanner))}
-    fn new_scoped(jobs:Jobs,domains:Arc<dyn Domains>,accepted_kind:Option<Kind>)->Result<Self,Error>{
+    pub fn new_logo_scanner(jobs: Jobs, domains: Arc<dyn Domains>) -> Result<Self, Error> {
+        Self::new_scoped(jobs, domains, Some(Kind::LogoScanner))
+    }
+    fn new_scoped(
+        jobs: Jobs,
+        domains: Arc<dyn Domains>,
+        accepted_kind: Option<Kind>,
+    ) -> Result<Self, Error> {
         if !jobs.allows_defaults() {
             return Err(Error::Configuration);
         }
@@ -129,8 +135,12 @@ impl DefaultWorker {
                 // Preserve legacy intake authority/classification. Merely
                 // recognizing the new protocol must not activate this family.
                 // This check precedes revocation, expiry and domain callbacks.
-                if inner.accepted_kind.is_none()&&kind==Kind::LogoScanner{return Ok(Run::UnsupportedHead);}
-                if inner.accepted_kind.is_some_and(|accepted|accepted!=kind){return Ok(Run::Unsupported(kind));}
+                if inner.accepted_kind.is_none() && kind == Kind::LogoScanner {
+                    return Ok(Run::UnsupportedHead);
+                }
+                if inner.accepted_kind.is_some_and(|accepted| accepted != kind) {
+                    return Ok(Run::Unsupported(kind));
+                }
                 let cached = inner
                     .revoked
                     .lock()
@@ -145,7 +155,11 @@ impl DefaultWorker {
                     .as_ref()
                     .is_some_and(|value| value.expired(chrono::Utc::now()));
                 if !cached && !initially_expired {
-                    match inner.domains.preflight_message(candidate.message.clone(), owner.clone()).await {
+                    match inner
+                        .domains
+                        .preflight_message(candidate.message.clone(), owner.clone())
+                        .await
+                    {
                         Ok(()) => {}
                         Err(DomainError::Unsupported) => return Ok(Run::Unsupported(kind)),
                         Err(error) => return Err(Error::Domain(error)),

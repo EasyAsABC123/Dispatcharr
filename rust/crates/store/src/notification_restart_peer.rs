@@ -1,9 +1,7 @@
 //! Disposable cached-owner restart protocol; no deployment or provider work.
 //! Original Dispatcharr authors retain full application and algorithm credit.
 use serde_json::{json, Value};
-use std::{
-    io::{BufRead, Read, Write},
-};
+use std::io::{BufRead, Read, Write};
 fn input() -> tokio::sync::mpsc::Receiver<String> {
     let (tx, rx) = tokio::sync::mpsc::channel(1);
     std::thread::spawn(move || {

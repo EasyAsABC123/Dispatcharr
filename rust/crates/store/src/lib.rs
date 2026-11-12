@@ -340,8 +340,8 @@ mod epg_current_lookup;
 
 // Bounded ordinary VOD reads; other VOD REST families remain separate gates.
 mod vod_api_draft;
-pub use vod_api_draft::{VodReads,VodReadLimits};
 pub use vod_api_draft::source_browsable_csrf;
+pub use vod_api_draft::{VodReadLimits, VodReads};
 
 /// Safe operator component; no HTTP or destructive management routes.
 pub mod operator_commands;
