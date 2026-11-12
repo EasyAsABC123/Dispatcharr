@@ -1,0 +1,591 @@
+{
+  "scope": "Read-only literalM0Sourcebudget/contract crosswalk; notregister mutation orendpoint/Native acceptance",
+  "credit": "Original Dispatcharr/dependency authors retainapplication/algorithmcredit/licenses",
+  "registry": {
+    "path": "docs/rust-contract-register.json",
+    "sha256": "f907e9a49322e1368aadffd40879d9d87f1466e8e9759c5cc2940a2e4cfac402",
+    "counts": {
+      "runtime_routes": 592,
+      "routes_with_unresolved_methods": 322,
+      "methodless_routes_with_runtime_handler_candidates": 166,
+      "runtime_operation_work_items": 798,
+      "OpenAPI_operations": 362,
+      "static_non_HTTP_candidates": 250,
+      "fully_verified_route_operations": 0,
+      "scoped_evidence_requiring_case_mapping": 16,
+      "operations_with_partial_case_bindings": 11,
+      "mapped_packaged_case_observations": 403
+    }
+  },
+  "HTTP_observations": [
+    {
+      "literal_contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/proxy/ts/stream/{owned_uuid}?output_format=ts",
+      "observed_method": "GET",
+      "observed_role": "anonymous, existingprivate-network fixture",
+      "statuses": [
+        200,
+        503
+      ],
+      "observed_assertions": "Real TS; mixed/slow, fault, many; configuredfinite1/10 refusal/release.503 only finitecases, not universal responsegrammar.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-accounting-qualified-handoff-1/proof.json",
+          "sha256": "a373f864721d504b34d41bc149f3bc58a0388a96f20a46eec73773343032ae6f"
+        },
+        {
+          "path": "artifacts/rust/m0-accounting-qualified-handoff-1/many-plan2-proof.json",
+          "sha256": "aec258017f775f2b56c416ae4fc554c7a20d2d3a563f5a51d57ed6ced077e13a"
+        },
+        {
+          "path": "artifacts/rust/m0-finite-capacity-source-1/sanitized-summary.json",
+          "sha256": "9280ecb2b5bbbd43b1172f59e6355e4ba1b530d1f0562d31195ad1273c9008a7"
+        },
+        {
+          "path": "artifacts/rust/m0-finite-ten-source-1/sanitized-summary.json",
+          "sha256": "3bce1401bb89bc0f277f6de815d4d0bec67e14897ebfa16f8491e872e72dce47"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/proxy/ts/stream/{owned_uuid}?output_format=ts",
+      "observed_method": "GET",
+      "observed_role": "owned JWT admin(user_level10/is_superuser), Source-only",
+      "statuses": [
+        200
+      ],
+      "observed_assertions": "One continuous authenticated sustained15/60 reader +retention; worker-inclusive15/120 reader and actualtasks; metadata useridentity verified.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-sustained-accounting-source-3/sanitized-summary.json",
+          "sha256": "dfc44f79f52607a35a7adff2935b657d6d42079d125c3442e0475bed0980b284"
+        },
+        {
+          "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/sanitized-summary.json",
+          "sha256": "f70e5456d1d94a8ffb7f45ef75601c29e0511037bf884dc59013c718164d86bd"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-211afdb7c19d0ea91286:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/proxy/ts/change_stream/{owned_uuid}",
+      "observed_method": "POST",
+      "observed_role": "ownedJWTadmin user_level10/is_superuser",
+      "statuses": [
+        200
+      ],
+      "observed_assertions": "Single real application POST selectsownedbackupstream; actualneworigin and oldbodyTScontinuity, separatefreshAVrecoverydecode.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-stream-change-source-1/sanitized-summary.json",
+          "sha256": "c51c87d271db732a8187686c561457b30bfbcc229941986f66061f51e634e9e8"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-211afdb7c19d0ea91286:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/proxy/ts/change_stream/{owned_uuid}",
+      "observed_method": "GET",
+      "observed_role": "ownedJWTadmin",
+      "statuses": [
+        405
+      ],
+      "observed_assertions": "Actualmethod-denial witness; notformat/Allow-order/rolegrammar closure.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-stream-change-source-1/sanitized-summary.json",
+          "sha256": "c51c87d271db732a8187686c561457b30bfbcc229941986f66061f51e634e9e8"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-211afdb7c19d0ea91286:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/proxy/ts/change_stream/{owned_uuid}",
+      "observed_method": "POST",
+      "observed_role": "anonymous",
+      "statuses": [
+        401
+      ],
+      "observed_assertions": "Actualadmin-denial/noadditionalorigin witness; no otherroles inferred.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-stream-change-source-1/sanitized-summary.json",
+          "sha256": "c51c87d271db732a8187686c561457b30bfbcc229941986f66061f51e634e9e8"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-4572aed84f826eed1b79:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/api/epg/import/",
+      "observed_method": "POST",
+      "observed_role": "ownedJWTadmin user_level10/is_superuser",
+      "statuses": [
+        202
+      ],
+      "observed_assertions": "Two actualOriginal HTTPforcedownedlocalguideimports; real refresh/index/Serieschildren,6SUCCESS/typedresults/TTL/lineage/SQL/events.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/sanitized-summary.json",
+          "sha256": "f70e5456d1d94a8ffb7f45ef75601c29e0511037bf884dc59013c718164d86bd"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-3efd3bc586265b0ce5da:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/api/epg/current-programs/",
+      "observed_method": "POST",
+      "observed_role": "ownedJWTadmin",
+      "statuses": [
+        200
+      ],
+      "observed_assertions": "Current response contains eachnewimport title; specificSourceworkflow validity, notcompleteDTO/grammar/permissions.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/sanitized-summary.json",
+          "sha256": "f70e5456d1d94a8ffb7f45ef75601c29e0511037bf884dc59013c718164d86bd"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-55aadc5558ca3b8248b1:GET",
+      "registered_method": "GET",
+      "observed_path": "/api/epg/programs/?title={owned_import_title}",
+      "observed_method": "GET",
+      "observed_role": "ownedJWTadmin",
+      "statuses": [
+        200
+      ],
+      "observed_assertions": "Guide response contains correspondingactualnewtitle. POST/suffix/detailmethods notcovered.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/sanitized-summary.json",
+          "sha256": "f70e5456d1d94a8ffb7f45ef75601c29e0511037bf884dc59013c718164d86bd"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-e26d7a42abc653fff1d5:GET",
+      "registered_method": "GET",
+      "observed_path": "/api/accounts/users/me/",
+      "observed_method": "GET",
+      "observed_role": "ownedJWTadmin",
+      "statuses": [
+        200
+      ],
+      "observed_assertions": "Setuponly:copiedDB ownusername. No fullserializeroracle/otherroles/PATCH/suffix claim.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/sanitized-summary.json",
+          "sha256": "f70e5456d1d94a8ffb7f45ef75601c29e0511037bf884dc59013c718164d86bd"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-19bdf8661c1cb2d36711:GET",
+      "registered_method": "GET",
+      "observed_path": "/api/channels/channels/{owned_pk}/",
+      "observed_method": "GET",
+      "observed_role": "ownedJWTadmin",
+      "statuses": [
+        200
+      ],
+      "observed_assertions": "Setuponly:owneduuid matchescopiedDB. No otherCRUD/suffix/fullprojection claim.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/sanitized-summary.json",
+          "sha256": "f70e5456d1d94a8ffb7f45ef75601c29e0511037bf884dc59013c718164d86bd"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-5bebee38a2a56b0dd8e1:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/api/core/version/",
+      "observed_method": "GET",
+      "observed_role": "anonymous ownedloopback setup",
+      "statuses": [
+        200
+      ],
+      "observed_assertions": "Readiness statusonly; no fullversionDTO/role/nativeoracle.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/sanitized-summary.json",
+          "sha256": "f70e5456d1d94a8ffb7f45ef75601c29e0511037bf884dc59013c718164d86bd"
+        },
+        {
+          "path": "artifacts/rust/m0-sustained-accounting-source-3/sanitized-summary.json",
+          "sha256": "dfc44f79f52607a35a7adff2935b657d6d42079d125c3442e0475bed0980b284"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    },
+    {
+      "literal_contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+      "registered_method": null,
+      "observed_path": "/proxy/ts/stream/{missing_sentinel}",
+      "observed_method": "GET",
+      "observed_role": "anonymous ownedfixture setup",
+      "statuses": [
+        404
+      ],
+      "observed_assertions": "Missingchannel readinesswitness only, notmalformed/alllookupgrammar.",
+      "Source_evidence": [
+        {
+          "path": "artifacts/rust/m0-fault-accounting-source-3/run.json",
+          "sha256": "04a524d3c3a2b771151aa9fd3c74e6a9dc7d2dc8fcb201f4873ce85e86a21ad4"
+        },
+        {
+          "path": "artifacts/rust/m0-finite-ten-source-1/sanitized-summary.json",
+          "sha256": "3bce1401bb89bc0f277f6de815d4d0bec67e14897ebfa16f8491e872e72dce47"
+        }
+      ],
+      "fully_verified": false,
+      "Native_acceptance": false,
+      "method_resolution_or_role_matrix_updated": false
+    }
+  ],
+  "task_observations": [
+    {
+      "literal_candidate_id": "candidate-442405cebe0695fa65ba",
+      "observed_task": "apps.epg.tasks.refresh_epg_data",
+      "executions": 2,
+      "actor": "Original worker,prefork1,copiedDB,broker8/result9",
+      "observed_assertions": "Actualprerun/postrun/HTTP-producedtasks and SUCCESS/results/TTL/lineage/durableeffects, noSignal/taskstubs. Only no-recordingSeries case.",
+      "fully_verified": false,
+      "Native_acceptance": false
+    },
+    {
+      "literal_candidate_id": "candidate-ec9fbf9e83b49892cea2",
+      "observed_task": "apps.epg.tasks.build_programme_index_task",
+      "executions": 2,
+      "actor": "Original worker,prefork1,copiedDB,broker8/result9",
+      "observed_assertions": "Actualprerun/postrun/HTTP-producedtasks and SUCCESS/results/TTL/lineage/durableeffects, noSignal/taskstubs. Only no-recordingSeries case.",
+      "fully_verified": false,
+      "Native_acceptance": false
+    },
+    {
+      "literal_candidate_id": "candidate-1bcc1e26e1c56f58d30a",
+      "observed_task": "apps.channels.tasks.evaluate_series_rules",
+      "executions": 2,
+      "actor": "Original worker,prefork1,copiedDB,broker8/result9",
+      "observed_assertions": "Actualprerun/postrun/HTTP-producedtasks and SUCCESS/results/TTL/lineage/durableeffects, noSignal/taskstubs. Only no-recordingSeries case.",
+      "fully_verified": false,
+      "Native_acceptance": false
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "corrected_original_idle_churn_3rep",
+      "evidence": {
+        "path": "artifacts/rust/m0-idle-churn-original-review-2/sanitized-summary.json",
+        "sha256": "f5043576f00f82ea21de8481a22dcf704c2866691b6c0dfc0d0e193aa5fa8be5"
+      },
+      "policy_sha256": "6984f5e73d31048f47ebac884c3936112e26b262da842e637645d363d99fbeab",
+      "actual_validity": "all3validcoverage;102readers18phases",
+      "Source_budget_acceptance": false,
+      "literal_declared_growth_budgets": {
+        "post_idle_process_growth": 0,
+        "post_idle_thread_growth": 4,
+        "post_idle_fd_growth": 16,
+        "post_idle_socket_growth": 16,
+        "post_idle_memory_growth_bytes": 67108864,
+        "post_idle_memory_growth_fraction": 0.1
+      },
+      "limits": "validSourceprocess/FD/socketgrowth failures retained; no causalleak proof; warmDBpool sourcecontext plausibleonly"
+    },
+    {
+      "name": "many_unlimited",
+      "evidence": {
+        "path": "artifacts/rust/m0-accounting-qualified-handoff-1/many-plan2-proof.json",
+        "sha256": "aec258017f775f2b56c416ae4fc554c7a20d2d3a563f5a51d57ed6ced077e13a"
+      },
+      "provider": {
+        "kind": "unlimited",
+        "configured_value": 0,
+        "counter_zero_meaning": "Source doesnotINCR unlimitedprofile; origin10actual"
+      },
+      "Docker_CPU_memory": "0/unset",
+      "literal_budgets": {
+        "resource_samples_minimum": 3,
+        "HTTP_errors": 0,
+        "empty_responses": 0,
+        "viewers_without_data": 0
+      },
+      "absolute_CPU_ceiling": null,
+      "absolute_memory_ceiling": null,
+      "growth_ceiling": null,
+      "Source_budget_acceptance": null
+    },
+    {
+      "name": "mixed9fast1slow",
+      "evidence": {
+        "path": "artifacts/rust/m0-accounting-qualified-handoff-1/proof.json",
+        "sha256": "a373f864721d504b34d41bc149f3bc58a0388a96f20a46eec73773343032ae6f"
+      },
+      "provider": {
+        "kind": "unlimited",
+        "configured_value": 0
+      },
+      "Docker_CPU_memory": "0/unset",
+      "literal_budgets": {
+        "fast_floor_Bps": 225000,
+        "slow_recv_buffer": 4096,
+        "slow_read_bytes": 1024,
+        "slow_delay_s": 0.25,
+        "warmup_s": 15,
+        "active_s": 30
+      },
+      "absolute_CPU_ceiling": null,
+      "absolute_memory_ceiling": null,
+      "growth_ceiling": null,
+      "Source_budget_acceptance": null
+    },
+    {
+      "name": "stall_failover",
+      "evidence": {
+        "path": "artifacts/rust/m0-fault-accounting-source-3/run.json",
+        "sha256": "04a524d3c3a2b771151aa9fd3c74e6a9dc7d2dc8fcb201f4873ce85e86a21ad4"
+      },
+      "literal_budgets": {
+        "timeout_s": 45,
+        "stall_s": 2,
+        "prefault_bytes": 250000,
+        "recovery_observation_s": 7,
+        "capture_max_bytes": 33554432
+      },
+      "limits": "Injected origin/control POST isfixtureonly, never boundto application change_stream. Failoverinterior183/115frameswarning remains; later75frameAVdecode clean.",
+      "absolute_CPU_ceiling": null,
+      "absolute_memory_ceiling": null,
+      "growth_ceiling": null,
+      "Source_budget_acceptance": null
+    },
+    {
+      "name": "finite_provider1_and10",
+      "evidence": {
+        "path": "artifacts/rust/m0-finite-ten-source-1/sanitized-summary.json",
+        "sha256": "3bce1401bb89bc0f277f6de815d4d0bec67e14897ebfa16f8491e872e72dce47"
+      },
+      "provider": {
+        "kind": "finite",
+        "actual_configured_cases": [
+          1,
+          10
+        ]
+      },
+      "assertions": "ActualSQLprofilesave, samechannelsharing, distinctrefusal503, actualrelease/admit andsame-runretention; no fabricatedcountergrant/reset.",
+      "resource_sampler": false,
+      "absolute_CPU_ceiling": null,
+      "absolute_memory_ceiling": null,
+      "growth_ceiling": null,
+      "Source_budget_acceptance": null
+    },
+    {
+      "name": "sustained_source1reader",
+      "evidence": {
+        "path": "artifacts/rust/m0-sustained-accounting-source-3/sanitized-summary.json",
+        "sha256": "dfc44f79f52607a35a7adff2935b657d6d42079d125c3442e0475bed0980b284"
+      },
+      "provider": {
+        "kind": "unlimited",
+        "configured_value": 0
+      },
+      "actual_cgroup_caps": {
+        "backend_CPU": 2,
+        "backend_memory": 536870912,
+        "PGRedis_CPU": 1,
+        "PGRedis_memory": 1073741824,
+        "origin_CPU": 2,
+        "origin_memory": 536870912
+      },
+      "timing": "15warm/60active/70retention,3s warmprimer; samecontainers, localclose still1client/origin then0",
+      "resource_sampler": false,
+      "absolute_CPU_ceiling": null,
+      "absolute_memory_ceiling": null,
+      "growth_ceiling": null,
+      "Source_budget_acceptance": null,
+      "remaining": "No sampledpostclosefootprint/FD/socketgrowth; only1sustainedreader, no relabelinghistorical1/10/100"
+    },
+    {
+      "name": "worker_inclusive_normal",
+      "evidence": {
+        "path": "artifacts/rust/m0-concurrent-bounded-normal-source-1/sanitized-summary.json",
+        "sha256": "f70e5456d1d94a8ffb7f45ef75601c29e0511037bf884dc59013c718164d86bd"
+      },
+      "provider": {
+        "kind": "finite",
+        "configured_value": 1
+      },
+      "actual_cgroup_caps": {
+        "baseline": {
+          "nano_cpus": 1000000000,
+          "memory_bytes": 1073741824
+        },
+        "source": {
+          "nano_cpus": 2000000000,
+          "memory_bytes": 536870912
+        },
+        "origin": {
+          "nano_cpus": 2000000000,
+          "memory_bytes": 536870912
+        },
+        "worker": {
+          "nano_cpus": 1000000000,
+          "memory_bytes": 536870912
+        }
+      },
+      "timing": "15warm/120active,imports5/60,2MiBx3/25framefloor",
+      "workload_resource_sampler": false,
+      "separate_prework_observer_contract": "10s4roles/10samples, no worker-cost/gainacceptance",
+      "instrumentation_limits": {
+        "worker_shared_journal": 8388608,
+        "worker_records": 1024,
+        "one_event": 65536,
+        "channel_event_aggregate": 8388608,
+        "one_process_stdout_plus_stderr": 8388608
+      },
+      "absolute_CPU_ceiling": null,
+      "absolute_memory_ceiling": null,
+      "growth_ceiling": null,
+      "Source_budget_acceptance": null
+    },
+    {
+      "name": "resource_controller5",
+      "evidence": {
+        "path": "artifacts/rust/m0-concurrent-resource-controller-5/input-seal.json",
+        "sha256": "b047ab233ed0bcd831d74ed0525ab031c3076769f9ebe748a701d9d837413536"
+      },
+      "execution": "HARD BLOCKED;31offlinecontrols only; no resourcewindow",
+      "proposed_cgroup_caps": {
+        "baseline": {
+          "nano_cpus": 1000000000,
+          "memory_bytes": 1073741824
+        },
+        "source": {
+          "nano_cpus": 2000000000,
+          "memory_bytes": 536870912
+        },
+        "origin": {
+          "nano_cpus": 2000000000,
+          "memory_bytes": 536870912
+        },
+        "worker": {
+          "nano_cpus": 1000000000,
+          "memory_bytes": 536870912
+        }
+      },
+      "proposed_budgets_not_yet_approved_for_four_roles": {
+        "idle_cpu_percent_one_core": 50,
+        "whole_stack_cpu_percent_one_core": 500,
+        "post_idle_memory_growth_bytes": 67108864,
+        "post_idle_memory_growth_fraction": 0.1,
+        "post_idle_process_growth": 0,
+        "post_idle_thread_growth": 4,
+        "post_idle_fd_growth": 16,
+        "post_idle_socket_growth": 16,
+        "tcp_time_wait_ceiling": 1024,
+        "oom_events": 0
+      },
+      "timing_quality": {
+        "observer_commit": "4b209bf8",
+        "sample_interval_seconds": 1,
+        "census_interval_seconds": 2,
+        "census_service_deadline_seconds": 5,
+        "maximum_resource_rows": 512,
+        "maximum_census_rows": 128,
+        "maximum_json_row_bytes": 1048576,
+        "maximum_stream_bytes": 16777216,
+        "idle_before_seconds": 20,
+        "retention_settle_seconds": 70,
+        "idle_after_seconds": 20,
+        "minimum_complete_stable_idle_censuses": 5,
+        "repetition_deadline_seconds": 900,
+        "aggregate_channel_events_bytes": 8388608,
+        "aggregate_worker_events_bytes": 8388608,
+        "maximum_event_records": 1024,
+        "maximum_event_bytes": 65536,
+        "repetitions": 3,
+        "minimum_workload_resource_samples": 60,
+        "budgets_inherited_without_tuning": {
+          "idle_cpu_percent_one_core": 50,
+          "whole_stack_cpu_percent_one_core": 500,
+          "post_idle_memory_growth_bytes": 67108864,
+          "post_idle_memory_growth_fraction": 0.1,
+          "post_idle_process_growth": 0,
+          "post_idle_thread_growth": 4,
+          "post_idle_fd_growth": 16,
+          "post_idle_socket_growth": 16,
+          "tcp_time_wait_ceiling": 1024,
+          "oom_events": 0
+        },
+        "minimum_workload_cpu_samples": 60
+      },
+      "Source_budget_acceptance": null
+    }
+  ],
+  "fixture_endpoints_not_application_contracts": [
+    "origin /health GET",
+    "origin /stats GET",
+    "origin /control POST"
+  ],
+  "preserved_Source_negatives": [
+    "correctedidle/churn3rep validSourcegrowthbudgetfailures",
+    "firstidle3rep observerinvalidrep2 hasnogrowthinference",
+    "cold100/reopen Source0bytes10sdeadline",
+    "Sourceownercrash retainedproviderslot90s",
+    "failoverinterior decoderwarning separatefromcleanrecovery",
+    "historicalsetup/oracle/prediction/provenance failures retained"
+  ],
+  "method_and_budget_rules": [
+    "METHOD_UNRESOLVED IDs stayliteral; observedmethods do not fabricate resolved IDs",
+    "GET/PATCH/POST/DELETE/formataliases remainseparate; onlylistedmethod/role/assertions observed",
+    "0/unsetDockerlimit isnotfinitezeroCPU/RAM;0providerprofile isunlimited notnoslots",
+    "AbsentabsoluteCPU/memory/startup/growthceilings remainnull; no retrospectivethresholds",
+    "Originalpolicy FD/socketgrowth ceilings16/16 areliteral, notconversationalzero",
+    "ExistingSourcebudgetfailures arefacts, notcausalleaks orNativegain",
+    "No798operation orNativecompleteness fromreferencecounts"
+  ],
+  "fully_verified": false,
+  "Native_acceptance": false,
+  "M0_complete": false,
+  "live_index_ref_modifications": false
+}

@@ -1,0 +1,45 @@
+{
+  "scope": "STATIC public summary attestation, not private raw replay or new measurement",
+  "source_commit": "6054f7b52073485cff1d2ca249f8e3bde8bd46b3",
+  "crosswalk_sha256": "4bb1f1e895874bb83d9d8f910e6806000ed81c52147a43cd9703d8fa60a46e71",
+  "authorities": [
+    {
+      "path": "docs/rust-contract-register.json",
+      "sha256": "f907e9a49322e1368aadffd40879d9d87f1466e8e9759c5cc2940a2e4cfac402"
+    },
+    {
+      "path": "scripts/rust-baseline/idle-churn/policy.json",
+      "sha256": "6984f5e73d31048f47ebac884c3936112e26b262da842e637645d363d99fbeab"
+    },
+    {
+      "path": "scripts/rust-baseline/idle-churn/verified-original-three-repetitions-corrected-2.json",
+      "sha256": "674972b482b179b733b8c650db40201d19562c8cf7bb206ea4410fa54e036336"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/verified-source-accounting-1.json",
+      "sha256": "3586d8c3668873e5b431166370de255d07f1b2c64a6cc0682a6ea22d3a52cd68"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/verified-source-finite-capacity-1.json",
+      "sha256": "9280ecb2b5bbbd43b1172f59e6355e4ba1b530d1f0562d31195ad1273c9008a7"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/verified-source-finite-ten-1.json",
+      "sha256": "3bce1401bb89bc0f277f6de815d4d0bec67e14897ebfa16f8491e872e72dce47"
+    },
+    {
+      "path": "scripts/rust-playback-baseline/verified-source-application-stream-change-1.json",
+      "sha256": "c51c87d271db732a8187686c561457b30bfbcc229941986f66061f51e634e9e8"
+    },
+    {
+      "path": "scripts/rust-baseline/sustained/verified-source-sustained-accounting-1.json",
+      "sha256": "dfc44f79f52607a35a7adff2935b657d6d42079d125c3442e0475bed0980b284"
+    },
+    {
+      "path": "scripts/rust-baseline/concurrent-import/verified-source-bounded-concurrent-1.json",
+      "sha256": "ca408c907c52c71f7f30181c7546865f2bbc76647d2abfc8f09ad2f25c2a358b"
+    }
+  ],
+  "private_historical_evidence_not_required_by_default": true,
+  "optional_deep_evidence": "Only when explicitly requested; requires original private files, never fallback"
+}
