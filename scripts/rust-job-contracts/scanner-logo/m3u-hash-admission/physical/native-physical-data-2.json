@@ -1,0 +1,173 @@
+{
+  "passed": true,
+  "native_verified": true,
+  "scope": "Owned Source producer/native pre-ACK hash-read physical ownership controls.\nReal Redis response and real PostgreSQL ERROR/Ready; no synthetic server frames.\nOriginal Dispatcharr/dependency authors retain code/algorithm/license credit.\n",
+  "checks": [
+    {
+      "name": "fresh-empty-/data/m3us",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/epgs",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/logos",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-real-parent-null",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-normal-path-prepared",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-started",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-actual-reply-held",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-aborted-caller-slot-shutdown-retained",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-physical-owner-survives-logical-timeout",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-no-ACK-or-task-metadata",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-account-cache-unchanged",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-actual-settlement-releases-owner",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-still-no-ACK-or-result",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-drain",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "cache-reply-proxy-clean",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-real-parent-null",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-normal-path-prepared",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-started",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-actual-reply-held",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-real-P0001-forwarded",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-aborted-caller-slot-shutdown-retained",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-one-real-error-no-statement-retry",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-no-ACK-or-task-metadata",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-account-cache-unchanged",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-actual-settlement-releases-owner",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-still-no-ACK-or-result",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-drain",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "SQL-Ready-proxy-clean",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "cache-reply",
+      "task_id": "629cac6d-e9e6-4ba6-8008-9048c95fa583",
+      "retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "no_ACK": true,
+      "no_result": true,
+      "account_cache_unchanged": true
+    },
+    {
+      "name": "SQL-Ready",
+      "task_id": "1599228f-c0c4-4942-976c-7d5d282b53da",
+      "retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "no_ACK": true,
+      "no_result": true,
+      "account_cache_unchanged": true
+    }
+  ],
+  "predeclared": {
+    "cases": [
+      "cache-reply",
+      "SQL-Ready"
+    ],
+    "cache_hold_after_abort": 2.3,
+    "SQL_hold_before_abort": 6.2,
+    "native_cache_logical_timeout": 2,
+    "pool_acquire_timeout": 5
+  }
+}

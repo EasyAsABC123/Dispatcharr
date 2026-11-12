@@ -179,6 +179,12 @@ async fn native_scanner_m3u_peer() {
                     json!({"caller_retained":weak.as_ref().unwrap().upgrade().is_some(),"slots":worker.available_slots(),"admission":format!("{admission:?}"),"drain":format!("{drain:?}")}),
                 );
             }
+            "observe" => {
+                let drain = worker.shutdown(Duration::from_millis(30)).await;
+                output(
+                    json!({"caller_retained":weak.as_ref().unwrap().upgrade().is_some(),"slots":worker.available_slots(),"drain":format!("{drain:?}")}),
+                );
+            }
             "settled" => {
                 let end = tokio::time::Instant::now() + Duration::from_secs(10);
                 while worker.available_slots() == 0 {

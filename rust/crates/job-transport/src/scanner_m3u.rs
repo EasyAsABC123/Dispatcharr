@@ -209,7 +209,7 @@ impl Service {
         owner: Arc<Operation>,
         done: tokio::sync::oneshot::Receiver<()>,
     ) -> Result<Prepared, Error> {
-        let row=sqlx::query("SELECT id::bigint,name,file_path,is_active,status,last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1").bind(id).fetch_optional(self.inner.store.pool()).await.map_err(|_|Error::Operational)?.ok_or(Error::Unsupported)?;
+        let row=sqlx::query("SELECT id::bigint,name,file_path,is_active,status,CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1").bind(id).fetch_optional(self.inner.store.pool()).await.map_err(|_|Error::Operational)?.ok_or(Error::Unsupported)?;
         if !row
             .try_get::<bool, _>("known")
             .map_err(|_| Error::Unsupported)?
@@ -242,6 +242,7 @@ impl Service {
         {
             return Err(Error::Unsupported);
         }
+        self.require_empty_hash_setting(owner.clone()).await?;
         let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1 OR s.stream_hash='44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a') OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
         if forbidden {
             return Err(Error::Unsupported);
@@ -267,19 +268,6 @@ impl Service {
             })
             .await
             .map_err(|_| Error::Operational)??;
-            if kind == Kind::Single && !cached.as_ref().unwrap_or(&input).entries.is_empty() {
-                let settings = self
-                    .inner
-                    .auth
-                    .clone()
-                    .with_retained_scope(prepared.owner.clone())
-                    .source_stream_settings()
-                    .await
-                    .map_err(|_| Error::Operational)?;
-                if settings.get("m3u_hash_key").is_some_and(|v| v != "") {
-                    return Err(Error::Unsupported);
-                }
-            }
             prepared.input = Some(input);
             prepared.cached = cached;
         } else if kind == Kind::Single {
@@ -318,6 +306,53 @@ impl Service {
             }
         }
         Ok(prepared)
+    }
+    async fn require_empty_hash_setting(&self, owner: Owner) -> Result<(), Error> {
+        let cached = self
+            .inner
+            .ports
+            .stream_settings_cached(owner.clone())
+            .await
+            .map_err(hash_cache_error)?;
+        let hash = if let Some(group) = cached {
+            // Source returns any cached dict as stored, including an empty dict.
+            group.get("m3u_hash_key").cloned().unwrap_or(json!(""))
+        } else {
+            let before = self
+                .inner
+                .ports
+                .stream_settings_version(owner.clone())
+                .await
+                .map_err(hash_cache_error)?;
+            // Never transfer/parse an unbounded CoreSettings value. Only a
+            // bounded projected hash field/default may leave PostgreSQL.
+            // This bounds fetched data, not PostgreSQL CPU/TOAST/scan work.
+            let row: Option<(bool, Option<Value>)> = sqlx::query_as(
+                "SELECT octet_length(value::text)<=65536 AS bounded,CASE WHEN octet_length(value::text)<=65536 THEN CASE WHEN jsonb_typeof(value)='object' THEN COALESCE(value->'m3u_hash_key','\"\"'::jsonb) ELSE '\"\"'::jsonb END ELSE NULL END AS hash_value FROM core_coresettings WHERE key='stream_settings'",
+            ).fetch_optional(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+            let after = self
+                .inner
+                .ports
+                .stream_settings_version(owner)
+                .await
+                .map_err(hash_cache_error)?;
+            if !dispatcharr_store::source_cache_values_equal(&before, &after) {
+                // Unlike Source's fill-only version check, admission refuses an
+                // observed changing snapshot. Concurrent config parity is open.
+                return Err(Error::Operational);
+            }
+            match row {
+                None => json!(""),
+                Some((true, Some(value))) => value,
+                Some((false, _)) => return Err(Error::Unsupported),
+                _ => return Err(Error::Operational),
+            }
+        };
+        match hash {
+            Value::Null => Ok(()),
+            Value::String(value) if value.is_empty() => Ok(()),
+            _ => Err(Error::Unsupported),
+        }
     }
     fn cache_path(&self, id: i64) -> PathBuf {
         self.inner.roots.cache.join(format!("{id}.json"))
@@ -827,6 +862,12 @@ impl Service {
             .map_err(|_| Error::DrainTimeout)?
             .map_err(|_| Error::Closed)?;
         Ok(())
+    }
+}
+fn hash_cache_error(error: crate::transport::Error) -> Error {
+    match error {
+        crate::transport::Error::Capacity => Error::Unsupported,
+        _ => Error::Operational,
     }
 }
 fn caught_batch(error: &StoreError) -> bool {

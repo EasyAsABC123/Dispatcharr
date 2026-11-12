@@ -1,0 +1,49 @@
+usage: python -m unittest [-h] --source SOURCE
+python -m unittest: error: the following arguments are required: --source
+E
+======================================================================
+ERROR: test_build_peer (unittest.loader._FailedTest.test_build_peer)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_build_peer
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/argparse.py", line 2047, in _parse_known_args2
+    namespace, args = self._parse_known_args(args, namespace, intermixed)
+                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2344, in _parse_known_args
+    raise ArgumentError(None, _('the following arguments are required: %s') %
+               ', '.join(required_actions))
+argparse.ArgumentError: the following arguments are required: --source
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 433, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 374, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/scanner-m3u-hash-handoff-1/selected/scripts/rust-job-contracts/scanner-logo/m3u-hash-admission/test_build_peer.py", line 4, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--source',type=Path,required=True);a=p.parse_args();SOURCE=a.source.resolve();TOOL=Path(__file__).with_name('build_peer.py')
+                                                                                     ~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/argparse.py", line 2008, in parse_args
+    args, argv = self.parse_known_args(args, namespace)
+                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2018, in parse_known_args
+    return self._parse_known_args2(args, namespace, intermixed=False)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2049, in _parse_known_args2
+    self.error(str(err))
+    ~~~~~~~~~~^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2785, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2772, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 2
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

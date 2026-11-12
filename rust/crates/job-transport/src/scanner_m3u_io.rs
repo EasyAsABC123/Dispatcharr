@@ -185,6 +185,46 @@ impl M3uPorts {
             Err(e) => Err(map(e)),
         }
     }
+    // Admission-only Source cache reads: no fill and no logical-error DB fallback.
+    // TYPE/STRLEN/GET are one script, so replacement cannot race the bulk bound.
+    async fn hash_cache_value(
+        &self,
+        key: &str,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Value>, Error> {
+        const READ: &str = "local t=redis.call('TYPE',KEYS[1]).ok;if t=='none'then return{0,''}end;if t~='string'then return{-1,''}end;if redis.call('STRLEN',KEYS[1])>65536 then return{-2,''}end;return{1,redis.call('GET',KEYS[1])}";
+        let (reply, _) = self
+            .cache
+            .command_classified::<(i64, Vec<u8>), _>(READ, &[key.into()], &[], owner)
+            .await
+            .map_err(map)?;
+        match reply.0 {
+            0 => Ok(None),
+            1 => dispatcharr_store::decode_source_cache(&reply.1)
+                .map(Some)
+                .ok_or(Error::Corrupt),
+            -2 => Err(Error::Capacity),
+            _ => Err(Error::Corrupt),
+        }
+    }
+    pub(crate) async fn stream_settings_cached(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Value>, Error> {
+        Ok(self
+            .hash_cache_value(":1:coresettings:group:stream_settings", owner)
+            .await?
+            .filter(Value::is_object))
+    }
+    pub(crate) async fn stream_settings_version(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Value, Error> {
+        Ok(self
+            .hash_cache_value(":1:coresettings:groupver:stream_settings", owner)
+            .await?
+            .unwrap_or(Value::Null))
+    }
     pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
         self.jobs.shutdown(timeout).await
     }

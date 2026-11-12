@@ -1,0 +1,88 @@
+{
+  "passed": true,
+  "scope": "Final inert bounded read-only hash admission and last_message server projection; no Main/default registration or performance claim",
+  "source_map_sha256": "3317c253b340304836b9a14de6e9575ea6ac3fb6de8fc59a0e6f6841fec856e8",
+  "source_file_count": 788,
+  "runtime_delta_count": 3,
+  "executed_job_elf_sha256": "d8408b5f3cebf66a2397aa26a8a58c8a1f3fcd93386c58edfdf031b0fb74d785",
+  "whole_workspace": {
+    "strict_all_targets": true,
+    "fmt": true,
+    "default_passed": 566,
+    "ignored": 703,
+    "suites": 170,
+    "exit": 0
+  },
+  "public_controls": {
+    "acceptance": 10,
+    "physical_acceptance": 8,
+    "reconstruct": 13,
+    "build": 5
+  },
+  "reports": {
+    "scanner-m3u-hash-native-3": {
+      "path": "artifacts/rust/scanner-m3u-hash-native-3/integration.json",
+      "sha256": "18006a05328ae6be8b18a3a68871cef2fb7762e0149c5a5dac592f40dc09faef",
+      "checks": 176,
+      "native_binary_sha256": "d8408b5f3cebf66a2397aa26a8a58c8a1f3fcd93386c58edfdf031b0fb74d785"
+    },
+    "scanner-m3u-hash-physical-2": {
+      "path": "artifacts/rust/scanner-m3u-hash-physical-2/integration.json",
+      "sha256": "6fc35234b62d65e885816df4dce49f8c2b381d1b68676c4d5061df87fa1cc602",
+      "checks": 32,
+      "native_binary_sha256": "d8408b5f3cebf66a2397aa26a8a58c8a1f3fcd93386c58edfdf031b0fb74d785"
+    },
+    "scanner-m3u-hash-audit-regression-1": {
+      "path": "artifacts/rust/scanner-m3u-hash-audit-regression-1/integration.json",
+      "sha256": "45c0dd52ff0a5b9b69b836364e962ada711f31692c3059ff2abb3e072e58717e",
+      "checks": 634,
+      "native_binary_sha256": "d8408b5f3cebf66a2397aa26a8a58c8a1f3fcd93386c58edfdf031b0fb74d785"
+    },
+    "scanner-m3u-hash-audit-physical-1": {
+      "path": "artifacts/rust/scanner-m3u-hash-audit-physical-1/integration.json",
+      "sha256": "54ad1289a114e7d4ad8f8c10d66e66502a3c51f48edd4223beebd52f8943c69e",
+      "checks": 63,
+      "native_binary_sha256": "d8408b5f3cebf66a2397aa26a8a58c8a1f3fcd93386c58edfdf031b0fb74d785"
+    },
+    "scanner-m3u-hash-old-regression-1": {
+      "path": "artifacts/rust/scanner-m3u-hash-old-regression-1/integration.json",
+      "sha256": "452605f20e1f39687a61378a796a332cadf0fe7afbfac2da52f83608740dd2cc",
+      "checks": 275,
+      "native_binary_sha256": "d8408b5f3cebf66a2397aa26a8a58c8a1f3fcd93386c58edfdf031b0fb74d785"
+    }
+  },
+  "public_portable_actual_replay": {
+    "passed": true,
+    "job_elf_sha256": "7e791fe05b4ccfc0b2be657c1003f3c0852cce85e17bc65197251ff517b34851",
+    "source_map_sha256": "3317c253b340304836b9a14de6e9575ea6ac3fb6de8fc59a0e6f6841fec856e8",
+    "cases": {
+      "admission": 14,
+      "physical": 2
+    },
+    "checks": {
+      "admission": 176,
+      "physical": 32
+    },
+    "default_database_unchanged": true,
+    "independent_cleanup": true,
+    "host_exit": 0,
+    "private_fallback": false
+  },
+  "failures_retained": [
+    "private1 duplicate inherited hash getter",
+    "private2 before last_message projection",
+    "native1 snapshot type controller setup",
+    "native2 independent live worker heartbeat comparison",
+    "build-controls-1 missing required CLI argument before build"
+  ],
+  "unsupported": [
+    "general hash normalization or nonempty keys",
+    "account custom-property overrides",
+    "cachefill/outage parity",
+    "concurrent configuration changes",
+    "general elapsed formatting",
+    "Main/default consumers and whole scanner",
+    "general SQL transport/CPU/scan bounds"
+  ],
+  "original_authors_credit": "Original Dispatcharr/dependency authors retain their code, algorithms and licenses."
+}
