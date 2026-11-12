@@ -1,0 +1,61 @@
+{
+  "scope": "portable fresh functional reproduction; caller resolves placeholders, no automatic execution",
+  "support_revision": "5afbb78ee8be031474b41278479fcdf623f2ddce",
+  "support_archive_sha256": "2948da2a0fa4379c3785c2f3cdeec79adc167e3ef79a40c6f4b9cb809f7469da",
+  "cwd": "{support}",
+  "environment": {
+    "GIT_DIR": "{actual_git_dir}",
+    "GIT_WORK_TREE": "{support}",
+    "DISPATCHARR_REPO": "{support}"
+  },
+  "historical_safe17_Source_raw_hash": "1043832c1cfa47bec05bf0a23500aa7d1e7b7c80c98ceefb1868097c9fe10615",
+  "historical_Source_raw_not_required_for_fresh_capture": true,
+  "commands": [
+    {
+      "step": "fresh-Original17capture",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-operator-contracts/run_source.py",
+        "--output",
+        "{output}/original17"
+      ]
+    },
+    {
+      "step": "shipped-safe17",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-operator-contracts/run_packaged.py",
+        "--output",
+        "{output}/safe17",
+        "--build-manifest",
+        "{manifest}",
+        "--source-cases",
+        "{output}/original17/operator-cli-source.json"
+      ]
+    },
+    {
+      "step": "shipped-createsuperuser22",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-operator-contracts/createsuperuser-packaged/run_source.py",
+        "--output",
+        "{output}/create22",
+        "--build-manifest",
+        "{manifest}"
+      ]
+    },
+    {
+      "step": "strict-typed154",
+      "argv": [
+        "python3",
+        "{support}/scripts/rust-operator-contracts/createsuperuser-native/verify.py",
+        "--source",
+        "{support}/scripts/rust-operator-contracts/createsuperuser-native/source-createsuperuser-4.json",
+        "--native",
+        "{output}/create22/operator-cli-source.json"
+      ]
+    }
+  ],
+  "fresh_outputs_required": true,
+  "no_performance_or_Source5_execution": true
+}
