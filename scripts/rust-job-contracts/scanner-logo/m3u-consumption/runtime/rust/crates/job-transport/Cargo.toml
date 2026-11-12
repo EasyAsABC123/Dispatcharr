@@ -1,0 +1,30 @@
+[package]
+name = "dispatcharr-job-transport"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+axum = "0.8"
+dispatcharr-coordination = {path="../coordination"}
+dispatcharr-contracts = {path="../contracts"}
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres"] }
+dispatcharr-store = {path="../store"}
+dispatcharr-ingest-core = { path = "../ingest-core" }
+dispatcharr-ingest-epg = {path="../ingest-epg"}
+dispatcharr-backups = {path="../backups"}
+chrono = "0.4"
+dispatcharr-output-store = {path="../output-store"}
+base64 = "0.22"
+redis = {version="0.32",features=["tokio-comp"]}
+serde_json = {version="1",features=["arbitrary_precision","preserve_order"]}
+tokio = {version="1",features=["rt-multi-thread","sync","time","macros"]}
+uuid = {version="1",features=["v4"]}
+
+[dev-dependencies]
+dispatcharr-realtime = {path="../realtime"}
+zip = {version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs"]}
+tokio = {version="1",features=["io-util","net"]}
+sha2 = "0.10"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+jsonwebtoken = "9"

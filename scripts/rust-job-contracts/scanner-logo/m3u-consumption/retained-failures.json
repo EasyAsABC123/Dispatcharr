@@ -1,0 +1,134 @@
+[
+  {
+    "attempt": "scanner-m3u-native-1",
+    "reason": "Controller variable shadow, before publication",
+    "files": {
+      "integration.json": {
+        "sha256": "1b45bcbd77d24eccf812196f1f7b985addd4aa28f86bc5cac81b9ec645074eb3",
+        "bytes": 1078
+      },
+      "source-controller-private.log": {
+        "sha256": "8a1f0092ff5fe004766f6715ca38b0feb26cebe7ea364507a5e4a29c284232ee",
+        "bytes": 635
+      },
+      "source-logo-scanner-private.json": {
+        "sha256": "577863d19373cb9531bf716ebcb8f8f37918bafcad2eab3c322d6b41409fe6ac",
+        "bytes": 950
+      }
+    }
+  },
+  {
+    "attempt": "scanner-m3u-native-2",
+    "reason": "Controller missed insertion/nativeids undefined; before native execution",
+    "files": {
+      "integration.json": {
+        "sha256": "2054e33e59d3843a1c509c905da2b4823c73fd836d0d8c3b816230a83fabda7d",
+        "bytes": 1078
+      },
+      "source-controller-private.log": {
+        "sha256": "38caf5cd660a356dda2017b1ac6636a79e78d8b2da764bc14c087769da319a6b",
+        "bytes": 949
+      },
+      "source-logo-scanner-private.json": {
+        "sha256": "0d873617ac73c651a586733a493d92e745af0854e9d6ec03215a5d1d54d2b2b6",
+        "bytes": 3559
+      }
+    }
+  },
+  {
+    "attempt": "scanner-m3u-native-3",
+    "reason": "Actual native conservative refusal exposed two incorrect Connect table labels",
+    "files": {
+      "integration.json": {
+        "sha256": "55ce45329956d59b60dfd398622973d29b9491f6c88c0899ee9fb637d30a367e",
+        "bytes": 1078
+      },
+      "source-controller-private.log": {
+        "sha256": "594005afab9e3a88a02996bce37eeeddac605745c8146ea489b7fc2622c8daf9",
+        "bytes": 1011
+      },
+      "source-logo-scanner-private.json": {
+        "sha256": "b324a7a8441c57c5167ef2822626c3338adbecf1c535e1abd7444ddc481fff37",
+        "bytes": 3909
+      }
+    }
+  },
+  {
+    "attempt": "scanner-m3u-sql-physical-1",
+    "reason": "Owned RLS guard integer signature mismatched bigint PK, before native physical gate",
+    "files": {
+      "integration.json": {
+        "sha256": "07fa6260f654060e4fb389dbd76cdb3210c5078524e7a3d634720f4b992ca185",
+        "bytes": 1177
+      },
+      "source-controller-private.log": {
+        "sha256": "26115c4bfd4853e88bbf1ec9ec97c79d9067427e313fc735b503f92ffc570955",
+        "bytes": 2602
+      },
+      "source-logo-scanner-private.json": {
+        "sha256": "5f801d7ee8f19b96175d9f6b2d6aab0e76c083571b13b824b980a4693053d5b5",
+        "bytes": 909
+      }
+    }
+  },
+  {
+    "attempt": "scanner-m3u-reply-1",
+    "reason": "Observer held NOSCRIPT before increment executed",
+    "files": {
+      "integration.json": {
+        "sha256": "0aa9c73f0b69938f88ae2ca9e6eaca93824dcdcdb104bc53b8cb61aecfe086d7",
+        "bytes": 1174
+      },
+      "source-controller-private.log": {
+        "sha256": "7ebce741b7f3e3e63c523dbf2b81ab206f111f7598e8e53b8d078ad4858380c0",
+        "bytes": 695
+      },
+      "source-logo-scanner-private.json": {
+        "sha256": "a082f99b8bcd81d02c3bdc031c61c3c77d45fc324e283082a7edcc5482d269d0",
+        "bytes": 6213
+      }
+    }
+  },
+  {
+    "attempt": "scanner-m3u-portable-reply-2",
+    "reason": "Observer absolute event-count assumption failed; corrected to exact increment relative to actual prior Source events",
+    "files": {
+      "integration.json": {
+        "sha256": "c8be3ce5048cb7bda390b133f9b7821647fc9ba5d7e0d31d29c82a785db974b1",
+        "bytes": 1209
+      },
+      "source-controller-private.log": {
+        "sha256": "7bc2a827ae98a1405bcde99a164958b33fd9c38c215a89d3154093c8e20a3274",
+        "bytes": 684
+      },
+      "source-logo-scanner-private.json": {
+        "sha256": "6f4f6398d1df48fa78a28aa8f545abb95096146a5792cc34bbb2b7eb492b948a",
+        "bytes": 3685
+      }
+    }
+  },
+  {
+    "attempt": "artifacts/rust/scanner-m3u-private-1/whole-defaults-1.log",
+    "reason": "Sandbox denied loopback socket binds; exact unchanged source passed authorized rerun",
+    "sha256": "a9afbc0a82778287015b0285a0d18d8369357e961bebee49da190ff84484ca36",
+    "bytes": 49835
+  },
+  {
+    "attempt": "artifacts/rust/scanner-m3u-handoff-1/public-controls-1.log",
+    "reason": "Unittest discovery invoked command-line scripts without required arguments",
+    "sha256": "9a66f0d363910a9e7ad93305fd372f98e3fd9848ab22afba64c92bb791beaba5",
+    "bytes": 5429
+  },
+  {
+    "attempt": "artifacts/rust/scanner-m3u-handoff-1/build-controls-1.log",
+    "reason": "Test CLI invoked --repo but requires --source",
+    "sha256": "76bcb06d6153e3e569778197acb71609665683928f298d8cc1a6e334d68da38a",
+    "bytes": 121
+  },
+  {
+    "attempt": "artifacts/rust/scanner-m3u-handoff-1/sql-acceptance-controls-1.log",
+    "reason": "Singleton-case reverse was unchanged; meaningful unknown-case negative replaced it",
+    "sha256": "275bcb7e8eab8ab81001a1db78b434bedebd5700442e4092e16c17ae90b90c44",
+    "bytes": 1063
+  }
+]

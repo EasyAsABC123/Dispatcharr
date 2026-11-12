@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "native_verified": true,
+  "scope": "Native-only actual physical preflight SQL fence; actual Original producer.\nKnown real server P0001 is forwarded before held ReadyForQuery, with one owned\nRLS role/policy in the copied DB. No Original-handler parity/performance claim.\n",
+  "checks": [
+    {
+      "name": "fresh-empty-/data/m3us",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/epgs",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/logos",
+      "passed": true
+    },
+    {
+      "name": "actual-Source-scanner-parent-completed",
+      "passed": true
+    },
+    {
+      "name": "actual-scanner-parented-group-head",
+      "passed": true
+    },
+    {
+      "name": "normal-path-peer-prepared",
+      "passed": true
+    },
+    {
+      "name": "owned-native-run-started",
+      "passed": true
+    },
+    {
+      "name": "real-server-error-forwarded-and-Ready-held",
+      "passed": true
+    },
+    {
+      "name": "caller-admission-shutdown-retained-past-existing5s",
+      "passed": true
+    },
+    {
+      "name": "actual-server-completed-error-without-application-retry",
+      "passed": true
+    },
+    {
+      "name": "preflight-error-never-ACKs-or-publishes-result",
+      "passed": true
+    },
+    {
+      "name": "physical-ready-close-releases-owner",
+      "passed": true
+    },
+    {
+      "name": "failed-preflight-still-retains-exact-frame",
+      "passed": true
+    },
+    {
+      "name": "normal-family-drain",
+      "passed": true
+    },
+    {
+      "name": "native-exit0",
+      "passed": true
+    },
+    {
+      "name": "proxy-no-errors",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "actual-P0001-held-Ready-after-pool-timeout",
+      "task_id": "06ae4a71-1fed-424c-b562-3a394e54a1c7",
+      "observation": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "backend_pid": 449,
+      "error_code": "P0001"
+    }
+  ],
+  "predeclared": {
+    "held_ready_seconds": 6.2,
+    "existing_pool_acquire_timeout_seconds": 5,
+    "shutdown_probe_seconds": 0.03,
+    "no_application_SQL_retry": true
+  }
+}

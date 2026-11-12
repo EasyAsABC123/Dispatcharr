@@ -168,3 +168,12 @@ pub mod scanner_refresh;
 
 #[cfg(test)]
 mod scanner_refresh_peer;
+
+pub mod scanner_m3u_protocol;
+
+pub mod scanner_m3u;
+mod scanner_m3u_files;
+pub mod scanner_m3u_worker;
+
+#[cfg(test)]
+mod scanner_m3u_peer;

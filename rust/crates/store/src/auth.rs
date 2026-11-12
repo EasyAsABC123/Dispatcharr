@@ -102,6 +102,13 @@ impl AuthService {
         }
     }
 
+    /// Read-only identity check for a dedicated retained SQL scope. SQLx0.8.6
+    /// Pool::options borrows its Arc-owned inner options; clones share the
+    /// reference, separately created same-config pools do not.
+    pub fn uses_store_pool(&self, store: &Store) -> bool {
+        std::ptr::eq(self.store.pool().options(), store.pool().options())
+    }
+
     /// Preserve ordinary constructor compatibility; media ownership remains in
     /// the application rather than coupling the SQL store to a playback engine.
     pub fn with_channel_control(mut self, control: Arc<dyn ChannelControl>) -> Self {
@@ -867,6 +874,29 @@ mod tests {
             Store::from_pool(pool),
             AuthConfig::new("test-signing-secret-only".into()).unwrap(),
         )
+    }
+
+    #[tokio::test]
+    async fn dedicated_pool_identity_matches_clones_not_equal_configuration() {
+        let options = sqlx::postgres::PgPoolOptions::new().max_connections(1);
+        let first = Store::from_pool(
+            options
+                .clone()
+                .connect_lazy("postgresql://unused:unused@localhost/unused")
+                .unwrap(),
+        );
+        let distinct = Store::from_pool(
+            options
+                .connect_lazy("postgresql://unused:unused@localhost/unused")
+                .unwrap(),
+        );
+        let auth = AuthService::new(
+            first.clone(),
+            AuthConfig::new("unused-pool-identity-only".into()).unwrap(),
+        );
+        assert!(auth.uses_store_pool(&first));
+        assert!(auth.clone().uses_store_pool(&first.clone()));
+        assert!(!auth.uses_store_pool(&distinct));
     }
 
     fn request_for(peer: &str, headers: Vec<(&str, &str)>) -> PlaybackRequest {

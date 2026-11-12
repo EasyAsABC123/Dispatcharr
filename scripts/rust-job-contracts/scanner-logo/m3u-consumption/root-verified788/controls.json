@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "reconstruction_controls": 13,
+  "portable_build_controls": 5,
+  "aggregate_controls": 27,
+  "suites": [
+    {
+      "argv": [
+        "artifacts/rust/scanner-m3u-handoff-1/selected/scripts/rust-job-contracts/scanner-logo/m3u-consumption/test_build_peer.py",
+        "--source",
+        "artifacts/rust/root-m3u788-portable-reconstruction-1"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "artifacts/rust/scanner-m3u-handoff-1/selected/scripts/rust-job-contracts/scanner-logo/m3u-consumption/test_acceptance.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "artifacts/rust/scanner-m3u-handoff-1/selected/scripts/rust-job-contracts/scanner-logo/m3u-consumption/sql-physical/test_acceptance.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "artifacts/rust/scanner-m3u-handoff-1/selected/scripts/rust-job-contracts/scanner-logo/m3u-consumption/reply-physical/test_acceptance.py"
+      ],
+      "returncode": 0
+    }
+  ],
+  "prior_integration_map_build_controls": "Two path-order assertion failures: newer SDK Dockerfile inputs correctly fail historical exact788-map guard first; rerun historical builder controls on reconstructed historical exact map. No runtime change."
+}

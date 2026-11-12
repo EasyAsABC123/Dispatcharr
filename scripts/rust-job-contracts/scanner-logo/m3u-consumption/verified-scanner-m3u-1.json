@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "scope": "Inert normal-library scanner-owned M3U groups/single consumption; six native domains, two explicit pre-ACK refusals with real Original fallback; no Main/default intake/performance/full-M6 claim",
+  "base": "4fdfc1c4154f8f72ff5ccff5928ef02fe1617cfb",
+  "source_file_count": 788,
+  "source_map_sha256": "4938a90d457f6153ba6bfaf09cc4fb4ee91c3047a7548dc86b54e6b8899f415a",
+  "runtime_overlay_count": 11,
+  "qualified_elf_sha256": "f656b75b335e09e470e4d4d8ce0e89dbe3f7caf87d4453cda27f1fb4acf890bc",
+  "portable_elf_sha256": "64bfa99f7e5534b64a14ed6db761999596e4a5f742d6ffcc6eab67a313320aba",
+  "actual_qualified": {
+    "interop_checks": 275,
+    "cases": 8,
+    "native_domains": 6,
+    "refused_then_Original_fallback_domains": 2,
+    "held_SQL_checks": 16,
+    "held_parent_claim_membership_result_cache_checks": 65
+  },
+  "portable": {
+    "reconstruction_controls": 13,
+    "build_controls": 5,
+    "aggregate_controls": 27,
+    "interop_checks": 275,
+    "cases": 8,
+    "held_SQL_checks": 16,
+    "held_parent_claim_actual_Channel_publication_result_cache_checks": 66
+  },
+  "whole_workspace": {
+    "strict_all_targets": true,
+    "non_test_library_check": true,
+    "passed": 566,
+    "ignored": 703,
+    "suites": 170
+  },
+  "comparators": {
+    "ordered_sql_rows_exclude_only": [
+      "created_at",
+      "updated_at",
+      "last_seen",
+      "timestamp"
+    ],
+    "exact": [
+      "event_payload_order",
+      "input_file_bytes_mtime",
+      "parsed_cache_bytes",
+      "owned_output_cache_values",
+      "typed_result_value_parent_children"
+    ],
+    "ttl": "separately bounded; TTL values excluded only from exact cache equality",
+    "elapsed_clock": "explicit test input1000.125 =>0.0 seconds; no general elapsed-format claim"
+  },
+  "remaining_pre_CAS_refusals": [
+    "full audit history: existing systemevent count >= normalized limit",
+    "max_system_events unsupported types/ranges (only absent/null/0 or positive integer<=10000)",
+    "missing local file",
+    "group-SQL trigger",
+    "plugins/filters/XC/Connect/autosync/catchup/mapped channels",
+    "unqualified M3U grammar/large or special files",
+    "foreign/unlisted/ETA/periodic/parent shapes"
+  ],
+  "other_remaining": [
+    "Source audit history timestamp-tie cutoff/deletion/caught failure semantics",
+    "general elapsed/date format domain",
+    "exception metadata for uncaught groups failures",
+    "normal scanner assembly/task-family graph and Main activation"
+  ],
+  "source_reference_dependency": "reference-dependencies.json",
+  "raw_scope_correction": "Historical qualified integration scope strings were inherited incorrectly; actual roles are stated here. SQL/Redis physical controls use real Original scanner publication, not Original-handler error/timing parity.",
+  "all_projects_cleanup_and_default_audit_reported": true,
+  "independent_cleanup_pending": false,
+  "credit": "Original Dispatcharr and all dependency authors retain code/algorithm/license credit.",
+  "independent_cleanup_projects": 14
+}

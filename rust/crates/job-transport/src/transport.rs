@@ -1429,3 +1429,7 @@ pub use scanner_files_io::{ScannerFilesPorts, ScannerIoError, ScannerRoute, Scan
 
 #[path = "scanner_refresh_io.rs"]
 mod scanner_refresh_io;
+
+#[path = "scanner_m3u_io.rs"]
+mod scanner_m3u_io;
+pub use scanner_m3u_io::M3uPorts;
