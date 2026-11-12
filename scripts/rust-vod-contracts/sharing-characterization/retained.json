@@ -1,0 +1,4607 @@
+{
+  "scope": "exact raw summary projection omitting only listed client response-header maps; no new application execution",
+  "actual_exit_code": 0,
+  "raw_summary_sha256": "7f34e9a6fe62757056c9c4ee2f1c5799a703490df6eaa555a2bbfc8910cb3f24",
+  "raw_phase_sha256": {
+    "source": "c858ca5e88930885b4e8fecdd6e65131fe1c620d25345428dbb54e7aba4ae2b9",
+    "native": "d65a25dd0fe0868fac741ef0044ef2e2f5c23230f6634fd777505fe19943109b"
+  },
+  "seed_sha256": "c12049eb30f472d9a7ad261e8459fe80eb7569a8661b10d3f205356df0cb9057",
+  "seed_non_auth_projection": {
+    "movie_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+    "provider_profile_id": 2,
+    "provider_account_id": 2,
+    "real_user_id": 3
+  },
+  "omitted_fields": [
+    {
+      "path": "summary.backends.source.clients.0.headers",
+      "canonical_sha256": "51d46ad8b6b353072aa694305f5602447bd9919175c5a0444710de70a84a3b3b",
+      "reason": "omit response cookies/presentation headers; origin literal headers remain exact"
+    },
+    {
+      "path": "summary.backends.source.clients.1.headers",
+      "canonical_sha256": "0347038b89c40770b1d4d117f25224340bc2cae5e180ae31888347093999dcfc",
+      "reason": "omit response cookies/presentation headers; origin literal headers remain exact"
+    },
+    {
+      "path": "summary.backends.native.clients.0.headers",
+      "canonical_sha256": "51477b599916a11b4cb6537f89c04a069ea6a7eaf5393e5df65fff11fb92e2f2",
+      "reason": "omit response cookies/presentation headers; origin literal headers remain exact"
+    },
+    {
+      "path": "summary.backends.native.clients.1.headers",
+      "canonical_sha256": "165e92c361185671b55265703fe6ca3fa792d3a9c98a2bb2f76abb8a090af309",
+      "reason": "omit response cookies/presentation headers; origin literal headers remain exact"
+    }
+  ],
+  "independent_cleanup_sha256": "56c6aa0e30fc227fc1aaaeb7d36e93807f1ad37c6d3a5a361762a769f928ae0b",
+  "summary": {
+    "project": "dispatcharr-normal-admission-a4388ec7d7",
+    "HTTP_pair_complete": true,
+    "resource_sampling": false,
+    "full_M4_acceptance": false,
+    "backends": {
+      "source": {
+        "mode": "source",
+        "HTTP_capture_valid": true,
+        "scenario_ready": true,
+        "clients": [
+          {
+            "role": "first",
+            "began": 197440.327158615,
+            "sid": "fixture-sharing-same",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "status": 200,
+            "headers_at": 197442.338878246,
+            "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+            "absolute_observation": {
+              "deadline": 197464.327186686,
+              "completed": 197442.339306948,
+              "timer_joined": true
+            },
+            "first_observation_complete": 197442.339308488
+          },
+          {
+            "role": "second",
+            "began": 197443.339373321,
+            "sid": "fixture-sharing-same",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "status": 200,
+            "headers_at": 197445.348824094,
+            "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+            "absolute_observation": {
+              "deadline": 197467.339406902,
+              "completed": 197445.349223846,
+              "timer_joined": true
+            },
+            "first_observation_complete": 197445.349226136
+          }
+        ],
+        "checkpoints": [
+          {
+            "label": "drain_5",
+            "target": 197450.349226136,
+            "at": 197450.349293626,
+            "readers": {
+              "first": {
+                "role": "first",
+                "retained": 327680,
+                "received": 327680,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": false,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197450.349300386,
+                "socket_fd": 11
+              },
+              "second": {
+                "role": "second",
+                "retained": 196608,
+                "received": 196608,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": false,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197450.349306546,
+                "socket_fd": 13
+              }
+            },
+            "origin_observation_began": 197450.34943229,
+            "origin": {
+              "epoch": "7338e064349a46368fc86e42196fdefe",
+              "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+              "invalid": [],
+              "accepted_TCP_total": 4,
+              "actual_open_TCP": 3,
+              "actual_stream_GET_inflight": 2,
+              "media_HEAD_total": 0,
+              "control_total": 2,
+              "transient_TCP_without_request": 0,
+              "connections": [
+                {
+                  "id": 1,
+                  "opened": 197437.505841837,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4,
+                  "closed": 197437.506561538,
+                  "fd_after": -1
+                },
+                {
+                  "id": 2,
+                  "opened": 197440.337938786,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4
+                },
+                {
+                  "id": 3,
+                  "opened": 197443.348047991,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 6
+                },
+                {
+                  "id": 4,
+                  "opened": 197450.355755322,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8
+                }
+              ],
+              "requests": [
+                {
+                  "id": 1,
+                  "connection": 1,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197437.506304461,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197437.506521497,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "201"
+                    ]
+                  }
+                },
+                {
+                  "id": 2,
+                  "connection": 2,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197440.338262325,
+                  "in_flight": true,
+                  "bytes_written": 327680,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197442.338630738,
+                  "last_body_write": 197450.338611078
+                },
+                {
+                  "id": 3,
+                  "connection": 3,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197443.348333799,
+                  "in_flight": true,
+                  "bytes_written": 196608,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197445.3486644,
+                  "last_body_write": 197449.348644018
+                },
+                {
+                  "id": 4,
+                  "connection": 4,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197450.356009299,
+                  "in_flight": true,
+                  "bytes_written": 0,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  }
+                }
+              ],
+              "events": [
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197437.505844577,
+                  "connection": 1
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197437.506307821,
+                  "connection": 1,
+                  "request": 1,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197437.506523817,
+                  "request": 1,
+                  "connection": 1
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197437.506563008,
+                  "connection": 1,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197440.337941686,
+                  "connection": 2
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197440.338264865,
+                  "connection": 2,
+                  "request": 2,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197443.348050291,
+                  "connection": 3
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197443.348336629,
+                  "connection": 3,
+                  "request": 3,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197450.355757402,
+                  "connection": 4
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197450.356011589,
+                  "connection": 4,
+                  "request": 4,
+                  "request_kind": "control"
+                }
+              ],
+              "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+            },
+            "literal_profile_counter": "1",
+            "origin_observation_completed": 197450.356786272
+          },
+          {
+            "label": "drain_15",
+            "target": 197460.349226136,
+            "at": 197460.349293633,
+            "readers": {
+              "first": {
+                "role": "first",
+                "retained": 655360,
+                "received": 655360,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": false,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197460.349297493,
+                "socket_fd": 11
+              },
+              "second": {
+                "role": "second",
+                "retained": 524288,
+                "received": 524288,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": false,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197460.349302483,
+                "socket_fd": 13
+              }
+            },
+            "origin_observation_began": 197460.349352154,
+            "origin": {
+              "epoch": "7338e064349a46368fc86e42196fdefe",
+              "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+              "invalid": [],
+              "accepted_TCP_total": 5,
+              "actual_open_TCP": 3,
+              "actual_stream_GET_inflight": 2,
+              "media_HEAD_total": 0,
+              "control_total": 3,
+              "transient_TCP_without_request": 0,
+              "connections": [
+                {
+                  "id": 1,
+                  "opened": 197437.505841837,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4,
+                  "closed": 197437.506561538,
+                  "fd_after": -1
+                },
+                {
+                  "id": 2,
+                  "opened": 197440.337938786,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4
+                },
+                {
+                  "id": 3,
+                  "opened": 197443.348047991,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 6
+                },
+                {
+                  "id": 4,
+                  "opened": 197450.355755322,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8,
+                  "closed": 197450.356352999,
+                  "fd_after": -1
+                },
+                {
+                  "id": 5,
+                  "opened": 197460.34988997,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8
+                }
+              ],
+              "requests": [
+                {
+                  "id": 1,
+                  "connection": 1,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197437.506304461,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197437.506521497,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "201"
+                    ]
+                  }
+                },
+                {
+                  "id": 2,
+                  "connection": 2,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197440.338262325,
+                  "in_flight": true,
+                  "bytes_written": 655360,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197442.338630738,
+                  "last_body_write": 197460.338615835
+                },
+                {
+                  "id": 3,
+                  "connection": 3,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197443.348333799,
+                  "in_flight": true,
+                  "bytes_written": 524288,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197445.3486644,
+                  "last_body_write": 197459.348673578
+                },
+                {
+                  "id": 4,
+                  "connection": 4,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197450.356009299,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197450.356315548,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "3373"
+                    ]
+                  }
+                },
+                {
+                  "id": 5,
+                  "connection": 5,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197460.350189548,
+                  "in_flight": true,
+                  "bytes_written": 0,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  }
+                }
+              ],
+              "events": [
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197437.505844577,
+                  "connection": 1
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197437.506307821,
+                  "connection": 1,
+                  "request": 1,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197437.506523817,
+                  "request": 1,
+                  "connection": 1
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197437.506563008,
+                  "connection": 1,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197440.337941686,
+                  "connection": 2
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197440.338264865,
+                  "connection": 2,
+                  "request": 2,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197443.348050291,
+                  "connection": 3
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197443.348336629,
+                  "connection": 3,
+                  "request": 3,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197450.355757402,
+                  "connection": 4
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197450.356011589,
+                  "connection": 4,
+                  "request": 4,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197450.356317858,
+                  "request": 4,
+                  "connection": 4
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197450.356354369,
+                  "connection": 4,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197460.34989267,
+                  "connection": 5
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197460.350191479,
+                  "connection": 5,
+                  "request": 5,
+                  "request_kind": "control"
+                }
+              ],
+              "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+            },
+            "literal_profile_counter": "1",
+            "origin_observation_completed": 197460.351211058
+          },
+          {
+            "label": "drain_30",
+            "target": 197475.349226136,
+            "at": 197475.349287959,
+            "readers": {
+              "first": {
+                "role": "first",
+                "retained": 1048576,
+                "received": 1114112,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": true,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197475.349292019,
+                "socket_fd": 11
+              },
+              "second": {
+                "role": "second",
+                "retained": 1048576,
+                "received": 1048576,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": true,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197475.349296159,
+                "socket_fd": 13
+              }
+            },
+            "origin_observation_began": 197475.349342781,
+            "origin": {
+              "epoch": "7338e064349a46368fc86e42196fdefe",
+              "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+              "invalid": [],
+              "accepted_TCP_total": 6,
+              "actual_open_TCP": 3,
+              "actual_stream_GET_inflight": 2,
+              "media_HEAD_total": 0,
+              "control_total": 4,
+              "transient_TCP_without_request": 0,
+              "connections": [
+                {
+                  "id": 1,
+                  "opened": 197437.505841837,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4,
+                  "closed": 197437.506561538,
+                  "fd_after": -1
+                },
+                {
+                  "id": 2,
+                  "opened": 197440.337938786,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4
+                },
+                {
+                  "id": 3,
+                  "opened": 197443.348047991,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 6
+                },
+                {
+                  "id": 4,
+                  "opened": 197450.355755322,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8,
+                  "closed": 197450.356352999,
+                  "fd_after": -1
+                },
+                {
+                  "id": 5,
+                  "opened": 197460.34988997,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8,
+                  "closed": 197460.35058192,
+                  "fd_after": -1
+                },
+                {
+                  "id": 6,
+                  "opened": 197475.349856655,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8
+                }
+              ],
+              "requests": [
+                {
+                  "id": 1,
+                  "connection": 1,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197437.506304461,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197437.506521497,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "201"
+                    ]
+                  }
+                },
+                {
+                  "id": 2,
+                  "connection": 2,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197440.338262325,
+                  "in_flight": true,
+                  "bytes_written": 1114112,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197442.338630738,
+                  "last_body_write": 197474.338595068
+                },
+                {
+                  "id": 3,
+                  "connection": 3,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197443.348333799,
+                  "in_flight": true,
+                  "bytes_written": 1048576,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197445.3486644,
+                  "last_body_write": 197475.348653011
+                },
+                {
+                  "id": 4,
+                  "connection": 4,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197450.356009299,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197450.356315548,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "3373"
+                    ]
+                  }
+                },
+                {
+                  "id": 5,
+                  "connection": 5,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197460.350189548,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197460.350550159,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "4242"
+                    ]
+                  }
+                },
+                {
+                  "id": 6,
+                  "connection": 6,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197475.350104013,
+                  "in_flight": true,
+                  "bytes_written": 0,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  }
+                }
+              ],
+              "events": [
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197437.505844577,
+                  "connection": 1
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197437.506307821,
+                  "connection": 1,
+                  "request": 1,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197437.506523817,
+                  "request": 1,
+                  "connection": 1
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197437.506563008,
+                  "connection": 1,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197440.337941686,
+                  "connection": 2
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197440.338264865,
+                  "connection": 2,
+                  "request": 2,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197443.348050291,
+                  "connection": 3
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197443.348336629,
+                  "connection": 3,
+                  "request": 3,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197450.355757402,
+                  "connection": 4
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197450.356011589,
+                  "connection": 4,
+                  "request": 4,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197450.356317858,
+                  "request": 4,
+                  "connection": 4
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197450.356354369,
+                  "connection": 4,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197460.34989267,
+                  "connection": 5
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197460.350191479,
+                  "connection": 5,
+                  "request": 5,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197460.350552369,
+                  "request": 5,
+                  "connection": 5
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197460.35058312,
+                  "connection": 5,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197475.349859506,
+                  "connection": 6
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197475.350106323,
+                  "connection": 6,
+                  "request": 6,
+                  "request_kind": "control"
+                }
+              ],
+              "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+            },
+            "literal_profile_counter": "1",
+            "origin_observation_completed": 197475.35071126
+          },
+          {
+            "label": "fixed_teardown",
+            "target": 197480.349226136,
+            "at": 197480.349288639,
+            "readers": {
+              "first": {
+                "role": "first",
+                "retained": 1048576,
+                "received": 1310720,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": true,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197480.349292119,
+                "socket_fd": 11
+              },
+              "second": {
+                "role": "second",
+                "retained": 1048576,
+                "received": 1179648,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": true,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197480.349296959,
+                "socket_fd": 13
+              }
+            }
+          }
+        ],
+        "Source_generator_read_claim": false,
+        "caps_before": {
+          "account": 2,
+          "profile": 2
+        },
+        "actual_SQL_Bearer_verified": true,
+        "second_dispatch_target": 197443.339308488,
+        "second_dispatch_actual": 197443.339371591,
+        "fixed_teardown_target": 197480.349226136,
+        "teardown_snapshot": {
+          "label": "fixed_teardown",
+          "target": 197480.349226136,
+          "at": 197480.349288639,
+          "readers": {
+            "first": {
+              "role": "first",
+              "retained": 1048576,
+              "received": 1310720,
+              "cap": 1048576,
+              "wire_cap": 8388608,
+              "prefix_ready": true,
+              "eof": false,
+              "invalid": null,
+              "reader_done": false,
+              "retention_does_not_close_or_pause": true,
+              "monotonic": 197480.349292119,
+              "socket_fd": 11
+            },
+            "second": {
+              "role": "second",
+              "retained": 1048576,
+              "received": 1179648,
+              "cap": 1048576,
+              "wire_cap": 8388608,
+              "prefix_ready": true,
+              "eof": false,
+              "invalid": null,
+              "reader_done": false,
+              "retention_does_not_close_or_pause": true,
+              "monotonic": 197480.349296959,
+              "socket_fd": 13
+            }
+          }
+        },
+        "teardown_began": 197480.349300809,
+        "client_closes": {
+          "first": {
+            "role": "first",
+            "close_begin": 197480.349455783,
+            "close_complete": 197480.349712141,
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "server_cancellation_inferred": false,
+            "reader_joined": true,
+            "snapshot": {
+              "role": "first",
+              "retained": 1048576,
+              "received": 1310720,
+              "cap": 1048576,
+              "wire_cap": 8388608,
+              "prefix_ready": true,
+              "eof": true,
+              "invalid": null,
+              "reader_done": true,
+              "retention_does_not_close_or_pause": true,
+              "monotonic": 197480.349713381
+            }
+          },
+          "second": {
+            "role": "second",
+            "close_begin": 197480.349572187,
+            "close_complete": 197480.349769132,
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "server_cancellation_inferred": false,
+            "reader_joined": true,
+            "snapshot": {
+              "role": "second",
+              "retained": 1048576,
+              "received": 1179648,
+              "cap": 1048576,
+              "wire_cap": 8388608,
+              "prefix_ready": true,
+              "eof": true,
+              "invalid": null,
+              "reader_done": true,
+              "retention_does_not_close_or_pause": true,
+              "monotonic": 197480.349770443
+            }
+          }
+        },
+        "caps_after": {
+          "account": 2,
+          "profile": 2
+        },
+        "decoders": {
+          "first": {
+            "passed": true,
+            "retained_bytes": 1048576,
+            "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+            "frames": 75,
+            "strict_audio_video_seconds": 3,
+            "minimum_frames": 50,
+            "process_reaped": true,
+            "pipes_settled": true
+          },
+          "second": {
+            "passed": true,
+            "retained_bytes": 1048576,
+            "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+            "frames": 75,
+            "strict_audio_video_seconds": 3,
+            "minimum_frames": 50,
+            "process_reaped": true,
+            "pipes_settled": true
+          }
+        },
+        "Source_response_finalization": {
+          "valid": true,
+          "complete": true,
+          "started": 2,
+          "finalized": 2,
+          "not_generator_finally": true
+        },
+        "Source_signal_rows": [
+          {
+            "kind": "request_started",
+            "monotonic": 197440.327562787,
+            "request": 1,
+            "role": "first",
+            "sid_sha256": "5d54464ddc186c611ecf723065b1ff3652e752eb42370c8eb453d8489a9247a1"
+          },
+          {
+            "kind": "request_started",
+            "monotonic": 197443.339899046,
+            "request": 2,
+            "role": "second",
+            "sid_sha256": "5d54464ddc186c611ecf723065b1ff3652e752eb42370c8eb453d8489a9247a1"
+          },
+          {
+            "kind": "request_finalized",
+            "monotonic": 197481.349468535,
+            "request": 2,
+            "role": "second",
+            "sid_sha256": "5d54464ddc186c611ecf723065b1ff3652e752eb42370c8eb453d8489a9247a1"
+          },
+          {
+            "kind": "request_finalized",
+            "monotonic": 197482.339703885,
+            "request": 1,
+            "role": "first",
+            "sid_sha256": "5d54464ddc186c611ecf723065b1ff3652e752eb42370c8eb453d8489a9247a1"
+          }
+        ],
+        "terminal_origin_before_service_stop": {
+          "epoch": "7338e064349a46368fc86e42196fdefe",
+          "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+          "invalid": [],
+          "accepted_TCP_total": 7,
+          "actual_open_TCP": 3,
+          "actual_stream_GET_inflight": 2,
+          "media_HEAD_total": 0,
+          "control_total": 5,
+          "transient_TCP_without_request": 0,
+          "connections": [
+            {
+              "id": 1,
+              "opened": 197437.505841837,
+              "socket_closed": true,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 4,
+              "closed": 197437.506561538,
+              "fd_after": -1
+            },
+            {
+              "id": 2,
+              "opened": 197440.337938786,
+              "socket_closed": false,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 4
+            },
+            {
+              "id": 3,
+              "opened": 197443.348047991,
+              "socket_closed": false,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 6
+            },
+            {
+              "id": 4,
+              "opened": 197450.355755322,
+              "socket_closed": true,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 8,
+              "closed": 197450.356352999,
+              "fd_after": -1
+            },
+            {
+              "id": 5,
+              "opened": 197460.34988997,
+              "socket_closed": true,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 8,
+              "closed": 197460.35058192,
+              "fd_after": -1
+            },
+            {
+              "id": 6,
+              "opened": 197475.349856655,
+              "socket_closed": true,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 8,
+              "closed": 197475.350450403,
+              "fd_after": -1
+            },
+            {
+              "id": 7,
+              "opened": 197482.383160326,
+              "socket_closed": false,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 8
+            }
+          ],
+          "requests": [
+            {
+              "id": 1,
+              "connection": 1,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197437.506304461,
+              "in_flight": false,
+              "bytes_written": 0,
+              "returned": 197437.506521497,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "application/json"
+                ],
+                "content-length": [
+                  "201"
+                ]
+              }
+            },
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 197440.338262325,
+              "in_flight": true,
+              "bytes_written": 1376256,
+              "returned": null,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "video/mp4"
+                ],
+                "accept-ranges": [
+                  "bytes"
+                ],
+                "content-length": [
+                  "4299455"
+                ]
+              },
+              "first_body_write": 197442.338630738,
+              "last_body_write": 197482.338623284
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 197443.348333799,
+              "in_flight": true,
+              "bytes_written": 1245184,
+              "returned": null,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "video/mp4"
+                ],
+                "accept-ranges": [
+                  "bytes"
+                ],
+                "content-length": [
+                  "4299455"
+                ]
+              },
+              "first_body_write": 197445.3486644,
+              "last_body_write": 197481.348685282
+            },
+            {
+              "id": 4,
+              "connection": 4,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197450.356009299,
+              "in_flight": false,
+              "bytes_written": 0,
+              "returned": 197450.356315548,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "application/json"
+                ],
+                "content-length": [
+                  "3373"
+                ]
+              }
+            },
+            {
+              "id": 5,
+              "connection": 5,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197460.350189548,
+              "in_flight": false,
+              "bytes_written": 0,
+              "returned": 197460.350550159,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "application/json"
+                ],
+                "content-length": [
+                  "4242"
+                ]
+              }
+            },
+            {
+              "id": 6,
+              "connection": 6,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197475.350104013,
+              "in_flight": false,
+              "bytes_written": 0,
+              "returned": 197475.350421012,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "application/json"
+                ],
+                "content-length": [
+                  "5113"
+                ]
+              }
+            },
+            {
+              "id": 7,
+              "connection": 7,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197482.383395423,
+              "in_flight": true,
+              "bytes_written": 0,
+              "returned": null,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              }
+            }
+          ],
+          "events": [
+            {
+              "kind": "accepted_TCP",
+              "at": 197437.505844577,
+              "connection": 1
+            },
+            {
+              "kind": "request_begin",
+              "at": 197437.506307821,
+              "connection": 1,
+              "request": 1,
+              "request_kind": "control"
+            },
+            {
+              "kind": "handler_return",
+              "at": 197437.506523817,
+              "request": 1,
+              "connection": 1
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 197437.506563008,
+              "connection": 1,
+              "fd_after": -1
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197440.337941686,
+              "connection": 2
+            },
+            {
+              "kind": "request_begin",
+              "at": 197440.338264865,
+              "connection": 2,
+              "request": 2,
+              "request_kind": "stream_GET"
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197443.348050291,
+              "connection": 3
+            },
+            {
+              "kind": "request_begin",
+              "at": 197443.348336629,
+              "connection": 3,
+              "request": 3,
+              "request_kind": "stream_GET"
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197450.355757402,
+              "connection": 4
+            },
+            {
+              "kind": "request_begin",
+              "at": 197450.356011589,
+              "connection": 4,
+              "request": 4,
+              "request_kind": "control"
+            },
+            {
+              "kind": "handler_return",
+              "at": 197450.356317858,
+              "request": 4,
+              "connection": 4
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 197450.356354369,
+              "connection": 4,
+              "fd_after": -1
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197460.34989267,
+              "connection": 5
+            },
+            {
+              "kind": "request_begin",
+              "at": 197460.350191479,
+              "connection": 5,
+              "request": 5,
+              "request_kind": "control"
+            },
+            {
+              "kind": "handler_return",
+              "at": 197460.350552369,
+              "request": 5,
+              "connection": 5
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 197460.35058312,
+              "connection": 5,
+              "fd_after": -1
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197475.349859506,
+              "connection": 6
+            },
+            {
+              "kind": "request_begin",
+              "at": 197475.350106323,
+              "connection": 6,
+              "request": 6,
+              "request_kind": "control"
+            },
+            {
+              "kind": "handler_return",
+              "at": 197475.350423172,
+              "request": 6,
+              "connection": 6
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 197475.350451523,
+              "connection": 6,
+              "fd_after": -1
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197482.383163206,
+              "connection": 7
+            },
+            {
+              "kind": "request_begin",
+              "at": 197482.383397993,
+              "connection": 7,
+              "request": 7,
+              "request_kind": "control"
+            }
+          ],
+          "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+        },
+        "caps_terminal": {
+          "account": 2,
+          "profile": 2
+        },
+        "elapsed_seconds": 42.075861613004236,
+        "continuous_client_read_progress": true,
+        "literal_snapshot_coverage": true,
+        "literal_origin_coverage": true,
+        "fixed_schedule_valid": true,
+        "no_reproduction": false,
+        "full_M4_acceptance": false
+      },
+      "native": {
+        "mode": "native",
+        "HTTP_capture_valid": true,
+        "scenario_ready": true,
+        "clients": [
+          {
+            "role": "first",
+            "began": 197488.062917574,
+            "sid": "fixture-sharing-same",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "status": 200,
+            "headers_at": 197488.072081778,
+            "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+            "absolute_observation": {
+              "deadline": 197512.062941364,
+              "completed": 197490.072073686,
+              "timer_joined": true
+            },
+            "first_observation_complete": 197490.072075246
+          },
+          {
+            "role": "second",
+            "began": 197491.072152407,
+            "sid": "fixture-sharing-same",
+            "content_uuid": "a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+            "status": 200,
+            "headers_at": 197491.077387727,
+            "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+            "absolute_observation": {
+              "deadline": 197515.072198878,
+              "completed": 197493.077378344,
+              "timer_joined": true
+            },
+            "first_observation_complete": 197493.077381604
+          }
+        ],
+        "checkpoints": [
+          {
+            "label": "drain_5",
+            "target": 197498.077381604,
+            "at": 197498.077453524,
+            "readers": {
+              "first": {
+                "role": "first",
+                "retained": 327680,
+                "received": 327680,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": false,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197498.077464974,
+                "socket_fd": 11
+              },
+              "second": {
+                "role": "second",
+                "retained": 196608,
+                "received": 196608,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": false,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197498.077474864,
+                "socket_fd": 13
+              }
+            },
+            "origin_observation_began": 197498.077623389,
+            "origin": {
+              "epoch": "93708cbd8086400095b188bcb6fc8216",
+              "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+              "invalid": [],
+              "accepted_TCP_total": 4,
+              "actual_open_TCP": 3,
+              "actual_stream_GET_inflight": 2,
+              "media_HEAD_total": 0,
+              "control_total": 2,
+              "transient_TCP_without_request": 0,
+              "connections": [
+                {
+                  "id": 1,
+                  "opened": 197485.436246276,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4,
+                  "closed": 197485.436766261,
+                  "fd_after": -1
+                },
+                {
+                  "id": 2,
+                  "opened": 197488.071252034,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4
+                },
+                {
+                  "id": 3,
+                  "opened": 197491.076507732,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 6
+                },
+                {
+                  "id": 4,
+                  "opened": 197498.08390134,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8
+                }
+              ],
+              "requests": [
+                {
+                  "id": 1,
+                  "connection": 1,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197485.436568736,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197485.436735,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "201"
+                    ]
+                  }
+                },
+                {
+                  "id": 2,
+                  "connection": 2,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197488.071563683,
+                  "in_flight": true,
+                  "bytes_written": 327680,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197490.071900951,
+                  "last_body_write": 197498.071901694
+                },
+                {
+                  "id": 3,
+                  "connection": 3,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197491.0767944,
+                  "in_flight": true,
+                  "bytes_written": 196608,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197493.077131517,
+                  "last_body_write": 197497.077157638
+                },
+                {
+                  "id": 4,
+                  "connection": 4,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197498.084185298,
+                  "in_flight": true,
+                  "bytes_written": 0,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  }
+                }
+              ],
+              "events": [
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197485.436248716,
+                  "connection": 1
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197485.436571016,
+                  "connection": 1,
+                  "request": 1,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197485.43673675,
+                  "request": 1,
+                  "connection": 1
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197485.436767651,
+                  "connection": 1,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197488.071255234,
+                  "connection": 2
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197488.071566223,
+                  "connection": 2,
+                  "request": 2,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197491.076510572,
+                  "connection": 3
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197491.07679692,
+                  "connection": 3,
+                  "request": 3,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197498.08390403,
+                  "connection": 4
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197498.084187368,
+                  "connection": 4,
+                  "request": 4,
+                  "request_kind": "control"
+                }
+              ],
+              "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+            },
+            "literal_profile_counter": "1",
+            "origin_observation_completed": 197498.085032842
+          },
+          {
+            "label": "drain_15",
+            "target": 197508.077381604,
+            "at": 197508.077451571,
+            "readers": {
+              "first": {
+                "role": "first",
+                "retained": 655360,
+                "received": 655360,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": false,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197508.077458871,
+                "socket_fd": 11
+              },
+              "second": {
+                "role": "second",
+                "retained": 524288,
+                "received": 524288,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": false,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197508.077465862,
+                "socket_fd": 13
+              }
+            },
+            "origin_observation_began": 197508.077518633,
+            "origin": {
+              "epoch": "93708cbd8086400095b188bcb6fc8216",
+              "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+              "invalid": [],
+              "accepted_TCP_total": 5,
+              "actual_open_TCP": 3,
+              "actual_stream_GET_inflight": 2,
+              "media_HEAD_total": 0,
+              "control_total": 3,
+              "transient_TCP_without_request": 0,
+              "connections": [
+                {
+                  "id": 1,
+                  "opened": 197485.436246276,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4,
+                  "closed": 197485.436766261,
+                  "fd_after": -1
+                },
+                {
+                  "id": 2,
+                  "opened": 197488.071252034,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4
+                },
+                {
+                  "id": 3,
+                  "opened": 197491.076507732,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 6
+                },
+                {
+                  "id": 4,
+                  "opened": 197498.08390134,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8,
+                  "closed": 197498.084531608,
+                  "fd_after": -1
+                },
+                {
+                  "id": 5,
+                  "opened": 197508.077965006,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8
+                }
+              ],
+              "requests": [
+                {
+                  "id": 1,
+                  "connection": 1,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197485.436568736,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197485.436735,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "201"
+                    ]
+                  }
+                },
+                {
+                  "id": 2,
+                  "connection": 2,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197488.071563683,
+                  "in_flight": true,
+                  "bytes_written": 655360,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197490.071900951,
+                  "last_body_write": 197508.071893301
+                },
+                {
+                  "id": 3,
+                  "connection": 3,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197491.0767944,
+                  "in_flight": true,
+                  "bytes_written": 524288,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197493.077131517,
+                  "last_body_write": 197507.077166048
+                },
+                {
+                  "id": 4,
+                  "connection": 4,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197498.084185298,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197498.084494637,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "3366"
+                    ]
+                  }
+                },
+                {
+                  "id": 5,
+                  "connection": 5,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197508.078258314,
+                  "in_flight": true,
+                  "bytes_written": 0,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  }
+                }
+              ],
+              "events": [
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197485.436248716,
+                  "connection": 1
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197485.436571016,
+                  "connection": 1,
+                  "request": 1,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197485.43673675,
+                  "request": 1,
+                  "connection": 1
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197485.436767651,
+                  "connection": 1,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197488.071255234,
+                  "connection": 2
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197488.071566223,
+                  "connection": 2,
+                  "request": 2,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197491.076510572,
+                  "connection": 3
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197491.07679692,
+                  "connection": 3,
+                  "request": 3,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197498.08390403,
+                  "connection": 4
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197498.084187368,
+                  "connection": 4,
+                  "request": 4,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197498.084497267,
+                  "request": 4,
+                  "connection": 4
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197498.084532868,
+                  "connection": 4,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197508.077967146,
+                  "connection": 5
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197508.078260955,
+                  "connection": 5,
+                  "request": 5,
+                  "request_kind": "control"
+                }
+              ],
+              "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+            },
+            "literal_profile_counter": "1",
+            "origin_observation_completed": 197508.079297094
+          },
+          {
+            "label": "drain_30",
+            "target": 197523.077381604,
+            "at": 197523.077447893,
+            "readers": {
+              "first": {
+                "role": "first",
+                "retained": 1048576,
+                "received": 1114112,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": true,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197523.077453673,
+                "socket_fd": 11
+              },
+              "second": {
+                "role": "second",
+                "retained": 1048576,
+                "received": 1048576,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": true,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197523.077459614,
+                "socket_fd": 13
+              }
+            },
+            "origin_observation_began": 197523.077504425,
+            "origin": {
+              "epoch": "93708cbd8086400095b188bcb6fc8216",
+              "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+              "invalid": [],
+              "accepted_TCP_total": 6,
+              "actual_open_TCP": 3,
+              "actual_stream_GET_inflight": 2,
+              "media_HEAD_total": 0,
+              "control_total": 4,
+              "transient_TCP_without_request": 0,
+              "connections": [
+                {
+                  "id": 1,
+                  "opened": 197485.436246276,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4,
+                  "closed": 197485.436766261,
+                  "fd_after": -1
+                },
+                {
+                  "id": 2,
+                  "opened": 197488.071252034,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 4
+                },
+                {
+                  "id": 3,
+                  "opened": 197491.076507732,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 6
+                },
+                {
+                  "id": 4,
+                  "opened": 197498.08390134,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8,
+                  "closed": 197498.084531608,
+                  "fd_after": -1
+                },
+                {
+                  "id": 5,
+                  "opened": 197508.077965006,
+                  "socket_closed": true,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8,
+                  "closed": 197508.078640635,
+                  "fd_after": -1
+                },
+                {
+                  "id": 6,
+                  "opened": 197523.077961098,
+                  "socket_closed": false,
+                  "peer_eof_observed": false,
+                  "requests": 1,
+                  "fd": 8
+                }
+              ],
+              "requests": [
+                {
+                  "id": 1,
+                  "connection": 1,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197485.436568736,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197485.436735,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "201"
+                    ]
+                  }
+                },
+                {
+                  "id": 2,
+                  "connection": 2,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197488.071563683,
+                  "in_flight": true,
+                  "bytes_written": 1114112,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197490.071900951,
+                  "last_body_write": 197522.071914773
+                },
+                {
+                  "id": 3,
+                  "connection": 3,
+                  "method": "GET",
+                  "path_role": "shared_movie",
+                  "kind": "stream_GET",
+                  "began": 197491.0767944,
+                  "in_flight": true,
+                  "bytes_written": 1048576,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "video/mp4"
+                    ],
+                    "accept-ranges": [
+                      "bytes"
+                    ],
+                    "content-length": [
+                      "4299455"
+                    ]
+                  },
+                  "first_body_write": 197493.077131517,
+                  "last_body_write": 197523.077139994
+                },
+                {
+                  "id": 4,
+                  "connection": 4,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197498.084185298,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197498.084494637,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "3366"
+                    ]
+                  }
+                },
+                {
+                  "id": 5,
+                  "connection": 5,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197508.078258314,
+                  "in_flight": false,
+                  "bytes_written": 0,
+                  "returned": 197508.078608365,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  },
+                  "response_status": 200,
+                  "response_headers": {
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "content-length": [
+                      "4237"
+                    ]
+                  }
+                },
+                {
+                  "id": 6,
+                  "connection": 6,
+                  "method": "GET",
+                  "path_role": null,
+                  "kind": "control",
+                  "began": 197523.078231036,
+                  "in_flight": true,
+                  "bytes_written": 0,
+                  "returned": null,
+                  "error": null,
+                  "request_headers": {
+                    "Range": [],
+                    "If-Range": []
+                  }
+                }
+              ],
+              "events": [
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197485.436248716,
+                  "connection": 1
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197485.436571016,
+                  "connection": 1,
+                  "request": 1,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197485.43673675,
+                  "request": 1,
+                  "connection": 1
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197485.436767651,
+                  "connection": 1,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197488.071255234,
+                  "connection": 2
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197488.071566223,
+                  "connection": 2,
+                  "request": 2,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197491.076510572,
+                  "connection": 3
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197491.07679692,
+                  "connection": 3,
+                  "request": 3,
+                  "request_kind": "stream_GET"
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197498.08390403,
+                  "connection": 4
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197498.084187368,
+                  "connection": 4,
+                  "request": 4,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197498.084497267,
+                  "request": 4,
+                  "connection": 4
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197498.084532868,
+                  "connection": 4,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197508.077967146,
+                  "connection": 5
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197508.078260955,
+                  "connection": 5,
+                  "request": 5,
+                  "request_kind": "control"
+                },
+                {
+                  "kind": "handler_return",
+                  "at": 197508.078610605,
+                  "request": 5,
+                  "connection": 5
+                },
+                {
+                  "kind": "server_socket_shutdown_ack",
+                  "at": 197508.078642235,
+                  "connection": 5,
+                  "fd_after": -1
+                },
+                {
+                  "kind": "accepted_TCP",
+                  "at": 197523.077963328,
+                  "connection": 6
+                },
+                {
+                  "kind": "request_begin",
+                  "at": 197523.078233626,
+                  "connection": 6,
+                  "request": 6,
+                  "request_kind": "control"
+                }
+              ],
+              "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+            },
+            "literal_profile_counter": "1",
+            "origin_observation_completed": 197523.078834483
+          },
+          {
+            "label": "fixed_teardown",
+            "target": 197528.077381604,
+            "at": 197528.077444666,
+            "readers": {
+              "first": {
+                "role": "first",
+                "retained": 1048576,
+                "received": 1310720,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": true,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197528.077448896,
+                "socket_fd": 11
+              },
+              "second": {
+                "role": "second",
+                "retained": 1048576,
+                "received": 1179648,
+                "cap": 1048576,
+                "wire_cap": 8388608,
+                "prefix_ready": true,
+                "eof": false,
+                "invalid": null,
+                "reader_done": false,
+                "retention_does_not_close_or_pause": true,
+                "monotonic": 197528.077454286,
+                "socket_fd": 13
+              }
+            }
+          }
+        ],
+        "Source_generator_read_claim": false,
+        "caps_before": {
+          "account": 2,
+          "profile": 2
+        },
+        "actual_SQL_Bearer_verified": true,
+        "second_dispatch_target": 197491.072075246,
+        "second_dispatch_actual": 197491.072149927,
+        "fixed_teardown_target": 197528.077381604,
+        "teardown_snapshot": {
+          "label": "fixed_teardown",
+          "target": 197528.077381604,
+          "at": 197528.077444666,
+          "readers": {
+            "first": {
+              "role": "first",
+              "retained": 1048576,
+              "received": 1310720,
+              "cap": 1048576,
+              "wire_cap": 8388608,
+              "prefix_ready": true,
+              "eof": false,
+              "invalid": null,
+              "reader_done": false,
+              "retention_does_not_close_or_pause": true,
+              "monotonic": 197528.077448896,
+              "socket_fd": 11
+            },
+            "second": {
+              "role": "second",
+              "retained": 1048576,
+              "received": 1179648,
+              "cap": 1048576,
+              "wire_cap": 8388608,
+              "prefix_ready": true,
+              "eof": false,
+              "invalid": null,
+              "reader_done": false,
+              "retention_does_not_close_or_pause": true,
+              "monotonic": 197528.077454286,
+              "socket_fd": 13
+            }
+          }
+        },
+        "teardown_began": 197528.077458246,
+        "client_closes": {
+          "first": {
+            "role": "first",
+            "close_begin": 197528.077619781,
+            "close_complete": 197528.077914649,
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "server_cancellation_inferred": false,
+            "reader_joined": true,
+            "snapshot": {
+              "role": "first",
+              "retained": 1048576,
+              "received": 1310720,
+              "cap": 1048576,
+              "wire_cap": 8388608,
+              "prefix_ready": true,
+              "eof": true,
+              "invalid": null,
+              "reader_done": true,
+              "retention_does_not_close_or_pause": true,
+              "monotonic": 197528.077916079
+            }
+          },
+          "second": {
+            "role": "second",
+            "close_begin": 197528.077758875,
+            "close_complete": 197528.078052083,
+            "fd_after": -1,
+            "original_inode_absent": true,
+            "server_cancellation_inferred": false,
+            "reader_joined": true,
+            "snapshot": {
+              "role": "second",
+              "retained": 1048576,
+              "received": 1179648,
+              "cap": 1048576,
+              "wire_cap": 8388608,
+              "prefix_ready": true,
+              "eof": true,
+              "invalid": null,
+              "reader_done": true,
+              "retention_does_not_close_or_pause": true,
+              "monotonic": 197528.078053993
+            }
+          }
+        },
+        "caps_after": {
+          "account": 2,
+          "profile": 2
+        },
+        "decoders": {
+          "first": {
+            "passed": true,
+            "retained_bytes": 1048576,
+            "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+            "frames": 75,
+            "strict_audio_video_seconds": 3,
+            "minimum_frames": 50,
+            "process_reaped": true,
+            "pipes_settled": true
+          },
+          "second": {
+            "passed": true,
+            "retained_bytes": 1048576,
+            "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+            "frames": 75,
+            "strict_audio_video_seconds": 3,
+            "minimum_frames": 50,
+            "process_reaped": true,
+            "pipes_settled": true
+          }
+        },
+        "terminal_origin_before_service_stop": {
+          "epoch": "93708cbd8086400095b188bcb6fc8216",
+          "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+          "invalid": [],
+          "accepted_TCP_total": 7,
+          "actual_open_TCP": 3,
+          "actual_stream_GET_inflight": 2,
+          "media_HEAD_total": 0,
+          "control_total": 5,
+          "transient_TCP_without_request": 0,
+          "connections": [
+            {
+              "id": 1,
+              "opened": 197485.436246276,
+              "socket_closed": true,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 4,
+              "closed": 197485.436766261,
+              "fd_after": -1
+            },
+            {
+              "id": 2,
+              "opened": 197488.071252034,
+              "socket_closed": false,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 4
+            },
+            {
+              "id": 3,
+              "opened": 197491.076507732,
+              "socket_closed": false,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 6
+            },
+            {
+              "id": 4,
+              "opened": 197498.08390134,
+              "socket_closed": true,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 8,
+              "closed": 197498.084531608,
+              "fd_after": -1
+            },
+            {
+              "id": 5,
+              "opened": 197508.077965006,
+              "socket_closed": true,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 8,
+              "closed": 197508.078640635,
+              "fd_after": -1
+            },
+            {
+              "id": 6,
+              "opened": 197523.077961098,
+              "socket_closed": true,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 8,
+              "closed": 197523.078601736,
+              "fd_after": -1
+            },
+            {
+              "id": 7,
+              "opened": 197528.112623448,
+              "socket_closed": false,
+              "peer_eof_observed": false,
+              "requests": 1,
+              "fd": 8
+            }
+          ],
+          "requests": [
+            {
+              "id": 1,
+              "connection": 1,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197485.436568736,
+              "in_flight": false,
+              "bytes_written": 0,
+              "returned": 197485.436735,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "application/json"
+                ],
+                "content-length": [
+                  "201"
+                ]
+              }
+            },
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 197488.071563683,
+              "in_flight": true,
+              "bytes_written": 1310720,
+              "returned": null,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "video/mp4"
+                ],
+                "accept-ranges": [
+                  "bytes"
+                ],
+                "content-length": [
+                  "4299455"
+                ]
+              },
+              "first_body_write": 197490.071900951,
+              "last_body_write": 197528.071917857
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 197491.0767944,
+              "in_flight": true,
+              "bytes_written": 1179648,
+              "returned": null,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "video/mp4"
+                ],
+                "accept-ranges": [
+                  "bytes"
+                ],
+                "content-length": [
+                  "4299455"
+                ]
+              },
+              "first_body_write": 197493.077131517,
+              "last_body_write": 197527.077153107
+            },
+            {
+              "id": 4,
+              "connection": 4,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197498.084185298,
+              "in_flight": false,
+              "bytes_written": 0,
+              "returned": 197498.084494637,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "application/json"
+                ],
+                "content-length": [
+                  "3366"
+                ]
+              }
+            },
+            {
+              "id": 5,
+              "connection": 5,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197508.078258314,
+              "in_flight": false,
+              "bytes_written": 0,
+              "returned": 197508.078608365,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "application/json"
+                ],
+                "content-length": [
+                  "4237"
+                ]
+              }
+            },
+            {
+              "id": 6,
+              "connection": 6,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197523.078231036,
+              "in_flight": false,
+              "bytes_written": 0,
+              "returned": 197523.078574256,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              },
+              "response_status": 200,
+              "response_headers": {
+                "content-type": [
+                  "application/json"
+                ],
+                "content-length": [
+                  "5110"
+                ]
+              }
+            },
+            {
+              "id": 7,
+              "connection": 7,
+              "method": "GET",
+              "path_role": null,
+              "kind": "control",
+              "began": 197528.112914447,
+              "in_flight": true,
+              "bytes_written": 0,
+              "returned": null,
+              "error": null,
+              "request_headers": {
+                "Range": [],
+                "If-Range": []
+              }
+            }
+          ],
+          "events": [
+            {
+              "kind": "accepted_TCP",
+              "at": 197485.436248716,
+              "connection": 1
+            },
+            {
+              "kind": "request_begin",
+              "at": 197485.436571016,
+              "connection": 1,
+              "request": 1,
+              "request_kind": "control"
+            },
+            {
+              "kind": "handler_return",
+              "at": 197485.43673675,
+              "request": 1,
+              "connection": 1
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 197485.436767651,
+              "connection": 1,
+              "fd_after": -1
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197488.071255234,
+              "connection": 2
+            },
+            {
+              "kind": "request_begin",
+              "at": 197488.071566223,
+              "connection": 2,
+              "request": 2,
+              "request_kind": "stream_GET"
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197491.076510572,
+              "connection": 3
+            },
+            {
+              "kind": "request_begin",
+              "at": 197491.07679692,
+              "connection": 3,
+              "request": 3,
+              "request_kind": "stream_GET"
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197498.08390403,
+              "connection": 4
+            },
+            {
+              "kind": "request_begin",
+              "at": 197498.084187368,
+              "connection": 4,
+              "request": 4,
+              "request_kind": "control"
+            },
+            {
+              "kind": "handler_return",
+              "at": 197498.084497267,
+              "request": 4,
+              "connection": 4
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 197498.084532868,
+              "connection": 4,
+              "fd_after": -1
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197508.077967146,
+              "connection": 5
+            },
+            {
+              "kind": "request_begin",
+              "at": 197508.078260955,
+              "connection": 5,
+              "request": 5,
+              "request_kind": "control"
+            },
+            {
+              "kind": "handler_return",
+              "at": 197508.078610605,
+              "request": 5,
+              "connection": 5
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 197508.078642235,
+              "connection": 5,
+              "fd_after": -1
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197523.077963328,
+              "connection": 6
+            },
+            {
+              "kind": "request_begin",
+              "at": 197523.078233626,
+              "connection": 6,
+              "request": 6,
+              "request_kind": "control"
+            },
+            {
+              "kind": "handler_return",
+              "at": 197523.078576296,
+              "request": 6,
+              "connection": 6
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 197523.078602846,
+              "connection": 6,
+              "fd_after": -1
+            },
+            {
+              "kind": "accepted_TCP",
+              "at": 197528.112626228,
+              "connection": 7
+            },
+            {
+              "kind": "request_begin",
+              "at": 197528.112916827,
+              "connection": 7,
+              "request": 7,
+              "request_kind": "control"
+            }
+          ],
+          "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+        },
+        "caps_terminal": {
+          "account": 2,
+          "profile": 2
+        },
+        "elapsed_seconds": 40.059161676996155,
+        "continuous_client_read_progress": true,
+        "literal_snapshot_coverage": true,
+        "literal_origin_coverage": true,
+        "fixed_schedule_valid": true,
+        "no_reproduction": false,
+        "full_M4_acceptance": false
+      }
+    },
+    "cleanup_errors": [],
+    "default_before": {
+      "database": "dispatcharr",
+      "tables": {
+        "accounts_user": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "m3u_m3uaccount": {
+          "rows": 1,
+          "sha256": "b213683a5d0a069689b9a6bac85d9410fbd15eb71ab320d7a0e0e8d9d61e9a20"
+        },
+        "m3u_m3uaccountprofile": {
+          "rows": 1,
+          "sha256": "7ec5643d009b5bec09a7e0fc33724139979033f2e22e8dc56c3ec4393b8ba9c7"
+        },
+        "vod_movie": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "vod_m3umovierelation": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "vod_series": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "vod_episode": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "vod_m3uepisoderelation": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "core_coresettings": {
+          "rows": 8,
+          "sha256": "16f7da03c033c5fe0dae629dd4940aa4dea4f5095d357177a7b38ebdc2ccdb96"
+        }
+      },
+      "sequences": {
+        "public.accounts_user_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.m3u_m3uaccountprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.core_coresettings_id_seq": {
+          "last_value": 18,
+          "is_called": true
+        }
+      },
+      "dataset_sha256": "5925a2242a7ef62649733a08cde98077af554116230cb47358f1aa154b61e369"
+    },
+    "source_before": {
+      "database": "rust_pending_538d324974_source",
+      "tables": {
+        "accounts_user": {
+          "rows": 3,
+          "sha256": "024f8a37b4567645b7354014f2de6f1fe33f958a44180157dcde0fa128eab668"
+        },
+        "m3u_m3uaccount": {
+          "rows": 2,
+          "sha256": "a24629e90612a5ba26380ee4898685a3d6293dc21c683c5b0f40dfc7a1f0fdf6"
+        },
+        "m3u_m3uaccountprofile": {
+          "rows": 2,
+          "sha256": "716c094b26b44bf9c8434b7b2797f598ae70decccc6bf53a815e0415ccc66809"
+        },
+        "vod_movie": {
+          "rows": 4,
+          "sha256": "0aac2fe7ce179d02330ae8e961c623e16e5e99a9881c291633ebaee7db0c6284"
+        },
+        "vod_m3umovierelation": {
+          "rows": 4,
+          "sha256": "da702f61f186d8566d3ea12acb7d9951cec0e852654b98ec0369feb876b32548"
+        },
+        "vod_series": {
+          "rows": 1,
+          "sha256": "8fdb9e2e61206b4000df9c5e807038d74e41f99a8ab75e2eca20ede7bde05817"
+        },
+        "vod_episode": {
+          "rows": 1,
+          "sha256": "e09950ee53cb679ff319bf00e2cd91e525db16e27d48ce7cc8a39629b433e015"
+        },
+        "vod_m3uepisoderelation": {
+          "rows": 1,
+          "sha256": "f81f64bcc102234980443cd2c9e6d245124a2ea325530f83c391bf49d1b91c07"
+        },
+        "core_coresettings": {
+          "rows": 8,
+          "sha256": "cd6cfa39b8529962c16a2b78220f514ee7cf483731b404235ba2e1f75989ba60"
+        }
+      },
+      "sequences": {
+        "public.accounts_user_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.m3u_m3uaccountprofile_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.core_coresettings_id_seq": {
+          "last_value": 18,
+          "is_called": true
+        }
+      },
+      "dataset_sha256": "efa17d9365a912632ec679341110b4783073361fa036f8cd53ac996beee57d2c"
+    },
+    "source_caps_after": {
+      "account_max_streams": 2,
+      "profile_max_streams": 2,
+      "account_id": 2,
+      "profile_id": 2,
+      "fixed_at_seed": true
+    },
+    "source_after": {
+      "database": "rust_pending_538d324974_source",
+      "tables": {
+        "accounts_user": {
+          "rows": 3,
+          "sha256": "024f8a37b4567645b7354014f2de6f1fe33f958a44180157dcde0fa128eab668"
+        },
+        "m3u_m3uaccount": {
+          "rows": 2,
+          "sha256": "a24629e90612a5ba26380ee4898685a3d6293dc21c683c5b0f40dfc7a1f0fdf6"
+        },
+        "m3u_m3uaccountprofile": {
+          "rows": 2,
+          "sha256": "716c094b26b44bf9c8434b7b2797f598ae70decccc6bf53a815e0415ccc66809"
+        },
+        "vod_movie": {
+          "rows": 4,
+          "sha256": "0aac2fe7ce179d02330ae8e961c623e16e5e99a9881c291633ebaee7db0c6284"
+        },
+        "vod_m3umovierelation": {
+          "rows": 4,
+          "sha256": "da702f61f186d8566d3ea12acb7d9951cec0e852654b98ec0369feb876b32548"
+        },
+        "vod_series": {
+          "rows": 1,
+          "sha256": "8fdb9e2e61206b4000df9c5e807038d74e41f99a8ab75e2eca20ede7bde05817"
+        },
+        "vod_episode": {
+          "rows": 1,
+          "sha256": "e09950ee53cb679ff319bf00e2cd91e525db16e27d48ce7cc8a39629b433e015"
+        },
+        "vod_m3uepisoderelation": {
+          "rows": 1,
+          "sha256": "f81f64bcc102234980443cd2c9e6d245124a2ea325530f83c391bf49d1b91c07"
+        },
+        "core_coresettings": {
+          "rows": 8,
+          "sha256": "cd6cfa39b8529962c16a2b78220f514ee7cf483731b404235ba2e1f75989ba60"
+        }
+      },
+      "sequences": {
+        "public.accounts_user_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.m3u_m3uaccountprofile_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.core_coresettings_id_seq": {
+          "last_value": 18,
+          "is_called": true
+        }
+      },
+      "dataset_sha256": "efa17d9365a912632ec679341110b4783073361fa036f8cd53ac996beee57d2c"
+    },
+    "Source_status_and_main_listener_closed": true,
+    "source_origin_terminal": {
+      "epoch": "7338e064349a46368fc86e42196fdefe",
+      "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+      "invalid": [],
+      "accepted_TCP_total": 7,
+      "actual_open_TCP": 0,
+      "actual_stream_GET_inflight": 0,
+      "media_HEAD_total": 0,
+      "control_total": 5,
+      "transient_TCP_without_request": 0,
+      "connections": [
+        {
+          "id": 1,
+          "opened": 197437.505841837,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 4,
+          "closed": 197437.506561538,
+          "fd_after": -1
+        },
+        {
+          "id": 2,
+          "opened": 197440.337938786,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 4,
+          "closed": 197484.338629845,
+          "fd_after": -1
+        },
+        {
+          "id": 3,
+          "opened": 197443.348047991,
+          "socket_closed": true,
+          "peer_eof_observed": true,
+          "requests": 1,
+          "fd": 6,
+          "closed": 197483.348673174,
+          "fd_after": -1
+        },
+        {
+          "id": 4,
+          "opened": 197450.355755322,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 8,
+          "closed": 197450.356352999,
+          "fd_after": -1
+        },
+        {
+          "id": 5,
+          "opened": 197460.34988997,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 8,
+          "closed": 197460.35058192,
+          "fd_after": -1
+        },
+        {
+          "id": 6,
+          "opened": 197475.349856655,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 8,
+          "closed": 197475.350450403,
+          "fd_after": -1
+        },
+        {
+          "id": 7,
+          "opened": 197482.383160326,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 8,
+          "closed": 197482.383821085,
+          "fd_after": -1
+        }
+      ],
+      "requests": [
+        {
+          "id": 1,
+          "connection": 1,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197437.506304461,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197437.506521497,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "201"
+            ]
+          }
+        },
+        {
+          "id": 2,
+          "connection": 2,
+          "method": "GET",
+          "path_role": "shared_movie",
+          "kind": "stream_GET",
+          "began": 197440.338262325,
+          "in_flight": false,
+          "bytes_written": 1376256,
+          "returned": 197484.338576933,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "video/mp4"
+            ],
+            "accept-ranges": [
+              "bytes"
+            ],
+            "content-length": [
+              "4299455"
+            ]
+          },
+          "first_body_write": 197442.338630738,
+          "last_body_write": 197482.338623284,
+          "body_write_failures": [
+            {
+              "exception_class": "ConnectionResetError",
+              "at": 197484.338548543
+            }
+          ],
+          "serve_file_return": {
+            "status": 200,
+            "body_bytes": 1376256
+          }
+        },
+        {
+          "id": 3,
+          "connection": 3,
+          "method": "GET",
+          "path_role": "shared_movie",
+          "kind": "stream_GET",
+          "began": 197443.348333799,
+          "in_flight": false,
+          "bytes_written": 1245184,
+          "returned": 197483.348619332,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "video/mp4"
+            ],
+            "accept-ranges": [
+              "bytes"
+            ],
+            "content-length": [
+              "4299455"
+            ]
+          },
+          "first_body_write": 197445.3486644,
+          "last_body_write": 197481.348685282,
+          "body_write_failures": [
+            {
+              "exception_class": "ConnectionResetError",
+              "at": 197483.348594511
+            }
+          ],
+          "serve_file_return": {
+            "status": 200,
+            "body_bytes": 1245184
+          }
+        },
+        {
+          "id": 4,
+          "connection": 4,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197450.356009299,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197450.356315548,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "3373"
+            ]
+          }
+        },
+        {
+          "id": 5,
+          "connection": 5,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197460.350189548,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197460.350550159,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "4242"
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "connection": 6,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197475.350104013,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197475.350421012,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "5113"
+            ]
+          }
+        },
+        {
+          "id": 7,
+          "connection": 7,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197482.383395423,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197482.383789184,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "5984"
+            ]
+          }
+        }
+      ],
+      "events": [
+        {
+          "kind": "accepted_TCP",
+          "at": 197437.505844577,
+          "connection": 1
+        },
+        {
+          "kind": "request_begin",
+          "at": 197437.506307821,
+          "connection": 1,
+          "request": 1,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197437.506523817,
+          "request": 1,
+          "connection": 1
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197437.506563008,
+          "connection": 1,
+          "fd_after": -1
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197440.337941686,
+          "connection": 2
+        },
+        {
+          "kind": "request_begin",
+          "at": 197440.338264865,
+          "connection": 2,
+          "request": 2,
+          "request_kind": "stream_GET"
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197443.348050291,
+          "connection": 3
+        },
+        {
+          "kind": "request_begin",
+          "at": 197443.348336629,
+          "connection": 3,
+          "request": 3,
+          "request_kind": "stream_GET"
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197450.355757402,
+          "connection": 4
+        },
+        {
+          "kind": "request_begin",
+          "at": 197450.356011589,
+          "connection": 4,
+          "request": 4,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197450.356317858,
+          "request": 4,
+          "connection": 4
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197450.356354369,
+          "connection": 4,
+          "fd_after": -1
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197460.34989267,
+          "connection": 5
+        },
+        {
+          "kind": "request_begin",
+          "at": 197460.350191479,
+          "connection": 5,
+          "request": 5,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197460.350552369,
+          "request": 5,
+          "connection": 5
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197460.35058312,
+          "connection": 5,
+          "fd_after": -1
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197475.349859506,
+          "connection": 6
+        },
+        {
+          "kind": "request_begin",
+          "at": 197475.350106323,
+          "connection": 6,
+          "request": 6,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197475.350423172,
+          "request": 6,
+          "connection": 6
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197475.350451523,
+          "connection": 6,
+          "fd_after": -1
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197482.383163206,
+          "connection": 7
+        },
+        {
+          "kind": "request_begin",
+          "at": 197482.383397993,
+          "connection": 7,
+          "request": 7,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197482.383791334,
+          "request": 7,
+          "connection": 7
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197482.383822345,
+          "connection": 7,
+          "fd_after": -1
+        },
+        {
+          "kind": "handler_return",
+          "at": 197483.348621982,
+          "request": 3,
+          "connection": 3
+        },
+        {
+          "kind": "request_read_EOF",
+          "at": 197483.348644113,
+          "connection": 3,
+          "local_shutdown_active": false
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197483.348674864,
+          "connection": 3,
+          "fd_after": -1
+        },
+        {
+          "kind": "handler_return",
+          "at": 197484.338580033,
+          "request": 2,
+          "connection": 2
+        },
+        {
+          "kind": "request_read_EOF",
+          "at": 197484.338601534,
+          "connection": 2,
+          "local_shutdown_active": true
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197484.338631015,
+          "connection": 2,
+          "fd_after": -1
+        }
+      ],
+      "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress",
+      "server_thread_settled": true
+    },
+    "native_before": {
+      "database": "rust_pending_538d324974_native",
+      "tables": {
+        "accounts_user": {
+          "rows": 3,
+          "sha256": "024f8a37b4567645b7354014f2de6f1fe33f958a44180157dcde0fa128eab668"
+        },
+        "m3u_m3uaccount": {
+          "rows": 2,
+          "sha256": "a24629e90612a5ba26380ee4898685a3d6293dc21c683c5b0f40dfc7a1f0fdf6"
+        },
+        "m3u_m3uaccountprofile": {
+          "rows": 2,
+          "sha256": "716c094b26b44bf9c8434b7b2797f598ae70decccc6bf53a815e0415ccc66809"
+        },
+        "vod_movie": {
+          "rows": 4,
+          "sha256": "0aac2fe7ce179d02330ae8e961c623e16e5e99a9881c291633ebaee7db0c6284"
+        },
+        "vod_m3umovierelation": {
+          "rows": 4,
+          "sha256": "da702f61f186d8566d3ea12acb7d9951cec0e852654b98ec0369feb876b32548"
+        },
+        "vod_series": {
+          "rows": 1,
+          "sha256": "8fdb9e2e61206b4000df9c5e807038d74e41f99a8ab75e2eca20ede7bde05817"
+        },
+        "vod_episode": {
+          "rows": 1,
+          "sha256": "e09950ee53cb679ff319bf00e2cd91e525db16e27d48ce7cc8a39629b433e015"
+        },
+        "vod_m3uepisoderelation": {
+          "rows": 1,
+          "sha256": "f81f64bcc102234980443cd2c9e6d245124a2ea325530f83c391bf49d1b91c07"
+        },
+        "core_coresettings": {
+          "rows": 8,
+          "sha256": "cd6cfa39b8529962c16a2b78220f514ee7cf483731b404235ba2e1f75989ba60"
+        }
+      },
+      "sequences": {
+        "public.accounts_user_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.m3u_m3uaccountprofile_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.core_coresettings_id_seq": {
+          "last_value": 18,
+          "is_called": true
+        }
+      },
+      "dataset_sha256": "efa17d9365a912632ec679341110b4783073361fa036f8cd53ac996beee57d2c"
+    },
+    "actual_Main_image_id": "sha256:909d506f1c1deb29c60bd360da995eef9d5ff5c7ffa0ea3799bca11f7c93b5d0",
+    "native_caps_after": {
+      "account_max_streams": 2,
+      "profile_max_streams": 2,
+      "account_id": 2,
+      "profile_id": 2,
+      "fixed_at_seed": true
+    },
+    "native_after": {
+      "database": "rust_pending_538d324974_native",
+      "tables": {
+        "accounts_user": {
+          "rows": 3,
+          "sha256": "024f8a37b4567645b7354014f2de6f1fe33f958a44180157dcde0fa128eab668"
+        },
+        "m3u_m3uaccount": {
+          "rows": 2,
+          "sha256": "a24629e90612a5ba26380ee4898685a3d6293dc21c683c5b0f40dfc7a1f0fdf6"
+        },
+        "m3u_m3uaccountprofile": {
+          "rows": 2,
+          "sha256": "716c094b26b44bf9c8434b7b2797f598ae70decccc6bf53a815e0415ccc66809"
+        },
+        "vod_movie": {
+          "rows": 4,
+          "sha256": "0aac2fe7ce179d02330ae8e961c623e16e5e99a9881c291633ebaee7db0c6284"
+        },
+        "vod_m3umovierelation": {
+          "rows": 4,
+          "sha256": "da702f61f186d8566d3ea12acb7d9951cec0e852654b98ec0369feb876b32548"
+        },
+        "vod_series": {
+          "rows": 1,
+          "sha256": "8fdb9e2e61206b4000df9c5e807038d74e41f99a8ab75e2eca20ede7bde05817"
+        },
+        "vod_episode": {
+          "rows": 1,
+          "sha256": "e09950ee53cb679ff319bf00e2cd91e525db16e27d48ce7cc8a39629b433e015"
+        },
+        "vod_m3uepisoderelation": {
+          "rows": 1,
+          "sha256": "f81f64bcc102234980443cd2c9e6d245124a2ea325530f83c391bf49d1b91c07"
+        },
+        "core_coresettings": {
+          "rows": 8,
+          "sha256": "cd6cfa39b8529962c16a2b78220f514ee7cf483731b404235ba2e1f75989ba60"
+        }
+      },
+      "sequences": {
+        "public.accounts_user_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.m3u_m3uaccountprofile_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.core_coresettings_id_seq": {
+          "last_value": 18,
+          "is_called": true
+        }
+      },
+      "dataset_sha256": "efa17d9365a912632ec679341110b4783073361fa036f8cd53ac996beee57d2c"
+    },
+    "native_origin_terminal": {
+      "epoch": "93708cbd8086400095b188bcb6fc8216",
+      "nonce_sha256": "15a4da47a49a870ba66c4e553752c2f546b20d7f5575406dd0e8ad2350cf1cd7",
+      "invalid": [],
+      "accepted_TCP_total": 7,
+      "actual_open_TCP": 0,
+      "actual_stream_GET_inflight": 0,
+      "media_HEAD_total": 0,
+      "control_total": 5,
+      "transient_TCP_without_request": 0,
+      "connections": [
+        {
+          "id": 1,
+          "opened": 197485.436246276,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 4,
+          "closed": 197485.436766261,
+          "fd_after": -1
+        },
+        {
+          "id": 2,
+          "opened": 197488.071252034,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 4,
+          "closed": 197532.071916114,
+          "fd_after": -1
+        },
+        {
+          "id": 3,
+          "opened": 197491.076507732,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 6,
+          "closed": 197531.077140386,
+          "fd_after": -1
+        },
+        {
+          "id": 4,
+          "opened": 197498.08390134,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 8,
+          "closed": 197498.084531608,
+          "fd_after": -1
+        },
+        {
+          "id": 5,
+          "opened": 197508.077965006,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 8,
+          "closed": 197508.078640635,
+          "fd_after": -1
+        },
+        {
+          "id": 6,
+          "opened": 197523.077961098,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 8,
+          "closed": 197523.078601736,
+          "fd_after": -1
+        },
+        {
+          "id": 7,
+          "opened": 197528.112623448,
+          "socket_closed": true,
+          "peer_eof_observed": false,
+          "requests": 1,
+          "fd": 8,
+          "closed": 197528.113404481,
+          "fd_after": -1
+        }
+      ],
+      "requests": [
+        {
+          "id": 1,
+          "connection": 1,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197485.436568736,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197485.436735,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "201"
+            ]
+          }
+        },
+        {
+          "id": 2,
+          "connection": 2,
+          "method": "GET",
+          "path_role": "shared_movie",
+          "kind": "stream_GET",
+          "began": 197488.071563683,
+          "in_flight": false,
+          "bytes_written": 1376256,
+          "returned": 197532.071869613,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "video/mp4"
+            ],
+            "accept-ranges": [
+              "bytes"
+            ],
+            "content-length": [
+              "4299455"
+            ]
+          },
+          "first_body_write": 197490.071900951,
+          "last_body_write": 197530.071881295,
+          "body_write_failures": [
+            {
+              "exception_class": "BrokenPipeError",
+              "at": 197532.071840252
+            }
+          ],
+          "serve_file_return": {
+            "status": 200,
+            "body_bytes": 1376256
+          }
+        },
+        {
+          "id": 3,
+          "connection": 3,
+          "method": "GET",
+          "path_role": "shared_movie",
+          "kind": "stream_GET",
+          "began": 197491.0767944,
+          "in_flight": false,
+          "bytes_written": 1245184,
+          "returned": 197531.077087864,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "video/mp4"
+            ],
+            "accept-ranges": [
+              "bytes"
+            ],
+            "content-length": [
+              "4299455"
+            ]
+          },
+          "first_body_write": 197493.077131517,
+          "last_body_write": 197529.077158887,
+          "body_write_failures": [
+            {
+              "exception_class": "BrokenPipeError",
+              "at": 197531.077056803
+            }
+          ],
+          "serve_file_return": {
+            "status": 200,
+            "body_bytes": 1245184
+          }
+        },
+        {
+          "id": 4,
+          "connection": 4,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197498.084185298,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197498.084494637,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "3366"
+            ]
+          }
+        },
+        {
+          "id": 5,
+          "connection": 5,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197508.078258314,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197508.078608365,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "4237"
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "connection": 6,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197523.078231036,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197523.078574256,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "5110"
+            ]
+          }
+        },
+        {
+          "id": 7,
+          "connection": 7,
+          "method": "GET",
+          "path_role": null,
+          "kind": "control",
+          "began": 197528.112914447,
+          "in_flight": false,
+          "bytes_written": 0,
+          "returned": 197528.11336502,
+          "error": null,
+          "request_headers": {
+            "Range": [],
+            "If-Range": []
+          },
+          "response_status": 200,
+          "response_headers": {
+            "content-type": [
+              "application/json"
+            ],
+            "content-length": [
+              "5981"
+            ]
+          }
+        }
+      ],
+      "events": [
+        {
+          "kind": "accepted_TCP",
+          "at": 197485.436248716,
+          "connection": 1
+        },
+        {
+          "kind": "request_begin",
+          "at": 197485.436571016,
+          "connection": 1,
+          "request": 1,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197485.43673675,
+          "request": 1,
+          "connection": 1
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197485.436767651,
+          "connection": 1,
+          "fd_after": -1
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197488.071255234,
+          "connection": 2
+        },
+        {
+          "kind": "request_begin",
+          "at": 197488.071566223,
+          "connection": 2,
+          "request": 2,
+          "request_kind": "stream_GET"
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197491.076510572,
+          "connection": 3
+        },
+        {
+          "kind": "request_begin",
+          "at": 197491.07679692,
+          "connection": 3,
+          "request": 3,
+          "request_kind": "stream_GET"
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197498.08390403,
+          "connection": 4
+        },
+        {
+          "kind": "request_begin",
+          "at": 197498.084187368,
+          "connection": 4,
+          "request": 4,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197498.084497267,
+          "request": 4,
+          "connection": 4
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197498.084532868,
+          "connection": 4,
+          "fd_after": -1
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197508.077967146,
+          "connection": 5
+        },
+        {
+          "kind": "request_begin",
+          "at": 197508.078260955,
+          "connection": 5,
+          "request": 5,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197508.078610605,
+          "request": 5,
+          "connection": 5
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197508.078642235,
+          "connection": 5,
+          "fd_after": -1
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197523.077963328,
+          "connection": 6
+        },
+        {
+          "kind": "request_begin",
+          "at": 197523.078233626,
+          "connection": 6,
+          "request": 6,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197523.078576296,
+          "request": 6,
+          "connection": 6
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197523.078602846,
+          "connection": 6,
+          "fd_after": -1
+        },
+        {
+          "kind": "accepted_TCP",
+          "at": 197528.112626228,
+          "connection": 7
+        },
+        {
+          "kind": "request_begin",
+          "at": 197528.112916827,
+          "connection": 7,
+          "request": 7,
+          "request_kind": "control"
+        },
+        {
+          "kind": "handler_return",
+          "at": 197528.11336732,
+          "request": 7,
+          "connection": 7
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197528.113406501,
+          "connection": 7,
+          "fd_after": -1
+        },
+        {
+          "kind": "handler_return",
+          "at": 197531.077090994,
+          "request": 3,
+          "connection": 3
+        },
+        {
+          "kind": "request_read_EOF",
+          "at": 197531.077112295,
+          "connection": 3,
+          "local_shutdown_active": true
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197531.077141706,
+          "connection": 3,
+          "fd_after": -1
+        },
+        {
+          "kind": "handler_return",
+          "at": 197532.071872853,
+          "request": 2,
+          "connection": 2
+        },
+        {
+          "kind": "request_read_EOF",
+          "at": 197532.071894504,
+          "connection": 2,
+          "local_shutdown_active": true
+        },
+        {
+          "kind": "server_socket_shutdown_ack",
+          "at": 197532.071917455,
+          "connection": 2,
+          "fd_after": -1
+        }
+      ],
+      "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress",
+      "server_thread_settled": true
+    },
+    "comparison_scope": "VOD same-SID continuous-body origin characterization only; no TS-sharing or fullM4 transfer",
+    "default_after": {
+      "database": "dispatcharr",
+      "tables": {
+        "accounts_user": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "m3u_m3uaccount": {
+          "rows": 1,
+          "sha256": "b213683a5d0a069689b9a6bac85d9410fbd15eb71ab320d7a0e0e8d9d61e9a20"
+        },
+        "m3u_m3uaccountprofile": {
+          "rows": 1,
+          "sha256": "7ec5643d009b5bec09a7e0fc33724139979033f2e22e8dc56c3ec4393b8ba9c7"
+        },
+        "vod_movie": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "vod_m3umovierelation": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "vod_series": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "vod_episode": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "vod_m3uepisoderelation": {
+          "rows": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "core_coresettings": {
+          "rows": 8,
+          "sha256": "16f7da03c033c5fe0dae629dd4940aa4dea4f5095d357177a7b38ebdc2ccdb96"
+        }
+      },
+      "sequences": {
+        "public.accounts_user_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.m3u_m3uaccountprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.core_coresettings_id_seq": {
+          "last_value": 18,
+          "is_called": true
+        }
+      },
+      "dataset_sha256": "5925a2242a7ef62649733a08cde98077af554116230cb47358f1aa154b61e369"
+    },
+    "default_named_tables_sequences_unchanged": true,
+    "remaining": {
+      "containers": "",
+      "networks": "",
+      "volumes": ""
+    },
+    "owned_cleanup_valid": true,
+    "observation_complete": true,
+    "sharing_characterization_qualified": true,
+    "settled_literal_origin_coverage": true,
+    "no_reproduction": false
+  },
+  "retained_files": {
+    "source": {
+      "first": {
+        "bytes": 1048576,
+        "sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097"
+      },
+      "second": {
+        "bytes": 1048576,
+        "sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097"
+      }
+    },
+    "native": {
+      "first": {
+        "bytes": 1048576,
+        "sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097"
+      },
+      "second": {
+        "bytes": 1048576,
+        "sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# VOD sharing characterization adapters1 — BLOCKED
+
+Read PLAN.md, policy.json, proof.json and selection.json. Two real same-SID/same-movie HTTP clients will continuously drain; bounded origin Range/status/byte/return/physical telemetry will constrain GET classification. No Source business function or Redis method is replaced; no upstream viewer markers are added. No runtime edits, Source/Native application pair, resource sampler or benchmark occurred.
+
+Current qualification:50 local controls (42 inherited guard/reader/socket/ownership regressions plus8 new telemetry/sharing cases); two genuine pinned Django-signal/status controls without django.setup; actual standalone changed-origin1MiB Range206 prefix in~32s with75 strict audio/video frames/3s. Only the exact used origin/media/decoder subset is qualified by that preflight. Controller/gate files added later are separately local-tested; they do not inherit Source execution. All containers/processes settled and were removed. Prior admission metadata/logs are historical, named accordingly.
+
+Local controls: `PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s tools -p 'test_*.py' -v` (local socket permission needed). Do not call run.py for application execution: it raises RootReviewFreshPairCueRequired before reading inputs or claiming. A future reviewed activation + exact fresh Root cue is required. No adaptive retry or status/counter dispatch predicate is allowed.

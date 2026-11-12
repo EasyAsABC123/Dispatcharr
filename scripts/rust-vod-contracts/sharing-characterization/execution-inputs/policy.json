@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "scope": "NEW bounded VOD same-SID continuously draining characterization; not TS sharing",
+  "execution_authorized": false,
+  "resource_sampling": false,
+  "performance_acceptance": false,
+  "full_M4_acceptance": false,
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "support_revision": "c91ab5ece7926f1b6b04a8069c6ad38c5b5d8d55",
+  "candidate_proposal": {
+    "image51_manifest": "artifacts/rust/candidate-build-observer-unlock-image51-1/build.json",
+    "revision": "5afbb78ee8be031474b41278479fcdf623f2ddce",
+    "runtime_input_count": 772,
+    "binding": "Root review/fresh cue required; no current application execution"
+  },
+  "cohort": {
+    "backends": [
+      "source",
+      "native"
+    ],
+    "repetitions": 1,
+    "viewers": 2,
+    "roles": [
+      "first",
+      "second"
+    ],
+    "same_content": true,
+    "same_sid": "fixture-sharing-same",
+    "real_Bearer_SQL_user": true,
+    "user_level": 10,
+    "stream_limit": 0,
+    "custom_properties": {},
+    "profile_max_streams": 2,
+    "account_max_streams": 2,
+    "cap_boundary": "owned seed once before independent Source/native DB clones",
+    "cap_mutation_during_playback": false,
+    "reply_hold": false,
+    "admin_stop": false,
+    "provider_contact": "owned local fixed origin only",
+    "Source_methods_replaced": false,
+    "upstream_URL_or_header_markers_injected": false
+  },
+  "schedule_seconds": {
+    "first_observation_absolute_max": 24,
+    "second_start_after_first_bounded_observation": 1,
+    "start_max_overshoot": 0.35,
+    "drain_snapshots_after_second_bounded_observation": [
+      5,
+      15,
+      30
+    ],
+    "teardown_after_second_bounded_observation": 35,
+    "teardown_max_overshoot": 0.35,
+    "prefix_deadline": 40,
+    "decoder_deadline": 45,
+    "Source_finalization_collection": 10,
+    "full_phase": 120,
+    "owned_stop": 15
+  },
+  "schedule_inputs": "timestamps only, no status/counter/zero/adaptive conditions; second dispatch even after first error",
+  "body_bounds": {
+    "read_frame": 8192,
+    "retained_per_client": 1048576,
+    "retained_total": 2097152,
+    "continued_drain_after_retention": true,
+    "wire_per_client": 8388608,
+    "minimum_decoded_video_frames": 50,
+    "strict_audio_video_seconds": 3,
+    "decoder_parallel": 2,
+    "decode_input": "actual retained MP4 prefix"
+  },
+  "origin_observation": {
+    "methods": "literal actual HTTP method",
+    "request_headers": [
+      "Range",
+      "If-Range"
+    ],
+    "response_fields": [
+      "HTTP_status",
+      "Content-Range",
+      "Content-Length",
+      "Accept-Ranges",
+      "Content-Type"
+    ],
+    "headers_per_name": 8,
+    "header_value_UTF8_bytes": 2048,
+    "aggregate_collection_bytes": 4096,
+    "request_bound": 64,
+    "connection_bound": 128,
+    "live_connection_bound": 64,
+    "event_bound": 512,
+    "status_bytes": 65536,
+    "invalid_policy": "sticky incomplete/invalid; never silent truncation",
+    "body": "actual successful origin write byte count plus first/last write time, write exception class, serve_file returned status/byte count",
+    "physical": "handler return and server fd=-1 close separately from peer EOF-read observation",
+    "role_association": "origin own server request/connection identities + fixed path_role only; never guessed first/second owner from timing"
+  },
+  "input_effects": {
+    "DBs": "independent cloned owned template; fixture fingerprints equal before each backend",
+    "origin_epochs": "fresh origin process/nonce-bound ledger epoch for each backend",
+    "default_audit": "same nine default model-table and sequence fingerprints before/after",
+    "seed_rows": "existing owned four-movie fixture retained; ONLY original movie used by these two viewers",
+    "Source_signals": "bounded genuine request_started/request_finished for owned inbound UAs; not generator-finally proof"
+  },
+  "outcomes": "literal unexpected statuses/EOF/errors retained; incomplete/no-reproduction separate from qualified characterization; no arbitrary single-upstream or full M4 parity claim",
+  "actual_application_pair_prerequisites": [
+    "Root exact closure/policy review",
+    "new activation-only copy and fresh once cue",
+    "owned quiet functional window",
+    "standalone changed-origin exact-subset preflight passed"
+  ]
+}

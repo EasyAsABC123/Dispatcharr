@@ -1,0 +1,463 @@
+{
+  "cases": [
+    {
+      "case": "unchanged_actual",
+      "expected": "accept",
+      "actual": "accept",
+      "passed": true,
+      "media_GETs": {
+        "source": 2,
+        "native": 2
+      }
+    },
+    {
+      "case": "source missing clients",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryClients"
+    },
+    {
+      "case": "source missing checkpoints",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "KeyError",
+      "label": "'checkpoints'"
+    },
+    {
+      "case": "source missing decoders",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "source decoder missing first",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "source file missing first",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "source close missing first",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryCloseReceipts"
+    },
+    {
+      "case": "source decoder missing second",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "source file missing second",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "source close missing second",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryCloseReceipts"
+    },
+    {
+      "case": "source terminal empty requests",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "RetainedTerminalCoverage"
+    },
+    {
+      "case": "source terminal empty connections",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "RetainedTerminalCoverage"
+    },
+    {
+      "case": "source stale origin reference",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "RetainedSnapshotCoverage"
+    },
+    {
+      "case": "source flat progress",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ReaderBytes"
+    },
+    {
+      "case": "source origin observation before phase",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "PhaseRelativeObservationClock"
+    },
+    {
+      "case": "source elapsed zero",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ElapsedCoversObservedSpan"
+    },
+    {
+      "case": "source false phase HTTP_capture_valid",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "source false phase scenario_ready",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "source false phase continuous_client_read_progress",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "source false phase literal_snapshot_coverage",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "source false phase fixed_schedule_valid",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "source false phase literal_origin_coverage",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "native missing clients",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryClients"
+    },
+    {
+      "case": "native missing checkpoints",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "KeyError",
+      "label": "'checkpoints'"
+    },
+    {
+      "case": "native missing decoders",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "native decoder missing first",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "native file missing first",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "native close missing first",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryCloseReceipts"
+    },
+    {
+      "case": "native decoder missing second",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "native file missing second",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDecoderFiles"
+    },
+    {
+      "case": "native close missing second",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryCloseReceipts"
+    },
+    {
+      "case": "native terminal empty requests",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "RetainedTerminalCoverage"
+    },
+    {
+      "case": "native terminal empty connections",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "RetainedTerminalCoverage"
+    },
+    {
+      "case": "native stale origin reference",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "RetainedSnapshotCoverage"
+    },
+    {
+      "case": "native flat progress",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ReaderBytes"
+    },
+    {
+      "case": "native origin observation before phase",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "PhaseRelativeObservationClock"
+    },
+    {
+      "case": "native elapsed zero",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ElapsedCoversObservedSpan"
+    },
+    {
+      "case": "native false phase HTTP_capture_valid",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "native false phase scenario_ready",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "native false phase continuous_client_read_progress",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "native false phase literal_snapshot_coverage",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "native false phase fixed_schedule_valid",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "native false phase literal_origin_coverage",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPhaseAgreement"
+    },
+    {
+      "case": "false pair HTTP_pair_complete",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPairAgreement"
+    },
+    {
+      "case": "false pair observation_complete",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPairAgreement"
+    },
+    {
+      "case": "false pair sharing_characterization_qualified",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPairAgreement"
+    },
+    {
+      "case": "false pair settled_literal_origin_coverage",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPairAgreement"
+    },
+    {
+      "case": "false pair owned_cleanup_valid",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPairAgreement"
+    },
+    {
+      "case": "false pair default_named_tables_sequences_unchanged",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualDerivedPairAgreement"
+    },
+    {
+      "case": "signals missing",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatorySourceSignals"
+    },
+    {
+      "case": "signals before all requests",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "PhaseRelativeSignalClock"
+    },
+    {
+      "case": "candidate wrong image",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "ActualImage51"
+    },
+    {
+      "case": "default changed",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryDefaultAuditSchema"
+    },
+    {
+      "case": "default both no sequences",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "MandatoryAuditSequences"
+    },
+    {
+      "case": "cleanup process alive",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "IndependentCleanup"
+    },
+    {
+      "case": "source missing second media observation consistently",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "RetainedTerminalCoverage"
+    },
+    {
+      "case": "native missing second media observation consistently",
+      "expected": "reject",
+      "actual": "reject",
+      "passed": true,
+      "error_type": "ValueError",
+      "label": "RetainedTerminalCoverage"
+    }
+  ],
+  "failures": []
+}

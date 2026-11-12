@@ -1,0 +1,159 @@
+{
+  "scope": "offline derivation from retained exact field projection only",
+  "actual_exit_code": 0,
+  "characterization_qualified": true,
+  "phase_results": {
+    "source": {
+      "qualified": true,
+      "media_GET_count": 2,
+      "literal_nonrange_200": [
+        true,
+        true
+      ],
+      "origin_body_bytes": [
+        1376256,
+        1245184
+      ],
+      "write_errors": [
+        [
+          "ConnectionResetError"
+        ],
+        [
+          "ConnectionResetError"
+        ]
+      ],
+      "full_delivery": [
+        false,
+        false
+      ],
+      "client_progress": [
+        {
+          "first": 327680,
+          "second": 196608
+        },
+        {
+          "first": 655360,
+          "second": 524288
+        },
+        {
+          "first": 1114112,
+          "second": 1048576
+        },
+        {
+          "first": 1310720,
+          "second": 1179648
+        }
+      ],
+      "literal_profile_counters": [
+        {
+          "checkpoint": "drain_5",
+          "value": "1",
+          "observation_begin": 197450.34943229,
+          "observation_end": 197450.356786272
+        },
+        {
+          "checkpoint": "drain_15",
+          "value": "1",
+          "observation_begin": 197460.349352154,
+          "observation_end": 197460.351211058
+        },
+        {
+          "checkpoint": "drain_30",
+          "value": "1",
+          "observation_begin": 197475.349342781,
+          "observation_end": 197475.35071126
+        }
+      ],
+      "origin_counts": {
+        "requests": 7,
+        "connections": 7,
+        "controls": 5,
+        "media_HEAD": 0,
+        "transient": 0
+      },
+      "upstream_to_client_association": "unresolved",
+      "two_people_inferred": false
+    },
+    "native": {
+      "qualified": true,
+      "media_GET_count": 2,
+      "literal_nonrange_200": [
+        true,
+        true
+      ],
+      "origin_body_bytes": [
+        1376256,
+        1245184
+      ],
+      "write_errors": [
+        [
+          "BrokenPipeError"
+        ],
+        [
+          "BrokenPipeError"
+        ]
+      ],
+      "full_delivery": [
+        false,
+        false
+      ],
+      "client_progress": [
+        {
+          "first": 327680,
+          "second": 196608
+        },
+        {
+          "first": 655360,
+          "second": 524288
+        },
+        {
+          "first": 1114112,
+          "second": 1048576
+        },
+        {
+          "first": 1310720,
+          "second": 1179648
+        }
+      ],
+      "literal_profile_counters": [
+        {
+          "checkpoint": "drain_5",
+          "value": "1",
+          "observation_begin": 197498.077623389,
+          "observation_end": 197498.085032842
+        },
+        {
+          "checkpoint": "drain_15",
+          "value": "1",
+          "observation_begin": 197508.077518633,
+          "observation_end": 197508.079297094
+        },
+        {
+          "checkpoint": "drain_30",
+          "value": "1",
+          "observation_begin": 197523.077504425,
+          "observation_end": 197523.078834483
+        }
+      ],
+      "origin_counts": {
+        "requests": 7,
+        "connections": 7,
+        "controls": 5,
+        "media_HEAD": 0,
+        "transient": 0
+      },
+      "upstream_to_client_association": "unresolved",
+      "two_people_inferred": false
+    }
+  },
+  "mandatory_coverage_checked": true,
+  "retained_origin_authority_checked": true,
+  "finite_phase_relative_clocks_checked": true,
+  "mandatory_default_sequence_schema_checked": true,
+  "cleanup_default_audit_derived": true,
+  "response_finalization_not_generator_finally": true,
+  "runtime_or_application_rerun": false,
+  "full_M4_acceptance": false,
+  "TS_sharing_transfer": false,
+  "performance_claim": false
+}

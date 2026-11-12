@@ -1,0 +1,165 @@
+{
+  "review_passed": false,
+  "scope": "Independent offline audit only; no application requests, runtime edits, Native/M4/performance acceptance or relabeling of actual execution.",
+  "selection_sha256": "402548e474e67733c38ec8e93a7eb9fae366d04a91916064e407933e3af615c6",
+  "all113_hashes_exact": true,
+  "raw_summary_sha256": "7f34e9a6fe62757056c9c4ee2f1c5799a703490df6eaa555a2bbfc8910cb3f24",
+  "exact_summary_projection_only_client_response_headers_omitted": true,
+  "exact_private_source_native_phase_seed_projection": {
+    "exact_summary_phase_and_seed_projection": true,
+    "retained_media_hashes_verified": true,
+    "private_auth_printed": false,
+    "application_executed": false
+  },
+  "exact_origin_terminal_private_records": true,
+  "actual_exit_code": 0,
+  "actual_qualification": true,
+  "source_signal_rows": 4,
+  "four_media_prefixes_hashed": true,
+  "private_token_password_values_absent_from_all113": true,
+  "pinned_contexts": {
+    "exact_immutable_code_contexts": [
+      {
+        "context": "pinned-Original-context.json",
+        "git_blob": "7449405b780a77054243a87fa6094e454730a014",
+        "sha256": "8a63d669219d149293da592d1d9a4e77db4d0c8b253baaf29c44e2e766c72c4a"
+      },
+      {
+        "context": "pinned-native-context.json",
+        "git_blob": "6f416a04c1ebc82d2e90ce72ecb86c8d61f9be2d",
+        "sha256": "2ec842d39172d1bd5cfa26e4fdd4c43b36434925557988de06986fd9fdc4604b"
+      }
+    ],
+    "runtime_application_executed": false,
+    "dynamic_request_association_inferred": false
+  },
+  "Original_license_exact": true,
+  "candidate_manifest_exact": true,
+  "executed_tool_hashes_exact": true,
+  "restoration": {
+    "blocked": {
+      "restored_files": 87,
+      "mode": "blocked",
+      "reused_peer_output": true,
+      "selection_sha256": "696971279c9463e8c11c79f01c5dff6b0177e47c2ee842681031ee874d1557bf"
+    },
+    "executed-historical": {
+      "restored_files": 87,
+      "mode": "executed-historical",
+      "reused_peer_output": true,
+      "selection_sha256": "b19c5fb9f1ab243e47e124dc10fe23816f68336a361a432d686a105c31eac31f"
+    }
+  },
+  "supplied_tests": 17,
+  "supplied_tests_passed": true,
+  "peer_challenges": 57,
+  "peer_challenges_rejected_or_baseline_accepted": 49,
+  "blocking_counterexamples": [
+    {
+      "case": "source origin observation before phase",
+      "expected": "reject",
+      "actual": "accept",
+      "passed": false,
+      "media_GETs": {
+        "source": 2,
+        "native": 2
+      }
+    },
+    {
+      "case": "source elapsed zero",
+      "expected": "reject",
+      "actual": "accept",
+      "passed": false,
+      "media_GETs": {
+        "source": 2,
+        "native": 2
+      }
+    },
+    {
+      "case": "native origin observation before phase",
+      "expected": "reject",
+      "actual": "accept",
+      "passed": false,
+      "media_GETs": {
+        "source": 2,
+        "native": 2
+      }
+    },
+    {
+      "case": "native elapsed zero",
+      "expected": "reject",
+      "actual": "accept",
+      "passed": false,
+      "media_GETs": {
+        "source": 2,
+        "native": 2
+      }
+    },
+    {
+      "case": "signals before all requests",
+      "expected": "reject",
+      "actual": "accept",
+      "passed": false,
+      "media_GETs": {
+        "source": 2,
+        "native": 2
+      }
+    },
+    {
+      "case": "default both no sequences",
+      "expected": "reject",
+      "actual": "accept",
+      "passed": false,
+      "media_GETs": {
+        "source": 2,
+        "native": 2
+      }
+    },
+    {
+      "case": "source missing second media observation consistently",
+      "expected": "reject",
+      "actual": "accept",
+      "passed": false,
+      "media_GETs": {
+        "source": 1,
+        "native": 2
+      }
+    },
+    {
+      "case": "native missing second media observation consistently",
+      "expected": "reject",
+      "actual": "accept",
+      "passed": false,
+      "media_GETs": {
+        "source": 2,
+        "native": 1
+      }
+    }
+  ],
+  "unchanged_actual_interpretation": {
+    "origin_media_GETs": {
+      "source": 2,
+      "native": 2
+    },
+    "continuous_progress": true,
+    "full_representation_delivery": {
+      "source": [
+        false,
+        false
+      ],
+      "native": [
+        false,
+        false
+      ]
+    },
+    "upstream_to_client_association": "unresolved",
+    "two_people_inferred": false
+  },
+  "cleanup": "Retained exact independent owned project/process absence verified; no new Docker query or probe performed.",
+  "proof_inputs": {
+    "review.py": "7827f95facfa9d3e8debf83c193b3c624a7a1124982ac06cd9796c1518c35342",
+    "challenge.py": "75d570bd5eb64d4c9dda467320d90a64063e1e9aafd57d3ebabd5c02a5080d42",
+    "challenges.json": "0b792f27215d658137b317b0535209b7d22812d3ef05202970efbabf9ef47571",
+    "offline-controls.log": "c632018f6667082b7ea68214a58016588b7ba9d40d1226e31ba651dba31048e4"
+  }
+}

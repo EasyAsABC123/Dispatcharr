@@ -1,0 +1,75 @@
+{
+  "scope": "NEW bounded VOD sharing adapters qualification only; application pair remains blocked",
+  "Source_application_pair_executed": false,
+  "Native_application_pair_executed": false,
+  "run_hardblocked": true,
+  "local_controls": 50,
+  "new_sharing_telemetry_cases": 8,
+  "local_controls_log_sha256": "4806082355887eb343c248fada8d674cb07999cff1a371fde0ca9cb3df932aff",
+  "phase_wiring_scope": "syntax/read-only review only; no Django playback execution",
+  "final_phase_close_executor_note": "separate bounded2 close executor avoids pending telemetry tasks delaying both physical close starts; syntax checked after local suite",
+  "standalone_prefix": {
+    "qualified": true,
+    "report_sha256": "0cae4b1fdc94d386f74e004ea4ad2efc5e9ff6b5006b3c0a5ea95f2b234481c6",
+    "Source_application_executed": false,
+    "literal_origin_capture_qualified": true,
+    "prefix_seconds": 32.00607668800512,
+    "decoder": {
+      "passed": true,
+      "retained_bytes": 1048576,
+      "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+      "frames": 75,
+      "strict_audio_video_seconds": 3,
+      "minimum_frames": 50,
+      "process_reaped": true,
+      "pipes_settled": true
+    },
+    "exact_used_subset": {
+      "base_origin.py": "25b3db706774b6d275d9a10190db422bb58643501382e5647416432e96e0d24d",
+      "range_http.py": "0ec719c932bfd15dfa308f007356cb92dd272614668754cd4ef79b5880366124",
+      "ledger_origin.py": "7506f89518912215334bc1a2c6a5db6cc0c880048da8975ccd143df26e7feb46",
+      "decoder.py": "f3c1dafe6a0345e016207eeec834f5a5e9a4f9a87027854610c9ab8ee23e1427",
+      "local_command.py": "db436a2a6e1e772885a178685aa287773d71e1a1fb79afd545bce64d22933699",
+      "bounded_process.py": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+      "fixture_preflight.py": "5f904dcbfaa984009bd2ac54d83edfca93684fde6819ec8a95a9de49a22a476b"
+    }
+  },
+  "genuine_framework": {
+    "qualified": true,
+    "Source_application_imported": false,
+    "Django_setup_called": false,
+    "tests": 2,
+    "report_sha256": "7f2303f2ce9a21a4fb6b7d6ec6850a376fd8d0565c4ad1954cfbfe1e0d6c1273",
+    "exact_used_subset": {
+      "framework_controls.py": "6b439d8786e704afdbbe8dfeaa058c32b294c76ceee1428bddc13e57b29d6906",
+      "normal_signals.py": "4d34403972c42f3ac74e3385e96f64780180c993f78e4ad221ff0902b534be6e",
+      "request_observer.py": "bcc43687845d98114588a9ee1442a29ad834e0d3c5d0ba9a9cd0972073f23fc0",
+      "status_app.py": "93dd5b671a3cfde0c504cfee739871c764c62e17d7604fa2d826844d2a5cef45"
+    }
+  },
+  "controller_only_changes_after_preflight_not_execution_transferred": [
+    {
+      "path": "tools/phase.py",
+      "before_sha256": "24027a66f8e858bc79b53543923633ded1fc5660ab2d90e52b6862c7d01e02cd",
+      "current_sha256": "872c8ab76f8015ece96f1493235fda2eac985ca3db1a2607e158d879f488fb54",
+      "preflight_used": false
+    },
+    {
+      "path": "tools/sharing_acceptance.py",
+      "before_sha256": "8f29c7c229ec7dcae41df91c5dbce18d6df5c452bfaf16eef0651f01432ee49c",
+      "current_sha256": "33f9c61ed68bc93d22feb8aa47bd33df54fee5c1f66932dcbe24a2304701d88b",
+      "preflight_used": false
+    },
+    {
+      "path": "tools/test_sharing.py",
+      "before_sha256": "3d7a2b948b78bc9026586793705e515fbac434001b2f36697dd1f591dbd655b7",
+      "current_sha256": "428274ba5acebbb214863d2776f7f7d0251566f83df2c7e3f62cebbd30551bf3",
+      "preflight_used": false
+    }
+  ],
+  "independent_cleanup_sha256": "a5dce5c8e24f0a199bca92b042d552315570292c396472f272cc5e84024c84b0",
+  "default_DB_modified": false,
+  "runtime_Main_Cargo_index_refs_modified": false,
+  "resource_sampling": false,
+  "full_M4_acceptance": false
+}
