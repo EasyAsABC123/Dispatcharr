@@ -1,0 +1,107 @@
+{
+  "state": "FAILED",
+  "passed": false,
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-native-qa-2/source",
+  "same_existing_target_root": "/tmp/dispatcharr-notification-mutations-native-qa2-target-1",
+  "no_target_transplant": true,
+  "full797_map_sha256": "46d649d3503e6ee202f1393c3981871fe74da75f4a554ae275247e84915090b9",
+  "jobs": 2,
+  "debug": 0,
+  "incremental": false,
+  "commands": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "pid": 5,
+      "starttime": "23018854",
+      "began_utc": "2026-11-12T18:56:33.498789+00:00",
+      "state": "SETTLED",
+      "exit": 0,
+      "wait_completed": true,
+      "poll": 0,
+      "completed_utc": "2026-11-12T18:56:35.210288+00:00",
+      "elapsed_seconds": 1.7115030019776896,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "non-test",
+      "argv": [
+        "cargo",
+        "build",
+        "--workspace",
+        "--offline",
+        "--locked"
+      ],
+      "pid": 32,
+      "starttime": "23019025",
+      "began_utc": "2026-11-12T18:56:35.210564+00:00",
+      "state": "SETTLED",
+      "exit": 0,
+      "wait_completed": true,
+      "poll": 0,
+      "completed_utc": "2026-11-12T18:57:26.382937+00:00",
+      "elapsed_seconds": 51.172382965974975,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "bb7ffd4ad4b1be0b21fc50c883faf7a6960e311692fa9f921980c017c60a03b9"
+    },
+    {
+      "name": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 6235,
+      "starttime": "23024142",
+      "began_utc": "2026-11-12T18:57:26.383243+00:00",
+      "state": "SETTLED",
+      "exit": 0,
+      "wait_completed": true,
+      "poll": 0,
+      "completed_utc": "2026-11-12T18:58:18.914372+00:00",
+      "elapsed_seconds": 52.53113751098863,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "c16bb6028905c56b39183d4b0ab43b9a59abcfa72a658d71f6fe25665310ed70"
+    },
+    {
+      "name": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--offline",
+        "--locked",
+        "--",
+        "--test-threads=2"
+      ],
+      "pid": 12039,
+      "starttime": "23029396",
+      "began_utc": "2026-11-12T18:58:18.914711+00:00",
+      "state": "SETTLED",
+      "exit": 101,
+      "wait_completed": true,
+      "poll": 101,
+      "completed_utc": "2026-11-12T19:00:00.568182+00:00",
+      "elapsed_seconds": 101.65347866702359,
+      "stdout_sha256": "70c5eecf498ec00d4a7c8c50e5b0c8697015cd584d024fb3144a013d794c8341",
+      "stderr_sha256": "0995ae006668cd7a92296f3f7a509f628a47821780697dcd2bf8336132721ad4"
+    }
+  ],
+  "Docker_app_media_Source_runs": 0,
+  "failed_stage": "defaults",
+  "source_map_unchanged": true,
+  "completed_utc": "2026-11-12T19:00:00.605212+00:00"
+}

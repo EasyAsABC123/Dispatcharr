@@ -1,0 +1,473 @@
+{
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "passed": true,
+  "cleanup_passed": true,
+  "format_version": 1,
+  "scope": "original busy middle seek, plain reconnect and tail probe boundary characterization",
+  "capture_complete": true,
+  "events": [
+    {
+      "case": "middle-seek",
+      "range": "bytes=1880000-1880255",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 1880000-1880255/15001836",
+        "content-length": "256"
+      },
+      "captured_bytes": 256,
+      "captured_sha256": "869eee20827b8ebaa0fe00cd53e1a1cf5b6802c884f3382f50ea9fe71647fde2",
+      "capture_is_prefix": false,
+      "elapsed_seconds": 0.016,
+      "before": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 599,
+        "pool_busy": "1",
+        "profile_connections": 1,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "1",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "start",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236055.4189065",
+            "position_anchor_at": "1794236055.4189065"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236055.4189065",
+            "state": "active"
+          }
+        ]
+      },
+      "during_replacement": {
+        "api_exists": true,
+        "api_ttl": 600,
+        "pool_exists": true,
+        "pool_ttl": 60,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "0",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "range",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236055.4189065",
+            "playback_base_secs": "263.16778826271667",
+            "position_anchor_at": "1794236056.708842"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236055.4189065",
+            "total_bytes": "787712",
+            "state": "active"
+          }
+        ]
+      },
+      "initial_prefix_bytes": 65536,
+      "initial_prefix_sha256": "fa79ce3fca2e93302d0dc1c112216f93326d89df5693f1686e75c37832c64564",
+      "old_response_after_replacement_bytes": 721920,
+      "old_response_read_was_bounded": true,
+      "after_both_closed": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 59,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "0",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "range",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236055.4189065",
+            "playback_base_secs": "263.16778826271667",
+            "position_anchor_at": "1794236056.708842"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236055.4189065",
+            "total_bytes": "787712",
+            "state": "active"
+          }
+        ]
+      },
+      "after_grace": {
+        "api_exists": true,
+        "api_ttl": 589,
+        "pool_exists": true,
+        "pool_ttl": 49,
+        "pool_busy": "0",
+        "profile_connections": 0,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "0",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "range",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236055.4189065",
+            "playback_base_secs": "263.16778826271667",
+            "position_anchor_at": "1794236056.708842"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236055.4189065",
+            "total_bytes": "787712",
+            "state": "active"
+          }
+        ]
+      },
+      "origin": {
+        "mode": "all",
+        "requests": [
+          {
+            "shape": "colon-dash",
+            "status": 206,
+            "range": "bytes=0-"
+          },
+          {
+            "shape": "colon-dash",
+            "status": 206,
+            "range": "bytes=1880000-1880255"
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      }
+    },
+    {
+      "case": "plain-reconnect",
+      "range": null,
+      "status": 200,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-length": "15001836"
+      },
+      "captured_bytes": 65536,
+      "captured_sha256": "fa79ce3fca2e93302d0dc1c112216f93326d89df5693f1686e75c37832c64564",
+      "capture_is_prefix": true,
+      "elapsed_seconds": 2.5,
+      "before": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 599,
+        "pool_busy": "1",
+        "profile_connections": 1,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "1",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "start",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236067.9677768",
+            "position_anchor_at": "1794236067.9677768"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236067.9677768",
+            "state": "active"
+          }
+        ]
+      },
+      "during_replacement": {
+        "api_exists": true,
+        "api_ttl": 597,
+        "pool_exists": true,
+        "pool_ttl": 597,
+        "pool_busy": "1",
+        "profile_connections": 1,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "1",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "none",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236067.9677768",
+            "position_anchor_at": "1794236069.2482796"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236067.9677768",
+            "total_bytes": "787456",
+            "state": "active"
+          }
+        ]
+      },
+      "initial_prefix_bytes": 65536,
+      "initial_prefix_sha256": "fa79ce3fca2e93302d0dc1c112216f93326d89df5693f1686e75c37832c64564",
+      "old_response_after_replacement_bytes": 721920,
+      "old_response_read_was_bounded": true,
+      "after_both_closed": {
+        "api_exists": true,
+        "api_ttl": 596,
+        "pool_exists": true,
+        "pool_ttl": 596,
+        "pool_busy": "1",
+        "profile_connections": 1,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "1",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "none",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236067.9677768",
+            "position_anchor_at": "1794236069.2482796"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236067.9677768",
+            "total_bytes": "787456",
+            "state": "active"
+          }
+        ]
+      },
+      "after_grace": {
+        "api_exists": false,
+        "api_ttl": -2,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0,
+        "pool_fields": {},
+        "cached_final_url_present": false,
+        "clients": [],
+        "metadata": []
+      },
+      "origin": {
+        "mode": "all",
+        "requests": [
+          {
+            "shape": "colon-dash",
+            "status": 206,
+            "range": "bytes=0-"
+          },
+          {
+            "shape": "colon-dash",
+            "status": 200,
+            "range": null
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      }
+    },
+    {
+      "case": "near-eof-probe",
+      "range": "bytes=14999900-15000155",
+      "status": 206,
+      "headers": {
+        "content-type": "video/mp2t",
+        "accept-ranges": "bytes",
+        "content-range": "bytes 14999900-15000155/15001836",
+        "content-length": "256"
+      },
+      "captured_bytes": 256,
+      "captured_sha256": "fde240ed13df7bc20b0faa2d059ff3f0fd094375940e67a28d4e365f99467599",
+      "capture_is_prefix": false,
+      "elapsed_seconds": 0.01,
+      "before": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 599,
+        "pool_busy": "1",
+        "profile_connections": 1,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "1",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "start",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236083.0136454",
+            "position_anchor_at": "1794236083.0136454"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236083.0136454",
+            "state": "active"
+          }
+        ]
+      },
+      "during_replacement": {
+        "api_exists": true,
+        "api_ttl": 599,
+        "pool_exists": true,
+        "pool_ttl": 599,
+        "pool_busy": "1",
+        "profile_connections": 1,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "1",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "start",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236083.0136454",
+            "position_anchor_at": "1794236083.0136454"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236083.0136454",
+            "state": "active"
+          }
+        ]
+      },
+      "initial_prefix_bytes": 65536,
+      "initial_prefix_sha256": "fa79ce3fca2e93302d0dc1c112216f93326d89df5693f1686e75c37832c64564",
+      "old_response_after_replacement_bytes": 65536,
+      "old_response_read_was_bounded": true,
+      "after_both_closed": {
+        "api_exists": true,
+        "api_ttl": 598,
+        "pool_exists": true,
+        "pool_ttl": 598,
+        "pool_busy": "1",
+        "profile_connections": 1,
+        "stats_client_count": 1,
+        "pool_fields": {
+          "busy": "1",
+          "profile_id": "2",
+          "content_length": "15001836",
+          "serving_range": "start",
+          "media_id": "11_2026-11-09T11-00-00Z",
+          "stream_id": "fixture",
+          "user_id": "3"
+        },
+        "cached_final_url_present": true,
+        "clients": [
+          {
+            "connected_at": "1794236083.0136454",
+            "position_anchor_at": "1794236083.0136454"
+          }
+        ],
+        "metadata": [
+          {
+            "init_time": "1794236083.0136454",
+            "state": "active"
+          }
+        ]
+      },
+      "after_grace": {
+        "api_exists": false,
+        "api_ttl": -2,
+        "pool_exists": false,
+        "pool_ttl": -2,
+        "pool_busy": null,
+        "profile_connections": 0,
+        "stats_client_count": 0,
+        "pool_fields": {},
+        "cached_final_url_present": false,
+        "clients": [],
+        "metadata": []
+      },
+      "origin": {
+        "mode": "all",
+        "requests": [
+          {
+            "shape": "colon-dash",
+            "status": 206,
+            "range": "bytes=0-"
+          },
+          {
+            "shape": "colon-dash",
+            "status": 206,
+            "range": "bytes=14999900-15000155"
+          }
+        ],
+        "fixture_sha256": "c037e21737ea10921d85a03e9f71903b69020c216e4b97c0611e5c0282c6a816",
+        "fixture_bytes": 15001836,
+        "bytes_per_second": 500000
+      }
+    }
+  ],
+  "controlled_established_body_min_seconds": 2.5,
+  "continuous_quota_sampling_verified": false,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "evidence": "artifacts/rust/m4-timeshift-busy-native-sql-1/vod-contracts.json",
+  "evidence_sha256": "a1daf06bf1196e81cc4fc1bf2d58a75b7a8015010a866799314534f0b3d25c8e",
+  "original_application_credit": "Original Dispatcharr authors and contributors; retained LICENSE and ATTRIBUTION.md",
+  "implementation_verified": false
+}

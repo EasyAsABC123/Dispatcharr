@@ -1,0 +1,84 @@
+{
+  "observation_qualified": true,
+  "controller_passed": false,
+  "actual_controller_exit": 1,
+  "Native_test_exits": [
+    0,
+    0
+  ],
+  "Root_recomputed_mutation_projection": {
+    "passed": true,
+    "Source48_cases": 48,
+    "Native_order_controls": 3,
+    "raw_clocks_credentials_cache_retained": true,
+    "renderer_body_parity_claimed": false,
+    "Source_credential_or_TCP_acceptance_claimed": false
+  },
+  "Root_recomputed_legacy_projection": {
+    "passed": true,
+    "legacy_Source8": 8,
+    "legacy_extra_controls": 8,
+    "first5_extra_definitions_preserved": true,
+    "last3_501_expectations_replaced_only": true
+  },
+  "raw_mutations_sha256": "4ae8aead5b5a1cf6a3365a3aeb406085170ab050d2ac44eb9d193bb358a8574d",
+  "raw_legacy_sha256": "4a20c97b4c11ca51e082ca3cfd490415cdb082ba0c5141c8d67564d2de0529e5",
+  "all67functional_requests_qualified": true,
+  "default11_audit_exact": true,
+  "owned_cleanup_queries": {
+    "container": {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifmut-native-4f723b3242",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "network": {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifmut-native-4f723b3242",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "volume": {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notifmut-native-4f723b3242",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "exact_CID": {
+      "id": "301f4b7c0dde278bee17cb1031006868c624caebdbd4a7a81348c2c93f606012",
+      "exit": 1,
+      "stdout": "[]\n",
+      "stderr": "error: no such object: 301f4b7c0dde278bee17cb1031006868c624caebdbd4a7a81348c2c93f606012\n"
+    }
+  },
+  "controller_negative": "Latefinallymutations-cachecollectorrequiredDB1sentinelafterexplicitcontrollertransitiontoDB2; guardcorrectlyrefused. Primaryepoch1aftercacheandinsideRustfinalcachealreadycaptured. No lateDB1cachecapture or overallcontrollerpass claimed.",
+  "Root_review_initial_negative": "Expected genericcleanupreceiptfieldnames; actualstructured namesdiffered; originalqueryrunempty andRawcomparerspassed, correctedlookup only.",
+  "no_workload_retry_or_raw_relabel": true,
+  "scope": "finiteNativeSource48+3 andlegacy16 SQL/router; noMain,newSource,Sourcecredentialpair,forms,500rendererbodyparity,concurrentSQLphysicalproof orperformance acceptance",
+  "reviewed_epoch": 1794508947.619797
+}

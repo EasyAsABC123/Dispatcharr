@@ -1,0 +1,9 @@
+# Private Native notification mutation observations
+
+The selected private component extends f0's notification router/SQL behavior and adds focused QA, producing 792 Rust inputs plus five unchanged coupled goldens. Both real Rust tests exited 0: Source48-derived requests plus three Native ordering controls, and legacy eight-plus-eight checks. Independent read-only comparison qualifies 67 observations, while the **overall controller remains exit 1 / failed**.
+
+The failure is retained precisely: after the owned Redis sentinel moved from mutation DB1 to legacy DB2, a late finally collector requested DB1. Its strict OwnedRedisMarker guard refused. Valid epoch-1 primary cache-after and Rust final_cache already existed; no late DB1 snapshot is claimed or fabricated. All 51 named cache projections, sentinel/TTL/raw bytes, own/cross-request clocks, SQL/credential/sequence effects and the legacy delta remain checked. Default eleven-model audits and exact CID/PID/project cleanup passed independently.
+
+The same-source additive workspace proof reports fmt/build/strict exit 0 and unchanged host defaults 584 passed / 706 ignored across 172 blocks, after preserving the sandbox socket-permission negative. No ELF or target is distributed; exact source792 reconstruction uses Git f0 plus three overlays and five coupled inputs. The portable packet and caveats are in [notification-mutations-native67](../scripts/rust-contracts/notification-mutations-native67/README.md).
+
+This is not a successful overall fixture, a new Source run, paired credential/TCP authority, packaged Main result or full M5 acceptance. Source's 500 renderer exception, Native JSON error difference, forms/multipart, physical SQL cancellation and broader grammar remain open. Current image 53 retains its own bindings; neither these observations nor a later package inherits performance gains. Original Dispatcharr credit and licenses are preserved.

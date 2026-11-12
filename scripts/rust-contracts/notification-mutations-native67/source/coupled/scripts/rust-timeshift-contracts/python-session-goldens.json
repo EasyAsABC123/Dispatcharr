@@ -1,0 +1,230 @@
+{
+  "format_version": 1,
+  "scope": "native catch-up session API source/candidate wire characterization",
+  "capture_complete": true,
+  "application_parity_verified": false,
+  "performance_verified": false,
+  "events": [
+    {
+      "case": "missing-auth",
+      "status": 401,
+      "body": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "viewer-denied",
+      "status": 403,
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "catchup-disabled-before-validation",
+      "status": 403,
+      "body": {
+        "error": "Catch-up is disabled"
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "required-fields",
+      "status": 400,
+      "body": {
+        "channel_uuid": [
+          "This field is required."
+        ],
+        "start": [
+          "This field is required."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "invalid-uuid",
+      "status": 400,
+      "body": {
+        "channel_uuid": [
+          "Must be a valid UUID."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "blank-start",
+      "status": 400,
+      "body": {
+        "start": [
+          "This field may not be blank."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "invalid-start",
+      "status": 400,
+      "body": {
+        "error": "Invalid start timestamp"
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "duration-zero",
+      "status": 400,
+      "body": {
+        "duration": [
+          "Ensure this value is greater than or equal to 1."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "duration-over-cap",
+      "status": 400,
+      "body": {
+        "duration": [
+          "Ensure this value is less than or equal to 480."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "duration-fraction",
+      "status": 400,
+      "body": {
+        "duration": [
+          "A valid integer is required."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "duration-null",
+      "status": 400,
+      "body": {
+        "duration": [
+          "This field may not be null."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "unsupported-channel",
+      "status": 400,
+      "body": {
+        "error": "Catch-up not supported for this channel"
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "missing-channel",
+      "status": 404,
+      "body": {
+        "detail": "Channel not found"
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "create",
+      "status": 201,
+      "body": {
+        "session_id": "<session>",
+        "playback_url": "/proxy/catchup/0282858c-3869-471b-a58b-e913c1b6bd33?session_id=<session>",
+        "expires_at": "<handshake-deadline>",
+        "channel_uuid": "0282858c-3869-471b-a58b-e913c1b6bd33",
+        "start": "2026-11-09T11:00:00Z",
+        "duration": 30
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "position-without-active-playback",
+      "status": 404,
+      "body": {
+        "error": "No active playback for this session"
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "position-missing-field",
+      "status": 400,
+      "body": {
+        "position_secs": [
+          "This field is required."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "position-negative",
+      "status": 400,
+      "body": {
+        "position_secs": [
+          "Ensure this value is greater than or equal to 0."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "position-over-cap",
+      "status": 400,
+      "body": {
+        "position_secs": [
+          "Ensure this value is less than or equal to 28800."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "position-invalid-paused",
+      "status": 400,
+      "body": {
+        "paused": [
+          "Must be a valid boolean."
+        ]
+      },
+      "allow": "POST, OPTIONS"
+    },
+    {
+      "case": "other-owner-hidden",
+      "status": 404,
+      "body": {
+        "error": "Session not found"
+      },
+      "allow": "DELETE, OPTIONS"
+    },
+    {
+      "case": "revoke",
+      "status": 204,
+      "body": null,
+      "allow": "DELETE, OPTIONS"
+    },
+    {
+      "case": "revoked-session-hidden",
+      "status": 404,
+      "body": {
+        "error": "Session not found"
+      },
+      "allow": "DELETE, OPTIONS"
+    },
+    {
+      "case": "native-playback-missing-auth",
+      "status": 401,
+      "body": {
+        "error": "Authentication required"
+      },
+      "allow": "OPTIONS, GET"
+    },
+    {
+      "case": "native-playback-head",
+      "status": 405,
+      "body": null,
+      "allow": "OPTIONS, GET"
+    }
+  ],
+  "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "cleanup_passed": true
+}

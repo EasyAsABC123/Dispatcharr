@@ -1,0 +1,9 @@
+   Compiling dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m5-notification-mutations-native-qa-2/source/rust/crates/store)
+    Finished `test` profile [unoptimized] target(s) in 12.10s
+     Running tests/notifications_mutations_sql.rs (/tmp/dispatcharr-notification-mutations-native-qa2-target-1/debug/deps/notifications_mutations_sql-3a514377138ce60a)
+
+thread 'mapped_generated_clock_cannot_rewind_to_source' panicked at crates/store/tests/notifications_mutations_sql.rs:264:17:
+assertion `left == right` failed: /updated_at
+  left: 2026-11-12T10:00:01Z
+ right: 2026-11-12T10:00:00Z
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

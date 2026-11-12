@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/native-tools/audit.py", line 73, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/native-tools/audit.py", line 70, in main
+    elif stage=='cache':owned(database);value=cache(database)
+                                              ~~~~~^^^^^^^^^^
+  File "/native-tools/audit.py", line 52, in cache
+    require(client.get('rust-probe-notification-native-owner')==database.encode(),'OwnedRedisMarker')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/native-tools/audit.py", line 8, in require
+    if not ok:raise ValueError(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: OwnedRedisMarker
