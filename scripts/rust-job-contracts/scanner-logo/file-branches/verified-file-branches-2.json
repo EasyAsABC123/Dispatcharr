@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "scope": "Actual pinned Original scanner M3U/EPG branches/signals/partial commits; parent-only worker, real descendants preserved but not executed; no native/API/Main/performance claim",
+  "checks": 217,
+  "cases": 17,
+  "aggregate_exit_zero": true,
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged": true,
+  "cleanup": "owned project removed",
+  "preserved_default_queue_frames": 29,
+  "normal_new_active_order": [
+    "apps.m3u.tasks.refresh_m3u_groups",
+    "apps.m3u.tasks.refresh_single_m3u_account",
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.epg.tasks.build_programme_index_task"
+  ],
+  "inactive_still_publishes_group_child": true,
+  "inactive_default_profile_is_active": true,
+  "default_periodic_rows_disabled_hour1": true,
+  "auto_import_values": {
+    "active": [
+      "JSONtrue",
+      "stringtrue",
+      "stringTrue",
+      "JSONinteger1"
+    ],
+    "inactive": [
+      "JSONfalse",
+      "stringTRUE",
+      "JSONnull"
+    ],
+    "other_types_unproven": true
+  },
+  "existing_setting_does_not_reactivate_or_deactivate_rows": true,
+  "caught_EPG_faults": [
+    "INSERT P0001",
+    "marker SET denied after committed model/signal",
+    "signal child LPUSH denied with model rollback"
+  ],
+  "uncaught_M3U_faults_stop_before_EPG": [
+    "INSERT P0001",
+    "marker SET denied after committed account/profile/groupchild",
+    "signal child LPUSH denied with account/profile rollback"
+  ],
+  "raw_sha256": "8aa0689682cbce5f7d57a05ca8932afd146d4bf26d2d8f8c1d40fc278a37c060",
+  "integration_sha256": "cf233f9e31b6cea30a8a3a839ac127838bc0b1b97cc7cf0a3d62b4913b3c70a9",
+  "tools_sha256": {
+    "run_pair.py": "424d321a1ede95791a49036d06303dcf0b104b84bf65dc714dc160eea0706567",
+    "source_pair.py": "5a7e30a686abbd559bd6d09e7ba26cce0d8c0e50bc95c83a473c72930acefa28",
+    "periodic_worker_observer.py": "224fb1360f553272b2149a241d106a8c0cd07616af7aa2c760b0a49228bcd603"
+  },
+  "retained_failure": {
+    "path": "artifacts/rust/scanner-file-branches-original-1",
+    "reason": "Inherited logo-only event oracle incorrectly expected no M3U event; corrected before final2 actual217 checks. No runtime patch."
+  },
+  "limitations": [
+    "Fixed scanner clock is explicit observer control; no elapsed-time/performance claim",
+    "Only parent queue consumed; actual child imports/results/guide/network/Series effects untested here",
+    "Child attempt recorded before failed LPUSH is not durable publication; backend children and raw queue are separate witnesses",
+    "Publication inside get_or_create can precede row commit; multiworker execution race remains untested",
+    "No generic scanner SQL/failure authority imported into Rust",
+    "Native immediate parented Refresh head currently refused despite protocol structure support; separate consumption/root/child/result gate required",
+    "Native M3U groups/single import families remain unported",
+    "Native larger traversal still128 cap; Source259 reference is separate",
+    "No symlink/concurrent directory/config/provider domain extension"
+  ]
+}
