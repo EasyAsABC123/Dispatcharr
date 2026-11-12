@@ -1,0 +1,15 @@
+ERROR apps.m3u.tasks refresh_single_m3u_account failed for account 15: parse_m3u_hash_keys expects a CSV string or None; pass an already-parsed field list through directly.
+Traceback (most recent call last):
+  File "/app/apps/m3u/tasks.py", line 3519, in refresh_single_m3u_account
+    return _refresh_single_m3u_account_impl(account_id)
+  File "/app/apps/m3u/tasks.py", line 3745, in _refresh_single_m3u_account_impl
+    hash_keys = account.get_effective_hash_keys()
+  File "/app/apps/m3u/models.py", line 121, in get_effective_hash_keys
+    return parse_m3u_hash_keys(CoreSettings.get_m3u_hash_key())
+  File "/app/apps/m3u/utils.py", line 35, in parse_m3u_hash_keys
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: parse_m3u_hash_keys expects a CSV string or None; pass an already-parsed field list through directly.
+
+worker: Warm shutdown (MainProcess)

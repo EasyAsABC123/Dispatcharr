@@ -36,3 +36,6 @@ scripts/rust-contracts/executable-fixtures/image240-original.py -text -whitespac
 scripts/rust-contracts/scanner-tasks/original/apps/epg/tasks.py -text -whitespace
 # Preserve exact Original EPG test fixture EOF whitespace.
 scripts/rust-contracts/channels-guide/original/apps/epg/tests/test_epg_grid_api.py -text -whitespace
+
+# Preserve the exact pinned Original core task EOF bytes.
+scripts/rust-job-contracts/scanner-logo/m3u-url-reference/pinned/core/tasks.py -text whitespace=-blank-at-eof

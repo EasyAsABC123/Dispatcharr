@@ -1,0 +1,1341 @@
+{
+  "scope": "Partial step18 actual publication/postrun/SQL/filepost/queue observations only; NO retained backendmetadata/fullcase projection",
+  "cohort_passed": false,
+  "step": "unsupported-list",
+  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+  "full_backend_metadata_retained": false,
+  "before_after_SQL_Channels_projection_retained": false,
+  "Source_postruns": [
+    {
+      "task": "core.tasks.scan_and_process_files",
+      "id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "state": "SUCCESS",
+      "result": null
+    },
+    {
+      "task": "apps.m3u.tasks.refresh_m3u_groups",
+      "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+      "state": "SUCCESS",
+      "result": [
+        [
+          {
+            "attributes": {
+              "tvg-id": "owned.unsupported-list",
+              "group-title": "Owned URL Group"
+            },
+            "display_name": "Owned URL unsupported-list",
+            "name": "Owned URL unsupported-list",
+            "url": "http://127.0.0.1:9/owned-url-unsupported-list.ts"
+          }
+        ],
+        {
+          "Default Group": {},
+          "Owned URL Group": {}
+        }
+      ]
+    },
+    {
+      "task": "apps.m3u.tasks.refresh_single_m3u_account",
+      "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+      "state": "SUCCESS",
+      "result": null
+    }
+  ],
+  "publications": [
+    {
+      "task": "apps.m3u.tasks.refresh_m3u_groups",
+      "headers": {
+        "lang": "py",
+        "task": "apps.m3u.tasks.refresh_m3u_groups",
+        "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          null,
+          null
+        ],
+        "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+        "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+        "argsrepr": "(15,)",
+        "kwargsrepr": "{}",
+        "origin": "gen2184@6129176fcb9b",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          15
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+        "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1"
+      },
+      "exchange": "",
+      "routing_key": "celery"
+    },
+    {
+      "task": "apps.m3u.tasks.refresh_single_m3u_account",
+      "headers": {
+        "lang": "py",
+        "task": "apps.m3u.tasks.refresh_single_m3u_account",
+        "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+        "shadow": null,
+        "eta": null,
+        "expires": null,
+        "group": null,
+        "group_index": null,
+        "retries": 0,
+        "timelimit": [
+          3600,
+          3500
+        ],
+        "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+        "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+        "argsrepr": "(15,)",
+        "kwargsrepr": "{}",
+        "origin": "gen2184@6129176fcb9b",
+        "ignore_result": false,
+        "replaced_task_nesting": 0,
+        "stamped_headers": null,
+        "stamps": {}
+      },
+      "body": [
+        [
+          15
+        ],
+        {},
+        {
+          "callbacks": null,
+          "errbacks": null,
+          "chain": null,
+          "chord": null
+        }
+      ],
+      "properties": {
+        "correlation_id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+        "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1"
+      },
+      "exchange": "",
+      "routing_key": "celery"
+    }
+  ],
+  "controller_result_ID_TTL_check": {
+    "name": "unsupported-list-result-ID-and-TTL",
+    "passed": true
+  },
+  "backend_ledger_gap": "Unprefixed wildcard did not match configured celery-tasks: prefix; absence is not absence ofresults",
+  "step19": "UNEXECUTED",
+  "prerun": [
+    {
+      "task": "core.tasks.scan_and_process_files",
+      "id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "parent_id": null,
+      "args": [],
+      "kwargs": {},
+      "uid": 0,
+      "attrs": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "time_limit": null,
+        "soft_time_limit": null,
+        "max_retries": 3,
+        "reject_on_worker_lost": null
+      },
+      "unacked_tags": [],
+      "unacked_task_ids": [],
+      "queue_length": 0
+    },
+    {
+      "task": "apps.m3u.tasks.refresh_m3u_groups",
+      "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+      "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "args": [
+        15
+      ],
+      "kwargs": {},
+      "uid": 0,
+      "attrs": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "time_limit": null,
+        "soft_time_limit": null,
+        "max_retries": 3,
+        "reject_on_worker_lost": null
+      },
+      "unacked_tags": [
+        "f991f6fe-697e-46b5-a9df-4029cb0f90f9"
+      ],
+      "unacked_task_ids": [
+        "b904d085-418f-4c06-8ccc-047fc52cbc87"
+      ],
+      "queue_length": 0
+    },
+    {
+      "task": "apps.m3u.tasks.refresh_single_m3u_account",
+      "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+      "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "args": [
+        15
+      ],
+      "kwargs": {},
+      "uid": 0,
+      "attrs": {
+        "acks_late": false,
+        "ignore_result": false,
+        "track_started": false,
+        "time_limit": 3600,
+        "soft_time_limit": 3500,
+        "max_retries": 3,
+        "reject_on_worker_lost": null
+      },
+      "unacked_tags": [],
+      "unacked_task_ids": [],
+      "queue_length": 0
+    }
+  ],
+  "received": [
+    {
+      "task": "core.tasks.scan_and_process_files",
+      "id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "parent_id": null,
+      "delivery_info": {
+        "exchange": "",
+        "routing_key": "rust-owned-scanner-parents",
+        "priority": 0,
+        "redelivered": false
+      },
+      "delivery_tag": "2ad642cb-55b2-43fd-8a9e-86f9fc7df26c",
+      "args": [],
+      "kwargs": {}
+    },
+    {
+      "task": "apps.m3u.tasks.refresh_m3u_groups",
+      "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+      "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "delivery_info": {
+        "exchange": "",
+        "routing_key": "celery",
+        "priority": 0,
+        "redelivered": false
+      },
+      "delivery_tag": "83e91d26-1a62-4025-a39a-8432e29420ac",
+      "args": [
+        15
+      ],
+      "kwargs": {}
+    },
+    {
+      "task": "apps.m3u.tasks.refresh_single_m3u_account",
+      "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+      "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "delivery_info": {
+        "exchange": "",
+        "routing_key": "celery",
+        "priority": 0,
+        "redelivered": false
+      },
+      "delivery_tag": "f991f6fe-697e-46b5-a9df-4029cb0f90f9",
+      "args": [
+        15
+      ],
+      "kwargs": {}
+    }
+  ],
+  "sql": [
+    {
+      "id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "queries": [
+        {
+          "sql": "SELECT \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"name\", \"m3u_m3uaccount\".\"server_url\", \"m3u_m3uaccount\".\"file_path\", \"m3u_m3uaccount\".\"server_group_id\", \"m3u_m3uaccount\".\"max_streams\", \"m3u_m3uaccount\".\"is_active\", \"m3u_m3uaccount\".\"created_at\", \"m3u_m3uaccount\".\"updated_at\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\", \"m3u_m3uaccount\".\"user_agent_id\", \"m3u_m3uaccount\".\"locked\", \"m3u_m3uaccount\".\"stream_profile_id\", \"m3u_m3uaccount\".\"account_type\", \"m3u_m3uaccount\".\"username\", \"m3u_m3uaccount\".\"password\", \"m3u_m3uaccount\".\"custom_properties\", \"m3u_m3uaccount\".\"refresh_interval\", \"m3u_m3uaccount\".\"refresh_task_id\", \"m3u_m3uaccount\".\"stale_stream_days\", \"m3u_m3uaccount\".\"priority\" FROM \"m3u_m3uaccount\" WHERE \"m3u_m3uaccount\".\"file_path\" = %s LIMIT 21",
+          "param_types": [
+            "str"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "INSERT INTO \"m3u_m3uaccount\" (\"name\", \"server_url\", \"file_path\", \"server_group_id\", \"max_streams\", \"is_active\", \"created_at\", \"updated_at\", \"status\", \"last_message\", \"user_agent_id\", \"locked\", \"stream_profile_id\", \"account_type\", \"username\", \"password\", \"custom_properties\", \"refresh_interval\", \"refresh_task_id\", \"stale_stream_days\", \"priority\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING \"m3u_m3uaccount\".\"id\"",
+          "param_types": [
+            "str",
+            "NoneType",
+            "str",
+            "NoneType",
+            "Int4",
+            "bool",
+            "datetime",
+            "NoneType",
+            "Status",
+            "NoneType",
+            "NoneType",
+            "bool",
+            "NoneType",
+            "Types",
+            "NoneType",
+            "NoneType",
+            "Jsonb",
+            "Int4",
+            "NoneType",
+            "Int4",
+            "Int4"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "INSERT INTO \"m3u_m3uaccountprofile\" (\"m3u_account_id\", \"name\", \"is_default\", \"max_streams\", \"is_active\", \"search_pattern\", \"replace_pattern\", \"current_viewers\", \"custom_properties\", \"exp_date\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING \"m3u_m3uaccountprofile\".\"id\"",
+          "param_types": [
+            "int",
+            "str",
+            "bool",
+            "Int4",
+            "bool",
+            "str",
+            "str",
+            "Int4",
+            "Jsonb",
+            "NoneType"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "SELECT \"core_systemnotification\".\"notification_key\" AS \"notification_key\" FROM \"core_systemnotification\" WHERE \"core_systemnotification\".\"notification_key\" IN (%s, %s) ORDER BY \"core_systemnotification\".\"priority\" DESC, \"core_systemnotification\".\"created_at\" DESC",
+          "param_types": [
+            "str",
+            "str"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "SELECT \"django_celery_beat_periodictask\".\"id\", \"django_celery_beat_periodictask\".\"name\", \"django_celery_beat_periodictask\".\"task\", \"django_celery_beat_periodictask\".\"interval_id\", \"django_celery_beat_periodictask\".\"crontab_id\", \"django_celery_beat_periodictask\".\"solar_id\", \"django_celery_beat_periodictask\".\"clocked_id\", \"django_celery_beat_periodictask\".\"args\", \"django_celery_beat_periodictask\".\"kwargs\", \"django_celery_beat_periodictask\".\"queue\", \"django_celery_beat_periodictask\".\"exchange\", \"django_celery_beat_periodictask\".\"routing_key\", \"django_celery_beat_periodictask\".\"headers\", \"django_celery_beat_periodictask\".\"priority\", \"django_celery_beat_periodictask\".\"expires\", \"django_celery_beat_periodictask\".\"expire_seconds\", \"django_celery_beat_periodictask\".\"one_off\", \"django_celery_beat_periodictask\".\"start_time\", \"django_celery_beat_periodictask\".\"enabled\", \"django_celery_beat_periodictask\".\"last_run_at\", \"django_celery_beat_periodictask\".\"total_run_count\", \"django_celery_beat_periodictask\".\"date_changed\", \"django_celery_beat_periodictask\".\"description\" FROM \"django_celery_beat_periodictask\" WHERE \"django_celery_beat_periodictask\".\"name\" = %s LIMIT 21",
+          "param_types": [
+            "str"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "SELECT \"django_celery_beat_intervalschedule\".\"id\", \"django_celery_beat_intervalschedule\".\"every\", \"django_celery_beat_intervalschedule\".\"period\" FROM \"django_celery_beat_intervalschedule\" WHERE (\"django_celery_beat_intervalschedule\".\"every\" = %s AND \"django_celery_beat_intervalschedule\".\"period\" = %s) LIMIT 21",
+          "param_types": [
+            "Int4",
+            "str"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "SAVEPOINT \"s140675543511552_x1\"",
+          "param_types": [],
+          "atomic": true
+        },
+        {
+          "sql": "SELECT \"django_celery_beat_periodictask\".\"id\", \"django_celery_beat_periodictask\".\"name\", \"django_celery_beat_periodictask\".\"task\", \"django_celery_beat_periodictask\".\"interval_id\", \"django_celery_beat_periodictask\".\"crontab_id\", \"django_celery_beat_periodictask\".\"solar_id\", \"django_celery_beat_periodictask\".\"clocked_id\", \"django_celery_beat_periodictask\".\"args\", \"django_celery_beat_periodictask\".\"kwargs\", \"django_celery_beat_periodictask\".\"queue\", \"django_celery_beat_periodictask\".\"exchange\", \"django_celery_beat_periodictask\".\"routing_key\", \"django_celery_beat_periodictask\".\"headers\", \"django_celery_beat_periodictask\".\"priority\", \"django_celery_beat_periodictask\".\"expires\", \"django_celery_beat_periodictask\".\"expire_seconds\", \"django_celery_beat_periodictask\".\"one_off\", \"django_celery_beat_periodictask\".\"start_time\", \"django_celery_beat_periodictask\".\"enabled\", \"django_celery_beat_periodictask\".\"last_run_at\", \"django_celery_beat_periodictask\".\"total_run_count\", \"django_celery_beat_periodictask\".\"date_changed\", \"django_celery_beat_periodictask\".\"description\" FROM \"django_celery_beat_periodictask\" WHERE \"django_celery_beat_periodictask\".\"name\" = %s LIMIT 21 FOR UPDATE",
+          "param_types": [
+            "str"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "SAVEPOINT \"s140675543511552_x2\"",
+          "param_types": [],
+          "atomic": true
+        },
+        {
+          "sql": "SELECT %s AS \"a\" FROM \"django_celery_beat_periodictask\" WHERE \"django_celery_beat_periodictask\".\"name\" = %s LIMIT 1",
+          "param_types": [
+            "Int4",
+            "str"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "SAVEPOINT \"s140675543511552_x3\"",
+          "param_types": [],
+          "atomic": true
+        },
+        {
+          "sql": "SELECT \"django_celery_beat_periodictasks\".\"ident\", \"django_celery_beat_periodictasks\".\"last_update\" FROM \"django_celery_beat_periodictasks\" WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s LIMIT 21 FOR UPDATE",
+          "param_types": [
+            "Int2"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "UPDATE \"django_celery_beat_periodictasks\" SET \"last_update\" = %s WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s",
+          "param_types": [
+            "datetime",
+            "Int2"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "RELEASE SAVEPOINT \"s140675543511552_x3\"",
+          "param_types": [],
+          "atomic": true
+        },
+        {
+          "sql": "INSERT INTO \"django_celery_beat_periodictask\" (\"name\", \"task\", \"interval_id\", \"crontab_id\", \"solar_id\", \"clocked_id\", \"args\", \"kwargs\", \"queue\", \"exchange\", \"routing_key\", \"headers\", \"priority\", \"expires\", \"expire_seconds\", \"one_off\", \"start_time\", \"enabled\", \"last_run_at\", \"total_run_count\", \"date_changed\", \"description\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING \"django_celery_beat_periodictask\".\"id\"",
+          "param_types": [
+            "str",
+            "str",
+            "int",
+            "NoneType",
+            "NoneType",
+            "NoneType",
+            "str",
+            "str",
+            "NoneType",
+            "NoneType",
+            "NoneType",
+            "str",
+            "NoneType",
+            "NoneType",
+            "NoneType",
+            "bool",
+            "NoneType",
+            "bool",
+            "NoneType",
+            "Int4",
+            "datetime",
+            "str"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "SAVEPOINT \"s140675543511552_x4\"",
+          "param_types": [],
+          "atomic": true
+        },
+        {
+          "sql": "SELECT \"django_celery_beat_periodictasks\".\"ident\", \"django_celery_beat_periodictasks\".\"last_update\" FROM \"django_celery_beat_periodictasks\" WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s LIMIT 21 FOR UPDATE",
+          "param_types": [
+            "Int2"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "UPDATE \"django_celery_beat_periodictasks\" SET \"last_update\" = %s WHERE \"django_celery_beat_periodictasks\".\"ident\" = %s",
+          "param_types": [
+            "datetime",
+            "Int2"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "RELEASE SAVEPOINT \"s140675543511552_x4\"",
+          "param_types": [],
+          "atomic": true
+        },
+        {
+          "sql": "RELEASE SAVEPOINT \"s140675543511552_x2\"",
+          "param_types": [],
+          "atomic": true
+        },
+        {
+          "sql": "RELEASE SAVEPOINT \"s140675543511552_x1\"",
+          "param_types": [],
+          "atomic": true
+        },
+        {
+          "sql": "UPDATE \"m3u_m3uaccount\" SET \"refresh_task_id\" = %s WHERE \"m3u_m3uaccount\".\"id\" = %s",
+          "param_types": [
+            "int",
+            "int"
+          ],
+          "atomic": true
+        },
+        {
+          "sql": "SELECT \"epg_epgsource\".\"id\", \"epg_epgsource\".\"name\", \"epg_epgsource\".\"source_type\", \"epg_epgsource\".\"url\", \"epg_epgsource\".\"username\", \"epg_epgsource\".\"password\", \"epg_epgsource\".\"is_active\", \"epg_epgsource\".\"file_path\", \"epg_epgsource\".\"extracted_file_path\", \"epg_epgsource\".\"refresh_interval\", \"epg_epgsource\".\"refresh_task_id\", \"epg_epgsource\".\"custom_properties\", \"epg_epgsource\".\"priority\", \"epg_epgsource\".\"status\", \"epg_epgsource\".\"last_message\", \"epg_epgsource\".\"created_at\", \"epg_epgsource\".\"updated_at\" FROM \"epg_epgsource\" LEFT OUTER JOIN \"epg_epgsourceindex\" ON (\"epg_epgsource\".\"id\" = \"epg_epgsourceindex\".\"source_id\") WHERE (\"epg_epgsource\".\"is_active\" AND NOT (\"epg_epgsource\".\"source_type\" IN (%s, %s)) AND (\"epg_epgsourceindex\".\"source_id\" IS NULL OR \"epg_epgsourceindex\".\"data\" IS NULL))",
+          "param_types": [
+            "str",
+            "str"
+          ],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+      "queries": [
+        {
+          "sql": "SELECT \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"name\", \"m3u_m3uaccount\".\"server_url\", \"m3u_m3uaccount\".\"file_path\", \"m3u_m3uaccount\".\"server_group_id\", \"m3u_m3uaccount\".\"max_streams\", \"m3u_m3uaccount\".\"is_active\", \"m3u_m3uaccount\".\"created_at\", \"m3u_m3uaccount\".\"updated_at\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\", \"m3u_m3uaccount\".\"user_agent_id\", \"m3u_m3uaccount\".\"locked\", \"m3u_m3uaccount\".\"stream_profile_id\", \"m3u_m3uaccount\".\"account_type\", \"m3u_m3uaccount\".\"username\", \"m3u_m3uaccount\".\"password\", \"m3u_m3uaccount\".\"custom_properties\", \"m3u_m3uaccount\".\"refresh_interval\", \"m3u_m3uaccount\".\"refresh_task_id\", \"m3u_m3uaccount\".\"stale_stream_days\", \"m3u_m3uaccount\".\"priority\", \"core_useragent\".\"id\", \"core_useragent\".\"name\", \"core_useragent\".\"user_agent\", \"core_useragent\".\"description\", \"core_useragent\".\"is_active\", \"core_useragent\".\"created_at\", \"core_useragent\".\"updated_at\" FROM \"m3u_m3uaccount\" LEFT OUTER JOIN \"core_useragent\" ON (\"m3u_m3uaccount\".\"user_agent_id\" = \"core_useragent\".\"id\") WHERE (\"m3u_m3uaccount\".\"id\" = %s AND \"m3u_m3uaccount\".\"is_active\") LIMIT 21",
+          "param_types": [
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\" FROM \"m3u_m3uaccount\" WHERE \"m3u_m3uaccount\".\"id\" = %s LIMIT 21",
+          "param_types": [
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"dispatcharr_channels_channelgroup\".\"id\", \"dispatcharr_channels_channelgroup\".\"name\" FROM \"dispatcharr_channels_channelgroup\" WHERE \"dispatcharr_channels_channelgroup\".\"name\" IN (%s, %s)",
+          "param_types": [
+            "str",
+            "str"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"dispatcharr_channels_channelgroupm3uaccount\".\"id\", \"dispatcharr_channels_channelgroupm3uaccount\".\"channel_group_id\", \"dispatcharr_channels_channelgroupm3uaccount\".\"m3u_account_id\", \"dispatcharr_channels_channelgroupm3uaccount\".\"custom_properties\", \"dispatcharr_channels_channelgroupm3uaccount\".\"enabled\", \"dispatcharr_channels_channelgroupm3uaccount\".\"auto_channel_sync\", \"dispatcharr_channels_channelgroupm3uaccount\".\"auto_sync_channel_start\", \"dispatcharr_channels_channelgroupm3uaccount\".\"auto_sync_channel_end\", \"dispatcharr_channels_channelgroupm3uaccount\".\"last_seen\", \"dispatcharr_channels_channelgroupm3uaccount\".\"is_stale\", \"dispatcharr_channels_channelgroup\".\"id\", \"dispatcharr_channels_channelgroup\".\"name\" FROM \"dispatcharr_channels_channelgroupm3uaccount\" INNER JOIN \"dispatcharr_channels_channelgroup\" ON (\"dispatcharr_channels_channelgroupm3uaccount\".\"channel_group_id\" = \"dispatcharr_channels_channelgroup\".\"id\") WHERE (\"dispatcharr_channels_channelgroup\".\"name\" IN (%s, %s) AND \"dispatcharr_channels_channelgroupm3uaccount\".\"m3u_account_id\" = %s)",
+          "param_types": [
+            "str",
+            "str",
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "INSERT INTO \"dispatcharr_channels_channelgroupm3uaccount\" (\"channel_group_id\", \"m3u_account_id\", \"custom_properties\", \"enabled\", \"auto_channel_sync\", \"auto_sync_channel_start\", \"auto_sync_channel_end\", \"last_seen\", \"is_stale\") SELECT * FROM UNNEST((%s)::bigint[], (%s)::bigint[], (%s)::jsonb[], (%s)::boolean[], (%s)::boolean[], (%s)::double precision[], (%s)::double precision[], (%s)::timestamp with time zone[], (%s)::boolean[]) ON CONFLICT DO NOTHING",
+          "param_types": [
+            "list",
+            "list",
+            "list",
+            "list",
+            "list",
+            "list",
+            "list",
+            "list",
+            "list"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "UPDATE \"m3u_m3uaccount\" SET \"status\" = %s, \"last_message\" = %s WHERE \"m3u_m3uaccount\".\"id\" = %s",
+          "param_types": [
+            "Status",
+            "str",
+            "int"
+          ],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+      "queries": [
+        {
+          "sql": "SELECT \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"name\", \"m3u_m3uaccount\".\"server_url\", \"m3u_m3uaccount\".\"file_path\", \"m3u_m3uaccount\".\"server_group_id\", \"m3u_m3uaccount\".\"max_streams\", \"m3u_m3uaccount\".\"is_active\", \"m3u_m3uaccount\".\"created_at\", \"m3u_m3uaccount\".\"updated_at\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\", \"m3u_m3uaccount\".\"user_agent_id\", \"m3u_m3uaccount\".\"locked\", \"m3u_m3uaccount\".\"stream_profile_id\", \"m3u_m3uaccount\".\"account_type\", \"m3u_m3uaccount\".\"username\", \"m3u_m3uaccount\".\"password\", \"m3u_m3uaccount\".\"custom_properties\", \"m3u_m3uaccount\".\"refresh_interval\", \"m3u_m3uaccount\".\"refresh_task_id\", \"m3u_m3uaccount\".\"stale_stream_days\", \"m3u_m3uaccount\".\"priority\", \"core_useragent\".\"id\", \"core_useragent\".\"name\", \"core_useragent\".\"user_agent\", \"core_useragent\".\"description\", \"core_useragent\".\"is_active\", \"core_useragent\".\"created_at\", \"core_useragent\".\"updated_at\" FROM \"m3u_m3uaccount\" LEFT OUTER JOIN \"core_useragent\" ON (\"m3u_m3uaccount\".\"user_agent_id\" = \"core_useragent\".\"id\") WHERE (\"m3u_m3uaccount\".\"id\" = %s AND \"m3u_m3uaccount\".\"is_active\") LIMIT 21",
+          "param_types": [
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "UPDATE \"m3u_m3uaccount\" SET \"status\" = %s, \"last_message\" = %s WHERE \"m3u_m3uaccount\".\"id\" = %s",
+          "param_types": [
+            "Status",
+            "str",
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"name\", \"m3u_m3uaccount\".\"server_url\", \"m3u_m3uaccount\".\"file_path\", \"m3u_m3uaccount\".\"server_group_id\", \"m3u_m3uaccount\".\"max_streams\", \"m3u_m3uaccount\".\"is_active\", \"m3u_m3uaccount\".\"created_at\", \"m3u_m3uaccount\".\"updated_at\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\", \"m3u_m3uaccount\".\"user_agent_id\", \"m3u_m3uaccount\".\"locked\", \"m3u_m3uaccount\".\"stream_profile_id\", \"m3u_m3uaccount\".\"account_type\", \"m3u_m3uaccount\".\"username\", \"m3u_m3uaccount\".\"password\", \"m3u_m3uaccount\".\"custom_properties\", \"m3u_m3uaccount\".\"refresh_interval\", \"m3u_m3uaccount\".\"refresh_task_id\", \"m3u_m3uaccount\".\"stale_stream_days\", \"m3u_m3uaccount\".\"priority\", \"core_useragent\".\"id\", \"core_useragent\".\"name\", \"core_useragent\".\"user_agent\", \"core_useragent\".\"description\", \"core_useragent\".\"is_active\", \"core_useragent\".\"created_at\", \"core_useragent\".\"updated_at\" FROM \"m3u_m3uaccount\" LEFT OUTER JOIN \"core_useragent\" ON (\"m3u_m3uaccount\".\"user_agent_id\" = \"core_useragent\".\"id\") WHERE (\"m3u_m3uaccount\".\"id\" = %s AND \"m3u_m3uaccount\".\"is_active\") LIMIT 21",
+          "param_types": [
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"m3u_m3ufilter\".\"id\", \"m3u_m3ufilter\".\"m3u_account_id\", \"m3u_m3ufilter\".\"filter_type\", \"m3u_m3ufilter\".\"regex_pattern\", \"m3u_m3ufilter\".\"exclude\", \"m3u_m3ufilter\".\"order\", \"m3u_m3ufilter\".\"custom_properties\" FROM \"m3u_m3ufilter\" WHERE \"m3u_m3ufilter\".\"m3u_account_id\" = %s ORDER BY \"m3u_m3ufilter\".\"order\" ASC",
+          "param_types": [
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"core_coresettings\".\"id\", \"core_coresettings\".\"key\", \"core_coresettings\".\"name\", \"core_coresettings\".\"value\" FROM \"core_coresettings\" WHERE \"core_coresettings\".\"key\" = %s LIMIT 21",
+          "param_types": [
+            "str"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"m3u_m3uaccount\".\"name\" AS \"name\" FROM \"m3u_m3uaccount\" WHERE \"m3u_m3uaccount\".\"id\" = %s ORDER BY \"m3u_m3uaccount\".\"id\" ASC LIMIT 1",
+          "param_types": [
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "UPDATE \"m3u_m3uaccount\" SET \"status\" = %s, \"last_message\" = %s WHERE \"m3u_m3uaccount\".\"id\" = %s",
+          "param_types": [
+            "Status",
+            "str",
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"m3u_m3uaccount\".\"id\", \"m3u_m3uaccount\".\"status\", \"m3u_m3uaccount\".\"last_message\" FROM \"m3u_m3uaccount\" WHERE \"m3u_m3uaccount\".\"id\" = %s LIMIT 21",
+          "param_types": [
+            "int"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"dispatcharr_connect_eventsubscription\" WHERE (\"dispatcharr_connect_eventsubscription\".\"enabled\" AND \"dispatcharr_connect_eventsubscription\".\"event\" = %s)",
+          "param_types": [
+            "str"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"dispatcharr_connect_eventsubscription\".\"id\", \"dispatcharr_connect_eventsubscription\".\"event\", \"dispatcharr_connect_eventsubscription\".\"integration_id\", \"dispatcharr_connect_eventsubscription\".\"enabled\", \"dispatcharr_connect_eventsubscription\".\"payload_template\", \"dispatcharr_connect_integration\".\"id\", \"dispatcharr_connect_integration\".\"name\", \"dispatcharr_connect_integration\".\"type\", \"dispatcharr_connect_integration\".\"config\", \"dispatcharr_connect_integration\".\"enabled\", \"dispatcharr_connect_integration\".\"created_at\" FROM \"dispatcharr_connect_eventsubscription\" INNER JOIN \"dispatcharr_connect_integration\" ON (\"dispatcharr_connect_eventsubscription\".\"integration_id\" = \"dispatcharr_connect_integration\".\"id\") WHERE (\"dispatcharr_connect_eventsubscription\".\"enabled\" AND \"dispatcharr_connect_eventsubscription\".\"event\" = %s)",
+          "param_types": [
+            "str"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"m3u_m3uaccount\".\"status\" AS \"status\", \"m3u_m3uaccount\".\"name\" AS \"name\" FROM \"m3u_m3uaccount\" WHERE \"m3u_m3uaccount\".\"id\" = %s ORDER BY \"m3u_m3uaccount\".\"id\" ASC LIMIT 1",
+          "param_types": [
+            "int"
+          ],
+          "atomic": false
+        }
+      ]
+    }
+  ],
+  "filepost": [
+    {
+      "id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+      "files": []
+    },
+    {
+      "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+      "files": [
+        {
+          "path": "/app/media/cached_m3u/15.json",
+          "size": 304,
+          "sha256": "4265cf6e1d1667e56a41287750608bbdf384969d3a098711cee711ce8197c2ad",
+          "raw_base64": "eyJleHRpbmZfZGF0YSI6IFt7ImF0dHJpYnV0ZXMiOiB7InR2Zy1pZCI6ICJvd25lZC51bnN1cHBvcnRlZC1saXN0IiwgImdyb3VwLXRpdGxlIjogIk93bmVkIFVSTCBHcm91cCJ9LCAiZGlzcGxheV9uYW1lIjogIk93bmVkIFVSTCB1bnN1cHBvcnRlZC1saXN0IiwgIm5hbWUiOiAiT3duZWQgVVJMIHVuc3VwcG9ydGVkLWxpc3QiLCAidXJsIjogImh0dHA6Ly8xMjcuMC4wLjE6OS9vd25lZC11cmwtdW5zdXBwb3J0ZWQtbGlzdC50cyJ9XSwgImdyb3VwcyI6IHsiRGVmYXVsdCBHcm91cCI6IHt9LCAiT3duZWQgVVJMIEdyb3VwIjoge319fQ=="
+        }
+      ]
+    },
+    {
+      "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+      "files": [
+        {
+          "path": "/app/media/cached_m3u/15.json",
+          "size": 304,
+          "sha256": "4265cf6e1d1667e56a41287750608bbdf384969d3a098711cee711ce8197c2ad",
+          "raw_base64": "eyJleHRpbmZfZGF0YSI6IFt7ImF0dHJpYnV0ZXMiOiB7InR2Zy1pZCI6ICJvd25lZC51bnN1cHBvcnRlZC1saXN0IiwgImdyb3VwLXRpdGxlIjogIk93bmVkIFVSTCBHcm91cCJ9LCAiZGlzcGxheV9uYW1lIjogIk93bmVkIFVSTCB1bnN1cHBvcnRlZC1saXN0IiwgIm5hbWUiOiAiT3duZWQgVVJMIHVuc3VwcG9ydGVkLWxpc3QiLCAidXJsIjogImh0dHA6Ly8xMjcuMC4wLjE6OS9vd25lZC11cmwtdW5zdXBwb3J0ZWQtbGlzdC50cyJ9XSwgImdyb3VwcyI6IHsiRGVmYXVsdCBHcm91cCI6IHt9LCAiT3duZWQgVVJMIEdyb3VwIjoge319fQ=="
+        }
+      ]
+    }
+  ],
+  "transport_ledger": [
+    {
+      "stage": "before-check:unsupported-list-prior-queue-and-unacked-empty",
+      "case": "unsupported-list",
+      "epoch": 1794487201.9438202,
+      "queues": {},
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "before-check:unsupported-list-sealed-input-bytes",
+      "case": "unsupported-list",
+      "epoch": 1794487201.9460628,
+      "queues": {},
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "parent-published-before-worker-start",
+      "case": "unsupported-list",
+      "epoch": 1794487201.959838,
+      "queues": {
+        "rust-owned-scanner-parents": {
+          "length": 1,
+          "LRANGE_order": [
+            {
+              "LRANGE_index": 0,
+              "raw_base64": "eyJib2R5IjogIlcxdGRMQ0I3ZlN3Z2V5SmpZV3hzWW1GamEzTWlPaUJ1ZFd4c0xDQWlaWEp5WW1GamEzTWlPaUJ1ZFd4c0xDQWlZMmhoYVc0aU9pQnVkV3hzTENBaVkyaHZjbVFpT2lCdWRXeHNmVjA9IiwgImNvbnRlbnQtZW5jb2RpbmciOiAidXRmLTgiLCAiY29udGVudC10eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLCAiaGVhZGVycyI6IHsibGFuZyI6ICJweSIsICJ0YXNrIjogImNvcmUudGFza3Muc2Nhbl9hbmRfcHJvY2Vzc19maWxlcyIsICJpZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogW251bGwsIG51bGxdLCAicm9vdF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAicGFyZW50X2lkIjogbnVsbCwgImFyZ3NyZXByIjogIigpIiwgImt3YXJnc3JlcHIiOiAie30iLCAib3JpZ2luIjogImdlbjM2NkA2MTI5MTc2ZmNiOWIiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fX0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAicmVwbHlfdG8iOiAiMzRmMDBlMzItM2U0OC0zMjY5LTkyN2YtN2E3Y2I2ODg3N2NkIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogInJ1c3Qtb3duZWQtc2Nhbm5lci1wYXJlbnRzIn0sICJwcmlvcml0eSI6IDAsICJib2R5X2VuY29kaW5nIjogImJhc2U2NCIsICJkZWxpdmVyeV90YWciOiAiMmFkNjQyY2ItNTViMi00M2ZkLThhOWUtODZmOWZjN2RmMjZjIn19",
+              "sha256": "4dc32d3f29ed5c70eeda2c5560631d459dfcef562fc6e55aad2fad5090f40225",
+              "decoded": {
+                "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "core.tasks.scan_and_process_files",
+                  "id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    null,
+                    null
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": null,
+                  "argsrepr": "()",
+                  "kwargsrepr": "{}",
+                  "origin": "gen366@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "reply_to": "34f00e32-3e48-3269-927f-7a7cb68877cd",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "rust-owned-scanner-parents"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "2ad642cb-55b2-43fd-8a9e-86f9fc7df26c"
+                }
+              }
+            }
+          ],
+          "delivery_end": "RPOP; raw ordering is retained, not normalized"
+        }
+      },
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "parent-postrun-before-result-assertion",
+      "case": "unsupported-list",
+      "epoch": 1794487203.1240497,
+      "queues": {
+        "celery": {
+          "length": 2,
+          "LRANGE_order": [
+            {
+              "LRANGE_index": 0,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX3NpbmdsZV9tM3VfYWNjb3VudCIsICJpZCI6ICJiOTA0ZDA4NS00MThmLTRjMDYtOGNjYy0wNDdmYzUyY2JjODciLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogWzM2MDAsIDM1MDBdLCAicm9vdF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAicGFyZW50X2lkIjogIjIwOGVmOTdjLTc1MTQtNGY0Ny1hNmU3LTZkMGFmMDYyYTQwNCIsICJhcmdzcmVwciI6ICIoMTUsKSIsICJrd2FyZ3NyZXByIjogInt9IiwgIm9yaWdpbiI6ICJnZW4yMTg0QDYxMjkxNzZmY2I5YiIsICJpZ25vcmVfcmVzdWx0IjogZmFsc2UsICJyZXBsYWNlZF90YXNrX25lc3RpbmciOiAwLCAic3RhbXBlZF9oZWFkZXJzIjogbnVsbCwgInN0YW1wcyI6IHt9fSwgInByb3BlcnRpZXMiOiB7ImNvcnJlbGF0aW9uX2lkIjogImI5MDRkMDg1LTQxOGYtNGMwNi04Y2NjLTA0N2ZjNTJjYmM4NyIsICJyZXBseV90byI6ICI3NmYxY2M2ZC00YWE4LTNhYjMtOGMyYS02N2RlYzBmNzIyZTEiLCAiZGVsaXZlcnlfbW9kZSI6IDIsICJkZWxpdmVyeV9pbmZvIjogeyJleGNoYW5nZSI6ICIiLCAicm91dGluZ19rZXkiOiAiY2VsZXJ5In0sICJwcmlvcml0eSI6IDAsICJib2R5X2VuY29kaW5nIjogImJhc2U2NCIsICJkZWxpdmVyeV90YWciOiAiZjk5MWY2ZmUtNjk3ZS00NmI1LWE5ZGYtNDAyOWNiMGY5MGY5In19",
+              "sha256": "6ad039087a8e9ff5f5f7f458ad3b9138eaf4e0a737782c1f98a64eb29ad7a08b",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_single_m3u_account",
+                  "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    3600,
+                    3500
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "f991f6fe-697e-46b5-a9df-4029cb0f90f9"
+                }
+              }
+            },
+            {
+              "LRANGE_index": 1,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX20zdV9ncm91cHMiLCAiaWQiOiAiOGU2NTczOGMtOGMyMy00OGY1LWJhMjEtY2QyMDBiYjdkN2RlIiwgInNoYWRvdyI6IG51bGwsICJldGEiOiBudWxsLCAiZXhwaXJlcyI6IG51bGwsICJncm91cCI6IG51bGwsICJncm91cF9pbmRleCI6IG51bGwsICJyZXRyaWVzIjogMCwgInRpbWVsaW1pdCI6IFtudWxsLCBudWxsXSwgInJvb3RfaWQiOiAiMjA4ZWY5N2MtNzUxNC00ZjQ3LWE2ZTctNmQwYWYwNjJhNDA0IiwgInBhcmVudF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAiYXJnc3JlcHIiOiAiKDE1LCkiLCAia3dhcmdzcmVwciI6ICJ7fSIsICJvcmlnaW4iOiAiZ2VuMjE4NEA2MTI5MTc2ZmNiOWIiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fX0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICI4ZTY1NzM4Yy04YzIzLTQ4ZjUtYmEyMS1jZDIwMGJiN2Q3ZGUiLCAicmVwbHlfdG8iOiAiNzZmMWNjNmQtNGFhOC0zYWIzLThjMmEtNjdkZWMwZjcyMmUxIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogIjgzZTkxZDI2LTFhNjItNDAyNS1hMzlhLTg0MzJlMjk0MjBhYyJ9fQ==",
+              "sha256": "9a74369da60c99fb2dd2b71d6428eb57f94b398bb609ddc715a24b8fb1f315b6",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_m3u_groups",
+                  "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    null,
+                    null
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "83e91d26-1a62-4025-a39a-8432e29420ac"
+                }
+              }
+            }
+          ],
+          "delivery_end": "RPOP; raw ordering is retained, not normalized"
+        }
+      },
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "before-check:unsupported-list-actual-parent-normal-null",
+      "case": "unsupported-list",
+      "epoch": 1794487203.1577733,
+      "queues": {
+        "celery": {
+          "length": 2,
+          "LRANGE_order": [
+            {
+              "LRANGE_index": 0,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX3NpbmdsZV9tM3VfYWNjb3VudCIsICJpZCI6ICJiOTA0ZDA4NS00MThmLTRjMDYtOGNjYy0wNDdmYzUyY2JjODciLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogWzM2MDAsIDM1MDBdLCAicm9vdF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAicGFyZW50X2lkIjogIjIwOGVmOTdjLTc1MTQtNGY0Ny1hNmU3LTZkMGFmMDYyYTQwNCIsICJhcmdzcmVwciI6ICIoMTUsKSIsICJrd2FyZ3NyZXByIjogInt9IiwgIm9yaWdpbiI6ICJnZW4yMTg0QDYxMjkxNzZmY2I5YiIsICJpZ25vcmVfcmVzdWx0IjogZmFsc2UsICJyZXBsYWNlZF90YXNrX25lc3RpbmciOiAwLCAic3RhbXBlZF9oZWFkZXJzIjogbnVsbCwgInN0YW1wcyI6IHt9fSwgInByb3BlcnRpZXMiOiB7ImNvcnJlbGF0aW9uX2lkIjogImI5MDRkMDg1LTQxOGYtNGMwNi04Y2NjLTA0N2ZjNTJjYmM4NyIsICJyZXBseV90byI6ICI3NmYxY2M2ZC00YWE4LTNhYjMtOGMyYS02N2RlYzBmNzIyZTEiLCAiZGVsaXZlcnlfbW9kZSI6IDIsICJkZWxpdmVyeV9pbmZvIjogeyJleGNoYW5nZSI6ICIiLCAicm91dGluZ19rZXkiOiAiY2VsZXJ5In0sICJwcmlvcml0eSI6IDAsICJib2R5X2VuY29kaW5nIjogImJhc2U2NCIsICJkZWxpdmVyeV90YWciOiAiZjk5MWY2ZmUtNjk3ZS00NmI1LWE5ZGYtNDAyOWNiMGY5MGY5In19",
+              "sha256": "6ad039087a8e9ff5f5f7f458ad3b9138eaf4e0a737782c1f98a64eb29ad7a08b",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_single_m3u_account",
+                  "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    3600,
+                    3500
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "f991f6fe-697e-46b5-a9df-4029cb0f90f9"
+                }
+              }
+            },
+            {
+              "LRANGE_index": 1,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX20zdV9ncm91cHMiLCAiaWQiOiAiOGU2NTczOGMtOGMyMy00OGY1LWJhMjEtY2QyMDBiYjdkN2RlIiwgInNoYWRvdyI6IG51bGwsICJldGEiOiBudWxsLCAiZXhwaXJlcyI6IG51bGwsICJncm91cCI6IG51bGwsICJncm91cF9pbmRleCI6IG51bGwsICJyZXRyaWVzIjogMCwgInRpbWVsaW1pdCI6IFtudWxsLCBudWxsXSwgInJvb3RfaWQiOiAiMjA4ZWY5N2MtNzUxNC00ZjQ3LWE2ZTctNmQwYWYwNjJhNDA0IiwgInBhcmVudF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAiYXJnc3JlcHIiOiAiKDE1LCkiLCAia3dhcmdzcmVwciI6ICJ7fSIsICJvcmlnaW4iOiAiZ2VuMjE4NEA2MTI5MTc2ZmNiOWIiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fX0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICI4ZTY1NzM4Yy04YzIzLTQ4ZjUtYmEyMS1jZDIwMGJiN2Q3ZGUiLCAicmVwbHlfdG8iOiAiNzZmMWNjNmQtNGFhOC0zYWIzLThjMmEtNjdkZWMwZjcyMmUxIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogIjgzZTkxZDI2LTFhNjItNDAyNS1hMzlhLTg0MzJlMjk0MjBhYyJ9fQ==",
+              "sha256": "9a74369da60c99fb2dd2b71d6428eb57f94b398bb609ddc715a24b8fb1f315b6",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_m3u_groups",
+                  "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    null,
+                    null
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "83e91d26-1a62-4025-a39a-8432e29420ac"
+                }
+              }
+            }
+          ],
+          "delivery_end": "RPOP; raw ordering is retained, not normalized"
+        }
+      },
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "default-children-before-consumer-start-and-shape-assertion",
+      "case": "unsupported-list",
+      "epoch": 1794487204.8293688,
+      "queues": {
+        "celery": {
+          "length": 2,
+          "LRANGE_order": [
+            {
+              "LRANGE_index": 0,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX3NpbmdsZV9tM3VfYWNjb3VudCIsICJpZCI6ICJiOTA0ZDA4NS00MThmLTRjMDYtOGNjYy0wNDdmYzUyY2JjODciLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogWzM2MDAsIDM1MDBdLCAicm9vdF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAicGFyZW50X2lkIjogIjIwOGVmOTdjLTc1MTQtNGY0Ny1hNmU3LTZkMGFmMDYyYTQwNCIsICJhcmdzcmVwciI6ICIoMTUsKSIsICJrd2FyZ3NyZXByIjogInt9IiwgIm9yaWdpbiI6ICJnZW4yMTg0QDYxMjkxNzZmY2I5YiIsICJpZ25vcmVfcmVzdWx0IjogZmFsc2UsICJyZXBsYWNlZF90YXNrX25lc3RpbmciOiAwLCAic3RhbXBlZF9oZWFkZXJzIjogbnVsbCwgInN0YW1wcyI6IHt9fSwgInByb3BlcnRpZXMiOiB7ImNvcnJlbGF0aW9uX2lkIjogImI5MDRkMDg1LTQxOGYtNGMwNi04Y2NjLTA0N2ZjNTJjYmM4NyIsICJyZXBseV90byI6ICI3NmYxY2M2ZC00YWE4LTNhYjMtOGMyYS02N2RlYzBmNzIyZTEiLCAiZGVsaXZlcnlfbW9kZSI6IDIsICJkZWxpdmVyeV9pbmZvIjogeyJleGNoYW5nZSI6ICIiLCAicm91dGluZ19rZXkiOiAiY2VsZXJ5In0sICJwcmlvcml0eSI6IDAsICJib2R5X2VuY29kaW5nIjogImJhc2U2NCIsICJkZWxpdmVyeV90YWciOiAiZjk5MWY2ZmUtNjk3ZS00NmI1LWE5ZGYtNDAyOWNiMGY5MGY5In19",
+              "sha256": "6ad039087a8e9ff5f5f7f458ad3b9138eaf4e0a737782c1f98a64eb29ad7a08b",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_single_m3u_account",
+                  "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    3600,
+                    3500
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "f991f6fe-697e-46b5-a9df-4029cb0f90f9"
+                }
+              }
+            },
+            {
+              "LRANGE_index": 1,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX20zdV9ncm91cHMiLCAiaWQiOiAiOGU2NTczOGMtOGMyMy00OGY1LWJhMjEtY2QyMDBiYjdkN2RlIiwgInNoYWRvdyI6IG51bGwsICJldGEiOiBudWxsLCAiZXhwaXJlcyI6IG51bGwsICJncm91cCI6IG51bGwsICJncm91cF9pbmRleCI6IG51bGwsICJyZXRyaWVzIjogMCwgInRpbWVsaW1pdCI6IFtudWxsLCBudWxsXSwgInJvb3RfaWQiOiAiMjA4ZWY5N2MtNzUxNC00ZjQ3LWE2ZTctNmQwYWYwNjJhNDA0IiwgInBhcmVudF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAiYXJnc3JlcHIiOiAiKDE1LCkiLCAia3dhcmdzcmVwciI6ICJ7fSIsICJvcmlnaW4iOiAiZ2VuMjE4NEA2MTI5MTc2ZmNiOWIiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fX0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICI4ZTY1NzM4Yy04YzIzLTQ4ZjUtYmEyMS1jZDIwMGJiN2Q3ZGUiLCAicmVwbHlfdG8iOiAiNzZmMWNjNmQtNGFhOC0zYWIzLThjMmEtNjdkZWMwZjcyMmUxIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogIjgzZTkxZDI2LTFhNjItNDAyNS1hMzlhLTg0MzJlMjk0MjBhYyJ9fQ==",
+              "sha256": "9a74369da60c99fb2dd2b71d6428eb57f94b398bb609ddc715a24b8fb1f315b6",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_m3u_groups",
+                  "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    null,
+                    null
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "83e91d26-1a62-4025-a39a-8432e29420ac"
+                }
+              }
+            }
+          ],
+          "delivery_end": "RPOP; raw ordering is retained, not normalized"
+        }
+      },
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "before-check:unsupported-list-actual-created-or-existing-child-families",
+      "case": "unsupported-list",
+      "epoch": 1794487204.8326006,
+      "queues": {
+        "celery": {
+          "length": 2,
+          "LRANGE_order": [
+            {
+              "LRANGE_index": 0,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX3NpbmdsZV9tM3VfYWNjb3VudCIsICJpZCI6ICJiOTA0ZDA4NS00MThmLTRjMDYtOGNjYy0wNDdmYzUyY2JjODciLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogWzM2MDAsIDM1MDBdLCAicm9vdF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAicGFyZW50X2lkIjogIjIwOGVmOTdjLTc1MTQtNGY0Ny1hNmU3LTZkMGFmMDYyYTQwNCIsICJhcmdzcmVwciI6ICIoMTUsKSIsICJrd2FyZ3NyZXByIjogInt9IiwgIm9yaWdpbiI6ICJnZW4yMTg0QDYxMjkxNzZmY2I5YiIsICJpZ25vcmVfcmVzdWx0IjogZmFsc2UsICJyZXBsYWNlZF90YXNrX25lc3RpbmciOiAwLCAic3RhbXBlZF9oZWFkZXJzIjogbnVsbCwgInN0YW1wcyI6IHt9fSwgInByb3BlcnRpZXMiOiB7ImNvcnJlbGF0aW9uX2lkIjogImI5MDRkMDg1LTQxOGYtNGMwNi04Y2NjLTA0N2ZjNTJjYmM4NyIsICJyZXBseV90byI6ICI3NmYxY2M2ZC00YWE4LTNhYjMtOGMyYS02N2RlYzBmNzIyZTEiLCAiZGVsaXZlcnlfbW9kZSI6IDIsICJkZWxpdmVyeV9pbmZvIjogeyJleGNoYW5nZSI6ICIiLCAicm91dGluZ19rZXkiOiAiY2VsZXJ5In0sICJwcmlvcml0eSI6IDAsICJib2R5X2VuY29kaW5nIjogImJhc2U2NCIsICJkZWxpdmVyeV90YWciOiAiZjk5MWY2ZmUtNjk3ZS00NmI1LWE5ZGYtNDAyOWNiMGY5MGY5In19",
+              "sha256": "6ad039087a8e9ff5f5f7f458ad3b9138eaf4e0a737782c1f98a64eb29ad7a08b",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_single_m3u_account",
+                  "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    3600,
+                    3500
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "f991f6fe-697e-46b5-a9df-4029cb0f90f9"
+                }
+              }
+            },
+            {
+              "LRANGE_index": 1,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX20zdV9ncm91cHMiLCAiaWQiOiAiOGU2NTczOGMtOGMyMy00OGY1LWJhMjEtY2QyMDBiYjdkN2RlIiwgInNoYWRvdyI6IG51bGwsICJldGEiOiBudWxsLCAiZXhwaXJlcyI6IG51bGwsICJncm91cCI6IG51bGwsICJncm91cF9pbmRleCI6IG51bGwsICJyZXRyaWVzIjogMCwgInRpbWVsaW1pdCI6IFtudWxsLCBudWxsXSwgInJvb3RfaWQiOiAiMjA4ZWY5N2MtNzUxNC00ZjQ3LWE2ZTctNmQwYWYwNjJhNDA0IiwgInBhcmVudF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAiYXJnc3JlcHIiOiAiKDE1LCkiLCAia3dhcmdzcmVwciI6ICJ7fSIsICJvcmlnaW4iOiAiZ2VuMjE4NEA2MTI5MTc2ZmNiOWIiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fX0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICI4ZTY1NzM4Yy04YzIzLTQ4ZjUtYmEyMS1jZDIwMGJiN2Q3ZGUiLCAicmVwbHlfdG8iOiAiNzZmMWNjNmQtNGFhOC0zYWIzLThjMmEtNjdkZWMwZjcyMmUxIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogIjgzZTkxZDI2LTFhNjItNDAyNS1hMzlhLTg0MzJlMjk0MjBhYyJ9fQ==",
+              "sha256": "9a74369da60c99fb2dd2b71d6428eb57f94b398bb609ddc715a24b8fb1f315b6",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_m3u_groups",
+                  "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    null,
+                    null
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "83e91d26-1a62-4025-a39a-8432e29420ac"
+                }
+              }
+            }
+          ],
+          "delivery_end": "RPOP; raw ordering is retained, not normalized"
+        }
+      },
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "before-check:unsupported-list-direct-parent-root-lineage",
+      "case": "unsupported-list",
+      "epoch": 1794487204.8359847,
+      "queues": {
+        "celery": {
+          "length": 2,
+          "LRANGE_order": [
+            {
+              "LRANGE_index": 0,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX3NpbmdsZV9tM3VfYWNjb3VudCIsICJpZCI6ICJiOTA0ZDA4NS00MThmLTRjMDYtOGNjYy0wNDdmYzUyY2JjODciLCAic2hhZG93IjogbnVsbCwgImV0YSI6IG51bGwsICJleHBpcmVzIjogbnVsbCwgImdyb3VwIjogbnVsbCwgImdyb3VwX2luZGV4IjogbnVsbCwgInJldHJpZXMiOiAwLCAidGltZWxpbWl0IjogWzM2MDAsIDM1MDBdLCAicm9vdF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAicGFyZW50X2lkIjogIjIwOGVmOTdjLTc1MTQtNGY0Ny1hNmU3LTZkMGFmMDYyYTQwNCIsICJhcmdzcmVwciI6ICIoMTUsKSIsICJrd2FyZ3NyZXByIjogInt9IiwgIm9yaWdpbiI6ICJnZW4yMTg0QDYxMjkxNzZmY2I5YiIsICJpZ25vcmVfcmVzdWx0IjogZmFsc2UsICJyZXBsYWNlZF90YXNrX25lc3RpbmciOiAwLCAic3RhbXBlZF9oZWFkZXJzIjogbnVsbCwgInN0YW1wcyI6IHt9fSwgInByb3BlcnRpZXMiOiB7ImNvcnJlbGF0aW9uX2lkIjogImI5MDRkMDg1LTQxOGYtNGMwNi04Y2NjLTA0N2ZjNTJjYmM4NyIsICJyZXBseV90byI6ICI3NmYxY2M2ZC00YWE4LTNhYjMtOGMyYS02N2RlYzBmNzIyZTEiLCAiZGVsaXZlcnlfbW9kZSI6IDIsICJkZWxpdmVyeV9pbmZvIjogeyJleGNoYW5nZSI6ICIiLCAicm91dGluZ19rZXkiOiAiY2VsZXJ5In0sICJwcmlvcml0eSI6IDAsICJib2R5X2VuY29kaW5nIjogImJhc2U2NCIsICJkZWxpdmVyeV90YWciOiAiZjk5MWY2ZmUtNjk3ZS00NmI1LWE5ZGYtNDAyOWNiMGY5MGY5In19",
+              "sha256": "6ad039087a8e9ff5f5f7f458ad3b9138eaf4e0a737782c1f98a64eb29ad7a08b",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_single_m3u_account",
+                  "id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    3600,
+                    3500
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "b904d085-418f-4c06-8ccc-047fc52cbc87",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "f991f6fe-697e-46b5-a9df-4029cb0f90f9"
+                }
+              }
+            },
+            {
+              "LRANGE_index": 1,
+              "raw_base64": "eyJib2R5IjogIlcxc3hOVjBzSUh0OUxDQjdJbU5oYkd4aVlXTnJjeUk2SUc1MWJHd3NJQ0psY25KaVlXTnJjeUk2SUc1MWJHd3NJQ0pqYUdGcGJpSTZJRzUxYkd3c0lDSmphRzl5WkNJNklHNTFiR3g5WFE9PSIsICJjb250ZW50LWVuY29kaW5nIjogInV0Zi04IiwgImNvbnRlbnQtdHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgImhlYWRlcnMiOiB7ImxhbmciOiAicHkiLCAidGFzayI6ICJhcHBzLm0zdS50YXNrcy5yZWZyZXNoX20zdV9ncm91cHMiLCAiaWQiOiAiOGU2NTczOGMtOGMyMy00OGY1LWJhMjEtY2QyMDBiYjdkN2RlIiwgInNoYWRvdyI6IG51bGwsICJldGEiOiBudWxsLCAiZXhwaXJlcyI6IG51bGwsICJncm91cCI6IG51bGwsICJncm91cF9pbmRleCI6IG51bGwsICJyZXRyaWVzIjogMCwgInRpbWVsaW1pdCI6IFtudWxsLCBudWxsXSwgInJvb3RfaWQiOiAiMjA4ZWY5N2MtNzUxNC00ZjQ3LWE2ZTctNmQwYWYwNjJhNDA0IiwgInBhcmVudF9pZCI6ICIyMDhlZjk3Yy03NTE0LTRmNDctYTZlNy02ZDBhZjA2MmE0MDQiLCAiYXJnc3JlcHIiOiAiKDE1LCkiLCAia3dhcmdzcmVwciI6ICJ7fSIsICJvcmlnaW4iOiAiZ2VuMjE4NEA2MTI5MTc2ZmNiOWIiLCAiaWdub3JlX3Jlc3VsdCI6IGZhbHNlLCAicmVwbGFjZWRfdGFza19uZXN0aW5nIjogMCwgInN0YW1wZWRfaGVhZGVycyI6IG51bGwsICJzdGFtcHMiOiB7fX0sICJwcm9wZXJ0aWVzIjogeyJjb3JyZWxhdGlvbl9pZCI6ICI4ZTY1NzM4Yy04YzIzLTQ4ZjUtYmEyMS1jZDIwMGJiN2Q3ZGUiLCAicmVwbHlfdG8iOiAiNzZmMWNjNmQtNGFhOC0zYWIzLThjMmEtNjdkZWMwZjcyMmUxIiwgImRlbGl2ZXJ5X21vZGUiOiAyLCAiZGVsaXZlcnlfaW5mbyI6IHsiZXhjaGFuZ2UiOiAiIiwgInJvdXRpbmdfa2V5IjogImNlbGVyeSJ9LCAicHJpb3JpdHkiOiAwLCAiYm9keV9lbmNvZGluZyI6ICJiYXNlNjQiLCAiZGVsaXZlcnlfdGFnIjogIjgzZTkxZDI2LTFhNjItNDAyNS1hMzlhLTg0MzJlMjk0MjBhYyJ9fQ==",
+              "sha256": "9a74369da60c99fb2dd2b71d6428eb57f94b398bb609ddc715a24b8fb1f315b6",
+              "decoded": {
+                "body": "W1sxNV0sIHt9LCB7ImNhbGxiYWNrcyI6IG51bGwsICJlcnJiYWNrcyI6IG51bGwsICJjaGFpbiI6IG51bGwsICJjaG9yZCI6IG51bGx9XQ==",
+                "content-encoding": "utf-8",
+                "content-type": "application/json",
+                "headers": {
+                  "lang": "py",
+                  "task": "apps.m3u.tasks.refresh_m3u_groups",
+                  "id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "shadow": null,
+                  "eta": null,
+                  "expires": null,
+                  "group": null,
+                  "group_index": null,
+                  "retries": 0,
+                  "timelimit": [
+                    null,
+                    null
+                  ],
+                  "root_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "parent_id": "208ef97c-7514-4f47-a6e7-6d0af062a404",
+                  "argsrepr": "(15,)",
+                  "kwargsrepr": "{}",
+                  "origin": "gen2184@6129176fcb9b",
+                  "ignore_result": false,
+                  "replaced_task_nesting": 0,
+                  "stamped_headers": null,
+                  "stamps": {}
+                },
+                "properties": {
+                  "correlation_id": "8e65738c-8c23-48f5-ba21-cd200bb7d7de",
+                  "reply_to": "76f1cc6d-4aa8-3ab3-8c2a-67dec0f722e1",
+                  "delivery_mode": 2,
+                  "delivery_info": {
+                    "exchange": "",
+                    "routing_key": "celery"
+                  },
+                  "priority": 0,
+                  "body_encoding": "base64",
+                  "delivery_tag": "83e91d26-1a62-4025-a39a-8432e29420ac"
+                }
+              }
+            }
+          ],
+          "delivery_end": "RPOP; raw ordering is retained, not normalized"
+        }
+      },
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "before-check:unsupported-list-all-descendants-actually-complete",
+      "case": "unsupported-list",
+      "epoch": 1794487207.880911,
+      "queues": {},
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "before-check:unsupported-list-real-default-child-route",
+      "case": "unsupported-list",
+      "epoch": 1794487207.8820126,
+      "queues": {},
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "before-check:unsupported-list-result-ID-and-TTL",
+      "case": "unsupported-list",
+      "epoch": 1794487207.8830733,
+      "queues": {},
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "before-check:unsupported-list-expected-Single-state",
+      "case": "unsupported-list",
+      "epoch": 1794487207.8841162,
+      "queues": {},
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "finally-before-worker-stop",
+      "case": "unsupported-list",
+      "epoch": 1794487207.8851473,
+      "queues": {},
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    },
+    {
+      "stage": "finally-after-worker-stop",
+      "case": "unsupported-list",
+      "epoch": 1794487207.8971624,
+      "queues": {},
+      "unacked": {},
+      "backend": {},
+      "capacity_refusals": []
+    }
+  ]
+}

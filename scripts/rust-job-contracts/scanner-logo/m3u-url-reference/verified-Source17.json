@@ -1,0 +1,193 @@
+{
+  "passed": true,
+  "scope": "Scoped Source authority only, not failedcohort or native parity",
+  "cohort_passed": false,
+  "complete_steps": 17,
+  "complete_step_tasks": 46,
+  "all_observed_tasks_including_partial": 49,
+  "created_steps_complete": 12,
+  "existing_steps_complete": 5,
+  "cases": [
+    {
+      "label": "distinct-three",
+      "group": 1,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 3,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 3,
+      "global_owned_streams_after": 3
+    },
+    {
+      "label": "repeat-identical",
+      "group": 2,
+      "created": false,
+      "actual_task_count": 2,
+      "account_id": 3,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 3,
+      "global_owned_streams_after": 3
+    },
+    {
+      "label": "duplicate-first-wins",
+      "group": 3,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 4,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 2,
+      "global_owned_streams_after": 5
+    },
+    {
+      "label": "repeat-changed",
+      "group": 4,
+      "created": false,
+      "actual_task_count": 2,
+      "account_id": 3,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 3,
+      "global_owned_streams_after": 5
+    },
+    {
+      "label": "cross-A-setup",
+      "group": 5,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 5,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 2,
+      "global_owned_streams_after": 7
+    },
+    {
+      "label": "cross-B-identical",
+      "group": 5,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 6,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 0,
+      "global_owned_streams_after": 7
+    },
+    {
+      "label": "cross-B-update-create",
+      "group": 6,
+      "created": false,
+      "actual_task_count": 2,
+      "account_id": 6,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 1,
+      "global_owned_streams_after": 8
+    },
+    {
+      "label": "cross-B-unrelated-stale",
+      "group": 7,
+      "created": false,
+      "actual_task_count": 2,
+      "account_id": 6,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 1,
+      "global_owned_streams_after": 8
+    },
+    {
+      "label": "cached-url-over-db-empty",
+      "group": 8,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 7,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 2,
+      "global_owned_streams_after": 10
+    },
+    {
+      "label": "cached-empty-map-over-db-url",
+      "group": 8,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 8,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 1,
+      "global_owned_streams_after": 11
+    },
+    {
+      "label": "mapped-own-setup",
+      "group": 9,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 9,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 1,
+      "global_owned_streams_after": 12
+    },
+    {
+      "label": "mapped-own-update",
+      "group": 9,
+      "created": false,
+      "actual_task_count": 2,
+      "account_id": 9,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 1,
+      "global_owned_streams_after": 12
+    },
+    {
+      "label": "mapped-foreign-collision",
+      "group": 10,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 10,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 0,
+      "global_owned_streams_after": 12
+    },
+    {
+      "label": "unrelated-foreign-mapped",
+      "group": 11,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 11,
+      "proposed_native_in_domain": true,
+      "selected_account_streams_after": 1,
+      "global_owned_streams_after": 13
+    },
+    {
+      "label": "unsupported-space",
+      "group": 12,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 12,
+      "proposed_native_in_domain": false,
+      "selected_account_streams_after": 1,
+      "global_owned_streams_after": 14
+    },
+    {
+      "label": "unsupported-uppercase",
+      "group": 12,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 13,
+      "proposed_native_in_domain": false,
+      "selected_account_streams_after": 0,
+      "global_owned_streams_after": 14
+    },
+    {
+      "label": "unsupported-duplicate-csv",
+      "group": 12,
+      "created": true,
+      "actual_task_count": 3,
+      "account_id": 14,
+      "proposed_native_in_domain": false,
+      "selected_account_streams_after": 1,
+      "global_owned_streams_after": 15
+    }
+  ],
+  "step18_full_backendmetadata": false,
+  "step19_executed": false,
+  "default_database_unchanged": true,
+  "raw_binding": {
+    "source": "e162f11afcb5b7d8f082fb2ba105d3532fe429c6e308a78c1cd866c571c0e5d3",
+    "integration": "9703774e3fee5f3b0662ec14494c50ab0904d2d14a4d8230dd7989a54361b04c",
+    "transport_ledger": "1ad8b00ad8b203aa76ab906f3667336e15c0a147a67735abe5793fe0b6b35081"
+  },
+  "Source_dataset_sha256": "f97ed710872694abaa79fa1dc0d0abda3f2393912aa561f2fc69ef4f706fc15f",
+  "partial18_sha256": "5b70dba0ea029283bb09dedd3741117c7fba4679f5e84927530b45f73f359817",
+  "original_authors_credit": "Original Dispatcharr/dependency contributors retain code/algorithm/licenses"
+}

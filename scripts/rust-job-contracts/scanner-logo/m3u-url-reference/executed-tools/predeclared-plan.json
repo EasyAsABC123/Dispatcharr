@@ -1,0 +1,640 @@
+{
+  "status": "PROPOSED_FINITE_REDESIGN_UNEXECUTED_ROOT_REVIEW_REQUIRED",
+  "Source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "native_execution": false,
+  "normal_clock_scope": "Module-local elapsed fixed1000.125; scanner now per step as explicit fixture input. Django datetime/lock-renewer real.",
+  "groups": [
+    {
+      "number": 1,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "distinct-three"
+      ]
+    },
+    {
+      "number": 2,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "repeat-identical"
+      ]
+    },
+    {
+      "number": 3,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "duplicate-first-wins"
+      ]
+    },
+    {
+      "number": 4,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "repeat-changed"
+      ]
+    },
+    {
+      "number": 5,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "cross-A-setup",
+        "cross-B-identical"
+      ]
+    },
+    {
+      "number": 6,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "cross-B-update-create"
+      ]
+    },
+    {
+      "number": 7,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "cross-B-unrelated-stale"
+      ]
+    },
+    {
+      "number": 8,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "cached-url-over-db-empty",
+        "cached-empty-map-over-db-url"
+      ]
+    },
+    {
+      "number": 9,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "mapped-own-setup",
+        "mapped-own-update"
+      ]
+    },
+    {
+      "number": 10,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "mapped-foreign-collision"
+      ]
+    },
+    {
+      "number": 11,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "unrelated-foreign-mapped"
+      ]
+    },
+    {
+      "number": 12,
+      "role": "actual pinned Original scanner plus default worker descendants",
+      "step_labels": [
+        "unsupported-space",
+        "unsupported-uppercase",
+        "unsupported-duplicate-csv",
+        "unsupported-list",
+        "unsupported-account-override"
+      ]
+    },
+    {
+      "number": 13,
+      "role": "DEFERRED native-only oversized/TOCTOU/refusal controls; no Source parity invented",
+      "step_labels": []
+    },
+    {
+      "number": 14,
+      "role": "DEFERRED native physical ownership controls; prior Source70 held-cache evidence dependency only",
+      "step_labels": []
+    }
+  ],
+  "actual_worker_steps": [
+    {
+      "group": 1,
+      "label": "distinct-three",
+      "cohort": "distinct",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-u1.ts",
+          "name": "Owned URL u1",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.u1"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-u2.ts",
+          "name": "Owned URL u2",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.u2"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-u3.ts",
+          "name": "Owned URL u3",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.u3"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.u1\" group-title=\"Owned URL Group\",Owned URL u1\nhttp://127.0.0.1:9/owned-url-u1.ts\n#EXTINF:-1 tvg-id=\"owned.u2\" group-title=\"Owned URL Group\",Owned URL u2\nhttp://127.0.0.1:9/owned-url-u2.ts\n#EXTINF:-1 tvg-id=\"owned.u3\" group-title=\"Owned URL Group\",Owned URL u3\nhttp://127.0.0.1:9/owned-url-u3.ts\n",
+      "playlist_sha256": "b7669f9e54d4a8d3a97d9bd8c9005af4f16fbe2272c287dd4998bfc2690760cb",
+      "global_raw": "url",
+      "mtime": 1700000003,
+      "scanner_now": 1700000010.125,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 2,
+      "label": "repeat-identical",
+      "cohort": "distinct",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-u1.ts",
+          "name": "Owned URL u1",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.u1"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-u2.ts",
+          "name": "Owned URL u2",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.u2"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-u3.ts",
+          "name": "Owned URL u3",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.u3"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.u1\" group-title=\"Owned URL Group\",Owned URL u1\nhttp://127.0.0.1:9/owned-url-u1.ts\n#EXTINF:-1 tvg-id=\"owned.u2\" group-title=\"Owned URL Group\",Owned URL u2\nhttp://127.0.0.1:9/owned-url-u2.ts\n#EXTINF:-1 tvg-id=\"owned.u3\" group-title=\"Owned URL Group\",Owned URL u3\nhttp://127.0.0.1:9/owned-url-u3.ts\n",
+      "playlist_sha256": "b7669f9e54d4a8d3a97d9bd8c9005af4f16fbe2272c287dd4998bfc2690760cb",
+      "global_raw": "url",
+      "mtime": 1700000013,
+      "scanner_now": 1700000020.125,
+      "account_created_by_this_parent": false,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 3,
+      "label": "duplicate-first-wins",
+      "cohort": "duplicate",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-dup.ts",
+          "name": "Owned first",
+          "group": "Owned First Group",
+          "tvg_id": "owned.dup"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-dup.ts",
+          "name": "Owned second",
+          "group": "Owned Second Group",
+          "tvg_id": "owned.dup"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-unique.ts",
+          "name": "Owned URL unique",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.unique"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.dup\" group-title=\"Owned First Group\",Owned first\nhttp://127.0.0.1:9/owned-url-dup.ts\n#EXTINF:-1 tvg-id=\"owned.dup\" group-title=\"Owned Second Group\",Owned second\nhttp://127.0.0.1:9/owned-url-dup.ts\n#EXTINF:-1 tvg-id=\"owned.unique\" group-title=\"Owned URL Group\",Owned URL unique\nhttp://127.0.0.1:9/owned-url-unique.ts\n",
+      "playlist_sha256": "38a842bc0aa5a6a3655a3583c869610dd1534eb0dc8eff05455a29380c3385a3",
+      "global_raw": "url",
+      "mtime": 1700000023,
+      "scanner_now": 1700000030.125,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 4,
+      "label": "repeat-changed",
+      "cohort": "distinct",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-u1.ts",
+          "name": "Owned renamed",
+          "group": "Owned Changed Group",
+          "tvg_id": "owned.changed"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-u2.ts",
+          "name": "Owned URL u2",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.u2"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.changed\" group-title=\"Owned Changed Group\",Owned renamed\nhttp://127.0.0.1:9/owned-url-u1.ts\n#EXTINF:-1 tvg-id=\"owned.u2\" group-title=\"Owned URL Group\",Owned URL u2\nhttp://127.0.0.1:9/owned-url-u2.ts\n",
+      "playlist_sha256": "da503e85f5720e1378f89b3b3f2700211fc4fd1444cc469ebc7a66c7f161e60f",
+      "global_raw": "url",
+      "mtime": 1700000033,
+      "scanner_now": 1700000040.125,
+      "account_created_by_this_parent": false,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 5,
+      "label": "cross-A-setup",
+      "cohort": "cross-a",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-cross.ts",
+          "name": "Owned URL cross",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.cross"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-a-stale.ts",
+          "name": "Owned URL a-stale",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.a-stale"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.cross\" group-title=\"Owned URL Group\",Owned URL cross\nhttp://127.0.0.1:9/owned-url-cross.ts\n#EXTINF:-1 tvg-id=\"owned.a-stale\" group-title=\"Owned URL Group\",Owned URL a-stale\nhttp://127.0.0.1:9/owned-url-a-stale.ts\n",
+      "playlist_sha256": "fc3cafd029cb0d6a352a2e388d5c4ad644661d2297558a88cca56d79cb67af40",
+      "global_raw": "url",
+      "mtime": 1700000043,
+      "scanner_now": 1700000050.125,
+      "preserve_cross_fields": true,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 5,
+      "label": "cross-B-identical",
+      "cohort": "cross-b",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-cross.ts",
+          "name": "Owned URL cross",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.cross"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.cross\" group-title=\"Owned URL Group\",Owned URL cross\nhttp://127.0.0.1:9/owned-url-cross.ts\n",
+      "playlist_sha256": "81bb2c11197c9ea63304cfff9857f6e5ceb033911a1ecafe3b651cbe20dfe90c",
+      "global_raw": "url",
+      "mtime": 1700000053,
+      "scanner_now": 1700000060.125,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 6,
+      "label": "cross-B-update-create",
+      "cohort": "cross-b",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-cross.ts",
+          "name": "Owned Cross changed",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.cross.changed"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-b-new.ts",
+          "name": "Owned URL b-new",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.b-new"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.cross.changed\" group-title=\"Owned URL Group\",Owned Cross changed\nhttp://127.0.0.1:9/owned-url-cross.ts\n#EXTINF:-1 tvg-id=\"owned.b-new\" group-title=\"Owned URL Group\",Owned URL b-new\nhttp://127.0.0.1:9/owned-url-b-new.ts\n",
+      "playlist_sha256": "8cf12e56ec6ab92254d5b5951871eeae31a54d8cbd1b8daeb7a72ccc94dcf5b9",
+      "global_raw": "url",
+      "mtime": 1700000063,
+      "scanner_now": 1700000070.125,
+      "account_created_by_this_parent": false,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 7,
+      "label": "cross-B-unrelated-stale",
+      "cohort": "cross-b",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-b-new.ts",
+          "name": "Owned URL b-new",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.b-new"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.b-new\" group-title=\"Owned URL Group\",Owned URL b-new\nhttp://127.0.0.1:9/owned-url-b-new.ts\n",
+      "playlist_sha256": "00150dcb9a3700b8bd678183a7ccc2539f730fcea0ea8ee4fd07269677aae9ff",
+      "global_raw": "url",
+      "mtime": 1700000073,
+      "scanner_now": 1700000080.125,
+      "account_created_by_this_parent": false,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 8,
+      "label": "cached-url-over-db-empty",
+      "cohort": "cache-url",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-cache-u1.ts",
+          "name": "Owned URL cache-u1",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.cache-u1"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-cache-u2.ts",
+          "name": "Owned URL cache-u2",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.cache-u2"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.cache-u1\" group-title=\"Owned URL Group\",Owned URL cache-u1\nhttp://127.0.0.1:9/owned-url-cache-u1.ts\n#EXTINF:-1 tvg-id=\"owned.cache-u2\" group-title=\"Owned URL Group\",Owned URL cache-u2\nhttp://127.0.0.1:9/owned-url-cache-u2.ts\n",
+      "playlist_sha256": "e153a39266349102f204505c8ffc9e9180d4c7d3f674b46df6e726bbb9c1e4ec",
+      "global_raw": "",
+      "mtime": 1700000083,
+      "scanner_now": 1700000090.125,
+      "cached": {
+        "m3u_hash_key": "url"
+      },
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 8,
+      "label": "cached-empty-map-over-db-url",
+      "cohort": "cache-empty",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-empty-u1.ts",
+          "name": "Owned URL empty-u1",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.empty-u1"
+        },
+        {
+          "url": "http://127.0.0.1:9/owned-url-empty-u2.ts",
+          "name": "Owned URL empty-u2",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.empty-u2"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.empty-u1\" group-title=\"Owned URL Group\",Owned URL empty-u1\nhttp://127.0.0.1:9/owned-url-empty-u1.ts\n#EXTINF:-1 tvg-id=\"owned.empty-u2\" group-title=\"Owned URL Group\",Owned URL empty-u2\nhttp://127.0.0.1:9/owned-url-empty-u2.ts\n",
+      "playlist_sha256": "9b0a8b3ae5e094ddffa35dbb933419ad131481ccbaf44d4891364d21bfad2151",
+      "global_raw": "url",
+      "mtime": 1700000093,
+      "scanner_now": 1700000100.125,
+      "cached": {},
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 9,
+      "label": "mapped-own-setup",
+      "cohort": "mapped",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-mapped.ts",
+          "name": "Owned URL mapped",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.mapped"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.mapped\" group-title=\"Owned URL Group\",Owned URL mapped\nhttp://127.0.0.1:9/owned-url-mapped.ts\n",
+      "playlist_sha256": "c10c56a6d9b3a5e8a496500fce768a1f42a03ea7fd333c635ae54f0c0d181240",
+      "global_raw": "url",
+      "mtime": 1700000103,
+      "scanner_now": 1700000110.125,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 9,
+      "label": "mapped-own-update",
+      "cohort": "mapped",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-mapped.ts",
+          "name": "Owned Mapped changed",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.mapped"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.mapped\" group-title=\"Owned URL Group\",Owned Mapped changed\nhttp://127.0.0.1:9/owned-url-mapped.ts\n",
+      "playlist_sha256": "23b66cddf46ee8b9ad49e906d2c23362be917fae2a09c449c9bf3c6b4249cd38",
+      "global_raw": "url",
+      "mtime": 1700000113,
+      "scanner_now": 1700000120.125,
+      "map_from": "mapped",
+      "account_created_by_this_parent": false,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 10,
+      "label": "mapped-foreign-collision",
+      "cohort": "mapped-foreign",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-mapped.ts",
+          "name": "Owned Foreign mapped update",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.mapped"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.mapped\" group-title=\"Owned URL Group\",Owned Foreign mapped update\nhttp://127.0.0.1:9/owned-url-mapped.ts\n",
+      "playlist_sha256": "e21faa9cf043592f201b31ccf0d93b52fbbaf4f4584beca3861e48b760cf18db",
+      "global_raw": "url",
+      "mtime": 1700000123,
+      "scanner_now": 1700000130.125,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 11,
+      "label": "unrelated-foreign-mapped",
+      "cohort": "unrelated",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-unrelated.ts",
+          "name": "Owned URL unrelated",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.unrelated"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.unrelated\" group-title=\"Owned URL Group\",Owned URL unrelated\nhttp://127.0.0.1:9/owned-url-unrelated.ts\n",
+      "playlist_sha256": "dbc6767f4e850ddeda7af8a27987a231250115f479d32d895a242853797045d0",
+      "global_raw": "url",
+      "mtime": 1700000133,
+      "scanner_now": 1700000140.125,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 12,
+      "label": "unsupported-space",
+      "cohort": "unsupported-space",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-unsupported-space.ts",
+          "name": "Owned URL unsupported-space",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.unsupported-space"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.unsupported-space\" group-title=\"Owned URL Group\",Owned URL unsupported-space\nhttp://127.0.0.1:9/owned-url-unsupported-space.ts\n",
+      "playlist_sha256": "5f9513cdcd911ed6e11af97ee51f1c2b79c91d3de1b9ed9cf824d6675595c163",
+      "global_raw": " url ",
+      "mtime": 1700000143,
+      "scanner_now": 1700000150.125,
+      "expect_single_failure": false,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 12,
+      "label": "unsupported-uppercase",
+      "cohort": "unsupported-uppercase",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-unsupported-uppercase.ts",
+          "name": "Owned URL unsupported-uppercase",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.unsupported-uppercase"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.unsupported-uppercase\" group-title=\"Owned URL Group\",Owned URL unsupported-uppercase\nhttp://127.0.0.1:9/owned-url-unsupported-uppercase.ts\n",
+      "playlist_sha256": "79c4e4cef032727e8984c331bd2fe2913c3d3fcffddbf227d8647e814c194ec7",
+      "global_raw": "URL",
+      "mtime": 1700000153,
+      "scanner_now": 1700000160.125,
+      "expect_single_failure": false,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 12,
+      "label": "unsupported-duplicate-csv",
+      "cohort": "unsupported-duplicate-csv",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-unsupported-duplicate-csv.ts",
+          "name": "Owned URL unsupported-duplicate-csv",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.unsupported-duplicate-csv"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.unsupported-duplicate-csv\" group-title=\"Owned URL Group\",Owned URL unsupported-duplicate-csv\nhttp://127.0.0.1:9/owned-url-unsupported-duplicate-csv.ts\n",
+      "playlist_sha256": "202261f158d898eeff8b573d104b3b3072de94ef345939cdc571a9391277da64",
+      "global_raw": "url,url",
+      "mtime": 1700000163,
+      "scanner_now": 1700000170.125,
+      "expect_single_failure": false,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 12,
+      "label": "unsupported-list",
+      "cohort": "unsupported-list",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-unsupported-list.ts",
+          "name": "Owned URL unsupported-list",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.unsupported-list"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.unsupported-list\" group-title=\"Owned URL Group\",Owned URL unsupported-list\nhttp://127.0.0.1:9/owned-url-unsupported-list.ts\n",
+      "playlist_sha256": "7e88487b5a309b6bfbd02af852058ccb4ae0ceabb6f4c6e038b810f12f78e9a5",
+      "global_raw": [
+        "url"
+      ],
+      "mtime": 1700000173,
+      "scanner_now": 1700000180.125,
+      "expect_single_failure": true,
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    },
+    {
+      "group": 12,
+      "label": "unsupported-account-override",
+      "cohort": "override",
+      "rows": [
+        {
+          "url": "http://127.0.0.1:9/owned-url-override.ts",
+          "name": "Owned URL override",
+          "group": "Owned URL Group",
+          "tvg_id": "owned.override"
+        }
+      ],
+      "playlist": "#EXTM3U\n#EXTINF:-1 tvg-id=\"owned.override\" group-title=\"Owned URL Group\",Owned URL override\nhttp://127.0.0.1:9/owned-url-override.ts\n",
+      "playlist_sha256": "eca782e460878406d4076c17ce5e257ac9527fca670eb95736f3eaa8e8361d30",
+      "global_raw": "",
+      "mtime": 1700000183,
+      "scanner_now": 1700000190.125,
+      "account_custom": {
+        "hash_key": "url"
+      },
+      "account_created_by_this_parent": true,
+      "expected_direct_child_families": [
+        "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_single_m3u_account"
+      ]
+    }
+  ],
+  "fixed_per_step_drain_seconds": 65,
+  "host_controller_timeout_seconds": 1800,
+  "unknown_result_policy": "Capture all real descendants/results/FAILURE; no deletion or route quarantine; one parent-only fixture queue, default children unchanged",
+  "setting_scope": "literal global url and explicit uncaptured-native normalization/override Source observations; no general Native admission implied",
+  "files_scope": "owned synthetic local files only; URL bytes identify rows but no provider fetch",
+  "no_concurrent_writers": true,
+  "original_authors_credit": "Original Dispatcharr/dependency authors retain all code/algorithm/licenses",
+  "setting_setup_boundary": "Global DB setting before scanner parent; authoritative cached value reapplied before default children. Account custom-properties override applied after actual parent account creation and before children; fixture setup, not task effect.",
+  "processes": "Actual parent on fixture-only named queue; actual published descendants run on unchanged celery queue. No descendant quarantine.",
+  "publication_authority": {
+    "create_signal": "apps/m3u/signals.py refresh_account_on_save: created and non-XC => refresh_m3u_groups.delay; no created signal on repeat",
+    "scanner": "core/tasks.py scan_and_process_files: processed active file => refresh_single_m3u_account.delay",
+    "lineage": "both initial direct children inherit actual scanner task root and parent; existing account has Single only; direct synchronous groups fallback inside Single is not a new Celery child",
+    "queue_observation": "parent is really published while parent worker stopped; full raw parent queue ledger before worker start. Children are really published while default worker stopped; durable raw queue/unacked/backend ledger precedes all assertions. No descendant deletion/quarantine."
+  },
+  "ledger_scope": "Single owned controller, successful append writes all bytes and fsyncs file; first creation also fsyncs parent directory. Oversized record emits a small fsynced refusal receipt, not full frame evidence. Separate Redis observer reads are racy and qualify only small owned/no-external-writer fixture observations, not strict byte bounds or atomic snapshot."
+}
