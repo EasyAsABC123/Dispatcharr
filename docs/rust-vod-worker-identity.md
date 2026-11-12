@@ -1,0 +1,7 @@
+# Qualified VOD worker identity component
+
+The private canonical revision 98e worker-header component passes strict affected-package checks, a non-test build, 80 default test executions and 95 real Redis/media controls. It adds `X-Worker-ID` only to successful VOD stream responses, using the process's actual hostname/PID and a cached Source-style fallback. `HOSTNAME` overrides and provider spoofing cannot supply the identity. Root's accepted image52 remains unchanged until a new selected union is built and replayed.
+
+The scoped handoff contains five runtime/manifest paths, exact 788→789 input maps, pinned Source references and nine Django header primitive vectors. The direct nix hostname feature adds no registry packages or package versions. Edition 2021 formatting removes unrelated churn. All native fixture resources were independently removed; binaries and media stay private with hashes retained.
+
+[Portable reconstruction, controls, exact evidence and native fixture reproduction](../scripts/rust-vod-contracts/worker-identity/README.md) are published together. Actual Main SQL/auth, new application-image validation, full M4, complete header/error-message equivalence and performance acceptance remain pending. Existing Connection differences, public counter/timer decisions and default-OFF recovery remain separate. Original Dispatcharr and dependency authors retain application, algorithm and license credit.

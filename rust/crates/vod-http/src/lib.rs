@@ -8,6 +8,7 @@ mod resolver;
 mod recovery_generation;
 mod sessions;
 mod statistics;
+mod worker_identity;
 
 pub use engine::{VodConfig, VodEngine};
 pub use resolver::{ContentKind, SqlVodResolver, VodCandidate, VodRequest, VodResolver, VodSource};

@@ -92,6 +92,7 @@ impl VodEngine {
         {
             return Err(StoreError::Unsupported("Invalid bounded VOD configuration"));
         }
+        crate::worker_identity::initialize();
         let sessions = SessionPool::connect(
             redis_url,
             coordinator,
@@ -301,7 +302,6 @@ impl VodEngine {
         } else {
             StatusCode::OK
         };
-        let headers = compatibility_headers(upstream.headers(), original_range, total);
         let metadata = [
             ("content_length", total.to_string()),
             (
@@ -319,6 +319,7 @@ impl VodEngine {
             .sessions
             .update(&ticket.session, &metadata)
             .await?;
+        let headers = successful_headers(upstream.headers(), original_range, total)?;
         // Preserve Python's Range response contract, including its documented
         // suffix/conditional quirks. Correcting these is outside the 1:1 port.
         // A single bounded channel decouples cancellation from downstream body
@@ -631,6 +632,23 @@ fn validate_range(value: &str, total: u64) -> Option<String> {
         Some(format!("bytes={start}-{end}"))
     }
 }
+fn successful_headers(
+    source: &HeaderMap,
+    range: Option<&str>,
+    total: u64,
+) -> Result<HeaderMap, StoreError> {
+    let mut headers = compatibility_headers(source, range, total);
+    headers.insert(
+        "x-worker-id",
+        crate::worker_identity::current().map_err(|_| {
+            StoreError::StatusBody(
+                500,
+                json!("Streaming error: invalid worker response header"),
+            )
+        })?,
+    );
+    Ok(headers)
+}
 fn compatibility_headers(source: &HeaderMap, range: Option<&str>, total: u64) -> HeaderMap {
     let mut headers = HeaderMap::new();
     for (name, value) in [
@@ -906,6 +924,48 @@ async fn stop_client(State(engine): State<VodEngine>, request: Request<Body>) ->
 
 #[cfg(test)]
 mod header_tests {
+    #[tokio::test]
+    async fn worker_id_is_only_added_by_success_builder_and_cannot_be_spoofed() {
+        use axum::http::{HeaderMap, HeaderValue};
+        let mut provider = HeaderMap::new();
+        provider.insert("content-type", HeaderValue::from_static("video/mp4"));
+        provider.insert("x-worker-id", HeaderValue::from_static("provider-spoof"));
+        let full = super::successful_headers(&provider, None, 64).unwrap();
+        let range = super::successful_headers(&provider, Some("bytes=0-15"), 64).unwrap();
+        assert_eq!(
+            full["x-worker-id"],
+            crate::worker_identity::current().unwrap()
+        );
+        assert_ne!(full["x-worker-id"], "provider-spoof");
+        assert_eq!(full["x-worker-id"], range["x-worker-id"]);
+        assert_eq!(full["connection"], "keep-alive");
+        assert_eq!(range["content-range"], "bytes 0-15/64");
+        assert_eq!(range["content-length"], "16");
+        for error in [
+            dispatcharr_store::StoreError::NotFound,
+            dispatcharr_store::StoreError::StatusBody(
+                403,
+                serde_json::json!({"error":"Forbidden"}),
+            ),
+            dispatcharr_store::StoreError::StatusBody(
+                429,
+                serde_json::json!("Connection limit exceeded for profile"),
+            ),
+            dispatcharr_store::StoreError::StatusBody(
+                500,
+                serde_json::json!("Streaming error: VOD provider request failed"),
+            ),
+        ] {
+            assert!(!super::error_response(error)
+                .headers()
+                .contains_key("x-worker-id"));
+        }
+        assert_eq!(super::head().await.status(), 405);
+        assert!(!super::head().await.headers().contains_key("x-worker-id"));
+        assert!(!super::range_not_satisfiable()
+            .headers()
+            .contains_key("x-worker-id"));
+    }
     use super::{iri_location, session_redirect};
     use crate::VodRequest;
     use dispatcharr_contracts::PlaybackRequest;

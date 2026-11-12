@@ -1,0 +1,59 @@
+{
+  "scope": "Pinned Git-only static Source branch reachability/cache evidence, not new application execution",
+  "files": [
+    {
+      "path": "apps/proxy/vod_proxy/urls.py",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "blob_sha256": "8fee6b6403ba88ab80097a0e31ad33928990fa28be668e041b4efb84e4ca56e4",
+      "line_start": 1,
+      "line_end": 21,
+      "excerpt": "from django.urls import path\nfrom . import views\nfrom .views import stream_vod\n\napp_name = 'vod_proxy'\n\nurlpatterns = [\n    # Generic VOD streaming with session ID in path (for compatibility)\n    path('<str:content_type>/<uuid:content_id>/<str:session_id>', stream_vod, name='vod_stream_with_session'),\n    path('<str:content_type>/<uuid:content_id>/<str:session_id>/<int:profile_id>/', stream_vod, name='vod_stream_with_session_and_profile'),\n\n    # Generic VOD streaming (supports movies, episodes, series) - legacy patterns\n    path('<str:content_type>/<uuid:content_id>', stream_vod, name='vod_stream'),\n    path('<str:content_type>/<uuid:content_id>/<int:profile_id>/', stream_vod, name='vod_stream_with_profile'),\n\n    # VOD Stats\n    path('stats/', views.vod_stats, name='vod_stats'),\n\n    # Stop VOD client connection\n    path('stop_client/', views.stop_vod_client, name='stop_vod_client'),\n]\n",
+      "excerpt_sha256": "8fee6b6403ba88ab80097a0e31ad33928990fa28be668e041b4efb84e4ca56e4"
+    },
+    {
+      "path": "apps/proxy/vod_proxy/views.py",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "blob_sha256": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e",
+      "line_start": 678,
+      "line_end": 692,
+      "excerpt": "@api_view([\"GET\"])\n@authentication_classes([JWTAuthentication, ApiKeyAuthentication, QueryParamJWTAuthentication])\n@permission_classes([AllowAny])\ndef stream_vod(\n    request,\n    content_type,\n    content_id,\n    session_id=None,\n    profile_id=None,\n    user=None,\n    *,\n    check_network=True,\n):\n    \"\"\"\n    Stream VOD content (movies or series episodes) with session-based connection reuse\n",
+      "excerpt_sha256": "40212399409ddce0049612f80472951ecaaab15e7a66775a708be29a1f1ecf78"
+    },
+    {
+      "path": "apps/proxy/vod_proxy/views.py",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "blob_sha256": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e",
+      "line_start": 931,
+      "line_end": 945,
+      "excerpt": "@api_view([\"HEAD\"])\n@authentication_classes([JWTAuthentication, ApiKeyAuthentication, QueryParamJWTAuthentication])\n@permission_classes([AllowAny])\ndef head_vod(request, content_type, content_id, session_id=None, profile_id=None):\n    \"\"\"\n    Handle HEAD requests for FUSE filesystem integration\n\n    Returns content length and session URL header for subsequent GET requests\n    \"\"\"\n    if not network_access_allowed(request, \"STREAMS\"):\n        return JsonResponse({\"error\": \"Forbidden\"}, status=403)\n    user = _user_from_vod_request(request)\n    if not _vod_playback_allowed(content_type, user):\n        return JsonResponse({\"error\": \"Forbidden\"}, status=403)\n\n",
+      "excerpt_sha256": "8b9259f9d6cd8532d1ffad3d775f11c17a3d0119c48313bf3341857509c63c50"
+    },
+    {
+      "path": "apps/proxy/vod_proxy/views.py",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "blob_sha256": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e",
+      "line_start": 1112,
+      "line_end": 1129,
+      "excerpt": "\n        # Create response with content length and session URL header\n        head_response = HttpResponse()\n        head_response['Content-Length'] = total_size\n        head_response['Content-Type'] = content_type_header\n        head_response['Accept-Ranges'] = 'bytes'\n\n        # Custom header with session URL for FUSE\n        head_response['X-Session-URL'] = session_url\n        head_response['X-Dispatcharr-Session'] = session_id\n\n        logger.info(f\"[VOD-HEAD] Returning HEAD response with session URL: {session_url}\")\n        return head_response\n\n    except Exception as e:\n        logger.error(f\"[VOD-HEAD] Error in HEAD request: {e}\", exc_info=True)\n        return HttpResponse(f\"HEAD error: {str(e)}\", status=500)\n\n",
+      "excerpt_sha256": "4ebbb4264072d086491eb6f4555b9f3260702a8b68ea71558b13d878cc97be6e"
+    },
+    {
+      "path": "apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "blob_sha256": "8a63d669219d149293da592d1d9a4e77db4d0c8b253baaf29c44e2e766c72c4a",
+      "line_start": 895,
+      "line_end": 920,
+      "excerpt": "    def get_instance(cls):\n        \"\"\"Get the singleton instance\"\"\"\n        if cls._instance is None:\n            cls._instance = cls()\n        return cls._instance\n\n    def __init__(self):\n        self.redis_client = RedisClient.get_client()\n        self.connection_ttl = 3600  # 1 hour TTL for connections\n        self.session_ttl = 1800  # 30 minutes TTL for sessions\n        self.worker_id = self._get_worker_id()\n        logger.info(f\"MultiWorkerVODConnectionManager initialized for worker {self.worker_id}\")\n\n    def _get_worker_id(self):\n        \"\"\"Get unique worker ID for this process\"\"\"\n        import os\n        import socket\n        try:\n            # Use combination of hostname and PID for unique worker ID\n            return f\"{socket.gethostname()}-{os.getpid()}\"\n        except:\n            import random\n            return f\"worker-{random.randint(1000, 9999)}\"\n\n    def _get_profile_connections_key(self, profile_id: int) -> str:\n        \"\"\"Get Redis key for tracking connections per profile - STANDARDIZED with TS proxy\"\"\"\n",
+      "excerpt_sha256": "69f5f1555be2aa3500734cbe7df976917d0a7091cb49abaa473ac8ed1241984a"
+    },
+    {
+      "path": "apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "blob_sha256": "8a63d669219d149293da592d1d9a4e77db4d0c8b253baaf29c44e2e766c72c4a",
+      "line_start": 1709,
+      "line_end": 1724,
+      "excerpt": "                content_type=connection_headers.get('content_type', 'video/mp4')\n            )\n\n            # Set appropriate status code\n            response.status_code = 206 if range_header else 200\n\n            # Set required headers\n            response['Cache-Control'] = 'no-cache'\n            response['Pragma'] = 'no-cache'\n            response['X-Content-Type-Options'] = 'nosniff'\n            response['Connection'] = 'keep-alive'\n            response['X-Worker-ID'] = self.worker_id  # Identify which worker served this\n\n            if connection_headers.get('content_length'):\n                response['Accept-Ranges'] = 'bytes'\n\n",
+      "excerpt_sha256": "f7bb9232ede48eb7575ea5156ad365cf64f9249d20cadcba39d1b81ae5fdbb00"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "public_retained_path": "scripts/rust-vod-contracts/four-second-main/image52-observation/retained.json",
+  "retained_sha256": "42a07e670e1444335841a84e90786e83d2fc348f62f1d15d0ab7e24ee6233a66",
+  "rows": [
+    {
+      "case": "success",
+      "backend": "source",
+      "status": 200,
+      "X_Worker_ID_present": true,
+      "Connection": "keep-alive",
+      "scope": "Literal observed response map; dynamic worker string is not compared across independent processes"
+    },
+    {
+      "case": "success",
+      "backend": "native",
+      "status": 200,
+      "X_Worker_ID_present": false,
+      "Connection": "keep-alive",
+      "scope": "Literal observed response map; dynamic worker string is not compared across independent processes"
+    },
+    {
+      "case": "busy",
+      "backend": "source",
+      "status": 429,
+      "X_Worker_ID_present": false,
+      "Connection": null,
+      "scope": "Literal observed response map; dynamic worker string is not compared across independent processes"
+    },
+    {
+      "case": "busy",
+      "backend": "native",
+      "status": 429,
+      "X_Worker_ID_present": false,
+      "Connection": null,
+      "scope": "Literal observed response map; dynamic worker string is not compared across independent processes"
+    },
+    {
+      "case": "clientloss",
+      "backend": "source",
+      "status": null,
+      "X_Worker_ID_present": false,
+      "Connection": null,
+      "scope": "Literal observed response map; dynamic worker string is not compared across independent processes"
+    },
+    {
+      "case": "clientloss",
+      "backend": "native",
+      "status": null,
+      "X_Worker_ID_present": false,
+      "Connection": null,
+      "scope": "Literal observed response map; dynamic worker string is not compared across independent processes"
+    }
+  ],
+  "canonical_revision": "98e447186af099dd17496539aec46312f6cf4f62",
+  "source_rule": "manager._get_worker_id uses socket.gethostname()+os.getpid(), fallback worker-randint(1000,9999); successful StreamingHttpResponse adds X-Worker-ID",
+  "confirmed_small_runtime_gap": "Source successful200 header present, Native successful200 absent; actual busy429 absent both; client-loss has no response headers",
+  "no_new_Source_or_Native_execution": true
+}
