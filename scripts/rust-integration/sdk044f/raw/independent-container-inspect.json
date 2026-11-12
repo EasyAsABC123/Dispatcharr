@@ -1,0 +1,32 @@
+{
+  "container_id": "b3a7bd43a30405cd54c0866ed05f643f878577e82303a48bc20571f90691d564",
+  "image_id": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+  "network_mode": "none",
+  "command": [
+    "sh",
+    "scripts/rust-verify.sh"
+  ],
+  "state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 431784,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-12T19:23:26.624386194Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "mounts": [
+    {
+      "Type": "bind",
+      "Source": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/evidence",
+      "Destination": "/evidence",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": "rprivate"
+    }
+  ]
+}

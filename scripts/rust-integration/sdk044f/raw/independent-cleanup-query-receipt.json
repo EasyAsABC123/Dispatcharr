@@ -1,0 +1,271 @@
+{
+  "timestamp_utc": "2026-11-12T19:36:01.163280+00:00",
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-sdk-044f-2",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "query_utc": "2026-11-12T19:36:01.118951+00:00"
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-sdk-044f-2",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "query_utc": "2026-11-12T19:36:01.128542+00:00"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-sdk-044f-2",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "query_utc": "2026-11-12T19:36:01.138162+00:00"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "id=b3a7bd43a30405cd54c0866ed05f643f878577e82303a48bc20571f90691d564",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "query_utc": "2026-11-12T19:36:01.147583+00:00"
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "b3a7bd43a30405cd54c0866ed05f643f878577e82303a48bc20571f90691d564"
+      ],
+      "exit": 1,
+      "stdout": "[]\n",
+      "stderr": "error: no such object: b3a7bd43a30405cd54c0866ed05f643f878577e82303a48bc20571f90691d564\n",
+      "query_utc": "2026-11-12T19:36:01.163024+00:00"
+    }
+  ],
+  "all_project_resources_absent": true,
+  "exact_CID_absent": true,
+  "SDK_host_process_waited_exit0": true,
+  "SDK_host_PID": 429048,
+  "SDK_host_PID_proc_present": false,
+  "lifecycle": [
+    {
+      "action": "create",
+      "utc": "2026-11-12T19:23:26.597910+00:00",
+      "attributes": {
+        "com.docker.compose.config-hash": "69cc1224ee551e989420376ded155e2eca8c39e4ad8505a84c373e9e1f91cc0f",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "dispatcharr-sdk-044f-2",
+        "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker/compose.rust.yml",
+        "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker",
+        "com.docker.compose.service": "verify",
+        "com.docker.compose.version": "2.40.3",
+        "image": "dispatcharr-sdk-044f-2-verify",
+        "name": "dispatcharr-sdk-044f-2-verify-1",
+        "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+      },
+      "raw": {
+        "Type": "container",
+        "Action": "create",
+        "Actor": {
+          "ID": "b3a7bd43a30405cd54c0866ed05f643f878577e82303a48bc20571f90691d564",
+          "Attributes": {
+            "com.docker.compose.config-hash": "69cc1224ee551e989420376ded155e2eca8c39e4ad8505a84c373e9e1f91cc0f",
+            "com.docker.compose.container-number": "1",
+            "com.docker.compose.depends_on": "",
+            "com.docker.compose.image": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+            "com.docker.compose.oneoff": "False",
+            "com.docker.compose.project": "dispatcharr-sdk-044f-2",
+            "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker/compose.rust.yml",
+            "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker",
+            "com.docker.compose.service": "verify",
+            "com.docker.compose.version": "2.40.3",
+            "image": "dispatcharr-sdk-044f-2-verify",
+            "name": "dispatcharr-sdk-044f-2-verify-1",
+            "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+          }
+        },
+        "scope": "local",
+        "time": 1794511406,
+        "timeNano": 1794511406597909858
+      }
+    },
+    {
+      "action": "start",
+      "utc": "2026-11-12T19:23:26.687187+00:00",
+      "attributes": {
+        "com.docker.compose.config-hash": "69cc1224ee551e989420376ded155e2eca8c39e4ad8505a84c373e9e1f91cc0f",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "dispatcharr-sdk-044f-2",
+        "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker/compose.rust.yml",
+        "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker",
+        "com.docker.compose.service": "verify",
+        "com.docker.compose.version": "2.40.3",
+        "image": "dispatcharr-sdk-044f-2-verify",
+        "name": "dispatcharr-sdk-044f-2-verify-1",
+        "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+      },
+      "raw": {
+        "Type": "container",
+        "Action": "start",
+        "Actor": {
+          "ID": "b3a7bd43a30405cd54c0866ed05f643f878577e82303a48bc20571f90691d564",
+          "Attributes": {
+            "com.docker.compose.config-hash": "69cc1224ee551e989420376ded155e2eca8c39e4ad8505a84c373e9e1f91cc0f",
+            "com.docker.compose.container-number": "1",
+            "com.docker.compose.depends_on": "",
+            "com.docker.compose.image": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+            "com.docker.compose.oneoff": "False",
+            "com.docker.compose.project": "dispatcharr-sdk-044f-2",
+            "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker/compose.rust.yml",
+            "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker",
+            "com.docker.compose.service": "verify",
+            "com.docker.compose.version": "2.40.3",
+            "image": "dispatcharr-sdk-044f-2-verify",
+            "name": "dispatcharr-sdk-044f-2-verify-1",
+            "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+          }
+        },
+        "scope": "local",
+        "time": 1794511406,
+        "timeNano": 1794511406687187121
+      }
+    },
+    {
+      "action": "die",
+      "utc": "2026-11-12T19:33:48.708214+00:00",
+      "attributes": {
+        "com.docker.compose.config-hash": "69cc1224ee551e989420376ded155e2eca8c39e4ad8505a84c373e9e1f91cc0f",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "dispatcharr-sdk-044f-2",
+        "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker/compose.rust.yml",
+        "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker",
+        "com.docker.compose.service": "verify",
+        "com.docker.compose.version": "2.40.3",
+        "execDuration": "621",
+        "exitCode": "0",
+        "image": "dispatcharr-sdk-044f-2-verify",
+        "name": "dispatcharr-sdk-044f-2-verify-1",
+        "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+      },
+      "raw": {
+        "Type": "container",
+        "Action": "die",
+        "Actor": {
+          "ID": "b3a7bd43a30405cd54c0866ed05f643f878577e82303a48bc20571f90691d564",
+          "Attributes": {
+            "com.docker.compose.config-hash": "69cc1224ee551e989420376ded155e2eca8c39e4ad8505a84c373e9e1f91cc0f",
+            "com.docker.compose.container-number": "1",
+            "com.docker.compose.depends_on": "",
+            "com.docker.compose.image": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+            "com.docker.compose.oneoff": "False",
+            "com.docker.compose.project": "dispatcharr-sdk-044f-2",
+            "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker/compose.rust.yml",
+            "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker",
+            "com.docker.compose.service": "verify",
+            "com.docker.compose.version": "2.40.3",
+            "execDuration": "621",
+            "exitCode": "0",
+            "image": "dispatcharr-sdk-044f-2-verify",
+            "name": "dispatcharr-sdk-044f-2-verify-1",
+            "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+          }
+        },
+        "scope": "local",
+        "time": 1794512028,
+        "timeNano": 1794512028708213515
+      }
+    },
+    {
+      "action": "destroy",
+      "utc": "2026-11-12T19:33:49.733643+00:00",
+      "attributes": {
+        "com.docker.compose.config-hash": "69cc1224ee551e989420376ded155e2eca8c39e4ad8505a84c373e9e1f91cc0f",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "dispatcharr-sdk-044f-2",
+        "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker/compose.rust.yml",
+        "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker",
+        "com.docker.compose.service": "verify",
+        "com.docker.compose.version": "2.40.3",
+        "image": "dispatcharr-sdk-044f-2-verify",
+        "name": "dispatcharr-sdk-044f-2-verify-1",
+        "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+      },
+      "raw": {
+        "Type": "container",
+        "Action": "destroy",
+        "Actor": {
+          "ID": "b3a7bd43a30405cd54c0866ed05f643f878577e82303a48bc20571f90691d564",
+          "Attributes": {
+            "com.docker.compose.config-hash": "69cc1224ee551e989420376ded155e2eca8c39e4ad8505a84c373e9e1f91cc0f",
+            "com.docker.compose.container-number": "1",
+            "com.docker.compose.depends_on": "",
+            "com.docker.compose.image": "sha256:219b47db59ad14d555206142c44ac24c5880ee4c526afe06083914ee24602962",
+            "com.docker.compose.oneoff": "False",
+            "com.docker.compose.project": "dispatcharr-sdk-044f-2",
+            "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker/compose.rust.yml",
+            "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-044f-qualified-1/source/docker",
+            "com.docker.compose.service": "verify",
+            "com.docker.compose.version": "2.40.3",
+            "image": "dispatcharr-sdk-044f-2-verify",
+            "name": "dispatcharr-sdk-044f-2-verify-1",
+            "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+          }
+        },
+        "scope": "local",
+        "time": 1794512029,
+        "timeNano": 1794512029733642462
+      }
+    }
+  ],
+  "no_auxiliary_container_created": true,
+  "checker_scope": "docker exec within the one verify container only",
+  "outer_cleanup_receipt": "outer-owned-cleanup.json",
+  "no_new_cleanup_mutation_in_this_query": true
+}
