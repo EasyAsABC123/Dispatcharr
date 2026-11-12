@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "scope": "Post-run publication-only verification, no workload rerun",
+  "checks": [
+    {
+      "name": "raw30.log",
+      "sha256": "f69e4fee56558f25c53407a83e8a78aa0cc2aabf90c48ba182adaac8cc97beae",
+      "finite_checks": 30,
+      "skipped": 0
+    },
+    {
+      "name": "public-wrapper.log",
+      "sha256": "abc24c44286db71fc5f790bdaaed9c2d9c2076bd2c9ab6b913801f1db271f908",
+      "finite_checks": 30,
+      "skipped": 0
+    },
+    {
+      "name": "prerequisite-controls.log",
+      "sha256": "5aceb982a3fb449d1b338de0dc39d8958cc440c4b741dc7d80cbaf8e69e36e75",
+      "finite_checks": 12,
+      "skipped": 0
+    },
+    {
+      "name": "projection-controls.log",
+      "sha256": "c5bb7677296e7b53644b65551a6c485655aaa7ff06a8e4cc6b08ae1166eef0f3",
+      "finite_checks": 6,
+      "skipped": 0
+    },
+    {
+      "name": "delivery-controls-final.log",
+      "sha256": "612f0b0dbb1be53e58debd557b6f0447a9f021194d0290d09de27b4b7312ebba",
+      "finite_checks": 16,
+      "skipped": 0
+    },
+    {
+      "name": "reconstruction-controls.log",
+      "sha256": "1a029e48a18586705ecaaf91e4d5bd1d93cded12734d96ddc33f930088e4cddd",
+      "finite_checks": 6,
+      "skipped": 0
+    }
+  ],
+  "raw30_uses_actual_completed_report": true,
+  "public30_has_no_private_fallback": true,
+  "functional_readers": 222,
+  "Source_qualification_readers": 111,
+  "Source_qualification_inwindow_samples": 177,
+  "measured_readers": 666,
+  "raw_samples": 1080,
+  "in_window_samples": 1062,
+  "support_reconstruction": {
+    "passed": true,
+    "support_files": 1970,
+    "executed_tools": 1978,
+    "support_revision": "28122faf28a0acf1c136ca0d0831961e786cb686",
+    "support_archive_sha256": "4d33a8153050f80aa8c8ae7c3fbb7697b1c75071df071cbe856b126cec61c2d1",
+    "all_executed_hashes_exact": true,
+    "isolated_HEAD_archive_exact": true,
+    "application_or_resource_executed": false
+  },
+  "initial_curation_negative": "KeyError pairs while projecting Source-only report that intentionally has no pairs field. Fixed optional-key projection; raw reports unchanged; failed preparation source retained privately.",
+  "initial_self_scan_negative": "Synthetic JWT rejection-vector literal and forbidden-host-path pattern found in test code; expressed as concatenated strings; no actual credential present.",
+  "figures_visually_reviewed": true
+}

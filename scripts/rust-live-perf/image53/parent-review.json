@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "report_sha256": "36ea5a7f7b596e58734f541446f3b72d9e38521bddf8574e989bda6db0fc90f0",
+  "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+  "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+  "candidate_image": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+  "candidate_revision": "f0bfc2f200dcfd1f64ae32a9855ea250731ce67f",
+  "runtime_inputs": 791,
+  "fixed_pairs": 9,
+  "phases": 18,
+  "continuous_authenticated_readers": 666,
+  "resource_samples": 1080,
+  "media_prefix_and_decoder_hash_checks": 1998,
+  "minimum_decoder_frames": 72,
+  "all30_raw_corruption_controls_passed": true,
+  "numeric_and_candidate_input_binding_recomputed": true,
+  "exact_project_all_containers_networks_volumes_absent": true,
+  "actual_wrapper_exit": 0,
+  "wait_and_final_poll_completed": true,
+  "median_ratios": {
+    "1": {
+      "CPU": 0.2988936907980737,
+      "memory": 0.48276674520363516,
+      "throughput": 1.0014821758848718,
+      "first_byte_p95": 1.0
+    },
+    "10": {
+      "CPU": 0.20900514147715657,
+      "memory": 0.5362413749041656,
+      "throughput": 0.9878565680497033,
+      "first_byte_p95": 0.38009970942211296
+    },
+    "100": {
+      "CPU": 0.08708840833287389,
+      "memory": 0.5067949878227344,
+      "throughput": 1.0016392770839129,
+      "first_byte_p95": 0.09198731705044266
+    }
+  },
+  "median_CPU_reduction_percent": {
+    "1": 70.11063092019263,
+    "10": 79.09948585228435,
+    "100": 91.2911591667126
+  },
+  "median_peak_working_memory_reduction_percent": {
+    "1": 51.723325479636486,
+    "10": 46.37586250958344,
+    "100": 49.320501217726566
+  },
+  "scope": "authenticated live HTTP backend plus common PostgreSQL/Redis/local origin; not workers/browser driver/Docker daemon/full graph",
+  "gain_transfer_to_image54_or_792_input_runtime": false,
+  "full_milestone_or_rewrite_acceptance": false,
+  "offline_invocation_negative": "Initial explicit verifier invocation used nonexistent binding/runtime-inputs791.json, failed before raw verification. Corrected invocation uses sealed binding/expected-runtime.json; no workload or verifier changes or repeated measurement. Empty initial output retained separately.",
+  "evidence_sha256": {
+    "Root-media-review.json": "bf7e33354044bc27eead80f01f7067454a3093cd5b1b39e1b19d6dd2dab1ae55",
+    "Root-bound-verification-final.json": "e8ec80ce5375d529ba3d7a302e3b117343944d43fa164d5a80f20e47b0c2c36e",
+    "Root-complete-run-controls.log": "90059e69a68a23f2d164cd9563ad8f90083f0513c3761e32983baa7cb946a46b",
+    "Root-independent-cleanup.json": "4536c86290c55ec451fd244519420a01cde92ac96d9ccad8b2095e21d0f482aa"
+  },
+  "utc": "2026-11-12T20:06:46.495200+00:00",
+  "resource_samples_raw": 1080,
+  "resource_samples_in_window": 1062,
+  "raw_live_report_sha256": "36ea5a7f7b596e58734f541446f3b72d9e38521bddf8574e989bda6db0fc90f0",
+  "raw_Root_review_sha256": "4d6e1d0f6d21835936ae80df04561d60aaecbed65b37634bfc0b97f5aa95eed2"
+}

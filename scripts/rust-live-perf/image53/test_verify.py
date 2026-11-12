@@ -1,0 +1,45 @@
+"""Complete-run corruption controls. Explicit completed run required; no fallback."""
+import copy,importlib.util,json,os,unittest
+from pathlib import Path
+spec=importlib.util.spec_from_file_location('_live_matrix_under_test',Path(__file__).with_name('verify.py'));v=importlib.util.module_from_spec(spec);spec.loader.exec_module(v)
+class CompleteRun(unittest.TestCase):
+ @classmethod
+ def setUpClass(cls):
+  value=os.environ.get('LIVE_RETAINED_COMPLETE_RUN')
+  if not value:raise unittest.SkipTest('Explicit completed raw run required; no private fallback')
+  root=Path(value);cls.original=json.loads((root/'live-functional.json').read_text());cls.plan=json.loads((root/'tools/scripts/rust-live-perf/protocol.json').read_text());v.verify(cls.original,cls.plan)
+ def setUp(self):self.report=copy.deepcopy(self.original)
+ def reject(self):
+  with self.assertRaises((ValueError,KeyError,IndexError,ZeroDivisionError)):v.verify(self.report,self.plan)
+ def test_complete(self):self.assertTrue(v.verify(self.report,self.plan)['passed'])
+ def test_no_mutation(self):
+  old=copy.deepcopy(self.report);v.verify(self.report,self.plan);self.assertEqual(old,self.report)
+ def test_partial(self):self.report['passed']=False;self.reject()
+ def test_unverified(self):self.report['performance_verified']=False;self.reject()
+ def test_wrong_image(self):self.report['candidate_image']='wrong';self.reject()
+ def test_missing_phase(self):self.report['phases'].pop();self.reject()
+ def test_duplicate_phase(self):self.report['phases'][1]=copy.deepcopy(self.report['phases'][0]);self.reject()
+ def test_missing_pair(self):self.report['pairs'].pop();self.reject()
+ def test_duplicate_pair(self):self.report['pairs'][1]=copy.deepcopy(self.report['pairs'][0]);self.reject()
+ def test_hidden_pair_fail(self):self.report['pairs'][0]['failed']=['hidden'];self.reject()
+ def test_wrong_order(self):self.report['pairs'][0]['order'].reverse();self.reject()
+ def test_changed_pair_arithmetic(self):self.report['pairs'][0]['ratios']['CPU']=0;self.reject()
+ def test_unauthed(self):self.report['phases'][0]['authenticated_identity']['all_owned_user_id']=False;self.reject()
+ def test_HTTP_failure(self):self.report['phases'][0]['viewers'][0]['status']=503;self.reject()
+ def test_reader_reconnect(self):self.report['phases'][0]['viewers'][0]['requests']=2;self.reject()
+ def test_reader_error(self):self.report['phases'][0]['viewers'][0]['errors']=['TimeoutError'];self.reject()
+ def test_reader_EOF(self):self.report['phases'][0]['viewers'][0]['unexpected_eof']=True;self.reject()
+ def test_reader_no_barrier(self):self.report['phases'][0]['viewers'][0]['post_window_barrier']=False;self.reject()
+ def test_reader_rate(self):self.report['phases'][0]['viewers'][0]['measured_bytes']=1;self.reject()
+ def test_decoder_exit(self):self.report['phases'][0]['viewers'][0]['decoder_exit_code']=1;self.reject()
+ def test_decoder_frames(self):self.report['phases'][0]['viewers'][0]['decoder_frames']=0;self.reject()
+ def test_CPU_reset(self):self.report['phases'][0]['resources']['raw']['counters']['after']['backend']['cpu']['usage_usec']=0;self.reject()
+ def test_OOM_before(self):self.report['phases'][0]['resources']['raw']['counters']['before']['backend']['memory_events']['oom']=1;self.reject()
+ def test_OOM_after(self):self.report['phases'][0]['resources']['raw']['counters']['after']['backend']['memory_events']['oom_kill']=1;self.reject()
+ def test_incomplete_sample(self):self.report['phases'][0]['resources']['raw']['samples'][2]['value']['containers'].pop();self.reject()
+ def test_wrong_workingset(self):self.report['phases'][0]['resources']['raw']['samples'][2]['value']['containers'][0]['memory_bytes']+=1;self.reject()
+ def test_wrong_sum(self):self.report['phases'][0]['resources']['raw']['samples'][2]['value']['memory_bytes']+=1;self.reject()
+ def test_wrong_CPU_summary(self):self.report['phases'][0]['resources']['metrics']['cpu_percent_mean']=0;self.reject()
+ def test_wrong_memory_summary(self):self.report['phases'][0]['resources']['metrics']['peak_working_memory_bytes']=0;self.reject()
+ def test_no_cleanup(self):self.report['cleanup']='failed';self.reject()
+if __name__=='__main__':unittest.main(verbosity=2)

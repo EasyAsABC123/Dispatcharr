@@ -1,0 +1,20 @@
+{
+  "scope": "Distinct admission/offline verification failures, not viewer or measured-window failures",
+  "qualification_admission": {
+    "raw_correction_sha256": "c352608f091f38f3190452115fc5682933d1a77e116509785b85eaffb066a31d",
+    "rejected_cue_sha256": "dd53c4e22b47deaf5eef550a8447fe734bee24a80c06ea0e051a6ab903602963",
+    "initial_admission_failure": "IndependentPriorReview hashed integration.json; plan expects live-functional.json",
+    "all6phases_equal_and_only_integrationadds_resources_retained_false": true,
+    "original_review_and_unclaimed_cue_preserved": true,
+    "new_review_hash_binds_expected_actual_file": true,
+    "workload_runs": 0,
+    "source_inputs_protocol_budgets_unchanged": true,
+    "fresh_cue_sha256": "03131f8c0b7cab5bb4a78bfcd0e9e9a920d415d76788c6dfcaa785a3f05dbed0"
+  },
+  "measurement_offline_verification": {
+    "empty_initial_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final_output_sha256": "e8ec80ce5375d529ba3d7a302e3b117343944d43fa164d5a80f20e47b0c2c36e",
+    "initial_failure": "Initial explicit verifier invocation used nonexistent binding/runtime-inputs791.json, failed before raw verification. Corrected invocation uses sealed binding/expected-runtime.json; no workload or verifier changes or repeated measurement. Empty initial output retained separately.",
+    "application_or_resource_rerun": false
+  }
+}
