@@ -80,3 +80,9 @@ or network-configuration changes. Runtime verification uses no external network.
 The exact owned project has no remaining containers, networks or volumes. This
 is a verification image, separate from the accepted image51 application package;
 its component timing output does not establish new application performance gains.
+
+## Combined scanner788 and Source-contract integration
+
+Committed7e514c26f507ad1d1ed5d5df14ad6bdaa9dad695 was exported into a clean5085-file Git snapshot and passed full SDK Docker Compose verification. Formatting, strict all-target Clippy and566 default Rust tests passed, with703 fixture-dependent cases ignored. Portable Python checks ran171 cases:170 passed and one existing optional private-raw check skipped. The full154 core-contract checks include the55 partial Source assignments and exact task-reference closure. All5085 source files remained unchanged.
+
+The immutable verification image is `sha256:47d19a1f0cca801cd22cb8b1ec61b079fbf34776258eeb39e40d37c1e923f5d3`. Root independently checked its identity and empty project containers/networks/volumes. [Verification, source hashes and cleanup](../scripts/rust-integration/current-scanner788/review.json) retain exact scope. Runtime verification used network mode none. This is SDK/component verification, with no application parity or new application performance claim. Image51 remains the separately qualified packaged application.
