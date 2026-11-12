@@ -1,0 +1,9 @@
+# Fixed normal-capacity next-admission observation
+
+A once-run Source/Native image51 pair held account/profile max2 throughout with five real SQL/Bearer viewer requests, a separate admin stop and independent DB clones. The two new-session probes returned200 then503 on both backends. Literal counters were2→1→2 at the recorded checkpoints; no checkpoint showed zero. Inputs and dispatch never depended on a counter/status, and no Redis reply was held.
+
+The original controller exited1: its private Other-grant checker incorrectly required the lease token to equal the independent metadata token. The complete negative remains hash-bound. A separate offline validator, backed by pinned772 source and corruption controls, verifies each token namespace and unchanged reservation/fence/content/profile/metadata, then recomputes qualification from retained evidence. That corrected offline scenario result is true; it does not rewrite or relabel the actual run.
+
+Both Other bodies and admitted probe1 bodies remained open/draining across the second admission. Four retained1MiB prefixes each decoded75frames over3s with audio/video. Per backend,11 accepted origin sockets comprised7 control and4 media GETs: two shared-URI GETs, one Other and one probe1. This is request accounting, not one-upstream-sharing proof or TCP==viewer inference. Response-finalization signaling is distinct from generator-finally completion; body reads are distinct from origin writes. All owned processes/sockets/project resources settled and default9-table/sequence audits matched.
+
+Portable evidence, exact69-input reconstruction,24 offline controls and separate actual/offline results: [normal-admission-observation](../scripts/rust-vod-contracts/normal-admission-observation/README.md). Full M4 counter/timer parity remains open. No runtime change, performance measurement or Source defect inference follows this observation.

@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "Source_application_executed": false,
+  "Native_executed": false,
+  "prefix_seconds": 32.005199231993174,
+  "decoder": {
+    "passed": true,
+    "retained_bytes": 1048576,
+    "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+    "frames": 75,
+    "strict_audio_video_seconds": 3,
+    "minimum_frames": 50,
+    "process_reaped": true,
+    "pipes_settled": true
+  },
+  "origin_terminal": {
+    "epoch": "0bea4b65f2de4b2986347f87bf69ef21",
+    "nonce_sha256": "3ba3f5f43b92602683c19aee62a20342b084dd5971ddd33808d81a328879a547",
+    "invalid": [],
+    "accepted_TCP_total": 1,
+    "actual_open_TCP": 0,
+    "actual_stream_GET_inflight": 0,
+    "media_HEAD_total": 0,
+    "control_total": 0,
+    "transient_TCP_without_request": 0,
+    "connections": [
+      {
+        "id": 1,
+        "opened": 188638.083954447,
+        "socket_closed": true,
+        "peer_eof_observed": false,
+        "requests": 1,
+        "fd": 5,
+        "closed": 188670.08471982,
+        "fd_after": -1
+      }
+    ],
+    "requests": [
+      {
+        "id": 1,
+        "connection": 1,
+        "method": "GET",
+        "path_role": "shared_movie",
+        "kind": "preflight_GET",
+        "began": 188638.084242235,
+        "in_flight": false,
+        "bytes_written": 1048576,
+        "returned": 188670.084633478,
+        "error": null
+      }
+    ],
+    "events": [
+      {
+        "kind": "accepted_TCP",
+        "at": 188638.083956657,
+        "connection": 1
+      },
+      {
+        "kind": "request_begin",
+        "at": 188638.084244825,
+        "connection": 1,
+        "request": 1,
+        "request_kind": "preflight_GET"
+      },
+      {
+        "kind": "handler_return",
+        "at": 188670.084637198,
+        "request": 1,
+        "connection": 1
+      },
+      {
+        "kind": "server_socket_shutdown_ack",
+        "at": 188670.08472226,
+        "connection": 1,
+        "fd_after": -1
+      }
+    ],
+    "semantics": "TCP lifetime, in-flight HTTP, bytes written and peer EOF are separate; none denotes viewer/generator progress"
+  },
+  "origin_server_thread_settled": true,
+  "generator_progress_inferred": false
+}

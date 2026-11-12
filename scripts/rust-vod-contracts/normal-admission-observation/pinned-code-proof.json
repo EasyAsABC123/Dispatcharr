@@ -1,0 +1,51 @@
+{
+  "revision": "5afbb78ee8be031474b41278479fcdf623f2ddce",
+  "candidate_manifest_sha256": "2dcf19e84324aa77d56a8df034729dd3d8a07ba7743d09d8f3fd7ebc9ca89957",
+  "candidate_source_tree_sha256": "fee70ac06a5a6aead2ba3b589d9939a85576e59798421473e80fb8056a7f1082",
+  "source_input_count": 772,
+  "files": [
+    {
+      "path": "rust/crates/coordination/src/lib.rs",
+      "git_blob": "d07ddc7e63b43e7b6a3ac997919359a2bcb132c4",
+      "sha256": "68ed4ca4e3b24c7a61887892a7f1058b4f6896bee116420144e7fb46d36ba68a",
+      "excerpts": [
+        {
+          "start_line": 369,
+          "end_line": 378,
+          "text": "        &self,\n        request: AcquireRequest,\n        scope: OwnerScope,\n        permit: tokio::sync::OwnedSemaphorePermit,\n        retained: Option<Arc<dyn Send + Sync>>,\n    ) -> Result<AcquireDelivery, Error> {\n        let token = format!(\"rust:{}\", uuid::Uuid::new_v4());\n        let keys = Keys {\n            owner: match scope {\n                OwnerScope::Live => format!(\"live:channel:{}:owner\", request.channel_id),"
+        }
+      ]
+    },
+    {
+      "path": "rust/crates/vod-http/src/sessions.rs",
+      "git_blob": "280cff053df7cb7d46fec921550e6d2fabe71867",
+      "sha256": "81c016e782086b1bb6251885768b070f4ddc916db6c45a8e785d8dc55c9575e0",
+      "excerpts": [
+        {
+          "start_line": 850,
+          "end_line": 860,
+          "text": "            return Err(dispatcharr_store::StoreError::Unsupported(\n                \"Legacy or cross-worker VOD session adoption is not implemented\",\n            ));\n        }\n        let initial = source.candidates.first().ok_or_else(unavailable)?;\n        let metadata_token = format!(\"rust-vod-metadata:{}\", uuid::Uuid::new_v4());\n        let fields = metadata_fields(id, &source, request, initial, &metadata_token);\n        let mut pending = PendingCreate {\n            connection: connection.clone(),\n            id: id.into(),\n            token: metadata_token.clone(),"
+        },
+        {
+          "start_line": 1028,
+          "end_line": 1038,
+          "text": "        (\"bytes_sent\", \"0\".into()),\n        (\"position_seconds\", \"0\".into()),\n        (\"last_seek_byte\", \"0\".into()),\n        (\"last_seek_percentage\", \"0\".into()),\n        (\"total_content_size\", \"0\".into()),\n        (\"last_seek_timestamp\", \"0\".into()),\n        (\"user_id\", user_id),\n        (\"rust_owner_token\", metadata_token.to_owned()),\n    ];\n\n    fields"
+        }
+      ]
+    },
+    {
+      "path": "rust/crates/vod-http/src/generation_scope.rs",
+      "git_blob": "70f39b8f6ba69fca1bfd9a8732d25b8273ae0c3e",
+      "sha256": "732c7b5537ef7be25507d5366b2a0cd77fc86193f72cb9a6abeb1ef1ff32df84",
+      "excerpts": [
+        {
+          "start_line": 1172,
+          "end_line": 1187,
+          "text": ") -> Result<Closed, Error> {\n    let receipt = hold.receipt.lock().unwrap().clone();\n    let _hold = hold;\n    // One finalizer per true body; its body permit bounds this queue even when\n    // the separate ordinary-control admission is full.\n    let serial = inner.serial.clone().lock_owned().await;\n    let gen = inner.state.lock().await.current.clone();\n    if uncertain\n        && receipt.as_ref().is_none_or(|entry| {\n            entry.lease_token != gen.lease.token() || entry.metadata_token != gen.token\n        })\n    {\n        return Err(Error::UnprovenEntry);\n    }\n    let reply = mutate(\n        &inner,"
+        }
+      ]
+    }
+  ],
+  "exact_runtime_map_sha256": "8e6475a93b2776076b590116435495d13d999cc2256c9d7c228ee06ce6a46bf2",
+  "code_file_hashes_match_expected772": true
+}

@@ -1,0 +1,93 @@
+test_admitted_probe1_closed_fails_even_with_good_prefix (test_revision3.Accept.test_admitted_probe1_closed_fails_even_with_good_prefix) ... ok
+test_late_reader_error_not_masked_by_earlier_prefix (test_revision3.Accept.test_late_reader_error_not_masked_by_earlier_prefix) ... ok
+test_missing_private_grant_and_checkpoints_incomplete (test_revision3.Accept.test_missing_private_grant_and_checkpoints_incomplete) ... ERROR
+test_other_eof_error_and_done_fail_normal (test_revision3.Accept.test_other_eof_error_and_done_fail_normal) ... ok
+test_pair_literal_complete_is_not_scenario_pass (test_revision3.Accept.test_pair_literal_complete_is_not_scenario_pass) ... ok
+test_positive_no_status_equality_requirement (test_revision3.Accept.test_positive_no_status_equality_requirement) ... ok
+test_activation_identity_and_claim_hash_required (test_revision3.Claim.test_activation_identity_and_claim_hash_required) ... ok
+test_every_claim_identity_required_and_exact (test_revision3.Claim.test_every_claim_identity_required_and_exact) ... ok
+test_missing_nonce_cannot_equal_none (test_revision3.Claim.test_missing_nonce_cannot_equal_none) ... ok
+test_positive_bound_claim (test_revision3.Claim.test_positive_bound_claim) ... ok
+test_cancel_before_connect_joins_and_closes (test_revision3.Wire.test_cancel_before_connect_joins_and_closes) ... ERROR
+test_completed_owner_does_not_timer_close_transferred_socket (test_revision3.Wire.test_completed_owner_does_not_timer_close_transferred_socket) ... ERROR
+test_error_body_drip_cannot_extend_deadline (test_revision3.Wire.test_error_body_drip_cannot_extend_deadline) ... ERROR
+test_header_drip_cannot_extend_absolute_deadline (test_revision3.Wire.test_header_drip_cannot_extend_absolute_deadline) ... ERROR
+
+======================================================================
+ERROR: test_missing_private_grant_and_checkpoints_incomplete (test_revision3.Accept.test_missing_private_grant_and_checkpoints_incomplete)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 40, in test_missing_private_grant_and_checkpoints_incomplete
+    self.assertFalse(phase(r)['scenario_ready'])
+                     ~~~~~^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/acceptance.py", line 17, in phase
+    grant=report.get('mode')!='native' or report.get('native_other_grant_preserved',{}).get('preserved')is True
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+ERROR: test_cancel_before_connect_joins_and_closes (test_revision3.Wire.test_cancel_before_connect_joins_and_closes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 73, in test_cancel_before_connect_joins_and_closes
+    owner=Observation('http://127.0.0.1:1',seconds=.2);self.assertEqual(owner.cancel()['fd_after'],-1)
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/absolute_http.py", line 18, in __init__
+    self.socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM);self.fd=self.socket.fileno()
+                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/socket.py", line 236, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_completed_owner_does_not_timer_close_transferred_socket (test_revision3.Wire.test_completed_owner_does_not_timer_close_transferred_socket)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 75, in test_completed_owner_does_not_timer_close_transferred_socket
+    port,stop,t,state=self.serve([b'HTTP/1.1 200 OK\r\nContent-Length: 1\r\n\r\nx'],0);owner=Observation('http://127.0.0.1:'+str(port),seconds=.2)
+                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 49, in serve
+    listener=socket.socket();listener.bind(('127.0.0.1',0));listener.listen();listener.settimeout(2);stop=threading.Event();state={}
+  File "/usr/lib/python3.14/socket.py", line 236, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_error_body_drip_cannot_extend_deadline (test_revision3.Wire.test_error_body_drip_cannot_extend_deadline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 71, in test_error_body_drip_cannot_extend_deadline
+    def test_error_body_drip_cannot_extend_deadline(self):self.case([b'HTTP/1.1 429 Busy\r\nContent-Length: 50\r\n\r\n']+[b'x']*50,.02,.2,lambda r:r.raw.read(50))
+                                                          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 63, in case
+    port,stop,t,state=self.serve(payload,delay);owner=Observation('http://127.0.0.1:'+str(port),seconds=seconds);began=time.monotonic()
+                      ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 49, in serve
+    listener=socket.socket();listener.bind(('127.0.0.1',0));listener.listen();listener.settimeout(2);stop=threading.Event();state={}
+  File "/usr/lib/python3.14/socket.py", line 236, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_header_drip_cannot_extend_absolute_deadline (test_revision3.Wire.test_header_drip_cannot_extend_absolute_deadline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 70, in test_header_drip_cannot_extend_absolute_deadline
+    def test_header_drip_cannot_extend_absolute_deadline(self):self.case([bytes([c])for c in b'HTTP/1.1 429 Too Many Requests\r\nX-Long: abcdefghijklmnopqrstuvwxyz\r\n\r\n'],.02,.2,lambda r:None)
+                                                               ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 63, in case
+    port,stop,t,state=self.serve(payload,delay);owner=Observation('http://127.0.0.1:'+str(port),seconds=seconds);began=time.monotonic()
+                      ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-adapters-3/tools/test_revision3.py", line 49, in serve
+    listener=socket.socket();listener.bind(('127.0.0.1',0));listener.listen();listener.settimeout(2);stop=threading.Event();state={}
+  File "/usr/lib/python3.14/socket.py", line 236, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.004s
+
+FAILED (errors=5)

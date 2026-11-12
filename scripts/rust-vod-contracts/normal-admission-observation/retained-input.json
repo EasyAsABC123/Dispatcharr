@@ -1,0 +1,1074 @@
+{
+  "scope": "retained projection only; no new request/runtime execution",
+  "actual_exit_code": 1,
+  "actual_summary_sha256": "394be080e94930e102287f2879e9499d649387b68447b0ea0781d9bf55888522",
+  "actual_source_report_sha256": "07bde43edaa2dd03b8e3d10e1b77272ff37ef5e358a40bc05b27fc8901a7dfa6",
+  "actual_native_report_sha256": "9fbd5edecc92f8b25da2a4eb7511f79568742c5d9d2bc87637a8c3662d2f0322",
+  "actual_cleanup_sha256": "3b6c4aa6ed8d36c478729db1e719d21091a1f4ffce80323e813c0e3752e3aad2",
+  "actual_summary_flags": {
+    "observation_complete": true,
+    "normal_scenario_qualified": false,
+    "no_reproduction": true,
+    "owned_cleanup_valid": true,
+    "default_named_tables_sequences_unchanged": true,
+    "same_probe_statuses": true
+  },
+  "expected_profile": "profile_connections:2",
+  "expected_content": "63583cf6-32af-5efc-9d45-dc20f87a05ee",
+  "native_other_before": {
+    "owner": "rust:38751752-ca35-4115-bdab-0562e603b888",
+    "owner_confirm": "rust:38751752-ca35-4115-bdab-0562e603b888",
+    "ledger": {
+      "token": "rust:38751752-ca35-4115-bdab-0562e603b888",
+      "owner": "rust:coordination:vod:session:fixture-normal-other:owner",
+      "profile": "profile_connections:2",
+      "reserved": "1",
+      "fence": "2"
+    },
+    "metadata": {
+      "content_uuid": "63583cf6-32af-5efc-9d45-dc20f87a05ee",
+      "m3u_profile_id": "2",
+      "active_streams": "1",
+      "created_at": "1794473651.1421647",
+      "rust_owner_token": "rust-vod-metadata:6cd6559c-07f2-4d54-9cbf-1a7c14467bb9"
+    }
+  },
+  "native_other_after": {
+    "owner": "rust:38751752-ca35-4115-bdab-0562e603b888",
+    "owner_confirm": "rust:38751752-ca35-4115-bdab-0562e603b888",
+    "ledger": {
+      "token": "rust:38751752-ca35-4115-bdab-0562e603b888",
+      "owner": "rust:coordination:vod:session:fixture-normal-other:owner",
+      "profile": "profile_connections:2",
+      "reserved": "1",
+      "fence": "2"
+    },
+    "metadata": {
+      "content_uuid": "63583cf6-32af-5efc-9d45-dc20f87a05ee",
+      "m3u_profile_id": "2",
+      "active_streams": "1",
+      "created_at": "1794473651.1421647",
+      "rust_owner_token": "rust-vod-metadata:6cd6559c-07f2-4d54-9cbf-1a7c14467bb9"
+    }
+  },
+  "backends": {
+    "source": {
+      "actual_flags": {
+        "HTTP_capture_valid": true,
+        "scenario_ready": true,
+        "other_continuity_valid": true,
+        "admitted_probe1_continuity_valid": true,
+        "native_other_ownership_valid": true,
+        "required_checkpoint_coverage": true,
+        "reader_late_valid": true,
+        "shared_response_finalized_by_probe1": true,
+        "elapsed_seconds": 43.075745523005025
+      },
+      "probes": [
+        {
+          "role": "probe1",
+          "status": 200,
+          "body_bytes": null,
+          "body_sha256": null,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "prefix_matches_fixture": true,
+          "transport_error": null,
+          "began": 194002.429024669,
+          "headers_at": 194004.437523287,
+          "initial_observation_complete": 194004.437994721,
+          "absolute_observation": {
+            "deadline": 194026.429100021,
+            "completed": 194004.437993021,
+            "timer_joined": true
+          }
+        },
+        {
+          "role": "probe2",
+          "status": 503,
+          "body_bytes": 19,
+          "body_sha256": "8a734e98fdf672183da1b087d70cb7893f95818aadc601af7921f8f18910d01c",
+          "prefix_sha256": null,
+          "prefix_matches_fixture": null,
+          "transport_error": null,
+          "began": 194004.6880731,
+          "headers_at": 194004.709915538,
+          "initial_observation_complete": 194004.710048982,
+          "absolute_observation": {
+            "deadline": 194028.688104031,
+            "completed": 194004.709999541,
+            "timer_joined": true
+          }
+        }
+      ],
+      "literal_counters": [
+        {
+          "label": "before_stop",
+          "monotonic": 193999.41832591,
+          "value": "2",
+          "observation_error": null
+        },
+        {
+          "label": "fixed_probe1_boundary",
+          "monotonic": 194002.428801323,
+          "value": "1",
+          "observation_error": null
+        },
+        {
+          "label": "after_probe1",
+          "monotonic": 194004.438212557,
+          "value": "2",
+          "observation_error": null
+        },
+        {
+          "label": "after_probe2",
+          "monotonic": 194004.710235818,
+          "value": "2",
+          "observation_error": null
+        },
+        {
+          "label": "after_decode",
+          "monotonic": 194034.46038799,
+          "value": "2",
+          "observation_error": null
+        }
+      ],
+      "other_at_probe1": {
+        "role": "other",
+        "retained": 131072,
+        "received": 131072,
+        "cap": 1048576,
+        "wire_cap": 8388608,
+        "prefix_ready": false,
+        "eof": false,
+        "invalid": null,
+        "reader_done": false,
+        "retention_does_not_close_or_pause": true,
+        "monotonic": 194002.428998388,
+        "socket_fd": 13
+      },
+      "other_at_probe2": {
+        "role": "other",
+        "retained": 196608,
+        "received": 196608,
+        "cap": 1048576,
+        "wire_cap": 8388608,
+        "prefix_ready": false,
+        "eof": false,
+        "invalid": null,
+        "reader_done": false,
+        "retention_does_not_close_or_pause": true,
+        "monotonic": 194004.68806618,
+        "socket_fd": 13
+      },
+      "probe1_at_probe2": {
+        "role": "probe1",
+        "retained": 65536,
+        "received": 65536,
+        "cap": 1048576,
+        "wire_cap": 8388608,
+        "prefix_ready": false,
+        "eof": false,
+        "invalid": null,
+        "reader_done": false,
+        "retention_does_not_close_or_pause": true,
+        "monotonic": 194004.68806043,
+        "socket_fd": 11
+      },
+      "other_before_teardown": {
+        "role": "other",
+        "retained": 1048576,
+        "received": 1179648,
+        "cap": 1048576,
+        "wire_cap": 8388608,
+        "prefix_ready": true,
+        "eof": false,
+        "invalid": null,
+        "reader_done": false,
+        "retention_does_not_close_or_pause": true,
+        "monotonic": 194034.462949722,
+        "socket_fd": 13
+      },
+      "decode_results": {
+        "other": {
+          "passed": true,
+          "retained_bytes": 1048576,
+          "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+          "frames": 75,
+          "strict_audio_video_seconds": 3,
+          "minimum_frames": 50,
+          "process_reaped": true,
+          "pipes_settled": true
+        },
+        "probe1": {
+          "passed": true,
+          "retained_bytes": 1048576,
+          "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+          "frames": 75,
+          "strict_audio_video_seconds": 3,
+          "minimum_frames": 50,
+          "process_reaped": true,
+          "pipes_settled": true
+        }
+      },
+      "origin_checkpoints": [
+        {
+          "label": "before_stop",
+          "at": 193999.41832591,
+          "origin": {
+            "epoch": "d75e895498ff4110af0035914bf29150",
+            "invalid": [],
+            "accepted_TCP_total": 5,
+            "actual_open_TCP": 4,
+            "actual_stream_GET_inflight": 3,
+            "media_HEAD_total": 0,
+            "control_total": 2,
+            "transient_TCP_without_request": 0
+          }
+        },
+        {
+          "label": "fixed_probe1_boundary",
+          "at": 194002.428801323,
+          "origin": {
+            "epoch": "d75e895498ff4110af0035914bf29150",
+            "invalid": [],
+            "accepted_TCP_total": 6,
+            "actual_open_TCP": 4,
+            "actual_stream_GET_inflight": 3,
+            "media_HEAD_total": 0,
+            "control_total": 3,
+            "transient_TCP_without_request": 0
+          }
+        },
+        {
+          "label": "after_probe1",
+          "at": 194004.438212557,
+          "origin": {
+            "epoch": "d75e895498ff4110af0035914bf29150",
+            "invalid": [],
+            "accepted_TCP_total": 8,
+            "actual_open_TCP": 3,
+            "actual_stream_GET_inflight": 2,
+            "media_HEAD_total": 0,
+            "control_total": 4,
+            "transient_TCP_without_request": 0
+          }
+        },
+        {
+          "label": "after_probe2",
+          "at": 194004.710235818,
+          "origin": {
+            "epoch": "d75e895498ff4110af0035914bf29150",
+            "invalid": [],
+            "accepted_TCP_total": 9,
+            "actual_open_TCP": 3,
+            "actual_stream_GET_inflight": 2,
+            "media_HEAD_total": 0,
+            "control_total": 5,
+            "transient_TCP_without_request": 0
+          }
+        },
+        {
+          "label": "after_decode",
+          "at": 194034.46038799,
+          "origin": {
+            "epoch": "d75e895498ff4110af0035914bf29150",
+            "invalid": [],
+            "accepted_TCP_total": 10,
+            "actual_open_TCP": 3,
+            "actual_stream_GET_inflight": 2,
+            "media_HEAD_total": 0,
+            "control_total": 6,
+            "transient_TCP_without_request": 0
+          }
+        }
+      ],
+      "origin_after_owned_shutdown": {
+        "epoch": "d75e895498ff4110af0035914bf29150",
+        "invalid": [],
+        "accepted_TCP_total": 11,
+        "actual_open_TCP": 0,
+        "actual_stream_GET_inflight": 0,
+        "media_HEAD_total": 0,
+        "control_total": 7,
+        "transient_TCP_without_request": 0,
+        "server_thread_settled": true,
+        "connections": [
+          {
+            "id": 1,
+            "opened": 193990.548511197,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 193990.549109034,
+            "fd_after": -1
+          },
+          {
+            "id": 2,
+            "opened": 193993.394641827,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194003.395267192,
+            "fd_after": -1
+          },
+          {
+            "id": 3,
+            "opened": 193995.404185605,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 6,
+            "closed": 194003.406711356,
+            "fd_after": -1
+          },
+          {
+            "id": 4,
+            "opened": 193997.416790489,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 8,
+            "closed": 194037.417322607,
+            "fd_after": -1
+          },
+          {
+            "id": 5,
+            "opened": 193999.423904668,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 10,
+            "closed": 193999.424479064,
+            "fd_after": -1
+          },
+          {
+            "id": 6,
+            "opened": 194002.429991597,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 10,
+            "closed": 194002.431327564,
+            "fd_after": -1
+          },
+          {
+            "id": 7,
+            "opened": 194002.436801669,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 10,
+            "closed": 194038.437294371,
+            "fd_after": -1
+          },
+          {
+            "id": 8,
+            "opened": 194004.438913147,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194004.439505343,
+            "fd_after": -1
+          },
+          {
+            "id": 9,
+            "opened": 194004.710826414,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194004.711461162,
+            "fd_after": -1
+          },
+          {
+            "id": 10,
+            "opened": 194034.461024368,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194034.461688046,
+            "fd_after": -1
+          },
+          {
+            "id": 11,
+            "opened": 194036.439493266,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194036.440185135,
+            "fd_after": -1
+          }
+        ],
+        "requests": [
+          {
+            "id": 1,
+            "connection": 1,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 193990.548902818,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 193990.549074293,
+            "error": null
+          },
+          {
+            "id": 2,
+            "connection": 2,
+            "method": "GET",
+            "path_role": "shared_movie",
+            "kind": "stream_GET",
+            "began": 193993.394959956,
+            "in_flight": false,
+            "bytes_written": 262144,
+            "returned": 194003.395221311,
+            "error": null
+          },
+          {
+            "id": 3,
+            "connection": 3,
+            "method": "GET",
+            "path_role": "shared_movie",
+            "kind": "stream_GET",
+            "began": 193995.406414028,
+            "in_flight": false,
+            "bytes_written": 196608,
+            "returned": 194003.406653915,
+            "error": null
+          },
+          {
+            "id": 4,
+            "connection": 4,
+            "method": "GET",
+            "path_role": "other_movie",
+            "kind": "stream_GET",
+            "began": 193997.417081337,
+            "in_flight": false,
+            "bytes_written": 1245184,
+            "returned": 194037.417276696,
+            "error": null
+          },
+          {
+            "id": 5,
+            "connection": 5,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 193999.424175376,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 193999.424441923,
+            "error": null
+          },
+          {
+            "id": 6,
+            "connection": 6,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194002.431058707,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194002.431301524,
+            "error": null
+          },
+          {
+            "id": 7,
+            "connection": 7,
+            "method": "GET",
+            "path_role": "probe1_movie",
+            "kind": "stream_GET",
+            "began": 194002.437025606,
+            "in_flight": false,
+            "bytes_written": 1114112,
+            "returned": 194038.43723715,
+            "error": null
+          },
+          {
+            "id": 8,
+            "connection": 8,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194004.439152293,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194004.439477483,
+            "error": null
+          },
+          {
+            "id": 9,
+            "connection": 9,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194004.711062481,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194004.711430481,
+            "error": null
+          },
+          {
+            "id": 10,
+            "connection": 10,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194034.461245754,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194034.461661866,
+            "error": null
+          },
+          {
+            "id": 11,
+            "connection": 11,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194036.439741793,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194036.440150524,
+            "error": null
+          }
+        ],
+        "raw_sha256": "2edbce8e08097683318e5880dd7aaa36a25c810894aa836ab0f0c8ec4a97033c"
+      },
+      "admin_stop": {
+        "status": 200,
+        "body_bytes": 139
+      },
+      "early_stop_literal": "true",
+      "caps_before": {
+        "account": 2,
+        "profile": 2
+      },
+      "caps_after": {
+        "account": 2,
+        "profile": 2
+      },
+      "caps_terminal": {
+        "account": 2,
+        "profile": 2
+      }
+    },
+    "native": {
+      "actual_flags": {
+        "HTTP_capture_valid": true,
+        "scenario_ready": false,
+        "other_continuity_valid": true,
+        "admitted_probe1_continuity_valid": true,
+        "native_other_ownership_valid": false,
+        "required_checkpoint_coverage": true,
+        "reader_late_valid": true,
+        "shared_response_finalized_by_probe1": null,
+        "elapsed_seconds": 41.10944625700358
+      },
+      "probes": [
+        {
+          "role": "probe1",
+          "status": 200,
+          "body_bytes": null,
+          "body_sha256": null,
+          "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "prefix_matches_fixture": true,
+          "transport_error": null,
+          "began": 194051.198444826,
+          "headers_at": 194051.201755969,
+          "initial_observation_complete": 194053.2018629,
+          "absolute_observation": {
+            "deadline": 194075.198481717,
+            "completed": 194053.20186039,
+            "timer_joined": true
+          }
+        },
+        {
+          "role": "probe2",
+          "status": 503,
+          "body_bytes": 19,
+          "body_sha256": "8a734e98fdf672183da1b087d70cb7893f95818aadc601af7921f8f18910d01c",
+          "prefix_sha256": null,
+          "prefix_matches_fixture": null,
+          "transport_error": null,
+          "began": 194053.45193796,
+          "headers_at": 194053.45405214,
+          "initial_observation_complete": 194053.454149822,
+          "absolute_observation": {
+            "deadline": 194077.451967031,
+            "completed": 194053.454112091,
+            "timer_joined": true
+          }
+        }
+      ],
+      "literal_counters": [
+        {
+          "label": "before_stop",
+          "monotonic": 194048.189749203,
+          "value": "2",
+          "observation_error": null
+        },
+        {
+          "label": "fixed_probe1_boundary",
+          "monotonic": 194051.198317872,
+          "value": "1",
+          "observation_error": null
+        },
+        {
+          "label": "after_probe1",
+          "monotonic": 194053.202051346,
+          "value": "2",
+          "observation_error": null
+        },
+        {
+          "label": "after_probe2",
+          "monotonic": 194053.454299367,
+          "value": "2",
+          "observation_error": null
+        },
+        {
+          "label": "after_decode",
+          "monotonic": 194083.234409552,
+          "value": "2",
+          "observation_error": null
+        }
+      ],
+      "other_at_probe1": {
+        "role": "other",
+        "retained": 131072,
+        "received": 131072,
+        "cap": 1048576,
+        "wire_cap": 8388608,
+        "prefix_ready": false,
+        "eof": false,
+        "invalid": null,
+        "reader_done": false,
+        "retention_does_not_close_or_pause": true,
+        "monotonic": 194051.198435715,
+        "socket_fd": 13
+      },
+      "other_at_probe2": {
+        "role": "other",
+        "retained": 196608,
+        "received": 196608,
+        "cap": 1048576,
+        "wire_cap": 8388608,
+        "prefix_ready": false,
+        "eof": false,
+        "invalid": null,
+        "reader_done": false,
+        "retention_does_not_close_or_pause": true,
+        "monotonic": 194053.45193223,
+        "socket_fd": 13
+      },
+      "probe1_at_probe2": {
+        "role": "probe1",
+        "retained": 65536,
+        "received": 65536,
+        "cap": 1048576,
+        "wire_cap": 8388608,
+        "prefix_ready": false,
+        "eof": false,
+        "invalid": null,
+        "reader_done": false,
+        "retention_does_not_close_or_pause": true,
+        "monotonic": 194053.451927979,
+        "socket_fd": 11
+      },
+      "other_before_teardown": {
+        "role": "other",
+        "retained": 1048576,
+        "received": 1179648,
+        "cap": 1048576,
+        "wire_cap": 8388608,
+        "prefix_ready": true,
+        "eof": false,
+        "invalid": null,
+        "reader_done": false,
+        "retention_does_not_close_or_pause": true,
+        "monotonic": 194083.237723466,
+        "socket_fd": 13
+      },
+      "decode_results": {
+        "other": {
+          "passed": true,
+          "retained_bytes": 1048576,
+          "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+          "frames": 75,
+          "strict_audio_video_seconds": 3,
+          "minimum_frames": 50,
+          "process_reaped": true,
+          "pipes_settled": true
+        },
+        "probe1": {
+          "passed": true,
+          "retained_bytes": 1048576,
+          "retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097",
+          "frames": 75,
+          "strict_audio_video_seconds": 3,
+          "minimum_frames": 50,
+          "process_reaped": true,
+          "pipes_settled": true
+        }
+      },
+      "origin_checkpoints": [
+        {
+          "label": "before_stop",
+          "at": 194048.189749203,
+          "origin": {
+            "epoch": "6694079504c043c1ab9039e34733e20d",
+            "invalid": [],
+            "accepted_TCP_total": 5,
+            "actual_open_TCP": 4,
+            "actual_stream_GET_inflight": 3,
+            "media_HEAD_total": 0,
+            "control_total": 2,
+            "transient_TCP_without_request": 0
+          }
+        },
+        {
+          "label": "fixed_probe1_boundary",
+          "at": 194051.198317872,
+          "origin": {
+            "epoch": "6694079504c043c1ab9039e34733e20d",
+            "invalid": [],
+            "accepted_TCP_total": 6,
+            "actual_open_TCP": 4,
+            "actual_stream_GET_inflight": 3,
+            "media_HEAD_total": 0,
+            "control_total": 3,
+            "transient_TCP_without_request": 0
+          }
+        },
+        {
+          "label": "after_probe1",
+          "at": 194053.202051346,
+          "origin": {
+            "epoch": "6694079504c043c1ab9039e34733e20d",
+            "invalid": [],
+            "accepted_TCP_total": 8,
+            "actual_open_TCP": 3,
+            "actual_stream_GET_inflight": 2,
+            "media_HEAD_total": 0,
+            "control_total": 4,
+            "transient_TCP_without_request": 0
+          }
+        },
+        {
+          "label": "after_probe2",
+          "at": 194053.454299367,
+          "origin": {
+            "epoch": "6694079504c043c1ab9039e34733e20d",
+            "invalid": [],
+            "accepted_TCP_total": 9,
+            "actual_open_TCP": 3,
+            "actual_stream_GET_inflight": 2,
+            "media_HEAD_total": 0,
+            "control_total": 5,
+            "transient_TCP_without_request": 0
+          }
+        },
+        {
+          "label": "after_decode",
+          "at": 194083.234409552,
+          "origin": {
+            "epoch": "6694079504c043c1ab9039e34733e20d",
+            "invalid": [],
+            "accepted_TCP_total": 10,
+            "actual_open_TCP": 3,
+            "actual_stream_GET_inflight": 2,
+            "media_HEAD_total": 0,
+            "control_total": 6,
+            "transient_TCP_without_request": 0
+          }
+        }
+      ],
+      "origin_after_owned_shutdown": {
+        "epoch": "6694079504c043c1ab9039e34733e20d",
+        "invalid": [],
+        "accepted_TCP_total": 11,
+        "actual_open_TCP": 0,
+        "actual_stream_GET_inflight": 0,
+        "media_HEAD_total": 0,
+        "control_total": 7,
+        "transient_TCP_without_request": 0,
+        "server_thread_settled": true,
+        "connections": [
+          {
+            "id": 1,
+            "opened": 194039.424551029,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194039.425066204,
+            "fd_after": -1
+          },
+          {
+            "id": 2,
+            "opened": 194042.178652945,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194052.17921363,
+            "fd_after": -1
+          },
+          {
+            "id": 3,
+            "opened": 194044.183331385,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 6,
+            "closed": 194052.185696154,
+            "fd_after": -1
+          },
+          {
+            "id": 4,
+            "opened": 194046.188413927,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 8,
+            "closed": 194086.188907151,
+            "fd_after": -1
+          },
+          {
+            "id": 5,
+            "opened": 194048.195279869,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 10,
+            "closed": 194048.195887197,
+            "fd_after": -1
+          },
+          {
+            "id": 6,
+            "opened": 194051.199187357,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 10,
+            "closed": 194051.199832735,
+            "fd_after": -1
+          },
+          {
+            "id": 7,
+            "opened": 194051.201124451,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 10,
+            "closed": 194087.201595769,
+            "fd_after": -1
+          },
+          {
+            "id": 8,
+            "opened": 194053.202725795,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194053.203355553,
+            "fd_after": -1
+          },
+          {
+            "id": 9,
+            "opened": 194053.454735209,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194053.455305105,
+            "fd_after": -1
+          },
+          {
+            "id": 10,
+            "opened": 194083.235028489,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194083.235664187,
+            "fd_after": -1
+          },
+          {
+            "id": 11,
+            "opened": 194083.238424136,
+            "socket_closed": true,
+            "peer_eof_observed": false,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194083.239170407,
+            "fd_after": -1
+          }
+        ],
+        "requests": [
+          {
+            "id": 1,
+            "connection": 1,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194039.424892219,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194039.425033843,
+            "error": null
+          },
+          {
+            "id": 2,
+            "connection": 2,
+            "method": "GET",
+            "path_role": "shared_movie",
+            "kind": "stream_GET",
+            "began": 194042.178917973,
+            "in_flight": false,
+            "bytes_written": 262144,
+            "returned": 194052.179157759,
+            "error": null
+          },
+          {
+            "id": 3,
+            "connection": 3,
+            "method": "GET",
+            "path_role": "shared_movie",
+            "kind": "stream_GET",
+            "began": 194044.185453675,
+            "in_flight": false,
+            "bytes_written": 196608,
+            "returned": 194052.185652052,
+            "error": null
+          },
+          {
+            "id": 4,
+            "connection": 4,
+            "method": "GET",
+            "path_role": "other_movie",
+            "kind": "stream_GET",
+            "began": 194046.188643134,
+            "in_flight": false,
+            "bytes_written": 1245184,
+            "returned": 194086.188850069,
+            "error": null
+          },
+          {
+            "id": 5,
+            "connection": 5,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194048.195570018,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194048.195847785,
+            "error": null
+          },
+          {
+            "id": 6,
+            "connection": 6,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194051.199479125,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194051.199797684,
+            "error": null
+          },
+          {
+            "id": 7,
+            "connection": 7,
+            "method": "GET",
+            "path_role": "probe1_movie",
+            "kind": "stream_GET",
+            "began": 194051.201366118,
+            "in_flight": false,
+            "bytes_written": 1114112,
+            "returned": 194087.201560458,
+            "error": null
+          },
+          {
+            "id": 8,
+            "connection": 8,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194053.202948721,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194053.203323762,
+            "error": null
+          },
+          {
+            "id": 9,
+            "connection": 9,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194053.454916324,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194053.455276674,
+            "error": null
+          },
+          {
+            "id": 10,
+            "connection": 10,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194083.235249156,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194083.235637157,
+            "error": null
+          },
+          {
+            "id": 11,
+            "connection": 11,
+            "method": "GET",
+            "path_role": null,
+            "kind": "control",
+            "began": 194083.238625051,
+            "in_flight": false,
+            "bytes_written": 0,
+            "returned": 194083.239101885,
+            "error": null
+          }
+        ],
+        "raw_sha256": "9a8b070e41b00bf47bbe7065b18a19e644a751cadb814f915dcb90ae8039b1c8"
+      },
+      "admin_stop": {
+        "status": 200,
+        "body_bytes": 134
+      },
+      "early_stop_literal": "true",
+      "caps_before": {
+        "account": 2,
+        "profile": 2
+      },
+      "caps_after": {
+        "account": 2,
+        "profile": 2
+      },
+      "caps_terminal": {
+        "account": 2,
+        "profile": 2
+      }
+    }
+  },
+  "fixture_seed_binding": {
+    "private_seed_sha256": "328ed2922dbd52314863e82696b3b36594c2bdbcc230ca3b28037feb28663962",
+    "provider_profile_id": 2,
+    "other_movie_uuid": "63583cf6-32af-5efc-9d45-dc20f87a05ee",
+    "tokens_projected": false
+  }
+}

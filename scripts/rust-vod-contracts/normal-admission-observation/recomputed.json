@@ -1,0 +1,216 @@
+{
+  "scope": "Offline raw-field recomputation only; actual exit/report preserved",
+  "actual_exit_code": 1,
+  "actual_gate_recomputed": {
+    "observation_complete": true,
+    "normal_scenario_ready": false,
+    "normal_scenario_qualified": false,
+    "no_reproduction": true,
+    "full_M4_acceptance": false
+  },
+  "actual_phase_gate_recomputed": {
+    "source": {
+      "HTTP_capture_valid": true,
+      "scenario_ready": true,
+      "other_continuity_valid": true,
+      "admitted_probe1_continuity_valid": true,
+      "native_other_ownership_valid": true,
+      "required_checkpoint_coverage": true,
+      "reader_late_valid": true,
+      "bounded_unexpected_outcomes_retained": true,
+      "no_reproduction": false,
+      "capture_incomplete": false,
+      "parity_acceptance": false
+    },
+    "native": {
+      "HTTP_capture_valid": true,
+      "scenario_ready": false,
+      "other_continuity_valid": true,
+      "admitted_probe1_continuity_valid": true,
+      "native_other_ownership_valid": false,
+      "required_checkpoint_coverage": true,
+      "reader_late_valid": true,
+      "bounded_unexpected_outcomes_retained": true,
+      "no_reproduction": true,
+      "capture_incomplete": false,
+      "parity_acceptance": false
+    }
+  },
+  "corrected_ownership": {
+    "preserved": true,
+    "independent_typed_token_namespaces": true,
+    "positive_fence": true,
+    "reserved": true,
+    "complete_before_after_equality": true,
+    "counter_equality_claimed": false
+  },
+  "separate_offline_gate_recomputed": {
+    "observation_complete": true,
+    "normal_scenario_ready": true,
+    "normal_scenario_qualified": true,
+    "no_reproduction": false,
+    "full_M4_acceptance": false
+  },
+  "same_statuses": {
+    "source": [
+      200,
+      503
+    ],
+    "native": [
+      200,
+      503
+    ]
+  },
+  "literal_counter_timeline": {
+    "source": [
+      {
+        "label": "before_stop",
+        "value": "2",
+        "at": 193999.41832591
+      },
+      {
+        "label": "fixed_probe1_boundary",
+        "value": "1",
+        "at": 194002.428801323
+      },
+      {
+        "label": "after_probe1",
+        "value": "2",
+        "at": 194004.438212557
+      },
+      {
+        "label": "after_probe2",
+        "value": "2",
+        "at": 194004.710235818
+      },
+      {
+        "label": "after_decode",
+        "value": "2",
+        "at": 194034.46038799
+      }
+    ],
+    "native": [
+      {
+        "label": "before_stop",
+        "value": "2",
+        "at": 194048.189749203
+      },
+      {
+        "label": "fixed_probe1_boundary",
+        "value": "1",
+        "at": 194051.198317872
+      },
+      {
+        "label": "after_probe1",
+        "value": "2",
+        "at": 194053.202051346
+      },
+      {
+        "label": "after_probe2",
+        "value": "2",
+        "at": 194053.454299367
+      },
+      {
+        "label": "after_decode",
+        "value": "2",
+        "at": 194083.234409552
+      }
+    ]
+  },
+  "no_source_zero_at_recorded_checkpoints": true,
+  "owned_origin_request_groups": {
+    "source": {
+      "groups": {
+        "GET:None:control": {
+          "requests": 7,
+          "bytes_written": 0,
+          "connection_ids": [
+            1,
+            5,
+            6,
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        "GET:shared_movie:stream_GET": {
+          "requests": 2,
+          "bytes_written": 458752,
+          "connection_ids": [
+            2,
+            3
+          ]
+        },
+        "GET:other_movie:stream_GET": {
+          "requests": 1,
+          "bytes_written": 1245184,
+          "connection_ids": [
+            4
+          ]
+        },
+        "GET:probe1_movie:stream_GET": {
+          "requests": 1,
+          "bytes_written": 1114112,
+          "connection_ids": [
+            7
+          ]
+        }
+      },
+      "accepted_TCP_total": 11,
+      "control_total": 7,
+      "media_HEAD_total": 0,
+      "transient_TCP_without_request": 0,
+      "server_body_write_not_client_delivery": true,
+      "one_TCP_per_viewer_inferred": false
+    },
+    "native": {
+      "groups": {
+        "GET:None:control": {
+          "requests": 7,
+          "bytes_written": 0,
+          "connection_ids": [
+            1,
+            5,
+            6,
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        "GET:shared_movie:stream_GET": {
+          "requests": 2,
+          "bytes_written": 458752,
+          "connection_ids": [
+            2,
+            3
+          ]
+        },
+        "GET:other_movie:stream_GET": {
+          "requests": 1,
+          "bytes_written": 1245184,
+          "connection_ids": [
+            4
+          ]
+        },
+        "GET:probe1_movie:stream_GET": {
+          "requests": 1,
+          "bytes_written": 1114112,
+          "connection_ids": [
+            7
+          ]
+        }
+      },
+      "accepted_TCP_total": 11,
+      "control_total": 7,
+      "media_HEAD_total": 0,
+      "transient_TCP_without_request": 0,
+      "server_body_write_not_client_delivery": true,
+      "one_TCP_per_viewer_inferred": false
+    }
+  },
+  "physical_cleanup_and_default_audit_recomputed": true,
+  "runtime_or_application_rerun": false,
+  "full_M4_acceptance": false
+}

@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "scope": "NEW3 blocked owned adapter and deadline/identity/scenario controls; no Source/Native pair",
+  "execution_authorized": false,
+  "resource_sampling": false,
+  "performance_acceptance": false,
+  "full_M4_acceptance": false,
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "support_revision": "c91ab5ece7926f1b6b04a8069c6ad38c5b5d8d55",
+  "candidate_binding": "UNBOUND; immutable Main build manifest/source archive/image/Root review required before any Native phase",
+  "cohort": {
+    "repetitions": 1,
+    "profile_max_streams": 2,
+    "account_max_streams": 2,
+    "cap_set_boundary": "owned seed/template BEFORE clones or any playback",
+    "mid_phase_cap_writes": false,
+    "reply_holds": false,
+    "roles": [
+      "shared_initial",
+      "shared_follower",
+      "other",
+      "probe1",
+      "probe2"
+    ],
+    "separate_admin_action": "stop_shared",
+    "same_session_roles": [
+      "shared_initial",
+      "shared_follower"
+    ],
+    "distinct_movie_session_probes": 2,
+    "all_viewers_actual_Bearer": true,
+    "user_level": 10,
+    "stream_limit": 0,
+    "custom_properties": {},
+    "profile_counter_used_for_dispatch": false,
+    "probe_status_used_to_skip_next_probe": false,
+    "zero_required": false,
+    "adaptive_retry": false
+  },
+  "fixed_schedule": {
+    "prelude": "open initial then same-SID follower then other; each retain real200 and exact8192 prefix before stop action",
+    "admin_action": "POST stop shared SID with same real Bearer; preserve actual status/body/early stop key",
+    "shared_close": "actual initial socket shutdown/close acknowledgement, then follower socket shutdown/close acknowledgement, immediately in that order after admin return; no profile-counter wait",
+    "probe1_offset_from_follower_client_close_seconds": 3,
+    "checkpoint_max_overshoot_seconds": 0.35,
+    "shared_response_finalization_gate": "never a dispatch gate: bounded asynchronous signal reads with event-time readiness derived afterward against fixed probe1 dispatch",
+    "probe1": "new movie C/session C, actual status/headers/body; admitted body remains open",
+    "probe2_offset_from_probe1_initial_observation_seconds": 0.25,
+    "probe2": "different new movie D/session D regardless probe1 status, with any admitted probe1 kept open",
+    "probes_after": "counter/origin/private-owner observations are bounded independent tasks and never block probe2 dispatch; failures retained as observation errors",
+    "retained_body_capture": "save only first1MiB; flush prefix then continue draining/discarding until fixed teardown or literal EOF/error, retaining physical response/socket; no pause/close at cap",
+    "teardown": "close admitted probes then other; collect final source signals/origin/DB caps/audits; stop exact owned Source/Redis/candidate projects and verify independent empty inventories"
+  },
+  "timeouts_seconds": {
+    "HTTP_connect_and_read": 8,
+    "retained_prefix_capture": 40,
+    "decoder": 45,
+    "phase": 120,
+    "Source_finalization_terminal_collection": 10,
+    "owned_process_stop": 15,
+    "first_probe_observation_maximum": 24,
+    "first_probe_observation_explanation": "absolute24s socket owner clock covers connect, headers and initial8192 or bounded error-body read; timer shutdown interrupts slow drip. Resolve fixed fixture IP before schedule; no retries. Failure closes owned socket/response and joins timer before dispatch continues; literal elapsed/physical-close evidence retained."
+  },
+  "body_and_decoder": {
+    "initial_prefix_bytes": 8192,
+    "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+    "retained_bytes_each": 1048576,
+    "retained_maximum_streams": 3,
+    "retained_aggregate_bytes": 3145728,
+    "strict_audio_video_decode_seconds": 3,
+    "minimum_video_frames": 50,
+    "decoder_flags": [
+      "-xerror",
+      "-map",
+      "0:v:0",
+      "-map",
+      "0:a:0"
+    ],
+    "decoder_input": "captured1MiB MP4 prefix, not regenerated media; file fixture separately SHA checked",
+    "retention_cap_does_not_stop_reader": true,
+    "max_wire_bytes_each": 8388608,
+    "read_frame_bytes": 8192,
+    "decoder_parallel_maximum": 3,
+    "qualified_actual_retained_sha256": "b4a9992aa94b69eaaebf85025ec5b55f3ebf6360b143196b0d056fcb04c6b097"
+  },
+  "fixture_origin": {
+    "bytes_per_second": 32768,
+    "fixture_mp4_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "new_aliases": [
+      "/movie/fixture/fixture/fixture-normal-probe1.mp4",
+      "/movie/fixture/fixture/fixture-normal-probe2.mp4"
+    ],
+    "fresh_ledger_epoch_per_backend": true,
+    "ledger_roles": [
+      "accepted_TCP_connections",
+      "in_flight_HTTP_responses",
+      "response_bytes_written",
+      "handler_return",
+      "actual_socket_shutdown_ack"
+    ],
+    "socket_ack": "server.shutdown_request after actual socket shutdown/close with fd=-1; handler finish alone is not socket closure",
+    "body_progress": "actual consumer read byte counts separate; no Source generator instrumentation/new upstream read inferred",
+    "max_live_connections": 64,
+    "max_requests": 64,
+    "max_events": 512,
+    "max_ledger_bytes": 1048576,
+    "max_snapshot_bytes": 65536,
+    "classification": [
+      "stream_GET_inflight",
+      "media_HEAD",
+      "preflight_GET",
+      "health_stats_control",
+      "transient_TCP_without_request",
+      "accepted_socket_lifetime",
+      "actual_shutdown_ack"
+    ],
+    "max_total_connections": 128
+  },
+  "input_effect_guards": [
+    "independent exact DB clones/fingerprints before phases; Source mutations cannot seed Native",
+    "four movies/relations share same existing account/profile; no episode/provider-refresh inputs required",
+    "account/profile caps read as2 before/after each backend, no intermediate cap mutation",
+    "actual SQL/Bearer user resolution and same default nine-table/sequence audit as qualified Main",
+    "only owned local origin and exact allowed aliases; actual source/candidate process/image bindings",
+    "separate source response-finalization vs consumer-close vs origin-handler-return vs socket-close evidence",
+    "candidate opt-in recovery fixture only; normal default remainsOFF; workers/memory/session/request budgets unchanged"
+  ],
+  "probe_outcome_policy": "record all bounded HTTP statuses and bodies literally; no assumed Source0/200/429 filter; Source200 vsNative429 is a compatibility observation, never automatically fullM4 pass",
+  "result_dimensions": [
+    "input_valid",
+    "HTTP_capture_valid",
+    "shared_response_finalization_at_probe1",
+    "other_body_reader_progress",
+    "origin_actual_active_connections",
+    "origin_in_flight_responses",
+    "profile_counter_snapshots",
+    "probe_statuses_and_bodies",
+    "native_other_private_grant_preserved",
+    "same_outcomes",
+    "known_compatibility_difference",
+    "owned_cleanup_valid",
+    "capture_incomplete",
+    "no_reproduction",
+    "normal_scenario_qualified"
+  ],
+  "remaining_prerequisites": [
+    "Root review sealed adapters3 and exact fresh immutable candidate bindings",
+    "fresh Root once pair cue and reviewed activation-only copy",
+    "no actual Source/Native application cohort from blocked revision"
+  ]
+}

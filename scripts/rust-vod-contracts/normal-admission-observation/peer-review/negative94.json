@@ -1,0 +1,165 @@
+{
+  "passed": false,
+  "retained_actual_data_audit_passed": true,
+  "portable_validator_approved": false,
+  "blocking_coverage_challenges": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-Root-peer-review-1/coverage-challenges.json",
+    "sha256": "76ea4bba688268b38cd0b3ba88d693f4b82f7e42a52f3019a5b6b50901f0a500",
+    "accepted_corruptions": [
+      {
+        "mode": "source",
+        "corruption": "decoders_empty",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "source",
+        "corruption": "decoder_other_missing",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "source",
+        "corruption": "decoder_probe1_missing",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "source",
+        "corruption": "origin_connections_empty",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "source",
+        "corruption": "origin_requests_empty",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "native",
+        "corruption": "decoders_empty",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "native",
+        "corruption": "decoder_other_missing",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "native",
+        "corruption": "decoder_probe1_missing",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "native",
+        "corruption": "origin_connections_empty",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      },
+      {
+        "mode": "native",
+        "corruption": "origin_requests_empty",
+        "rejected": false,
+        "actual_qualified": false,
+        "offline_qualified": true,
+        "physical_cleanup_default_audit_claim": true
+      }
+    ]
+  },
+  "existing18_controls_passed_despite_gaps": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-normal-admission-Root-peer-review-1/offline-controls.log",
+    "sha256": "c3bba93064b36db16aad499e264cb673440ab6099a6ab98c96ca0dd0ec0e2c4d"
+  },
+  "scope": "Retained-only peer audit; no request/fixture/service/binary execution, sealed94 unchanged",
+  "selection_sha256": "b3fc9568e6b6df2c34c8ce4b266642aa0b774622656d59216de102ff3e0e5c77",
+  "files_verified": 94,
+  "bytes_verified": 732301,
+  "Original_license_exact": true,
+  "Original_attribution_preserved": true,
+  "exact_full_summary_only_four_header_maps_omitted": true,
+  "exact_private_phase_seed_bindings": {
+    "exact_summary_projection": true,
+    "exact_two_raw_phase_bindings": true,
+    "independent_expected_seed_binding": true,
+    "private_auth_fields_printed": false,
+    "application_executed": false
+  },
+  "actual_seed_Bearer_absent_and_no_JWT_patterns_in94": true,
+  "actual_exit1_status": "Recorded in packet/Root-observed session84761, independently consistent with exact historical driver return rule and false raw qualification; no invented exit-log file",
+  "actual_qualified_false_preserved": true,
+  "separate_offline_qualified_true_recomputed": true,
+  "no_actual_reclassification": true,
+  "raw_derived_gate_flag_corruption_rejections": 27,
+  "raw_origin_reconciliation": {
+    "source": {
+      "raw_sha256": "2edbce8e08097683318e5880dd7aaa36a25c810894aa836ab0f0c8ec4a97033c",
+      "connections": 11,
+      "control_GETs": 7,
+      "shared_media_GETs": 2,
+      "other_media_GETs": 1,
+      "probe1_media_GETs": 1,
+      "probe2_media_GETs": 0,
+      "all_server_sockets_closed_fd_minus1": true
+    },
+    "native": {
+      "raw_sha256": "9a8b070e41b00bf47bbe7065b18a19e644a751cadb814f915dcb90ae8039b1c8",
+      "connections": 11,
+      "control_GETs": 7,
+      "shared_media_GETs": 2,
+      "other_media_GETs": 1,
+      "probe1_media_GETs": 1,
+      "probe2_media_GETs": 0,
+      "all_server_sockets_closed_fd_minus1": true
+    }
+  },
+  "default_before_after_named_audit_exact": true,
+  "independent_owned_cleanup_record_empty": true,
+  "blocked_executed_restorations": {
+    "blocked": {
+      "restored_files": 69,
+      "mode": "blocked",
+      "selection_sha256": "dd888e443cd348e60e32f71e714cebb1028f67dda19b7a77dd4f46533441143d",
+      "application_executed": false,
+      "authorization_granted": false
+    },
+    "executed-historical": {
+      "restored_files": 69,
+      "mode": "executed-historical",
+      "selection_sha256": "2e24bb01b681afb5551fddf9aa5e82617a18ef48c401258964692daf275b5310",
+      "application_executed": false,
+      "authorization_granted": false
+    }
+  },
+  "only_activation_delta": "tools/run.py EXECUTION_BLOCKED False/True; restored69 exact, no execution authorized",
+  "pinned_runtime_code_excerpts_git_blobs_exact": true,
+  "candidate_manifest_image51_exact": true,
+  "recomputed_result_sha256": "3e649c6261919d78f4e9cee517060b00dedb729eb5fe2954860591e1dc919559",
+  "limitations": [
+    "Body/decoder/auth/physical observations are recorded hash-bound evidence, no fresh probe or decode in this peer review",
+    "No universal shared-upstream/TCP-viewer equality or transient-counter absence claim",
+    "No resource/performance/Source-defect/fullM4 acceptance or runtime fix claim"
+  ],
+  "review_helper_sha256": "2ab6720ca901ba967da252c5162f2dafbd37a5f070b7f853069308d60350f9c3"
+}

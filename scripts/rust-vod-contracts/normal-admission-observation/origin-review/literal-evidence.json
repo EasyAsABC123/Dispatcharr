@@ -1,0 +1,620 @@
+{
+  "scope": "READ-ONLY retained origin/request/source-code review; no requests or code changes",
+  "actual_summary_sha256": "394be080e94930e102287f2879e9499d649387b68447b0ea0781d9bf55888522",
+  "literal_Range_headers_captured": false,
+  "literal_Content_Range_headers_captured": false,
+  "literal_origin_response_status_captured": false,
+  "application_socket_reads_traced": false,
+  "sealed94_modified": false,
+  "backends": {
+    "source": {
+      "raw_origin_sha256": "2edbce8e08097683318e5880dd7aaa36a25c810894aa836ab0f0c8ec4a97033c",
+      "shared_requests": [
+        {
+          "origin_request": {
+            "id": 2,
+            "connection": 2,
+            "method": "GET",
+            "path_role": "shared_movie",
+            "kind": "stream_GET",
+            "began": 193993.394959956,
+            "in_flight": false,
+            "bytes_written": 262144,
+            "returned": 194003.395221311,
+            "error": null
+          },
+          "handler_duration_seconds": 10.000261354987742,
+          "physical_connection_receipt": {
+            "id": 2,
+            "opened": 193993.394641827,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194003.395267192,
+            "fd_after": -1
+          },
+          "request_Range": "UNCAPTURED",
+          "response_Content_Range": "UNCAPTURED",
+          "response_status": "UNCAPTURED",
+          "events": [
+            {
+              "kind": "accepted_TCP",
+              "at": 193993.394644107,
+              "connection": 2
+            },
+            {
+              "kind": "request_begin",
+              "at": 193993.394962616,
+              "connection": 2,
+              "request": 2,
+              "request_kind": "stream_GET"
+            },
+            {
+              "kind": "handler_return",
+              "at": 194003.395224341,
+              "request": 2,
+              "connection": 2
+            },
+            {
+              "kind": "request_read_EOF",
+              "at": 194003.395240602,
+              "connection": 2,
+              "local_shutdown_active": false
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 194003.395268882,
+              "connection": 2,
+              "fd_after": -1
+            }
+          ]
+        },
+        {
+          "origin_request": {
+            "id": 3,
+            "connection": 3,
+            "method": "GET",
+            "path_role": "shared_movie",
+            "kind": "stream_GET",
+            "began": 193995.406414028,
+            "in_flight": false,
+            "bytes_written": 196608,
+            "returned": 194003.406653915,
+            "error": null
+          },
+          "handler_duration_seconds": 8.000239887012867,
+          "physical_connection_receipt": {
+            "id": 3,
+            "opened": 193995.404185605,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 6,
+            "closed": 194003.406711356,
+            "fd_after": -1
+          },
+          "request_Range": "UNCAPTURED",
+          "response_Content_Range": "UNCAPTURED",
+          "response_status": "UNCAPTURED",
+          "events": [
+            {
+              "kind": "accepted_TCP",
+              "at": 193995.404187565,
+              "connection": 3
+            },
+            {
+              "kind": "request_begin",
+              "at": 193995.406416768,
+              "connection": 3,
+              "request": 3,
+              "request_kind": "stream_GET"
+            },
+            {
+              "kind": "handler_return",
+              "at": 194003.406658455,
+              "request": 3,
+              "connection": 3
+            },
+            {
+              "kind": "request_read_EOF",
+              "at": 194003.406681505,
+              "connection": 3,
+              "local_shutdown_active": false
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 194003.406712796,
+              "connection": 3,
+              "fd_after": -1
+            }
+          ]
+        }
+      ],
+      "handler_overlap_seconds": 7.988807282992639,
+      "shared_client_closes": [
+        {
+          "role": "shared_initial",
+          "close_begin": 193999.428340484,
+          "close_complete": 193999.428390245,
+          "fd_after": -1,
+          "original_inode_absent": true,
+          "server_cancellation_inferred": false
+        },
+        {
+          "role": "shared_follower",
+          "close_begin": 193999.428396105,
+          "close_complete": 193999.428436136,
+          "fd_after": -1,
+          "original_inode_absent": true,
+          "server_cancellation_inferred": false
+        }
+      ],
+      "source_shared_finalization_signals": [
+        {
+          "kind": "request_finalized",
+          "monotonic": 194001.396121329,
+          "request": 1,
+          "role": "shared_initial",
+          "sid_sha256": "20304882d84990f0d5535fe4f169491483f1c3697a37f8861811fc82f6e885f2"
+        },
+        {
+          "kind": "request_finalized",
+          "monotonic": 194001.407657216,
+          "request": 2,
+          "role": "shared_follower",
+          "sid_sha256": "20304882d84990f0d5535fe4f169491483f1c3697a37f8861811fc82f6e885f2"
+        }
+      ],
+      "shared_origin_checkpoints": [
+        {
+          "label": "before_stop",
+          "at": 193999.41832591,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193993.394959956,
+              "in_flight": true,
+              "bytes_written": 196608,
+              "returned": null,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193995.406414028,
+              "in_flight": true,
+              "bytes_written": 131072,
+              "returned": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "label": "fixed_probe1_boundary",
+          "at": 194002.428801323,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193993.394959956,
+              "in_flight": true,
+              "bytes_written": 262144,
+              "returned": null,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193995.406414028,
+              "in_flight": true,
+              "bytes_written": 196608,
+              "returned": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "label": "after_probe1",
+          "at": 194004.438212557,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193993.394959956,
+              "in_flight": false,
+              "bytes_written": 262144,
+              "returned": 194003.395221311,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193995.406414028,
+              "in_flight": false,
+              "bytes_written": 196608,
+              "returned": 194003.406653915,
+              "error": null
+            }
+          ]
+        },
+        {
+          "label": "after_probe2",
+          "at": 194004.710235818,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193993.394959956,
+              "in_flight": false,
+              "bytes_written": 262144,
+              "returned": 194003.395221311,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193995.406414028,
+              "in_flight": false,
+              "bytes_written": 196608,
+              "returned": 194003.406653915,
+              "error": null
+            }
+          ]
+        },
+        {
+          "label": "after_decode",
+          "at": 194034.46038799,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193993.394959956,
+              "in_flight": false,
+              "bytes_written": 262144,
+              "returned": 194003.395221311,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 193995.406414028,
+              "in_flight": false,
+              "bytes_written": 196608,
+              "returned": 194003.406653915,
+              "error": null
+            }
+          ]
+        }
+      ]
+    },
+    "native": {
+      "raw_origin_sha256": "9a8b070e41b00bf47bbe7065b18a19e644a751cadb814f915dcb90ae8039b1c8",
+      "shared_requests": [
+        {
+          "origin_request": {
+            "id": 2,
+            "connection": 2,
+            "method": "GET",
+            "path_role": "shared_movie",
+            "kind": "stream_GET",
+            "began": 194042.178917973,
+            "in_flight": false,
+            "bytes_written": 262144,
+            "returned": 194052.179157759,
+            "error": null
+          },
+          "handler_duration_seconds": 10.000239785993472,
+          "physical_connection_receipt": {
+            "id": 2,
+            "opened": 194042.178652945,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 4,
+            "closed": 194052.17921363,
+            "fd_after": -1
+          },
+          "request_Range": "UNCAPTURED",
+          "response_Content_Range": "UNCAPTURED",
+          "response_status": "UNCAPTURED",
+          "events": [
+            {
+              "kind": "accepted_TCP",
+              "at": 194042.178655835,
+              "connection": 2
+            },
+            {
+              "kind": "request_begin",
+              "at": 194042.178920373,
+              "connection": 2,
+              "request": 2,
+              "request_kind": "stream_GET"
+            },
+            {
+              "kind": "handler_return",
+              "at": 194052.179161869,
+              "request": 2,
+              "connection": 2
+            },
+            {
+              "kind": "request_read_EOF",
+              "at": 194052.179184959,
+              "connection": 2,
+              "local_shutdown_active": false
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 194052.17921486,
+              "connection": 2,
+              "fd_after": -1
+            }
+          ]
+        },
+        {
+          "origin_request": {
+            "id": 3,
+            "connection": 3,
+            "method": "GET",
+            "path_role": "shared_movie",
+            "kind": "stream_GET",
+            "began": 194044.185453675,
+            "in_flight": false,
+            "bytes_written": 196608,
+            "returned": 194052.185652052,
+            "error": null
+          },
+          "handler_duration_seconds": 8.00019837700529,
+          "physical_connection_receipt": {
+            "id": 3,
+            "opened": 194044.183331385,
+            "socket_closed": true,
+            "peer_eof_observed": true,
+            "requests": 1,
+            "fd": 6,
+            "closed": 194052.185696154,
+            "fd_after": -1
+          },
+          "request_Range": "UNCAPTURED",
+          "response_Content_Range": "UNCAPTURED",
+          "response_status": "UNCAPTURED",
+          "events": [
+            {
+              "kind": "accepted_TCP",
+              "at": 194044.183333425,
+              "connection": 3
+            },
+            {
+              "kind": "request_begin",
+              "at": 194044.185456036,
+              "connection": 3,
+              "request": 3,
+              "request_kind": "stream_GET"
+            },
+            {
+              "kind": "handler_return",
+              "at": 194052.185654602,
+              "request": 3,
+              "connection": 3
+            },
+            {
+              "kind": "request_read_EOF",
+              "at": 194052.185671063,
+              "connection": 3,
+              "local_shutdown_active": false
+            },
+            {
+              "kind": "server_socket_shutdown_ack",
+              "at": 194052.185697384,
+              "connection": 3,
+              "fd_after": -1
+            }
+          ]
+        }
+      ],
+      "handler_overlap_seconds": 7.993704084015917,
+      "shared_client_closes": [
+        {
+          "role": "shared_initial",
+          "close_begin": 194048.197802941,
+          "close_complete": 194048.197855552,
+          "fd_after": -1,
+          "original_inode_absent": true,
+          "server_cancellation_inferred": false
+        },
+        {
+          "role": "shared_follower",
+          "close_begin": 194048.197860892,
+          "close_complete": 194048.197919644,
+          "fd_after": -1,
+          "original_inode_absent": true,
+          "server_cancellation_inferred": false
+        }
+      ],
+      "source_shared_finalization_signals": [],
+      "shared_origin_checkpoints": [
+        {
+          "label": "before_stop",
+          "at": 194048.189749203,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194042.178917973,
+              "in_flight": true,
+              "bytes_written": 196608,
+              "returned": null,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194044.185453675,
+              "in_flight": true,
+              "bytes_written": 131072,
+              "returned": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "label": "fixed_probe1_boundary",
+          "at": 194051.198317872,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194042.178917973,
+              "in_flight": true,
+              "bytes_written": 262144,
+              "returned": null,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194044.185453675,
+              "in_flight": true,
+              "bytes_written": 196608,
+              "returned": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "label": "after_probe1",
+          "at": 194053.202051346,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194042.178917973,
+              "in_flight": false,
+              "bytes_written": 262144,
+              "returned": 194052.179157759,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194044.185453675,
+              "in_flight": false,
+              "bytes_written": 196608,
+              "returned": 194052.185652052,
+              "error": null
+            }
+          ]
+        },
+        {
+          "label": "after_probe2",
+          "at": 194053.454299367,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194042.178917973,
+              "in_flight": false,
+              "bytes_written": 262144,
+              "returned": 194052.179157759,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194044.185453675,
+              "in_flight": false,
+              "bytes_written": 196608,
+              "returned": 194052.185652052,
+              "error": null
+            }
+          ]
+        },
+        {
+          "label": "after_decode",
+          "at": 194083.234409552,
+          "requests": [
+            {
+              "id": 2,
+              "connection": 2,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194042.178917973,
+              "in_flight": false,
+              "bytes_written": 262144,
+              "returned": 194052.179157759,
+              "error": null
+            },
+            {
+              "id": 3,
+              "connection": 3,
+              "method": "GET",
+              "path_role": "shared_movie",
+              "kind": "stream_GET",
+              "began": 194044.185453675,
+              "in_flight": false,
+              "bytes_written": 196608,
+              "returned": 194052.185652052,
+              "error": null
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

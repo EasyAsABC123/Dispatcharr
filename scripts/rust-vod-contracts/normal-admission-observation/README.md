@@ -1,0 +1,25 @@
+# Normal-capacity next-admission observation — publication revision2
+
+One actual Source-first/Native image51 pair was run once with max2 throughout, no held Redis replies, no cap mutation, no counter-zero poll and no adaptive retries. Both backends produced next-probe statuses200 then503. The actual controller exited1 and its original summary qualification is false: its private-grant validator incorrectly compared the independent lease and metadata token namespaces. This negative is preserved exactly as a non-auth field projection in full-retained.json, bound to private raw hashes. No application rerun or runtime fix follows.
+
+The NEW offline validator checks canonical `rust:<UUIDv4>` lease identity and separate `rust-vod-metadata:<UUIDv4>` metadata identity, reservation, fence, exact content/profile and full before/after equality. Offline corrected normal-scenario qualification is true, separate from the original actual negative. This is not full M4 parity, a Source bug claim, or resource/performance acceptance.
+
+Offline reproduction from repository root:
+
+```
+python scripts/rust-vod-contracts/normal-admission-observation/recompute.py
+python -m unittest discover -s scripts/rust-vod-contracts/normal-admission-observation -p 'test_*.py' -v
+python scripts/rust-vod-contracts/normal-admission-observation/reconstruct.py --output artifacts/rust/normal-admission-restored-blocked
+```
+
+The24 offline controls cover schema corruption, actual-negative preservation, raw evidence gate recomputation and exact reconstruction. No sockets/Source/Native are invoked. recompute.py loads only two hash-checked pure historical gate modules and recomputes original phase flags, private-grant failure, pair qualification, decoder bounds, max2/auth/action witnesses, default audit equality and owned cleanup, then separately substitutes only the corrected grant result. full-retained.json includes complete original phase/checkpoint/reader/decoder/origin/default audit evidence, omitting only listed response-header dictionaries. Retained metadata UUIDs are synthetic fixture ownership identities, not Bearer credentials. Request auth, seed JWTs and activation nonce remain private. verify_projection.py optionally verifies exact field selection against explicitly provided hash-matching private originals; it never searches private paths or prints secret fields.
+
+reconstruct.py defaults to the exact blocked69 qualification source. `--mode executed-historical` restores the exact activated69 historical tool bytes; it grants no execution authorization. Both manifests are hash-pinned and corruption/symlink checks fail before output creation. The copied historical run requires a fresh Root review/once cue for any future application execution; this packet does not issue one. Do not rerun the old cue or substitute new timestamps. Payload proofs/docs retain their original blocked-qualification wording and failures.
+
+Source counters were2 before stop,1 at the fixed probe1 boundary, then2 after probe1/probe2/decode on both backends. No zero was observed at those recorded checkpoints. These are literal finite samples, not proof of no transient value. Source response-finalization signals completed by fixed probe1; request_finished does not prove successful generator-finally completion.
+
+Origin ledger per backend:11 accepted TCP connections,7 control GETs,4 media GETs (2 shared movie,1 Other,1 probe1),0 HEAD,0 transient TCP-without-request. No probe2 media GET was recorded. Two viewer requests to the shared URI produced two recorded origin GETs; do not infer one shared upstream connection or equate TCP with viewers. Origin bytes written, client body reads, server handler return, response finalization and actual owned server socket shutdown are distinct. All11 server sockets closed/FD-1 and owned service threads settled; exact project containers/networks/volumes were independently absent. Four retained1MiB bodies decoded75frames/3s with audio/video and reaped decoder processes.
+
+Original revision1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430, supportc91ab5ece7926f1b6b04a8069c6ad38c5b5d8d55, candidate revision5afbb78ee8be031474b41278479fcdf623f2ddce/image51 exact772 are bound in provenance.json. Original credit/license is preserved in ATTRIBUTION.md and Original-LICENSE. No full counter/timer/generator parity, arbitrary origin sharing or gains claim transfers to another workload/image.
+
+Revision2 corrects a separate offline-validator completeness bug found during Root/peer review: the prior94-file packet accepted deletion of required decoders or origin records. That packet remains sealed as a retained negative. Current checks require exactly Other plus each200-probe decoder and retained-reader role, nonempty unique origin request/connection records, referential/counter consistency, required media roles, and preservation of all earlier checkpoint request identities. Ten per-backend empty/missing coverage corruptions now fail. This tool-only correction does not change raw observations or the actual exit1.
