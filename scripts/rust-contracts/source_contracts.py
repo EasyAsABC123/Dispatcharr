@@ -117,6 +117,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'pinned_original_channel_guide_tests':
             import channel_guide_contracts
             channel_guide_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'pinned_original_dvr_import_tests':
+            import dvr_import_contracts
+            dvr_import_contracts.validate(root, value, bindings)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
@@ -134,7 +137,7 @@ def apply(root, rows, bindings):
             operation['executable_Source_contract'] = copy.deepcopy(contract)
             operation['role_matrix']['observed_fixture_definitions'] = copy.deepcopy(contract['source_role_specs'])
             operation['role_matrix']['complete'] = False
-            if reference['kind'] in ['pinned_original_framework_tests', 'pinned_original_account_settings_tests', 'pinned_original_channel_guide_tests']:
+            if reference['kind'] in ['pinned_original_framework_tests', 'pinned_original_account_settings_tests', 'pinned_original_channel_guide_tests', 'pinned_original_dvr_import_tests']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_test_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

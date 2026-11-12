@@ -17,6 +17,7 @@ from test_source_contracts import SourceContracts
 from test_framework_auth_contracts import Controls as FrameworkAuthControls
 from test_account_settings_contracts import AccountSettingsControls
 from test_channel_guide_contracts import ChannelGuideControls
+from test_dvr_import_contracts import DvrImportControls
 from test_scanner_task_contracts import ScannerTaskControls
 
 REPO = Path(__file__).resolve().parents[2]
@@ -42,6 +43,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(scanner_task_contracts.dependencies())
         import channel_guide_contracts
         refs.update(channel_guide_contracts.dependencies())
+        import dvr_import_contracts
+        refs.update(dvr_import_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)

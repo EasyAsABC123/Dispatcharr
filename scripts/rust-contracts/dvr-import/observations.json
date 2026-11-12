@@ -1,0 +1,393 @@
+{
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "full_log_sha256": "5ce7a671b204e8b1a444e2edbf51313363aaf385989e8268eee011ea1612ad35",
+  "full_log_bytes": 881752,
+  "fresh_Source_executions": 0,
+  "cases": {
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_bulk_remove_requires_tvg_id_or_title": {
+      "framework_log_block": "test_bulk_remove_requires_tvg_id_or_title (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_bulk_remove_requires_tvg_id_or_title) ... 2026-11-09 07:40:26,678 WARNING django.request Bad Request: /api/channels/series-rules/bulk-remove/\nok\n",
+      "framework_log_block_sha256": "c029484ce797ae629fd1b702a7f7fa90331ab50653e81f00ea0e3303f24fd304",
+      "full_log_byte_start": 101873,
+      "full_log_byte_end": 102122,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_bulk_remove_sourced_leaves_other_source_recordings": {
+      "framework_log_block": "test_bulk_remove_sourced_leaves_other_source_recordings (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_bulk_remove_sourced_leaves_other_source_recordings) ... ok\n",
+      "framework_log_block_sha256": "2a94fbab09090651bb54f1381707882f47f9073061e4d374e8def4ff1c34c9bb",
+      "full_log_byte_start": 102122,
+      "full_log_byte_end": 102299,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_bulk_remove_title_only_no_tvg_id": {
+      "framework_log_block": "test_bulk_remove_title_only_no_tvg_id (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_bulk_remove_title_only_no_tvg_id)\nBulk-remove accepts title alone (no tvg_id) for title-only rules. ... ok\n",
+      "framework_log_block_sha256": "03666733756e0c966eae8c7674c81b74407c8346729b000d9131c6e2c245d8b4",
+      "full_log_byte_start": 102299,
+      "full_log_byte_end": 102506,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_bulk_remove_with_tvg_id": {
+      "framework_log_block": "test_bulk_remove_with_tvg_id (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_bulk_remove_with_tvg_id) ... ok\n",
+      "framework_log_block_sha256": "36ee55601bbe518262cf54a1989b7019ff8a7cd417035e1f53ceb0bee68fcf25",
+      "full_log_byte_start": 102506,
+      "full_log_byte_end": 102629,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_create_rule_requires_title_or_description": {
+      "framework_log_block": "test_create_rule_requires_title_or_description (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_create_rule_requires_title_or_description) ... 2026-11-09 07:40:26,745 WARNING django.request Bad Request: /api/channels/series-rules/\nok\n",
+      "framework_log_block_sha256": "3e37578454bbd5ebb002271d56ef3cc5353e2e54b6da820f58dd16f0a7d03164",
+      "full_log_byte_start": 102629,
+      "full_log_byte_end": 102876,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_create_rule_stores_epg_source_id": {
+      "framework_log_block": "test_create_rule_stores_epg_source_id (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_create_rule_stores_epg_source_id) ... ok\n",
+      "framework_log_block_sha256": "ae8dca10b8c18a09175c57c18c0c16214524ba7f464d143da8052397fb295925",
+      "full_log_byte_start": 102876,
+      "full_log_byte_end": 103017,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_create_rule_with_tvg_id": {
+      "framework_log_block": "test_create_rule_with_tvg_id (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_create_rule_with_tvg_id) ... ok\n",
+      "framework_log_block_sha256": "d29f1c1746b314058d9cb3837c483e333ca52fd3a7b3f3aeacc9b689aeab6e0f",
+      "full_log_byte_start": 103017,
+      "full_log_byte_end": 103140,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_create_title_only_rule_no_tvg_id": {
+      "framework_log_block": "test_create_title_only_rule_no_tvg_id (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_create_title_only_rule_no_tvg_id)\nA rule with no tvg_id (title-only) is accepted when title is provided. ... ok\n",
+      "framework_log_block_sha256": "490e0202c2d0b03f190f5f52210cecbee2fe1f915b77cdbe7e8b54749feac363",
+      "full_log_byte_start": 103140,
+      "full_log_byte_end": 103352,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_only_removes_matching_rule": {
+      "framework_log_block": "test_delete_only_removes_matching_rule (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_only_removes_matching_rule)\nDelete by (tvg_id, title) leaves other rules intact. ... ok\n",
+      "framework_log_block_sha256": "390d7a985bcdd85ff1bed3267fd4789d5e13b1254a5e3bd7606a91b159277550",
+      "full_log_byte_start": 103352,
+      "full_log_byte_end": 103548,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_removes_future_recordings": {
+      "framework_log_block": "test_delete_removes_future_recordings (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_removes_future_recordings)\nDELETE cleans up future recordings that matched the rule. ... ok\n",
+      "framework_log_block_sha256": "347047b84b2c83bda0302a815415ade4c30e2240e05a4dda861a2ac1a869d9c5",
+      "full_log_byte_start": 103548,
+      "full_log_byte_end": 103747,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_rule_by_tvg_id_and_title": {
+      "framework_log_block": "test_delete_rule_by_tvg_id_and_title (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_rule_by_tvg_id_and_title) ... ok\n",
+      "framework_log_block_sha256": "02bece0bda5bd3142738abdf63f9c5fd3f1cbe6405b1385d153754e617751c30",
+      "full_log_byte_start": 103747,
+      "full_log_byte_end": 103886,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_sourced_rule_leaves_other_source_recordings": {
+      "framework_log_block": "test_delete_sourced_rule_leaves_other_source_recordings (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_sourced_rule_leaves_other_source_recordings)\nDeleting one sourced rule does not remove the other source's upcoming list. ... ok\n",
+      "framework_log_block_sha256": "dde79a29b5777d81e3a776525254b10eed952f159e47e84ece1c71cf49e177c5",
+      "full_log_byte_start": 103886,
+      "full_log_byte_end": 104139,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_title_only_rule": {
+      "framework_log_block": "test_delete_title_only_rule (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_title_only_rule)\nTitle-only rules (tvg_id='') are deleted via empty tvg_id query param. ... ok\n",
+      "framework_log_block_sha256": "0cf777f3701a3337c6e7f1d366be0980a606d817a5240c843c3608502eb388e8",
+      "full_log_byte_start": 104139,
+      "full_log_byte_end": 104331,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_with_epg_source_id_leaves_other_source": {
+      "framework_log_block": "test_delete_with_epg_source_id_leaves_other_source (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_with_epg_source_id_leaves_other_source) ... ok\n",
+      "framework_log_block_sha256": "8995747de25b81a891dbf078423919184bb554ce1cf99a4b1892ecfd9a06886c",
+      "full_log_byte_start": 104331,
+      "full_log_byte_end": 104498,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_with_epg_source_id_removes_legacy_unsourced_rule": {
+      "framework_log_block": "test_delete_with_epg_source_id_removes_legacy_unsourced_rule (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_delete_with_epg_source_id_removes_legacy_unsourced_rule)\nDVR card deletes pass program.epg_source_id even when the rule has none. ... ok\n",
+      "framework_log_block_sha256": "a5c402bfe57f1978fa164b492428edb356b0ce09e320e162db04046a725cbea9",
+      "full_log_byte_start": 104498,
+      "full_log_byte_end": 104758,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_saving_sourced_rule_upgrades_legacy_unsourced_rule": {
+      "framework_log_block": "test_saving_sourced_rule_upgrades_legacy_unsourced_rule (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_saving_sourced_rule_upgrades_legacy_unsourced_rule)\nRe-saving a legacy (tvg_id, title) rule with epg_source_id updates it. ... ok\n",
+      "framework_log_block_sha256": "1ec26dff54b95b48a0dd268d3f4722ff6c3ca4e0bcbec861760c4310426ebba4",
+      "full_log_byte_start": 104758,
+      "full_log_byte_end": 105006,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_two_sources_same_title_are_distinct_rules": {
+      "framework_log_block": "test_two_sources_same_title_are_distinct_rules (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_two_sources_same_title_are_distinct_rules) ... ok\n",
+      "framework_log_block_sha256": "853bd624503a8cf5aa812a3cba4c22af9cf6931d5d19d309521dd1c095111dd6",
+      "full_log_byte_start": 105006,
+      "full_log_byte_end": 105165,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_upsert_key_is_tvg_id_and_title": {
+      "framework_log_block": "test_upsert_key_is_tvg_id_and_title (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_upsert_key_is_tvg_id_and_title)\nTwo POST requests with same tvg_id but different titles create two rules. ... ok\n",
+      "framework_log_block_sha256": "6320b65f6406103e8227f5b4d7e733b405a921b4ce6b1ee28cb47bd7598771d8",
+      "full_log_byte_start": 105165,
+      "full_log_byte_end": 105376,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_upsert_updates_existing_rule": {
+      "framework_log_block": "test_upsert_updates_existing_rule (apps.channels.tests.test_channel_api.SeriesRuleAPITests.test_upsert_updates_existing_rule)\nPOSTing with an existing (tvg_id, title) pair updates in place. ... ok\n",
+      "framework_log_block_sha256": "3369fa8ba050a07598e3d8821a6eef74d5e6a9bc8a6e5ff984c58006dd1e6b17",
+      "full_log_byte_start": 105376,
+      "full_log_byte_end": 105573,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_admin_sees_all_recordings": {
+      "framework_log_block": "test_admin_sees_all_recordings (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_admin_sees_all_recordings) ... ok\n",
+      "framework_log_block_sha256": "3d0ad17dc49a1fc69d339397f61e3768b8ab56b813ab13425bb98275b3966ab0",
+      "full_log_byte_start": 115326,
+      "full_log_byte_end": 115451,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_bulk_delete_upcoming_only_removes_recordings_in_scope": {
+      "framework_log_block": "test_bulk_delete_upcoming_only_removes_recordings_in_scope (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_bulk_delete_upcoming_only_removes_recordings_in_scope) ... ok\n",
+      "framework_log_block_sha256": "2e2eeef355d65c2bcc947c3e556e3fc9f7eeb8e33bb17683e56685e79e8d4c26",
+      "full_log_byte_start": 115451,
+      "full_log_byte_end": 115632,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_bulk_delete_upcoming_requires_manage": {
+      "framework_log_block": "test_bulk_delete_upcoming_requires_manage (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_bulk_delete_upcoming_requires_manage) ... 2026-11-09 07:40:27,279 WARNING django.request Forbidden: /api/channels/recordings/bulk-delete-upcoming/\nok\n",
+      "framework_log_block_sha256": "8429342c8575d5f7656012b04b22c243756d1fbf42ecd13b066b633dc6c31023",
+      "full_log_byte_start": 115632,
+      "full_log_byte_end": 115884,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_comskip_config_stays_admin_only": {
+      "framework_log_block": "test_comskip_config_stays_admin_only (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_comskip_config_stays_admin_only) ... 2026-11-09 07:40:27,303 WARNING django.request Forbidden: /api/channels/dvr/comskip-config/\nok\n",
+      "framework_log_block_sha256": "e172cbfbfa755f4670c4130eeb8e2ecbef3db25f9039d68571a9d5111ea69b0e",
+      "full_log_byte_start": 115884,
+      "full_log_byte_end": 116113,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_can_create_and_delete": {
+      "framework_log_block": "test_manage_can_create_and_delete (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_can_create_and_delete) ... ok\n",
+      "framework_log_block_sha256": "6c5ed9dd420cab0a9037c5b1bd3b47291160eace5b4cff822f9c4f42db6e8e03",
+      "full_log_byte_start": 116292,
+      "full_log_byte_end": 116423,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_can_use_recurring_and_series_rules": {
+      "framework_log_block": "test_manage_can_use_recurring_and_series_rules (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_can_use_recurring_and_series_rules) ... ok\n",
+      "framework_log_block_sha256": "da93e53531b37dcdc7261b423e29698398e14cd7a094d7e4346386ab5410d24a",
+      "full_log_byte_start": 116423,
+      "full_log_byte_end": 116580,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_cannot_modify_or_play_recording_outside_scope": {
+      "framework_log_block": "test_manage_cannot_modify_or_play_recording_outside_scope (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_cannot_modify_or_play_recording_outside_scope) ... 2026-11-09 07:40:27,384 WARNING django.request Not Found: /api/channels/recordings/36/\n2026-11-09 07:40:27,387 WARNING django.request Forbidden: /api/channels/recordings/36/file/\n2026-11-09 07:40:27,390 WARNING django.request Not Found: /api/channels/recordings/35/file/\nok\n",
+      "framework_log_block_sha256": "bc3535855d71839332af3f9c9e81b366ea2c8ae95ab3997674690d5e047c105e",
+      "full_log_byte_start": 116580,
+      "full_log_byte_end": 117030,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_cannot_schedule_adult_channel_with_hide_adult_preference": {
+      "framework_log_block": "test_manage_cannot_schedule_adult_channel_with_hide_adult_preference (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_cannot_schedule_adult_channel_with_hide_adult_preference) ... 2026-11-09 07:40:27,404 WARNING django.request Bad Request: /api/channels/recordings/\nok\n",
+      "framework_log_block_sha256": "f23c92318e14cefb5cfee515904b7422a597cc506f96f298242fa77e141269a0",
+      "full_log_byte_start": 117030,
+      "full_log_byte_end": 117317,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_cannot_schedule_on_channel_above_user_level": {
+      "framework_log_block": "test_manage_cannot_schedule_on_channel_above_user_level (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_cannot_schedule_on_channel_above_user_level) ... 2026-11-09 07:40:27,419 WARNING django.request Bad Request: /api/channels/recordings/\nok\n",
+      "framework_log_block_sha256": "ed8d82c56d3652daa51ec6d18c038f6eae1bf302e18d8699959f54a866b3cc1f",
+      "full_log_byte_start": 117317,
+      "full_log_byte_end": 117578,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_cannot_schedule_on_channel_outside_profile": {
+      "framework_log_block": "test_manage_cannot_schedule_on_channel_outside_profile (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_cannot_schedule_on_channel_outside_profile) ... 2026-11-09 07:40:27,434 WARNING django.request Bad Request: /api/channels/recordings/\nok\n",
+      "framework_log_block_sha256": "cabdd45e09d5be7b99033f6a7fc69e9aefa64cc410b268aa8f690f1270e56444",
+      "full_log_byte_start": 117578,
+      "full_log_byte_end": 117837,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_list_is_scoped_to_channel_access": {
+      "framework_log_block": "test_manage_list_is_scoped_to_channel_access (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_manage_list_is_scoped_to_channel_access) ... ok\n",
+      "framework_log_block_sha256": "01041d805d8aba5a0623be5bd010823f66edfa8935234f5de63ea7e86d8db7c0",
+      "full_log_byte_start": 117837,
+      "full_log_byte_end": 117990,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_none_cannot_list": {
+      "framework_log_block": "test_none_cannot_list (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_none_cannot_list) ... 2026-11-09 07:40:27,479 WARNING django.request Forbidden: /api/channels/recordings/\nok\n",
+      "framework_log_block_sha256": "59fedac6e4ab8175a21dda1090cb07516bcfb1bf38aa40c85a201949498807e8",
+      "full_log_byte_start": 118127,
+      "full_log_byte_end": 118318,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_recurring_rules_are_scoped_to_channel_access": {
+      "framework_log_block": "test_recurring_rules_are_scoped_to_channel_access (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_recurring_rules_are_scoped_to_channel_access) ... 2026-11-09 07:40:27,510 WARNING django.request Bad Request: /api/channels/recurring-rules/\nok\n",
+      "framework_log_block_sha256": "bc5dc61c351a2973663fe45f2392d243dc1ba73c54d86108d34a6d0bf7c9d1ba",
+      "full_log_byte_start": 118475,
+      "full_log_byte_end": 118729,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_standard_with_default_view_can_list": {
+      "framework_log_block": "test_standard_with_default_view_can_list (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_standard_with_default_view_can_list) ... ok\n",
+      "framework_log_block_sha256": "3b67dd9bb47575505e560d37aab46b694b343fc9471cf8fa1ee902b18fabf85b",
+      "full_log_byte_start": 118729,
+      "full_log_byte_end": 118874,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_view_can_get_series_rules_but_not_mutate": {
+      "framework_log_block": "test_view_can_get_series_rules_but_not_mutate (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_view_can_get_series_rules_but_not_mutate) ... 2026-11-09 07:40:27,535 WARNING django.request Forbidden: /api/channels/series-rules/\n2026-11-09 07:40:27,536 WARNING django.request Forbidden: /api/channels/recurring-rules/\nok\n",
+      "framework_log_block_sha256": "0ba7eda41acc18b1264e9aa7afd38052ae07e1b4ef3584e301600f058ad92efd",
+      "full_log_byte_start": 118874,
+      "full_log_byte_end": 119204,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_view_can_list_but_not_create_or_delete": {
+      "framework_log_block": "test_view_can_list_but_not_create_or_delete (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_view_can_list_but_not_create_or_delete) ... 2026-11-09 07:40:27,549 WARNING django.request Forbidden: /api/channels/recordings/\n2026-11-09 07:40:27,550 WARNING django.request Forbidden: /api/channels/recordings/58/\nok\n",
+      "framework_log_block_sha256": "15e45c6597455e5357fc6db4bd6faa2fdbb9c7aaed9f10b042f47fceb83a406c",
+      "full_log_byte_start": 119204,
+      "full_log_byte_end": 119526,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_view_list_is_scoped_to_channel_profiles": {
+      "framework_log_block": "test_view_list_is_scoped_to_channel_profiles (apps.channels.tests.test_dvr_access.DvrAccessApiTests.test_view_list_is_scoped_to_channel_profiles) ... ok\n",
+      "framework_log_block_sha256": "747136aafd15e6e9161ff38c0840336f24a01f9b795eba57fee7a49484ff8016",
+      "full_log_byte_start": 119526,
+      "full_log_byte_end": 119679,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_bypasses_signals_no_revoke": {
+      "framework_log_block": "test_extend_bypasses_signals_no_revoke (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_bypasses_signals_no_revoke)\nExtend uses .update() to bypass pre_save \u2014 revoke_task must never fire. ... ok\n",
+      "framework_log_block_sha256": "fe1759f59edef19da51a6007efe163417b00d1bab3db803b6b1ef944cd9180db",
+      "full_log_byte_start": 134745,
+      "full_log_byte_end": 134968,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_does_not_clear_task_id": {
+      "framework_log_block": "test_extend_does_not_clear_task_id (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_does_not_clear_task_id)\nThe running Celery task must survive the DB save. ... ok\n",
+      "framework_log_block_sha256": "3a94baf66fdcf6205b6da3026b52416bb30f5c035a230bf71840ebc72138f5de",
+      "full_log_byte_start": 134968,
+      "full_log_byte_end": 135159,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_400_for_negative_minutes": {
+      "framework_log_block": "test_extend_returns_400_for_negative_minutes (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_400_for_negative_minutes) ... ok\n",
+      "framework_log_block_sha256": "53458f28beb7c7e72a8aa67ec761513c19c028f43cd88f39e1d9cf82fa558b54",
+      "full_log_byte_start": 135159,
+      "full_log_byte_end": 135320,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_400_for_non_numeric_minutes": {
+      "framework_log_block": "test_extend_returns_400_for_non_numeric_minutes (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_400_for_non_numeric_minutes) ... ok\n",
+      "framework_log_block_sha256": "e0ebccd84088343f1782be33220cbc4011751a3a48f6e5efc311ca567a7610b6",
+      "full_log_byte_start": 135320,
+      "full_log_byte_end": 135487,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_400_for_zero_minutes": {
+      "framework_log_block": "test_extend_returns_400_for_zero_minutes (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_400_for_zero_minutes) ... ok\n",
+      "framework_log_block_sha256": "ada5b96771c9edd365dae471838f3c2197c45755d8b7591364d3e69f2c03f071",
+      "full_log_byte_start": 135487,
+      "full_log_byte_end": 135640,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_400_if_finished": {
+      "framework_log_block": "test_extend_returns_400_if_finished (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_400_if_finished)\nCannot extend a completed, stopped, or interrupted recording. ... ok\n",
+      "framework_log_block_sha256": "c60bcdbdcbe973c61b3102db7841f92b9d5682a9e07df16a6815966b69beffcc",
+      "full_log_byte_start": 135640,
+      "full_log_byte_end": 135845,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_404_for_nonexistent_recording": {
+      "framework_log_block": "test_extend_returns_404_for_nonexistent_recording (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_returns_404_for_nonexistent_recording) ... ok\n",
+      "framework_log_block_sha256": "0b7d13ec0a0b0ea402bf07fb51dbb2905cb67d9f680e1ad542197942d9978b6e",
+      "full_log_byte_start": 135845,
+      "full_log_byte_end": 136016,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_stacks_multiple_extensions": {
+      "framework_log_block": "test_extend_stacks_multiple_extensions (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_stacks_multiple_extensions)\nCalling extend() twice adds both increments. ... ok\n",
+      "framework_log_block_sha256": "34646898a126a4883241e045d4673ba533ea977d159f2450876687bfb1072631",
+      "full_log_byte_start": 136016,
+      "full_log_byte_end": 136210,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_succeeds_before_task_sets_status": {
+      "framework_log_block": "test_extend_succeeds_before_task_sets_status (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_succeeds_before_task_sets_status)\nExtend must work when status is empty (task hasn't started yet). ... ok\n",
+      "framework_log_block_sha256": "302f0f0f17be847be8b028fb42a2989486fdf2f5e1ee19edc9c6cb7a5ec6c1e4",
+      "full_log_byte_start": 136210,
+      "full_log_byte_end": 136436,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_updates_end_time_in_db": {
+      "framework_log_block": "test_extend_updates_end_time_in_db (apps.channels.tests.test_recording_extend.ExtendEndpointTests.test_extend_updates_end_time_in_db) ... ok\n",
+      "framework_log_block_sha256": "f422bae91a34e635c19619bccb5acd70c0991e25494653d531cb8a3c505647a1",
+      "full_log_byte_start": 136436,
+      "full_log_byte_end": 136577,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_calls_stop_dvr_clients_in_background": {
+      "framework_log_block": "test_stop_calls_stop_dvr_clients_in_background (apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_calls_stop_dvr_clients_in_background)\nstop() spawns a background thread whose target calls _stop_dvr_clients. ... ok\n",
+      "framework_log_block_sha256": "a8c9d750dd78bd6e27ff5f285b4e35919cdb187313dea4406a96443b508d5853",
+      "full_log_byte_start": 166692,
+      "full_log_byte_end": 166932,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_idempotent_on_already_stopped": {
+      "framework_log_block": "test_stop_idempotent_on_already_stopped (apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_idempotent_on_already_stopped) ... ok\n",
+      "framework_log_block_sha256": "a648f335eb74570e2d780155b64fbc6f4f9e5bf525170c7d4fded9ce70caf98a",
+      "full_log_byte_start": 166932,
+      "full_log_byte_end": 167086,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_returns_404_for_nonexistent": {
+      "framework_log_block": "test_stop_returns_404_for_nonexistent (apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_returns_404_for_nonexistent) ... ok\n",
+      "framework_log_block_sha256": "17d2c579d9de439af7a58613a1598d730ed9c3217873573fad7dba55924265cc",
+      "full_log_byte_start": 167086,
+      "full_log_byte_end": 167236,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_writes_status_to_db_before_returning": {
+      "framework_log_block": "test_stop_writes_status_to_db_before_returning (apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_writes_status_to_db_before_returning)\nDB write is synchronous \u2014 run_recording polls for this. ... ok\n",
+      "framework_log_block_sha256": "4b7993b538ff5522382d7f5ad6bfda2ccd17fbee3277033876f2f472b0044406",
+      "full_log_byte_start": 167236,
+      "full_log_byte_end": 167462,
+      "historical_result": "ok"
+    },
+    "apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_writes_stopped_at_timestamp": {
+      "framework_log_block": "test_stop_writes_stopped_at_timestamp (apps.channels.tests.test_recording_stop_cancel.StopEndpointTests.test_stop_writes_stopped_at_timestamp) ... ok\n",
+      "framework_log_block_sha256": "081ffb4b78faf7234ab5f2245b9437fc98f40310ebef42689f7c0f96fea4bb67",
+      "full_log_byte_start": 167462,
+      "full_log_byte_end": 167612,
+      "historical_result": "ok"
+    },
+    "apps.epg.tests.test_epg_import_api.EPGImportAPITests.test_import_dummy_source_rejected_without_dispatch": {
+      "framework_log_block": "test_import_dummy_source_rejected_without_dispatch (apps.epg.tests.test_epg_import_api.EPGImportAPITests.test_import_dummy_source_rejected_without_dispatch) ... 2026-11-09 07:40:35,043 WARNING django.request Bad Request: /api/epg/import/\nok\n",
+      "framework_log_block_sha256": "de1f457e8716d1a3d46c344702c534ec697b0c24374920c5eb639963a05f4124",
+      "full_log_byte_start": 234556,
+      "full_log_byte_end": 234797,
+      "historical_result": "ok"
+    },
+    "apps.epg.tests.test_epg_import_api.EPGImportAPITests.test_import_honours_force_flag": {
+      "framework_log_block": "test_import_honours_force_flag (apps.epg.tests.test_epg_import_api.EPGImportAPITests.test_import_honours_force_flag) ... ok\n",
+      "framework_log_block_sha256": "1adf35796fe2d0e50cab13dffb859f60494827539d5cf233c44c9326896bc4a2",
+      "full_log_byte_start": 234797,
+      "full_log_byte_end": 234921,
+      "historical_result": "ok"
+    },
+    "apps.epg.tests.test_epg_import_api.EPGImportAPITests.test_import_missing_source_still_dispatches": {
+      "framework_log_block": "test_import_missing_source_still_dispatches (apps.epg.tests.test_epg_import_api.EPGImportAPITests.test_import_missing_source_still_dispatches) ... ok\n",
+      "framework_log_block_sha256": "9b7b5fa083279e36922c6f5d30f866ee43dc64530543e7608cdfafe29e0e56f1",
+      "full_log_byte_start": 234921,
+      "full_log_byte_end": 235071,
+      "historical_result": "ok"
+    },
+    "apps.epg.tests.test_epg_import_api.EPGImportAPITests.test_import_xmltv_dispatches_without_loading_programme_index": {
+      "framework_log_block": "test_import_xmltv_dispatches_without_loading_programme_index (apps.epg.tests.test_epg_import_api.EPGImportAPITests.test_import_xmltv_dispatches_without_loading_programme_index) ... ok\n",
+      "framework_log_block_sha256": "2a8e42d31b23fb267f8bcde5ca34f961a2d405cd7c64e60f15b49563461195fb",
+      "full_log_byte_start": 235071,
+      "full_log_byte_end": 235255,
+      "historical_result": "ok"
+    }
+  }
+}
