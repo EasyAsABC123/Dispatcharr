@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "scope": "Actual Original scanner and same-worker default-queue descendant consumption; six synthetic local-file cases, no quarantined children, no native/Main/full-scanner claim",
+  "checks": 100,
+  "cases": [
+    "epg-empty-active",
+    "epg-programme-active",
+    "m3u-inactive",
+    "m3u-empty-active",
+    "m3u-one-stream-active",
+    "combined-empty-active"
+  ],
+  "task_runs": 34,
+  "default_database_unchanged": true,
+  "cleanup": "owned project removed",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_sha256": "8603f06456c46816b8b959a48b0d2db72ff166bc096b7d799eb103256634a021",
+  "dataset_sha256": "8603f06456c46816b8b959a48b0d2db72ff166bc096b7d799eb103256634a021",
+  "native_verified": false,
+  "performance_verified": false,
+  "retained_attempts": {
+    "1": "Observer wrong EPGSourceIndex field; before publication, corrected source_id",
+    "2": "First EPG chain completed; observer incorrectly read delivery_info from before_task_publish properties, corrected actual signal exchange/routing_key and received metadata",
+    "3": "51 checks/6 cases passed; scope lacked per-task cache byte snapshots and exact own-earlyACK assertion; preserved",
+    "4": "100 checks/6 cases passed with strengthened observed-contract gates"
+  },
+  "remaining": [
+    "M3U group/single native domains and typed results unported",
+    "Immediate-parented Refresh requires explicit scanner-owned authority; old intake remains unchanged",
+    "Busy/ETA/hardloss and duplicate-ID child controls not established by this six-case capture",
+    "Successful EPG programme case has no mapped Channel, so EPGData row + index are written, ProgramData remains empty; no mapped guide/parsing claim",
+    "Active network/XC providers, configured recording rules, full scanner and HTTP/Main attachment remain unsupported"
+  ]
+}
