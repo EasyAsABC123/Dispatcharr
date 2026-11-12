@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "scope": "Actual pinned Original scanner parent -> unchanged default-queue M3U groups/single workers, eight owned local-file/control cases; no native/Main/full-M3U/network claim",
+  "checks": 119,
+  "cases": [
+    "m3u-inactive",
+    "m3u-empty-active",
+    "m3u-one-stream-active",
+    "m3u-missing-local-file",
+    "m3u-groups-lock-busy",
+    "m3u-single-lock-busy",
+    "m3u-group-SQL-P0001",
+    "m3u-stream-SQL-P0001"
+  ],
+  "actual_task_runs": 23,
+  "controlled_clocks": {
+    "scanner_epoch": 1700000000.125,
+    "m3u_module_elapsed_epoch": 1000.125,
+    "datetime_and_renewer": "real"
+  },
+  "proven": {
+    "group_return": "list [parsed entry array, groups map], inactive/busy [message,null]",
+    "single_return": "normal strings including failed import/busy; failure-described normal results are not task FAILURE",
+    "missing_file": "groups actual FileNotFoundError [2,message,path], leaked group lock; subsequent single normal failure string",
+    "group_server_P0001": "actual group FAIL ProgrammingError with CONTEXT, cache written before SQL fault and group lock remains; single can complete zero-stream success from existing cache",
+    "stream_server_P0001": "two actual server trigger calls, batch rollback/retry then single normal failed-batches string/error status; stale cleanup skipped",
+    "global_hash": "empty effective key list produces one globally unique hash across accounts; later account can update existing earlier account Stream without transferring account ownership",
+    "output_cache": "successful completion and failed-batch branch delete owned Django m3u_content keys and increment EPG generation once; inactive/empty/busy/missing do neither; unrelated cache and retired chunk retained",
+    "events": "updates channel payload order plus SQL SystemEvent audit rows; Source task-main SQL only, threaded SQL additionally proven with nontransactional sequence and final effects",
+    "hooks": "observed actual loaded m3u_refresh/m3u_error handlers and enabled plugin keys empty"
+  },
+  "default_database_unchanged": true,
+  "cleanup": "owned project removed",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_sha256": "d726946de24020938d815b0ca9b8d39d412d8c110a2226e61e7bcfd38b3ccb72",
+  "native_verified": false,
+  "performance_verified": false,
+  "retained_attempts": {
+    "1": "109 capture checks; intended stream INSERT fault did not run because global hash took UPDATE. Preserved discovery, not stream-fault proof.",
+    "2": "111 checks; corrected INSERT/UPDATE fault with actual sequence count, all-owned streams/group links added.",
+    "3": "119 checks; owned output cache/generation/retired-chunk controls added.",
+    "4": "119 checks; SQL audit events and passive already-loaded hook inventory added."
+  },
+  "remaining": [
+    "Native groups/single consumer/services and physical controls pending",
+    "Configured filters/XC/network/VOD/autosync/plugin/Connect domains unqualified",
+    "Root scanner public/default graph remains off",
+    "Instant-prerun ACK presence is observational only; Source held-handler ACK witness is separately qualified",
+    "General elapsed formatter/domain beyond declared controlled0.0 not established by this capture"
+  ]
+}
