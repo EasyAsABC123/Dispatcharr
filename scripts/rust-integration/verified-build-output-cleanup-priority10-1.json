@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "scope": "Only Root-approved priority10 completed Cargo roots; no runtime/source/index/ref changes by cleanup",
+  "deleted_targets": 10,
+  "deleted_apparent_bytes": 31009732197,
+  "deleted_allocated_bytes_estimate": 31383740416,
+  "filesystem_free_before_bytes": 442475675648,
+  "filesystem_free_after_bytes": 452450283520,
+  "observed_filesystem_free_delta_bytes": 9974607872,
+  "free_delta_scope": "Observed filesystem interval; shared extents/hard links/concurrent work mean not inferred solely from allocated estimates",
+  "remaining_other_targets_verified": 151,
+  "retained_scoped_files_verified": 21000,
+  "retained_scoped_bytes": 3153515301,
+  "retained_scoped_SHA_changes": [],
+  "global_tool_outside_ELFs_indexed": 1357,
+  "all_tool_target_evidence_preserved": 0,
+  "actual_exit": 0,
+  "manifest_sha256": "62c2c73abd960417b18eb3f37d96325cd5f116904948c1537b32d582767e3d8e",
+  "journal_sha256": "e7a367d9b4b781c81d26dafab78b55670ed4fb197654950d3d9faee57efd98e5",
+  "dispatch_receipt_sha256": "83e31e562ef58ab02ef00d1996f74e38450e546a11413a26870a98c0c4b70c7c",
+  "scoped_before_sha256": "e09618d1017322764a307daa40100d8c3e20e580110abf5c2eff4f5dc3d36209",
+  "scoped_after_sha256": "aae54ba30d53c22eee6fd229217d63120b93cd35a1e7861ecbfb4b40d2816b49",
+  "tool_reported_concurrent_WIP_changes": [],
+  "limitations": [
+    "Visible process/announced-owner/fresh Docker checks; privileged unrelated process cwd/FD visibility is not claimed.",
+    "All specifically recorded target references recognized by the committed tool were copied/matched before deletion; generic compiler executable listings do not require keeping target trees."
+  ],
+  "original_author_credit": "Original Dispatcharr authors retain application credit; cleanup removes generated output only.",
+  "deleted_paths": [
+    "artifacts/rust/m4-worker-identity-private-1/target",
+    "artifacts/rust/m4-worker-identity-private-2/target",
+    "artifacts/rust/target-logo-scanner-attachment-1",
+    "artifacts/rust/target-logo-scanner-private-1",
+    "artifacts/rust/target-scanner-m3u-private-1",
+    "artifacts/rust/target-scanner-m3u-url-public-1",
+    "artifacts/rust/target-scanner-m3u-url-qa4-1",
+    "artifacts/rust/target-scanner-m3u-url-runtime3-1",
+    "artifacts/rust/target-scanner-recovery-private-1",
+    "artifacts/rust/target-scanner-spool-private-1"
+  ],
+  "no_global_prune": true,
+  "no_recorded_target_local_reference_copy_needed": true,
+  "compiler_only_core_review": {
+    "scoped_unmatched": 22,
+    "found_in_global_outside_index": 5,
+    "remaining_generic_compiler_outputs_removed": 17,
+    "scope": "Generic compiled core outputs with no specifically recorded target-local reference recognized by committed screen; not claimed preserved tested-evidence executables."
+  },
+  "prior_cleanup_separate": {
+    "first_roots": 253,
+    "first_apparent_GiB": 895.4,
+    "first_measured_free_increase_GiB": 332.2,
+    "second_roots": 35,
+    "second_apparent_GiB": 35.53,
+    "second_measured_free_increase_GiB": 12.47,
+    "later_Root788_roots": 3,
+    "later_Root788_apparent_bytes": 5657970032,
+    "later_Root788_physical_gain_claimed": false
+  },
+  "private_exact_evidence_root": "artifacts/rust/build-output-cleanup-priority10-1"
+}
