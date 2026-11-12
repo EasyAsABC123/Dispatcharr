@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "base_git_revision": "6054f7b52073485cff1d2ca249f8e3bde8bd46b3",
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-retained-result-fix-1/source",
+  "status": "QUALIFIED strict/default/actual77 on exact763; NOT packagedMain accepted",
+  "global_coordinator_timeout_seconds": 2,
+  "outer_idle_observer_seconds": 3,
+  "selected_files": [
+    {
+      "path": "rust/crates/coordination/src/lib.rs",
+      "source": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-retained-result-fix-1/source/rust/crates/coordination/src/lib.rs",
+      "sha256": "68ed4ca4e3b24c7a61887892a7f1058b4f6896bee116420144e7fb46d36ba68a",
+      "base_sha256": "c5558de387547dbf5a59290e9ddb461f11c575fd94fccff54fe6a496fde991fe",
+      "git_blob_sha1": "d07ddc7e63b43e7b6a3ac997919359a2bcb132c4",
+      "role": "runtime"
+    },
+    {
+      "path": "rust/crates/vod-http/src/generation_idle.rs",
+      "source": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-retained-result-fix-1/source/rust/crates/vod-http/src/generation_idle.rs",
+      "sha256": "ba4146187dcd7786bdb0fc3d54a0117f8e8be8294f5629c343ca8a07b46843f6",
+      "base_sha256": "e33cbafab4a7aa4bb62e8f650ea84d11ae2cf9b76ff7ee436d809a4631e77553",
+      "git_blob_sha1": "91a7011a2045014cefa07a71d64733c973855c56",
+      "role": "runtime"
+    },
+    {
+      "path": "rust/crates/coordination/tests/retained_reserve.rs",
+      "source": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-retained-result-fix-1/source/rust/crates/coordination/tests/retained_reserve.rs",
+      "sha256": "658b61461d08864184f2c80e68efd70f39430677fdbae21d192c575f653c9088",
+      "base_sha256": null,
+      "git_blob_sha1": "713f685a66411029d6bc1d2861b14fc29bbf87ad",
+      "role": "test"
+    },
+    {
+      "path": "rust/crates/vod-http/tests/pending_follower_http.rs",
+      "source": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-retained-result-fix-1/source/rust/crates/vod-http/tests/pending_follower_http.rs",
+      "sha256": "d8b75f99d9c01f47504d7e3a866ab67a3e7fec0cae30f2ae02c37d4943665dc8",
+      "base_sha256": "b77ac81301bedacd624658b5f432475b1b61f909127ddfab5b9042df24bb8370",
+      "git_blob_sha1": "5267a7b219e2f1bc3e2270d38f7cffa099d55f46",
+      "role": "test"
+    }
+  ],
+  "other_runtime_overlays": false,
+  "source_inputs_map_sha256": "0d3a7b62ec5c416eb7d98f1175c2358eb68f707f304df2ed216e6828b7c70432",
+  "proof": {
+    "wholeworkspace_strict": true,
+    "wholeworkspace_default_passed": 476,
+    "wholeworkspace_ignored": 677,
+    "wholeworkspace_suites": 170,
+    "actual_component_passed": 77,
+    "actual_groups": [
+      {
+        "target": "retained_reserve",
+        "filter": "retained_",
+        "returncode": 0,
+        "passed_count": 6,
+        "log_sha256": "dc1e2546f96b98a756b0e2795820b2c4fc2a7aa03e50cbacb4c2bfaa1b8d5ec9"
+      },
+      {
+        "target": "retained_reserve",
+        "filter": "ordinary_two_second_",
+        "returncode": 0,
+        "passed_count": 1,
+        "log_sha256": "00cf2cb472211075ca43e303d6e2aa79041ad92d9b268db1dd917e8e68f17f7b"
+      },
+      {
+        "target": "lease_physical",
+        "filter": "",
+        "returncode": 0,
+        "passed_count": 13,
+        "log_sha256": "2bb27a5372791f5a02f241861d088d21deda9f53954bf7083394ce50d770825a"
+      },
+      {
+        "target": "idle_entry",
+        "filter": "pending_follower_",
+        "returncode": 0,
+        "passed_count": 4,
+        "log_sha256": "5b1e37adba9e66ae1532af9490d04bf7a5a3e4e961838d541378e55d86a7455d"
+      },
+      {
+        "target": "idle_entry",
+        "filter": "idle_entry_",
+        "returncode": 0,
+        "passed_count": 5,
+        "log_sha256": "b9201a8a59fb068977c22aaa563c2e0f98a46dafe6e132e0391f2453e4b3f208"
+      },
+      {
+        "target": "generation_scope",
+        "filter": "local_scope_",
+        "returncode": 0,
+        "passed_count": 20,
+        "log_sha256": "b7a6932e51e42652ce37e018bdfdf0251fd45bd93f1817a3543ecaa42dcc282d"
+      },
+      {
+        "target": "generation_scope_physical",
+        "filter": "local_physical_",
+        "returncode": 0,
+        "passed_count": 9,
+        "log_sha256": "003a5780ddcdc5c4781598edb30321d8d8b9cea287a1678899581d56299f41e3"
+      },
+      {
+        "target": "pending_follower_http",
+        "filter": "pending_http_",
+        "returncode": 0,
+        "passed_count": 6,
+        "log_sha256": "0a9a84995a6bff971bd0ccad655f420155d62af9d0f64c0e09d66ed15373cd00"
+      },
+      {
+        "target": "http_recovery",
+        "filter": "actual_http_",
+        "returncode": 0,
+        "passed_count": 13,
+        "log_sha256": "d586c509137a301816bb5ea30e3c46975a7700c9a513cb4505b6ce8431cccf37"
+      }
+    ],
+    "cleanup": "independent-cleanup-exact-bind.json",
+    "packaged_Main_rerun": false
+  }
+}

@@ -539,6 +539,23 @@ impl Lease {
     /// Atomically reserve a provider under the existing owner. The previous
     /// provider must already be cleared; failed attempts allocate nothing.
     pub async fn reserve_provider(&self, provider: ProviderReservation) -> Result<(), Error> {
+        self.reserve_provider_inner(provider, false).await
+    }
+    /// Return the actual result of one physically owned reservation invocation.
+    /// Only a supervised transition with its own observer/cleanup budget may use
+    /// this API. Caller timeout does not infer success or replay the mutation.
+    /// The existing global command timeout and ordinary reserve API are unchanged.
+    pub async fn reserve_provider_retained_result(
+        &self,
+        provider: ProviderReservation,
+    ) -> Result<(), Error> {
+        self.reserve_provider_inner(provider, true).await
+    }
+    async fn reserve_provider_inner(
+        &self,
+        provider: ProviderReservation,
+        retain_result: bool,
+    ) -> Result<(), Error> {
         if self.inner.release_started.load(Ordering::Acquire) {
             return Err(Error::Lost);
         }
@@ -552,7 +569,12 @@ impl Lease {
         {
             return Err(Error::InvalidRequest);
         }
-        let result = lease_mutation(&self.inner, LeaseMutation::ReserveProvider(provider)).await?;
+        let result = lease_mutation_observed(
+            &self.inner,
+            LeaseMutation::ReserveProvider(provider),
+            retain_result,
+        )
+        .await?;
         match result {
             1 => Ok(()),
             -1 => {
@@ -614,6 +636,13 @@ enum LeaseMutation {
 }
 
 async fn lease_mutation(lease: &LeaseInner, operation: LeaseMutation) -> Result<i64, Error> {
+    lease_mutation_observed(lease, operation, false).await
+}
+async fn lease_mutation_observed(
+    lease: &LeaseInner,
+    operation: LeaseMutation,
+    retain_result: bool,
+) -> Result<i64, Error> {
     let inner = lease.coordinator.upgrade().ok_or(Error::Lost)?;
     let coordinator = Coordinator { inner };
     let permit = coordinator.permit().await?;
@@ -665,10 +694,17 @@ async fn lease_mutation(lease: &LeaseInner, operation: LeaseMutation) -> Result<
         let result: Result<i64, redis::RedisError> = invocation.invoke_async(&mut connection).await;
         let _ = sender.send(result.map_err(|_| Error::RedisUnavailable));
     });
-    time::timeout(coordinator.inner.config.command_timeout, receiver)
-        .await
-        .map_err(|_| Error::RedisUnavailable)?
-        .map_err(|_| Error::RedisUnavailable)?
+    if retain_result {
+        // Same oneshot and same physical invocation; its admission remains owned
+        // through the real reply/disconnect. An outer supervised observer may
+        // expire without dropping the transition that must settle/clean up.
+        receiver.await.map_err(|_| Error::RedisUnavailable)?
+    } else {
+        time::timeout(coordinator.inner.config.command_timeout, receiver)
+            .await
+            .map_err(|_| Error::RedisUnavailable)?
+            .map_err(|_| Error::RedisUnavailable)?
+    }
 }
 
 async fn heartbeat_inner(lease: &LeaseInner) -> Result<bool, Error> {

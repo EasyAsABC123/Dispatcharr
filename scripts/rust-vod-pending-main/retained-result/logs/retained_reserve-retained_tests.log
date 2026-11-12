@@ -1,0 +1,17 @@
+
+running 6 tests
+test retained_actual_redis_error_not_success ... RETAINED_RESULT kind=error physical_owned=true no_replay=true final_counter=0
+ok
+test retained_busy_actual_typed_reply_after_two_seconds ... RETAINED_RESULT kind=busy physical_owned=true no_replay=true final_counter=0
+ok
+test retained_caller_loss_keeps_physical_admission ... RETAINED_RESULT kind=caller-loss physical_owned=true no_replay=true final_counter=0
+ok
+test retained_lost_reply_never_infers_success_or_replays ... RETAINED_RESULT kind=lost physical_owned=true no_replay=true final_counter=0
+ok
+test retained_outer_observer_expires_but_transition_still_settles ... RETAINED_RESULT kind=outer-expired physical_owned=true no_replay=true final_counter=0
+ok
+test retained_success_actual_reply_after_two_seconds ... RETAINED_RESULT kind=success physical_owned=true no_replay=true final_counter=0
+ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 15.46s
+

@@ -145,7 +145,7 @@ impl DefaultWorker {
                     .as_ref()
                     .is_some_and(|value| value.expired(chrono::Utc::now()));
                 if !cached && !initially_expired {
-                    match inner.domains.preflight(kind, owner.clone()).await {
+                    match inner.domains.preflight_message(candidate.message.clone(), owner.clone()).await {
                         Ok(()) => {}
                         Err(DomainError::Unsupported) => return Ok(Run::Unsupported(kind)),
                         Err(error) => return Err(Error::Domain(error)),
@@ -266,7 +266,7 @@ impl DefaultWorker {
                     .map_err(Error::Transport)?;
                 let value = inner
                     .domains
-                    .execute_task_terminal(kind, owner.clone())
+                    .execute_message(message.clone(), owner.clone())
                     .await
                     .map_err(Error::Domain)?;
                 let raised = value.raised();

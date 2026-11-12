@@ -4,11 +4,11 @@ use crate::{default_protocol::Normal,notification_terminal,transport::Error};
 use serde_json::json;
 use uuid::Uuid;
 #[derive(Debug)]
-pub enum Terminal{Normal(Normal),Notification(notification_terminal::ProgrammingFailure),Scanner(ScannerFailure)}
+pub enum Terminal{Normal(Normal),ScannerChildren(crate::scanner_index_helper::Children),Notification(notification_terminal::ProgrammingFailure),Scanner(ScannerFailure)}
 impl From<notification_terminal::Terminal> for Terminal{
  fn from(value:notification_terminal::Terminal)->Self{let raised=value.raised();let mapped=match value{notification_terminal::Terminal::Normal(v)=>Self::Normal(v),notification_terminal::Terminal::Raised(v)=>Self::Notification(v)};debug_assert_eq!(raised,mapped.raised());mapped}
 }
-impl Terminal{pub(crate)fn raised(&self)->bool{!matches!(self,Self::Normal(_))}}
+impl Terminal{pub(crate)fn raised(&self)->bool{!matches!(self,Self::Normal(_)|Self::ScannerChildren(_))}}
 /// Own observed scanner failure. No generic Python exception construction,
 /// arbitrary float grammar, SQL exception widening or notification reuse.
 #[derive(Debug)]

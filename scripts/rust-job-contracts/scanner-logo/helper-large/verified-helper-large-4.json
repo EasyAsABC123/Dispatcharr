@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "scope": "Actual Original first-index helper order/partial publication/SQL error and predeclared259-file traversal only; native759/760 unchanged",
+  "actual_original_worker": true,
+  "native_verified": false,
+  "checks": 85,
+  "cases": 9,
+  "aggregate_exit_zero": true,
+  "default_database_unchanged": true,
+  "cleanup": "owned project removed",
+  "descendants_retained": 7,
+  "first_index": {
+    "eligible_sources": 3,
+    "root_parent_actual": true,
+    "query_has_no_ORDER_BY": true,
+    "no_postdiff_sort": true,
+    "restart_duplicate_publications_retained": true,
+    "known_second_child_LPUSH_denial": {
+      "attempted": 2,
+      "durable_children": 1,
+      "parent_state": "SUCCESS",
+      "parent_result": null,
+      "first_scan_completed": true,
+      "no_retry_sameprocess": true
+    },
+    "actual_SELECT_server_P0001": {
+      "parent_state": "SUCCESS",
+      "children": 0,
+      "first_scan_completed": true,
+      "same_process_no_repeat": true,
+      "actual_error_class": "django.db.utils.ProgrammingError"
+    }
+  },
+  "large": {
+    "predeclared_supported": 257,
+    "unsupported_extensions": 2,
+    "total": 259,
+    "normal_processed": 257,
+    "one_settled_SQL_error_processed": 256,
+    "one_settled_SQL_error_errors": 1,
+    "full_create_order_matches_actual_pre_execution_os_walk": true,
+    "streaming_native_implemented": false,
+    "native128_cap_unchanged": true
+  },
+  "raw_sha256": "4cf6bee4903d129ffc28b30bddbe893b660a8a8fb59635358302fde242c3d701",
+  "integration_sha256": "77079257180892c81effd3cff7b3aa66ffcf58273dcf82925a54650c57ba816f",
+  "tools_sha256": {
+    "run_pair.py": "a5f16841260c3378fee1e77f5887c21fb58de19b126e21e970dc2c74b7f38f11",
+    "source_pair.py": "0ec24cae33f2e859348c11d6a73e66a4fa98bf13c86cf735a4ade3bc628bbf4e",
+    "periodic_worker_observer.py": "8b3c2a5cd580bd30af9a54892db0baaea8d36e069ad3f0c83935c2e03df7284f"
+  },
+  "retained_failures": [
+    {
+      "path": "artifacts/rust/scanner-helper-large-original-1",
+      "reason": "Wrong owned fixture table prefix rejected before scanner execution; defaultDB unchanged/cleanup."
+    },
+    {
+      "path": "artifacts/rust/scanner-helper-large-original-2",
+      "reason": "Fixture reset omitted new sub1/sub2 Logo rows; second large case reused existing row so INSERT failure trigger did not fire; raw retained."
+    },
+    {
+      "path": "artifacts/rust/scanner-helper-large-original-3",
+      "reason": "All actual85 checks passed but host scaffold expected obsolete report filename; aggregate false/exitnonzero retained. Corrected final4 uses actual filename and exits0."
+    }
+  ],
+  "limits": [
+    "Source query has no global ordering guarantee; observed controlled SQL iteration is authoritative, not insertion-order promise",
+    "Parent worker consumes explicit owned parent queue only; actual default-routed children remain unconsumed and preserved, no descendant result/index/guide claim",
+    "ACL intervention disables LPUSH on fixture default Redis user at second child publication; actual server denial, restored postrun; not global broker outage/reconnect/retry proof",
+    "Owned view makes helper SELECT raise realP0001; no generic network/rollback/ambiguous failure parity",
+    "Source directory traversal fully collected before effects; no native streaming or >128 admission yet",
+    "No Main/defaultenable/whole scanner/performance claim"
+  ]
+}

@@ -34,6 +34,9 @@ pub trait Domains: Send + Sync {
     fn execute_task_terminal(&self,kind:Kind,owner:Arc<dyn Send+Sync>)->BoxFuture<'_,Result<crate::default_task_terminal::Terminal,Error>>{
         Box::pin(async move{self.execute_terminal(kind,owner).await.map(Into::into)})
     }
+    /// Message-aware extension; legacy domains preserve their old methods.
+    fn preflight_message(&self,message:crate::default_protocol::Message,owner:Arc<dyn Send+Sync>)->BoxFuture<'_,Result<(),Error>>{self.preflight(message.kind,owner)}
+    fn execute_message(&self,message:crate::default_protocol::Message,owner:Arc<dyn Send+Sync>)->BoxFuture<'_,Result<crate::default_task_terminal::Terminal,Error>>{self.execute_task_terminal(message.kind,owner)}
     fn execute(
         &self,
         kind: Kind,

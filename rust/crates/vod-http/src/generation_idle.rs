@@ -250,7 +250,7 @@ impl LocalScope {
             }
             let reserve = gen
                 .lease
-                .reserve_provider(ProviderReservation {
+                .reserve_provider_retained_result(ProviderReservation {
                     profile_id: Some(inner.profile),
                     max_streams: profile_max,
                     credential_pool: None,

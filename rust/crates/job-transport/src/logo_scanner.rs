@@ -42,6 +42,12 @@ pub trait Effects: Send+Sync {
  /// ambiguous downstream lifetime remains Operational, not synthetic success.
  fn summary<'a>(&'a self,event:Value,receipt:Arc<Receipt>)->FutureResult<'a,FileEffect<()>>;
 }
+/// Immutable per-execution first-scan helper. The scanner supervisor retains
+/// its receipt through physical admission/read/publication and flag transition.
+pub trait FirstScanHook: Send+Sync {
+ fn admit<'a>(&'a self,receipt:Arc<Receipt>)->FutureResult<'a,()>;
+ fn finish<'a>(&'a self,receipt:Arc<Receipt>)->FutureResult<'a,()>;
+}
 #[derive(Clone)]
 pub struct Scanner { effects:Arc<dyn Effects>, roots:Roots, limits:Limits, slot:Arc<Semaphore>, first:Arc<AtomicBool> }
 #[derive(Clone)]
@@ -69,17 +75,24 @@ impl Scanner {
  pub async fn scan(&self,now:f64,owner:Owner)->Result<Counts,Error>{
   if !now.is_finite()||!(100_000_000.0..10_000_000_000.0).contains(&now){return Err(Error::Unsupported)}
   let slot=Arc::new(self.slot.clone().try_acquire_owned().map_err(|_|if self.slot.is_closed(){Error::Closed}else{Error::Capacity})?);
-  let this=self.clone();let(tx,rx)=oneshot::channel();tokio::spawn(async move{let answer=this.owned(now,owner,slot).await;let _=tx.send(answer);});rx.await.map_err(|_|Error::Operational)?
+  let this=self.clone();let(tx,rx)=oneshot::channel();tokio::spawn(async move{let answer=this.owned(now,owner,slot,None).await;let _=tx.send(answer);});rx.await.map_err(|_|Error::Operational)?
+ }
+ /// Explicit helper-enabled run; the original scan() keeps its no-index domain.
+ pub async fn scan_with_first_scan(&self,now:f64,owner:Owner,hook:Arc<dyn FirstScanHook>)->Result<Counts,Error>{
+  if !now.is_finite()||!(100_000_000.0..10_000_000_000.0).contains(&now){return Err(Error::Unsupported)}
+  let slot=Arc::new(self.slot.clone().try_acquire_owned().map_err(|_|if self.slot.is_closed(){Error::Closed}else{Error::Capacity})?);let this=self.clone();let(tx,rx)=oneshot::channel();tokio::spawn(async move{let result=this.owned(now,owner,slot,Some(hook)).await;let _=tx.send(result);});rx.await.map_err(|_|Error::Operational)?
  }
  /// Conservative read-only intake admission. Unknown marker grammar and
  /// unported directories/helper domains are refused BEFORE destructive claim.
  /// This is not the Source body; scan() rechecks before mutations. Stable owned
  /// directories/configuration and no external concurrent mutation are required.
- pub async fn preflight(&self,owner:Owner)->Result<(),Error>{
+ pub async fn preflight(&self,owner:Owner)->Result<(),Error>{self.preflight_hook(owner,None).await}
+ pub async fn preflight_with_first_scan(&self,owner:Owner,hook:Arc<dyn FirstScanHook>)->Result<(),Error>{self.preflight_hook(owner,Some(hook)).await}
+ async fn preflight_hook(&self,owner:Owner,hook:Option<Arc<dyn FirstScanHook>>)->Result<(),Error>{
   let slot=Arc::new(self.slot.clone().try_acquire_owned().map_err(|_|if self.slot.is_closed(){Error::Closed}else{Error::Capacity})?);
   let this=self.clone();let(tx,rx)=oneshot::channel();tokio::spawn(async move{
    let result=async{
-    let(receipt,done)=this.receipt(owner.clone(),slot.clone());let result=this.effects.no_index_sources(receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;if !result?{return Err(Error::Unsupported)}
+    let(receipt,done)=this.receipt(owner.clone(),slot.clone());let result=if let Some(hook)=&hook{hook.admit(receipt.clone()).await.map(|_|true)}else{this.effects.no_index_sources(receipt.clone()).await};drop(receipt);done.await.map_err(|_|Error::Operational)?;if !result?{return Err(Error::Unsupported)}
     let roots=this.roots.clone();let limits=this.limits;let keep=(owner.clone(),slot.clone());let files=tokio::task::spawn_blocking(move||{let _keep=keep;inspect(roots,limits)}).await.map_err(|_|Error::Operational)??;
     for file in files{if !file.supported{continue}let(receipt,done)=this.receipt(owner.clone(),slot.clone());let result=this.effects.marker(&file.path,receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;
      if let Some(value)=result?{if !value.is_empty(){match parse_marker(&value){Ok(_)|Err(Error::InvalidMarker)=>{},Err(error)=>return Err(error)}}}
@@ -87,7 +100,7 @@ impl Scanner {
    }.await;let _=tx.send(result);
   });rx.await.map_err(|_|Error::Operational)?
  }
- async fn owned(&self,now:f64,owner:Owner,slot:Arc<tokio::sync::OwnedSemaphorePermit>)->Result<Counts,Error>{
+ async fn owned(&self,now:f64,owner:Owner,slot:Arc<tokio::sync::OwnedSemaphorePermit>,hook:Option<Arc<dyn FirstScanHook>>)->Result<Counts,Error>{
   macro_rules! physical {($method:ident($($argument:expr),*))=>{{
    let(receipt,done)=self.receipt(owner.clone(),slot.clone());
    let result=self.effects.$method($($argument,)*receipt.clone()).await;drop(receipt);
@@ -95,7 +108,7 @@ impl Scanner {
   }}}
   // Bounded admission checks precede every mutation. This intentionally excludes
   // concurrent changes and first-scan children; it is not full scanner parity.
-  if !physical!(no_index_sources()){return Err(Error::Unsupported)}
+  if let Some(hook)=&hook{let(receipt,done)=self.receipt(owner.clone(),slot.clone());let result=hook.admit(receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;result?;}else if !physical!(no_index_sources()){return Err(Error::Unsupported)}
   let roots=self.roots.clone();let limits=self.limits;let keep=(owner.clone(),slot.clone());
   let files=tokio::task::spawn_blocking(move||{let _keep=keep;inspect(roots,limits)}).await.map_err(|_|Error::Operational)??;
   let mut counts=Counts{total_files:files.len(),..Counts::default()};
@@ -123,7 +136,7 @@ impl Scanner {
    let data=json!({"type":"update","data":{"success":true,"type":"logo_processing_summary","processed":counts.processed,"skipped":counts.skipped,"errors":counts.errors,"total_files":counts.total_files,"message":format!("Logo processing complete: {} processed, {} skipped, {} errors",counts.processed,counts.skipped,counts.errors)}});
    let _settled=physical!(summary(data));
   }
-  if !self.first_scan_completed(){if !physical!(no_index_sources()){return Err(Error::Unsupported)}self.first.store(true,Ordering::Release);}
+  if !self.first_scan_completed(){if let Some(hook)=hook{let(receipt,done)=self.receipt(owner.clone(),slot.clone());let result=hook.finish(receipt.clone()).await;drop(receipt);done.await.map_err(|_|Error::Operational)?;result?;}else if !physical!(no_index_sources()){return Err(Error::Unsupported)}self.first.store(true,Ordering::Release);}
   Ok(counts)
  }
  pub async fn shutdown(&self,timeout:Duration)->bool{

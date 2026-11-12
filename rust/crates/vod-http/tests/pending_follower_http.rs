@@ -249,6 +249,9 @@ async fn prefix(response: &mut reqwest::Response) -> Vec<u8> {
     retained
 }
 async fn actual_pending(busy: bool, cancel: bool) {
+    actual_pending_timed(busy, cancel, 5, 1200).await;
+}
+async fn actual_pending_timed(busy: bool, cancel: bool, command_seconds: u64, hold_millis: u64) {
     assert_eq!(
         std::env::var("REDIS_RESTART_DISPOSABLE_FIXTURE").as_deref(),
         Ok("playback-fixture-only")
@@ -289,7 +292,7 @@ async fn actual_pending(busy: bool, cancel: bool) {
             namespace: namespace.clone(),
             heartbeat_interval: None,
             reap_interval: None,
-            command_timeout: Duration::from_secs(5),
+            command_timeout: Duration::from_secs(command_seconds),
             ttl: Duration::from_secs(60),
             ..Default::default()
         },
@@ -412,7 +415,7 @@ async fn actual_pending(busy: bool, cancel: bool) {
     // Exceed this fixture's previous one-second cleanup timer while the
     // provider reply stays held. The admitted follower must keep metadata and
     // physical reservation alive; this is not a latency/performance sample.
-    tokio::time::sleep(Duration::from_millis(1200)).await;
+    tokio::time::sleep(Duration::from_millis(hold_millis)).await;
     assert_eq!(
         redis
             .hget::<_, _, i64>(&metadata, "active_streams")
@@ -500,4 +503,20 @@ async fn pending_http_busy() {
 #[ignore = "actual pending HTTP client disconnect; existing follower and physical reservation remain owned"]
 async fn pending_http_client_abort() {
     actual_pending(false, true).await;
+}
+
+#[tokio::test]
+#[ignore = "actual HTTP default2s Coordinator/outer3s and physical2.4s retained reply"]
+async fn retained_pending_http_success_2_4s() {
+    actual_pending_timed(false, false, 2, 2400).await;
+}
+#[tokio::test]
+#[ignore = "actual HTTP busy typed reply2.4s preserves other private reservation"]
+async fn retained_pending_http_busy_2_4s() {
+    actual_pending_timed(true, false, 2, 2400).await;
+}
+#[tokio::test]
+#[ignore = "actual HTTP caller loss during physical2.4s retained reply"]
+async fn retained_pending_http_client_loss_2_4s() {
+    actual_pending_timed(false, true, 2, 2400).await;
 }

@@ -177,11 +177,26 @@ impl Jobs{
   use crate::default_task_terminal::Terminal;
   match value{
    Terminal::Normal(value)=>self.write_default_success(message,value,owner).await,
+   Terminal::ScannerChildren(value)=>{
+    if !self.allows_defaults()||message.kind!=crate::default_protocol::Kind::LogoScanner{return Err(Error::UnsupportedTask)}
+    let tuples:Vec<serde_json::Value>=value.ids().iter().map(|id|serde_json::json!([[id.to_string(),null],null])).collect();let bytes=serde_json::to_vec(&serde_json::json!({"status":"SUCCESS","result":null,"traceback":null,"children":tuples,"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),"task_id":message.task_id.to_string()})).map_err(|_|Error::Protocol)?;crate::decode::decode(&bytes,message.task_id).map_err(|_|Error::Protocol)?;self.write_metadata(message.task_id,bytes,owner).await
+   }
    Terminal::Notification(value)=>self.write_default_terminal(message,crate::notification_terminal::Terminal::Raised(value),owner).await,
    Terminal::Scanner(value)=>{
     if !self.allows_defaults()||message.kind!=crate::default_protocol::Kind::LogoScanner{return Err(Error::UnsupportedTask)}
     let date=chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string();let bytes=value.metadata(message.task_id,&date)?;self.write_metadata(message.task_id,bytes,owner).await
    }
+  }
+ }
+}
+
+/// Only an observed, physically replied Redis server rejection is caught by
+/// the scanner helper. Lost/ambiguous replies never become Source null.
+use crate::scanner_index_helper::Publication as ScannerIndexPublication;
+impl Jobs{
+ pub(crate) async fn publish_scanner_index(&self,parent:uuid::Uuid,source:i64,owner:std::sync::Arc<dyn Send+Sync>)->Result<ScannerIndexPublication,Error>{
+  self.require_default()?;if source<=0{return Err(Error::Protocol)}let id=uuid::Uuid::new_v4();let bytes=crate::refresh_dispatch::encode_child(&crate::refresh_dispatch::ChildPublication::ProgrammeIndex{source_id:source},id,parent,parent,uuid::Uuid::new_v4(),uuid::Uuid::new_v4(),"rust@scanner-index").map_err(|_|Error::Protocol)?;crate::refresh_dispatch::parse_native_child(&bytes).map_err(|_|Error::Protocol)?;let limit=self.inner.config.max_queued_jobs.to_string();match self.inner.broker.command_classified::<i64,_>(PUBLISH,&["celery".into(),"_kombu.binding.celery".into()],&[&bytes,limit.as_bytes()],self.lease(owner)?).await{
+   Ok((n,_))if n>0=>Ok(ScannerIndexPublication::Committed(id)),Ok((-2,_))=>Err(Error::Capacity),Ok(_)=>Err(Error::Corrupt),Err(ClassifiedError::Server)=>Ok(ScannerIndexPublication::CaughtServer),Err(ClassifiedError::Backend)=>Err(Error::AmbiguousPublication(id)),Err(error)=>Err(map(error))
   }
  }
 }

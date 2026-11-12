@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "source_inputs": 763,
+  "source_inputs_sha256": "0d3a7b62ec5c416eb7d98f1175c2358eb68f707f304df2ed216e6828b7c70432",
+  "base_git_revision": "6054f7b52073485cff1d2ca249f8e3bde8bd46b3",
+  "selection_sha256": "b36f52782ffab005c8a81194ba390fa2bfa52307efb8530ebb5c743e2cef5a56",
+  "scope": "explicit retained actual result only in supervised idle transition; no global timeout/config/default changes",
+  "workspace": {
+    "wholeworkspace_strict": true,
+    "wholeworkspace_default_passed": 476,
+    "wholeworkspace_ignored": 677,
+    "wholeworkspace_suites": 170,
+    "actual_component_passed": 77,
+    "actual_groups": [
+      {
+        "target": "retained_reserve",
+        "filter": "retained_",
+        "returncode": 0,
+        "passed_count": 6,
+        "log_sha256": "dc1e2546f96b98a756b0e2795820b2c4fc2a7aa03e50cbacb4c2bfaa1b8d5ec9"
+      },
+      {
+        "target": "retained_reserve",
+        "filter": "ordinary_two_second_",
+        "returncode": 0,
+        "passed_count": 1,
+        "log_sha256": "00cf2cb472211075ca43e303d6e2aa79041ad92d9b268db1dd917e8e68f17f7b"
+      },
+      {
+        "target": "lease_physical",
+        "filter": "",
+        "returncode": 0,
+        "passed_count": 13,
+        "log_sha256": "2bb27a5372791f5a02f241861d088d21deda9f53954bf7083394ce50d770825a"
+      },
+      {
+        "target": "idle_entry",
+        "filter": "pending_follower_",
+        "returncode": 0,
+        "passed_count": 4,
+        "log_sha256": "5b1e37adba9e66ae1532af9490d04bf7a5a3e4e961838d541378e55d86a7455d"
+      },
+      {
+        "target": "idle_entry",
+        "filter": "idle_entry_",
+        "returncode": 0,
+        "passed_count": 5,
+        "log_sha256": "b9201a8a59fb068977c22aaa563c2e0f98a46dafe6e132e0391f2453e4b3f208"
+      },
+      {
+        "target": "generation_scope",
+        "filter": "local_scope_",
+        "returncode": 0,
+        "passed_count": 20,
+        "log_sha256": "b7a6932e51e42652ce37e018bdfdf0251fd45bd93f1817a3543ecaa42dcc282d"
+      },
+      {
+        "target": "generation_scope_physical",
+        "filter": "local_physical_",
+        "returncode": 0,
+        "passed_count": 9,
+        "log_sha256": "003a5780ddcdc5c4781598edb30321d8d8b9cea287a1678899581d56299f41e3"
+      },
+      {
+        "target": "pending_follower_http",
+        "filter": "pending_http_",
+        "returncode": 0,
+        "passed_count": 6,
+        "log_sha256": "0a9a84995a6bff971bd0ccad655f420155d62af9d0f64c0e09d66ed15373cd00"
+      },
+      {
+        "target": "http_recovery",
+        "filter": "actual_http_",
+        "returncode": 0,
+        "passed_count": 13,
+        "log_sha256": "d586c509137a301816bb5ea30e3c46975a7700c9a513cb4505b6ce8431cccf37"
+      }
+    ],
+    "cleanup": "independent-cleanup-exact-bind.json",
+    "packaged_Main_rerun": false
+  },
+  "global_ordinary_observer_seconds": 2,
+  "outer_idle_observer_seconds": 3,
+  "same_physical_invocation_and_no_replay": true,
+  "outside_ELFs": {
+    "retained_reserve": "aeffa317612563952075db0b109083048edefdadb600b3ee6bce86d81447b1c1",
+    "lease_physical": "410e37f23a82ac21f43d6a41963c062faa2e9f417f8c3f36abb62382898b4836",
+    "pending_follower_http": "02afa74767b1ad92983857393f9615f34c43ccd94033955edb8937f3caace790",
+    "http_recovery": "7a3706ffbcafabffb7781aaf995c28228797f6b8f6258908938d80985e054b77",
+    "generation_scope": "0d527fbfb8d16f88ea986e896f868a8b95fe858d04713ec154f3c422f5e13c71",
+    "generation_scope_physical": "efaa0aa5d55c054436a8ed699de8d21067e7a7328331ecf67328a5197f40b128",
+    "idle_entry": "9182a74596aa4fafb631871b096f3a3cfbf6c72e735a0096cc079ccf6e4af6be"
+  },
+  "native_peer_HTTP_auth": "fixture resolver/admin, not SQL/Main; future-drop caller observer is not proof of server handler cancellation",
+  "shutdown_scope": "existing actual4s held provider/lease scope drain controls retain caller/physicalowner; no new packaged engine-shutdown claim",
+  "raw_log_sha256": {
+    "clippy.log": "2dd843173ff9c46429854c9a777c07d11d1d42a51b4fa1d81c3a2c98db9a56ce",
+    "compile.log": "1691d6289416021379c16bbab552efe78d6fc06481127e589238c56621b4bf08",
+    "regression-execution.log": "f5e19ee053b28f31c112ee11aab4727e53855224990b9999dc78ada865f41580",
+    "media-generation.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retained_reserve-retained_tests.log": "dc1e2546f96b98a756b0e2795820b2c4fc2a7aa03e50cbacb4c2bfaa1b8d5ec9",
+    "retained_reserve-ordinary_two_second_tests.log": "00cf2cb472211075ca43e303d6e2aa79041ad92d9b268db1dd917e8e68f17f7b",
+    "workspace-clippy.log": "c7e17df2edf066856cbd4ffe99cb69ee1ce98a9deab539ec3cc07b4eb426e78b",
+    "lease_physical-tests.log": "2bb27a5372791f5a02f241861d088d21deda9f53954bf7083394ce50d770825a",
+    "idle_entry-pending_follower_tests.log": "5b1e37adba9e66ae1532af9490d04bf7a5a3e4e961838d541378e55d86a7455d",
+    "idle_entry-idle_entry_tests.log": "b9201a8a59fb068977c22aaa563c2e0f98a46dafe6e132e0391f2453e4b3f208",
+    "workspace-tests.log": "b39f535d5016bac1bdffa7683dfc2c13f2b8bf44a3bd8da2ab03cabd513def30",
+    "generation_scope-local_scope_tests.log": "b7a6932e51e42652ce37e018bdfdf0251fd45bd93f1817a3543ecaa42dcc282d",
+    "generation_scope_physical-local_physical_tests.log": "003a5780ddcdc5c4781598edb30321d8d8b9cea287a1678899581d56299f41e3",
+    "pending_follower_http-pending_http_tests.log": "0a9a84995a6bff971bd0ccad655f420155d62af9d0f64c0e09d66ed15373cd00",
+    "http_recovery-actual_http_tests.log": "d586c509137a301816bb5ea30e3c46975a7700c9a513cb4505b6ce8431cccf37"
+  },
+  "cleanup": {
+    "passed": true,
+    "ownership": "exact fixture native-peers/media bind path, not shared prefix",
+    "matching_owned_containers": 0,
+    "other_same_prefix_containers_ignored": 1,
+    "no_resource_removed_by_inspection": true,
+    "runner_exact_rm_acknowledged": true,
+    "retained_prior_prefix_only_false": "independent-cleanup.json"
+  },
+  "retained_prefix_cleanup_false": "first prefix-only inventory observed Parent concurrent fixture; exact-own-bind check0, no cleanup interference",
+  "Main49_failed_unchanged": true,
+  "performance_acceptance": false,
+  "full_M3_M4_acceptance": false
+}
