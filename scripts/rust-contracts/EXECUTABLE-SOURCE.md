@@ -4,7 +4,7 @@ Original Dispatcharr authors retain all application/algorithm credit and licensi
 The initial cohort assigned concrete fixtures/assertions/results to thirteen
 existing operation identities. The account/settings cohort adds sixteen more
 HTTP assignments and one typed CoreSettings model candidate. Current totals are
-29 HTTP assignments and one nonHTTP assignment; all remain partial. It does not resolve missing methods, complete an
+29 HTTP assignments and seven nonHTTP assignments; all remain partial. It does not resolve missing methods, complete an
 endpoint's role/grammar matrix, establish new Native behavior or accept M0/M1.
 
 `register.py` consumes `executable-source-inputs.json`, verifies each input hash,
@@ -108,3 +108,9 @@ the exact eighteen labels listed in `framework-auth/bindings.json`; no rerun was
 needed to reuse independently recorded named successes. External-fixture tests
 remain separate from pure SDK tests. Root decides the next contract cohort and
 formal milestone status; there is no all-798 completion claim here.
+
+The subsequent [six-task Source cohort](scanner-tasks/README.md) adds six typed
+nonHTTP task assignments from74 retained worker observations. The current selected
+core suite discovers122 tests (121 pass, one existing optional skip). Exactly15
+already-public fixture/capture dependencies are included in the SDK COPY closure.
+The prior100/68 counts retain their historical cohort scopes.

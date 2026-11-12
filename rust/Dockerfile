@@ -24,3 +24,20 @@ COPY scripts/rust-vod-api-contracts/verified-unified-image36-1.json ./scripts/ru
 COPY apps/proxy/live_proxy/input/ts_discontinuity.py ./apps/proxy/live_proxy/input/ts_discontinuity.py
 CMD ["sh", "scripts/rust-verify.sh"]
 COPY scripts/rust-verify.sh ./scripts/rust-verify.sh
+
+# Exact Original task-fixture and retained-capture authorities for portable assertions.
+COPY scripts/rust-job-contracts/scanner-logo/children/source-children-4.json ./scripts/rust-job-contracts/scanner-logo/children/source-children-4.json
+COPY scripts/rust-job-contracts/scanner-logo/children/verified-children-4.json ./scripts/rust-job-contracts/scanner-logo/children/verified-children-4.json
+COPY scripts/rust-job-contracts/scanner-logo/children/run_pair.py ./scripts/rust-job-contracts/scanner-logo/children/run_pair.py
+COPY scripts/rust-job-contracts/scanner-logo/children/source_pair.py ./scripts/rust-job-contracts/scanner-logo/children/source_pair.py
+COPY scripts/rust-job-contracts/scanner-logo/children/periodic_worker_observer.py ./scripts/rust-job-contracts/scanner-logo/children/periodic_worker_observer.py
+COPY scripts/rust-job-contracts/scanner-logo/m3u-reference/source-m3u-4.json ./scripts/rust-job-contracts/scanner-logo/m3u-reference/source-m3u-4.json
+COPY scripts/rust-job-contracts/scanner-logo/m3u-reference/verified-m3u-4.json ./scripts/rust-job-contracts/scanner-logo/m3u-reference/verified-m3u-4.json
+COPY scripts/rust-job-contracts/scanner-logo/m3u-reference/run_pair.py ./scripts/rust-job-contracts/scanner-logo/m3u-reference/run_pair.py
+COPY scripts/rust-job-contracts/scanner-logo/m3u-reference/source_pair.py ./scripts/rust-job-contracts/scanner-logo/m3u-reference/source_pair.py
+COPY scripts/rust-job-contracts/scanner-logo/m3u-reference/periodic_worker_observer.py ./scripts/rust-job-contracts/scanner-logo/m3u-reference/periodic_worker_observer.py
+COPY scripts/rust-job-contracts/scanner-logo/file-branches/source-file-branches-2.json ./scripts/rust-job-contracts/scanner-logo/file-branches/source-file-branches-2.json
+COPY scripts/rust-job-contracts/scanner-logo/file-branches/verified-file-branches-2.json ./scripts/rust-job-contracts/scanner-logo/file-branches/verified-file-branches-2.json
+COPY scripts/rust-job-contracts/scanner-logo/file-branches/run_pair.py ./scripts/rust-job-contracts/scanner-logo/file-branches/run_pair.py
+COPY scripts/rust-job-contracts/scanner-logo/file-branches/source_pair.py ./scripts/rust-job-contracts/scanner-logo/file-branches/source_pair.py
+COPY scripts/rust-job-contracts/scanner-logo/file-branches/periodic_worker_observer.py ./scripts/rust-job-contracts/scanner-logo/file-branches/periodic_worker_observer.py

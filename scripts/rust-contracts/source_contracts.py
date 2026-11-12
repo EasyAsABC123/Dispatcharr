@@ -111,6 +111,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'pinned_original_account_settings_tests':
             import account_settings_contracts
             account_settings_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'captured_original_scanner_task_observations':
+            import scanner_task_contracts
+            scanner_task_contracts.validate(root, value, bindings)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
@@ -138,29 +141,37 @@ def apply(root, rows, bindings):
 
 
 def apply_non_HTTP(root, entries):
-    """Only the reviewed CoreSettings model candidate; no arbitrary importer."""
+    """Only reviewed exact model/task candidates; no arbitrary importer."""
     root = Path(root)
     manifest = json.loads((root / 'scripts/rust-contracts/executable-source-inputs.json').read_text())
     index = {entry['candidate_id']: entry for entry in entries}
     seen = set()
     for reference in manifest['inputs']:
-        if reference['kind'] != 'pinned_original_account_settings_tests':
+        if reference['kind'] not in ['pinned_original_account_settings_tests', 'captured_original_scanner_task_observations']:
             continue
         value = checked(root, reference)
-        import account_settings_contracts
-        account_settings_contracts.validate(root, value)
+        if reference['kind'] == 'pinned_original_account_settings_tests':
+            import account_settings_contracts
+            account_settings_contracts.validate(root, value)
+            source_kind = 'model_candidate'
+        else:
+            import scanner_task_contracts
+            scanner_task_contracts.validate(root, value)
+            source_kind = 'task_candidate'
         for contract in value['non_HTTP_contracts']:
             identifier = contract['candidate_id']
             assert identifier not in seen, 'conflicting nonHTTP Source inputs'
             seen.add(identifier)
             entry = index[identifier]
             assert entry['source'] == contract['source'], 'exact nonHTTP source identity'
-            assert entry['source']['kind'] == 'model_candidate'
+            assert entry['source']['kind'] == source_kind
             assert entry['fully_verified'] is False and contract['fully_verified'] is False
-            entry['setup_fixture'] = copy.deepcopy(value['fixtures'][contract['fixture_id']])
+            entry['setup_fixture'] = (copy.deepcopy(value['fixtures'][contract['fixture_id']]) if source_kind == 'model_candidate'
+                                      else {key: copy.deepcopy(value['fixtures'][key]) for key in contract['fixture_ids']})
             entry['assertions'] = copy.deepcopy(contract['assertions'])
             entry['result'] = copy.deepcopy(contract['result'])
             entry['executable_Source_contract'] = copy.deepcopy(contract)
-            entry['state'] = 'partial_executable_Original_model_tests'
-    return {'state': 'typed partial Original model assertions, not HTTP or Native verification',
+            entry['state'] = ('partial_executable_Original_model_tests' if source_kind == 'model_candidate'
+                              else 'partial_executable_Original_task_observations')
+    return {'state': 'typed partial Original model/task assertions, not HTTP or Native verification',
             'candidates': len(seen), 'fully_verified_added': 0}

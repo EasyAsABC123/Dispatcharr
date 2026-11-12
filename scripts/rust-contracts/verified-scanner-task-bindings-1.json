@@ -1,0 +1,228 @@
+{
+  "passed": true,
+  "scope": "Portable offline replay of retained actual Original task observations; no new Source execution, Native task/HTTP/Main acceptance, ACK guarantee or formal M0/M1 closure",
+  "base_revision": "5ff0f3b1ac54879c2a711c6932c0774d9763b5b5",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_credit": "All application/algorithm credit belongs to original Dispatcharr authors and contributors; upstream licenses retained.",
+  "task_candidates": 6,
+  "actual_historical_worker_observations": 74,
+  "received_signals": 57,
+  "scanner_worker_stage_without_received": 17,
+  "task_counts": {
+    "core.tasks.scan_and_process_files": {
+      "state": "partial_historical_Original_task_observations",
+      "actual_worker_observations": 31,
+      "received_signals": 14,
+      "new_Source_cases_this_task": 0,
+      "fully_verified": false
+    },
+    "apps.epg.tasks.refresh_epg_data": {
+      "state": "partial_historical_Original_task_observations",
+      "actual_worker_observations": 6,
+      "received_signals": 6,
+      "new_Source_cases_this_task": 0,
+      "fully_verified": false
+    },
+    "apps.epg.tasks.build_programme_index_task": {
+      "state": "partial_historical_Original_task_observations",
+      "actual_worker_observations": 9,
+      "received_signals": 9,
+      "new_Source_cases_this_task": 0,
+      "fully_verified": false
+    },
+    "apps.channels.tasks.evaluate_series_rules": {
+      "state": "partial_historical_Original_task_observations",
+      "actual_worker_observations": 6,
+      "received_signals": 6,
+      "new_Source_cases_this_task": 0,
+      "fully_verified": false
+    },
+    "apps.m3u.tasks.refresh_m3u_groups": {
+      "state": "partial_historical_Original_task_observations",
+      "actual_worker_observations": 12,
+      "received_signals": 12,
+      "new_Source_cases_this_task": 0,
+      "fully_verified": false
+    },
+    "apps.m3u.tasks.refresh_single_m3u_account": {
+      "state": "partial_historical_Original_task_observations",
+      "actual_worker_observations": 10,
+      "received_signals": 10,
+      "new_Source_cases_this_task": 0,
+      "fully_verified": false
+    }
+  },
+  "file_branch_before_publish_observations": 31,
+  "file_branch_queued_unconsumed_frames": 29,
+  "denied_publish_attempts": 2,
+  "fully_verified_added": 0,
+  "previous_HTTP_assignments": 29,
+  "new_Source_runs": 0,
+  "identity_preservation": {
+    "routes": 592,
+    "HTTP_work_items": 798,
+    "static_candidates": 250,
+    "runtime_routes_and_all29_HTTP_assignments_exact": true,
+    "OpenAPI_exact": true,
+    "all250_candidate_identities_exact": true,
+    "all244_unselected_candidate_records_exact": true,
+    "all_fully_verified_flags_false": true
+  },
+  "non_HTTP_states": {
+    "static_candidate_requires_runtime_contract": 243,
+    "partial_executable_Original_task_observations": 6,
+    "partial_executable_Original_model_tests": 1
+  },
+  "binding": {
+    "path": "scripts/rust-contracts/scanner-tasks/bindings.json",
+    "sha256": "a1dc0b6b8d6164a98775a7589b099f9fd61f472e3c7b7967d05a7a2636bfbe00"
+  },
+  "public_authorities": [
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/children/source-children-4.json",
+      "sha256": "8603f06456c46816b8b959a48b0d2db72ff166bc096b7d799eb103256634a021"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/children/verified-children-4.json",
+      "sha256": "6a6bd332ffe41db93c65cbc1d49e4b4d0f66972f8832c31c31c389972e34b5a2"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/children/run_pair.py",
+      "sha256": "ad0ce732ab55f42646d5ba049d55c876a47dd3a453143f7a960addb9b8bc4912"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/children/source_pair.py",
+      "sha256": "724c558e448c1971d46f1088876635966e4f38720f4774b953ad3809f90f5640"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/children/periodic_worker_observer.py",
+      "sha256": "ac2f24a0507e73dbdedc816eaf01e4d39732f867f1a03d5bea0ef86a1d17b935"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/m3u-reference/source-m3u-4.json",
+      "sha256": "d726946de24020938d815b0ca9b8d39d412d8c110a2226e61e7bcfd38b3ccb72"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/m3u-reference/verified-m3u-4.json",
+      "sha256": "c47d138967d5d586396bd82bbeeac00813f57955a9920eb4717cd53e81ce6723"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/m3u-reference/run_pair.py",
+      "sha256": "ad0ce732ab55f42646d5ba049d55c876a47dd3a453143f7a960addb9b8bc4912"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/m3u-reference/source_pair.py",
+      "sha256": "3a9426ed8c2c0fb9ec0e7043496221bff4f8d018e602202356d5a74df06d7ae9"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/m3u-reference/periodic_worker_observer.py",
+      "sha256": "366d7a7efd61330a37ee251fb84a7b21d4bed437bef6a917390db879000ac557"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/file-branches/source-file-branches-2.json",
+      "sha256": "8aa0689682cbce5f7d57a05ca8932afd146d4bf26d2d8f8c1d40fc278a37c060"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/file-branches/verified-file-branches-2.json",
+      "sha256": "d3b57ea6aa860849a5b549f7fee7db2e2d1da19ed25a8b3dd1274fc73e6eb66c"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/file-branches/run_pair.py",
+      "sha256": "424d321a1ede95791a49036d06303dcf0b104b84bf65dc714dc160eea0706567"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/file-branches/source_pair.py",
+      "sha256": "5a7e30a686abbd559bd6d09e7ba26cce0d8c0e50bc95c83a473c72930acefa28"
+    },
+    {
+      "path": "scripts/rust-job-contracts/scanner-logo/file-branches/periodic_worker_observer.py",
+      "sha256": "224fb1360f553272b2149a241d106a8c0cd07616af7aa2c760b0a49228bcd603"
+    }
+  ],
+  "original_files": [
+    {
+      "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+      "sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279"
+    },
+    {
+      "path": "scripts/rust-contracts/scanner-tasks/original/apps/epg/tasks.py",
+      "sha256": "deb4792a39ed93c57da435ecc2a4fcdf5b4dad8f4e087d3afdb5d4f2b7932ff9"
+    },
+    {
+      "path": "scripts/rust-contracts/scanner-tasks/original/apps/m3u/tasks.py",
+      "sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981"
+    },
+    {
+      "path": "scripts/rust-contracts/scanner-tasks/original/core/tasks.py",
+      "sha256": "5e20b3a7395c9d78cc45f3b07abc1becc7d744a3f37e09735eac512ae537dcbc"
+    }
+  ],
+  "portable_tests": {
+    "core_modules": [
+      "test_inventory",
+      "test_register_evidence",
+      "test_source_links"
+    ],
+    "discovered": 122,
+    "passed": 121,
+    "existing_optional_private_raw_skip": 1,
+    "new_task_controls": 22,
+    "host_log": {
+      "path": "artifacts/rust/m0-scanner-task-contracts-1/host-tests-3.log",
+      "sha256": "5233a3278aa505ab97b00dd2aaaead8a591d8b786123dc29b330d584a393a96f"
+    },
+    "SDK_log": {
+      "path": "artifacts/rust/m0-scanner-task-contracts-1/sdk-tests-3.log",
+      "sha256": "0b6d5be7ff1af03be1641729705b20c1a85c29d5658ca2159718aa0925e9162c"
+    },
+    "SDK_image": "sha256:57c217f05ac8d9c2104887647fdfc6470fd82617beda101585105f270acfadd3",
+    "SDK_resources": {
+      "CPU": 1,
+      "memory_bytes": 268435456,
+      "pids": 128,
+      "tmpfs_bytes": 134217728,
+      "network": "none",
+      "read_only": true
+    },
+    "SDK_mounted_input_inventory": {
+      "path": "scripts/rust-contracts/scanner-tasks/sdk-mounted-inputs.json",
+      "sha256": "2cc7d3f8bc49a477165ac4dc628b1aef743aab355ffc984225e43f95caeae5dc",
+      "files": 327,
+      "bytes": 36430388
+    },
+    "SDK_containers_independently_absent": true,
+    "cleanup_inventory": {
+      "path": "artifacts/rust/m0-scanner-task-contracts-1/sdk-cleanup.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "retained_attempts": {
+    "preparation": "Initial private archive list included nonexistent docs/rust-runtime-rest-inventory.json; command stopped before any application execution. Correct public discovery inputs used afterward.",
+    "host1": {
+      "log": {
+        "path": "artifacts/rust/m0-scanner-task-contracts-1/host-tests.log",
+        "sha256": "28ac619d509a93af779ca2912c39267720f5c92cfa9bd0721142d655af3a44e6"
+      },
+      "state": "122 tests;17 source-link errors from two omitted public plugin files in private copy. Added exact committed dependencies; no application or test assertion changed."
+    },
+    "host2": {
+      "path": "artifacts/rust/m0-scanner-task-contracts-1/host-tests-2.log",
+      "sha256": "d9a76fab749f8744efd459846c9a16680cfb9d09cbb1af355f1b8cdf9e5535b3"
+    },
+    "SDK1": {
+      "path": "artifacts/rust/m0-scanner-task-contracts-1/sdk-tests-1.log",
+      "sha256": "fd45f8e88cc92bd76bced4e01406c48e74700e9f1697ff08390b4d79695f0840"
+    },
+    "SDK2": {
+      "path": "artifacts/rust/m0-scanner-task-contracts-1/sdk-tests-2.log",
+      "sha256": "063e5006067ca3a0314695d32b4f471f6a6d34ba593c8008c5f86f4d6bccf43c"
+    },
+    "final": "Added explicit31 attempted versus29 queued assertion, then final host3 and fully hash-inventoried SDK3 run. README/gitattributes are publication data; tested implementation bytes unchanged afterward."
+  },
+  "historical_source_negatives": "Retained failures/busy states/partial effects and prior fixture setup failures remain in existing exact authorities; no reruns to seek green.",
+  "Docker_closure": "Exactly fifteen existing public fixture/capture files added via COPY and specific ignore exceptions; no private fallback. Full Rust SDK Compose is parent integration work, not claimed here.",
+  "documentation_only_not_in_test_mount": [
+    "scripts/rust-contracts/scanner-tasks/sdk-mounted-inputs.json",
+    "scripts/rust-contracts/verified-scanner-task-bindings-1.json"
+  ]
+}
