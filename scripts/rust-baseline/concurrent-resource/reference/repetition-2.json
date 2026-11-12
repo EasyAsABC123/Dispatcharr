@@ -1,0 +1,284 @@
+{
+  "passed": false,
+  "scope": "ONE fixed Original-only worker-inclusive resource repetition2; valid reference, negative Source growth budgets",
+  "repetition": 2,
+  "observation_coverage_valid": true,
+  "Source_budget_acceptance": false,
+  "plan_sha256": "851047385b3cc124b2ac7adc9a8e3b53e645184bb78e9bf595a04ca4a0d0ac70",
+  "captured36_activated_inputs_match": true,
+  "policy_sha256": "dca986f0efa0ac85fba6397ac6d3d02e2c4c873ab32215aa2bdbf2503dbec758",
+  "cue_sha256": "703932d4f9c26cf96d718f3bb96082fdcc891fe2f0d44ec48022ff7678771973",
+  "all_quality_intervals_passed": [
+    {
+      "id": "idle-before-first-playback/CPU-intervals/baseline",
+      "passed": true,
+      "count": 18,
+      "left_edge_seconds": 1.007642583019333,
+      "right_edge_seconds": 0.9103339169814717,
+      "maximum_gap_seconds": 0,
+      "minimum": 5
+    },
+    {
+      "id": "idle-before-first-playback/CPU-intervals/origin",
+      "passed": true,
+      "count": 18,
+      "left_edge_seconds": 1.009637361014029,
+      "right_edge_seconds": 0.9084681219828781,
+      "maximum_gap_seconds": 0,
+      "minimum": 5
+    },
+    {
+      "id": "idle-before-first-playback/CPU-intervals/source",
+      "passed": true,
+      "count": 18,
+      "left_edge_seconds": 1.0086069710087031,
+      "right_edge_seconds": 0.9093949289817829,
+      "maximum_gap_seconds": 0,
+      "minimum": 5
+    },
+    {
+      "id": "idle-before-first-playback/CPU-intervals/worker",
+      "passed": true,
+      "count": 18,
+      "left_edge_seconds": 1.0105240069970023,
+      "right_edge_seconds": 0.9075937669840641,
+      "maximum_gap_seconds": 0,
+      "minimum": 5
+    },
+    {
+      "id": "idle-before-first-playback/complete-census-intervals",
+      "passed": true,
+      "count": 9,
+      "left_edge_seconds": 0.0011348930129315704,
+      "right_edge_seconds": 1.5148649360053241,
+      "maximum_gap_seconds": 2.0003104499774054,
+      "minimum": 5
+    },
+    {
+      "id": "concurrent-import-playback/CPU-intervals/baseline",
+      "passed": true,
+      "count": 119,
+      "left_edge_seconds": 0.426137895003194,
+      "right_edge_seconds": 0.5056643069838174,
+      "maximum_gap_seconds": 0,
+      "minimum": 60
+    },
+    {
+      "id": "concurrent-import-playback/CPU-intervals/origin",
+      "passed": true,
+      "count": 119,
+      "left_edge_seconds": 0.42812937300186604,
+      "right_edge_seconds": 0.5037146399845369,
+      "maximum_gap_seconds": 0,
+      "minimum": 60
+    },
+    {
+      "id": "concurrent-import-playback/CPU-intervals/source",
+      "passed": true,
+      "count": 119,
+      "left_edge_seconds": 0.42714822498965077,
+      "right_edge_seconds": 0.5046467779902741,
+      "maximum_gap_seconds": 0,
+      "minimum": 60
+    },
+    {
+      "id": "concurrent-import-playback/CPU-intervals/worker",
+      "passed": true,
+      "count": 119,
+      "left_edge_seconds": 0.4290507000114303,
+      "right_edge_seconds": 0.5028266239969525,
+      "maximum_gap_seconds": 0,
+      "minimum": 60
+    },
+    {
+      "id": "concurrent-import-playback/complete-census-intervals",
+      "passed": true,
+      "count": 52,
+      "left_edge_seconds": 1.262667014991166,
+      "right_edge_seconds": 0.21246490499470383,
+      "maximum_gap_seconds": 4.315092442993773,
+      "minimum": 30
+    },
+    {
+      "id": "idle-after-import-playback/CPU-intervals/baseline",
+      "passed": true,
+      "count": 19,
+      "left_edge_seconds": 0.676306963985553,
+      "right_edge_seconds": 0.6724922879948281,
+      "maximum_gap_seconds": 0,
+      "minimum": 5
+    },
+    {
+      "id": "idle-after-import-playback/CPU-intervals/origin",
+      "passed": true,
+      "count": 19,
+      "left_edge_seconds": 0.6782166289922316,
+      "right_edge_seconds": 0.6704573489842005,
+      "maximum_gap_seconds": 0,
+      "minimum": 5
+    },
+    {
+      "id": "idle-after-import-playback/CPU-intervals/source",
+      "passed": true,
+      "count": 19,
+      "left_edge_seconds": 0.6772950220038183,
+      "right_edge_seconds": 0.671401806990616,
+      "maximum_gap_seconds": 0,
+      "minimum": 5
+    },
+    {
+      "id": "idle-after-import-playback/CPU-intervals/worker",
+      "passed": true,
+      "count": 19,
+      "left_edge_seconds": 0.6790502639778424,
+      "right_edge_seconds": 0.6695570629963186,
+      "maximum_gap_seconds": 0,
+      "minimum": 5
+    },
+    {
+      "id": "idle-after-import-playback/complete-census-intervals",
+      "passed": true,
+      "count": 9,
+      "left_edge_seconds": 1.1581541429914068,
+      "right_edge_seconds": 0.7413005259877536,
+      "maximum_gap_seconds": 2.0002551149809733,
+      "minimum": 5
+    }
+  ],
+  "resource_rows": 258,
+  "census_rows": 114,
+  "complete_eligible_census_rows": 111,
+  "census_phase_counts": {
+    "idle-before-first-playback": 9,
+    "playback-startup-and-warmup": 9,
+    "concurrent-import-playback": 53,
+    "decoder-and-reader-close": 3,
+    "post-close-retention-settle": 31,
+    "idle-after-import-playback": 9
+  },
+  "observer_errors": [],
+  "observer_threads_drained": true,
+  "failed_Source_budget_checks": [
+    {
+      "id": "settled/process-growth",
+      "observed": 1,
+      "limit": 0,
+      "passed": false
+    },
+    {
+      "id": "settled/fd-growth",
+      "observed": 144,
+      "limit": 16,
+      "passed": false
+    },
+    {
+      "id": "settled/socket-growth",
+      "observed": 18,
+      "limit": 16,
+      "passed": false
+    }
+  ],
+  "all_other_declared_checks_passed": true,
+  "Source_workload": {
+    "task_executions": 6,
+    "durable_checks": 44,
+    "actual_task_playback_overlap": true,
+    "decodes": [
+      {
+        "label": "startup",
+        "frames": 124,
+        "payload_sha256": "6249a5b72318a6ec1e9e558808ca706cc647a7a44c663b8bfad5dd8bb044a39e"
+      },
+      {
+        "label": "import1",
+        "frames": 86,
+        "payload_sha256": "c757ae521b431ae45a4931db4e70cc88fb87d128ad4f0da78edc163f8de224ea"
+      },
+      {
+        "label": "import2",
+        "frames": 92,
+        "payload_sha256": "6d602046b0404b0e27c2b343b47dd1f90307b4048b512c06a9123449a79f5e19"
+      }
+    ],
+    "playback_status": 200,
+    "playback_errors": [],
+    "unexpected_EOF": false,
+    "actual_measured_bytes": 29936556
+  },
+  "default_database_unchanged": true,
+  "all8terminal_actions_passed": true,
+  "host_process_cleanup": {
+    "drained": true,
+    "host_clients_drained": true,
+    "remaining": [],
+    "owned_stop_acknowledged": false,
+    "owned_stop_error": null,
+    "commands_started": 1591
+  },
+  "independently_owned_cleanup_empty": true,
+  "raw_bindings": [
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/integration.json",
+      "sha256": "2a0d5d75a19c81097705f3af4d691b1b62f0b5bc30a2e8da3cb8a965f5b2aa53"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/authorization-binding.json",
+      "sha256": "280b29be9d48f1647cbd61e229c674b34b75340e264d76eff8e06774fdb5907b"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/reviewed-seal.json",
+      "sha256": "a0f5f5a748639dec9e74ea76dfdf1b4595b86643d076b6f9336a1b203650503f"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/active-quiet-cue.json",
+      "sha256": "703932d4f9c26cf96d718f3bb96082fdcc891fe2f0d44ec48022ff7678771973"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/resource-metadata-private.json",
+      "sha256": "16b5cd09a2464fc59d7f35bfbcf3c9b3105d59d0bbe81e157d110769ddb7afcc"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/resource-window/window.json",
+      "sha256": "3287ba3f456fca6d53007b98079719bc74e603afbeb7213f506b3d5335179a41"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/resource-window/resources.jsonl",
+      "sha256": "dd8623f9f0fb19fc9e3a461896dd5b478282c6acb3390c840d7dd7772ff61033"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/resource-window/censuses.jsonl",
+      "sha256": "2d552ad225234ae11b12ed82890087e7b1ff60b45736620f049aacacb11f6fa4"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/source-refresh-workflow-private.json",
+      "sha256": "df9404c4d18cf54e81ed42ca734e9d8c6566d28b560dae2628db53bf01b08c4b"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/worker-observer-budget.json",
+      "sha256": "b84b2e3f2eeadca98b18512a090e85908843fa91447e7c1c7db852798ffe2dec"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/workflow-prerun.jsonl",
+      "sha256": "7c1c60bbf32d8e4052275b65cd89621590bb0803241e3f62cf19f7829f6dbf18"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/workflow-postrun.jsonl",
+      "sha256": "fcf00c6a7258c99ecde3d00dd4c6698888ea3788624949f44da37098073c10e2"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/workflow-published.jsonl",
+      "sha256": "bdab9009ec14e720f36e3b2aaf28512bf55aa0b53b1b2be52a486e755622530b"
+    },
+    {
+      "path": "artifacts/rust/m0-concurrent-resource-original-1/repetition-2/independent-cleanup.json",
+      "sha256": "e94118ab6fddaa574f24cc18cc9b3fb74967f1f46e3ae013a6d2fdc9ec829cf9"
+    }
+  ],
+  "attribution_limits": "Role/UID/PID census and Source settings context do not prove live/zombie state, individual descriptor ownership or causal leak. No repeat toseekgreen.",
+  "resource_footprint_scope": "Exact four inspected Source/worker/PGRedis/origin roles and declared observer, not whole production graph. No perPIDRSS/PSS/Rediswire metric coverage inferred.",
+  "Native_enabled": false,
+  "performance_gain_claim": false,
+  "M0_complete": false,
+  "automatic_retry": false,
+  "next_repetition_requires_fresh_Root_cue": true
+}

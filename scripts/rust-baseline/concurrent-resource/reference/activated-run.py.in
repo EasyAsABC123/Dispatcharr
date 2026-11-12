@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+"""UNEXECUTED private Source-only concurrent playback/import RESOURCE DRAFT.
+Original Dispatcharr and dependency authors retain application/algorithm credit.
+Requires reviewed policy seal and explicit quiet cue; no accepted resource result.
+"""
+import argparse,hashlib,importlib.util,json,os,shutil,subprocess,sys,time,uuid,urllib.request
+from pathlib import Path
+HERE=Path(__file__).resolve().parent
+BASE='1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
+ARCHIVE='f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff'
+IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
+def load(path,name):
+ spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n')
+RESOURCE_EXECUTION_BLOCKED=False  # Unvalidated in-flight collector/abort controls.
+def main():
+ if RESOURCE_EXECUTION_BLOCKED:raise RuntimeError('UnvalidatedBoundedCollectorExecutionBlocked')
+ p=argparse.ArgumentParser(description=__doc__)
+ p.add_argument('--repo',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+ p.add_argument('--reviewed-seal',type=Path,required=True);p.add_argument('--quiet-cue',type=Path,required=True)
+ p.add_argument('--repetition',type=int,choices=[1,2,3],required=True)
+ args=p.parse_args();root=args.repo.resolve();out=args.output.resolve()
+ # Proposed cue schema: no execution without independent parent review.
+ raw=(HERE/'policy.json').read_bytes();sha=hashlib.sha256(raw).hexdigest()
+ own={v.name:hashlib.sha256(v.read_bytes()).hexdigest()for v in HERE.iterdir()if v.is_file()}
+ review=json.loads(args.reviewed_seal.read_text());cue=json.loads(args.quiet_cue.read_text())
+ authority=load(HERE/'authorization.py','resource6_authorization')
+ authority.validate(review,cue,json.loads(raw),sha,own,args.repetition,Path('/proc/sys/kernel/random/boot_id').read_text().strip(),time.time())
+ if out==HERE or HERE in out.parents:raise ValueError('OutputInsideController')
+ out.mkdir(parents=True,exist_ok=False);controller=out/'controller'
+ shutil.copytree(HERE,controller,ignore=shutil.ignore_patterns('support','__pycache__','*.log'))
+ (controller/'proc_snapshot.py').chmod(0o444)
+ (out/'reviewed-seal.json').write_bytes(args.reviewed_seal.read_bytes());(out/'active-quiet-cue.json').write_bytes(args.quiet_cue.read_bytes())
+ save(out/'authorization-binding.json',{'reviewed_seal_sha256':hashlib.sha256(args.reviewed_seal.read_bytes()).hexdigest(),'quiet_cue_sha256':hashlib.sha256(args.quiet_cue.read_bytes()).hexdigest(),'repetition':args.repetition,'boot_id':cue['boot_id']})
+ return load(controller/'run.py','frozen_concurrent_resource').execute(root,out,controller,args.repetition)
+
+def verify_execution_authority(out,controller,repetition):
+ # Defense at the second entry too: direct execute cannot bypass fresh Root
+ # authorization by avoiding main. Saved inputs are outside the controller map.
+ policyraw=(controller/'policy.json').read_bytes();policy=json.loads(policyraw)
+ own={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in controller.iterdir()if p.is_file()}
+ review=json.loads((out/'reviewed-seal.json').read_text());cue=json.loads((out/'active-quiet-cue.json').read_text())
+ authority=load(controller/'authorization.py','full_resource_activation_authority')
+ return authority.validate(review,cue,policy,hashlib.sha256(policyraw).hexdigest(),own,repetition,Path('/proc/sys/kernel/random/boot_id').read_text().strip(),time.time())
+
+def execute(root,out,controller,repetition):
+ if RESOURCE_EXECUTION_BLOCKED:raise RuntimeError('UnvalidatedBoundedCollectorExecutionBlocked')
+ sys.path.insert(0,str(controller))
+ from supervision import atomic_json,WorkDeadline
+ report={'passed':False,'bootstrap_failed':True}
+ try:
+  verify_execution_authority(out,controller,repetition)
+  policy=json.loads((controller/'policy.json').read_text());deadline=WorkDeadline(policy['resource_draft']['fixture_work_deadline_seconds'])
+  return execute_inner(root,out,controller,repetition,report,deadline)
+ except BaseException as error:
+  report.update(passed=False,error_type=type(error).__name__,error_message=str(error)[:1024])
+  from supervision import terminal
+  terminal(report,out,[]);return 1
+
+def execute_inner(root,out,controller,repetition,report,deadline):
+ sys.path.insert(0,str(controller))
+ policy=json.loads((controller/'policy.json').read_text())
+ report.update({'passed':False,'scope':__doc__,'performance_verified':False,'M0_complete':False,'baseline_accepted':False,'Native_enabled':False,'repetition':repetition,'project':'dispatcharr-m0-concurrent-'+uuid.uuid4().hex[:10]})
+ save(out/'seal.json',{'policy_sha256':hashlib.sha256((controller/'policy.json').read_bytes()).hexdigest(),'controller_sha256':{v.name:hashlib.sha256(v.read_bytes()).hexdigest()for v in controller.iterdir()if v.is_file()}})
+ tools=out/'support';tools.mkdir();support_archive=subprocess.check_output(['git','-C',str(root),'archive','21a152a27a5800592c66e412a7fac67509a5d485','scripts','docker'],timeout=deadline.remaining(30));subprocess.run(['tar','-x','--no-same-owner','-C',str(tools)],input=support_archive,check=True,timeout=deadline.remaining(30));save(out/'support-binding.json',{'git_revision':'21a152a27a5800592c66e412a7fac67509a5d485','archive_sha256':hashlib.sha256(support_archive).hexdigest()});source=out/'original-source';source.mkdir(mode=0o755);source.chmod(0o755);raw=subprocess.check_output(['git','-C',str(root),'archive',BASE],timeout=deadline.remaining(30));assert hashlib.sha256(raw).hexdigest()==ARCHIVE;subprocess.run(['tar','-x','--no-same-owner','-C',str(source)],input=raw,check=True,timeout=deadline.remaining(30));(source/'media').mkdir(exist_ok=True)
+ sys.path[:0]=[str(tools/'scripts/rust-integration'),str(tools/'scripts/rust-guide-perf')];ports=load(tools/'scripts/rust-integration/fixture_ports.py','concurrent_ports');work=load(controller/'workload.py','concurrent_work');observer=load(controller/'observer.py','concurrent_observer');database='rust_probe_backup_jobs_'+uuid.uuid4().hex[:10];resource_module=load(controller/'resource_window.py','concurrent_resource_window');corrected=load(controller/'coverage.py','concurrent_denied_coverage');metadata=load(controller/'metadata.py','concurrent_metadata');bounded=load(controller/'bounded_process.py','concurrent_bounded_process')
+ env=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(out),FIXTURE_SECONDS='600',FIXTURE_CODEC='h264',BENCHMARK_SHUTDOWN_DELAY='5',BENCHMARK_RETENTION_SECONDS='60',BENCHMARK_STARTUP_BEHIND='5')
+ common={'DJANGO_SECRET_KEY':'playback-fixture-only','POSTGRES_DB':database,'POSTGRES_HOST':'baseline','POSTGRES_PORT':'5432','POSTGRES_USER':'dispatch','POSTGRES_PASSWORD':'playback-fixture-only','REDIS_HOST':'baseline','REDIS_PORT':'6379','REDIS_PASSWORD':'playback-fixture-only','CELERY_BROKER_URL':'redis://:playback-fixture-only@baseline:6379/8','CELERY_RESULT_BACKEND':'redis://:playback-fixture-only@baseline:6379/9','JOB_DISPOSABLE_FIXTURE':'playback-fixture-only','DISPATCHARR_ENABLE_IP_LOOKUP':'false','DJANGO_SETTINGS_MODULE':'dispatcharr.settings','DISPATCHARR_ENV':'aio','PYTHONDONTWRITEBYTECODE':'1','DISPATCHARR_LOG_LEVEL':'WARNING','PYTHONPATH':'/concurrent:/app'}
+ services={'baseline':{'volumes':[str(controller)+':/concurrent:ro',str(tools/'scripts/rust-integration')+':/backup-tools:ro']},'origin':{}}
+ for name in ['source','worker']:
+  services[name]={'image':IMAGE,'working_dir':'/app','environment':common,'volumes':[str(source)+':/app:ro',str(controller)+':/concurrent:ro',str(tools/'scripts/rust-playback-baseline')+':/verification:ro',str(tools/'scripts/rust-m4-perf')+':/m4-perf:ro',str(out)+':/evidence','concurrent-media:/app/media'],'tmpfs':['/tmp:mode=1777,size=134217728','/data:mode=1777,size=67108864'],'stop_grace_period':'15s'}
+ services['source']['networks']=['default','ingress'];services['source'].update(entrypoint=['/dispatcharrpy/bin/python','/m4-perf/source_web.py'],ports=['127.0.0.1::5656'])
+ services['worker']['entrypoint']=['/dispatcharrpy/bin/celery','-A','concurrent_task_observer:app','worker','--pool=prefork','--concurrency=1','--without-gossip','--without-mingle','--without-heartbeat','--loglevel=WARNING','--hostname=rust-m0@fixture'];services['worker']['environment']={**common,'C_FORCE_ROOT':'true'}
+ for name,limits in policy['caps'].items():services[name].update(cpus=limits['nano_cpus']/1e9,mem_limit=limits['memory_bytes']);services[name].setdefault('volumes',[]).append(str(controller/'proc_snapshot.py')+':/m0-census.py:ro')
+ overlay=out/'fixture.json';save(overlay,{'services':services,'volumes':{'concurrent-media':{}},'networks':{'default':{'internal':True},'ingress':{'internal':False}}});portfile=out/'ports.yml';ports.write_port_overlay(portfile,{'baseline':[5656],'origin':[8080],'source':[5656]});compose=['docker','compose','-p',report['project'],'-f',str(tools/'docker/compose.rust-playback.yml'),'-f',str(overlay),'-f',str(portfile)]
+ def stop_owned():
+  from owned_stop import stop_project
+  report['owned_stop']=stop_project(compose,env,report['project'],policy['resource_draft']['supervision']['owned_stop_seconds'],run=registry.stop_control)
+ from supervision import Registry,PayloadBudget
+ limits=policy['resource_draft']['supervision'];budget=PayloadBudget(limits['host_observer_retained_payload_bytes'],limits['cleanup_reserved_payload_bytes']);budget.charge(limits['external_child_payload_reservation_bytes'])
+ registry=Registry(bounded.Collected,env,out,stop_owned,limits,budget,deadline)
+ def command(argv,body=None,timeout=180):return registry.run(argv,body,timeout)
+ def cleanup_command(argv,timeout=None):return registry.run(argv,timeout=limits["cleanup_control_command_seconds"]if timeout is None else timeout,cleanup=True)
+
+ def cleanup_counter_command(argv,timeout=5):
+  from final_counter_authority import FinalCounterCommand
+  return FinalCounterCommand(registry,selected,observer.CGROUP_SCRIPT)(argv,timeout)
+
+ def execute(*argv,body=None,timeout=180):return command(compose+list(argv),body,timeout)
+ def endpoint(name,port):return 'http://'+execute('port',name,str(port)).decode().strip()
+ def get(url,token=None):
+  with urllib.request.urlopen(urllib.request.Request(url,headers={'Authorization':'Bearer '+token}if token else{}),timeout=3)as response:return json.load(response)
+ def ready(url):
+  until=time.monotonic()+180
+  while True:
+   try:return get(url)
+   except Exception:
+    if time.monotonic()>until:raise TimeoutError('OwnedReadiness')
+    time.sleep(.25)
+ def helper(db,action):return json.loads(execute('exec','-T','-e','POSTGRES_DB='+db,'-e','BACKUP_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/backup-tools/backup_fixture.py',body=json.dumps({'action':action}).encode()).splitlines()[-1])
+ before=None;job=None;joblog=None;window=None;window_closed=False
+ try:
+  execute('up','-d','baseline');baseline_ready_deadline=time.monotonic()+180
+  while True:
+   try:
+    execute('exec','-T','baseline','/dispatcharrpy/bin/python','-c',"import urllib.request;assert urllib.request.urlopen('http://127.0.0.1:5656/api/core/version/',timeout=2).status==200",timeout=5);break
+   except (subprocess.SubprocessError,bounded.CollectionFailure):
+    if time.monotonic()>baseline_ready_deadline:raise TimeoutError('InternalBaselineReadiness')
+    time.sleep(.25)
+  before=helper('dispatcharr','baseline_manifest');execute('exec','-T','-e','PGPASSWORD=playback-fixture-only','baseline','psql','-h','127.0.0.1','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c','CREATE DATABASE '+database);helper(database,'seed')
+  execute('exec','-T','-e','POSTGRES_DB='+database,'-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','-e','CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8','-e','CELERY_RESULT_BACKEND=redis://:playback-fixture-only@localhost:6379/9','baseline','/dispatcharrpy/bin/python','/concurrent/seed.py');seed=json.loads((out/'concurrent-seed-private.json').read_text());assert seed['database']==database and seed['profile_max_streams']==1
+  execute('exec','-T','baseline','/dispatcharrpy/bin/python','/verification/supervisor.py','control','stop');execute('up','-d','--no-deps','source');base=endpoint('source',5656);ready(base+'/api/core/version/');assert get(base+'/api/accounts/users/me/',seed['token'])['username']==seed['username'];channel=get(base+'/api/channels/channels/'+str(seed['channel_pk'])+'/',seed['token']);assert channel['uuid']==seed['channel_uuid'];report['copied_DB_HTTP_binding']=True
+  # Only known startup plugin messages may be removed, before any workload.
+  execute('exec','-T','-e','CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8','baseline','/dispatcharrpy/bin/python','-c',"import redis,json,os;r=redis.Redis.from_url(os.environ['CELERY_BROKER_URL']);assert r.llen('celery')<=64;v=r.lrange('celery',0,63);assert all(json.loads(x)['headers']['task']=='apps.plugins.tasks.refresh_plugin_repos'for x in v);r.delete('celery')")
+  execute('up','-d','--no-deps','worker')
+  until=time.monotonic()+60
+  while not(out/'concurrent-worker-ready.json').exists():
+   if time.monotonic()>until:raise TimeoutError('WorkerReady')
+   time.sleep(.1)
+  execute('exec','-T','-e','POSTGRES_DB='+database,'-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/concurrent/django_overflow.py')
+  report['genuine_django_overflow']=json.loads((out/'django-overflow/proof.json').read_text());assert report['genuine_django_overflow']['passed']
+  selected={}
+  for name,service_limits in policy['caps'].items():
+   cid=execute('ps','-q',name).decode().strip();record=json.loads(command(['docker','inspect',cid]))[0];assert record['HostConfig']['Memory']==service_limits['memory_bytes']and record['HostConfig']['NanoCpus']==service_limits['nano_cpus'];selected[name]={'id':cid,'limits':service_limits}
+  group_observer=observer.Observer(selected,tools,command=command)
+  report['bootstrap_failed']=False
+  report['observer_contract']=group_observer.smoke();report['observer_contract']['scope']='10s four-service capability check only; no workload resource acceptance';report['census']={}
+  metadata.capture(command,selected,policy,source,controller,out,budget=budget)
+  window=resource_module.Window(group_observer,selected,command,policy,out/'resource-window',corrected,registry=registry,budget=budget,deadline=deadline,final_counter_command=cleanup_counter_command);window.start()
+  window.hold('idle-before-first-playback',policy['resource_draft']['idle_before_seconds'])
+  window.label('playback-startup-and-warmup')
+  def active(count):
+   script="local k=redis.call('KEYS',ARGV[1]);local n=0;for _,v in ipairs(k)do if redis.call('TYPE',v).ok=='hash'then if redis.call('HGET',v,'user_id')~=ARGV[2]then return {-1,#k}end;n=n+1 end end;return {n,#k}"
+   data=json.loads(execute('exec','-T','baseline','redis-cli','--json','EVAL',script,'0','live:channel:'+seed['channel_uuid']+':clients:*',str(seed['user_id'])));assert data==[count,count];slots=int(execute('exec','-T','baseline','redis-cli','GET','profile_connections:'+str(seed['profile_id'])).strip()or b'0');assert slots==count;return{'clients':count,'all_owned_user_id':True}
+  def footprint(label):
+   # Actual channel/slot retention stays visible; no expired-key sweep/reset.
+   script="import json,redis;from pathlib import Path;s=json.loads(Path('/evidence/concurrent-seed-private.json').read_text());r=redis.Redis(host='baseline',password='playback-fixture-only');keys=[];cursor=0\nwhile True:\n cursor,part=r.scan(cursor,match='live:channel:'+s['channel_uuid']+'*',count=64);keys.extend(part)\n if len(keys)>1024:raise RuntimeError('RetentionKeyBound')\n if cursor==0:break\nprint(json.dumps({'keys':[{'key':k.decode(),'type':r.type(k).decode(),'ttl':r.ttl(k),'memory_bytes':r.memory_usage(k)}for k in sorted(set(keys))],'profile_slots':int(r.get('profile_connections:'+str(s['profile_id']))or 0)}))"
+   value=json.loads(execute('exec','-T','baseline','/dispatcharrpy/bin/python','-c',script))
+   value['origin']=json.loads(execute('exec','-T','baseline','/dispatcharrpy/bin/python','-c',"import urllib.request;print(urllib.request.urlopen('http://origin:8080/stats',timeout=3).read().decode())"))
+   value.update(monotonic=time.monotonic(),phase=label)
+   save(out/('footprint-'+label+'-private.json'),value)
+   if value['profile_slots']!=0 or value['origin']['active']!=0:raise ValueError('PostCloseNotSettled')
+  def start():
+   nonlocal job,joblog
+   window.begin_workload()
+   save(out/'concurrent-window.json',{'begin':time.monotonic()});argv=compose+['exec','-T','-e','POSTGRES_DB='+database,'-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','-e','CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8','-e','CELERY_RESULT_BACKEND=redis://:playback-fixture-only@localhost:6379/9','baseline','/dispatcharrpy/bin/python','/concurrent/source_workflow.py'];job=registry.launch(argv,stdout_path=out/'workflow-controller-private.stdout',stderr_path=out/'workflow-controller-private.stderr');return None
+  def finish(_state,begin,end):
+   window.end_workload()
+   job.wait(timeout=5);report['normal_collector_witness']=load(controller/'normal_audit.py','normal_collector_audit').inspect(out,job);actual=json.loads((out/'source-refresh-workflow-private.json').read_text());assert actual['passed'];return{'scope':'Unaccepted full-window Source resource draft','workflow_passed':True}
+  phase=work.run(base,seed['path'],seed['token'],1,15,120,out/'media',start,finish,active,prefix_limit=2097152,control_check=window.check);row=phase['viewers'][0];assert row['status']==200 and not row['errors']and not row['unexpected_eof']and row['post_window_barrier']and row['prefix_bytes']==2097152 and row['measured_bytes']>=120*100000 and row['first_byte_ms']<=15000;report['playback']=phase
+  def decode_saved(label,*argv,timeout):
+   collection=registry.launch(compose+list(argv),limit=1048576,stdout_path=out/('decoder-'+label+'.stdout'),stderr_path=out/('decoder-'+label+'.stderr'))
+   collection.wait(timeout)
+   return (out/('decoder-'+label+'.stdout')).read_bytes()
+  for label,file in [('startup','0.ts'),('import1','0-import1.ts'),('import2','0-import2.ts')]:
+   payload=out/'media'/file;assert payload.stat().st_size==2097152;decoded=decode_saved(label,'exec','-T','baseline','ffmpeg','-hide_banner','-loglevel','error','-xerror','-progress','pipe:1','-nostats','-i','/evidence/media/'+file,'-map','0:v:0','-map','0:a:0','-t','5','-f','null','-',timeout=20);frames=max([int(l.split(b'=')[1])for l in decoded.splitlines()if l.startswith(b'frame=')],default=0);assert frames>=25;report.setdefault('decodes',[]).append({'label':label,'frames':frames,'payload_sha256':hashlib.sha256(payload.read_bytes()).hexdigest()})
+  tasks=[json.loads(l)for l in(out/'workflow-prerun.jsonl').read_text().splitlines()];assert len(tasks)==6;assert all(row['reader_start_monotonic']<=t['monotonic']<=row['reader_end_monotonic']for t in tasks);done={t['id']:t for t in[json.loads(l)for l in(out/'workflow-postrun.jsonl').read_text().splitlines()]}
+  for task in tasks:
+   earlier=[x for x in row['byte_trace']if x['monotonic']<=task['monotonic']];later=[x for x in row['byte_trace']if x['monotonic']>=done[task['id']]['monotonic']];assert earlier and later and later[0]['bytes']>earlier[-1]['bytes']
+  report['real_worker_task_overlap']=True;report['task_executions']=6;report['durable_checks']=len(json.loads((out/'source-refresh-workflow-private.json').read_text())['checks'])
+  until=time.monotonic()+45
+  while json.loads(execute('exec','-T','baseline','/dispatcharrpy/bin/python','-c',"import urllib.request;print(urllib.request.urlopen('http://origin:8080/stats',timeout=3).read().decode())"))['active']:
+   if time.monotonic()>until:raise TimeoutError('UpstreamCleanup')
+   time.sleep(.25)
+  active(0);footprint('after-reader-close');report['settled_slot_origin_zero']=True
+  window.hold('post-close-retention-settle',policy['resource_draft']['retention_settle_seconds'])
+  active(0);footprint('after-retention-settle')
+  window.hold('idle-after-import-playback',policy['resource_draft']['idle_after_seconds'])
+  active(0);footprint('after-post-idle')
+  if (out/'worker-observer-capacity.json').exists():raise ValueError('WorkerEventCapacity')
+  report['worker_event_budget']=json.loads((out/'worker-observer-budget.json').read_text())
+  report['resource_window']=window.close();window_closed=True
+  report['proposed_resource_checks']=resource_module.proposed_checks(window,policy)
+  report['default_database_unchanged']=helper('dispatcharr','baseline_manifest')==before;assert report['default_database_unchanged'];report['passed']=not window.errors and all(c['passed']for c in report['proposed_resource_checks'])
+ except Exception as error:
+  report['error_type']=type(error).__name__;report['error_message']=str(error)
+  if isinstance(error,subprocess.CalledProcessError):(out/'failure-private.log').write_bytes(error.stderr or b'')
+ finally:
+  from finalization import finish as finish_terminal
+  def audit_default():
+   if before is None:return None
+   value=registry.run(compose+['exec','-T','-e','POSTGRES_DB=dispatcharr','-e','BACKUP_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/backup-tools/backup_fixture.py'],body=json.dumps({'action':'baseline_manifest'}).encode(),timeout=limits['cleanup_control_command_seconds'],cleanup=True)
+   return json.loads(value.splitlines()[-1])==before
+  def logs():
+   data=cleanup_command(compose+['logs','--no-color','--tail','200']);(out/'compose-private.log').write_bytes(data);return {'bytes':len(data)}
+  def inventory(kind):
+   argv={'containers':['ps','-aq'],'networks':['network','ls','-q'],'volumes':['volume','ls','-q']}[kind]
+   return cleanup_command(['docker',*argv,'--filter','label=com.docker.compose.project='+report['project']],limits['cleanup_inventory_seconds']).decode().strip()
+  report['host_budget']=budget.snapshot()
+  finish_terminal(report,out,window,registry,audit_default,logs,lambda:cleanup_command(compose+['down','--volumes','--remove-orphans','--timeout','10'],limits['cleanup_compose_down_seconds']),inventory,limits)
+ print(json.dumps({'passed':report['passed'],'error_type':report.get('error_type'),'output':str(out)}));return 0 if report['passed']else 1
+if __name__=='__main__':raise SystemExit(main())
