@@ -1,0 +1,56 @@
+{
+  "status": "predeclared before any execution",
+  "Source": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "cases": [
+    "audit-limit1-empty",
+    "audit-limit1-full",
+    "audit-limit2-overfull",
+    "audit-timestamp-id-inversion",
+    "audit-timestamp-tie",
+    "audit-insert-P0001",
+    "audit-delete-P0001",
+    "normalize-absent",
+    "normalize-null",
+    "normalize-zero",
+    "normalize-string-one",
+    "normalize-string-invalid",
+    "normalize-negative",
+    "normalize-boolean",
+    "normalize-float"
+  ],
+  "real_worker": true,
+  "fixture_parent_route": "rust-owned-scanner-parents",
+  "unchanged_descendants_route": "celery",
+  "timing": "elapsed module-local0.0; datetime/renewer real",
+  "physical_faults": [
+    "core_systemevent INSERT P0001 conditional m3u_refresh",
+    "core_systemevent DELETE P0001 conditional owned seed rows"
+  ],
+  "equal_timestamp_case": "observation only, no stable tie inference",
+  "normalizations": {
+    "absent": "field removed",
+    "null": null,
+    "zero": 0,
+    "string-one": "1",
+    "string-invalid": "not-an-integer",
+    "negative": -1,
+    "boolean": true,
+    "float": 1.5
+  },
+  "source_tools": {
+    "run_pair.py": "5fd12476f6c156e37bf0fbbd70138c0b6918f4389de3e0772c1aaa17f5de4017",
+    "source_pair.py": "86a04d1011dda5312f74dbf6d18086ec423e00dc160d1996c2a0d08f17d2bdf3",
+    "periodic_worker_observer.py": "2fc71fb6b9354df1d2e267f1c71c1214f99a178472532b0bfc9e13e9c5611459",
+    "test_case_plan.py": "8c057703a84b8300aa6937c41522329d47f167f288c3dcd02758d5887a38f316"
+  },
+  "global_hash_authority": "Published Source6 empty effective hash keys/global lookup may retain older account ownership; compare all_owned_streams count1 and capture current account associations, do not require per-account ownership transfer.",
+  "retained_failed_attempt": "scanner-m3u-audit-original-1: generated literal-string loop; no intended case authority",
+  "prelaunch_controls": {
+    "passed": 7,
+    "log_sha256": "a6cb0728948845635de1de2d20e8f5a408449e5fdad3d5d27fcb6080be33ad9f"
+  },
+  "retained_failed_attempts": {
+    "1": "literal-string case loop; no intended case authority",
+    "2": "SQL trigger return variable shadowed AsyncResult at first fault; earlier five history observations retained partial only"
+  }
+}

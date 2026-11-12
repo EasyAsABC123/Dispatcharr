@@ -1,0 +1,1349 @@
+{
+  "passed": true,
+  "Source_only": true,
+  "native_verified": false,
+  "scope": "Pinned Original actual scanner parent/ordinary default-queue M3U groups+single worker audit-history/known SQL-failure observations; owned files/copiedDB/Redis8+9 only",
+  "checks": 323,
+  "cases": 15,
+  "tasks": 45,
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "predeclared_plan_sha256": "b2d5be0ea7b19faa1fd79fc51a8ca1010ce0a99444fdbed3c0aaedac10d0cb85",
+  "provenance": {
+    "packages": {
+      "Django": "6.0.9",
+      "celery": "5.6.3",
+      "kombu": "5.6.2"
+    },
+    "files": {
+      "/app/core/utils.py": "c7969e38d0d5028b1f99ab74a8e358c1e62db67fc2402dbd6c640a286d31aac7",
+      "/app/core/models.py": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb"
+    },
+    "audit_function_sha256": "24fe1424d1813a4004e6c0725d19059b7b3d67409992c684cf5d5d73ca5e71e1"
+  },
+  "model_ordering": [
+    "-timestamp"
+  ],
+  "prelaunch_case_and_binding_controls": 7,
+  "default_database_unchanged": true,
+  "independent_cleanup_attempts": 3,
+  "observations": [
+    {
+      "name": "audit-limit1-empty",
+      "raw_setting": {
+        "present": true,
+        "value": 1
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-audit-limit1-empty.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 1,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "name": "audit-limit1-full",
+      "raw_setting": {
+        "present": true,
+        "value": 1
+      },
+      "before_count": 1,
+      "after_count": 2,
+      "remaining_seed_ordinals": [
+        0
+      ],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-audit-limit1-full.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"core_systemevent\".\"id\" AS \"id\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"timestamp\" DESC LIMIT 1 OFFSET 1",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "DELETE FROM \"core_systemevent\" WHERE \"core_systemevent\".\"id\" < %s",
+          "param_types": [
+            "int"
+          ],
+          "atomic": true
+        }
+      ]
+    },
+    {
+      "name": "audit-limit2-overfull",
+      "raw_setting": {
+        "present": true,
+        "value": 2
+      },
+      "before_count": 4,
+      "after_count": 3,
+      "remaining_seed_ordinals": [
+        2,
+        3
+      ],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-audit-limit2-overfull.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"core_systemevent\".\"id\" AS \"id\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"timestamp\" DESC LIMIT 1 OFFSET 2",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "DELETE FROM \"core_systemevent\" WHERE \"core_systemevent\".\"id\" < %s",
+          "param_types": [
+            "int"
+          ],
+          "atomic": true
+        }
+      ]
+    },
+    {
+      "name": "audit-timestamp-id-inversion",
+      "raw_setting": {
+        "present": true,
+        "value": 2
+      },
+      "before_count": 4,
+      "after_count": 3,
+      "remaining_seed_ordinals": [
+        2,
+        3
+      ],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-audit-timestamp-id-inversion.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"core_systemevent\".\"id\" AS \"id\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"timestamp\" DESC LIMIT 1 OFFSET 2",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "DELETE FROM \"core_systemevent\" WHERE \"core_systemevent\".\"id\" < %s",
+          "param_types": [
+            "int"
+          ],
+          "atomic": true
+        }
+      ]
+    },
+    {
+      "name": "audit-timestamp-tie",
+      "raw_setting": {
+        "present": true,
+        "value": 2
+      },
+      "before_count": 4,
+      "after_count": 4,
+      "remaining_seed_ordinals": [
+        1,
+        2,
+        3
+      ],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-audit-timestamp-tie.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"core_systemevent\".\"id\" AS \"id\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"timestamp\" DESC LIMIT 1 OFFSET 2",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "DELETE FROM \"core_systemevent\" WHERE \"core_systemevent\".\"id\" < %s",
+          "param_types": [
+            "int"
+          ],
+          "atomic": true
+        }
+      ]
+    },
+    {
+      "name": "audit-insert-P0001",
+      "raw_setting": {
+        "present": true,
+        "value": 2
+      },
+      "before_count": 4,
+      "after_count": 4,
+      "remaining_seed_ordinals": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "new_audit_rows": [],
+      "actual_trigger_calls": 1,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false,
+          "error_class": "django.db.utils.ProgrammingError"
+        }
+      ]
+    },
+    {
+      "name": "audit-delete-P0001",
+      "raw_setting": {
+        "present": true,
+        "value": 2
+      },
+      "before_count": 4,
+      "after_count": 5,
+      "remaining_seed_ordinals": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-audit-delete-P0001.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": 1,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT \"core_systemevent\".\"id\" AS \"id\" FROM \"core_systemevent\" ORDER BY \"core_systemevent\".\"timestamp\" DESC LIMIT 1 OFFSET 2",
+          "param_types": [],
+          "atomic": false
+        },
+        {
+          "sql": "DELETE FROM \"core_systemevent\" WHERE \"core_systemevent\".\"id\" < %s",
+          "param_types": [
+            "int"
+          ],
+          "atomic": true,
+          "error_class": "django.db.utils.ProgrammingError"
+        }
+      ]
+    },
+    {
+      "name": "normalize-absent",
+      "raw_setting": {
+        "present": false,
+        "value": null
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-normalize-absent.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "name": "normalize-null",
+      "raw_setting": {
+        "present": true,
+        "value": null
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-normalize-null.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "name": "normalize-zero",
+      "raw_setting": {
+        "present": true,
+        "value": 0
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-normalize-zero.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "name": "normalize-string-one",
+      "raw_setting": {
+        "present": true,
+        "value": "1"
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-normalize-string-one.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "name": "normalize-string-invalid",
+      "raw_setting": {
+        "present": true,
+        "value": "not-an-integer"
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-normalize-string-invalid.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "name": "normalize-negative",
+      "raw_setting": {
+        "present": true,
+        "value": -1
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-normalize-negative.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "name": "normalize-boolean",
+      "raw_setting": {
+        "present": true,
+        "value": true
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-normalize-boolean.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    },
+    {
+      "name": "normalize-float",
+      "raw_setting": {
+        "present": true,
+        "value": 1.5
+      },
+      "before_count": 0,
+      "after_count": 1,
+      "remaining_seed_ordinals": [],
+      "new_audit_rows": [
+        {
+          "event_type": "m3u_refresh",
+          "details": {
+            "account_name": "rust-owned-children-normalize-float.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "actual_trigger_calls": null,
+      "task_states": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "task_results": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "result": null
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_m3u_groups",
+          "result": [
+            [
+              {
+                "attributes": {
+                  "tvg-id": "owned.channel",
+                  "group-title": "Owned Group"
+                },
+                "display_name": "Owned stream",
+                "name": "Owned stream",
+                "url": "http://127.0.0.1:9/owned-never-played.ts"
+              }
+            ],
+            {
+              "Default Group": {},
+              "Owned Group": {}
+            }
+          ]
+        },
+        {
+          "task": "apps.m3u.tasks.refresh_single_m3u_account",
+          "result": "Dispatched jobs complete."
+        }
+      ],
+      "lock_count": 0,
+      "audit_SQL": [
+        {
+          "sql": "INSERT INTO \"core_systemevent\" (\"event_type\", \"timestamp\", \"channel_id\", \"channel_name\", \"details\") VALUES (%s, %s, %s, %s, %s) RETURNING \"core_systemevent\".\"id\"",
+          "param_types": [
+            "str",
+            "datetime",
+            "NoneType",
+            "NoneType",
+            "Jsonb"
+          ],
+          "atomic": false
+        },
+        {
+          "sql": "SELECT COUNT(*) AS \"__count\" FROM \"core_systemevent\"",
+          "param_types": [],
+          "atomic": false
+        }
+      ]
+    }
+  ],
+  "remaining": [
+    "Equal timestamps are actual SQL-order observations, not stable tie authority",
+    "Empty-history normalization cases establish caught/no-raise worker outcomes/raw values, not discrimination of every effective integer cutoff",
+    "No count/cutoff read SQL-fault or arbitrary IO/decode/release ambiguity authority",
+    "Plugins/Connect empty only; no concurrent external audit writers or Main/default graph claim",
+    "788/native73-file handoff stays frozen; no native history implementation yet"
+  ],
+  "failed_attempts": {
+    "1": {
+      "reason": "Generated literal-string loop; no intended case authority",
+      "report": {
+        "passed": false,
+        "scope": "Actual pinned Original scanner and real default-queue descendant consumption; no native execution",
+        "project": "dispatcharr-scanner-children-dbf4562e7f",
+        "copied_database": "rust_probe_backup_jobs_dbf4562e7f",
+        "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "native_verified": false,
+        "tools_sha256": {
+          "run_pair.py": "ad0ce732ab55f42646d5ba049d55c876a47dd3a453143f7a960addb9b8bc4912",
+          "source_pair.py": "96553bbd3b37bd0b654a55d67474ea754980c883484d17763bdeea634cee6f2a",
+          "periodic_worker_observer.py": "2fc71fb6b9354df1d2e267f1c71c1214f99a178472532b0bfc9e13e9c5611459"
+        },
+        "performance_verified": false,
+        "default_registry_enabled": false,
+        "copied_nonempty_tables": 26,
+        "error_type": "CalledProcessError",
+        "default_database_unchanged": true,
+        "cleanup": "owned project removed",
+        "resources_retained": false
+      },
+      "files": {
+        "source-logo-scanner-private.json": "3657eeb03ad383be717801013b2be62aad8d4a08f795a387f77e3069636f938a",
+        "source-controller-private.log": "8c4c638b1e81a5b3601ef4b4e1f05e46936f02381a063314b5ec54ef254f888d",
+        "integration.json": "bb18a43bd39077d7698a471fa4db8545d3e7c8c77274f87542a929903d3c3ca7"
+      }
+    },
+    "2": {
+      "reason": "Trigger return variable shadowed AsyncResult at first fault; earlier five history observations retained partial, aggregate false",
+      "report": {
+        "passed": false,
+        "scope": "Actual pinned Original scanner and real default-queue descendant consumption; no native execution",
+        "project": "dispatcharr-scanner-children-5464f68093",
+        "copied_database": "rust_probe_backup_jobs_5464f68093",
+        "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "native_verified": false,
+        "tools_sha256": {
+          "run_pair.py": "14eb03e542145fd398d41618e51b22ca8e6c2b90a8fba5736d1fb3f9594df1b5",
+          "source_pair.py": "4714c8aa828bcde34a55692614c36a386a45ae95b35900ab9f95e1407f94bd32",
+          "periodic_worker_observer.py": "2fc71fb6b9354df1d2e267f1c71c1214f99a178472532b0bfc9e13e9c5611459",
+          "predeclared-plan.json": "10edeba108eeaf01aea2b1c54bb7ec510b48ecebd793de87d68e1a5c509ed5f1"
+        },
+        "performance_verified": false,
+        "default_registry_enabled": false,
+        "copied_nonempty_tables": 26,
+        "error_type": "CalledProcessError",
+        "default_database_unchanged": true,
+        "cleanup": "owned project removed",
+        "resources_retained": false
+      },
+      "files": {
+        "source-logo-scanner-private.json": "0cc2959ebd9a1231f41b45fc0381272bf48bb2059490d674786e505a6fcd85be",
+        "source-controller-private.log": "54ed07805c17929705ffda5af29456031758af0532bbbd83d9efa9a2f291c50f",
+        "integration.json": "304bb8c453e716fc351bb64bba4e918ad387278c262b802ec426ee4632a44a3f"
+      }
+    }
+  },
+  "credit": "Original Dispatcharr/Django/Celery/Kombu/Redis/Channels authors retain code/algorithm/license credit."
+}
