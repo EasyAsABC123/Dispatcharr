@@ -4,7 +4,9 @@ Generate the source candidate register without installing or importing Django:
 
 ```sh
 python scripts/rust-contracts/inventory.py --output docs/rust-contract-inventory.json --summary
-python -m unittest discover -s scripts/rust-contracts -p 'test_*.py' -v
+python -m unittest discover -s scripts/rust-contracts -p test_inventory.py -v
+python -m unittest discover -s scripts/rust-contracts -p test_register_evidence.py -v
+python -m unittest discover -s scripts/rust-contracts -p test_source_links.py -v
 ```
 
 The checked-in inventory scans `apps/`, `core/`, and `dispatcharr/` and records
@@ -66,3 +68,15 @@ To also check retained private raw matrices when restored locally:
 ```sh
 DISPATCHARR_CONTRACT_DEEP_EVIDENCE=1 python3 -m unittest discover -s scripts/rust-contracts -p test_register_evidence.py -v
 ```
+
+## Additive executable Source assignments
+
+[Executable Source definitions](EXECUTABLE-SOURCE.md) now populate thirteen
+existing operation rows with concrete fixture/assertion/result assignments: eleven
+HTTP captured-case operations and two pinned Original framework-test assignments.
+Only three provider operations received a new live Original fixture in this
+handoff (78 scoped assertions); the other observations and eighteen framework
+methods remain historical. Regeneration consumes the exact additive input manifest.
+Stable 592/798/250 identities, 322 unresolved methods and fully_verified=0 remain.
+The separate Django/DRF passive-binding fixture needs its supported Original
+image/mounts; it is not a portable host/SDK discovery module.

@@ -223,6 +223,8 @@ def build(bindings_path=None,deep_evidence=False):
             assert observation['case']['method']==observation['method']
             dataset,loaded=dataset_for(observation);bind_case(observation['case'],dataset,loaded,route)
         assert seen_cases=={(key,index)for key,dataset in datasets.items()for index in range(dataset['case_count'])}
+    import source_contracts
+    executable_Source_mapping=source_contracts.apply(ROOT,rows,case_bindings or {})
     attestations=sorted({item['attestation']['path']:item['attestation']for item in(case_bindings or{}).get('evidence_datasets',[])}.values(),key=lambda item:item['path'])
     attestation_paths=[ROOT/item['path']for item in attestations]
     operations=[]
@@ -242,11 +244,11 @@ def build(bindings_path=None,deep_evidence=False):
     candidate_ids=[x['candidate_id']for x in non_http];assert len(candidate_ids)==len(set(candidate_ids))
     ids=[op['contract_id']for r in rows for op in r['operations']];assert len(ids)==len(set(ids))
     assert len(rows)==len(runtime['routes']) and len(operations)==sum(k in HTTP for p in runtime['openapi']['paths'].values()for k in p)
-    assert all(op['result']is None and not op['fully_verified']for r in rows for op in r['operations'])
+    assert all(not op['fully_verified'] and (op['result'] is None or ('executable_Source_contract' in op and op['result'] == op['executable_Source_contract']['result'])) for r in rows for op in r['operations'])
     return {'format_version':1,'scope':'Contract work register linking runtime discovery and explicit mapping gaps; not executable parity acceptance',
         'credit':'All application/algorithm credit belongs to original Dispatcharr authors and contributors; AGPL retained.',
-        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[]),*([bindings_path]if case_bindings is not None else[]),*attestation_paths]},
-        'runtime_discovery_metadata':runtime['metadata'],'case_attestation_bindings':attestations,'case_binding_validation':{'mode':'deep_private_raw_revalidation'if deep_evidence else'committed_sanitized_attestation','is_new_HTTP_replay':False},'limits':['Method/action is unresolved where original runtime discovery returned null; no GET/POST guesses.',
+        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[]),*([bindings_path]if case_bindings is not None else[]),*attestation_paths,*([ROOT/'scripts/rust-contracts/executable-source-inputs.json', *[ROOT/item['path'] for item in executable_Source_mapping.get('inputs',[])]] if (ROOT/'scripts/rust-contracts/executable-source-inputs.json').exists() else [])]},
+        'executable_Source_mapping':executable_Source_mapping,'runtime_discovery_metadata':runtime['metadata'],'case_attestation_bindings':attestations,'case_binding_validation':{'mode':'deep_private_raw_revalidation'if deep_evidence else'committed_sanitized_attestation','is_new_HTTP_replay':False},'limits':['Method/action is unresolved where original runtime discovery returned null; no GET/POST guesses.',
             'Schema authentication is not a role/permission proof; every role matrix still requires case mapping.',
             'Module-associated tests and related scoped reports never mark an entire route fully verified.',
             'Runtime resolver order and exact raw patterns, including format variants, are retained.',

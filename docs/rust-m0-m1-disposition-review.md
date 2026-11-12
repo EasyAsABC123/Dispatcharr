@@ -1,7 +1,7 @@
 # M0/M1 disposition review: subgates qualified, formal gates remain open
 
-This is an additive review proposal, not a milestone acceptance or a modification
-of the historical crosswalk. Original Dispatcharr and dependency authors retain
+This records the af18/4fdf audit and later scoped assignment progress, not a
+milestone acceptance or a modification of the historical crosswalk. Original Dispatcharr and dependency authors retain
 credit and licensing. Root decides the ledger disposition.
 
 ## Existing requirements and actual disposition
@@ -10,7 +10,7 @@ credit and licensing. Root decides the ledger disposition.
 | --- | --- | --- |
 | Pinned toolchain; local and Rust-image workspace formatting, tests and lints | Historical 20-test bootstrap remains valid. Canonical repair `a65e334d82a8de51da2bc6d63af5e7cb4a3bd771` now supplies the qualified current verifier, formatting and input closure: host/container 560 default Rust tests, 701 external-fixture tests ignored, strict Clippy, formatting, 41 passing Python tests plus one optional deep skip, and 1,806 helper comparisons. | Qualified for its exact source and selected suite. The published shell has a separately disclosed one-space normalization and `sh -n` check; its new byte hash is not mislabeled as the executed archive. Later changes still need their own checks. |
 | Resolve runtime URLs; snapshot schema and non-OpenAPI surface | Stable 592 routes, 798 operation work items and 250 static non-HTTP candidates; runtime extraction, passive metadata and literal public crosswalk exist. | Discovery/indexing is qualified. There are 322 unresolved method placeholders; passive observations do not invent declarations or close dynamic method behavior. |
-| Contract register with source/test, method/path/event, roles, setup, assertions, owner, coverage and result | Register schema and stable identities exist. Eleven operations have partial captured-case bindings. | **Not complete as an executable contract register.** Every one of the 798 operation rows has null setup/result and empty top-level assertions. Source test candidates are module associations, not proof that a particular test covers a behavior. |
+| Contract register with source/test, method/path/event, roles, setup, assertions, owner, coverage and result | Register schema and stable identities exist. Eleven operations have partial captured-case bindings. | **Not complete as an executable contract register.** At that audit, every one of the 798 operation rows had null setup/result and empty top-level assertions. Source test candidates are module associations, not proof that a particular test covers a behavior. |
 | Deterministic media and injected fault fixtures | Published TS/fMP4/HLS/seekable VOD fixtures and malformed/stalled/redirected/ranged/failure authorities; many/mixed/capacity/change/sustained references; bounded prolonged outage. | Qualified in the declared fixture/scenario scopes, not all future profile combinations. Preserve the short-fault decoder warning and outage context-report serialization exit 1. |
 | Supported pinned Original tests | Full unchanged Original suite passed 3,362 tests, separately from earlier 48/526 scopes. | Qualified for its recorded pinned environment; counts are not summed. This does not assign every discovered route to a specific executable test. |
 | Baseline scenarios and frozen budgets | Named warmed image48 Source cohort; idle/churn and fixed worker-inclusive three-run references; finite capacity, mixed, many, fault/change and sustained accounting; supplemental Source2 metric attachment. | Source characterization is valid in these bounded scopes. Valid Source process/FD/socket budget failures remain failures. Missing/unexercised numerical quantities stay null; not every field has a universal absolute or comparative ceiling. |
@@ -21,9 +21,9 @@ The contract requirement is explicit in `docs/rust-milestones.md` M0 and in
 response contracts and assigning an executable test and owning milestone to every
 required behavior. This review does not redefine that as an inventory count.
 
-## Literal current register accounting
+## Register accounting at the af18/4fdf audit
 
-Actual operation rows: 798. Setup fixtures populated: 0. Nonempty top-level
+At that audit: 798 operation rows. Setup fixtures populated: 0. Nonempty top-level
 assertion lists: 0. Nonnull operation results: 0. Role state: 787 unmapped and 11
 partial captured cases. Coverage state: 771 not yet mapped, 16 scoped evidence
 needing case mapping, and 11 partial captured-case mappings. Fully verified: 0.
@@ -31,6 +31,12 @@ Unresolved method placeholders: 322. These are separate dimensions, not additive
 percentages. Stable IDs, methods, aliases and all historical captures remain
 unchanged. The 250 non-HTTP entries include static candidates; do not equate all
 of them to independently established runtime behaviors.
+
+## Current scoped assignment progress
+
+The deterministic register now includes13 partial executable Source assignments:11 existing HTTP operations with403 captured cases and2 METHOD_UNRESOLVED operations with18 qualified Original framework tests. Three provider GET operations additionally pass78 actual new Original assertions; the other325 historical HTTP cases and18 framework methods were not freshly rerun. All13 now have concrete setup/assertion/result fields. Roles remain785unmapped,11partial captured HTTP and2partial framework-test assignments;322 method declarations remain unresolved. Underlying592/798/250 identities, aliases/methods,403 old Native case observations and fully_verified=0 are unchanged. These are scoped Source contract assignments, not full endpoint/Native coverage or M0/M1 completion.
+
+[Exact Source definitions and replay commands](../scripts/rust-contracts/EXECUTABLE-SOURCE.md) and the [source-bound proof](../scripts/rust-contracts/verified-executable-source13-1.json) record the new assignments. The prior zero counts remain a dated audit, not the current state. The 785 other rows still lack top-level setup/assertion/result assignments. Root independently regenerates the exact register and repeats 68 core tests (67 passed, one optional raw-data skip) plus 19 provider controls. M0/M1 remain in progress.
 
 ## Source observation limits that stay explicit
 

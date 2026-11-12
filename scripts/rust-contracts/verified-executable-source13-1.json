@@ -1,0 +1,200 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "13 partial executable Source assignments; no method resolution, endpoint/Native completion or M0/M1 acceptance",
+  "credit": "Original Dispatcharr and dependency authors retain application/algorithm credit and licenses.",
+  "base_source_support_commit": "b34df23831f016ee4a8067dc727f76ab1d99ae41",
+  "framework_dependency_commit": "6caab000617010633d527f47b05ef7be41a596a6",
+  "regenerated_register_sha256": "32579c8bde2a0e18dac1691c9930c88e704bd942fcf3f6e4cdf150d539f67e88",
+  "additive_manifest": {
+    "path": "scripts/rust-contracts/executable-source-inputs.json",
+    "sha256": "d7473f11d3841dc1c160d35248955d45270b07e89813f99b6229aaa7a3a2ec72"
+  },
+  "preservation": {
+    "underlying_route_and_method_and_case_binding_structures_unchanged": true,
+    "openapi_and_nonHTTP_unchanged": true,
+    "counts_unchanged": {
+      "runtime_routes": 592,
+      "routes_with_unresolved_methods": 322,
+      "methodless_routes_with_runtime_handler_candidates": 166,
+      "runtime_operation_work_items": 798,
+      "OpenAPI_operations": 362,
+      "static_non_HTTP_candidates": 250,
+      "fully_verified_route_operations": 0,
+      "scoped_evidence_requiring_case_mapping": 16,
+      "operations_with_partial_case_bindings": 11,
+      "mapped_packaged_case_observations": 403
+    },
+    "changed_operations": [
+      "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "route-f7c174fdedb4d5f479b2:METHOD_UNRESOLVED",
+      "route-077d59452e88e68f3711:GET",
+      "route-56a108b56d175586118c:GET",
+      "route-6aba9848cb2820c89438:GET",
+      "route-ff6271e7d76cb2eed261:GET",
+      "route-b83465b777e172577ee9:GET",
+      "route-d9dbd4bd21190a41aec4:GET",
+      "route-657d87e22914efd937b6:GET",
+      "route-c8efbe7db4ff89033563:GET",
+      "route-1798d412607eea1f93a7:GET",
+      "route-30804de5ee9d1b9b7317:GET",
+      "route-715313bb016b528e1671:GET"
+    ],
+    "current": {
+      "nonnull_setup": 13,
+      "nonempty_assertions": 13,
+      "nonnull_result": 13,
+      "role_matrix_states": {
+        "unmapped": 785,
+        "partial_Original_framework_test_assignment": 2,
+        "partial_captured_cases_only": 11
+      },
+      "coverage_states": {
+        "not_yet_mapped": 769,
+        "partial_executable_Source_contract": 13,
+        "scoped_evidence_needs_case_mapping": 16
+      },
+      "unresolved_method_placeholders": 322
+    }
+  },
+  "Source_HTTP": {
+    "registered_operations": 11,
+    "historical_case_assertions": 403,
+    "historical_only_cases_without_new_execution": 325,
+    "actual_new_Original_provider_operations": 3,
+    "actual_new_Original_GET_cases": 78,
+    "captured_roles_per_provider_operation": 7,
+    "owned_18_table_fingerprints_restored": true,
+    "SQL_sequence_restoration_not_claimed": true,
+    "ordinary463_not_newly_mapped": true,
+    "owned_cleanup_independently_empty": true,
+    "actual_source_capture_sha256": "e933746a7fec7dfd08a57e7c61681e1c025fbb05ec670e9aca62d025f541488d",
+    "fresh_body_status_header_wire_scope_not_all_semantic_fields": true,
+    "post_run_metadata_owner_correction_M4_to_stable_M5_disclosed": true
+  },
+  "Original_framework_tests": {
+    "registered_methodless_operations": 2,
+    "qualified_historical_tests": 18,
+    "new_Source_executions": 0,
+    "transport": "Original Django APIClient; no TCP claim",
+    "observed_methods_do_not_resolve_declarations": true
+  },
+  "validation": {
+    "host_core3_discovered": 68,
+    "host_core3_passed": 67,
+    "optional_private_raw_skip": 1,
+    "SDK_python_version": "3.11",
+    "SDK_image": "sha256:57c217f05ac8d9c2104887647fdfc6470fd82617beda101585105f270acfadd3",
+    "SDK_core3_discovered": 68,
+    "SDK_core3_passed": 67,
+    "SDK_optional_private_raw_skip": 1,
+    "new_Source_controls": 20,
+    "framework_controls_included": 23,
+    "provider_specific_controls_separate": 19,
+    "retained_original_HTTP_raw_cases_verified": 403,
+    "SDK_check": "actual qualified SDK image, read-only current inputs, networknone,1CPU/256MiB/pids128/tmpfs128MiB; Python tests only, not another Rust build/image publication",
+    "SDK_COPY_closure": "default mapping/test dependencies lie within existing scripts/rust-contracts COPY+allowlist, plus unchanged already-copied public summaries",
+    "new_Source_shadow_entrypoints_for_remaining8_not_live_qualified": true
+  },
+  "retained_failure": "First SDK composition failed5 AST-dependent checks under Python3.11; separate Root6caab stable AST fix then final pass. Initial generator assertion requiring all result=null failed before the deliberate scoped-result invariant update. No Source workload repeated.",
+  "dependencies": [
+    {
+      "path": "scripts/rust-contracts/framework-auth/README.md",
+      "sha256": "466b1c3c294980484bc7cf5016963723cf97ce876affcf6600d7251e728d01ce",
+      "published_commit": "6caab000617010633d527f47b05ef7be41a596a6"
+    },
+    {
+      "path": "scripts/rust-contracts/framework-auth/bindings.json",
+      "sha256": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
+      "published_commit": "6caab000617010633d527f47b05ef7be41a596a6"
+    },
+    {
+      "path": "scripts/rust-contracts/framework-auth/full-suite-reference.json",
+      "sha256": "494e9945c39e94c2c05301efed9bba3ba89b5da3b60eb55142f2c701729091c6",
+      "published_commit": "6caab000617010633d527f47b05ef7be41a596a6"
+    },
+    {
+      "path": "scripts/rust-contracts/framework-auth/observations.json",
+      "sha256": "4a02a87c970ead7d8e2f5126c7f8c9fcff03c6ac91ca6c38f5b9478ccdb5dbd9",
+      "published_commit": "6caab000617010633d527f47b05ef7be41a596a6"
+    },
+    {
+      "path": "scripts/rust-contracts/framework-auth/original/test_accounts.py",
+      "sha256": "abb5476c7a08e28c195bea4ee6359d591db6d611f019daeb718e4090b6643ab0",
+      "published_commit": "6caab000617010633d527f47b05ef7be41a596a6"
+    },
+    {
+      "path": "scripts/rust-contracts/framework-auth/original/test_login_rate_limit_inbox.py",
+      "sha256": "f651a3cc1ffc6c84f930d80eb0af0d54dd5dc78b734ae243a8a2ca40b7747550",
+      "published_commit": "6caab000617010633d527f47b05ef7be41a596a6"
+    },
+    {
+      "path": "scripts/rust-contracts/framework_auth_contracts.py",
+      "sha256": "e863f70dbdba9aebfc5e6dc8dc0a48024998d75e419b910de13be530dc6d09df",
+      "published_commit": "6caab000617010633d527f47b05ef7be41a596a6"
+    },
+    {
+      "path": "scripts/rust-contracts/test_framework_auth_contracts.py",
+      "sha256": "57a31b2ac981e07826a907b72eb9c1b825df4872b08fb746480f08a6aac90a01",
+      "published_commit": "6caab000617010633d527f47b05ef7be41a596a6"
+    }
+  ],
+  "raw_authorities": [
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/regenerate-attempt1.log",
+      "sha256": "73391cd52c28c41d7f68f06db730f2526b45219a2337889f576ab9769f817277"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/regenerate13-final.log",
+      "sha256": "e2dbe47e6eef8148f347873523255bdc3aec0ae8d1ee627ae519954c7c81ded5"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/portable-controls.json",
+      "sha256": "df4a303615a6e306d8f2fb1ad902b65c1d248c055b44733f1cecfb529690ea38"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/host-final2-register-controls.log",
+      "sha256": "edd8c457de70ca3cf009207568676212bdd4046a70a5409a8399a05a2139ebeb"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/SDK-portable3.log",
+      "sha256": "3063fae64073e0cae388528fbba4590607e6a5504075a6fd4a04656695409dc9"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/SDK-portable3-final.log",
+      "sha256": "0ca4baaf15a2c11fc35505a41ed1207fae81e84903283921f2e947b59946415e"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/SDK-portable3-sealed.log",
+      "sha256": "98e06c40f9036a04ba763eec0f7bcd61f2e29df1f20d7e8ed8122160566645e7"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/SDK-independent-cleanup.json",
+      "sha256": "cce30f6b47392a36d08434de4985e8138e3ae762aab1a076cbb64b0adc36b848"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/identity-preservation.json",
+      "sha256": "4675843d44f8b31c6e747a0db161ca10a5980cdc09d393b7cd02e5ecc0de49bd"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/provider19-controls.log",
+      "sha256": "a07b4c62c3386dad89e8629e0cd680fa667a6f218a692fb615e88d9938f3478e"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/retained403-raw-check.json",
+      "sha256": "123a10193fa36363103b95c4d63a8efa9d25d33b8605e21d1c0dcca916a19c91"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/retained-fresh78-predicate-revalidation.json",
+      "sha256": "75382e2c49b6faf510d8aa72458d9839e2a44f25815cf405a495216f2a0951bd"
+    },
+    {
+      "path": "artifacts/rust/m0-executable-source-contracts-2/metadata-correction.json",
+      "sha256": "58248243e6ebc9b8b6abb502713139b06333e7589a662b039672b732cdd5a094"
+    }
+  ],
+  "M0_complete": false,
+  "M1_formal_pass": false,
+  "fully_verified_operations": 0,
+  "Native_coverage_added": false
+}

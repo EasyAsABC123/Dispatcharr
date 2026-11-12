@@ -1,0 +1,2034 @@
+{
+  "format_version": 1,
+  "scope": "Executable scoped Original GET contracts, historical attestations separate from fresh Source assertions",
+  "credit": "Original Dispatcharr authors retain application/algorithm credit and licensing.",
+  "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "public_binding_sha256": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
+  "public_attestation_sha256": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
+  "fixture_code_sha256": {
+    "scripts/rust-vod-api-contracts/run_provider_actions.py": "e25dfd1b4da5f1b69a21bee4650cf3c5cf535d9e76883fd47501fdcdb8624845",
+    "scripts/rust-vod-api-contracts/source.py": "1010346be96810f4483b15217d0dd65f437d5af75e686dc6b4818c647352ad2d",
+    "scripts/rust-vod-api-contracts/provider_actions_source.py": "66c277e05c3dc60182d471c86bd1aaf24e023cb0a148d8e21e6924d328f147ce",
+    "scripts/rust-integration/shared_ts.py": "7575ac31e68442bf20d0d952bc3b6179aa118a5383762e475ad2457f1893d193",
+    "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9"
+  },
+  "contracts": [
+    {
+      "contract_id": "route-077d59452e88e68f3711:GET",
+      "pattern_exact": "api/vod/^movies/(?P<pk>[^/.]+)/providers/$",
+      "source_handler": "apps.vod.api_views.MovieViewSet",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "roles_captured": [
+        "admin",
+        "adult_hidden",
+        "anonymous",
+        "basic",
+        "movies_off",
+        "series_off",
+        "standard"
+      ],
+      "complete_role_matrix": false,
+      "setup_fixture": {
+        "runner": "scripts/rust-vod-api-contracts/run_provider_actions.py",
+        "argv": [
+          "--provider-actions-source",
+          "--mode",
+          "http",
+          "--output",
+          "<new-empty-output>"
+        ],
+        "seed": "scripts/rust-vod-api-contracts/source.py",
+        "oracle": "scripts/rust-vod-api-contracts/provider_actions_source.py",
+        "fixture_scope": "fresh owned full pinned Original image, migrated PostgreSQL/Redis; six named active users plus anonymous; no native or sampler",
+        "role_specs": {
+          "admin": {
+            "user_level": 10,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "standard": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "basic": {
+            "user_level": 0,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "movies_off": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "vod_movies_enabled": false
+            }
+          },
+          "series_off": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "vod_series_enabled": false
+            }
+          },
+          "adult_hidden": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "hide_adult_content": true
+            }
+          },
+          "anonymous": null
+        }
+      },
+      "cases": [
+        {
+          "source_index": 0,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "admin",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 1,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 2,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "basic",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 3,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "movies_off",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "f966988a9681ba078a2ceaaad61c01bfabf6a4c48ce749722bd1db1f41efd3e0",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 4,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "series_off",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 5,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "adult_hidden",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 6,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": null,
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 401,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": "Bearer realm=\"api\""
+          },
+          "historical_exact_response_sha256": "d710485d54f7d20a17082cb8530e155e6bd97ba81fe6c571ac74d4744a71ddae",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 31,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/?search=definitely-missing",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "f966988a9681ba078a2ceaaad61c01bfabf6a4c48ce749722bd1db1f41efd3e0",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 32,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/?name=definitely-missing",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "f966988a9681ba078a2ceaaad61c01bfabf6a4c48ce749722bd1db1f41efd3e0",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 33,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/?m3u_account=bad",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 400,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "7bda0e59075f50da928ca6f558053c09830fa3ac9b4ed41ae30f9f4fa60b58b4",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 34,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/?category=unmatched",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "f966988a9681ba078a2ceaaad61c01bfabf6a4c48ce749722bd1db1f41efd3e0",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 35,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/?page=999999",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 36,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/?page_size=1",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 37,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/?ordering=-name",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 38,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/?format=json",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "bcbf516d4f964007950fa8ac7e79deb879f20148be87c70b92561ca895626854",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 39,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "representation",
+          "accept": "application/json; indent=4",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "a685ad448975803d22170915df3f9440d97fad26b152df32f198d3f07584913e",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 40,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "representation",
+          "accept": "application/xml",
+          "status": 406,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "5d318cbc8aae9314c6642e536644d401949dcafed4d01260416a1441c6c26311",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 123,
+          "method": "GET",
+          "path": "/api/vod/movies/999999999/providers/",
+          "role": "standard",
+          "label": "missing",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "f966988a9681ba078a2ceaaad61c01bfabf6a4c48ce749722bd1db1f41efd3e0",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 124,
+          "method": "GET",
+          "path": "/api/vod/movies/bad/providers/",
+          "role": "standard",
+          "label": "bad_lookup",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "abdce4591f8ab6bdcd1579e27a1aeb21c3e800b56ba938405b7b0f81d23d98cc",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 127,
+          "method": "GET",
+          "path": "/api/vod/movies/4/providers/",
+          "role": "admin",
+          "label": "adult_or_inactive",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "f31d34cfc656515721a384982ee3febfdcc5537774ed120a3794a007c829d20d",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 128,
+          "method": "GET",
+          "path": "/api/vod/movies/4/providers/",
+          "role": "standard",
+          "label": "adult_or_inactive",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "f31d34cfc656515721a384982ee3febfdcc5537774ed120a3794a007c829d20d",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 129,
+          "method": "GET",
+          "path": "/api/vod/movies/4/providers/",
+          "role": "adult_hidden",
+          "label": "adult_or_inactive",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "f966988a9681ba078a2ceaaad61c01bfabf6a4c48ce749722bd1db1f41efd3e0",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 130,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_{'quality': 'Custom 8K', 'resolution': 'ignored'}",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "ee6ab556e6f74fde7aab7dc19b5a069b2cc56e7051c77b9215799ef406cd960e",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 131,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_{'quality': '', 'resolution': '800x600'}",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "a95d7ac7fb6bcca66ed0648b19510e89481f347597a6410d159a801302f42fd8",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 132,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_{}",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "ba6cfb4b9aad7c2397382fe1c5df59985784dace41a5f414822ab0df2f30c84f",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 133,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_None",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "c2d6c0e7f04c240e85202f5d3d474a209a9ddb40cc1cff20a06ab48d6d03ea4f",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 134,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_False",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "0b6d037f1d70aa30656f04af04e9baf67888a08d7030c9fac5529e7df4f35129",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 135,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_[]",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "c4262657b0e8a191c755380034011e59564caa0a3f512b80ec5963d094a61dd7",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 136,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_{'quality': 8}",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "8bbbb983324a377d6ccbab023c0a79a1d171ab2552a2597f2372770da0d91c63",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 137,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_{'quality': [1, 2]}",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "86ee1c4097157da737659673ab42698fbaac933ed63ae55d8fa63d5b26fc9bb5",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 138,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "movie_quality_'truthy-nonmapping'",
+          "accept": "application/json",
+          "status": 500,
+          "static_selected_headers": {
+            "Content-Type": "text/html; charset=utf-8",
+            "Allow": null,
+            "Vary": "origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "1cfcced18b6f1a29f9e06b58b9fc56625f3780aedb0118d5bf7adeb98842deb9",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 139,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "admin",
+          "label": "populated_nested_account_inactive_only_episode",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "6c20b15238895ad49c8b88636e8e7c1ca879eaf9f1d259994b134985fae9f979",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 140,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "basic",
+          "label": "populated_nested_account_inactive_only_episode",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "6c20b15238895ad49c8b88636e8e7c1ca879eaf9f1d259994b134985fae9f979",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 145,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "nested_account_properties_{}",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "846ae801eb8c42371d3fa8c050024d192955e9593cfea7d90c4b71733a0fd38e",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 146,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "nested_account_properties_None",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "2baea54f0b1b35d02f1215040fe480ce2d3a35b2b9e1ef2623ffacfb5710b300",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 147,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "nested_account_properties_False",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "ed587ed0d84976c0e72bc3308b3049e5802300edf38c5e952d8779ef43c53e3d",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 148,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "nested_account_properties_{'enable_vod': False, 'auto_enable_new_groups_live': False, 'hash_key': 'name,url'}",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "ccbcc35e184e3fce21bd0837b5ee46e2ba172d4296cde138e45d6b81917d7a58",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 149,
+          "method": "GET",
+          "path": "/api/vod/movies/1/providers/",
+          "role": "standard",
+          "label": "nullable_category",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "34c7647576dc7dd285261ba97a600fea9acc365bae7c558af4526c8a93ec6545",
+          "historical_response_authority": "predeclared_fresh_same_state",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        }
+      ],
+      "coverage_state": "executable_scoped_Source_contract_not_complete_endpoint",
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-d9dbd4bd21190a41aec4:GET",
+      "pattern_exact": "api/vod/^series/(?P<pk>[^/.]+)/providers/$",
+      "source_handler": "apps.vod.api_views.SeriesViewSet",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "roles_captured": [
+        "admin",
+        "adult_hidden",
+        "anonymous",
+        "basic",
+        "movies_off",
+        "series_off",
+        "standard"
+      ],
+      "complete_role_matrix": false,
+      "setup_fixture": {
+        "runner": "scripts/rust-vod-api-contracts/run_provider_actions.py",
+        "argv": [
+          "--provider-actions-source",
+          "--mode",
+          "http",
+          "--output",
+          "<new-empty-output>"
+        ],
+        "seed": "scripts/rust-vod-api-contracts/source.py",
+        "oracle": "scripts/rust-vod-api-contracts/provider_actions_source.py",
+        "fixture_scope": "fresh owned full pinned Original image, migrated PostgreSQL/Redis; six named active users plus anonymous; no native or sampler",
+        "role_specs": {
+          "admin": {
+            "user_level": 10,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "standard": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "basic": {
+            "user_level": 0,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "movies_off": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "vod_movies_enabled": false
+            }
+          },
+          "series_off": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "vod_series_enabled": false
+            }
+          },
+          "adult_hidden": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "hide_adult_content": true
+            }
+          },
+          "anonymous": null
+        }
+      },
+      "cases": [
+        {
+          "source_index": 41,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "admin",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 42,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "standard",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 43,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "basic",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 44,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "movies_off",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 45,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "series_off",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 46,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "adult_hidden",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 47,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": null,
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 401,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": "Bearer realm=\"api\""
+          },
+          "historical_exact_response_sha256": "d710485d54f7d20a17082cb8530e155e6bd97ba81fe6c571ac74d4744a71ddae",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 72,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/?search=definitely-missing",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 73,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/?name=definitely-missing",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 74,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/?m3u_account=bad",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 400,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "7bda0e59075f50da928ca6f558053c09830fa3ac9b4ed41ae30f9f4fa60b58b4",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 75,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/?category=unmatched",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 76,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/?page=999999",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 77,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/?page_size=1",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 78,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/?ordering=-name",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 79,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/?format=json",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "749b7136c394561f45d8f59568778113638c53d16db14fafcecb728ed96e77fe",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 80,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "standard",
+          "label": "representation",
+          "accept": "application/json; indent=4",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "fbfaee2bbb9988307d446255da0a63926f89c66226d1322b60b6d35f846c5627",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 81,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "standard",
+          "label": "representation",
+          "accept": "application/xml",
+          "status": 406,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "5d318cbc8aae9314c6642e536644d401949dcafed4d01260416a1441c6c26311",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 125,
+          "method": "GET",
+          "path": "/api/vod/series/999999999/providers/",
+          "role": "standard",
+          "label": "missing",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 126,
+          "method": "GET",
+          "path": "/api/vod/series/bad/providers/",
+          "role": "standard",
+          "label": "bad_lookup",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "abdce4591f8ab6bdcd1579e27a1aeb21c3e800b56ba938405b7b0f81d23d98cc",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 141,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "admin",
+          "label": "populated_nested_account_inactive_only_episode",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "b8a41621e8d685cf3ef766a6910ee4610962f4cf00e0808376b89f4d6e10ebfb",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 142,
+          "method": "GET",
+          "path": "/api/vod/series/1/providers/",
+          "role": "basic",
+          "label": "populated_nested_account_inactive_only_episode",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "b8a41621e8d685cf3ef766a6910ee4610962f4cf00e0808376b89f4d6e10ebfb",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        }
+      ],
+      "coverage_state": "executable_scoped_Source_contract_not_complete_endpoint",
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-b83465b777e172577ee9:GET",
+      "pattern_exact": "api/vod/^series/(?P<pk>[^/.]+)/episodes/$",
+      "source_handler": "apps.vod.api_views.SeriesViewSet",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "roles_captured": [
+        "admin",
+        "adult_hidden",
+        "anonymous",
+        "basic",
+        "movies_off",
+        "series_off",
+        "standard"
+      ],
+      "complete_role_matrix": false,
+      "setup_fixture": {
+        "runner": "scripts/rust-vod-api-contracts/run_provider_actions.py",
+        "argv": [
+          "--provider-actions-source",
+          "--mode",
+          "http",
+          "--output",
+          "<new-empty-output>"
+        ],
+        "seed": "scripts/rust-vod-api-contracts/source.py",
+        "oracle": "scripts/rust-vod-api-contracts/provider_actions_source.py",
+        "fixture_scope": "fresh owned full pinned Original image, migrated PostgreSQL/Redis; six named active users plus anonymous; no native or sampler",
+        "role_specs": {
+          "admin": {
+            "user_level": 10,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "standard": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "basic": {
+            "user_level": 0,
+            "is_active": true,
+            "custom_properties": {}
+          },
+          "movies_off": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "vod_movies_enabled": false
+            }
+          },
+          "series_off": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "vod_series_enabled": false
+            }
+          },
+          "adult_hidden": {
+            "user_level": 1,
+            "is_active": true,
+            "custom_properties": {
+              "hide_adult_content": true
+            }
+          },
+          "anonymous": null
+        }
+      },
+      "cases": [
+        {
+          "source_index": 82,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "admin",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 83,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "standard",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 84,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "basic",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 85,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "movies_off",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 86,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "series_off",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 87,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "adult_hidden",
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 88,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": null,
+          "label": "baseline",
+          "accept": "application/json",
+          "status": 401,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": "Bearer realm=\"api\""
+          },
+          "historical_exact_response_sha256": "d710485d54f7d20a17082cb8530e155e6bd97ba81fe6c571ac74d4744a71ddae",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 113,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/?search=definitely-missing",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 114,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/?name=definitely-missing",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 115,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/?m3u_account=bad",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 400,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "7bda0e59075f50da928ca6f558053c09830fa3ac9b4ed41ae30f9f4fa60b58b4",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 116,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/?category=unmatched",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 404,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "3609bf09b7e9eccf2f13b57b5868bd7bc716116dcf8e8a558154e42ff59e82bd",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 117,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/?page=999999",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 118,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/?page_size=1",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 119,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/?ordering=-name",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 120,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/?format=json",
+          "role": "standard",
+          "label": "get_object_filter_or_action_query",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "07d445b2ec0d04c04a14db52755d5a3d0600bc14fb865c7804eb534f0d501f2e",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 121,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "standard",
+          "label": "representation",
+          "accept": "application/json; indent=4",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "46e9392fc3da6e209562216b4475c155076ec83a4c7aeeca0fa86ba5b6de331f",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 122,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "standard",
+          "label": "representation",
+          "accept": "application/xml",
+          "status": 406,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "5d318cbc8aae9314c6642e536644d401949dcafed4d01260416a1441c6c26311",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 143,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "admin",
+          "label": "populated_nested_account_inactive_only_episode",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "249c282d0867581de02f5137cd723c71b1d6c56d251a2fa92b31d997b1ca9fe5",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        },
+        {
+          "source_index": 144,
+          "method": "GET",
+          "path": "/api/vod/series/1/episodes/",
+          "role": "basic",
+          "label": "populated_nested_account_inactive_only_episode",
+          "accept": "application/json",
+          "status": 200,
+          "static_selected_headers": {
+            "Content-Type": "application/json",
+            "Allow": "GET, HEAD, OPTIONS",
+            "Vary": "Accept, origin",
+            "WWW-Authenticate": null
+          },
+          "historical_exact_response_sha256": "249c282d0867581de02f5137cd723c71b1d6c56d251a2fa92b31d997b1ca9fe5",
+          "historical_response_authority": "Original_capture_record",
+          "fresh_assertions": [
+            "exact request tuple and fixture-selected path",
+            "exact status and static selected headers",
+            "UTF8 body bytes/length/hash self-consistency and Content-Length",
+            "body parses as JSON for declared JSON Content-Type; non-JSON body stays explicit"
+          ]
+        }
+      ],
+      "coverage_state": "executable_scoped_Source_contract_not_complete_endpoint",
+      "fully_verified": false
+    }
+  ],
+  "Native_implementation_or_completeness_claim": false,
+  "fully_verified_operations": 0,
+  "historical_raw_bytes_not_reused_as_fresh_UUID_clock_or_port_expectations": true
+}

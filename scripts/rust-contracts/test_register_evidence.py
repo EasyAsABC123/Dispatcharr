@@ -12,6 +12,10 @@ import shutil
 import tempfile
 import unittest
 
+# These portable Source-input classes are included in the existing SDK module.
+from test_source_contracts import SourceContracts
+from test_framework_auth_contracts import Controls as FrameworkAuthControls
+
 REPO = Path(__file__).resolve().parents[2]
 
 
@@ -22,6 +26,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.bindings = json.loads((REPO / 'scripts/rust-contracts/case-bindings.json').read_text())
         refs = {'docs/rust-runtime-contracts.json', 'docs/rust-runtime-methods.json', 'docs/rust-contract-inventory.json'}
+        refs.update({'scripts/rust-contracts/executable-source-inputs.json', 'scripts/rust-contracts/executable-source-bindings.json'})
+        refs.update({'scripts/rust-contracts/framework-auth/' + name for name in ['bindings.json', 'full-suite-reference.json', 'observations.json', 'original/test_accounts.py', 'original/test_login_rate_limit_inbox.py']})
         refs.update(item['packaged_report'] for item in self.bindings['bindings'])
         refs.update(item['attestation']['path'] for item in self.bindings.get('evidence_datasets', []))
         for relative in refs:
