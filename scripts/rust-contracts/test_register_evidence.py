@@ -21,6 +21,7 @@ from test_dvr_import_contracts import DvrImportControls
 from test_provider_output_contracts import ProviderOutputControls
 from test_admin_rest_contracts import AdminRestControls
 from test_proxy_plugin_contracts import ProxyPluginControls
+from test_notification_source_contracts import NotificationSourceControls
 from test_scanner_task_contracts import ScannerTaskControls
 
 REPO = Path(__file__).resolve().parents[2]
@@ -54,6 +55,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(admin_rest_contracts.dependencies())
         import proxy_plugin_contracts
         refs.update(proxy_plugin_contracts.dependencies())
+        import notification_source_contracts
+        refs.update(notification_source_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)

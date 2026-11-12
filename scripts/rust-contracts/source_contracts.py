@@ -129,6 +129,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'pinned_original_proxy_plugin_tests':
             import proxy_plugin_contracts
             proxy_plugin_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_notification_framework_capture':
+            import notification_source_contracts
+            notification_source_contracts.validate(root, value, bindings)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
@@ -148,6 +151,9 @@ def apply(root, rows, bindings):
             operation['role_matrix']['complete'] = False
             if reference['kind'] in ['pinned_original_framework_tests', 'pinned_original_account_settings_tests', 'pinned_original_channel_guide_tests', 'pinned_original_dvr_import_tests', 'pinned_original_provider_output_consumer_tests', 'pinned_original_admin_rest_tests', 'pinned_original_proxy_plugin_tests']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_test_assignment'
+                operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
+            if reference['kind'] == 'retained_original_notification_framework_capture':
+                operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'
         loaded.append({'path': reference['path'], 'sha256': reference['sha256'], 'kind': reference['kind']})

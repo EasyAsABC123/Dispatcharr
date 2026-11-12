@@ -1,15 +1,21 @@
 # Partial executable Source contract assignments
 
 Original Dispatcharr authors retain all application/algorithm credit and licensing.
-The current register has 114 partial HTTP assignments and eight partial model,
+The current register has 117 partial HTTP assignments and eight partial model,
 task or consumer assignments. These preserve the initial and subsequent cohorts
 documented below. They do not resolve missing methods, complete endpoint role or
 grammar matrices, establish new Native behavior or accept M0/M1.
 
-The latest [proxy/plugin and playback cohort](proxy-plugin/README.md) adds 19
+The [proxy/plugin and playback cohort](proxy-plugin/README.md) adds 19
 assignments from 148 existing named successes, with exact setup, helper, actor,
 mock, assertion and result definitions. Its [verification record](verified-proxy-plugin-bindings-1.json)
 retains host checks, the recovered successful SDK exit and its interrupted log.
+
+The [notification capture assignment](notifications-source/MAPPING.md) adds three
+operations from eight retained correct-route framework observations and the closed
+29-input setup definition. Forced authentication, the original controller exit 1
+and recovered cleanup remain explicit. This capture has its own partial role state;
+it does not add a new Source run or Native/TCP/credential verification.
 
 `register.py` consumes `executable-source-inputs.json`, verifies each input hash,
 validates the declared Source authority and applies exact operation-ID, handler,

@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "abcdcfef95ac4ee92024740646281ad1628a1b22f9287951296480e3ce45abce",
+    "scripts/rust-contracts/executable-source-inputs.json": "608661a3c9b7fd2d66f4859e4f86adfd0a33ec6c2d8f4859d2062aeba962c4d8",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -18,11 +18,12 @@
     "scripts/rust-contracts/dvr-import/bindings.json": "24c21ecad1691cf87e713cb15b2a3950d7fad31bddb86b93fd79e6d8bfd8c9ec",
     "scripts/rust-contracts/provider-output/bindings.json": "46b63c7f478822b901551fc4f23ea5f43307c538fb4a4ef9580a35f1c6e20d7b",
     "scripts/rust-contracts/admin-rest/bindings.json": "65cfff20af62799f99b5c1c90c46a838b8e286e55848b8bfc0ade5cd124ed192",
-    "scripts/rust-contracts/proxy-plugin/bindings.json": "0696cc54bd3aeee53dfc058358b52f67bad8b3244ec38c0067607ed8e5407f2c"
+    "scripts/rust-contracts/proxy-plugin/bindings.json": "0696cc54bd3aeee53dfc058358b52f67bad8b3244ec38c0067607ed8e5407f2c",
+    "scripts/rust-contracts/notification-source-bindings.json": "6ed240f9cbb97e1ba29b5895bc56c170af2c593e27a7ee4aa056f8dd0d2d1e16"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 114,
+    "operations": 117,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -68,6 +69,11 @@
         "path": "scripts/rust-contracts/proxy-plugin/bindings.json",
         "sha256": "0696cc54bd3aeee53dfc058358b52f67bad8b3244ec38c0067607ed8e5407f2c",
         "kind": "pinned_original_proxy_plugin_tests"
+      },
+      {
+        "path": "scripts/rust-contracts/notification-source-bindings.json",
+        "sha256": "6ed240f9cbb97e1ba29b5895bc56c170af2c593e27a7ee4aa056f8dd0d2d1e16",
+        "kind": "retained_original_notification_framework_capture"
       }
     ],
     "fully_verified_added": 0
@@ -64099,15 +64105,1678 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_framework_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 10
+              },
+              "anonymous": {
+                "actor": "APIClient without force_authenticate",
+                "credential_backend_bypassed": false,
+                "authentication_result_observed": 401
+              },
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-notification-correct-resolver-Source8",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "scope": "Original management-shell real-resolver APIClient, forced users; not HTTP TCP or credential/backend/production-startup acceptance",
+            "ownership": {
+              "actual_owned_database": "rust_probe_notif_6380fe41f2",
+              "guarded_owned_copy_only": true,
+              "default_named_tables": 11,
+              "default_named_sequences": 11,
+              "default_unchanged_and_cleanup_independently_recovered": true
+            },
+            "roles": {
+              "anonymous": {
+                "actor": "APIClient without force_authenticate",
+                "credential_backend_bypassed": false,
+                "authentication_result_observed": 401
+              },
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              },
+              "admin": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 10
+              }
+            },
+            "seed": {
+              "actual_notification_and_dismissal_rows": {
+                "notifications": [
+                  {
+                    "id": 1,
+                    "notification_key": "test.notif",
+                    "notification_type": "info",
+                    "priority": "normal",
+                    "source": "system",
+                    "title": "Hello",
+                    "message": "World",
+                    "action_data": {},
+                    "is_active": true,
+                    "admin_only": false,
+                    "expires_at": null,
+                    "created_at": "2026-11-12T13:33:29.530188+00:00",
+                    "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                  }
+                ],
+                "dismissals": []
+              },
+              "actual_seed_users": [
+                {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                }
+              ],
+              "actual_network_settings": {},
+              "network_policy_modified": false
+            },
+            "setup": {
+              "executed_controller": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/run.py",
+                "sha256": "b75aea621f2963f265bacf59c8de1af379dd8115c277bdf126313e4be6a3bf8a"
+              },
+              "executed_fixture": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/source_fixture.py",
+                "sha256": "6f0ae15c25ed41f4fb03f0b9d8b330a27231d573e763bbbd78966ccc0f926737"
+              },
+              "executed_bootstrap": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/start.sh",
+                "sha256": "10a7496384f657509dfdaeb91413a02a464d6b9c3e61e6afa0c8454bef246092"
+              },
+              "exact_executed_seal": {
+                "path": "scripts/rust-contracts/notifications-source/raw/executed-seal.json",
+                "sha256": "2004c823a728d3ecdb7f7750867b0b0d3385fdac5779b4a074afb899b892ba59"
+              },
+              "sealed_inputs": 29,
+              "materializer": {
+                "path": "scripts/rust-contracts/notifications-source/materialize_inputs.py",
+                "sha256": "f76515b3cb536732e7b90436e791012b641ed85b955c3eeed723554a23abd644"
+              },
+              "archive_recipe": {
+                "pinned_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "bytes": 16609280,
+                "sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+                "Source_execution_required_for_materialization": false
+              },
+              "materialize_argv": [
+                "python3",
+                "scripts/rust-contracts/notifications-source/materialize_inputs.py",
+                "--repo",
+                "<local repository containing pinned Original>",
+                "--destination",
+                "<new owned input directory>"
+              ],
+              "future_Source_entrypoint": [
+                "python3",
+                "<materialized>/controller/run.py",
+                "--execute-reviewed-seal",
+                "2004c823a728d3ecdb7f7750867b0b0d3385fdac5779b4a074afb899b892ba59",
+                "--output",
+                "<new owned output>"
+              ],
+              "future_Source_replay_requires_separate_authorization": true,
+              "mapping_task_Source_runs": 0
+            },
+            "assertion_definition": {
+              "comparer": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+              },
+              "pure_guards": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/fixture_guards.py",
+                "sha256": "6df0761be7f22124d3946aa96d30e75a9730e441537988220f2d324f03b3c685"
+              },
+              "actual_whole_fixture_effect_checks": 213
+            },
+            "execution_result": {
+              "actual_observations": 8,
+              "Source_controller_passed": false,
+              "Source_controller_exit": 1,
+              "Source_controller_cleanup_error": "ExactOwnedContainerAbsent (Docker capitalization)",
+              "offline_effect_comparison_passed": true,
+              "independent_cleanup_recovered": true,
+              "raw_observations": {
+                "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9"
+              },
+              "negative_controller": {
+                "path": "scripts/rust-contracts/notifications-source/raw/controller-execution.json",
+                "sha256": "01964e8c1c45bf0d62da2cc686d7a9a41e2c98e65f78e077bc34862947519d72"
+              },
+              "actual_effects": {
+                "path": "scripts/rust-contracts/notifications-source/raw/executed-effect-validation.json",
+                "sha256": "1234eda3787ff4378dbb21228e56a4e8d5a0ef543723f8576b7eda23867fd31d"
+              },
+              "recovered_cleanup": {
+                "path": "scripts/rust-contracts/notifications-source/raw/execution-recovery.json",
+                "sha256": "526f363b1ac362a60c2ee4d8e5415b5a47d8a7eacbd0958fa4fe28e50a684cdc"
+              },
+              "new_Source_runs_for_mapping": 0
+            }
+          },
+          "assertions": [
+            {
+              "kind": "actual_resolver_and_method",
+              "action": "list",
+              "exact_pattern": "api/core/^notifications/$"
+            },
+            {
+              "kind": "actual_response_bytes_status_JSON_SQL_sequences_cache_clocks",
+              "case_indices": [
+                0,
+                1,
+                5,
+                6
+              ]
+            },
+            {
+              "kind": "whole_unchanged_executed_effect_definition",
+              "checks": 213,
+              "reference": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+              }
+            },
+            {
+              "kind": "separate_negative_execution_and_recovered_cleanup",
+              "controller_exit": 1,
+              "default11_audits_exact": true,
+              "cleanup_recovered": true
+            }
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_framework_capture_effects_passed_controller_exit1_cleanup_recovered",
+            "historical_captured_cases": 4,
+            "unique_fixture_observations": 8,
+            "new_Source_cases_this_task": 0,
+            "new_Source_runs_this_mapping": 0,
+            "Source_controller_passed": false,
+            "Source_controller_exit": 1,
+            "offline_effect_comparison_passed": true,
+            "offline_whole_fixture_effect_checks": 213,
+            "independent_cleanup_recovered": true,
+            "fully_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-025c0d74fa99218d4728:GET",
+            "pattern_exact": "api/core/^notifications/$",
+            "source_handler": "core.api_views.SystemNotificationViewSet",
+            "method": "GET",
+            "source_action": "list",
+            "owning_milestone": "M5",
+            "fixture_id": "retained-notification-correct-resolver-Source8",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 10
+              },
+              "anonymous": {
+                "actor": "APIClient without force_authenticate",
+                "credential_backend_bypassed": false,
+                "authentication_result_observed": 401
+              },
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              }
+            },
+            "cases": [
+              {
+                "source_index": 0,
+                "label": "anonymous-list",
+                "method": "GET",
+                "path": "/api/core/notifications/",
+                "role": "anonymous",
+                "Source_authority": {
+                  "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                  "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+                  "json_pointer": "/requests/0"
+                },
+                "actual_observation": {
+                  "name": "anonymous-list",
+                  "role": "anonymous",
+                  "method": "GET",
+                  "path": "/api/core/notifications/",
+                  "request_payload": null,
+                  "resolver_action": "list",
+                  "follow_redirects": false,
+                  "predicted_status": 401,
+                  "actual_status": 401,
+                  "status_prediction_matched": true,
+                  "response_headers": {
+                    "Content-Type": "application/json",
+                    "WWW-Authenticate": "Bearer realm=\"api\"",
+                    "Vary": "Accept, origin",
+                    "Allow": "GET, POST, HEAD, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "58",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_bytes": 58,
+                  "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                  "body_hex": "7b2264657461696c223a2241757468656e7469636174696f6e2063726564656e7469616c732077657265206e6f742070726f76696465642e227d",
+                  "body_capture_complete": true,
+                  "json": {
+                    "detail": "Authentication credentials were not provided."
+                  },
+                  "began_utc": "2026-11-12T13:33:29.537447+00:00",
+                  "completed_utc": "2026-11-12T13:33:29.542048+00:00",
+                  "before": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "after": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "before_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299714
+                      }
+                    ],
+                    "capture_bytes": 53,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299706
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299995
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "7d742beada3733003f2149a93b0ec8d4e5a7267c62988b32857b8c39385ba826",
+                    "capture_bytes": 3447,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "7d742beada3733003f2149a93b0ec8d4e5a7267c62988b32857b8c39385ba826",
+                    "capture_bytes": 3447,
+                    "scope": "eleven named tables and sequences, not full database"
+                  }
+                },
+                "assertion_scope": "Per-request response/SQL/cache/clock capture plus exact whole-fixture213 effect checks; retained sequential context, not a new independent execution"
+              },
+              {
+                "source_index": 1,
+                "label": "standard-list",
+                "method": "GET",
+                "path": "/api/core/notifications/",
+                "role": "standard",
+                "Source_authority": {
+                  "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                  "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+                  "json_pointer": "/requests/1"
+                },
+                "actual_observation": {
+                  "name": "standard-list",
+                  "role": "standard",
+                  "method": "GET",
+                  "path": "/api/core/notifications/",
+                  "request_payload": null,
+                  "resolver_action": "list",
+                  "follow_redirects": false,
+                  "predicted_status": 200,
+                  "actual_status": 200,
+                  "status_prediction_matched": true,
+                  "response_headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "GET, POST, HEAD, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "321",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_bytes": 321,
+                  "body_sha256": "208cb4e8b98fc4d03584d4cc4e79c350410c3f1e4ea6346a858193906beca242",
+                  "body_hex": "7b226e6f74696669636174696f6e73223a5b7b226964223a312c226e6f74696669636174696f6e5f6b6579223a22746573742e6e6f746966222c226e6f74696669636174696f6e5f74797065223a22696e666f222c227072696f72697479223a226e6f726d616c222c227469746c65223a2248656c6c6f222c226d657373616765223a22576f726c64222c22616374696f6e5f64617461223a7b7d2c2269735f616374697665223a747275652c2261646d696e5f6f6e6c79223a66616c73652c22657870697265735f6174223a6e756c6c2c22637265617465645f6174223a22323032362d31312d31325431333a33333a32392e3533303138385a222c2269735f6469736d6973736564223a66616c73652c22736f75726365223a2273797374656d227d5d2c22636f756e74223a312c22756e726561645f636f756e74223a317d",
+                  "body_capture_complete": true,
+                  "json": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188Z",
+                        "is_dismissed": false,
+                        "source": "system"
+                      }
+                    ],
+                    "count": 1,
+                    "unread_count": 1
+                  },
+                  "began_utc": "2026-11-12T13:33:29.548768+00:00",
+                  "completed_utc": "2026-11-12T13:33:29.554856+00:00",
+                  "before": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "after": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "before_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299703
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299992
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299693
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299982
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "7d742beada3733003f2149a93b0ec8d4e5a7267c62988b32857b8c39385ba826",
+                    "capture_bytes": 3447,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "7d742beada3733003f2149a93b0ec8d4e5a7267c62988b32857b8c39385ba826",
+                    "capture_bytes": 3447,
+                    "scope": "eleven named tables and sequences, not full database"
+                  }
+                },
+                "assertion_scope": "Per-request response/SQL/cache/clock capture plus exact whole-fixture213 effect checks; retained sequential context, not a new independent execution"
+              },
+              {
+                "source_index": 5,
+                "label": "standard-list-after-dismiss",
+                "method": "GET",
+                "path": "/api/core/notifications/",
+                "role": "standard",
+                "Source_authority": {
+                  "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                  "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+                  "json_pointer": "/requests/5"
+                },
+                "actual_observation": {
+                  "name": "standard-list-after-dismiss",
+                  "role": "standard",
+                  "method": "GET",
+                  "path": "/api/core/notifications/",
+                  "request_payload": null,
+                  "resolver_action": "list",
+                  "follow_redirects": false,
+                  "predicted_status": 200,
+                  "actual_status": 200,
+                  "status_prediction_matched": true,
+                  "response_headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "GET, POST, HEAD, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "47",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_bytes": 47,
+                  "body_sha256": "75c0076193c345f15aff1eda197809eb0959242a8e50d83c7228cab20813659f",
+                  "body_hex": "7b226e6f74696669636174696f6e73223a5b5d2c22636f756e74223a302c22756e726561645f636f756e74223a307d",
+                  "body_capture_complete": true,
+                  "json": {
+                    "notifications": [],
+                    "count": 0,
+                    "unread_count": 0
+                  },
+                  "began_utc": "2026-11-12T13:33:29.585275+00:00",
+                  "completed_utc": "2026-11-12T13:33:29.587023+00:00",
+                  "before": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "after": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "before_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299666
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299955
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299661
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299950
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "59d220629f7951250e3a3e354c725a8da149e2bb176de0ccf90cce93ce9737dd",
+                    "capture_bytes": 3566,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "59d220629f7951250e3a3e354c725a8da149e2bb176de0ccf90cce93ce9737dd",
+                    "capture_bytes": 3566,
+                    "scope": "eleven named tables and sequences, not full database"
+                  }
+                },
+                "assertion_scope": "Per-request response/SQL/cache/clock capture plus exact whole-fixture213 effect checks; retained sequential context, not a new independent execution"
+              },
+              {
+                "source_index": 6,
+                "label": "admin-list-independent",
+                "method": "GET",
+                "path": "/api/core/notifications/",
+                "role": "admin",
+                "Source_authority": {
+                  "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                  "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+                  "json_pointer": "/requests/6"
+                },
+                "actual_observation": {
+                  "name": "admin-list-independent",
+                  "role": "admin",
+                  "method": "GET",
+                  "path": "/api/core/notifications/",
+                  "request_payload": null,
+                  "resolver_action": "list",
+                  "follow_redirects": false,
+                  "predicted_status": 200,
+                  "actual_status": 200,
+                  "status_prediction_matched": true,
+                  "response_headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "GET, POST, HEAD, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "321",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_bytes": 321,
+                  "body_sha256": "208cb4e8b98fc4d03584d4cc4e79c350410c3f1e4ea6346a858193906beca242",
+                  "body_hex": "7b226e6f74696669636174696f6e73223a5b7b226964223a312c226e6f74696669636174696f6e5f6b6579223a22746573742e6e6f746966222c226e6f74696669636174696f6e5f74797065223a22696e666f222c227072696f72697479223a226e6f726d616c222c227469746c65223a2248656c6c6f222c226d657373616765223a22576f726c64222c22616374696f6e5f64617461223a7b7d2c2269735f616374697665223a747275652c2261646d696e5f6f6e6c79223a66616c73652c22657870697265735f6174223a6e756c6c2c22637265617465645f6174223a22323032362d31312d31325431333a33333a32392e3533303138385a222c2269735f6469736d6973736564223a66616c73652c22736f75726365223a2273797374656d227d5d2c22636f756e74223a312c22756e726561645f636f756e74223a317d",
+                  "body_capture_complete": true,
+                  "json": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188Z",
+                        "is_dismissed": false,
+                        "source": "system"
+                      }
+                    ],
+                    "count": 1,
+                    "unread_count": 1
+                  },
+                  "began_utc": "2026-11-12T13:33:29.593582+00:00",
+                  "completed_utc": "2026-11-12T13:33:29.595968+00:00",
+                  "before": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "after": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "before_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299658
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299947
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299652
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299941
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "59d220629f7951250e3a3e354c725a8da149e2bb176de0ccf90cce93ce9737dd",
+                    "capture_bytes": 3566,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "59d220629f7951250e3a3e354c725a8da149e2bb176de0ccf90cce93ce9737dd",
+                    "capture_bytes": 3566,
+                    "scope": "eleven named tables and sequences, not full database"
+                  }
+                },
+                "assertion_scope": "Per-request response/SQL/cache/clock capture plus exact whole-fixture213 effect checks; retained sequential context, not a new independent execution"
+              }
+            ],
+            "assertions": [
+              {
+                "kind": "actual_resolver_and_method",
+                "action": "list",
+                "exact_pattern": "api/core/^notifications/$"
+              },
+              {
+                "kind": "actual_response_bytes_status_JSON_SQL_sequences_cache_clocks",
+                "case_indices": [
+                  0,
+                  1,
+                  5,
+                  6
+                ]
+              },
+              {
+                "kind": "whole_unchanged_executed_effect_definition",
+                "checks": 213,
+                "reference": {
+                  "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                  "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+                }
+              },
+              {
+                "kind": "separate_negative_execution_and_recovered_cleanup",
+                "controller_exit": 1,
+                "default11_audits_exact": true,
+                "cleanup_recovered": true
+              }
+            ],
+            "result": {
+              "state": "retained_Original_framework_capture_effects_passed_controller_exit1_cleanup_recovered",
+              "historical_captured_cases": 4,
+              "unique_fixture_observations": 8,
+              "new_Source_cases_this_task": 0,
+              "new_Source_runs_this_mapping": 0,
+              "Source_controller_passed": false,
+              "Source_controller_exit": 1,
+              "offline_effect_comparison_passed": true,
+              "offline_whole_fixture_effect_checks": 213,
+              "independent_cleanup_recovered": true,
+              "fully_verified": false
+            },
+            "remaining": [
+              "other role slices and credentials/backend authentication",
+              "HTTP TCP/browser and production startup",
+              "other CRUD/actions/format aliases and developer/expiry/admin-only branches",
+              "full role matrix/endpoint/Native/performance/M0/M1 acceptance"
+            ],
+            "fully_verified": false
+          }
         },
         {
           "contract_id": "route-025c0d74fa99218d4728:POST",
@@ -64116,15 +65785,1025 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_framework_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 10
+              },
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-notification-correct-resolver-Source8",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "scope": "Original management-shell real-resolver APIClient, forced users; not HTTP TCP or credential/backend/production-startup acceptance",
+            "ownership": {
+              "actual_owned_database": "rust_probe_notif_6380fe41f2",
+              "guarded_owned_copy_only": true,
+              "default_named_tables": 11,
+              "default_named_sequences": 11,
+              "default_unchanged_and_cleanup_independently_recovered": true
+            },
+            "roles": {
+              "anonymous": {
+                "actor": "APIClient without force_authenticate",
+                "credential_backend_bypassed": false,
+                "authentication_result_observed": 401
+              },
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              },
+              "admin": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 10
+              }
+            },
+            "seed": {
+              "actual_notification_and_dismissal_rows": {
+                "notifications": [
+                  {
+                    "id": 1,
+                    "notification_key": "test.notif",
+                    "notification_type": "info",
+                    "priority": "normal",
+                    "source": "system",
+                    "title": "Hello",
+                    "message": "World",
+                    "action_data": {},
+                    "is_active": true,
+                    "admin_only": false,
+                    "expires_at": null,
+                    "created_at": "2026-11-12T13:33:29.530188+00:00",
+                    "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                  }
+                ],
+                "dismissals": []
+              },
+              "actual_seed_users": [
+                {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                }
+              ],
+              "actual_network_settings": {},
+              "network_policy_modified": false
+            },
+            "setup": {
+              "executed_controller": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/run.py",
+                "sha256": "b75aea621f2963f265bacf59c8de1af379dd8115c277bdf126313e4be6a3bf8a"
+              },
+              "executed_fixture": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/source_fixture.py",
+                "sha256": "6f0ae15c25ed41f4fb03f0b9d8b330a27231d573e763bbbd78966ccc0f926737"
+              },
+              "executed_bootstrap": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/start.sh",
+                "sha256": "10a7496384f657509dfdaeb91413a02a464d6b9c3e61e6afa0c8454bef246092"
+              },
+              "exact_executed_seal": {
+                "path": "scripts/rust-contracts/notifications-source/raw/executed-seal.json",
+                "sha256": "2004c823a728d3ecdb7f7750867b0b0d3385fdac5779b4a074afb899b892ba59"
+              },
+              "sealed_inputs": 29,
+              "materializer": {
+                "path": "scripts/rust-contracts/notifications-source/materialize_inputs.py",
+                "sha256": "f76515b3cb536732e7b90436e791012b641ed85b955c3eeed723554a23abd644"
+              },
+              "archive_recipe": {
+                "pinned_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "bytes": 16609280,
+                "sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+                "Source_execution_required_for_materialization": false
+              },
+              "materialize_argv": [
+                "python3",
+                "scripts/rust-contracts/notifications-source/materialize_inputs.py",
+                "--repo",
+                "<local repository containing pinned Original>",
+                "--destination",
+                "<new owned input directory>"
+              ],
+              "future_Source_entrypoint": [
+                "python3",
+                "<materialized>/controller/run.py",
+                "--execute-reviewed-seal",
+                "2004c823a728d3ecdb7f7750867b0b0d3385fdac5779b4a074afb899b892ba59",
+                "--output",
+                "<new owned output>"
+              ],
+              "future_Source_replay_requires_separate_authorization": true,
+              "mapping_task_Source_runs": 0
+            },
+            "assertion_definition": {
+              "comparer": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+              },
+              "pure_guards": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/fixture_guards.py",
+                "sha256": "6df0761be7f22124d3946aa96d30e75a9730e441537988220f2d324f03b3c685"
+              },
+              "actual_whole_fixture_effect_checks": 213
+            },
+            "execution_result": {
+              "actual_observations": 8,
+              "Source_controller_passed": false,
+              "Source_controller_exit": 1,
+              "Source_controller_cleanup_error": "ExactOwnedContainerAbsent (Docker capitalization)",
+              "offline_effect_comparison_passed": true,
+              "independent_cleanup_recovered": true,
+              "raw_observations": {
+                "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9"
+              },
+              "negative_controller": {
+                "path": "scripts/rust-contracts/notifications-source/raw/controller-execution.json",
+                "sha256": "01964e8c1c45bf0d62da2cc686d7a9a41e2c98e65f78e077bc34862947519d72"
+              },
+              "actual_effects": {
+                "path": "scripts/rust-contracts/notifications-source/raw/executed-effect-validation.json",
+                "sha256": "1234eda3787ff4378dbb21228e56a4e8d5a0ef543723f8576b7eda23867fd31d"
+              },
+              "recovered_cleanup": {
+                "path": "scripts/rust-contracts/notifications-source/raw/execution-recovery.json",
+                "sha256": "526f363b1ac362a60c2ee4d8e5415b5a47d8a7eacbd0958fa4fe28e50a684cdc"
+              },
+              "new_Source_runs_for_mapping": 0
+            }
+          },
+          "assertions": [
+            {
+              "kind": "actual_resolver_and_method",
+              "action": "create",
+              "exact_pattern": "api/core/^notifications/$"
+            },
+            {
+              "kind": "actual_response_bytes_status_JSON_SQL_sequences_cache_clocks",
+              "case_indices": [
+                2,
+                7
+              ]
+            },
+            {
+              "kind": "whole_unchanged_executed_effect_definition",
+              "checks": 213,
+              "reference": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+              }
+            },
+            {
+              "kind": "separate_negative_execution_and_recovered_cleanup",
+              "controller_exit": 1,
+              "default11_audits_exact": true,
+              "cleanup_recovered": true
+            }
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_framework_capture_effects_passed_controller_exit1_cleanup_recovered",
+            "historical_captured_cases": 2,
+            "unique_fixture_observations": 8,
+            "new_Source_cases_this_task": 0,
+            "new_Source_runs_this_mapping": 0,
+            "Source_controller_passed": false,
+            "Source_controller_exit": 1,
+            "offline_effect_comparison_passed": true,
+            "offline_whole_fixture_effect_checks": 213,
+            "independent_cleanup_recovered": true,
+            "fully_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-025c0d74fa99218d4728:POST",
+            "pattern_exact": "api/core/^notifications/$",
+            "source_handler": "core.api_views.SystemNotificationViewSet",
+            "method": "POST",
+            "source_action": "create",
+            "owning_milestone": "M5",
+            "fixture_id": "retained-notification-correct-resolver-Source8",
+            "observed_roles": [
+              "admin",
+              "standard"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 10
+              },
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              }
+            },
+            "cases": [
+              {
+                "source_index": 2,
+                "label": "standard-create-denied",
+                "method": "POST",
+                "path": "/api/core/notifications/",
+                "role": "standard",
+                "Source_authority": {
+                  "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                  "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+                  "json_pointer": "/requests/2"
+                },
+                "actual_observation": {
+                  "name": "standard-create-denied",
+                  "role": "standard",
+                  "method": "POST",
+                  "path": "/api/core/notifications/",
+                  "request_payload": {
+                    "notification_key": "evil",
+                    "title": "Phish",
+                    "message": "Click",
+                    "is_active": true
+                  },
+                  "resolver_action": "create",
+                  "follow_redirects": false,
+                  "predicted_status": 403,
+                  "actual_status": 403,
+                  "status_prediction_matched": true,
+                  "response_headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "GET, POST, HEAD, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "63",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_bytes": 63,
+                  "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                  "body_hex": "7b2264657461696c223a22596f7520646f206e6f742068617665207065726d697373696f6e20746f20706572666f726d207468697320616374696f6e2e227d",
+                  "body_capture_complete": true,
+                  "json": {
+                    "detail": "You do not have permission to perform this action."
+                  },
+                  "began_utc": "2026-11-12T13:33:29.561459+00:00",
+                  "completed_utc": "2026-11-12T13:33:29.562048+00:00",
+                  "before": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "after": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "before_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299690
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299979
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299686
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299975
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "7d742beada3733003f2149a93b0ec8d4e5a7267c62988b32857b8c39385ba826",
+                    "capture_bytes": 3447,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "7d742beada3733003f2149a93b0ec8d4e5a7267c62988b32857b8c39385ba826",
+                    "capture_bytes": 3447,
+                    "scope": "eleven named tables and sequences, not full database"
+                  }
+                },
+                "assertion_scope": "Per-request response/SQL/cache/clock capture plus exact whole-fixture213 effect checks; retained sequential context, not a new independent execution"
+              },
+              {
+                "source_index": 7,
+                "label": "admin-create-positive",
+                "method": "POST",
+                "path": "/api/core/notifications/",
+                "role": "admin",
+                "Source_authority": {
+                  "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                  "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+                  "json_pointer": "/requests/7"
+                },
+                "actual_observation": {
+                  "name": "admin-create-positive",
+                  "role": "admin",
+                  "method": "POST",
+                  "path": "/api/core/notifications/",
+                  "request_payload": {
+                    "notification_key": "owned.created.6380fe41f2",
+                    "title": "Hello",
+                    "message": "World",
+                    "is_active": true
+                  },
+                  "resolver_action": "create",
+                  "follow_redirects": false,
+                  "predicted_status": 201,
+                  "actual_status": 201,
+                  "status_prediction_matched": true,
+                  "response_headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "GET, POST, HEAD, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "288",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_bytes": 288,
+                  "body_sha256": "cc373fae5ae62271cc351340f4c0c2330c3db9d81070996763251be00f56f5a1",
+                  "body_hex": "7b226964223a322c226e6f74696669636174696f6e5f6b6579223a226f776e65642e637265617465642e36333830666534316632222c226e6f74696669636174696f6e5f74797065223a22696e666f222c227072696f72697479223a226e6f726d616c222c227469746c65223a2248656c6c6f222c226d657373616765223a22576f726c64222c22616374696f6e5f64617461223a7b7d2c2269735f616374697665223a747275652c2261646d696e5f6f6e6c79223a66616c73652c22657870697265735f6174223a6e756c6c2c22637265617465645f6174223a22323032362d31312d31325431333a33333a32392e3630333639375a222c2269735f6469736d6973736564223a66616c73652c22736f75726365223a2273797374656d227d",
+                  "body_capture_complete": true,
+                  "json": {
+                    "id": 2,
+                    "notification_key": "owned.created.6380fe41f2",
+                    "notification_type": "info",
+                    "priority": "normal",
+                    "title": "Hello",
+                    "message": "World",
+                    "action_data": {},
+                    "is_active": true,
+                    "admin_only": false,
+                    "expires_at": null,
+                    "created_at": "2026-11-12T13:33:29.603697Z",
+                    "is_dismissed": false,
+                    "source": "system"
+                  },
+                  "began_utc": "2026-11-12T13:33:29.602507+00:00",
+                  "completed_utc": "2026-11-12T13:33:29.604412+00:00",
+                  "before": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "after": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      },
+                      {
+                        "id": 2,
+                        "notification_key": "owned.created.6380fe41f2",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.603697+00:00",
+                        "updated_at": "2026-11-12T13:33:29.603702+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "before_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299649
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299938
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299644
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299933
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "59d220629f7951250e3a3e354c725a8da149e2bb176de0ccf90cce93ce9737dd",
+                    "capture_bytes": 3566,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 2,
+                        "sha256": "e56445035c4d2da5bd13730adfffb969247c61b0a3f533a7bbe0e5ee77f1aacc"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "4a1aaf0c2f2b2b2d203eda2a0a6de4523351fff2c228341922eee4dd173581dc",
+                    "capture_bytes": 3911,
+                    "scope": "eleven named tables and sequences, not full database"
+                  }
+                },
+                "assertion_scope": "Per-request response/SQL/cache/clock capture plus exact whole-fixture213 effect checks; retained sequential context, not a new independent execution"
+              }
+            ],
+            "assertions": [
+              {
+                "kind": "actual_resolver_and_method",
+                "action": "create",
+                "exact_pattern": "api/core/^notifications/$"
+              },
+              {
+                "kind": "actual_response_bytes_status_JSON_SQL_sequences_cache_clocks",
+                "case_indices": [
+                  2,
+                  7
+                ]
+              },
+              {
+                "kind": "whole_unchanged_executed_effect_definition",
+                "checks": 213,
+                "reference": {
+                  "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                  "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+                }
+              },
+              {
+                "kind": "separate_negative_execution_and_recovered_cleanup",
+                "controller_exit": 1,
+                "default11_audits_exact": true,
+                "cleanup_recovered": true
+              }
+            ],
+            "result": {
+              "state": "retained_Original_framework_capture_effects_passed_controller_exit1_cleanup_recovered",
+              "historical_captured_cases": 2,
+              "unique_fixture_observations": 8,
+              "new_Source_cases_this_task": 0,
+              "new_Source_runs_this_mapping": 0,
+              "Source_controller_passed": false,
+              "Source_controller_exit": 1,
+              "offline_effect_comparison_passed": true,
+              "offline_whole_fixture_effect_checks": 213,
+              "independent_cleanup_recovered": true,
+              "fully_verified": false
+            },
+            "remaining": [
+              "other role slices and credentials/backend authentication",
+              "HTTP TCP/browser and production startup",
+              "other CRUD/actions/format aliases and developer/expiry/admin-only branches",
+              "full role matrix/endpoint/Native/performance/M0/M1 acceptance"
+            ],
+            "fully_verified": false
+          }
         }
       ]
     },
@@ -64707,15 +67386,972 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_framework_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-notification-correct-resolver-Source8",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "scope": "Original management-shell real-resolver APIClient, forced users; not HTTP TCP or credential/backend/production-startup acceptance",
+            "ownership": {
+              "actual_owned_database": "rust_probe_notif_6380fe41f2",
+              "guarded_owned_copy_only": true,
+              "default_named_tables": 11,
+              "default_named_sequences": 11,
+              "default_unchanged_and_cleanup_independently_recovered": true
+            },
+            "roles": {
+              "anonymous": {
+                "actor": "APIClient without force_authenticate",
+                "credential_backend_bypassed": false,
+                "authentication_result_observed": 401
+              },
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              },
+              "admin": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 10
+              }
+            },
+            "seed": {
+              "actual_notification_and_dismissal_rows": {
+                "notifications": [
+                  {
+                    "id": 1,
+                    "notification_key": "test.notif",
+                    "notification_type": "info",
+                    "priority": "normal",
+                    "source": "system",
+                    "title": "Hello",
+                    "message": "World",
+                    "action_data": {},
+                    "is_active": true,
+                    "admin_only": false,
+                    "expires_at": null,
+                    "created_at": "2026-11-12T13:33:29.530188+00:00",
+                    "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                  }
+                ],
+                "dismissals": []
+              },
+              "actual_seed_users": [
+                {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                {
+                  "id": 2,
+                  "username": "notif_admin_6380fe41f2",
+                  "user_level": 10,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                }
+              ],
+              "actual_network_settings": {},
+              "network_policy_modified": false
+            },
+            "setup": {
+              "executed_controller": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/run.py",
+                "sha256": "b75aea621f2963f265bacf59c8de1af379dd8115c277bdf126313e4be6a3bf8a"
+              },
+              "executed_fixture": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/source_fixture.py",
+                "sha256": "6f0ae15c25ed41f4fb03f0b9d8b330a27231d573e763bbbd78966ccc0f926737"
+              },
+              "executed_bootstrap": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/start.sh",
+                "sha256": "10a7496384f657509dfdaeb91413a02a464d6b9c3e61e6afa0c8454bef246092"
+              },
+              "exact_executed_seal": {
+                "path": "scripts/rust-contracts/notifications-source/raw/executed-seal.json",
+                "sha256": "2004c823a728d3ecdb7f7750867b0b0d3385fdac5779b4a074afb899b892ba59"
+              },
+              "sealed_inputs": 29,
+              "materializer": {
+                "path": "scripts/rust-contracts/notifications-source/materialize_inputs.py",
+                "sha256": "f76515b3cb536732e7b90436e791012b641ed85b955c3eeed723554a23abd644"
+              },
+              "archive_recipe": {
+                "pinned_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "bytes": 16609280,
+                "sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+                "Source_execution_required_for_materialization": false
+              },
+              "materialize_argv": [
+                "python3",
+                "scripts/rust-contracts/notifications-source/materialize_inputs.py",
+                "--repo",
+                "<local repository containing pinned Original>",
+                "--destination",
+                "<new owned input directory>"
+              ],
+              "future_Source_entrypoint": [
+                "python3",
+                "<materialized>/controller/run.py",
+                "--execute-reviewed-seal",
+                "2004c823a728d3ecdb7f7750867b0b0d3385fdac5779b4a074afb899b892ba59",
+                "--output",
+                "<new owned output>"
+              ],
+              "future_Source_replay_requires_separate_authorization": true,
+              "mapping_task_Source_runs": 0
+            },
+            "assertion_definition": {
+              "comparer": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+              },
+              "pure_guards": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/fixture_guards.py",
+                "sha256": "6df0761be7f22124d3946aa96d30e75a9730e441537988220f2d324f03b3c685"
+              },
+              "actual_whole_fixture_effect_checks": 213
+            },
+            "execution_result": {
+              "actual_observations": 8,
+              "Source_controller_passed": false,
+              "Source_controller_exit": 1,
+              "Source_controller_cleanup_error": "ExactOwnedContainerAbsent (Docker capitalization)",
+              "offline_effect_comparison_passed": true,
+              "independent_cleanup_recovered": true,
+              "raw_observations": {
+                "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9"
+              },
+              "negative_controller": {
+                "path": "scripts/rust-contracts/notifications-source/raw/controller-execution.json",
+                "sha256": "01964e8c1c45bf0d62da2cc686d7a9a41e2c98e65f78e077bc34862947519d72"
+              },
+              "actual_effects": {
+                "path": "scripts/rust-contracts/notifications-source/raw/executed-effect-validation.json",
+                "sha256": "1234eda3787ff4378dbb21228e56a4e8d5a0ef543723f8576b7eda23867fd31d"
+              },
+              "recovered_cleanup": {
+                "path": "scripts/rust-contracts/notifications-source/raw/execution-recovery.json",
+                "sha256": "526f363b1ac362a60c2ee4d8e5415b5a47d8a7eacbd0958fa4fe28e50a684cdc"
+              },
+              "new_Source_runs_for_mapping": 0
+            }
+          },
+          "assertions": [
+            {
+              "kind": "actual_resolver_and_method",
+              "action": "dismiss",
+              "exact_pattern": "api/core/^notifications/(?P<pk>[^/.]+)/dismiss/$"
+            },
+            {
+              "kind": "actual_response_bytes_status_JSON_SQL_sequences_cache_clocks",
+              "case_indices": [
+                3,
+                4
+              ]
+            },
+            {
+              "kind": "whole_unchanged_executed_effect_definition",
+              "checks": 213,
+              "reference": {
+                "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+              }
+            },
+            {
+              "kind": "separate_negative_execution_and_recovered_cleanup",
+              "controller_exit": 1,
+              "default11_audits_exact": true,
+              "cleanup_recovered": true
+            }
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_Original_framework_capture_effects_passed_controller_exit1_cleanup_recovered",
+            "historical_captured_cases": 2,
+            "unique_fixture_observations": 8,
+            "new_Source_cases_this_task": 0,
+            "new_Source_runs_this_mapping": 0,
+            "Source_controller_passed": false,
+            "Source_controller_exit": 1,
+            "offline_effect_comparison_passed": true,
+            "offline_whole_fixture_effect_checks": 213,
+            "independent_cleanup_recovered": true,
+            "fully_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-1577c7cc68b36d7ee6f4:POST",
+            "pattern_exact": "api/core/^notifications/(?P<pk>[^/.]+)/dismiss/$",
+            "source_handler": "core.api_views.SystemNotificationViewSet",
+            "method": "POST",
+            "source_action": "dismiss",
+            "owning_milestone": "M5",
+            "fixture_id": "retained-notification-correct-resolver-Source8",
+            "observed_roles": [
+              "standard"
+            ],
+            "source_role_specs": {
+              "standard": {
+                "actor": "real owned user with force_authenticate",
+                "user": {
+                  "id": 1,
+                  "username": "notif_user_6380fe41f2",
+                  "user_level": 1,
+                  "is_active": true,
+                  "is_superuser": false,
+                  "custom_properties": {}
+                },
+                "credential_backend_bypassed": true,
+                "Source_user_level": 1
+              }
+            },
+            "cases": [
+              {
+                "source_index": 3,
+                "label": "standard-dismiss",
+                "method": "POST",
+                "path": "/api/core/notifications/1/dismiss/",
+                "role": "standard",
+                "Source_authority": {
+                  "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                  "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+                  "json_pointer": "/requests/3"
+                },
+                "actual_observation": {
+                  "name": "standard-dismiss",
+                  "role": "standard",
+                  "method": "POST",
+                  "path": "/api/core/notifications/1/dismiss/",
+                  "request_payload": {},
+                  "resolver_action": "dismiss",
+                  "follow_redirects": false,
+                  "predicted_status": 200,
+                  "actual_status": 200,
+                  "status_prediction_matched": true,
+                  "response_headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "POST, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "83",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_bytes": 83,
+                  "body_sha256": "25c384f1c57e4364799c35b3834a236decd70fe58b3d89c91e277957b4a372f6",
+                  "body_hex": "7b2273756363657373223a747275652c226d657373616765223a224e6f74696669636174696f6e206469736d6973736564222c226e6f74696669636174696f6e5f6b6579223a22746573742e6e6f746966227d",
+                  "body_capture_complete": true,
+                  "json": {
+                    "success": true,
+                    "message": "Notification dismissed",
+                    "notification_key": "test.notif"
+                  },
+                  "began_utc": "2026-11-12T13:33:29.568380+00:00",
+                  "completed_utc": "2026-11-12T13:33:29.570790+00:00",
+                  "before": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": []
+                  },
+                  "after": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "before_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299683
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299972
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299678
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299967
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      }
+                    },
+                    "dataset_sha256": "7d742beada3733003f2149a93b0ec8d4e5a7267c62988b32857b8c39385ba826",
+                    "capture_bytes": 3447,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "59d220629f7951250e3a3e354c725a8da149e2bb176de0ccf90cce93ce9737dd",
+                    "capture_bytes": 3566,
+                    "scope": "eleven named tables and sequences, not full database"
+                  }
+                },
+                "assertion_scope": "Per-request response/SQL/cache/clock capture plus exact whole-fixture213 effect checks; retained sequential context, not a new independent execution"
+              },
+              {
+                "source_index": 4,
+                "label": "standard-dismiss-repeat",
+                "method": "POST",
+                "path": "/api/core/notifications/1/dismiss/",
+                "role": "standard",
+                "Source_authority": {
+                  "path": "scripts/rust-contracts/notifications-source/raw/source-observations.json",
+                  "sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+                  "json_pointer": "/requests/4"
+                },
+                "actual_observation": {
+                  "name": "standard-dismiss-repeat",
+                  "role": "standard",
+                  "method": "POST",
+                  "path": "/api/core/notifications/1/dismiss/",
+                  "request_payload": {},
+                  "resolver_action": "dismiss",
+                  "follow_redirects": false,
+                  "predicted_status": 200,
+                  "actual_status": 200,
+                  "status_prediction_matched": true,
+                  "response_headers": {
+                    "Content-Type": "application/json",
+                    "Vary": "Accept, origin",
+                    "Allow": "POST, OPTIONS",
+                    "X-Frame-Options": "DENY",
+                    "Content-Length": "83",
+                    "X-Content-Type-Options": "nosniff",
+                    "Referrer-Policy": "same-origin",
+                    "Cross-Origin-Opener-Policy": "same-origin"
+                  },
+                  "body_bytes": 83,
+                  "body_sha256": "25c384f1c57e4364799c35b3834a236decd70fe58b3d89c91e277957b4a372f6",
+                  "body_hex": "7b2273756363657373223a747275652c226d657373616765223a224e6f74696669636174696f6e206469736d6973736564222c226e6f74696669636174696f6e5f6b6579223a22746573742e6e6f746966227d",
+                  "body_capture_complete": true,
+                  "json": {
+                    "success": true,
+                    "message": "Notification dismissed",
+                    "notification_key": "test.notif"
+                  },
+                  "began_utc": "2026-11-12T13:33:29.577194+00:00",
+                  "completed_utc": "2026-11-12T13:33:29.578883+00:00",
+                  "before": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "after": {
+                    "notifications": [
+                      {
+                        "id": 1,
+                        "notification_key": "test.notif",
+                        "notification_type": "info",
+                        "priority": "normal",
+                        "source": "system",
+                        "title": "Hello",
+                        "message": "World",
+                        "action_data": {},
+                        "is_active": true,
+                        "admin_only": false,
+                        "expires_at": null,
+                        "created_at": "2026-11-12T13:33:29.530188+00:00",
+                        "updated_at": "2026-11-12T13:33:29.530193+00:00"
+                      }
+                    ],
+                    "dismissals": [
+                      {
+                        "id": 1,
+                        "user_id": 1,
+                        "notification_id": 1,
+                        "dismissed_at": "2026-11-12T13:33:29.570209+00:00",
+                        "action_taken": null
+                      }
+                    ]
+                  },
+                  "before_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299674
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299963
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "after_owned_cache": {
+                    "rows": [
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a6e6574776f726b5f616363657373",
+                        "dump_hex": "000580047d942e0f00a5f61269dad2238f",
+                        "pttl": 299670
+                      },
+                      {
+                        "key_hex": "3a313a636f726573657474696e67733a67726f75703a73797374656d5f73657474696e6773",
+                        "dump_hex": "00406c80049561000000000000007d94288c0974696d655f7a6f6e65948c03555443948c107072656665727265645f726567696f6e948c027573948c116d61785f73797374656d5f6576656e7473944b648c186175746f5f696d706f72745f6d61707065645f66696c65739488752e0f006a27010cbd82b4f1",
+                        "pttl": 299958
+                      }
+                    ],
+                    "capture_bytes": 211,
+                    "scope": "owned Django Redis cache database only; TTL and unrelated timezone/group activity retained; no Channels/Celery delivery assertion"
+                  },
+                  "before_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "59d220629f7951250e3a3e354c725a8da149e2bb176de0ccf90cce93ce9737dd",
+                    "capture_bytes": 3566,
+                    "scope": "eleven named tables and sequences, not full database"
+                  },
+                  "after_named_audit": {
+                    "database": "rust_probe_notif_6380fe41f2",
+                    "tables": {
+                      "accounts_user": {
+                        "rows": 2,
+                        "sha256": "99faf2d07976dbf1ff62c318bb18d962b7dfc8a728ef6ad496e74323fe50f62f"
+                      },
+                      "m3u_m3uaccount": {
+                        "rows": 1,
+                        "sha256": "8d601edd5f3624ffe5ca133ed1964398232a32c5cd6ce3939fdab68e1cb8e780"
+                      },
+                      "m3u_m3uaccountprofile": {
+                        "rows": 1,
+                        "sha256": "400934f0b90b050a9bb3ee1f8b650285609bdb1d57e5e5437c7bafff5cf70007"
+                      },
+                      "vod_movie": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3umovierelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_series": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_episode": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "vod_m3uepisoderelation": {
+                        "rows": 0,
+                        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                      },
+                      "core_coresettings": {
+                        "rows": 8,
+                        "sha256": "ac532778bc0b1a30320a1530d7187bb3f3a14753118956e31cd5e87bb907672b"
+                      },
+                      "core_systemnotification": {
+                        "rows": 1,
+                        "sha256": "621cf29656001450f47ae6a866a9b61db128e3c1ce6e18078f08a58c1532cceb"
+                      },
+                      "core_notificationdismissal": {
+                        "rows": 1,
+                        "sha256": "a5a9120f1fa34b495a1e1b98362af8875da45cb852d08a8f23f780cd6da36b51"
+                      }
+                    },
+                    "sequences": {
+                      "public.accounts_user_id_seq": {
+                        "last_value": 2,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccount_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.m3u_m3uaccountprofile_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.vod_movie_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3umovierelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_series_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_episode_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.vod_m3uepisoderelation_id_seq": {
+                        "last_value": 1,
+                        "is_called": false
+                      },
+                      "public.core_coresettings_id_seq": {
+                        "last_value": 18,
+                        "is_called": true
+                      },
+                      "public.core_systemnotification_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      },
+                      "public.core_notificationdismissal_id_seq": {
+                        "last_value": 1,
+                        "is_called": true
+                      }
+                    },
+                    "dataset_sha256": "59d220629f7951250e3a3e354c725a8da149e2bb176de0ccf90cce93ce9737dd",
+                    "capture_bytes": 3566,
+                    "scope": "eleven named tables and sequences, not full database"
+                  }
+                },
+                "assertion_scope": "Per-request response/SQL/cache/clock capture plus exact whole-fixture213 effect checks; retained sequential context, not a new independent execution"
+              }
+            ],
+            "assertions": [
+              {
+                "kind": "actual_resolver_and_method",
+                "action": "dismiss",
+                "exact_pattern": "api/core/^notifications/(?P<pk>[^/.]+)/dismiss/$"
+              },
+              {
+                "kind": "actual_response_bytes_status_JSON_SQL_sequences_cache_clocks",
+                "case_indices": [
+                  3,
+                  4
+                ]
+              },
+              {
+                "kind": "whole_unchanged_executed_effect_definition",
+                "checks": 213,
+                "reference": {
+                  "path": "scripts/rust-contracts/notifications-source/executed/controller/effects.py",
+                  "sha256": "f16e55c03acbe8e046257a871cf55678347effcfd0d7fd5978dc2789dc4e0435"
+                }
+              },
+              {
+                "kind": "separate_negative_execution_and_recovered_cleanup",
+                "controller_exit": 1,
+                "default11_audits_exact": true,
+                "cleanup_recovered": true
+              }
+            ],
+            "result": {
+              "state": "retained_Original_framework_capture_effects_passed_controller_exit1_cleanup_recovered",
+              "historical_captured_cases": 2,
+              "unique_fixture_observations": 8,
+              "new_Source_cases_this_task": 0,
+              "new_Source_runs_this_mapping": 0,
+              "Source_controller_passed": false,
+              "Source_controller_exit": 1,
+              "offline_effect_comparison_passed": true,
+              "offline_whole_fixture_effect_checks": 213,
+              "independent_cleanup_recovered": true,
+              "fully_verified": false
+            },
+            "remaining": [
+              "other role slices and credentials/backend authentication",
+              "HTTP TCP/browser and production startup",
+              "other CRUD/actions/format aliases and developer/expiry/admin-only branches",
+              "full role matrix/endpoint/Native/performance/M0/M1 acceptance"
+            ],
+            "fully_verified": false
+          }
         }
       ]
     },
