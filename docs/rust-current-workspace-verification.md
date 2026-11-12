@@ -67,3 +67,16 @@ SHA-256 `312722bf6a5ceb3e4e4d3815951e7d16b2607cc0d3ef8115416fba0b00cb90fb`;
 published SHA-256 `342c61c4a2704afe9bf30fbe9230f161d4ed3cb91a08b944f9228f0c0cdf68c3`.
 Shell tokens are unchanged and `sh -n` passed; the new byte hash is not represented
 as the image-executed input. The frozen execution proof retains its original map.
+
+The later committed scanner-child workspace `4fdfc1c4154f8f72ff5ccff5928ef02fe1617cfb`
+now also passes a fresh complete Compose run, using the published normalized shell
+bytes. [Exact execution and review](../scripts/rust-integration/current-workspace782/review.json)
+bind image `sha256:c3745da228fcbc3f34ab80aa9e6b8538225fd145dc4f357177810a2f7874421f`
+and 4,796 unchanged sealed Git files, including all 782 Rust inputs. Formatting,
+strict all-target Clippy, 562 default Rust tests, 41 Python tests and 1,806 byte-exact
+helper cases pass; 702 external-fixture Rust tests and one optional private Python
+check are explicitly excluded. Initial build DNS retries recovered without source
+or network-configuration changes. Runtime verification uses no external network.
+The exact owned project has no remaining containers, networks or volumes. This
+is a verification image, separate from the accepted image51 application package;
+its component timing output does not establish new application performance gains.
