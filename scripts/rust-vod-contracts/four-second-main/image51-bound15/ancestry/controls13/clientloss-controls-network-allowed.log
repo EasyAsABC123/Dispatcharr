@@ -1,0 +1,21 @@
+test_foreign_target_or_unregistered_abort_rejected (__main__.Tests.test_foreign_target_or_unregistered_abort_rejected) ... ok
+test_premature503_or_missing_actual_close_cannot_pass (__main__.Tests.test_premature503_or_missing_actual_close_cannot_pass) ... ok
+test_socketpair_real_blocked_HTTP_read_abort_and_join (__main__.Tests.test_socketpair_real_blocked_HTTP_read_abort_and_join) ... ERROR
+test_valid_loss_never_infers_server_cancel (__main__.Tests.test_valid_loss_never_infers_server_cancel) ... ok
+
+======================================================================
+ERROR: test_socketpair_real_blocked_HTTP_read_abort_and_join (__main__.Tests.test_socketpair_real_blocked_HTTP_read_abort_and_join)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-four-second-main-tools-13/tools/test_client_loss.py", line 47, in test_socketpair_real_blocked_HTTP_read_abort_and_join
+    target.abort()
+    ~~~~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-four-second-main-tools-13/tools/target_client.py", line 36, in abort
+    if self.receipt['fd_after']!=-1:raise ValueError('TargetAbortDescriptorNotClosed')
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: TargetAbortDescriptorNotClosed
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+FAILED (errors=1)

@@ -1,0 +1,26 @@
+--- frozen13/tools/observation.py
++++ blocked14/tools/observation.py
+@@ -43,5 +43,5 @@
+  start=report.get('held_boundary_monotonic');at=close.get('close_begin');end=close.get('reader_joined_monotonic');done=outcome.get('completed')
+  clocks=[start,at,end,done]
+  valid_clocks=all(type(x)in[int,float]and math.isfinite(x)for x in clocks)
+- matched=bool(valid_clocks and start<=at<=end<=start+3.1 and at<=done<=end and close.get('fd_after')==-1 and close.get('local_shutdown')is True and close.get('reader_joined')is True and close.get('original_descriptor_identity_absent')is True and close.get('server_cancellation_inferred')is False and not outcome.get('headers_received')and 'status'not in outcome and outcome.get('transport_error')in['RemoteDisconnected','ConnectionResetError','ConnectionAbortedError','BrokenPipeError','OSError'])
++ matched=bool(valid_clocks and start<=at<=end<=start+3.1 and at<=done<=end and type(close.get('fd_after'))is int and close['fd_after']==-1 and close.get('local_shutdown')is True and close.get('reader_joined')is True and close.get('original_descriptor_identity_absent')is True and close.get('server_cancellation_inferred')is False and 'headers_received' not in outcome and 'status' not in outcome and outcome.get('transport_error')in['RemoteDisconnected','ConnectionResetError','ConnectionAbortedError','BrokenPipeError','OSError'])
+  return{'matched':matched,'scope':'owned consumer TCP shutdown/read-thread join before release; no server cancellation inference'}
+--- frozen13/tools/test_client_loss.py
++++ blocked14/tools/test_client_loss.py
+@@ -19,6 +19,14 @@
+    n=copy.deepcopy(r);n['target_outcome'][key]=value;self.assertFalse(observation.compare(r,n)['parity_passed'])
+   for key,value in[('fd_after',3),('reader_joined',False),('original_descriptor_identity_absent',False),('server_cancellation_inferred',True),('reader_joined_monotonic',103.2),('close_begin',float('nan'))]:
+    n=copy.deepcopy(r);n['target_client_loss'][key]=value;self.assertFalse(observation.client_loss(n)['matched'])
++ def test_header_key_absence_and_strict_integer_descriptor_required(self):
++  r=self.report();self.assertTrue(observation.client_loss(r)['matched'])
++  for value in[0,None,False,'',0.0]:
++   bad=copy.deepcopy(r);bad['target_outcome']['headers_received']=value
++   self.assertFalse(observation.client_loss(bad)['matched'])
++  for value in[-1.0,True,False,'-1',None]:
++   bad=copy.deepcopy(r);bad['target_client_loss']['fd_after']=value
++   self.assertFalse(observation.client_loss(bad)['matched'])
+  def test_foreign_target_or_unregistered_abort_rejected(self):
+   with self.assertRaises(ValueError):Target('https://example.org')
+   with self.assertRaises(ValueError):Target('http://127.0.0.1:5656')

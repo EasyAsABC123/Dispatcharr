@@ -1,0 +1,31 @@
+test_clientloss_path_registered_with_exact_source_roles (__main__.Tests.test_clientloss_path_registered_with_exact_source_roles) ... ok
+test_foreign_target_or_unregistered_abort_rejected (__main__.Tests.test_foreign_target_or_unregistered_abort_rejected) ... ok
+test_premature503_or_missing_actual_close_cannot_pass (__main__.Tests.test_premature503_or_missing_actual_close_cannot_pass) ... ok
+test_socketpair_real_blocked_HTTP_read_abort_and_join (__main__.Tests.test_socketpair_real_blocked_HTTP_read_abort_and_join) ... Exception in thread Thread-1 (peer):
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/threading.py", line 1082, in _bootstrap_inner
+    self._context.run(self.run)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/usr/lib/python3.14/threading.py", line 1024, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-four-second-main-tools-13/tools/test_client_loss.py", line 43, in peer
+    if not block:raise ValueError('MissingRequest')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: MissingRequest
+FAIL
+test_valid_loss_never_infers_server_cancel (__main__.Tests.test_valid_loss_never_infers_server_cancel) ... ok
+
+======================================================================
+FAIL: test_socketpair_real_blocked_HTTP_read_abort_and_join (__main__.Tests.test_socketpair_real_blocked_HTTP_read_abort_and_join)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-four-second-main-tools-13/tools/test_client_loss.py", line 55, in test_socketpair_real_blocked_HTTP_read_abort_and_join
+    self.assertTrue(received.wait(2));end=time.monotonic()+2
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.002s
+
+FAILED (failures=1)

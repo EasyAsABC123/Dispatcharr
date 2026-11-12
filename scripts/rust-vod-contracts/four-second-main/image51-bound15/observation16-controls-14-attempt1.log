@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-four-second-main-tools-14/tools/test_observation.py", line 5, in <module>
+    import observation
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-four-second-main-tools-14/tools/observation.py", line 46
+    matched=bool(valid_clocks and start<=at<=end<=start+3.1 and at<=done<=end and type(close.get('fd_after'))is int and close['fd_after']==-1 and close.get('local_shutdown')is True and close.get('reader_joined')is True and close.get('original_descriptor_identity_absent')is True and close.get('server_cancellation_inferred')is False and 'headers_received'not in outcomeand 'status'not in outcome and outcome.get('transport_error')in['RemoteDisconnected','ConnectionResetError','ConnectionAbortedError','BrokenPipeError','OSError'])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?

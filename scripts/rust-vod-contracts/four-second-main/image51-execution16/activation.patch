@@ -1,0 +1,80 @@
+--- blocked15/tools/run.py
++++ execution16/tools/run.py
+@@ -10,8 +10,75 @@
+ def save(path,value):Path(path).write_text(json.dumps(value,indent=2)+'\n')
+ def main():
+  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--repo',type=Path,required=True);parser.add_argument('--candidate-image',required=True);parser.add_argument('--build-manifest',type=Path,required=True);parser.add_argument('--source-archive',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args();repo=args.repo.resolve();out=args.output.resolve()
+- # Explicit block until Parent image cue and offline/failure controls review.
+- raise RuntimeError('UNVALIDATED_MAIN_FIXTURE_DRAFT: remove only after Parent review/image cue')
++ # Canonical51 activation begin
++ import datetime,math
++ expected={
++  'action':'canonical51-physical-main-four-second-once',
++  'reviewed_selection':'artifacts/rust/m4-vod-four-second-main-bound-15/selection.json',
++  'reviewed_selection_sha256':'40a8f027e4b64dddb59148e503b1331c3a96a2f284dcec4442159e393a5c569f',
++  'reviewed_policy_sha256':'c4440e6d23627cb218fba8208463c93495d2eced4bc1af4077aaf338e4c92472',
++  'reviewed_binding_sha256':'b7d2f3567bf503cbedf57e264549ae1c6cba18afab1f72c5bced2fcd8a6b189f',
++  'build_manifest':'artifacts/rust/candidate-build-observer-unlock-image51-1/build.json',
++  'build_manifest_sha256':'2dcf19e84324aa77d56a8df034729dd3d8a07ba7743d09d8f3fd7ebc9ca89957',
++  'candidate_image':'sha256:909d506f1c1deb29c60bd360da995eef9d5ff5c7ffa0ea3799bca11f7c93b5d0',
++  'candidate_tag':'dispatcharr-rust-app:observer-unlock-image51',
++  'source_tree_sha256':'fee70ac06a5a6aead2ba3b589d9939a85576e59798421473e80fb8056a7f1082',
++  'git_revision':'5afbb78ee8be031474b41278479fcdf623f2ddce',
++  'source_archive':'artifacts/rust/candidate-build-observer-unlock-image51-1/source.tar',
++  'source_archive_sha256':'4680d81f09fc1c4b956920cfd14a0d9b7e680f3e92d121a0fb271213a6a36d57',
++  'Root_input_count':772,
++  'Root_reviewed_input_map_sha256':'8e685a88c94ef7a680bb2d8d56ed916411589b921f670b55cd50e2cb779d60ce',
++  'cases':['success','busy','clientloss'],
++  'new_output':'artifacts/rust/m4-vod-four-second-main-image51-1',
++ }
++ cue_path=repo/'artifacts/rust/m4-vod-four-second-image51-execution-cue-1.json'
++ cue_raw=cue_path.read_bytes();cue=json.loads(cue_raw);now=time.time()
++ if cue.get('authorized')is not True or cue.get('source_native_application_requests_authorized')is not True:raise ValueError('ExplicitCanonicalMainCueRequired')
++ if any(cue.get(name)!=value for name,value in expected.items())or type(cue.get('Root_input_count'))is not int:raise ValueError('ExactCanonical51CueBinding')
++ if any(cue.get(name)is not False for name in['resource_sampling','performance_acceptance','full_M4_acceptance']):raise ValueError('FunctionalOnlyCueRequired')
++ for name in['issued_epoch','expires_epoch']:
++  if type(cue.get(name))not in[int,float]or not math.isfinite(cue[name]):raise ValueError('FiniteUTCEpochRequired')
++ if not cue['issued_epoch']<=now<cue['expires_epoch']or not 0<cue['expires_epoch']-cue['issued_epoch']<=1800 or now-cue['issued_epoch']>1800:raise ValueError('FreshCanonical51CueRequired')
++ for name in['issued','expires']:
++  value=cue.get(name+'_utc')
++  if not isinstance(value,str)or not value.endswith('Z'):raise ValueError('UTCStringRequired')
++  date=datetime.datetime.fromisoformat(value[:-1]+'+00:00')
++  if abs(date.timestamp()-cue[name+'_epoch'])>.001:raise ValueError('UTCEpochBinding')
++ if cue.get('boot_id')!=Path('/proc/sys/kernel/random/boot_id').read_text().strip():raise ValueError('Canonical51BootBinding')
++ if out!=(repo/expected['new_output']).resolve()or out.exists():raise ValueError('FreshCanonical51OutputRequired')
++ digest=lambda path:hashlib.sha256(Path(path).read_bytes()).hexdigest()
++ selection_path=repo/expected['reviewed_selection']
++ if digest(selection_path)!=expected['reviewed_selection_sha256']:raise ValueError('Canonical51SelectionSeal')
++ selected={row['path']:row for row in json.loads(selection_path.read_text())['files']}
++ if len(selected)!=46:raise ValueError('Exactly46ReviewedInputsRequired')
++ for name,row in selected.items():
++  if digest(selection_path.parent/name)!=row['sha256']:raise ValueError('ReviewedCanonical51InputModified '+name)
++  if name!='tools/run.py'and digest(HERE.parent/name)!=row['sha256']:raise ValueError('ExecutionCanonical51InputModified '+name)
++ own=Path(__file__).read_text();opening=' # Canonical51 '+'activation begin\n';ending=' # Canonical51 '+'activation end\n'
++ original=own[:own.index(opening)]+" # Explicit block until Parent image cue and offline/failure controls review.\n raise RuntimeError('UNVALIDATED_MAIN_FIXTURE_DRAFT: remove only after Parent review/image cue')\n"+own[own.index(ending)+len(ending):]
++ if hashlib.sha256(original.encode()).hexdigest()!=selected['tools/run.py']['sha256']:raise ValueError('OnlyEntryActivationMayDiffer')
++ if digest(HERE.parent/'policy.json')!=expected['reviewed_policy_sha256']or digest(HERE.parent/'candidate-binding.json')!=expected['reviewed_binding_sha256']:raise ValueError('Canonical51PolicyBindingSeal')
++ activation_path=HERE.parent/'activation.json'
++ if cue.get('reviewed_activation_sha256')!=digest(activation_path):raise ValueError('ReviewedActivationSeal')
++ if args.build_manifest.resolve()!=(repo/expected['build_manifest']).resolve()or digest(args.build_manifest)!=expected['build_manifest_sha256']:raise ValueError('Canonical51ManifestBinding')
++ if args.source_archive.resolve()!=(repo/expected['source_archive']).resolve()or digest(args.source_archive)!=expected['source_archive_sha256']:raise ValueError('Canonical51ArchiveBinding')
++ if args.candidate_image not in[expected['candidate_image'],expected['candidate_tag']]:raise ValueError('Canonical51ImageBinding')
++ proof=load(HERE/'candidate_inputs.py','canonical51_execution_inputs').bound_candidate(args.build_manifest,args.candidate_image,HERE/'expected-runtime.json',args.source_archive)
++ if proof['image_id']!=expected['candidate_image']or proof['source_tree_sha256']!=expected['source_tree_sha256']or proof['git_revision']!=expected['git_revision']:raise ValueError('Canonical51RuntimeProofBinding')
++ # Recheck after read-only hashing; no stale cue may acquire an execution claim.
++ if not cue['issued_epoch']<=time.time()<cue['expires_epoch']:raise ValueError('CueExpiredBeforeClaim')
++ claim_path=cue_path.with_name(cue_path.stem+'.claimed.json')
++ claim={'phase':'exclusive_claim_before_dispatch','cue_sha256':hashlib.sha256(cue_raw).hexdigest(),'reviewed_activation_sha256':cue['reviewed_activation_sha256'],'boot_id':cue['boot_id'],'pid':os.getpid(),'claimed_epoch':time.time(),'new_output':expected['new_output'],'no_retry':True}
++ try:fd=os.open(claim_path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
++ except FileExistsError:raise ValueError('Canonical51CueAlreadyClaimed')from None
++ with os.fdopen(fd,'w')as stream:stream.write(json.dumps(claim,indent=2)+'\n');stream.flush();os.fsync(stream.fileno())
++ directory_fd=os.open(claim_path.parent,os.O_RDONLY|os.O_DIRECTORY)
++ try:os.fsync(directory_fd)
++ finally:os.close(directory_fd)
++ try:return execute(args,repo,out)
++ finally:
++  if out.exists():shutil.copyfile(cue_path,out/'execution-cue.json');shutil.copyfile(claim_path,out/'execution-claim.json')
++ # Canonical51 activation end
+ def execute(args,repo,out):
+  out.mkdir(parents=True,exist_ok=False);controller=out/'controller';shutil.copytree(HERE,controller,ignore=shutil.ignore_patterns('__pycache__'))
+  proof=load(controller/'candidate_inputs.py','candidate_guard').bound_candidate(args.build_manifest,args.candidate_image,controller/'expected-runtime.json',args.source_archive);save(out/'candidate-inputs.json',proof)

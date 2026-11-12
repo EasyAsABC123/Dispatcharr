@@ -1,0 +1,1394 @@
+{
+  "schema": 1,
+  "scope": "Executed once immutable image51 Main3-case fixed4s physical Source/native reply qualification; scoped response/clientloss comparison only",
+  "process_exit": 0,
+  "passed": true,
+  "observation_valid": true,
+  "scoped_response_clientloss_comparison_passed": true,
+  "full_M4_acceptance": false,
+  "full_counter_metadata_or_timer_parity_claimed": false,
+  "Source_generator_finally_or_timer_callback_proved": false,
+  "server_cancellation_inferred": false,
+  "resource_sampling_or_gains_claimed": false,
+  "runtime_or_budget_changes_during_run": false,
+  "retry": false,
+  "bindings": {
+    "bound15_selection_sha256": "40a8f027e4b64dddb59148e503b1331c3a96a2f284dcec4442159e393a5c569f",
+    "execution16_selection_sha256": "7539c394d7f29eb5ec8c53df3c887d05c36328c05e77754f8742e901b6057a59",
+    "activation_sha256": "17eb68d1c1b3a9c8da2822c114ed7642b5d6c7f354978c5de23517823d72af02",
+    "run_sha256": "7d3295a1d74d18f5d22cb91ebdb965ba1b1dad06cac91309746aae918262a37e",
+    "cue_sha256": "0ed72c4e155f99944b7aacd3dbfcd0455bd456f0f87dcd7163565b088eb1c122",
+    "claim_sha256": "8ad033ef3ca7861bea0b16eefbfb6190b435e7c10600ba9aa724b38f7aad5ca9",
+    "manifest_sha256": "2dcf19e84324aa77d56a8df034729dd3d8a07ba7743d09d8f3fd7ebc9ca89957",
+    "image_id": "sha256:909d506f1c1deb29c60bd360da995eef9d5ff5c7ffa0ea3799bca11f7c93b5d0",
+    "git_revision": "5afbb78ee8be031474b41278479fcdf623f2ddce",
+    "Root_Rust_count": 772
+  },
+  "all55_execution_preparation_files_still_match_seal": true,
+  "runtime_run_matches_reviewed_activation_SHA": true,
+  "independent_cleanup_sha256": "72bed1c7c960fc651c7a7aa37991644ccf5ba52f5ffc7f5d91f6b6b08ad41810",
+  "raw_scope_label_caveat": "Raw summary inherits BLOCKED preparation docstring; raw reports remain unchanged. Actual once claim/requests/outcomes and this explicit executed scope disambiguate.",
+  "cases": [
+    {
+      "case": "success",
+      "passed": true,
+      "observation_valid": true,
+      "raw_parity_flag": true,
+      "scope_of_comparison": "status/errorbody forsuccess/busy; actual owned client close with no preclose HTTP outcome forclientloss",
+      "full_parity_accepted": false,
+      "Source_reference_expectation_matched": true,
+      "raw_report_sha256": "731c53e3acfdfedcec9c4af899a059defe5ddf28efe915664c377b03bd7b55ef",
+      "Source_signal_terminal_status": {
+        "invalid": [],
+        "rows": 6,
+        "bytes": 1047,
+        "maximum_rows": 256,
+        "maximum_bytes": 1048576
+      },
+      "Source_signal_terminal_coverage": {
+        "valid": true,
+        "started": 3,
+        "finished": 3,
+        "roles": [
+          "follower",
+          "initial",
+          "target"
+        ],
+        "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+      },
+      "default_named9tables_sequences_unchanged": true,
+      "proxy_terminal": {
+        "Source_proxy_terminal": {
+          "seen": 1,
+          "connections": 0,
+          "invalid": []
+        },
+        "proxy_terminal": {
+          "seen": 1,
+          "connections": 0,
+          "invalid": []
+        }
+      },
+      "remaining": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "phases": {
+        "source": {
+          "observation_valid": true,
+          "outcome_kind": "HTTP_headers",
+          "HTTP_status": 200,
+          "transport_error": null,
+          "request_to_recorded_outcome_seconds": 6.013615752017358,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.000750776991481,
+            "overshoot_seconds": 0.0007507769914809614,
+            "control_seconds": 2.016715956997359
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.1000695129914675
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 175296.984755613,
+            "completed_monotonic": 175296.985098672,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "selected_metadata_nonnull_fields": 6,
+            "active_streams": "2",
+            "request_count": "3",
+            "full_hash_existence_not_directly_tested": true
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175290.982575758,
+                "completed_monotonic": 175290.982811065,
+                "atomic": false,
+                "provider": "1",
+                "stop": null,
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "1",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175294.080690315,
+                "completed_monotonic": 175294.081061016,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175294.980688029,
+                "completed_monotonic": 175294.981033539,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175294.981900544,
+                "completed_monotonic": 175294.9821255,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175298.485312131,
+                "completed_monotonic": 175298.485657241,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "3",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175299.985321523,
+                "completed_monotonic": 175299.985672173,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "0",
+                "request_count": "3",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175302.985309155,
+                "completed_monotonic": 175302.985585633,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175311.985319016,
+                "completed_monotonic": 175311.985596703,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 175288.959658553,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175288.959708574
+            },
+            {
+              "role": "target",
+              "close_begin": 175296.985154474,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 14,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175296.985208756
+            },
+            {
+              "role": "follower",
+              "close_begin": 175296.985211686,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175296.985239106
+            }
+          ],
+          "consumer_close_boundary": 175296.985240066
+        },
+        "native": {
+          "observation_valid": true,
+          "outcome_kind": "HTTP_headers",
+          "HTTP_status": 200,
+          "transport_error": null,
+          "request_to_recorded_outcome_seconds": 4.04693717401824,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.000587087008171,
+            "overshoot_seconds": 0.0005870870081707835,
+            "control_seconds": 2.0136272110103164
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.1000677720003296
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 175321.046866557,
+            "completed_monotonic": 175321.047142745,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "selected_metadata_nonnull_fields": 6,
+            "active_streams": "2",
+            "request_count": "3",
+            "full_hash_existence_not_directly_tested": true
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175317.011055301,
+                "completed_monotonic": 175317.011311088,
+                "atomic": false,
+                "provider": "1",
+                "stop": null,
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "1",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175320.104147173,
+                "completed_monotonic": 175320.104448471,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175321.004141513,
+                "completed_monotonic": 175321.00438146,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175321.005160692,
+                "completed_monotonic": 175321.005389259,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175322.547359828,
+                "completed_monotonic": 175322.547611955,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175324.047503858,
+                "completed_monotonic": 175324.047838268,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175327.047359197,
+                "completed_monotonic": 175327.047616294,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175336.047359485,
+                "completed_monotonic": 175336.047611132,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 175316.985144949,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175316.985213871
+            },
+            {
+              "role": "target",
+              "close_begin": 175321.047187346,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175321.047230507
+            },
+            {
+              "role": "follower",
+              "close_begin": 175321.047232157,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175321.047289369
+            }
+          ],
+          "consumer_close_boundary": 175321.047290229
+        }
+      }
+    },
+    {
+      "case": "busy",
+      "passed": true,
+      "observation_valid": true,
+      "raw_parity_flag": true,
+      "scope_of_comparison": "status/errorbody forsuccess/busy; actual owned client close with no preclose HTTP outcome forclientloss",
+      "full_parity_accepted": false,
+      "Source_reference_expectation_matched": true,
+      "raw_report_sha256": "8bd6b6a7b78a1b1315d92063df64ea4643576abad40f1458de575f16412129f5",
+      "Source_signal_terminal_status": {
+        "invalid": [],
+        "rows": 8,
+        "bytes": 1392,
+        "maximum_rows": 256,
+        "maximum_bytes": 1048576
+      },
+      "Source_signal_terminal_coverage": {
+        "valid": true,
+        "started": 4,
+        "finished": 4,
+        "roles": [
+          "follower",
+          "initial",
+          "other",
+          "target"
+        ],
+        "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+      },
+      "default_named9tables_sequences_unchanged": true,
+      "proxy_terminal": {
+        "Source_proxy_terminal": {
+          "seen": 1,
+          "connections": 0,
+          "invalid": []
+        },
+        "proxy_terminal": {
+          "seen": 1,
+          "connections": 0,
+          "invalid": []
+        }
+      },
+      "remaining": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "phases": {
+        "source": {
+          "observation_valid": true,
+          "outcome_kind": "HTTP_headers",
+          "HTTP_status": 429,
+          "transport_error": null,
+          "request_to_recorded_outcome_seconds": 4.010749486013083,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.000686696992489,
+            "overshoot_seconds": 0.000686696992488578,
+            "control_seconds": 2.0160247320018243
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.1000693060050253
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 175380.20884515,
+            "completed_monotonic": 175380.209116418,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "selected_metadata_nonnull_fields": 6,
+            "active_streams": "1",
+            "request_count": "2",
+            "full_hash_existence_not_directly_tested": true
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175376.209562593,
+                "completed_monotonic": 175376.209826351,
+                "atomic": false,
+                "provider": "2",
+                "stop": null,
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "1",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175379.30649712,
+                "completed_monotonic": 175379.30683667,
+                "atomic": false,
+                "provider": "2",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175380.206496713,
+                "completed_monotonic": 175380.206783671,
+                "atomic": false,
+                "provider": "2",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175380.2077753,
+                "completed_monotonic": 175380.208061688,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175381.709339989,
+                "completed_monotonic": 175381.709594597,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175383.209337714,
+                "completed_monotonic": 175383.209577301,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175386.209337102,
+                "completed_monotonic": 175386.209604569,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175395.20933681,
+                "completed_monotonic": 175395.209594757,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 175374.20016809,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175374.200237402
+            },
+            {
+              "role": "target",
+              "close_begin": 175380.209206321,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175380.209228671
+            },
+            {
+              "role": "follower",
+              "close_begin": 175380.209230611,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 16,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175380.209269452
+            },
+            {
+              "role": "other",
+              "close_begin": 175395.20970622,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 14,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175395.209766382
+            }
+          ],
+          "consumer_close_boundary": 175380.209270222,
+          "error_body_hex": "436f6e6e656374696f6e206c696d697420657863656564656420666f722070726f66696c65",
+          "error_body_bytes": 37,
+          "error_body_sha256": "9cc0a1518ead11b8d9f290b0b83b10c1201d593b8e7ca4bbd3c641d2515fda5d",
+          "other_global_after_close": 0,
+          "other_next_prefix": "1e5ff7cc43f1c07e665ad794635d3e2fe08f7d9ea648d6fecef559bb8776c213"
+        },
+        "native": {
+          "observation_valid": true,
+          "outcome_kind": "HTTP_headers",
+          "HTTP_status": 429,
+          "transport_error": null,
+          "request_to_recorded_outcome_seconds": 4.0866372950258665,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.000775946013164,
+            "overshoot_seconds": 0.0007759460131637752,
+            "control_seconds": 2.0135661060048733
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.1000703159952536
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 175407.147067494,
+            "completed_monotonic": 175407.147320932,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "selected_metadata_nonnull_fields": 6,
+            "active_streams": "1",
+            "request_count": "2",
+            "full_hash_existence_not_directly_tested": true
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175403.112910932,
+                "completed_monotonic": 175403.113239712,
+                "atomic": false,
+                "provider": "1",
+                "stop": null,
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "1",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175406.204587828,
+                "completed_monotonic": 175406.204853576,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175407.104589068,
+                "completed_monotonic": 175407.104952098,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175407.105821613,
+                "completed_monotonic": 175407.10606657,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175408.647593279,
+                "completed_monotonic": 175408.647854107,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175410.147572888,
+                "completed_monotonic": 175410.147855646,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175413.147585877,
+                "completed_monotonic": 175413.147869235,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175422.147576664,
+                "completed_monotonic": 175422.147859963,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 175403.045691958,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175403.045817121
+            },
+            {
+              "role": "target",
+              "close_begin": 175407.147409114,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175407.147433815
+            },
+            {
+              "role": "follower",
+              "close_begin": 175407.147435815,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 16,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175407.147500117
+            },
+            {
+              "role": "other",
+              "close_begin": 175422.148412528,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 14,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175422.148498311
+            }
+          ],
+          "consumer_close_boundary": 175407.147501017,
+          "error_body_hex": "436f6e6e656374696f6e206c696d697420657863656564656420666f722070726f66696c65",
+          "error_body_bytes": 37,
+          "error_body_sha256": "9cc0a1518ead11b8d9f290b0b83b10c1201d593b8e7ca4bbd3c641d2515fda5d",
+          "other_ownership_observation": {
+            "same_private_owner_ledger_identity": true,
+            "reserved": true,
+            "native_global_count": 1,
+            "full_Source_counter_parity_claimed": false
+          },
+          "other_global_after_close": 1,
+          "other_next_prefix": "1e5ff7cc43f1c07e665ad794635d3e2fe08f7d9ea648d6fecef559bb8776c213"
+        }
+      }
+    },
+    {
+      "case": "clientloss",
+      "passed": true,
+      "observation_valid": true,
+      "raw_parity_flag": true,
+      "scope_of_comparison": "status/errorbody forsuccess/busy; actual owned client close with no preclose HTTP outcome forclientloss",
+      "full_parity_accepted": false,
+      "Source_reference_expectation_matched": true,
+      "raw_report_sha256": "17c7ae1a10e53844fff9c0736d618aaf128e5a4a005b5fe9a77badd20f23e205",
+      "Source_signal_terminal_status": {
+        "invalid": [],
+        "rows": 6,
+        "bytes": 1047,
+        "maximum_rows": 256,
+        "maximum_bytes": 1048576
+      },
+      "Source_signal_terminal_coverage": {
+        "valid": true,
+        "started": 3,
+        "finished": 3,
+        "roles": [
+          "follower",
+          "initial",
+          "target"
+        ],
+        "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+      },
+      "default_named9tables_sequences_unchanged": true,
+      "proxy_terminal": {
+        "Source_proxy_terminal": {
+          "seen": 1,
+          "connections": 0,
+          "invalid": []
+        },
+        "proxy_terminal": {
+          "seen": 1,
+          "connections": 0,
+          "invalid": []
+        }
+      },
+      "remaining": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "phases": {
+        "source": {
+          "observation_valid": true,
+          "outcome_kind": "client_transport_error",
+          "HTTP_status": null,
+          "transport_error": "RemoteDisconnected",
+          "request_to_recorded_outcome_seconds": 2.0241477050003596,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.000726737984223,
+            "overshoot_seconds": 0.0007267379842232913,
+            "control_seconds": 2.0155051779875066
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.1000659549899865
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 175463.584821314,
+            "completed_monotonic": 175463.585163014,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "selected_metadata_nonnull_fields": 6,
+            "active_streams": "2",
+            "request_count": "2",
+            "full_hash_existence_not_directly_tested": true
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175461.571595362,
+                "completed_monotonic": 175461.5718631,
+                "atomic": false,
+                "provider": "1",
+                "stop": null,
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "1",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175464.669799253,
+                "completed_monotonic": 175464.670165474,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175465.569802498,
+                "completed_monotonic": 175465.570140157,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175465.571023242,
+                "completed_monotonic": 175465.57128178,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175467.071427464,
+                "completed_monotonic": 175467.071757923,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "3",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175468.571428723,
+                "completed_monotonic": 175468.571784963,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "0",
+                "request_count": "3",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175471.571434961,
+                "completed_monotonic": 175471.57172467,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175480.57142574,
+                "completed_monotonic": 175480.571704438,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 175459.554981682,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175459.555044064
+            },
+            {
+              "role": "target",
+              "close_begin": 175463.584721881,
+              "socket_observed": true,
+              "fd_before": 14,
+              "inode_before": 49940202,
+              "server_cancellation_inferred": false,
+              "local_shutdown": true,
+              "close_complete": 175463.584742772,
+              "fd_immediately_after_shutdown": 14,
+              "physical_close_pending_until_reader_join": true,
+              "fd_after": -1,
+              "reader_joined_monotonic": 175463.585234736,
+              "reader_joined": true,
+              "original_descriptor_identity_absent": true
+            },
+            {
+              "role": "follower",
+              "close_begin": 175465.57130744,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175465.571355412
+            }
+          ],
+          "consumer_close_boundary": 175465.571356732,
+          "target_client_loss": {
+            "role": "target",
+            "close_begin": 175463.584721881,
+            "socket_observed": true,
+            "fd_before": 14,
+            "inode_before": 49940202,
+            "server_cancellation_inferred": false,
+            "local_shutdown": true,
+            "close_complete": 175463.584742772,
+            "fd_immediately_after_shutdown": 14,
+            "physical_close_pending_until_reader_join": true,
+            "fd_after": -1,
+            "reader_joined_monotonic": 175463.585234736,
+            "reader_joined": true,
+            "original_descriptor_identity_absent": true
+          },
+          "client_loss_contract": {
+            "matched": true,
+            "scope": "owned consumer TCP shutdown/read-thread join before release; no server cancellation inference"
+          }
+        },
+        "native": {
+          "observation_valid": true,
+          "outcome_kind": "client_transport_error",
+          "HTTP_status": null,
+          "transport_error": "RemoteDisconnected",
+          "request_to_recorded_outcome_seconds": 2.018129867996322,
+          "hold": {
+            "target_seconds": 4,
+            "maximum_seconds": 4.35,
+            "actual_seconds": 4.000903662992641,
+            "overshoot_seconds": 0.0009036629926413298,
+            "control_seconds": 2.015201533999061
+          },
+          "checkpoint_3_1_timing": {
+            "offset_seconds": 3.1,
+            "actual_offset_seconds": 3.100308683991898
+          },
+          "target_state_at_outcome": {
+            "began_monotonic": 175487.620369243,
+            "completed_monotonic": 175487.620834176,
+            "atomic": false,
+            "provider": "1",
+            "stop": "true",
+            "selected_metadata_nonnull_fields": 6,
+            "active_streams": "2",
+            "request_count": "2",
+            "full_hash_existence_not_directly_tested": true
+          },
+          "checkpoints": [
+            {
+              "label": "actual_reply_held",
+              "target_headers_already_observed": false,
+              "state": {
+                "began_monotonic": 175485.613217759,
+                "completed_monotonic": 175485.613495507,
+                "atomic": false,
+                "provider": "1",
+                "stop": null,
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "1",
+                "request_count": "1",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "absolute_3_1s",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175488.706017578,
+                "completed_monotonic": 175488.709350234,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_before_release",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175489.605775193,
+                "completed_monotonic": 175489.606244076,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "immediately_after_release",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175489.607271386,
+                "completed_monotonic": 175489.607507423,
+                "atomic": false,
+                "provider": "1",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 6,
+                "active_streams": "2",
+                "request_count": "2",
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_1.5",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175491.107687174,
+                "completed_monotonic": 175491.107982972,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_3",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175492.607676579,
+                "completed_monotonic": 175492.607924956,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_6",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175495.60767735,
+                "completed_monotonic": 175495.607920337,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            },
+            {
+              "label": "post_close_15",
+              "target_headers_already_observed": true,
+              "state": {
+                "began_monotonic": 175504.607677536,
+                "completed_monotonic": 175504.607931383,
+                "atomic": false,
+                "provider": "0",
+                "stop": "true",
+                "selected_metadata_nonnull_fields": 0,
+                "active_streams": null,
+                "request_count": null,
+                "full_hash_existence_not_directly_tested": true
+              }
+            }
+          ],
+          "early_follower_valid": true,
+          "follower_status": 200,
+          "follower_prefix_bytes": 8192,
+          "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+          "client_closes": [
+            {
+              "role": "initial",
+              "close_begin": 175485.587109162,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 12,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175485.587167414
+            },
+            {
+              "role": "target",
+              "close_begin": 175487.620202998,
+              "socket_observed": true,
+              "fd_before": 14,
+              "inode_before": 49971554,
+              "server_cancellation_inferred": false,
+              "local_shutdown": true,
+              "close_complete": 175487.620252689,
+              "fd_immediately_after_shutdown": 14,
+              "physical_close_pending_until_reader_join": true,
+              "fd_after": -1,
+              "reader_joined_monotonic": 175487.620907148,
+              "reader_joined": true,
+              "original_descriptor_identity_absent": true
+            },
+            {
+              "role": "follower",
+              "close_begin": 175489.607536473,
+              "socket_observed": true,
+              "server_cancellation_inferred": false,
+              "fd_before": 15,
+              "local_shutdown": true,
+              "fd_after": -1,
+              "close_complete": 175489.607609026
+            }
+          ],
+          "consumer_close_boundary": 175489.607610726,
+          "target_client_loss": {
+            "role": "target",
+            "close_begin": 175487.620202998,
+            "socket_observed": true,
+            "fd_before": 14,
+            "inode_before": 49971554,
+            "server_cancellation_inferred": false,
+            "local_shutdown": true,
+            "close_complete": 175487.620252689,
+            "fd_immediately_after_shutdown": 14,
+            "physical_close_pending_until_reader_join": true,
+            "fd_after": -1,
+            "reader_joined_monotonic": 175487.620907148,
+            "reader_joined": true,
+            "original_descriptor_identity_absent": true
+          },
+          "client_loss_contract": {
+            "matched": true,
+            "scope": "owned consumer TCP shutdown/read-thread join before release; no server cancellation inference"
+          }
+        }
+      }
+    }
+  ]
+}
