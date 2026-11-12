@@ -1,0 +1,13 @@
+name: dispatcharr-rust-verification
+services:
+  verify:
+    build:
+      context: ..
+      dockerfile: rust/Dockerfile
+    network_mode: none
+    environment:
+      EVIDENCE_DIR: /evidence
+    volumes:
+      - ${RUST_EVIDENCE_DIR:-../artifacts/rust}:/evidence
+    # This image verifies the core; it does not serve the application's API.
+    command: ["sh", "scripts/rust-verify.sh"]

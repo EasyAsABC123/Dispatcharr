@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "scope": "Single exact committed Compose SDK core verification; no application/Main/Original execution or milestone/performance promotion",
+  "ref": "9175d2c56aff107174444e8518bc31700e756a6b",
+  "archive_sha256": "8a94494585c74aedb064c1c16e0231fec654e340429ccc87d2acbea4ced8c052",
+  "all_frozen_source_files": 6158,
+  "all_frozen_source_bytes_unchanged": true,
+  "all_verifier_selected_hashes_exact": 4939,
+  "runtime_Rust_map_parent_sha256": "a729127b8f57f261433152d958b60695fb9e25ce824b65678b614378ac6bc8c5",
+  "Rust": {
+    "passed": 578,
+    "failed": 0,
+    "ignored": 705,
+    "summaries": 183
+  },
+  "Python": {
+    "total": 317,
+    "passed": 316,
+    "skipped": 1,
+    "groups": {
+      "rust-perf": 15,
+      "inventory": 6,
+      "register-evidence": 277,
+      "source-links": 17,
+      "rust-parity": 2
+    },
+    "contract_subset_total": 300,
+    "contract_subset_passed": 299
+  },
+  "TS_helper_byte_parity_cases": 1806,
+  "helper_seed": 20261109,
+  "actual_SDK_host_process_exit": 0,
+  "actual_container_exit": 0,
+  "actual_die_event": {
+    "Type": "container",
+    "Action": "die",
+    "Actor": {
+      "ID": "232a0c6aee82bfddeca423c9591fd9f7443aeec0f2a14c995e879e5c13dec7ed",
+      "Attributes": {
+        "com.docker.compose.config-hash": "4ebeef30df0194e42db80a579bba798da71884c0d1aef6f346ea7983957fc9b3",
+        "com.docker.compose.container-number": "1",
+        "com.docker.compose.depends_on": "",
+        "com.docker.compose.image": "sha256:e3c96bf8d92cf51d62a294a8de968d4b77825d6f51a62bfc0562e8a88e4d915c",
+        "com.docker.compose.oneoff": "False",
+        "com.docker.compose.project": "dispatcharr-sdk-9175-2",
+        "com.docker.compose.project.config_files": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-qualified-1/source/docker/compose.rust.yml",
+        "com.docker.compose.project.working_dir": "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-qualified-1/source/docker",
+        "com.docker.compose.service": "verify",
+        "com.docker.compose.version": "2.40.3",
+        "execDuration": "608",
+        "exitCode": "0",
+        "image": "dispatcharr-sdk-9175-2-verify",
+        "name": "dispatcharr-sdk-9175-2-verify-1",
+        "org.opencontainers.image.source": "https://github.com/rust-lang/docker-rust"
+      }
+    },
+    "scope": "local",
+    "time": 1794499825,
+    "timeNano": 1794499825191611798
+  },
+  "actual_destroy_event_retained": true,
+  "image_id": "sha256:e3c96bf8d92cf51d62a294a8de968d4b77825d6f51a62bfc0562e8a88e4d915c",
+  "container_id": "232a0c6aee82bfddeca423c9591fd9f7443aeec0f2a14c995e879e5c13dec7ed",
+  "runtime_network_mode": "none",
+  "Cargo_target": "Dockerinternal /tmp/dispatcharr-target",
+  "actual_project_inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "exact_container_absent": true,
+  "actual_absence_diagnostic": "error: no such object: 232a0c6aee82bfddeca423c9591fd9f7443aeec0f2a14c995e879e5c13dec7ed\n",
+  "canonical_Git_untouched_by_dispatch": true,
+  "private_Git_HEAD_exact": "9175d2c56aff107174444e8518bc31700e756a6b",
+  "original_auxiliary_image_hash_result": false,
+  "separate_offline_COPY_proof": {
+    "passed": true,
+    "actual_COPIED_inputs": 1159,
+    "host_only_controls": 2,
+    "scope": "Original auxiliary false retained; all actual COPY hashes verified, exact two host controls separately bound. No rerun."
+  },
+  "review_attempt1_preserved": "Case-sensitive Docker absence diagnostic assumption; actual SDK inputs/execution/outcomes unchanged",
+  "no_retry": true,
+  "finished_unix": 1794500012.6612751,
+  "evidence_sha256": {
+    "compose.log": "56fb670782af1119724dc2b340cb45dbf84a56e0f8c8b9a570ded11b1649bf34",
+    "rustc.txt": "3397f54a03033c1b027496d83acc64e8f3ceeb4017e0575150f78726edce8a1a",
+    "stream-core-fanout.jsonl": "81996f3299fd9cbb2d42e6f9e74b40643553d442a578ad83bc5c790239383e15",
+    "ts-helper-comparison.json": "ff8f178df2d4e715b6ac8e78ff8bc4c3f28d7f83470780844dfb138c406f5484",
+    "verification.json": "68c60e78442cb98b77b4b61a2d4000ee40dacdc83715ce3411af50ee34d0be38"
+  },
+  "additional_evidence_sha256": {
+    "plan.json": "c4f15d3673a0f7086dd6de8d7e960748fb54460b0627b9c246c16d8792a3e588",
+    "SDK-copy-closure.json": "ce18a12be9acca631bd1b0ed021c5b12393afee0019363f19d2e1462a3e6f216",
+    "independent-image-copy-hashes.json": "c8f98052e8b7789453e623e4fd4e72661d785ac0e9f56b871b189054422232ab",
+    "offline-exact-COPY-proof.json": "c5a121c0b71cf4de4f3849d7231db4d43e52c705e079e1d56a3377a88768add9",
+    "independent-private-git-context.json": "d15c326f2ceeffe19731941110356d6e283731acca1656985cc56254c1ba47c5",
+    "independent-image-configuration.json": "fc9a61cf4fd0c5f5f6ac82ca1ee6c9c51da9cfb93c85e400c83e7a69c4d80b60",
+    "Docker-events.jsonl": "2ac4e70721c20cbc4c5679b91d007c0975588016b9f6e46072b7f1c66d02d685",
+    "actual-process-exit.json": "93e2f40d397d813614f2c893d5949b1936dc1b9ac8d675b99b96a11d71029b7f",
+    "all-source-inputs.json": "34f70578b37daada222eb273f6088481f78eaf8ce3f26485138e8c7b1b33d3ec",
+    "all-source-after.json": "34f70578b37daada222eb273f6088481f78eaf8ce3f26485138e8c7b1b33d3ec",
+    "independent-review-attempt1.json": "86f7dd38a856218b9e87b9b88ce6c9f9a18fed193264ce7410b378fbe8be214e"
+  }
+}

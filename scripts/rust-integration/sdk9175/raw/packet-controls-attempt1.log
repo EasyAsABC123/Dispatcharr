@@ -1,0 +1,257 @@
+EEEEEE.EEEEEE
+======================================================================
+ERROR: test_changed_Source (__main__.Controls.test_changed_Source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 14, in test_changed_Source
+    def test_changed_Source(self):self.reject('all-source-after.json',lambda v:v.update({'rust/Cargo.toml':'0'*64}))
+                                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp23akn40u/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_extra_missing_copied_file (__main__.Controls.test_extra_missing_copied_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 17, in test_extra_missing_copied_file
+    def test_extra_missing_copied_file(self):self.reject('independent-image-copy-hashes.json',lambda v:v['missing'].append('rust/Cargo.toml'))
+                                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpare1hkjb/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_false_success (__main__.Controls.test_false_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 13, in test_false_success
+    def test_false_success(self):self.reject('verification.json',lambda v:v.update(passed=False))
+                                 ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpqds9xjd2/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_host_Cargo_target (__main__.Controls.test_host_Cargo_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 20, in test_host_Cargo_target
+    def test_host_Cargo_target(self):self.reject('independent-image-configuration.json',lambda v:v.update(Cargo_target='/workspace/rust/target'))
+                                     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp_iyn5uc2/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_missing_copied_hash (__main__.Controls.test_missing_copied_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 15, in test_missing_copied_hash
+    def test_missing_copied_hash(self):self.reject('independent-image-copy-hashes.json',lambda v:v['files'].pop(next(iter(v['files']))))
+                                       ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp2bu330aa/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_nonzero_actual_process (__main__.Controls.test_nonzero_actual_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 12, in test_nonzero_actual_process
+    def test_nonzero_actual_process(self):self.reject('actual-process-exit.json',lambda v:v.update(returncode=1))
+                                          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp9jyve8bb/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_relabel_aux_false (__main__.Controls.test_relabel_aux_false)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 18, in test_relabel_aux_false
+    def test_relabel_aux_false(self):self.reject('independent-image-copy-hashes.json',lambda v:v.update(passed=True))
+                                     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp37hen_4q/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_unclean_project (__main__.Controls.test_unclean_project)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 21, in test_unclean_project
+    def test_unclean_project(self):self.reject('independent-review.json',lambda v:v['actual_project_inventories']['containers'].append('leftover'))
+                                   ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpfu2092w5/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_wrong_cleanup_exit (__main__.Controls.test_wrong_cleanup_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 22, in test_wrong_cleanup_exit
+    def test_wrong_cleanup_exit(self):self.reject('verification.json',lambda v:v.update(cleanup_exit_code=1))
+                                      ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpkllfr2dn/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_wrong_copied_hash (__main__.Controls.test_wrong_copied_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 16, in test_wrong_copied_hash
+    def test_wrong_copied_hash(self):self.reject('independent-image-copy-hashes.json',lambda v:v['files'].update({'rust/Cargo.toml':'0'*64}))
+                                     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpcho2x7sd/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_wrong_network (__main__.Controls.test_wrong_network)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 19, in test_wrong_network
+    def test_wrong_network(self):self.reject('independent-image-configuration.json',lambda v:v.update(runtime_network_mode='bridge'))
+                                 ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpf8pi1pye/executed-tools/freeze.py'
+
+======================================================================
+ERROR: test_wrong_ref (__main__.Controls.test_wrong_ref)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 11, in test_wrong_ref
+    def test_wrong_ref(self):self.reject('verification.json',lambda v:v.update(revision='0'*40))
+                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/test_packet.py", line 9, in reject
+    with self.assertRaises((AssertionError,ValueError,KeyError)):m.validate(root)
+                                                                 ~~~~~~~~~~^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/sdk-9175-public-handoff-1/selected/scripts/rust-integration/sdk9175/validate.py", line 13, in validate
+    path=root/name;data=path.read_bytes()
+                        ~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpld82m37t/executed-tools/freeze.py'
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.085s
+
+FAILED (errors=12)

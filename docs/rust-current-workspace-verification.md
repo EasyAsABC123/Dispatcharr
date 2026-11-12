@@ -1,9 +1,11 @@
 # Current workspace verification repair
 
-The original 20-test core Compose result remains valid historical evidence. The
-current check is separately source-bound in
+The original 20-test core Compose result remains valid historical evidence. That
+formatting repair is separately source-bound in
 [`verified-current-workspace-verification-1.json`](../scripts/rust-integration/verified-current-workspace-verification-1.json).
 Original Dispatcharr and dependency authors retain credit and licensing.
+
+The current [SDK9175 checkpoint](../scripts/rust-integration/sdk9175/README.md) passes on the combined791 Rust tree and117 partial HTTP Source assignments. Its full source and actual execution are separately bound; the older repair and checkpoints below retain their original scopes.
 
 A frozen qualified 779-input workspace was formatted with pinned Rust 1.90.0.
 Exactly 79 physical Rust files changed; independent formatting of a second copy
@@ -92,3 +94,9 @@ The immutable verification image is `sha256:47d19a1f0cca801cd22cb8b1ec61b079fbf3
 Committed98e447186af099dd17496539aec46312f6cf4f62 was exported into a clean5405-file Git snapshot and passed full SDK Docker Compose verification. Formatting, strict all-target Clippy and566 default Rust tests passed;703 fixture-dependent cases remained ignored in that default run. Portable Python ran259 cases:258 passed and the existing optional private-raw check skipped. Its242 core-contract cases cover the current95 partial HTTP/eight nonHTTP Source assignments. All5405 frozen files remained unchanged.
 
 The immutable verification image is `sha256:66a7600d43d033691313a8620b32a73f2dad284587cd6028e951999b5605a020`. Root checked its identity and independently empty project resources. [Verification, hashes and cleanup](../scripts/rust-integration/current-hash788/review.json) retain the exact snapshot. Runtime verification used network mode none. The separately executed component fixtures are documented with their own source/ELF bindings. Application packaging and numerical application performance remain separate gates; no prior image gain transfers to this result.
+
+## Combined791 SDK: 9175d2c5
+
+Committed9175d2c56aff107174444e8518bc31700e756a6b was archived into a clean6158-file snapshot with a private detached Git context. One standard Docker Compose SDK run passed578 Rust tests (705 fixture-dependent cases explicitly ignored) and316 of317 Python tests (one existing optional skip), including the300-case contract subset.1806 TS-helper cases are byte-exact. All4939 verifier-selected hashes and every archived source byte remained unchanged; the791 Rust dictionary matches the separately qualified union.
+
+The actual SDK image issha256:e3c96bf8d92cf51d62a294a8de968d4b77825d6f51a62bfc0562e8a88e4d915c. Network mode wasnone; actual die0/destroy events and independently empty project resources are retained. An auxiliary image checker initially included two host-only files; its negative remains unchanged beside a separate exact1159-COPY/2-host-input proof. A cleanup-review capitalization error is also preserved separately. No SDK rerun or source change occurred. Root independently verifies raw digests, Rust totals, exact Git reconstruction, image identity and cleanup;13 public corruption controls pass. [Raw evidence and reproduction](../scripts/rust-integration/sdk9175/README.md) distinguish SDK/component verification from Main, packaged application parity and performance. No old gain transfers.

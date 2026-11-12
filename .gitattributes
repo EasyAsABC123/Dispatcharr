@@ -55,3 +55,6 @@ scripts/rust-contracts/notifications-native/raw/native1-test.stdout -text whites
 
 # Preserve the exact combined VOD test stdout, including terminal blank lines.
 scripts/rust-vod-contracts/worker-identity/union791/logs/*.log -text whitespace=-blank-at-eof
+
+# Preserve exact Docker SDK execution output bytes.
+scripts/rust-integration/sdk9175/raw/compose.log -text -whitespace
