@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "scope": "Normal inert scanner-owned immediate-parented Refresh worker; actual Original scanner producer, actual native FileJob/metadata writer, actual Original Index/Series consumers and AsyncResult. No Main/default intake/poller/fullscanner/performance claim.",
+  "source_file_count": 782,
+  "source_manifest_sha256": "2c148f65b48ce81714bb2466d3034618a2084e7296e9fc5cabbb3817adb6c0e5",
+  "base": "779 on committed772 5afbb78ee8be031474b41278479fcdf623f2ddce; five selected delta paths, three new modules",
+  "private_elf_sha256": "979b006b4e147250bf25fe204fbb4567efb7dcfc26c5136cd28916cec5d99ea4",
+  "portable_elf_sha256": "95cb64cc5577ce8d60379a540a304f1e4353a2bc65215196a453284ba92dfa3e",
+  "actual_gates": {
+    "private": "150 checks /2 functional +3 physical, all real descendants consumed",
+    "portable": "150 checks /2 functional +3 physical, aggregate exit0/native verified",
+    "physical": [
+      "real successful-parent metadata reply before ACK",
+      "actual CAS pop reply before execution",
+      "actual committed-result reply"
+    ],
+    "refusals": [
+      "existing Refresh intake retains real parented frame",
+      "foreign scanner scope retains frame",
+      "parent metadata without child receipt retains frame"
+    ],
+    "source_comparison": [
+      "exact event payload/order",
+      "exact final index data",
+      "exact stable source fields",
+      "typed native null/parent/children/result TTL through actual Original AsyncResult"
+    ]
+  },
+  "whole_workspace": {
+    "strict_all_targets": true,
+    "non_test_lib_bins": true,
+    "defaults_passed": 562,
+    "ignored": 702,
+    "reported_suites": 182,
+    "source_rechecked_unchanged": true
+  },
+  "portable_controls": {
+    "reconstruct": 13,
+    "builder": 5,
+    "aggregate": 9
+  },
+  "ack_authority": {
+    "Source4_and_private150": "Instant-prerun own reservation absent in those captured observations only; no universal physical ACK-before-prerun guarantee",
+    "counterexample": "portable-native-1 Original Index task was still reserved at task_prerun despite acks_late=false; preserved failed run",
+    "code": "pinned Celery Request.on_accepted performs ACK in parent pool accept callback; Billiard workloop sends acceptance before task function, not a universal Redis-ACK barrier",
+    "held_witness": "6 assertions, actual owned FIFO Index handler, 26 observations over .2559s; ACK completes while real file read blocked and before result, then SUCCESS/index/lease release",
+    "future_observer": "Records instant prerun reservation states diagnostically; native CAS/physical gates unchanged"
+  },
+  "remaining": [
+    "M3U groups/single consumers unported; Source six-case corpus exists",
+    "Parent-scope constructor is trusted scanner assembly authority; result metadata alone is not task-family authentication",
+    "Unlisted repeated-ID/new children, failed-parent/orphan children, ETA, foreign sources and unknown shapes refused before ACK",
+    "No global Celery prefetch/reservation protocol or automatic worker restart authority",
+    "No new lost-reply/server-denial/whole-application claim; operational outcomes remain errors",
+    "No mapped Channel in programme case: one EPGData row/index, zero ProgramData; no guide claim"
+  ],
+  "retained_failures": [
+    "Source attempt1 wrong model observer field before publication",
+    "Source attempt2 wrong passive routing-field assertion after first chain completed",
+    "Native attempt1 host JSON marker-prefix parser before task execution",
+    "Portable attempt1 actual Original instant-prerun reservation counterexample",
+    "Static Billiard inspector referenced nonexistent ResultHandler member, corrected read-only inspector"
+  ],
+  "authors": "Original Dispatcharr, Celery, Billiard, Kombu, Django, Redis and Channels authors retain application/algorithm and licensing credit"
+}

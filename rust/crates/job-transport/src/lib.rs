@@ -163,3 +163,8 @@ pub mod scanner_files_worker;
 
 #[cfg(test)]
 mod scanner_files_resources;
+
+pub mod scanner_refresh;
+
+#[cfg(test)]
+mod scanner_refresh_peer;

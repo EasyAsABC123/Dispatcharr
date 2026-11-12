@@ -1,0 +1,291 @@
+{
+  "passed": true,
+  "native_verified": false,
+  "scope": "Actual pinned Source Index handler held in owned FIFO file I/O; no native claim.\nParent/root apply_async options are explicit fixture controls, not a scanner-parent\npublication claim. Original Dispatcharr/Celery/Billiard authors retain credit.\n",
+  "checks": [
+    {
+      "name": "actual-parented-default-queue-envelope",
+      "passed": true
+    },
+    {
+      "name": "actual-handler-read-holds-original-file-lease",
+      "passed": true
+    },
+    {
+      "name": "Source-ACK-completes-during-held-actual-handler-before-result",
+      "passed": true
+    },
+    {
+      "name": "real-handler-completes-after-owned-file-release",
+      "passed": true
+    },
+    {
+      "name": "known-parent-and-result-TTL",
+      "passed": true
+    },
+    {
+      "name": "actual-index-bytes-and-final-queue-drain",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "original-parented-index-held-file-read",
+      "task_id": "642c1749-d848-4cc7-a709-a50a02b3eced",
+      "parent_id": "95475fc9-cbb5-4b49-bb49-e1d00eb3e12f",
+      "envelope": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "642c1749-d848-4cc7-a709-a50a02b3eced",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "95475fc9-cbb5-4b49-bb49-e1d00eb3e12f",
+          "parent_id": "95475fc9-cbb5-4b49-bb49-e1d00eb3e12f",
+          "argsrepr": "[1]",
+          "kwargsrepr": "{}",
+          "origin": "gen360@13d44a6adb94",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "642c1749-d848-4cc7-a709-a50a02b3eced",
+          "reply_to": "2278f2de-6d68-35a6-8772-0126f43c6f86",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "bca6f1eb-5e02-4525-9492-cade1d1eedbc"
+        }
+      },
+      "prerun": {
+        "task": "apps.epg.tasks.build_programme_index_task",
+        "id": "642c1749-d848-4cc7-a709-a50a02b3eced",
+        "root_id": "95475fc9-cbb5-4b49-bb49-e1d00eb3e12f",
+        "parent_id": "95475fc9-cbb5-4b49-bb49-e1d00eb3e12f",
+        "args": [
+          1
+        ],
+        "kwargs": {},
+        "uid": 0,
+        "attrs": {
+          "acks_late": false,
+          "ignore_result": false,
+          "track_started": false,
+          "time_limit": null,
+          "soft_time_limit": null,
+          "max_retries": 3,
+          "reject_on_worker_lost": null
+        },
+        "unacked_tags": [],
+        "unacked_task_ids": [],
+        "queue_length": 0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 6.954200216569006e-05,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.010316303989384323,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.020561646000714973,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.03083680898998864,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.041085290984483436,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.051320472004590556,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.06154812398017384,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.07183236698620021,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.08207355899503455,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.09230202998151071,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.10252804198535159,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.11276148300385103,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.12299758498556912,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.13322309599607252,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.14345347799826413,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.15366959900711663,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.16388815999380313,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.17411336197983474,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.18433696299325675,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.19456533397897147,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.20480447600129992,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.21502677799435332,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.22526023900718428,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.2354874309967272,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.24570966200553812,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        },
+        {
+          "elapsed_seconds": 0.25593171300715767,
+          "own_task_unacked": false,
+          "backend_present": false,
+          "file_lock_present": true
+        }
+      ],
+      "postrun": {
+        "task": "apps.epg.tasks.build_programme_index_task",
+        "id": "642c1749-d848-4cc7-a709-a50a02b3eced",
+        "state": "SUCCESS",
+        "result": null
+      },
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-12T04:58:27.471283+00:00",
+        "parent_id": "95475fc9-cbb5-4b49-bb49-e1d00eb3e12f",
+        "task_id": "642c1749-d848-4cc7-a709-a50a02b3eced"
+      },
+      "ttl": 3600,
+      "index": {
+        "channels": {
+          "owned.channel": [
+            4
+          ]
+        },
+        "interleaved_channels": []
+      }
+    }
+  ],
+  "predeclared": {
+    "real_fifo_handler_io": true,
+    "ack_deadline_seconds": 5,
+    "minimum_before_release_seconds": 0.25,
+    "task_deadline_seconds": 30,
+    "instant_prerun_reservation_is_diagnostic_only": true
+  }
+}
