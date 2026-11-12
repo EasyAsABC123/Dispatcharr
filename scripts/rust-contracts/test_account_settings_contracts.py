@@ -32,6 +32,11 @@ class AccountSettingsControls(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        import provider_output_contracts
+        for name in provider_output_contracts.dependencies():
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         self.value = copy.deepcopy(ORIGINAL)
 
     def reject(self, mutate):
@@ -43,7 +48,7 @@ class AccountSettingsControls(unittest.TestCase):
         before = json.loads((self.root / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
         after = copy.deepcopy(before)
         result = source_contracts.apply_non_HTTP(self.root, after)
-        self.assertEqual(result['candidates'], 7)
+        self.assertEqual(result['candidates'], 8)
         self.assertEqual(before, after)
         self.assertEqual(len(after), 250)
         self.assertTrue(all(not item['fully_verified'] for item in after))

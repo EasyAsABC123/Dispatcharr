@@ -120,6 +120,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'pinned_original_dvr_import_tests':
             import dvr_import_contracts
             dvr_import_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'pinned_original_provider_output_consumer_tests':
+            import provider_output_contracts
+            provider_output_contracts.validate(root, value, bindings)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
@@ -137,7 +140,7 @@ def apply(root, rows, bindings):
             operation['executable_Source_contract'] = copy.deepcopy(contract)
             operation['role_matrix']['observed_fixture_definitions'] = copy.deepcopy(contract['source_role_specs'])
             operation['role_matrix']['complete'] = False
-            if reference['kind'] in ['pinned_original_framework_tests', 'pinned_original_account_settings_tests', 'pinned_original_channel_guide_tests', 'pinned_original_dvr_import_tests']:
+            if reference['kind'] in ['pinned_original_framework_tests', 'pinned_original_account_settings_tests', 'pinned_original_channel_guide_tests', 'pinned_original_dvr_import_tests', 'pinned_original_provider_output_consumer_tests']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_test_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'
@@ -147,23 +150,27 @@ def apply(root, rows, bindings):
 
 
 def apply_non_HTTP(root, entries):
-    """Only reviewed exact model/task candidates; no arbitrary importer."""
+    """Only reviewed exact model/task/consumer candidates; no arbitrary importer."""
     root = Path(root)
     manifest = json.loads((root / 'scripts/rust-contracts/executable-source-inputs.json').read_text())
     index = {entry['candidate_id']: entry for entry in entries}
     seen = set()
     for reference in manifest['inputs']:
-        if reference['kind'] not in ['pinned_original_account_settings_tests', 'captured_original_scanner_task_observations']:
+        if reference['kind'] not in ['pinned_original_account_settings_tests', 'captured_original_scanner_task_observations', 'pinned_original_provider_output_consumer_tests']:
             continue
         value = checked(root, reference)
         if reference['kind'] == 'pinned_original_account_settings_tests':
             import account_settings_contracts
             account_settings_contracts.validate(root, value)
             source_kind = 'model_candidate'
-        else:
+        elif reference['kind'] == 'captured_original_scanner_task_observations':
             import scanner_task_contracts
             scanner_task_contracts.validate(root, value)
             source_kind = 'task_candidate'
+        else:
+            import provider_output_contracts
+            provider_output_contracts.validate(root, value)
+            source_kind = 'websocket_consumer_candidate'
         for contract in value['non_HTTP_contracts']:
             identifier = contract['candidate_id']
             assert identifier not in seen, 'conflicting nonHTTP Source inputs'
@@ -172,12 +179,13 @@ def apply_non_HTTP(root, entries):
             assert entry['source'] == contract['source'], 'exact nonHTTP source identity'
             assert entry['source']['kind'] == source_kind
             assert entry['fully_verified'] is False and contract['fully_verified'] is False
-            entry['setup_fixture'] = (copy.deepcopy(value['fixtures'][contract['fixture_id']]) if source_kind == 'model_candidate'
+            entry['setup_fixture'] = (copy.deepcopy(value['fixtures'][contract['fixture_id']]) if source_kind in ['model_candidate', 'websocket_consumer_candidate']
                                       else {key: copy.deepcopy(value['fixtures'][key]) for key in contract['fixture_ids']})
             entry['assertions'] = copy.deepcopy(contract['assertions'])
             entry['result'] = copy.deepcopy(contract['result'])
             entry['executable_Source_contract'] = copy.deepcopy(contract)
             entry['state'] = ('partial_executable_Original_model_tests' if source_kind == 'model_candidate'
-                              else 'partial_executable_Original_task_observations')
-    return {'state': 'typed partial Original model/task assertions, not HTTP or Native verification',
+                              else 'partial_executable_Original_task_observations' if source_kind == 'task_candidate'
+                              else 'partial_executable_Original_synthetic_consumer_method_tests')
+    return {'state': 'typed partial Original model/task/synthetic-consumer assertions, not HTTP or Native verification',
             'candidates': len(seen), 'fully_verified_added': 0}

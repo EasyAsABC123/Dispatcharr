@@ -1,0 +1,246 @@
+{
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "full_log_sha256": "5ce7a671b204e8b1a444e2edbf51313363aaf385989e8268eee011ea1612ad35",
+  "full_log_bytes": 881752,
+  "new_Source_executions": 0,
+  "cases": {
+    "apps.m3u.tests.test_account_custom_action_permissions.M3UAccountCustomActionPermissionTests.test_admin_can_call_custom_actions": {
+      "framework_log_block": "test_admin_can_call_custom_actions (apps.m3u.tests.test_account_custom_action_permissions.M3UAccountCustomActionPermissionTests.test_admin_can_call_custom_actions) ... ok\n",
+      "framework_log_block_sha256": "5bd35a40e791a92d79ce12c8068f1e5829679d88d4715a464a49e510dd7bf644",
+      "full_log_byte_start": 302871,
+      "full_log_byte_end": 303042,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_custom_action_permissions.M3UAccountCustomActionPermissionTests.test_standard_user_denied_custom_actions": {
+      "framework_log_block": "test_standard_user_denied_custom_actions (apps.m3u.tests.test_account_custom_action_permissions.M3UAccountCustomActionPermissionTests.test_standard_user_denied_custom_actions) ... 2026-11-09 07:40:44,768 WARNING django.request Forbidden: /api/m3u/accounts/71/group-settings/\n2026-11-09 07:40:44,768 WARNING django.request Forbidden: /api/m3u/accounts/71/repack-group/\n2026-11-09 07:40:44,769 WARNING django.request Forbidden: /api/m3u/accounts/71/refresh-vod/\nok\n",
+      "framework_log_block_sha256": "b4ede6c6130f9f01dcb38a2aaeeee030a53d8876934cff060d5016d805ca3728",
+      "full_log_byte_start": 303042,
+      "full_log_byte_end": 303505,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_custom_action_permissions.M3UAccountCustomActionPermissionTests.test_streamer_denied_custom_actions": {
+      "framework_log_block": "test_streamer_denied_custom_actions (apps.m3u.tests.test_account_custom_action_permissions.M3UAccountCustomActionPermissionTests.test_streamer_denied_custom_actions) ... 2026-11-09 07:40:44,776 WARNING django.request Forbidden: /api/m3u/accounts/72/group-settings/\n2026-11-09 07:40:44,776 WARNING django.request Forbidden: /api/m3u/accounts/72/repack-group/\n2026-11-09 07:40:44,777 WARNING django.request Forbidden: /api/m3u/accounts/72/refresh-vod/\n2026-11-09 07:40:44,777 WARNING django.request Forbidden: /api/m3u/accounts/72/auto-created-channels-count/\nok\n",
+      "framework_log_block_sha256": "bf73b3a799aaef0e445640c79b2428c206212980fabf5aad261891e0c0b35ccf",
+      "full_log_byte_start": 303505,
+      "full_log_byte_end": 304066,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_cascade_deletes_auto_created_channels": {
+      "framework_log_block": "test_cascade_deletes_auto_created_channels (apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_cascade_deletes_auto_created_channels) ... ok\n",
+      "framework_log_block_sha256": "79ddf830ab63a32e25fd69c8730cbdbff746b147ae9f577ac1ee90d7c117befe",
+      "full_log_byte_start": 304066,
+      "full_log_byte_end": 304220,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_legacy_cleanup_channels_param_is_ignored": {
+      "framework_log_block": "test_legacy_cleanup_channels_param_is_ignored (apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_legacy_cleanup_channels_param_is_ignored) ... ok\n",
+      "framework_log_block_sha256": "293fb34a85510377ebf679e424705bdf9d22ce4d64773b975ff7be23b3308767",
+      "full_log_byte_start": 304220,
+      "full_log_byte_end": 304380,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_locked_account_cannot_be_deleted": {
+      "framework_log_block": "test_locked_account_cannot_be_deleted (apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_locked_account_cannot_be_deleted) ... 2026-11-09 07:40:44,868 WARNING django.request Bad Request: /api/m3u/accounts/1/\nok\n",
+      "framework_log_block_sha256": "ac18648e49160bc3fb63cfb718de004fda0116953948d2ec8441b0c6820267d3",
+      "full_log_byte_start": 304380,
+      "full_log_byte_end": 304605,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_locked_account_cannot_be_put": {
+      "framework_log_block": "test_locked_account_cannot_be_put (apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_locked_account_cannot_be_put) ... 2026-11-09 07:40:44,883 WARNING django.request Bad Request: /api/m3u/accounts/1/\nok\n",
+      "framework_log_block_sha256": "204d2e802c9aec4a75dab48706e17b38a9b25622b924bc79e23a2c4c9143ad3f",
+      "full_log_byte_start": 304605,
+      "full_log_byte_end": 304822,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_locked_account_cannot_be_updated": {
+      "framework_log_block": "test_locked_account_cannot_be_updated (apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_locked_account_cannot_be_updated) ... 2026-11-09 07:40:44,898 WARNING django.request Bad Request: /api/m3u/accounts/1/\nok\n",
+      "framework_log_block_sha256": "81cb4b5dc1792505effbcfb763724b6308aa822649d2bc80d31cefe3d983dc57",
+      "full_log_byte_start": 304822,
+      "full_log_byte_end": 305047,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_manual_channel_survives_with_other_provider_streams": {
+      "framework_log_block": "test_manual_channel_survives_with_other_provider_streams (apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_manual_channel_survives_with_other_provider_streams) ... ok\n",
+      "framework_log_block_sha256": "ae3a1af26a90581bf7315bec5e5df7eeaa5c7fb5563c0b4662e279d146a1679f",
+      "full_log_byte_start": 305047,
+      "full_log_byte_end": 305229,
+      "historical_result": "ok"
+    },
+    "apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_no_op_when_account_has_no_auto_created_channels": {
+      "framework_log_block": "test_no_op_when_account_has_no_auto_created_channels (apps.m3u.tests.test_account_destroy.M3UAccountDestroyTests.test_no_op_when_account_has_no_auto_created_channels) ... ok\n",
+      "framework_log_block_sha256": "5cd7c7e634d856a8bf696e76b273f7514fabf207d80eaa5b4154e0871a452d28",
+      "full_log_byte_start": 305229,
+      "full_log_byte_end": 305403,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.GenerateM3URadioAttributeTests.test_override_false_wins_over_radio_channel": {
+      "framework_log_block": "test_override_false_wins_over_radio_channel (apps.output.tests.test_views.GenerateM3URadioAttributeTests.test_override_false_wins_over_radio_channel) ... ok\n",
+      "framework_log_block_sha256": "971eb348605e0ca6c24ab0d84ff1484c0c8f86a2f226cd3c9ce4a6766ddd2e3d",
+      "full_log_byte_start": 378047,
+      "full_log_byte_end": 378204,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.GenerateM3URadioAttributeTests.test_override_true_wins_over_tv_channel": {
+      "framework_log_block": "test_override_true_wins_over_tv_channel (apps.output.tests.test_views.GenerateM3URadioAttributeTests.test_override_true_wins_over_tv_channel) ... ok\n",
+      "framework_log_block_sha256": "8222c905542e9e89d2025a5043f0dd4ed6a0fee26bc9a8aec2f2dd978b166d82",
+      "full_log_byte_start": 378204,
+      "full_log_byte_end": 378353,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.GenerateM3URadioAttributeTests.test_radio_channel_gets_radio_attribute": {
+      "framework_log_block": "test_radio_channel_gets_radio_attribute (apps.output.tests.test_views.GenerateM3URadioAttributeTests.test_radio_channel_gets_radio_attribute) ... ok\n",
+      "framework_log_block_sha256": "1f99a0caa1cc81a0821008dd6b8d13914262614a04480fb4bb6814614431b02f",
+      "full_log_byte_start": 378353,
+      "full_log_byte_end": 378502,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.GenerateM3URadioAttributeTests.test_tv_channel_omits_radio_attribute": {
+      "framework_log_block": "test_tv_channel_omits_radio_attribute (apps.output.tests.test_views.GenerateM3URadioAttributeTests.test_tv_channel_omits_radio_attribute) ... ok\n",
+      "framework_log_block_sha256": "00815bd988aaf99e3b3079b675cf6566b05f859d1f840a7dc1abd865ef9eec49",
+      "full_log_byte_start": 378502,
+      "full_log_byte_end": 378647,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_channel_id_with_all_special_chars": {
+      "framework_log_block": "test_channel_id_with_all_special_chars (apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_channel_id_with_all_special_chars)\nTest channel ID with all XML special characters ... ok\n",
+      "framework_log_block_sha256": "a59b8e90f3c92a39dbcab63d8c8908926d9f76f1968ae71ce4a325bc28f36b0f",
+      "full_log_byte_start": 378647,
+      "full_log_byte_end": 378836,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_channel_id_with_ampersand": {
+      "framework_log_block": "test_channel_id_with_ampersand (apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_channel_id_with_ampersand)\nTest channel ID with ampersand is properly escaped ... ok\n",
+      "framework_log_block_sha256": "e633d9114382adf3ea048b82cee817c09131c861b0f613ac282d018e6470873d",
+      "full_log_byte_start": 378836,
+      "full_log_byte_end": 379012,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_channel_id_with_angle_brackets": {
+      "framework_log_block": "test_channel_id_with_angle_brackets (apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_channel_id_with_angle_brackets)\nTest channel ID with < and > characters ... ok\n",
+      "framework_log_block_sha256": "413fe9847af367049a7f146d3c49267f465d619e176c25bddc30e677b217f977",
+      "full_log_byte_start": 379012,
+      "full_log_byte_end": 379187,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_override_epg_change_invalidates_xmltv_chunk_cache": {
+      "framework_log_block": "test_override_epg_change_invalidates_xmltv_chunk_cache (apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_override_epg_change_invalidates_xmltv_chunk_cache)\nXC reads live ProgramData; XMLTV is chunk-cached. Changing the ... ok\n",
+      "framework_log_block_sha256": "7e2998efb591222f2bb9c52763766945b087b543e458ed3796388d11543b0342",
+      "full_log_byte_start": 379187,
+      "full_log_byte_end": 379423,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_paged_export_emits_every_programme_once_in_order": {
+      "framework_log_block": "test_paged_export_emits_every_programme_once_in_order (apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_paged_export_emits_every_programme_once_in_order)\nPaging by (epg_id, end_time, id) keeps rows with equal end times intact. ... ok\n",
+      "framework_log_block_sha256": "5d60b62dd31e9681d37b5763f68b5e3d91b7dd69aa094e858efe3cb1ed105b90",
+      "full_log_byte_start": 379423,
+      "full_log_byte_end": 379667,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_program_channel_attribute_escaping": {
+      "framework_log_block": "test_program_channel_attribute_escaping (apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_program_channel_attribute_escaping)\nTest that programme elements also have escaped channel attributes ... ok\n",
+      "framework_log_block_sha256": "92d339e4189e9c52a50ab2f131b46341164452a40347258544b76a686a9d7fad",
+      "full_log_byte_start": 379667,
+      "full_log_byte_end": 379876,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_programmes_emitted_in_start_time_order": {
+      "framework_log_block": "test_programmes_emitted_in_start_time_order (apps.output.tests.test_views.OutputEPGXMLEscapingTest.test_programmes_emitted_in_start_time_order)\nProgrammes for a channel are emitted in start_time order, not insert order. ... ok\n",
+      "framework_log_block_sha256": "28417a282cb60de71785b7c967312f40b2102a36d1dd6eca66f15eed26cabf33",
+      "full_log_byte_start": 379876,
+      "full_log_byte_end": 380103,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputM3UTest.test_generate_m3u_response": {
+      "framework_log_block": "test_generate_m3u_response (apps.output.tests.test_views.OutputM3UTest.test_generate_m3u_response)\nTest that the M3U endpoint returns a valid M3U file. ... ok\n",
+      "framework_log_block_sha256": "426568b3db82d10271dc500f974e6c68a3f19f686ead9032fce38359d205b79a",
+      "full_log_byte_start": 380103,
+      "full_log_byte_end": 380262,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputM3UTest.test_generate_m3u_response_post_empty_body": {
+      "framework_log_block": "test_generate_m3u_response_post_empty_body (apps.output.tests.test_views.OutputM3UTest.test_generate_m3u_response_post_empty_body)\nTest that a POST request with an empty body returns 200 OK. ... ok\n",
+      "framework_log_block_sha256": "e3633cd6fd3f56934c24d34d043333c149e8cbd711ea712c9b4699c502d1b5fe",
+      "full_log_byte_start": 380262,
+      "full_log_byte_end": 380460,
+      "historical_result": "ok"
+    },
+    "apps.output.tests.test_views.OutputM3UTest.test_generate_m3u_response_post_with_body": {
+      "framework_log_block": "test_generate_m3u_response_post_with_body (apps.output.tests.test_views.OutputM3UTest.test_generate_m3u_response_post_with_body)\nTest that a POST request with a non-empty body returns 403 Forbidden. ... 2026-11-09 07:40:59,255 WARNING django.request Forbidden: /output/m3u/m3u-286133cb\nok\n",
+      "framework_log_block_sha256": "0c7517d8357401773d398db7ff579878949bea096b80224165ea3ef2214433bd",
+      "full_log_byte_start": 380460,
+      "full_log_byte_end": 380749,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_catastrophic_regex_returns_quickly": {
+      "framework_log_block": "test_m3u_profile_test_catastrophic_regex_returns_quickly (tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_catastrophic_regex_returns_quickly)\nAlternation+star ReDoS must time out instead of blocking Daphne. ... 2026-11-09 07:41:27,459 ERROR dispatcharr.consumers Failed to generate replace preview: regex timed out\n2026-11-09 07:41:27,560 ERROR live_proxy.url_utils Error transforming URL: regex timed out\nok\n",
+      "framework_log_block_sha256": "8b2fe3ddb0d7fcda56aadd1be7c7b173284775368163fcb5392d23a096dd849e",
+      "full_log_byte_start": 829017,
+      "full_log_byte_end": 829472,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_ignored_for_standard_user": {
+      "framework_log_block": "test_m3u_profile_test_ignored_for_standard_user (tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_ignored_for_standard_user) ... ok\n",
+      "framework_log_block_sha256": "43d672cc1f6d7a27177251bce984ebb88eeab40ea92f43a515179e8e32f3a850",
+      "full_log_byte_start": 829472,
+      "full_log_byte_end": 829649,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_normal_rewrite_still_works": {
+      "framework_log_block": "test_m3u_profile_test_normal_rewrite_still_works (tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_normal_rewrite_still_works) ... ok\n",
+      "framework_log_block_sha256": "763637e3834bb5c07f87fa91a797ebe3118985e667101392425e528cb75f8173",
+      "full_log_byte_start": 829649,
+      "full_log_byte_end": 829828,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_passes_timeout_to_preview_sub": {
+      "framework_log_block": "test_m3u_profile_test_passes_timeout_to_preview_sub (tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_passes_timeout_to_preview_sub) ... ok\n",
+      "framework_log_block_sha256": "ca1248e3c72c3e6097582cee8002d94b988fec5ebd968697274e585285ec3441",
+      "full_log_byte_start": 829828,
+      "full_log_byte_end": 830013,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_rejects_oversized_fields": {
+      "framework_log_block": "test_m3u_profile_test_rejects_oversized_fields (tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_rejects_oversized_fields)\nOversized url/search/replace must not reach regex.sub or transform. ... ok\n",
+      "framework_log_block_sha256": "738e011b99c44bcaa89e5d05cf478f88acf1f21dfdc6b991bef3f0ab14645caa",
+      "full_log_byte_start": 830013,
+      "full_log_byte_end": 830256,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_runs_for_admin": {
+      "framework_log_block": "test_m3u_profile_test_runs_for_admin (tests.test_websocket_consumer_filter.ConsumerM3UProfileTestReceiveTests.test_m3u_profile_test_runs_for_admin) ... ok\n",
+      "framework_log_block_sha256": "4a56e41005277fdd7109f8aabfbfb99010d3cd2aac1737a81fb33f847d20466a",
+      "full_log_byte_start": 830256,
+      "full_log_byte_end": 830411,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerUpdateFilteringTests.test_update_drops_admin_only_notification_for_standard_user": {
+      "framework_log_block": "test_update_drops_admin_only_notification_for_standard_user (tests.test_websocket_consumer_filter.ConsumerUpdateFilteringTests.test_update_drops_admin_only_notification_for_standard_user) ... ok\n",
+      "framework_log_block_sha256": "3a8d451b4939e94a3fbfcca507dc93eb15bf9ef8e0ac2d97017591a43d4c79e8",
+      "full_log_byte_start": 830411,
+      "full_log_byte_end": 830606,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerUpdateFilteringTests.test_update_drops_channel_stats_for_standard_user": {
+      "framework_log_block": "test_update_drops_channel_stats_for_standard_user (tests.test_websocket_consumer_filter.ConsumerUpdateFilteringTests.test_update_drops_channel_stats_for_standard_user) ... ok\n",
+      "framework_log_block_sha256": "83b51287721e146071c40c91d1a10fa360790adc388b7704f967190af341f7f6",
+      "full_log_byte_start": 830606,
+      "full_log_byte_end": 830781,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerUpdateFilteringTests.test_update_forwards_channel_stats_for_admin": {
+      "framework_log_block": "test_update_forwards_channel_stats_for_admin (tests.test_websocket_consumer_filter.ConsumerUpdateFilteringTests.test_update_forwards_channel_stats_for_admin) ... ok\n",
+      "framework_log_block_sha256": "e14e0b3d1c0557614636220b78cd5ed59f784bce8857b4b0bcebbeebcf8be7d7",
+      "full_log_byte_start": 830781,
+      "full_log_byte_end": 830946,
+      "historical_result": "ok"
+    },
+    "tests.test_websocket_consumer_filter.ConsumerUpdateFilteringTests.test_update_forwards_non_sensitive_for_standard_user": {
+      "framework_log_block": "test_update_forwards_non_sensitive_for_standard_user (tests.test_websocket_consumer_filter.ConsumerUpdateFilteringTests.test_update_forwards_non_sensitive_for_standard_user) ... ok\n",
+      "framework_log_block_sha256": "231da20dddcf182ca0db3cc0ee994927791ba1a6d8acafc7c70fd4bbbb8635f4",
+      "full_log_byte_start": 830946,
+      "full_log_byte_end": 831127,
+      "historical_result": "ok"
+    }
+  }
+}

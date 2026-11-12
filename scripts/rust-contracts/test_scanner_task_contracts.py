@@ -84,7 +84,7 @@ class ScannerTaskControls(unittest.TestCase):
         before = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
         after = copy.deepcopy(before)
         result = source_contracts.apply_non_HTTP(ROOT, after)
-        self.assertEqual(result['candidates'], 7)
+        self.assertEqual(result['candidates'], 8)
         self.assertEqual(before, after)
         self.assertEqual(len(after), 250)
         self.assertTrue(all(not r['fully_verified'] for r in after))
