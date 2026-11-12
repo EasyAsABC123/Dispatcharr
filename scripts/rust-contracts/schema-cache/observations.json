@@ -1,0 +1,62 @@
+{
+  "state": "retained_pinned_Original_schema_cache_tests",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "full_suite_reference_sha256": "494e9945c39e94c2c05301efed9bba3ba89b5da3b60eb55142f2c701729091c6",
+  "full_suite_log_sha256": "5ce7a671b204e8b1a444e2edbf51313363aaf385989e8268eee011ea1612ad35",
+  "full_suite_tests_passed": 3362,
+  "Original_files_sha256": {
+    "tests/test_openapi_schema.py": "b653b53c0319b0f184225a3d030d7f97698b5c99dbdfc07ffd24ceae289db495",
+    "apps/api/schema_views.py": "f6c9b86a70f542d82aea28ef20ec7ab3970d501c0be85d7879e4c7bcd0cf0df4",
+    "apps/api/urls.py": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6"
+  },
+  "class_AST_sha256": "faa360c2ff48e85fd594b477c238160aae0c8d47adc6ab4139854fe95aca45cf",
+  "observations": [
+    {
+      "test_id": "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_schema_cache_is_reused",
+      "success_log_line": "test_schema_cache_is_reused (tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_schema_cache_is_reused) ... ok",
+      "method_ast_sha256": "1be2e3aae349cbb51912c2d4b4547ffd5470c412cadccbdd373329922cde2714",
+      "assertion_ASTs": [
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertEqual', ctx=Load()), args=[Subscript(value=Name(id='calls', ctx=Load()), slice=Constant(value='n'), ctx=Load()), Constant(value=1)])",
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertEqual', ctx=Load()), args=[Attribute(value=Name(id='response', ctx=Load()), attr='status_code', ctx=Load()), Constant(value=200)])"
+      ],
+      "transport": "Django RequestFactory direct view",
+      "schema_generator_mocked": true,
+      "cache_backend": "LocMemCache",
+      "Native_or_TCP_acceptance": false
+    },
+    {
+      "test_id": "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_clear_schema_cache_forces_rebuild",
+      "success_log_line": "test_clear_schema_cache_forces_rebuild (tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_clear_schema_cache_forces_rebuild) ... ok",
+      "method_ast_sha256": "c0d0a85e53217f7739f6fdb17d994f6b18326d6c14a64ef9230d4e8d09965df6",
+      "assertion_ASTs": [
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertEqual', ctx=Load()), args=[Subscript(value=Name(id='calls', ctx=Load()), slice=Constant(value='n'), ctx=Load()), Constant(value=2)])",
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertEqual', ctx=Load()), args=[Attribute(value=Call(func=Name(id='view', ctx=Load()), args=[Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='factory', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='/api/schema/')])]), attr='status_code', ctx=Load()), Constant(value=200)])",
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertEqual', ctx=Load()), args=[Attribute(value=Call(func=Name(id='view', ctx=Load()), args=[Call(func=Attribute(value=Attribute(value=Name(id='self', ctx=Load()), attr='factory', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='/api/schema/')])]), attr='status_code', ctx=Load()), Constant(value=200)])"
+      ],
+      "transport": "Django RequestFactory direct view",
+      "schema_generator_mocked": true,
+      "cache_backend": "LocMemCache",
+      "Native_or_TCP_acceptance": false
+    },
+    {
+      "test_id": "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_concurrent_first_load_uses_single_build",
+      "success_log_line": "test_concurrent_first_load_uses_single_build (tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_concurrent_first_load_uses_single_build) ... ok",
+      "method_ast_sha256": "d5cbfd1e1a99945ff2c287602c4c0512232edc6fb93018061ddf403c9f5453bf",
+      "assertion_ASTs": [
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertEqual', ctx=Load()), args=[Name(id='call_count', ctx=Load()), Constant(value=1)])",
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertEqual', ctx=Load()), args=[Name(id='max_in_flight', ctx=Load()), Constant(value=1)])",
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertTrue', ctx=Load()), args=[Call(func=Name(id='all', ctx=Load()), args=[GeneratorExp(elt=Compare(left=Call(func=Attribute(value=Name(id='r', ctx=Load()), attr='get', ctx=Load()), args=[Constant(value='openapi')]), ops=[Eq()], comparators=[Constant(value='3.0.3')]), generators=[comprehension(target=Name(id='r', ctx=Store()), iter=Name(id='results', ctx=Load()), is_async=0)])])])",
+        "Call(func=Attribute(value=Name(id='self', ctx=Load()), attr='assertEqual', ctx=Load()), args=[Attribute(value=Name(id='response', ctx=Load()), attr='status_code', ctx=Load()), Constant(value=200)])"
+      ],
+      "transport": "Django RequestFactory direct view",
+      "schema_generator_mocked": true,
+      "cache_backend": "LocMemCache",
+      "Native_or_TCP_acceptance": false
+    }
+  ],
+  "proposed_contract_id": "route-926efc2599602af7af63:METHOD_UNRESOLVED",
+  "method_declaration_remains_unresolved": true,
+  "new_source_runs": 0,
+  "complete_schema_or_role_matrix_claimed": false,
+  "credit": "Original Dispatcharr and dependency authors retain full application/algorithm/license credit."
+}

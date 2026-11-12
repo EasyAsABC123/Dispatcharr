@@ -1,0 +1,80 @@
+{
+  "format_version": 1,
+  "binding_kind": "pinned_original_schema_cache_tests",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "scope": "One partial Source schema-cache framework-test assignment; not Native, real schema, TCP or milestone acceptance",
+  "credit": "Original Dispatcharr and dependency authors retain all application/algorithm/license credit.",
+  "operation_count": 1,
+  "fully_verified_added": 0,
+  "Native_coverage_increased": false,
+  "fixtures": {
+    "Original-schema-cache3": {
+      "id": "Original-schema-cache3",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "roles": {
+        "anonymous": null
+      },
+      "setup": [
+        "Use pinned Original source and unchanged baseline test runner in a new disposable environment",
+        "Preserve SimpleTestCase, RequestFactory, LocMemCache override, counting/slow generators and threaded assertions",
+        "Run exact selected test labels; retain actual exits and clean up only owned resources"
+      ],
+      "execution": {
+        "entrypoint": "scripts/rust-baseline/run.py",
+        "argv": [
+          "--output",
+          "<fresh-empty-output>",
+          "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_schema_cache_is_reused",
+          "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_clear_schema_cache_forces_rebuild",
+          "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_concurrent_first_load_uses_single_build"
+        ],
+        "fresh_live_replay_qualified_this_task": false
+      },
+      "retained_full_suite_reference": "scripts/rust-contracts/framework-auth/full-suite-reference.json",
+      "observations": "scripts/rust-contracts/schema-cache/observations.json",
+      "no_Swagger_Redoc_alias_or_real_schema_generation_claim": true
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-926efc2599602af7af63:METHOD_UNRESOLVED",
+      "pattern_exact": "api/schema/",
+      "source_handler": "apps.api.schema_views.LockedSpectacularAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M0",
+      "fixture_id": "Original-schema-cache3",
+      "assertions": [
+        "Execute the three exact unmodified named Original tests with original class setup, teardown, helpers and mocks",
+        "Retain exact whole-workflow assertion ASTs: cached generator reuse, explicit invalidation and eight-thread single-flight with mocked schema generation and LocMemCache",
+        "RequestFactory direct-view anonymous requests are not real TCP, full OpenAPI schema generation, Redis/multi-process cache or complete role coverage",
+        "Keep METHOD_UNRESOLVED and all existing route identities; no Native result or milestone acceptance is inferred"
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "transport": "Django RequestFactory direct view",
+          "schema_generator_mocked": true,
+          "authorization_backend_equivalence_claimed": false
+        }
+      },
+      "source_test_methods": [
+        "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_schema_cache_is_reused",
+        "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_clear_schema_cache_forces_rebuild",
+        "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_concurrent_first_load_uses_single_build"
+      ],
+      "result": {
+        "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+        "methods": 3,
+        "new_Source_runs": 0,
+        "new_Source_cases_this_task": 0,
+        "Native_or_TCP_acceptance": false,
+        "complete_role_matrix": false
+      }
+    }
+  ],
+  "non_HTTP_contracts": []
+}

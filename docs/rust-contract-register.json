@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "dc65fd05c73fb8512fa498ed9c7c6e17a55784cfefdb6869282b52c4ef1e76b9",
+    "scripts/rust-contracts/executable-source-inputs.json": "07c87ddd466d2d590ee48b08c21f83f05416085d0634fab251fe5ea75f8527f2",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -20,11 +20,12 @@
     "scripts/rust-contracts/admin-rest/bindings.json": "65cfff20af62799f99b5c1c90c46a838b8e286e55848b8bfc0ade5cd124ed192",
     "scripts/rust-contracts/proxy-plugin/bindings.json": "0696cc54bd3aeee53dfc058358b52f67bad8b3244ec38c0067607ed8e5407f2c",
     "scripts/rust-contracts/notification-source-bindings.json": "6ed240f9cbb97e1ba29b5895bc56c170af2c593e27a7ee4aa056f8dd0d2d1e16",
-    "scripts/rust-contracts/notification-mutation-bindings.json": "1f249987370590687e7e53fd968e8bf380ffad234e39a8ab7cf7d441b9d213c4"
+    "scripts/rust-contracts/notification-mutation-bindings.json": "1f249987370590687e7e53fd968e8bf380ffad234e39a8ab7cf7d441b9d213c4",
+    "scripts/rust-contracts/schema-cache/bindings.json": "4aad9d445c30bdec179be818b8cf362c92bfb47df9a1b1c564d5c8b137f5048e"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 120,
+    "operations": 121,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -80,6 +81,11 @@
         "path": "scripts/rust-contracts/notification-mutation-bindings.json",
         "sha256": "1f249987370590687e7e53fd968e8bf380ffad234e39a8ab7cf7d441b9d213c4",
         "kind": "retained_original_notification_mutations_Source48_framework_capture"
+      },
+      {
+        "path": "scripts/rust-contracts/schema-cache/bindings.json",
+        "sha256": "4aad9d445c30bdec179be818b8cf362c92bfb47df9a1b1c564d5c8b137f5048e",
+        "kind": "pinned_original_schema_cache_tests"
       }
     ],
     "fully_verified_added": 0
@@ -181623,15 +181629,102 @@
           "owning_milestone": "M0",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_framework_test_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "transport": "Django RequestFactory direct view",
+                "schema_generator_mocked": true,
+                "authorization_backend_equivalence_claimed": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-schema-cache3",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "roles": {
+              "anonymous": null
+            },
+            "setup": [
+              "Use pinned Original source and unchanged baseline test runner in a new disposable environment",
+              "Preserve SimpleTestCase, RequestFactory, LocMemCache override, counting/slow generators and threaded assertions",
+              "Run exact selected test labels; retain actual exits and clean up only owned resources"
+            ],
+            "execution": {
+              "entrypoint": "scripts/rust-baseline/run.py",
+              "argv": [
+                "--output",
+                "<fresh-empty-output>",
+                "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_schema_cache_is_reused",
+                "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_clear_schema_cache_forces_rebuild",
+                "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_concurrent_first_load_uses_single_build"
+              ],
+              "fresh_live_replay_qualified_this_task": false
+            },
+            "retained_full_suite_reference": "scripts/rust-contracts/framework-auth/full-suite-reference.json",
+            "observations": "scripts/rust-contracts/schema-cache/observations.json",
+            "no_Swagger_Redoc_alias_or_real_schema_generation_claim": true
+          },
+          "assertions": [
+            "Execute the three exact unmodified named Original tests with original class setup, teardown, helpers and mocks",
+            "Retain exact whole-workflow assertion ASTs: cached generator reuse, explicit invalidation and eight-thread single-flight with mocked schema generation and LocMemCache",
+            "RequestFactory direct-view anonymous requests are not real TCP, full OpenAPI schema generation, Redis/multi-process cache or complete role coverage",
+            "Keep METHOD_UNRESOLVED and all existing route identities; no Native result or milestone acceptance is inferred"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+            "methods": 3,
+            "new_Source_runs": 0,
+            "new_Source_cases_this_task": 0,
+            "Native_or_TCP_acceptance": false,
+            "complete_role_matrix": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-926efc2599602af7af63:METHOD_UNRESOLVED",
+            "pattern_exact": "api/schema/",
+            "source_handler": "apps.api.schema_views.LockedSpectacularAPIView",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M0",
+            "fixture_id": "Original-schema-cache3",
+            "assertions": [
+              "Execute the three exact unmodified named Original tests with original class setup, teardown, helpers and mocks",
+              "Retain exact whole-workflow assertion ASTs: cached generator reuse, explicit invalidation and eight-thread single-flight with mocked schema generation and LocMemCache",
+              "RequestFactory direct-view anonymous requests are not real TCP, full OpenAPI schema generation, Redis/multi-process cache or complete role coverage",
+              "Keep METHOD_UNRESOLVED and all existing route identities; no Native result or milestone acceptance is inferred"
+            ],
+            "observed_roles": [
+              "anonymous"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "transport": "Django RequestFactory direct view",
+                "schema_generator_mocked": true,
+                "authorization_backend_equivalence_claimed": false
+              }
+            },
+            "source_test_methods": [
+              "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_schema_cache_is_reused",
+              "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_clear_schema_cache_forces_rebuild",
+              "tests.test_openapi_schema.LockedSpectacularAPIViewTests.test_concurrent_first_load_uses_single_build"
+            ],
+            "result": {
+              "state": "selected_named_Original_tests_passed_in_retained_full3362_suite",
+              "methods": 3,
+              "new_Source_runs": 0,
+              "new_Source_cases_this_task": 0,
+              "Native_or_TCP_acceptance": false,
+              "complete_role_matrix": false
+            }
+          }
         }
       ]
     },
