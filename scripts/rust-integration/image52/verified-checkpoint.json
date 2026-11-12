@@ -1,0 +1,1062 @@
+{
+  "scope": "Selected image52 functional package checkpoint; no resource measurements or full milestone acceptance",
+  "required_nodes": 28,
+  "actual_attempts": 29,
+  "exit_zero_attempts": 28,
+  "preserved_nonzero_attempts": 1,
+  "candidate": {
+    "git_revision": "98e447186af099dd17496539aec46312f6cf4f62",
+    "manifest_sha256": "6b5ab542dfc6cda4f9a2187d1669f06ccd007ee7f43a1359e7812ff353afa549",
+    "image_id": "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+    "source_tree_sha256": "ca3c42acb72734330a103d192f65f84a1e59044540f5abaa74e4faaa1e548bcc",
+    "source_archive_sha256": "b019ead2a4d897ece19e0e1ce12703397dc91181ebf6112983ec9d25190fbf04",
+    "all_application_inputs": 1285,
+    "exact_qualified_Rust_inputs": 788,
+    "all_frontend_and_LICENSE_inputs_exact_Original": true,
+    "runtime_UID": 65532,
+    "runtime_LICENSE_and_ATTRIBUTION_hashes_exact": true
+  },
+  "support_revision": "416e1cd0020e158864851c549a1570affd3f195c",
+  "support_archive_sha256": "6605979ec54f153eb448055429be9d15aff726950168b40246474b701d7d91b1",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "plan_original": {
+    "retained_path": "artifacts/rust/image52-package-plan-rendered-1/plan.json",
+    "sha256": "2d4513a36887be2aeb5aee08a6d8304cfa257d69090c56401d24953f40fb5aae",
+    "bytes": 19196
+  },
+  "supplementary_plan_original": {
+    "retained_path": "artifacts/rust/image52-package-plan-rendered-1/supplementary-nodes.json",
+    "sha256": "c35790d57402638b29dd242e24cebf2e5111109463a0ed8ec8f4365394f078f1",
+    "bytes": 1170
+  },
+  "attempts": [
+    {
+      "name": "baseline-all",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/baseline-all.result.json",
+        "sha256": "a92947209182497dfc35fa370c5836db3e42bd3b4bb9a20af232a161438e35b3",
+        "bytes": 852
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/baseline-all/node-review.json",
+        "sha256": "e8cf36727f7cc1067854ef37e0e54dab88594a7109ee9b56be815b881a186ac9",
+        "bytes": 1214
+      },
+      "review": "reviews/baseline-all.json",
+      "review_sha256": "e8cf36727f7cc1067854ef37e0e54dab88594a7109ee9b56be815b881a186ac9",
+      "required_node": "baseline-all",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480622.9110925,
+      "completed_epoch": 1794481004.8152084,
+      "controller_payload": "controller-results/baseline-all.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/baseline-all",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--contract-suites",
+        "all"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "proxy-auth",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/proxy-auth.result.json",
+        "sha256": "756a0be05d64bad58a56ff8d2302d3ac8e13c31220ce71223c717ac9d9a36d51",
+        "bytes": 884
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/proxy-auth.json",
+        "sha256": "4d58b431918ed2d90205db304bc9490caea746fd13cbdda8189b686e73420a41",
+        "bytes": 737
+      },
+      "review": "reviews/proxy-auth.json",
+      "review_sha256": "4d58b431918ed2d90205db304bc9490caea746fd13cbdda8189b686e73420a41",
+      "required_node": "proxy-auth",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480628.292759,
+      "completed_epoch": 1794480659.070394,
+      "controller_payload": "controller-results/proxy-auth.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/proxy-auth",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--contract-suites",
+        "proxy_auth",
+        "--trusted-proxy-fixture"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "auth-hash",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/auth-hash.result.json",
+        "sha256": "9914c7d05fc46a3211877f1d1a1d94ad2dc8e3a0f2c646586d311a2f21dc0764",
+        "bytes": 882
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/auth-hash.json",
+        "sha256": "3d4c585314d8f63810aa7d176b73d47aefa4d4a63286284a5fdb64da549b7d68",
+        "bytes": 1002
+      },
+      "review": "reviews/auth-hash.json",
+      "review_sha256": "3d4c585314d8f63810aa7d176b73d47aefa4d4a63286284a5fdb64da549b7d68",
+      "required_node": "auth-hash",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480636.4074817,
+      "completed_epoch": 1794480708.727041,
+      "controller_payload": "controller-results/auth-hash.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/auth-hash",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--contract-suites",
+        "auth_hash",
+        "--trusted-proxy-fixture"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "live-react-stats",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/live-react-stats.result.json",
+        "sha256": "edf6d74e7e7673fff4161ecfcf46f175385701641dca5be77bed7c1917c5fe2f",
+        "bytes": 711
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/live-react-stats/node-review.json",
+        "sha256": "6b04a980c3e1f2cb0fc1e75746c0d99338d161cb2718c98c6145214e8d03051a",
+        "bytes": 1191
+      },
+      "review": "reviews/live-react-stats.json",
+      "review_sha256": "6b04a980c3e1f2cb0fc1e75746c0d99338d161cb2718c98c6145214e8d03051a",
+      "required_node": "live-react-stats",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481035.5994565,
+      "completed_epoch": 1794481082.6110647,
+      "controller_payload": "controller-results/live-react-stats.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-live-browser/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/live-react-stats",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "user-agent",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/user-agent.result.json",
+        "sha256": "5ddc2ae51164c508dd1d394067b77801bcc99e36f91c497b9066f8ca066d19f4",
+        "bytes": 728
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/user-agent.json",
+        "sha256": "ba227ac4f7d1e903ee9519708744fd6545c8b176389767cdbac2ad37faf30a21",
+        "bytes": 732
+      },
+      "review": "reviews/user-agent.json",
+      "review_sha256": "ba227ac4f7d1e903ee9519708744fd6545c8b176389767cdbac2ad37faf30a21",
+      "required_node": "user-agent",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480691.455109,
+      "completed_epoch": 1794480716.9930902,
+      "controller_payload": "controller-results/user-agent.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/run_user_agent_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/user-agent",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "output-profile",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/output-profile.result.json",
+        "sha256": "373b26ea07074a11237d5e4f67200275dce04688f36fb390ac1c9ede2657ccc3",
+        "bytes": 739
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/output-profile.json",
+        "sha256": "1f5bdf229314c09ba732d5af5727f78c42bc615c9fd60e6c48995f2c62b4e9a3",
+        "bytes": 1120
+      },
+      "review": "reviews/output-profile.json",
+      "review_sha256": "1f5bdf229314c09ba732d5af5727f78c42bc615c9fd60e6c48995f2c62b4e9a3",
+      "required_node": "output-profile",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480798.58077,
+      "completed_epoch": 1794480830.1798208,
+      "controller_payload": "controller-results/output-profile.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/run_output_profile_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/output-profile",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "profile-restart",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/profile-restart.result.json",
+        "sha256": "e0f08ebadd83024929adff8db72a2cd952bb8bfac02c63d3bf85330023621f3e",
+        "bytes": 766
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/profile-restart/node-review.json",
+        "sha256": "79034eecf81bdae338a05cdce343b824a7c17890ecb0a93e4172b286b72defb7",
+        "bytes": 1239
+      },
+      "review": "reviews/profile-restart.json",
+      "review_sha256": "79034eecf81bdae338a05cdce343b824a7c17890ecb0a93e4172b286b72defb7",
+      "required_node": "profile-restart",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481112.9630198,
+      "completed_epoch": 1794481140.1330779,
+      "controller_payload": "controller-results/profile-restart.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/run_output_profile_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/profile-restart",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--redis-restart"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "guide-grid-packaged",
+      "kind": "packaged-functional",
+      "actual_returncode": 1,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/guide-grid-packaged.result.json",
+        "sha256": "d9a958aa5fcea438be69db9279bf2e6d4d7e5f7de4a72ae905851150059754e5",
+        "bytes": 860
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/guide-grid-packaged.json",
+        "sha256": "9bb3427dc0bf4350c6501b91eab657d2614dd84c37e3fc90f1db544702183daf",
+        "bytes": 1079
+      },
+      "review": "reviews/guide-grid-packaged.json",
+      "review_sha256": "9bb3427dc0bf4350c6501b91eab657d2614dd84c37e3fc90f1db544702183daf",
+      "required_node": "guide-grid-packaged",
+      "qualification": "preserved_clock_guard_failure",
+      "started_epoch": 1794480750.972438,
+      "completed_epoch": 1794480777.5172966,
+      "controller_payload": "controller-results/guide-grid-packaged.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/guide-grid-packaged",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--candidate-grid-wire"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "current-packaged",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/current-packaged.result.json",
+        "sha256": "d5129a706a361c3cf7b586d6db306fd57871469c224685bc28264f2d0961f56a",
+        "bytes": 853
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/current-packaged.json",
+        "sha256": "54664899486d4c13d9994a9cd2e476b11f67a2bc5dae946a365acff85d9c6b7d",
+        "bytes": 1101
+      },
+      "review": "reviews/current-packaged.json",
+      "review_sha256": "54664899486d4c13d9994a9cd2e476b11f67a2bc5dae946a365acff85d9c6b7d",
+      "required_node": "current-packaged",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480909.6456258,
+      "completed_epoch": 1794480939.2755241,
+      "controller_payload": "controller-results/current-packaged.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/current-packaged",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--candidate-current"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "m4-functional",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/m4-functional.result.json",
+        "sha256": "5d823bfc03b14ad7c03a3dad850dd13fe3e8409fefdf64d43edc01ade2779103",
+        "bytes": 710
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/m4-functional/node-review.json",
+        "sha256": "94240d684b31899a2063997230b5593c1148f1a1718df50e9474872a58b4c83e",
+        "bytes": 1725
+      },
+      "review": "reviews/m4-functional.json",
+      "review_sha256": "94240d684b31899a2063997230b5593c1148f1a1718df50e9474872a58b4c83e",
+      "required_node": "m4-functional",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481178.7597165,
+      "completed_epoch": 1794481326.7253475,
+      "controller_payload": "controller-results/m4-functional.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-m4-perf/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/m4-functional",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "clean-install",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/clean-install.result.json",
+        "sha256": "9d33f72bd29cab13d8085202455b574205df43f248da4d5885c224552f9a5332",
+        "bytes": 728
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/clean-install.json",
+        "sha256": "a5fb34dd932005a9d8ea1ee67f3b585eaadfd8ca8c63b5179e759b1e28fe826f",
+        "bytes": 880
+      },
+      "review": "reviews/clean-install.json",
+      "review_sha256": "a5fb34dd932005a9d8ea1ee67f3b585eaadfd8ca8c63b5179e759b1e28fe826f",
+      "required_node": "clean-install",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480809.4906325,
+      "completed_epoch": 1794480828.4419758,
+      "controller_payload": "controller-results/clean-install.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/run_clean_install.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/clean-install",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "category-browser",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/category-browser.result.json",
+        "sha256": "8ea2d78b3a6202286f18c0a27f4d9277f094188f145bce56d4527169875e501d",
+        "bytes": 826
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/category-browser.json",
+        "sha256": "3395c126af25b7247a2e06a2fb2211a74a2a88b6603dcec98f568b0d2108476d",
+        "bytes": 1940
+      },
+      "review": "reviews/category-browser.json",
+      "review_sha256": "3395c126af25b7247a2e06a2fb2211a74a2a88b6603dcec98f568b0d2108476d",
+      "required_node": "category-browser",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481017.8107522,
+      "completed_epoch": 1794481064.535532,
+      "controller_payload": "controller-results/category-browser.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/category-browser",
+        "--mode",
+        "http",
+        "--packaged-categories",
+        "--category-closed-gaps",
+        "--category-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "unified-HTML-browser",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/unified-HTML-browser.result.json",
+        "sha256": "900bd3ccc980474e0a672c5045f2cc6c8c17590ca6f281b6abc470ee8f442d8b",
+        "bytes": 923
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/unified-HTML-browser/node-review.json",
+        "sha256": "e13ec061e26235ef3eed0cb6b7e787b390528e00138f3780e09fbf6c51c9b476",
+        "bytes": 1346
+      },
+      "review": "reviews/unified-HTML-browser.json",
+      "review_sha256": "e13ec061e26235ef3eed0cb6b7e787b390528e00138f3780e09fbf6c51c9b476",
+      "required_node": "unified-HTML-browser",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481359.800313,
+      "completed_epoch": 1794481510.5922604,
+      "controller_payload": "controller-results/unified-HTML-browser.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/unified-HTML-browser",
+        "--mode",
+        "http",
+        "--packaged-unified",
+        "--packaged-html",
+        "--unified-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "complete-refresh-original",
+      "kind": "fresh-Original-prerequisite",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/complete-refresh-original.result.json",
+        "sha256": "4c7d73eb99a8b631d8fb79c88508e9c33020b626f329656d24e48f17f30f7607",
+        "bytes": 616
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/complete-refresh-original/node-review.json",
+        "sha256": "3e672ff9a84e4e4fc47d9a61d77fdd73ebe52522f05ef51e559092f7761d01fc",
+        "bytes": 1183
+      },
+      "review": "reviews/complete-refresh-original.json",
+      "review_sha256": "3e672ff9a84e4e4fc47d9a61d77fdd73ebe52522f05ef51e559092f7761d01fc",
+      "required_node": "complete-refresh-original",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480330.364566,
+      "completed_epoch": 1794480363.9498866,
+      "controller_payload": "controller-results/complete-refresh-original.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-job-contracts/run_refresh_workflow.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/complete-refresh-original"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "complete-refresh",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/complete-refresh.result.json",
+        "sha256": "a7ecb560d6e59212cb327559316a1d22165c234d3726528b1018c562e3c37fb8",
+        "bytes": 847
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/complete-refresh/node-review.json",
+        "sha256": "947386e8df3c7e5319bc195e76cdee2e43c2de62847a0dda42b04738a73f92b9",
+        "bytes": 1426
+      },
+      "review": "reviews/complete-refresh.json",
+      "review_sha256": "947386e8df3c7e5319bc195e76cdee2e43c2de62847a0dda42b04738a73f92b9",
+      "required_node": "complete-refresh",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480501.914118,
+      "completed_epoch": 1794480530.5230007,
+      "controller_payload": "controller-results/complete-refresh.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-job-contracts/run_refresh_workflow.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/complete-refresh",
+        "--manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--reference",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/complete-refresh-original"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": [
+        "complete-refresh-original"
+      ]
+    },
+    {
+      "name": "static-Chrome-HTML-browser",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/static-Chrome-HTML-browser.result.json",
+        "sha256": "9589947b34871083a706bd46e3be9dd785bdd7f5945f3877ee538fc96eac75d0",
+        "bytes": 860
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/static-Chrome-HTML-browser.json",
+        "sha256": "ae7b75cfb9f240897bbe628f4404216083b25fee457fdb4b1ff4252509591adb",
+        "bytes": 1412
+      },
+      "review": "reviews/static-Chrome-HTML-browser.json",
+      "review_sha256": "ae7b75cfb9f240897bbe628f4404216083b25fee457fdb4b1ff4252509591adb",
+      "required_node": "static-Chrome-HTML-browser",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480855.448181,
+      "completed_epoch": 1794481118.9855533,
+      "controller_payload": "controller-results/static-Chrome-HTML-browser.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/static-Chrome-HTML-browser",
+        "--mode",
+        "http",
+        "--packaged-unified",
+        "--packaged-html",
+        "--packaged-static",
+        "--unified-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "packaged-provider-actions",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/packaged-provider-actions.result.json",
+        "sha256": "c3183bf1de129d83643624b1d2c577bdd483813557ef06fced76e719a34fb795",
+        "bytes": 821
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/packaged-provider-actions.json",
+        "sha256": "310268b51fc2c1a627904fb139880dbece8ea64b3c503df77c48615497e6a25a",
+        "bytes": 1195
+      },
+      "review": "reviews/packaged-provider-actions.json",
+      "review_sha256": "310268b51fc2c1a627904fb139880dbece8ea64b3c503df77c48615497e6a25a",
+      "required_node": "packaged-provider-actions",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481219.1189356,
+      "completed_epoch": 1794481255.3355656,
+      "controller_payload": "controller-results/packaged-provider-actions.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-vod-api-contracts/run_provider_actions_packaged.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/packaged-provider-actions",
+        "--mode",
+        "http",
+        "--packaged-provider-actions",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "packaged-cached-provider-info",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/packaged-cached-provider-info.result.json",
+        "sha256": "a02542c588bc40b706bb963227d3d986922761641f262bb6a4492be6960ec425",
+        "bytes": 919
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/packaged-cached-provider-info/node-review.json",
+        "sha256": "07602248ee73df2992e75b408c0919eaa213937ee37b1a14305e5dc4aacb58c4",
+        "bytes": 1180
+      },
+      "review": "reviews/packaged-cached-provider-info.json",
+      "review_sha256": "07602248ee73df2992e75b408c0919eaa213937ee37b1a14305e5dc4aacb58c4",
+      "required_node": "packaged-cached-provider-info",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481546.4748557,
+      "completed_epoch": 1794481577.8245087,
+      "controller_payload": "controller-results/packaged-cached-provider-info.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-vod-api-contracts/run_packaged_cached_info.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/packaged-cached-provider-info",
+        "--mode",
+        "http",
+        "--packaged-cached-info",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "channel-logos",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/channel-logos.result.json",
+        "sha256": "6e84403ee8d46ca6ce4cfe77d266785b5aedfdb55ded2e6ea88474f977cd186b",
+        "bytes": 729
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/channel-logos.json",
+        "sha256": "f02dd8e01403063a7afa867de0cb7b423994670843d914d1dd554e5cb3690e85",
+        "bytes": 717
+      },
+      "review": "reviews/channel-logos.json",
+      "review_sha256": "f02dd8e01403063a7afa867de0cb7b423994670843d914d1dd554e5cb3690e85",
+      "required_node": "channel-logos",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481157.6696086,
+      "completed_epoch": 1794481223.0450046,
+      "controller_payload": "controller-results/channel-logos.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/run_logo_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/channel-logos",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "packaged-vod-images",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/packaged-vod-images.result.json",
+        "sha256": "24cb9619df924758cdff0e2a309987f8ace38b61b78e48cdc3566d5cc43e39c1",
+        "bytes": 897
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/packaged-vod-images.json",
+        "sha256": "eaf3e988729c810d51b168cf2dd1354ae5854376bfbd8bcc71ccdd83babd9baa",
+        "bytes": 1343
+      },
+      "review": "reviews/packaged-vod-images.json",
+      "review_sha256": "eaf3e988729c810d51b168cf2dd1354ae5854376bfbd8bcc71ccdd83babd9baa",
+      "required_node": "packaged-vod-images",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481345.7276618,
+      "completed_epoch": 1794481383.1396086,
+      "controller_payload": "controller-results/packaged-vod-images.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-vod-api-contracts/run_packaged_vod_images.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/packaged-vod-images",
+        "--mode",
+        "http",
+        "--packaged-vod-images",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "provider-modal-browser",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/provider-modal-browser.result.json",
+        "sha256": "94e585051c352c44b1dcc5b9dcddad3e53264ba34a87c01082a773902e71a59b",
+        "bytes": 850
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/provider-modal-browser.json",
+        "sha256": "c7221486b16b376635f85b086467b4dd70450032177a2c070123fd1c372d4f85",
+        "bytes": 1550
+      },
+      "review": "reviews/provider-modal-browser.json",
+      "review_sha256": "c7221486b16b376635f85b086467b4dd70450032177a2c070123fd1c372d4f85",
+      "required_node": "provider-modal-browser",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481642.4157667,
+      "completed_epoch": 1794481671.742571,
+      "controller_payload": "controller-results/provider-modal-browser.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-vod-api-contracts/run_provider_modal_browser.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/provider-modal-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "fresh-Original17capture",
+      "kind": "CLI-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/fresh-Original17capture.result.json",
+        "sha256": "7ff8ee6e80f0918c0438c73362fabcde07ca131ab288c9ee12ca413218bd076a",
+        "bytes": 595
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/fresh-Original17capture.json",
+        "sha256": "792625556dde8f721d32f275da4e278afb8c38d78ebd154e7e4b32d1a979df1f",
+        "bytes": 1234
+      },
+      "review": "reviews/fresh-Original17capture.json",
+      "review_sha256": "792625556dde8f721d32f275da4e278afb8c38d78ebd154e7e4b32d1a979df1f",
+      "required_node": "fresh-Original17capture",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480301.2969198,
+      "completed_epoch": 1794480353.1091855,
+      "controller_payload": "controller-results/fresh-Original17capture.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-operator-contracts/run_source.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/original17"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "shipped-safe17",
+      "kind": "CLI-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/shipped-safe17.result.json",
+        "sha256": "f6dcbea8ddf289a18798d80c64d97007f714a1a19fb98b7381faa675a76b4bf9",
+        "bytes": 852
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/shipped-safe17.json",
+        "sha256": "f9d193a4b5458e12ea362ef6725e5cea52046e36041178302ad19e04034e3a8c",
+        "bytes": 1126
+      },
+      "review": "reviews/shipped-safe17.json",
+      "review_sha256": "f9d193a4b5458e12ea362ef6725e5cea52046e36041178302ad19e04034e3a8c",
+      "required_node": "shipped-safe17",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480507.2400825,
+      "completed_epoch": 1794480526.9995134,
+      "controller_payload": "controller-results/shipped-safe17.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-operator-contracts/run_packaged.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/safe17",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--source-cases",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/original17/operator-cli-source.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": [
+        "fresh-Original17capture"
+      ]
+    },
+    {
+      "name": "shipped-createsuperuser22",
+      "kind": "CLI-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/shipped-createsuperuser22.result.json",
+        "sha256": "e20efdb74a744107f544b31a9649c7ede077b1d0d85ee98550017aa3263cab40",
+        "bytes": 749
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/shipped-createsuperuser22.json",
+        "sha256": "b16f5459d44da414e4faffe2c6adc594b5b264a86a649ba268870f0a9a294f76",
+        "bytes": 2209
+      },
+      "review": "reviews/shipped-createsuperuser22.json",
+      "review_sha256": "b16f5459d44da414e4faffe2c6adc594b5b264a86a649ba268870f0a9a294f76",
+      "required_node": "shipped-createsuperuser22",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480312.193407,
+      "completed_epoch": 1794480403.7256114,
+      "controller_payload": "controller-results/shipped-createsuperuser22.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-operator-contracts/createsuperuser-packaged/run_source.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/create22",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "strict-typed154",
+      "kind": "offline-typed-comparison",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/strict-typed154.result.json",
+        "sha256": "15d973497c8f3b80ac2c40a41881af09e4f1a13021dad7a789693b1644c8dd0c",
+        "bytes": 821
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/strict-typed154.json",
+        "sha256": "ca7d31ad20b9cec4f0c559e1ff7abfefdd3b2f0fba9bbdff64b4b3d963e9bba5",
+        "bytes": 1463
+      },
+      "review": "reviews/strict-typed154.json",
+      "review_sha256": "ca7d31ad20b9cec4f0c559e1ff7abfefdd3b2f0fba9bbdff64b4b3d963e9bba5",
+      "required_node": "strict-typed154",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794480510.8934212,
+      "completed_epoch": 1794480510.9363112,
+      "controller_payload": "controller-results/strict-typed154.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-operator-contracts/createsuperuser-native/verify.py",
+        "--source",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-operator-contracts/createsuperuser-native/source-createsuperuser-4.json",
+        "--native",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/create22/operator-cli-source.json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": [
+        "shipped-createsuperuser22"
+      ]
+    },
+    {
+      "name": "sharedTS18",
+      "kind": "native-lifecycle-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/sharedTS18.result.json",
+        "sha256": "92e4e5ed68dac84e9a7fdb007ec4fb75c82bbd482d4758cf38f80261fae7c6d9",
+        "bytes": 1053
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/sharedTS18.json",
+        "sha256": "028fc589418b7b56968624bb0a10e7b3f8aaaa06d80be0866e359b2fe4b2a4f7",
+        "bytes": 2312
+      },
+      "review": "reviews/sharedTS18.json",
+      "review_sha256": "028fc589418b7b56968624bb0a10e7b3f8aaaa06d80be0866e359b2fe4b2a4f7",
+      "required_node": "sharedTS18",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481908.8912446,
+      "completed_epoch": 1794481973.3099682,
+      "controller_payload": "controller-results/sharedTS18.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/shared_ts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/sharedTS18",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "stop",
+        "owner-crash",
+        "--require-active-metadata"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "sharedTS6-all-down",
+      "kind": "native-lifecycle-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/sharedTS6-all-down.result.json",
+        "sha256": "58ace2e415cf36787f333f38821f448da6ca7a340bc15aebfe1e06888a0da571",
+        "bytes": 1040
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/sharedTS6-all-down.json",
+        "sha256": "6a3677a23747321831f37a753a1e23e6dee0b25d22ced569784b89f459f97eee",
+        "bytes": 1695
+      },
+      "review": "reviews/sharedTS6-all-down.json",
+      "review_sha256": "6a3677a23747321831f37a753a1e23e6dee0b25d22ced569784b89f459f97eee",
+      "required_node": "sharedTS6-all-down",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794482192.179692,
+      "completed_epoch": 1794482287.1697752,
+      "controller_payload": "controller-results/sharedTS6-all-down.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/shared_ts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/sharedTS6-all-down",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--backends",
+        "candidate",
+        "--cases",
+        "all-workers-down",
+        "--require-active-metadata"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "retention100",
+      "kind": "native-retained-media-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/retention100.result.json",
+        "sha256": "d7153d03ace2ed3507d820acd009f2b31ba3373bb9181ea43fb87e26d539b095",
+        "bytes": 1014
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/retention100.json",
+        "sha256": "aec9204a95ffa3a4db235fbf26e29251dd8cdc223ea5c3ec31deeeb605d3c0a4",
+        "bytes": 3272
+      },
+      "review": "reviews/retention100.json",
+      "review_sha256": "aec9204a95ffa3a4db235fbf26e29251dd8cdc223ea5c3ec31deeeb605d3c0a4",
+      "required_node": "retention100",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794482427.5557077,
+      "completed_epoch": 1794482534.6889434,
+      "controller_payload": "controller-results/retention100.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-integration/retention_probe.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/retention100",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--expected-local-limit",
+        "4194304",
+        "--late-history-viewers",
+        "100"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    },
+    {
+      "name": "guide-grid-packaged-valid-window-2",
+      "kind": "packaged-functional",
+      "actual_returncode": 0,
+      "controller_result": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/controller-logs/guide-grid-packaged-valid-window-2.result.json",
+        "sha256": "fbd64fe63f3d11503be6e24c71c2ec11fd749f572be17efbeb159542e16bc3bb",
+        "bytes": 989
+      },
+      "review_original": {
+        "retained_path": "artifacts/rust/image52-packaged-matrix-1/node-reviews/guide-grid-packaged-valid-window-2.json",
+        "sha256": "62ad1c11fac2d3c6e3df5f7538f3bb63ab9981f9b53883b774ebf108d6224c0d",
+        "bytes": 1550
+      },
+      "review": "reviews/guide-grid-packaged-valid-window-2.json",
+      "review_sha256": "62ad1c11fac2d3c6e3df5f7538f3bb63ab9981f9b53883b774ebf108d6224c0d",
+      "required_node": "guide-grid-packaged",
+      "qualification": "scoped_pass",
+      "started_epoch": 1794481321.1923456,
+      "completed_epoch": 1794481351.20198,
+      "controller_payload": "controller-results/guide-grid-packaged-valid-window-2.json",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image52-packaged-matrix-1/guide-grid-packaged-valid-window-2",
+        "--candidate-image",
+        "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-hash-admission-image52-1/build.json",
+        "--candidate-grid-wire"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image52-package-plan-draft-1/support",
+      "requires": []
+    }
+  ],
+  "Main4s": "Separate three-case Source/native packet; not included in the 28 required nodes or 29 attempts",
+  "performance_verified": false,
+  "full_M4_verified": false,
+  "worker_graph_activation": false,
+  "cleanup_scope": "Per-node exact-project inventories preserved; no new global inventory in this curation",
+  "default_database_scope": "Per-node audit limits retained; no uniform external/default DB audit inferred",
+  "execution_support_provenance": {
+    "path": "execution-support-provenance.json",
+    "sha256": "b793d9f121a691778445497f44f8e0b3ce8b27192f52357aece95eaf506a30c0"
+  },
+  "Main4s_reference": {
+    "public_namespace": "scripts/rust-vod-contracts/four-second-main/image52-observation/",
+    "documentation": "docs/rust-vod-main4s-image52.md",
+    "retained_summary_path": "artifacts/rust/m4-vod-four-second-main-image52-1/summary.json",
+    "retained_summary_sha256": "fd874d775c14b2d8fd8b032295fc3a016a6c74e36766d9766ab1d912bebf1a96",
+    "independent_review_sha256": "3dc17312cb0e06f6744ce1b435e3db25aa8670e94bf0d20828883df5cfd76b44",
+    "cases": 3,
+    "separate_from_28_required_nodes_and_29_attempts": true,
+    "full_M4_claim": false
+  },
+  "publication_revision": 2,
+  "prior_publication_preserved": "image52-public-delivery-1:39 files, prior validator accepted four explicit integrity corruptions; no runtime/evidence mutation"
+}

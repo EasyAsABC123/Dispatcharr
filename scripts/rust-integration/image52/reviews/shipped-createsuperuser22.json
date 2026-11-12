@@ -1,0 +1,40 @@
+{
+  "scope": "private node review ONLY shipped-createsuperuser22; no next node dispatched",
+  "name": "shipped-createsuperuser22",
+  "passed": true,
+  "returncode": 0,
+  "plan_sha256": "2d4513a36887be2aeb5aee08a6d8304cfa257d69090c56401d24953f40fb5aae",
+  "image_id": "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+  "source_commit": "98e447186af099dd17496539aec46312f6cf4f62",
+  "source_tree_sha256": "ca3c42acb72734330a103d192f65f84a1e59044540f5abaa74e4faaa1e548bcc",
+  "manifest_sha256": "6b5ab542dfc6cda4f9a2187d1669f06ccd007ee7f43a1359e7812ff353afa549",
+  "cases": 22,
+  "checks": 95,
+  "all_checks_passed": true,
+  "typed_case_field_shapes_checked": true,
+  "strict154_next_batch_status": "NOT_RUN_BY_THIS_AGENT; Root approval/dependency pending",
+  "copied_nonempty_tables": 26,
+  "default_database_unchanged_reported_and_asserted": true,
+  "runtime_hardening_reported_and_asserted": true,
+  "frozen_runtime_assertion_code": {
+    "path": "artifacts/rust/image52-package-plan-draft-1/support/scripts/rust-operator-contracts/createsuperuser-packaged/run_source.py",
+    "sha256": "9dcf2532e96186f47233498ca6fc9d23fd7517285e10d88a28278c9a704c5b77",
+    "lines163_166": "            actual = json.loads(command(['docker','inspect',operator_id]))[0]\n            assert actual['Image'] == image and actual['Config']['User'] == '65532:65532'\n            assert actual['HostConfig']['ReadonlyRootfs'] and actual['HostConfig']['CapDrop'] == ['ALL']\n            report['inspected_runtime_uid_readonly_capabilities'] = True"
+  },
+  "project": "dispatcharr-operator-cli-source-5ab51d4158",
+  "independent_remaining": {
+    "containers": "",
+    "networks": "",
+    "volumes": ""
+  },
+  "cleanup_verified": true,
+  "actual_results_sha256": {
+    "integration.json": "7cf7ee02141c071255956273d3823081d3d07f003b05f166681f36460f4c54c7",
+    "operator-cli-source.json": "068d7e7c9e337c7eda5e600c0eddff8b01010e5ecd5499e16d97eb44c0102da5",
+    "controller_result": "e20efdb74a744107f544b31a9649c7ede077b1d0d85ee98550017aa3263cab40"
+  },
+  "performance_claim": false,
+  "full_CLI_acceptance": false,
+  "runtime_Main_graph_index_refs_changed": false,
+  "reviewed_epoch": 1794480476.6646233
+}

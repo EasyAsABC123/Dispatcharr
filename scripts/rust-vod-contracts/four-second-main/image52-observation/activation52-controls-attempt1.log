@@ -1,0 +1,33 @@
+test_UTC_epoch_and_boot (test_activation52.Controls.test_UTC_epoch_and_boot) ... ok
+test_changed_runtime_map_and_added_789_fail_closed (test_activation52.Controls.test_changed_runtime_map_and_added_789_fail_closed) ... ok
+test_claim_before_dispatch_and_cannot_replay (test_activation52.Controls.test_claim_before_dispatch_and_cannot_replay) ... ok
+test_every_binding_and_seal_mismatch (test_activation52.Controls.test_every_binding_and_seal_mismatch) ... ok
+test_exact_cue_read_only_validation (test_activation52.Controls.test_exact_cue_read_only_validation) ... ok
+test_existing_output_and_symlink_output_rejected (test_activation52.Controls.test_existing_output_and_symlink_output_rejected) ... FAIL
+test_expired_future_nan_bool_and_overlong_cues (test_activation52.Controls.test_expired_future_nan_bool_and_overlong_cues) ... ok
+test_expiry_during_readonly_checks_never_claims (test_activation52.Controls.test_expiry_during_readonly_checks_never_claims) ... ok
+test_input_and_nonflag_launcher_edits_reject (test_activation52.Controls.test_input_and_nonflag_launcher_edits_reject) ... ok
+test_missing_corrupt_stale_quiet_preflight (test_activation52.Controls.test_missing_corrupt_stale_quiet_preflight) ... ok
+test_only_flag_activation_preserves_seal (test_activation52.Controls.test_only_flag_activation_preserves_seal) ... ok
+test_real_image52_exact788_archive_set_and_scripts (test_activation52.Controls.test_real_image52_exact788_archive_set_and_scripts) ... ok
+test_runtime_proof_mismatch (test_activation52.Controls.test_runtime_proof_mismatch) ... ok
+test_scope_action_and_explicit_authorization (test_activation52.Controls.test_scope_action_and_explicit_authorization) ... ok
+test_unconditional_launcher_block_before_any_cue_read (test_activation52.Controls.test_unconditional_launcher_block_before_any_cue_read) ... ok
+test_underlying_protocol_entry_unconditionally_blocked (test_activation52.Controls.test_underlying_protocol_entry_unconditionally_blocked) ... ok
+
+======================================================================
+FAIL: test_existing_output_and_symlink_output_rejected (test_activation52.Controls.test_existing_output_and_symlink_output_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image52-vod-main4s-prep-1/controller/test_activation52.py", line 56, in test_existing_output_and_symlink_output_rejected
+    p=self.repo/self.plan['new_output'];p.mkdir();self.fail();p.rmdir();p.symlink_to(self.repo/'missing');self.fail()
+                                                  ~~~~~~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image52-vod-main4s-prep-1/controller/test_activation52.py", line 25, in fail
+    self.assertFalse((self.repo/self.plan['new_output']).exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.154s
+
+FAILED (failures=1)

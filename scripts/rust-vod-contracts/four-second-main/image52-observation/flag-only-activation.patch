@@ -1,0 +1,11 @@
+--- blocked/launch_once.py
++++ execution-copy/launch_once.py
+@@ -1,7 +1,7 @@
+ """BLOCKED preparation: no dispatch until Root reviewed flag-only activation and fresh cue."""
+ import argparse,datetime,hashlib,importlib.util,json,math,os,shutil,time
+ from pathlib import Path
+-EXECUTION_BLOCKED=True
++EXECUTION_BLOCKED=False
+ HERE=Path(__file__).resolve().parent
+ ACTION='image52-main-four-second-physical-once'
+ def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()

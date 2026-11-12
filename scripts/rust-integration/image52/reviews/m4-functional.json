@@ -1,0 +1,53 @@
+{
+  "node": "m4-functional",
+  "passed": true,
+  "actual_exit_code": 0,
+  "four_preflights": [
+    {
+      "protocol": "vod",
+      "backend": "source",
+      "prefix_bytes": 1048576,
+      "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+      "decoded_frames": 200,
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "vod",
+      "backend": "candidate",
+      "prefix_bytes": 1048576,
+      "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+      "decoded_frames": 200,
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "source",
+      "prefix_bytes": 1048576,
+      "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+      "decoded_frames": 199,
+      "provider_counter_released": true
+    },
+    {
+      "protocol": "timeshift",
+      "backend": "candidate",
+      "prefix_bytes": 1048576,
+      "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+      "decoded_frames": 199,
+      "provider_counter_released": true
+    }
+  ],
+  "measurements_started": false,
+  "performance_verified": false,
+  "full_m4_parity_verified": false,
+  "project": "dispatcharr-m4-perf-5bed5b2368",
+  "independent_owned_inventory": {
+    "containers": "",
+    "networks": "",
+    "volumes": ""
+  },
+  "default_database_audit": "Not separately captured; no stronger audit inferred.",
+  "candidate_image_id": "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+  "integration_sha256": "ce8728779bc7c2d1bf4a4cbc56655334a441db520daed6798ce34a08e79f6e7b",
+  "no_retry": true,
+  "reviewed_epoch": 1794481354.271265
+}

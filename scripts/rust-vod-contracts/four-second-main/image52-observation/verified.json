@@ -1,0 +1,72 @@
+{
+  "scope": "Public retained Main4s image52 once-run3case data/controller reconstruction and local guards; no application rerun/performance/fullM4 claim.",
+  "passed": true,
+  "actual_exit_code": 0,
+  "summary_sha256": "fd874d775c14b2d8fd8b032295fc3a016a6c74e36766d9766ab1d912bebf1a96",
+  "candidate_image": "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+  "candidate_revision": "98e447186af099dd17496539aec46312f6cf4f62",
+  "runtime_inputs": 788,
+  "actual_Source_phases": 3,
+  "actual_native_phases": 3,
+  "cases": [
+    "success",
+    "busy",
+    "clientloss"
+  ],
+  "status_pairs": {
+    "success": [
+      200,
+      200
+    ],
+    "busy": [
+      429,
+      429
+    ],
+    "clientloss": [
+      "RemoteDisconnected",
+      "RemoteDisconnected"
+    ]
+  },
+  "source_signal_rows": [
+    6,
+    8,
+    6
+  ],
+  "hold_seconds_range": [
+    4.000612117990386,
+    4.000815940002212
+  ],
+  "control_duration_seconds_range": [
+    2.012741721002385,
+    2.025436557014473
+  ],
+  "default_named_tables_sequences_equal": [
+    9,
+    9
+  ],
+  "owned_projects_independently_empty": 3,
+  "response_header_maps_retained": 4,
+  "header_redactions": 0,
+  "private_seed_token_fields_omitted": 3,
+  "private_process_nonce_fields_hashed": 15,
+  "complete_raw_summary_case_phase_signal_PID_projection_verified": true,
+  "blocked_and_executed25_exact_restore_verified": true,
+  "actual48plus16_preexecution_local_guards_passed": true,
+  "portable_corruption_controls": 29,
+  "actualSource_requests_during_publication": 0,
+  "no_retry": true,
+  "full_M4_acceptance": false,
+  "performance_claim": false,
+  "default_recovery_enabled": false,
+  "control_absolute_timestamp_not_separately_retained": true,
+  "Root_cleanup_sha256": "de86f02bb861523a3f1a6376f1927991ace8dfd56953d1f6c9341b78b2cb9c31",
+  "authority_sha256": "e048ba5dacd8090560d01afd3694bd0860711b3e4c0be95f942854090f7a3664",
+  "public_check_hashes": {
+    "public-controls-final.log": "8227ab0362c22f7264d27dbdcb9762fd11ccd6b87c0de0cab9b783c6dc071dda",
+    "validated.json": "a07ff6ef56d646e714cbcd97f6cd5f1dbbf36c6484424de5ff5cbc403362ebab",
+    "projection-check.json": "793a5dc1973e98db5a2f7880c3154b9340fcfbb64eb7b38fa8e3565bc80352ed",
+    "execution-check.json": "7ce78e314ef24950b4097271089a7d1d8ef599b84d6d762163104b7bd218f925",
+    "restored-blocked-proof.json": "f47d43cad0c0aeecde0fc41cc999416ddbdab4fc1a15eecbcc396f3ba947de9b",
+    "restored-executed-proof.json": "5b1d7f130503445660402a3366c318113cdf0f055c729e51817e90921c8b3649"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "scope": "Exact Root once-cued image52 Main4s functional3case observation/parity only; no new resource/performance/fullM4/default enable claim.",
+  "actual_exit_code": 0,
+  "session_id": 96892,
+  "passed": true,
+  "cases": [
+    {
+      "case": "success",
+      "project": "dispatcharr-pending-main-08fd0d24e6",
+      "passed": true,
+      "observation_valid": true,
+      "parity_passed": true,
+      "full_M4_accepted": false,
+      "phases": {
+        "source": {
+          "status": 200,
+          "hold_seconds": 4.000778424990131,
+          "control_seconds": 2.017489702993771,
+          "observation_valid": true
+        },
+        "native": {
+          "status": 200,
+          "hold_seconds": 4.000760431023082,
+          "control_seconds": 2.0139928870194126,
+          "observation_valid": true
+        }
+      },
+      "default9table_sequence_audit_equal": true,
+      "Source_signal_rows": 6,
+      "Source_signal_started_finished": 3,
+      "Source_signal_scope": "request_finished after resource-closer attempts; not generator-finally success/bodyEOF/server cancellation",
+      "independent_owned_remaining": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "physical_proxy_terminal_connections_zero": true,
+      "report_sha256": "9b677be4db749a0bb8551c4b004542b8ce7451499d4410d6aaa9612ac6c8cf79"
+    },
+    {
+      "case": "busy",
+      "project": "dispatcharr-pending-main-1b32dec627",
+      "passed": true,
+      "observation_valid": true,
+      "parity_passed": true,
+      "full_M4_accepted": false,
+      "phases": {
+        "source": {
+          "status": 429,
+          "hold_seconds": 4.000764972995967,
+          "control_seconds": 2.0173133079952095,
+          "observation_valid": true
+        },
+        "native": {
+          "status": 429,
+          "hold_seconds": 4.000655526004266,
+          "control_seconds": 2.012741721002385,
+          "observation_valid": true
+        }
+      },
+      "default9table_sequence_audit_equal": true,
+      "Source_signal_rows": 8,
+      "Source_signal_started_finished": 4,
+      "Source_signal_scope": "request_finished after resource-closer attempts; not generator-finally success/bodyEOF/server cancellation",
+      "independent_owned_remaining": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "physical_proxy_terminal_connections_zero": true,
+      "report_sha256": "75566c0ecb25f4b9755aab770df3831a746122b0084a6ffe5062a3a046f86a95"
+    },
+    {
+      "case": "clientloss",
+      "project": "dispatcharr-pending-main-4f57801a4c",
+      "passed": true,
+      "observation_valid": true,
+      "parity_passed": true,
+      "full_M4_accepted": false,
+      "phases": {
+        "source": {
+          "status": null,
+          "hold_seconds": 4.000815940002212,
+          "control_seconds": 2.025436557014473,
+          "observation_valid": true,
+          "transport_error": "RemoteDisconnected",
+          "reader_joined": true,
+          "fd_after": -1,
+          "original_inode_absent": true,
+          "server_cancellation_inferred": false
+        },
+        "native": {
+          "status": null,
+          "hold_seconds": 4.000612117990386,
+          "control_seconds": 2.0149147189804353,
+          "observation_valid": true,
+          "transport_error": "RemoteDisconnected",
+          "reader_joined": true,
+          "fd_after": -1,
+          "original_inode_absent": true,
+          "server_cancellation_inferred": false
+        }
+      },
+      "default9table_sequence_audit_equal": true,
+      "Source_signal_rows": 6,
+      "Source_signal_started_finished": 3,
+      "Source_signal_scope": "request_finished after resource-closer attempts; not generator-finally success/bodyEOF/server cancellation",
+      "independent_owned_remaining": {
+        "containers": "",
+        "networks": "",
+        "volumes": ""
+      },
+      "physical_proxy_terminal_connections_zero": true,
+      "report_sha256": "c802f8f77768187459a467fe707c9d1f13f9f8d236e7620eff7cda2338bf4e42"
+    }
+  ],
+  "summary_sha256": "fd874d775c14b2d8fd8b032295fc3a016a6c74e36766d9766ab1d912bebf1a96",
+  "candidate_inputs_sha256": "5ca5625dcdd94dda55b14de3f35981d0327cf6ce5030cfc7976dd48779b26705",
+  "cue_sha256": "cb74de410d94ec2887469d46169769ab59e3fe6d096dfb65dfcb110c4db8af64",
+  "claim_sha256": "6b982b7bbc0aeb338ffc80d8f8195a25056a3ce3014a334323fa50908d90d05e",
+  "Source_new_phases": 3,
+  "native_new_phases": 3,
+  "no_retry": true,
+  "no_policy_clock_budget_changes": true,
+  "physical_process_drain_scope": "Controller owned PID/starttime stop plus docker-exec return/pipe joins succeeded; independent exactproject container/network/volume absence verified after exit.",
+  "all3_projects_independently_empty": true,
+  "reviewed_epoch": 1794483200.9990592,
+  "remain_held_until_Root_release": true,
+  "review_tool_sha256": "d74d849399cbafb5c7cae304eb78ab54b0c9be6e2d1de0700d88cdb6465514bc"
+}

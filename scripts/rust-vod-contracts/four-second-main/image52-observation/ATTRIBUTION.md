@@ -1,0 +1,1 @@
+Original Dispatcharr authors and contributors retain all application, protocol, behavior and algorithm credit. Original1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430 and its upstream license are preserved. Native rewrite/controller evidence is scoped below; no new ownership of Original work is claimed.

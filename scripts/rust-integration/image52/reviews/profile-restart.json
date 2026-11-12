@@ -1,0 +1,33 @@
+{
+  "node": "profile-restart",
+  "passed": true,
+  "actual_exit_code": 0,
+  "phases": 2,
+  "warmup_backends": [
+    "candidate",
+    "source"
+  ],
+  "capture_complete": true,
+  "candidate_process_preserved": true,
+  "migration_gate_passed": true,
+  "candidate_image_binding": {
+    "image_id": "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+    "source_tree_sha256": "ca3c42acb72734330a103d192f65f84a1e59044540f5abaa74e4faaa1e548bcc",
+    "manifest_verified": true
+  },
+  "project": "dispatcharr-output-profiles-343bcc9f69",
+  "independent_owned_inventory": {
+    "containers": "",
+    "networks": "",
+    "volumes": ""
+  },
+  "default_database_audit": "Not separately captured by this runner; not inferred.",
+  "scope": "Actual original/native same-service output-profile deletion/cache effects after owned Redis restart; fixture peer rewarms named cache keys, not an active media continuity gate",
+  "no_active_media_continuity_claim": true,
+  "sha256": {
+    "integration.json": "0202c317466b6c07fcb11127b2e728e1a0c1cecabe8048c8db380add7d013a79",
+    "packaged-checks.json": "c642a510c73fbb0f326786b4aeb949e7fe3f35343e133c6f9faf70a34a3c23a5"
+  },
+  "reviewed_epoch": 1794481175.2641358,
+  "no_retry": true
+}

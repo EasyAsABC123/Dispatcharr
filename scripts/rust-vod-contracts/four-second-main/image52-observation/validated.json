@@ -1,0 +1,84 @@
+{
+  "passed": true,
+  "actual_exit_code": 0,
+  "cases": [
+    {
+      "case": "success",
+      "phases": {
+        "source": {
+          "status": 200,
+          "hold_seconds": 4.000778424990131,
+          "control_seconds": 2.017489702993771,
+          "actual_close_or_loss": true,
+          "semantic_response_headers_retained": true
+        },
+        "native": {
+          "status": 200,
+          "hold_seconds": 4.000760431023082,
+          "control_seconds": 2.0139928870194126,
+          "actual_close_or_loss": true,
+          "semantic_response_headers_retained": true
+        }
+      },
+      "Source_signal_rows": 6,
+      "clones_equal": true,
+      "default9tables9sequences_equal": true,
+      "owned_project_empty": true
+    },
+    {
+      "case": "busy",
+      "phases": {
+        "source": {
+          "status": 429,
+          "hold_seconds": 4.000764972995967,
+          "control_seconds": 2.0173133079952095,
+          "actual_close_or_loss": true,
+          "semantic_response_headers_retained": true
+        },
+        "native": {
+          "status": 429,
+          "hold_seconds": 4.000655526004266,
+          "control_seconds": 2.012741721002385,
+          "actual_close_or_loss": true,
+          "semantic_response_headers_retained": true
+        }
+      },
+      "Source_signal_rows": 8,
+      "clones_equal": true,
+      "default9tables9sequences_equal": true,
+      "owned_project_empty": true
+    },
+    {
+      "case": "clientloss",
+      "phases": {
+        "source": {
+          "status": null,
+          "hold_seconds": 4.000815940002212,
+          "control_seconds": 2.025436557014473,
+          "actual_close_or_loss": true,
+          "semantic_response_headers_retained": false
+        },
+        "native": {
+          "status": null,
+          "hold_seconds": 4.000612117990386,
+          "control_seconds": 2.0149147189804353,
+          "actual_close_or_loss": true,
+          "semantic_response_headers_retained": false
+        }
+      },
+      "Source_signal_rows": 6,
+      "clones_equal": true,
+      "default9tables9sequences_equal": true,
+      "owned_project_empty": true
+    }
+  ],
+  "all3_observation_and_scoped_parity_passed": true,
+  "response_header_maps_retained": 4,
+  "header_redactions": 0,
+  "control_timestamp_limit": "Only elapsed control duration retained, not separate absolute control_done timestamp; physical hold clocks are independently retained in proxy traces.",
+  "Source_signal_scope": "request_finished after resource-closer attempts, not guaranteed generator-finally/providerEOF/TCP or server cancellation",
+  "full_M4_acceptance": false,
+  "performance_claim": false,
+  "application_rerun": false,
+  "default_recovery_enabled": false
+}

@@ -1,0 +1,104 @@
+{
+  "node": "retention100",
+  "qualified": true,
+  "actual_exit_code": 0,
+  "candidate_image_id": "sha256:983dc2ba0b740d97abf45cd3a51bf96633b75fbce8cbe9ea678bad36647d9b44",
+  "candidate_source_tree_sha256": "ca3c42acb72734330a103d192f65f84a1e59044540f5abaa74e4faaa1e548bcc",
+  "candidate_build_manifest_sha256": "6b5ab542dfc6cda4f9a2187d1669f06ccd007ee7f43a1359e7812ff353afa549",
+  "report_sha256": "dd3c76caaa468473d57c428717153077dc4ef4cd731e1785fe52099e9b21ff0a",
+  "samples": [
+    {
+      "elapsed_seconds": 5.159467639983632,
+      "local_bytes": 28145480,
+      "redis_logical_bytes": 28145480,
+      "origin_connections": 10,
+      "origin_active": 10
+    },
+    {
+      "elapsed_seconds": 30.160676411993336,
+      "local_bytes": 40938880,
+      "redis_logical_bytes": 89553800,
+      "origin_connections": 10,
+      "origin_active": 10
+    },
+    {
+      "elapsed_seconds": 60.16304774399032,
+      "local_bytes": 40938880,
+      "redis_logical_bytes": 148403440,
+      "origin_connections": 10,
+      "origin_active": 10
+    },
+    {
+      "elapsed_seconds": 75.14221345499391,
+      "local_bytes": 40938880,
+      "redis_logical_bytes": 150962120,
+      "origin_connections": 10,
+      "origin_active": 10
+    }
+  ],
+  "late_readers": 100,
+  "channels": 10,
+  "concurrency": 32,
+  "late_reader_bytes_min": 1500000,
+  "prefix_hash_membership_all": true,
+  "reference_age_scope": "Redis zrangebyscore collection filters 35\u201355 seconds at collection; collection epoch is not separately retained, so exact ages are not independently recomputed.",
+  "late_decoder_frames": [
+    69,
+    69,
+    69,
+    69,
+    69,
+    69,
+    69,
+    69,
+    69,
+    69
+  ],
+  "strict_priming_frames": [
+    75,
+    75,
+    75,
+    75,
+    75,
+    75,
+    75,
+    75,
+    75,
+    75
+  ],
+  "priming_spread_seconds": 0.006029351003235206,
+  "decoder_log_frames": {
+    "late-decode-0.log": 69,
+    "late-decode-1.log": 69,
+    "late-decode-2.log": 69,
+    "late-decode-3.log": 69,
+    "late-decode-4.log": 69,
+    "late-decode-5.log": 69,
+    "late-decode-6.log": 69,
+    "late-decode-7.log": 69,
+    "late-decode-8.log": 69,
+    "late-decode-9.log": 69,
+    "decode-0.log": 75,
+    "decode-1.log": 75,
+    "decode-2.log": 75,
+    "decode-3.log": 75,
+    "decode-4.log": 75,
+    "decode-5.log": 75,
+    "decode-6.log": 75,
+    "decode-7.log": 75,
+    "decode-8.log": 75,
+    "decode-9.log": 75
+  },
+  "terminal_origin_scope": "Frozen controller asserts active==0 after closing live readers, before strict priming; terminal scalar is not separately retained.",
+  "no_extra_origin_scope": "Recorded passed flag and frozen before/after connection equality assertion; four retained snapshots each show 10 connections.",
+  "independent_cleanup": {
+    "project": "dispatcharr-retention-c1957abdebeb",
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "verification_note": "Initial bare-shell inventory failed docker-not-found; sourced tooling environment inventory exited 0 with all three exact-project inventories empty. No application rerun.",
+  "application_performance_verified": false,
+  "milestone_complete": false,
+  "scope": "Local payload and authoritative Redis logical bytes; excludes in-flight HTTP/allocator/cgroup memory, CPU and performance gains."
+}
