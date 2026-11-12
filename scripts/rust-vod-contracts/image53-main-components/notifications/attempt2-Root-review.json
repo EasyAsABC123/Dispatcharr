@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "actual_controller_exit": 0,
+  "raw_phase_sha256": "4fe905f9b968c258f676e54d3eec58e275df8c9b5b1fdf4d540c2c77eaf4cc1c",
+  "Root_recomputed_qualification": {
+    "normal_Bearer_Main_notification_slice_qualified": true,
+    "Source8_framework_not_TCP": true,
+    "Native_definition_extra_cases": true,
+    "full_endpoint_or_Source48_parity": false,
+    "performance_acceptance": false
+  },
+  "actual9statuses": [
+    201,
+    200,
+    200,
+    200,
+    400,
+    403,
+    501,
+    501,
+    501
+  ],
+  "own_clock_SQLrow_sequence_and_cross_request_continuity_verified": true,
+  "default_eleven_tables_and_sequences_exact": true,
+  "own_cleanup_queries": {
+    "container": {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-fe9e3b8a2e",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "network": {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-fe9e3b8a2e",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "volume": {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-fe9e3b8a2e",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "actual_Main_image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+  "actual_Main_Config_User": "65532:65532",
+  "first_attempt_default_negative_preserved": true,
+  "reviewed_epoch": 1794507019.4668298,
+  "scope": "normalBearerMaincreate/dismiss/repeat/truthy/duplicate/deny/guardedCRUD only, notSource48/newCRUD/fullM5/performance"
+}

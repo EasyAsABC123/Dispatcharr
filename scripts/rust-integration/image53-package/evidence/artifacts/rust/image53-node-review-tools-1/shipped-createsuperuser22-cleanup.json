@@ -1,0 +1,170 @@
+{
+  "name": "shipped-createsuperuser22",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "bea62eef74d4d0e060d8b15735f368838d7e4c9cadcfc0d1c077725f6ac25a71",
+  "observation": {
+    "name": "shipped-createsuperuser22",
+    "status": "reports-observed-not-accepted",
+    "classification": "Native scoped CLI against prior Source authority; no new Original command run",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/create22/integration.json",
+        "relative": "integration.json",
+        "sha256": "81c8bfc5290dff794de3efebdcad527a1c32e48e113ee431aa666f6112d9bebe",
+        "bytes": 87663,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Actual shipped UID65532 createsuperuser22 cases observed by Original Django on owned copied database; no performance/full CLI acceptance",
+          "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "project": "dispatcharr-operator-cli-source-74b5c7d100",
+          "copied_database": "rust_probe_backup_operator_74b5c7d100",
+          "native_verified": true,
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "source_commit": "f0bfc2f200dcfd1f64ae32a9855ea250731ce67f",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "performance_verified": false,
+          "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "copied_nonempty_tables": 26,
+          "inspected_runtime_uid_readonly_capabilities": true,
+          "cases": 22,
+          "source_report_sha256": "2ffbe908e055534b167f51220d34d402f7fee8a9bd93b4f6a752a5461f76b964",
+          "default_database_unchanged": true,
+          "cleanup": "project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443"
+        },
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "original_revision",
+          "project",
+          "copied_database",
+          "native_verified",
+          "image_id",
+          "build_manifest_sha256",
+          "source_commit",
+          "source_tree_sha256",
+          "performance_verified",
+          "tool_source_sha256",
+          "original_archive_sha256",
+          "ports",
+          "copied_nonempty_tables",
+          "inspected_runtime_uid_readonly_capabilities",
+          "cases",
+          "source_report_sha256",
+          "default_database_unchanged",
+          "cleanup",
+          "resources_retained"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/create22/operator-cli-source.json",
+        "relative": "operator-cli-source.json",
+        "sha256": "2ffbe908e055534b167f51220d34d402f7fee8a9bd93b4f6a752a5461f76b964",
+        "bytes": 217873,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Bounded native createsuperuser effects/exit-code cases observed with Original Django; not stdout/stderr byte parity",
+          "native_verified": true,
+          "performance_verified": false,
+          "cases": {
+            "length": 22,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "checks": {
+            "length": 95,
+            "explicit_passed_true": 95,
+            "explicit_passed_false": 0,
+            "explicit_flags": 95
+          },
+          "credit": "All original application and Django behavior credit remains with their authors."
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "native_verified",
+          "performance_verified",
+          "cases",
+          "checks",
+          "credit"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [
+      {
+        "report": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/create22/integration.json",
+        "field": "default_database_unchanged",
+        "value": true
+      }
+    ],
+    "default_audit_missing": false,
+    "actual_explicit_project_ids": [
+      "dispatcharr-operator-cli-source-74b5c7d100"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-cli-source-74b5c7d100"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504631.7176976
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-cli-source-74b5c7d100"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504631.7271662
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-cli-source-74b5c7d100"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504631.7366872
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504631.708212,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504631.758294
+}

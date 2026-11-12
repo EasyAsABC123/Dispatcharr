@@ -1,0 +1,171 @@
+{
+  "passed": true,
+  "scope": "Local Git/file-only qualification. No Docker/network/app/media/Cargo commands.\nRun with explicit repository/output; retain all actual child exits/stdout/stderr.\n",
+  "actual_local_controls": 9,
+  "positive_checks": {
+    "private_HEAD": "f0bfc2f200dcfd1f64ae32a9855ea250731ce67f",
+    "all6148_hashes_recomputed": true,
+    "rendered28_exact_path_substitution": true,
+    "all_dispatch_flags_false": true,
+    "output_application_directory_absent": true,
+    "repository_object_alternates": "/home/justin/github/Dispatcharr/.git/objects"
+  },
+  "controls": [
+    {
+      "name": "positive",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/positive"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "877c187a215957ebf04851e8f340a734626a66763286e2cc468934f17fbc8f84",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_error": null,
+      "destination_exists": true,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "fresh-output-refusal",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/positive"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "4d0bd2a98fcf4c13832b33c97ae5d73fbf7d2665688bb7798780aa0fdfb3b786",
+      "expected_error": "Fresh destination required",
+      "destination_exists": true,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "actual-report-corruption",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/corrupt-packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/corrupt-output"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "734316c1cb7cb4fa7f95dd6b8318ef99b5a0d6daaa340d22cab21d4866ee11fa",
+      "expected_error": "Packet input changed",
+      "destination_exists": false,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "manifest-revision",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/manifest-revision-packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/manifest-revision-output"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ff6d8270a7eafa5836dc95a2e5a1b4e733e77476e924587b7f0b5adc68980f37",
+      "expected_error": "Support revision mismatch",
+      "destination_exists": false,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "manifest-count",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/manifest-count-packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/manifest-count-output"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "626166a4552f37d60c0005441d992e0b8ff5aafa99d3cd9af086a45d4a570bca",
+      "expected_error": "Support count mismatch",
+      "destination_exists": false,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "plan-map-binding",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/plan-map-binding-packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/plan-map-binding-output"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "bd71f065fa1061210296c3888696d3218eb3540be66705406706e712ab803ee0",
+      "expected_error": "Plan support-map binding differs",
+      "destination_exists": false,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "wrong-support-file",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/wrong-support-file-packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/wrong-support-file-output"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "c22221db89be620da95f6f47098ddc1d37f9cb8df14f59252cf78d5f2155ec46",
+      "expected_error": "Support mismatch: .dockerignore",
+      "destination_exists": true,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "wrong-Git-archive",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/wrong-Git-archive-packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/wrong-Git-archive-output"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "5fda45112f69249e3a0a2cd0f81a1a99089f273cd2368721c433b3d1d913aebf",
+      "expected_error": "Immutable Git archive differs",
+      "destination_exists": false,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "candidate-manifest",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/candidate-manifest-packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/candidate-manifest-output"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "88318be86c7696df7ee79da699ef0230e020d7b4aaaccc6647c577de48a70c89",
+      "expected_error": "Candidate manifest binding differs",
+      "destination_exists": false,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    }
+  ],
+  "new_workloads_started": 0,
+  "new_Docker_network_Cargo_app_media_commands": 0,
+  "historical_reports_modified": false
+}

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/packet/test_materialize.py", line 71, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/packet/test_materialize.py", line 53, in main
+    run('fresh-output-refusal',HERE,positive,'Fresh destination required');assert all(sha(positive/name)==digest for name,digest in before.items())
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/packet/test_materialize.py", line 32, in run
+    assert not(destination/'rendered-plan.json').exists(), 'Refusal must not emit executable proposal'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Refusal must not emit executable proposal

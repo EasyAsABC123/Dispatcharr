@@ -1,0 +1,156 @@
+{
+  "name": "fresh-Original17capture",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "f38caefaa40b15b8cc372995e0151af68f70c6105c135c2fa80f17888f0a23af",
+  "observation": {
+    "name": "fresh-Original17capture",
+    "status": "reports-observed-not-accepted",
+    "classification": "Actual Original command oracle, no candidate execution",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/original17/integration.json",
+        "relative": "integration.json",
+        "sha256": "c0b09bdff5b9dffbd6e60091bddba0c485a5bc4e99060d621aa14d58df3bcc64",
+        "bytes": 87053,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Original actual operator subprocess oracle",
+          "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "project": "dispatcharr-operator-cli-source-7e9603af78",
+          "copied_database": "rust_probe_backup_operator_7e9603af78",
+          "native_verified": false,
+          "performance_verified": false,
+          "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "copied_nonempty_tables": 26,
+          "cases": 17,
+          "source_report_sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc",
+          "default_database_unchanged": true,
+          "cleanup": "project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "original_revision",
+          "project",
+          "copied_database",
+          "native_verified",
+          "performance_verified",
+          "tool_source_sha256",
+          "original_archive_sha256",
+          "ports",
+          "copied_nonempty_tables",
+          "cases",
+          "source_report_sha256",
+          "default_database_unchanged",
+          "cleanup",
+          "resources_retained"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/original17/operator-cli-source.json",
+        "relative": "operator-cli-source.json",
+        "sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc",
+        "bytes": 163049,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Original actual manage.py subprocesses on owned copied PostgreSQL",
+          "native_verified": false,
+          "performance_verified": false,
+          "cases": {
+            "length": 17,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "commands": {
+            "length": 2,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "destructive_commands_executed": false
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "native_verified",
+          "performance_verified",
+          "cases",
+          "commands",
+          "destructive_commands_executed"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [
+      {
+        "report": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/original17/integration.json",
+        "field": "default_database_unchanged",
+        "value": true
+      }
+    ],
+    "default_audit_missing": false,
+    "actual_explicit_project_ids": [
+      "dispatcharr-operator-cli-source-7e9603af78"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-cli-source-7e9603af78"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504536.2455165
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-cli-source-7e9603af78"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504536.2549136
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-cli-source-7e9603af78"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504536.2643883
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504536.235179,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504536.264594
+}

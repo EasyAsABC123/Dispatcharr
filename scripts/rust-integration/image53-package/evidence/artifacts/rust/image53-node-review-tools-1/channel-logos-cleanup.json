@@ -1,0 +1,141 @@
+{
+  "name": "channel-logos",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "e97aae529b3fd67aece0e645fb1be46606124268bccecc17797f2959832418c5",
+  "observation": {
+    "name": "channel-logos",
+    "status": "reports-observed-not-accepted",
+    "classification": "Use explicit actual report scopes/flags; no synthesized all-application claim",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/channel-logos/integration.json",
+        "relative": "integration.json",
+        "sha256": "4665fdf674abea703c3d922248561e2047c948329fb52ec68923bc08819fbce3",
+        "bytes": 87234,
+        "observed_fields": {
+          "passed": true,
+          "scope": "actual original logo bytes/CRUD/uploads versus native HTTP in original container network and disposable PostgreSQL",
+          "project": "dispatcharr-logos-72d2a945c6",
+          "performance_verified": false,
+          "application_image_verified": true,
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "source_cases": 101,
+          "source_http_responses": 104,
+          "packaged_checks_sha256": "0633ad7ab9085c3da41cb71e71969d3372e26b97d77cfefaf6dadbc06f74d1a2",
+          "cleanup": "project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "candidate_image_binding": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "project",
+          "performance_verified",
+          "application_image_verified",
+          "tool_source_sha256",
+          "fixture_ports",
+          "build_manifest_sha256",
+          "candidate_image_binding",
+          "source_cases",
+          "source_http_responses",
+          "packaged_checks_sha256",
+          "cleanup",
+          "resources_retained"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/channel-logos/packaged-checks.json",
+        "relative": "packaged-checks.json",
+        "sha256": "0633ad7ab9085c3da41cb71e71969d3372e26b97d77cfefaf6dadbc06f74d1a2",
+        "bytes": 9316,
+        "observed_fields": {
+          "passed": true,
+          "checks": {
+            "length": 101,
+            "explicit_passed_true": 101,
+            "explicit_passed_false": 0,
+            "explicit_flags": 101
+          },
+          "source_cases": 101,
+          "source_http_responses": 104
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "checks",
+          "source_cases",
+          "source_http_responses"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-logos-72d2a945c6"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-logos-72d2a945c6"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504418.8684633
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-logos-72d2a945c6"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504418.8784475
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-logos-72d2a945c6"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504418.888475
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504418.8583431,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504418.9094498
+}

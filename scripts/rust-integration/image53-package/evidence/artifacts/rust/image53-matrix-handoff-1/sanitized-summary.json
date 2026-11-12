@@ -1,0 +1,802 @@
+{
+  "format_version": 1,
+  "passed": true,
+  "scope": "Finite28 image53 scoped package/CLI/native-lifecycle gates; no new resource measurements, full application/milestone acceptance, or Main probes inferred",
+  "candidate": {
+    "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+    "git_revision": "f0bfc2f200dcfd1f64ae32a9855ea250731ce67f",
+    "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+    "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+  },
+  "actual_nodes": 28,
+  "actual_controller_exit_zero": 28,
+  "reviewed_owned_cleanup_nodes": 27,
+  "offline_no_resources_nodes": 1,
+  "fixture_failures": 0,
+  "fixture_retries": 0,
+  "per_node": [
+    {
+      "name": "baseline-all",
+      "actual_scope_and_counts": {
+        "checks": 1024,
+        "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "contract_suites": [
+          "accounts",
+          "account_crud",
+          "app_data",
+          "core",
+          "profiles",
+          "memberships",
+          "channel_reads",
+          "channel_crud",
+          "groups",
+          "channel_stops",
+          "group_cleanup",
+          "streams",
+          "provider_reads",
+          "server_group_crud",
+          "filter_crud",
+          "core_utilities",
+          "core_stream_crud",
+          "notifications"
+        ],
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "suite_isolation_observation": [
+          {
+            "before_suite": "core",
+            "reason": "independent login contracts share real per-IP 3/min budgets",
+            "wait_seconds": 62
+          }
+        ],
+        "application_performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/baseline-all.json",
+        "sha256": "6641306ce6dadf976f1d17952e53ab2a3251e5e31ef32e6cd98ae777cf37b2eb"
+      }
+    },
+    {
+      "name": "proxy-auth",
+      "actual_scope_and_counts": {
+        "checks": 38,
+        "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "contract_suites": [
+          "proxy_auth"
+        ],
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "suite_isolation_observation": null,
+        "application_performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/proxy-auth.json",
+        "sha256": "a00227e4c040029850543a052a2109277fe5d33a0137527ebc61b0abf332f085"
+      }
+    },
+    {
+      "name": "auth-hash",
+      "actual_scope_and_counts": {
+        "checks": 34,
+        "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "contract_suites": [
+          "auth_hash"
+        ],
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "application_performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/auth-hash.json",
+        "sha256": "8dcfccad9886ec43002bc2cde8ba2d2ee7b5cec77d362e367a0ce0e4edd98749"
+      }
+    },
+    {
+      "name": "live-react-stats",
+      "actual_scope_and_counts": {
+        "backends": {
+          "Original": {
+            "browser_exit": 0,
+            "normal_login": true,
+            "frames": [
+              26,
+              76
+            ],
+            "time": [
+              0.82492,
+              2.822394
+            ],
+            "stream_HTTP_200": 1,
+            "statistics_identity_verified": true,
+            "player_closed": true,
+            "uncaught_exceptions": 0
+          },
+          "native": {
+            "browser_exit": 0,
+            "normal_login": true,
+            "frames": [
+              25,
+              75
+            ],
+            "time": [
+              0.839013,
+              2.83563
+            ],
+            "stream_HTTP_200": 1,
+            "statistics_identity_verified": true,
+            "player_closed": true,
+            "uncaught_exceptions": 0
+          }
+        },
+        "frontend_assets_recorded": 112,
+        "candidate": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "resource_sampler": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/live-react-stats/Root-node-review.json",
+        "sha256": "2d30a4dd00ef86de3232b1bbd97df9e131deb85c56c7958c2a11105d27c6fcdf"
+      }
+    },
+    {
+      "name": "user-agent",
+      "actual_scope_and_counts": {
+        "source_cases": 79,
+        "default_id_cases": 13,
+        "resource_checks": 3,
+        "checks": 95,
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/user-agent.json",
+        "sha256": "fdf9e6bc3be77012e9b6108d6065804ecc942a78ba04b9dd8ae0aa150e5ddf25"
+      }
+    },
+    {
+      "name": "output-profile",
+      "actual_scope_and_counts": {
+        "source_cases": 127,
+        "sql_fault_cases": 4,
+        "resource_checks": 3,
+        "checks": 130,
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/output-profile.json",
+        "sha256": "a2fcbe9e19bca9460c63ab3c124aeeee5bfede34eb67ad74ba146187cc2bdb27"
+      }
+    },
+    {
+      "name": "profile-restart",
+      "actual_scope_and_counts": {
+        "backend_phases": 2,
+        "warmups": 2,
+        "scope": "Actual original/native same-service output-profile deletion/cache effects after owned Redis restart; fixture peer rewarms named cache keys, not an active media continuity gate",
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "candidate_process_preserved": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/profile-restart.json",
+        "sha256": "c47e8767ec1d17d8f00e18c984b8b5d97f68a6033625bf9372b8244a2b95d740"
+      }
+    },
+    {
+      "name": "guide-grid-packaged",
+      "actual_scope_and_counts": {
+        "counts": {
+          "Source_cases": 104,
+          "packaged_grid_cases": 43,
+          "differences": 0
+        },
+        "flags": {
+          "native_verified": false,
+          "native_guide_http_verified": false,
+          "native_grid_packaged_image_verified": true,
+          "application_parity_verified": false,
+          "performance_verified": false,
+          "candidate_provenance": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+          }
+        }
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/guide-grid-packaged.json",
+        "sha256": "5759916b1f96b2e099d4a12dc49761714a911a9da60d0ed8027fd2ab6265ac43"
+      }
+    },
+    {
+      "name": "current-packaged",
+      "actual_scope_and_counts": {
+        "source_cases": 104,
+        "native_verified": false,
+        "native_guide_http_verified": false,
+        "native_current_packaged_image_verified": true,
+        "performance_verified": false,
+        "packaged_current_cases": 64,
+        "differences": [],
+        "application_parity_verified": false,
+        "candidate_provenance": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+        }
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/current-packaged.json",
+        "sha256": "a750e4e8142c227db482618baed7c3f4c7c0a561b38e844efe9161ab56591dec"
+      }
+    },
+    {
+      "name": "m4-functional",
+      "actual_scope_and_counts": {
+        "scope": "Sustained native XC VOD and archive catch-up playback subset; not full application acceptance",
+        "functional_preflights": [
+          {
+            "protocol": "vod",
+            "backend": "source",
+            "prefix_bytes": 1048576,
+            "decoded_frames": 200,
+            "provider_counter_released": true
+          },
+          {
+            "protocol": "vod",
+            "backend": "candidate",
+            "prefix_bytes": 1048576,
+            "decoded_frames": 200,
+            "provider_counter_released": true
+          },
+          {
+            "protocol": "timeshift",
+            "backend": "source",
+            "prefix_bytes": 1048576,
+            "decoded_frames": 199,
+            "provider_counter_released": true
+          },
+          {
+            "protocol": "timeshift",
+            "backend": "candidate",
+            "prefix_bytes": 1048576,
+            "decoded_frames": 199,
+            "provider_counter_released": true
+          }
+        ],
+        "candidate_provenance": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "measurements_started": false,
+        "performance_verified": false,
+        "full_m4_parity_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/m4-functional.json",
+        "sha256": "96b4878a8a899119483d7e23ce76fff76c34e4f7eb5d8ee8b8c47031a3667f78"
+      }
+    },
+    {
+      "name": "clean-install",
+      "actual_scope_and_counts": {
+        "checks": 11,
+        "scope": "pure-native fresh empty officialPG17/Redis Compose; actual unchanged React first-admin/login/init/restart",
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "no_django_service": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/clean-install.json",
+        "sha256": "9b659fa8e5263867ea73ad2391a34f9dc2dcb1f97d24c06c48780078eaf91cc8"
+      }
+    },
+    {
+      "name": "category-browser",
+      "actual_scope_and_counts": {
+        "Source_cases": 664,
+        "ordinary_compared": 393,
+        "category_compared": 163,
+        "category_browser_comparisons": [
+          {
+            "kind": "movies",
+            "exact_selected_label_and_ordered_content_and_visible_count": true
+          },
+          {
+            "kind": "series",
+            "exact_selected_label_and_ordered_content_and_visible_count": true
+          }
+        ],
+        "restoration": {
+          "restored": true,
+          "users_passwords_and_rows_exact": true,
+          "poster_relations_exact": true,
+          "category_enabled_flags_exact": true
+        },
+        "application_image_verified": true,
+        "scope": "Ordinary/category API+React workflow subset; no provider refresh/playback/performance/fullVOD claim",
+        "source_wrapper_native_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/category-browser.json",
+        "sha256": "fa12ef4420fad9ba17b3c8332c4365abfcfda7a17e82f757ee60c769d45134a0"
+      }
+    },
+    {
+      "name": "unified-HTML-browser",
+      "actual_scope_and_counts": {
+        "Source_cases": 592,
+        "Source_unified_observations": 189,
+        "ordinary_compared": 393,
+        "unified_compared": 188,
+        "HTML_compared": 56,
+        "HTML_assets_verified": false,
+        "full_HTML_parity": false,
+        "browser_exact_ordered_content": true,
+        "application_image_verified": true,
+        "scope": "Captured ordinary/unified HTTP+HTML56 and unchanged React All subset; no provider/artwork/playback/episode/fullHTML/performance claim"
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/unified-HTML-browser.json",
+        "sha256": "9d97a7eca1ce88cef609c93bee1a03c31625c641610a844283d9d52d92099c30"
+      }
+    },
+    {
+      "name": "complete-refresh-original",
+      "actual_scope_and_counts": {
+        "counts": {
+          "actual_Source_checks": 40,
+          "imports": 2,
+          "Source_workers": 6,
+          "fixture_clock": "2026-11-12T17:06:26+00:00"
+        },
+        "flags": {
+          "native_jobs_verified": false,
+          "performance_verified": false,
+          "original_complete_refresh_workflow_verified": true,
+          "native_worker_execution_verified": false
+        }
+      },
+      "observed_default_audits": [
+        {
+          "report": "artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/integration.json",
+          "field": "default_database_unchanged",
+          "value": true,
+          "raw_manifest_pair_not_claimed_retained": true
+        }
+      ],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/complete-refresh-original.json",
+        "sha256": "4f2d0014555c535c89fca0f246637f905e554e77a38b85e796ad877786681027"
+      }
+    },
+    {
+      "name": "complete-refresh",
+      "actual_scope_and_counts": {
+        "checks": 40,
+        "imports": 2,
+        "paired_projection_exact": true,
+        "candidate_UID": 65532,
+        "native_worker_execution_verified": true,
+        "original_complete_refresh_workflow_verified": false,
+        "native_jobs_verified": false,
+        "scope": "Manifest-bound Native import->Index+Series0->second import->Current/guide; outer Source wrapper flags retained separately"
+      },
+      "observed_default_audits": [
+        {
+          "report": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/integration.json",
+          "field": "default_database_unchanged",
+          "value": true
+        }
+      ],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/complete-refresh.json",
+        "sha256": "5ce07743919ad573605fb113134fceaf55a81b7956ac1fc1c01436b9325cde58"
+      }
+    },
+    {
+      "name": "static-Chrome-HTML-browser",
+      "actual_scope_and_counts": {
+        "Source_cases": 592,
+        "ordinary_compared": 393,
+        "unified_compared": 188,
+        "HTML_compared": 56,
+        "Chrome_HTML_compared": 32,
+        "static_compared": 68,
+        "assets": 27,
+        "scope": "Captured static27/68 +HTML56/Chrome32/unified188 +actualReactAll; no fullstatic/HTML grammar, provider, playback or performance claim",
+        "full_HTML_parity": false,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/static-Chrome-HTML-browser.json",
+        "sha256": "61153af1f53673d69e8a88e0f7ce0b3d629b03a0b8971bf7f2384a53a0774a8d"
+      }
+    },
+    {
+      "name": "packaged-provider-actions",
+      "actual_scope_and_counts": {
+        "Source_cases": 592,
+        "ordinary_compared": 393,
+        "provider_actions_compared": 150,
+        "predeclared_fresh_references": 25,
+        "owned_metadata_restored": true,
+        "scope": "actual canonical packaged provider-action150 TCP, fixed25 same-state freshSource; no cached-info/image/React/performance acceptance",
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/packaged-provider-actions.json",
+        "sha256": "a57de47a669f4171c5a2f7cda4f0342b0093e3fc8ec9ad1851ebbeed8be05075"
+      }
+    },
+    {
+      "name": "packaged-cached-provider-info",
+      "actual_scope_and_counts": {
+        "Source_cases": 592,
+        "ordinary_compared": 393,
+        "cached_info_compared": 90,
+        "Source_unstaggered": 10,
+        "candidate_unstaggered": 10,
+        "scope": "actual canonical packaged cached-info90 TCP and Source10/candidate10; no remote refresh/image/browser/performance acceptance",
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/packaged-cached-provider-info.json",
+        "sha256": "523dd181e5d9636ab77c2b70ed7bac4a09dabb559bb185c46f1877e48790593d"
+      }
+    },
+    {
+      "name": "channel-logos",
+      "actual_scope_and_counts": {
+        "checks": 101,
+        "Source_cases": 101,
+        "Source_HTTP_responses": 104,
+        "scope": "actual original logo bytes/CRUD/uploads versus native HTTP in original container network and disposable PostgreSQL",
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/channel-logos.json",
+        "sha256": "d1a37c0e48df61822e59957a416421dc67626e21a97af0d5342a74295773231a"
+      }
+    },
+    {
+      "name": "packaged-vod-images",
+      "actual_scope_and_counts": {
+        "Source_cases": 592,
+        "ordinary_compared": 393,
+        "image_records": 240,
+        "FIFO_cancellation_audits": 2,
+        "scope": "actual Original/canonical packaged image TCP",
+        "owned_metadata_restored": true,
+        "owned_local_file_removed": true,
+        "provider_refresh_requests": 0,
+        "volatile_headers_not_selected": [
+          "Date",
+          "Server"
+        ],
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/packaged-vod-images.json",
+        "sha256": "1e267867444619d1fd00892693d20b052b42977749e5561e6c5445d16b306810"
+      }
+    },
+    {
+      "name": "provider-modal-browser",
+      "actual_scope_and_counts": {
+        "scope": "Actual unchanged React movie/series modals, provider selection, decoded proxied artwork; no resource claim",
+        "normal_login_count": 2,
+        "exact_ordered_modal_observations": true,
+        "restoration": {
+          "restored": true,
+          "seven_model_row_fingerprints_exact": true,
+          "user_full_microsecond_row_exact": true,
+          "origin_requests": [
+            {
+              "method": "GET",
+              "path": "/poster-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/episode-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/episode-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/episode-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/episode-b.svg",
+              "allowed": true
+            }
+          ],
+          "no_provider_contact": true,
+          "scope": "Login audit events and sequence advancement remain genuine fixture effects; owned project must be destroyed."
+        },
+        "candidate_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/provider-modal-browser.json",
+        "sha256": "9f641c051ac3b0e607527d2a939f36e9e3916369bd8fa748370396ed50157d9b"
+      }
+    },
+    {
+      "name": "fresh-Original17capture",
+      "actual_scope_and_counts": {
+        "cases": 17,
+        "scope": "Original actual operator subprocess oracle",
+        "native_verified": false,
+        "performance_verified": false
+      },
+      "observed_default_audits": [
+        {
+          "report": "artifacts/rust/image53-packaged-matrix-1/original17/integration.json",
+          "field": "default_database_unchanged",
+          "value": true
+        }
+      ],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/fresh-Original17capture.json",
+        "sha256": "2845f6f6b3ea39a58c6a5958d1031a4a71f71d8b067962309d02bb027c983cae"
+      }
+    },
+    {
+      "name": "shipped-safe17",
+      "actual_scope_and_counts": {
+        "cases": 17,
+        "scope": "Private packaged native safe CLI on official owned PostgreSQL/Redis; Original Python container is read/fixture/Channels observer only, no Original command/runtime service",
+        "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "source_cases_sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc",
+        "native_help_and_stderr_exact": false,
+        "full_django_cli_verified": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/shipped-safe17.json",
+        "sha256": "5252760b8aee504075e6991fcd27a99f28500817f1cc64c20597e4b0bcb391fc"
+      }
+    },
+    {
+      "name": "shipped-createsuperuser22",
+      "actual_scope_and_counts": {
+        "cases": 22,
+        "scope": "Actual shipped UID65532 createsuperuser22 cases observed by Original Django on owned copied database; no performance/full CLI acceptance",
+        "native_verified": true,
+        "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "inspected_runtime_uid_readonly_capabilities": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [
+        {
+          "report": "artifacts/rust/image53-packaged-matrix-1/create22/integration.json",
+          "field": "default_database_unchanged",
+          "value": true
+        }
+      ],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/shipped-createsuperuser22.json",
+        "sha256": "6944f0e2ebc446d28bc125dbd887b396498423a3d8de9c44993738673f926d29"
+      }
+    },
+    {
+      "name": "strict-typed154",
+      "actual_scope_and_counts": {
+        "passed": true,
+        "cases": 22,
+        "strict_typed_comparisons": 154,
+        "actual_creation_clock_slots_per_backend": 10,
+        "full_CLI_byte_parity": false,
+        "full_M8_or_package_or_performance_acceptance": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/strict-typed154.json",
+        "sha256": "74782be148b4f0ca61c2def5c625d910cca19646f56257682d2e32f8c88de971"
+      }
+    },
+    {
+      "name": "sharedTS18",
+      "actual_scope_and_counts": {
+        "checks": 24,
+        "lifecycle_cases": [
+          "shared-demand",
+          "stop",
+          "owner-crash"
+        ],
+        "scope": "two-worker-native-TS-functional-contracts",
+        "candidate_functional_and_recovery_passed": true,
+        "require_active_metadata": true,
+        "application_performance_verified": false,
+        "milestone_complete": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/sharedTS18.json",
+        "sha256": "6e4c0f2dbb9d29d28b9fbfdc499a19f1bf8dbed0e51edb7b89d787a0e34292af"
+      }
+    },
+    {
+      "name": "sharedTS6-all-down",
+      "actual_scope_and_counts": {
+        "checks": 14,
+        "lifecycle_cases": [
+          "all-workers-down"
+        ],
+        "scope": "two-worker-native-TS-functional-contracts",
+        "candidate_functional_and_recovery_passed": true,
+        "require_active_metadata": true,
+        "application_performance_verified": false,
+        "milestone_complete": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/sharedTS6-all-down.json",
+        "sha256": "95fef482b6277070fee29162dca393a39477b82db46848c14755932b3c2ae72a"
+      }
+    },
+    {
+      "name": "retention100",
+      "actual_scope_and_counts": {
+        "scope": "candidate-only functional retained-media and database accounting",
+        "observer_scope": "bounded sequential admin/Redis/PG snapshots, not isolated CPU or memory measurements",
+        "channels": 10,
+        "late_history_viewers": 100,
+        "late_reader_prefix_matches": 100,
+        "representative_channel_decoders": 10,
+        "decoder_frames": [
+          69,
+          69,
+          69,
+          69,
+          69,
+          69,
+          69,
+          69,
+          69,
+          69
+        ],
+        "no_extra_upstream": true,
+        "local_limit_bytes_per_channel": 4194304,
+        "accounting_snapshots": 4,
+        "candidate_image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "application_performance_verified": false,
+        "milestone_complete": false
+      },
+      "observed_default_audits": [],
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/retention100.json",
+        "sha256": "2b6be073bc01a6eb1f46781643554bc35e12249ee0d261cec31770065ad04937"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/aggregate-reviewed-1.json",
+      "sha256": "c7b6cb6dc3ea4c805f3ee31d1c574c27a600a34eb8eea4e4aaf04edefffe683a"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/final-heavy-idle-1.json",
+      "sha256": "bf2f0893edc028c6d3b5f2a7035ef3f3fa981994a12fc74c215c83482da754f7"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/review-tool-negatives.json",
+      "sha256": "b17f9b0acd4d67adba6e696c21be52d55b77ed46261bb69871d607bce8ff53f7"
+    }
+  ],
+  "separate_unexecuted_by_this_authorization": [
+    "Main4s53",
+    "worker-header-Main53",
+    "notification-create-repeat-Main53"
+  ],
+  "performance_verified": false,
+  "full_application_parity_verified": false,
+  "milestones_promoted": false,
+  "author_credit": "Original Dispatcharr and dependency authors retain application, algorithm and license credit; these controllers qualify only declared scoped gates."
+}

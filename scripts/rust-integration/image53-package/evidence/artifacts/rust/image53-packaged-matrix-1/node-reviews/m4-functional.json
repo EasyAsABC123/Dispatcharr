@@ -1,0 +1,73 @@
+{
+  "name": "m4-functional",
+  "controller_result_sha256": "57af037190524796f73a853741ff8ee16a1674b244bf0b12988aa830a97879c6",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/m4-functional/result.json",
+      "sha256": "06ec37d61e12e8a2cf8d95269e200c4c45c55a074513b68ac569ee85bfcfd659"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "scope": "Sustained native XC VOD and archive catch-up playback subset; not full application acceptance",
+    "functional_preflights": [
+      {
+        "protocol": "vod",
+        "backend": "source",
+        "prefix_bytes": 1048576,
+        "decoded_frames": 200,
+        "provider_counter_released": true
+      },
+      {
+        "protocol": "vod",
+        "backend": "candidate",
+        "prefix_bytes": 1048576,
+        "decoded_frames": 200,
+        "provider_counter_released": true
+      },
+      {
+        "protocol": "timeshift",
+        "backend": "source",
+        "prefix_bytes": 1048576,
+        "decoded_frames": 199,
+        "provider_counter_released": true
+      },
+      {
+        "protocol": "timeshift",
+        "backend": "candidate",
+        "prefix_bytes": 1048576,
+        "decoded_frames": 199,
+        "provider_counter_released": true
+      }
+    ],
+    "candidate_provenance": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "measurements_started": false,
+    "performance_verified": false,
+    "full_m4_parity_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-m4-perf-df6106ae54"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/m4-functional-cleanup.json",
+      "sha256": "d963b11890cd596c3b6f706c2ff8902409a09822c9c0a6f68d2d9f62e663fb01"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "packaged-vod-images",
+  "controller_result_sha256": "c7d484875bdd35df4104a53ada6819f00c625ef4ba63083a259b56b6ebfb49d2",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/source-run.json",
+      "sha256": "cd1954cb40548cc2bc56025e491cc67f9ae862d879a4645358eb031f9ed048d7"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/source-run.json",
+      "sha256": "20df60e3d8ad5e3a63c8ef580e9b3047ed39091e4c3052c30361eb629195ce5d"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-http.json",
+      "sha256": "06a0f437eb4ed2cb05f92b28b2e2106df84af041e39b65fec63935835241ae88"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-vod-images.json",
+      "sha256": "25f0aba10163c038ade53d855c84a8c1b57ab7ead1ff8feaf7b028f3ac5fc89e"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-effects.json",
+      "sha256": "3db4b4bb8185aa7970b801d8df5544682b03c7b75e4ac5706c5e9147ca7d7409"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "Source_cases": 592,
+    "ordinary_compared": 393,
+    "image_records": 240,
+    "FIFO_cancellation_audits": 2,
+    "scope": "actual Original/canonical packaged image TCP",
+    "owned_metadata_restored": true,
+    "owned_local_file_removed": true,
+    "provider_refresh_requests": 0,
+    "volatile_headers_not_selected": [
+      "Date",
+      "Server"
+    ],
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-vod-api-http-05ffa5f6fe"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/packaged-vod-images-cleanup.json",
+      "sha256": "8bafcc9a6b254a6d238be6d63039152836bfe6a9fb10c79740bd758870132fa1"
+    }
+  }
+}

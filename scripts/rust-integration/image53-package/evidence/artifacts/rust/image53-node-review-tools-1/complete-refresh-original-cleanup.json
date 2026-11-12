@@ -1,0 +1,125 @@
+{
+  "name": "complete-refresh-original",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "486762252d98d934b5c2a8232aca8c5e4a9848f9bc50181f3ffe539948d04c42",
+  "observation": {
+    "name": "complete-refresh-original",
+    "status": "reports-observed-not-accepted",
+    "classification": "Actual Original HTTP/worker reference, no candidate execution",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/integration.json",
+        "relative": "integration.json",
+        "sha256": "39821f99172d03ce1e0bf94a7d10408fbed79d57034e5d14eb6ee3adaf661ca6",
+        "bytes": 131878,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Actual Original HTTP import\u2192refresh+Index+Series0\u2192secondimport\u2192guide; no descendant quarantine",
+          "project": "dispatcharr-refresh-workflow-original-756a7e344e",
+          "copied_database": "rust_probe_backup_jobs_756a7e344e",
+          "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "native_jobs_verified": false,
+          "performance_verified": false,
+          "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "copied_nonempty_tables": 26,
+          "checks": 40,
+          "default_database_unchanged": true,
+          "source_report_sha256": "cfec24aa2ac9da7405e30dcc176e7d9004be77c61ccc43c094bf5573fed55767",
+          "original_complete_refresh_workflow_verified": true,
+          "native_worker_execution_verified": false,
+          "cleanup": "project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "project",
+          "copied_database",
+          "original_revision",
+          "tool_source_sha256",
+          "native_jobs_verified",
+          "performance_verified",
+          "original_archive_sha256",
+          "ports",
+          "copied_nonempty_tables",
+          "checks",
+          "default_database_unchanged",
+          "source_report_sha256",
+          "original_complete_refresh_workflow_verified",
+          "native_worker_execution_verified",
+          "cleanup",
+          "resources_retained"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [
+      {
+        "report": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/integration.json",
+        "field": "default_database_unchanged",
+        "value": true
+      }
+    ],
+    "default_audit_missing": false,
+    "actual_explicit_project_ids": [
+      "dispatcharr-refresh-workflow-original-756a7e344e"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-refresh-workflow-original-756a7e344e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503262.8053153
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-refresh-workflow-original-756a7e344e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503262.8155644
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-refresh-workflow-original-756a7e344e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503262.8259394
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794503262.7955904,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794503262.8261242
+}

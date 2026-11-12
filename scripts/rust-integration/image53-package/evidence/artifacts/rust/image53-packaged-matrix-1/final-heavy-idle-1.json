@@ -1,0 +1,46 @@
+{
+  "observed_epoch": 1794505060.8701158,
+  "scope": "Read-only postmatrix host inventory; no stop/prune",
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project",
+        "-q"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project",
+        "-q"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "visible_build_media_processes": [],
+  "all_Docker_containers_empty": true,
+  "compose_labeled_networks_empty": true,
+  "compose_labeled_volumes_empty": true
+}

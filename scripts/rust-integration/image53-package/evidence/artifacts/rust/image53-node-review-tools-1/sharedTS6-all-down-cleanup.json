@@ -1,0 +1,143 @@
+{
+  "name": "sharedTS6-all-down",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "c423f529f4476b39428bc54c6f3ef6737f1f4f641cdd62fe0cb3ae8defe4af1a",
+  "observation": {
+    "name": "sharedTS6-all-down",
+    "status": "reports-observed-not-accepted",
+    "classification": "Use explicit actual report scopes/flags; no synthesized all-application claim",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/sharedTS6-all-down/shared-ts.json",
+        "relative": "shared-ts.json",
+        "sha256": "510cfb4aff63b78149ed3689a4a555a6f4a824b65f1fcd424392bd2eabe39d7f",
+        "bytes": 91147,
+        "observed_fields": {
+          "scope": "two-worker-native-TS-functional-contracts",
+          "passed": true,
+          "application_performance_verified": false,
+          "milestone_complete": false,
+          "require_active_metadata": true,
+          "project": "dispatcharr-shared-ts-009a0868451e",
+          "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "checks": {
+            "length": 14,
+            "explicit_passed_true": 14,
+            "explicit_passed_false": 0,
+            "explicit_flags": 14
+          },
+          "cases": {
+            "length": 1,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "commands": {
+            "length": 59,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "candidate_build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "candidate_build_manifest": "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+          "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "baseline_protocol_functional_passed": null,
+          "candidate_functional_and_recovery_passed": true,
+          "cleanup": "isolated Compose project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {
+          "candidate_build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+        },
+        "top_level_keys": [
+          "scope",
+          "passed",
+          "application_performance_verified",
+          "milestone_complete",
+          "require_active_metadata",
+          "project",
+          "baseline_commit",
+          "baseline_image",
+          "checks",
+          "cases",
+          "commands",
+          "candidate_build_manifest_sha256",
+          "candidate_build_manifest",
+          "ports",
+          "tool_sha256",
+          "baseline_archive_sha256",
+          "provider_fixture",
+          "fixture",
+          "baseline_protocol_functional_passed",
+          "candidate_functional_and_recovery_passed",
+          "cleanup",
+          "changed_tool_sources",
+          "resources_retained"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-shared-ts-009a0868451e"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-009a0868451e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504872.3358645
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-009a0868451e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504872.3459651
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-009a0868451e"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504872.356315
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504872.3248563,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504872.356482
+}

@@ -1,0 +1,57 @@
+{
+  "name": "complete-refresh-original",
+  "controller_result_sha256": "486762252d98d934b5c2a8232aca8c5e4a9848f9bc50181f3ffe539948d04c42",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/integration.json",
+      "sha256": "39821f99172d03ce1e0bf94a7d10408fbed79d57034e5d14eb6ee3adaf661ca6"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/source-refresh-workflow-private.json",
+      "sha256": "cfec24aa2ac9da7405e30dcc176e7d9004be77c61ccc43c094bf5573fed55767"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "report": "artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/integration.json",
+      "field": "default_database_unchanged",
+      "value": true,
+      "raw_manifest_pair_not_claimed_retained": true
+    }
+  ],
+  "audit_scope": "Only explicit controller default_database_unchanged flag for Source workflow; guide default audit not claimed",
+  "observed_counts_and_candidate_Source_scope": {
+    "counts": {
+      "actual_Source_checks": 40,
+      "imports": 2,
+      "Source_workers": 6,
+      "fixture_clock": "2026-11-12T17:06:26+00:00"
+    },
+    "flags": {
+      "native_jobs_verified": false,
+      "performance_verified": false,
+      "original_complete_refresh_workflow_verified": true,
+      "native_worker_execution_verified": false
+    }
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-refresh-workflow-original-756a7e344e"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/complete-refresh-original-cleanup.json",
+      "sha256": "6236d02185481b18f93b31693a7793b1d12d38287780e78dcee49906893957bf"
+    }
+  }
+}

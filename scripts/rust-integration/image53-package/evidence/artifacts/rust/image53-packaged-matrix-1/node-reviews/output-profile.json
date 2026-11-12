@@ -1,0 +1,49 @@
+{
+  "name": "output-profile",
+  "controller_result_sha256": "f934c4f20e4652fa9f6ed30860685c664697d4c3f8d842eb00ee1f837e5e7cbb",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/output-profile/integration.json",
+      "sha256": "6efeb3be192b5cf814fe00762dcc18be3b0d424e0e129190d2f548f86a20afb8"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/output-profile/packaged-checks.json",
+      "sha256": "563963af071f3bf50f0566b45cbcfde77d3e78731765ad330268a834a8c77dd0"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Only actual Source/Native checks and cleanup; no implicit default-database audit field",
+  "observed_counts_and_candidate_Source_scope": {
+    "source_cases": 127,
+    "sql_fault_cases": 4,
+    "resource_checks": 3,
+    "checks": 130,
+    "candidate_image_binding": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "application_image_verified": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-output-profiles-c794d901b4"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/output-profile-cleanup.json",
+      "sha256": "afdd6ed24c054df78b8f11a2941e66a6069a1aeba599eb7f9e07c1c2870e3164"
+    }
+  }
+}

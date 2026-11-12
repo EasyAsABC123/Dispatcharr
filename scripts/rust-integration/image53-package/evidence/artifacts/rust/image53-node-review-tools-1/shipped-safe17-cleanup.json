@@ -1,0 +1,121 @@
+{
+  "name": "shipped-safe17",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "61866f18112d6aa6c411ee321a815df2a4187d3647dbcb2fb1e1ebda19fb7ec4",
+  "observation": {
+    "name": "shipped-safe17",
+    "status": "reports-observed-not-accepted",
+    "classification": "Native safe CLI with owned PG/Redis; no full Django CLI parity",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/safe17/proof.json",
+        "relative": "proof.json",
+        "sha256": "eb1749d1ebc095a75cad616c626add3e307e2c12253b39ed3f0eb833939b361e",
+        "bytes": 123820,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Private packaged native safe CLI on official owned PostgreSQL/Redis; Original Python container is read/fixture/Channels observer only, no Original command/runtime service",
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "source_cases_sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc",
+          "schema_sha256": "35d78338081e2d6fe3149c58d9a041e8d8570a410fa7f49aad36e4b9f858e9a9",
+          "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "project": "dispatcharr-operator-package-9554f8ecba",
+          "cases": {
+            "length": 17,
+            "explicit_passed_true": 17,
+            "explicit_passed_false": 0,
+            "explicit_flags": 17
+          },
+          "native_help_and_stderr_exact": false,
+          "full_django_cli_verified": false,
+          "cleanup_passed": true
+        },
+        "candidate_Source_binding_fields": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+        },
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "image_id",
+          "source_tree_sha256",
+          "build_manifest_sha256",
+          "source_cases_sha256",
+          "tool_sha256",
+          "schema_sha256",
+          "original_archive_sha256",
+          "project",
+          "cases",
+          "native_help_and_stderr_exact",
+          "full_django_cli_verified",
+          "cleanup_passed"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-operator-package-9554f8ecba"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-package-9554f8ecba"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504587.7753885
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-package-9554f8ecba"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504587.785133
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-package-9554f8ecba"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504587.7943497
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504587.7655718,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504587.7944577
+}

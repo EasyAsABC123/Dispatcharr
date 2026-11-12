@@ -1,0 +1,741 @@
+{
+  "schema": 1,
+  "scope": "review-only image53 finite package qualification plan",
+  "dispatch_authorized": false,
+  "performance_acceptance": false,
+  "candidate": {
+    "manifest": "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+    "manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+    "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+    "revision": "f0bfc2f200dcfd1f64ae32a9855ea250731ce67f",
+    "tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+    "archive_sha256": "92cd08964a0cfd0d0349c5c0dcb265912563c7a743bc5fab4476cdb8019b7103",
+    "runtime_map_sha256": "a729127b8f57f261433152d958b60695fb9e25ce824b65678b614378ac6bc8c5",
+    "runtime_inputs": 791,
+    "app_inputs": 1288
+  },
+  "support_revision": "f0bfc2f200dcfd1f64ae32a9855ea250731ce67f",
+  "support_input_map_sha256": "bd476ff596fcb7347d371fcda49b6ad83d1cfd8f393e071b133a0805fb3a2521",
+  "Git_environment_file": "environment.json",
+  "support_context": "full6148 tracked files/private detachedHEAD+privateindex/read-only alternates; all nestedGitarchives pinf0, no sharedHEAD",
+  "groups": [
+    {
+      "name": "baseline-all",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/baseline-all",
+        "--candidate-image",
+        "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--contract-suites",
+        "all"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "proxy-auth",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/proxy-auth",
+        "--candidate-image",
+        "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--contract-suites",
+        "proxy_auth",
+        "--trusted-proxy-fixture"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "auth-hash",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/auth-hash",
+        "--candidate-image",
+        "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--contract-suites",
+        "auth_hash",
+        "--trusted-proxy-fixture"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "live-react-stats",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-live-browser/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/live-react-stats",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "user-agent",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/run_user_agent_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/user-agent",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "output-profile",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/run_output_profile_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/output-profile",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "profile-restart",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/run_output_profile_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/profile-restart",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--redis-restart"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "guide-grid-packaged",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/guide-grid-packaged",
+        "--candidate-image",
+        "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--candidate-grid-wire"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3",
+      "pre_dispatch_clock_guard": {
+        "UTC_minute_range_inclusive": [
+          0,
+          35
+        ],
+        "check_before_output_or_fixture": true,
+        "Source_ten_minute_hour_guard_unchanged": true,
+        "Source_five_minute_expiry_unchanged": true,
+        "no_retry_or_clock_normalization": true
+      }
+    },
+    {
+      "name": "current-packaged",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-epg-contracts/control_reads.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/current-packaged",
+        "--candidate-image",
+        "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--candidate-current"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "m4-functional",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-m4-perf/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/m4-functional",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "clean-install",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/run_clean_install.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/clean-install",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "category-browser",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/category-browser",
+        "--mode",
+        "http",
+        "--packaged-categories",
+        "--category-closed-gaps",
+        "--category-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "unified-HTML-browser",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser",
+        "--mode",
+        "http",
+        "--packaged-unified",
+        "--packaged-html",
+        "--unified-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "complete-refresh-original",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-job-contracts/run_refresh_workflow.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/complete-refresh-original"
+      ],
+      "requires": [],
+      "kind": "fresh-Original-prerequisite",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "complete-refresh",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-job-contracts/run_refresh_workflow.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/complete-refresh",
+        "--manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--reference",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/complete-refresh-original"
+      ],
+      "requires": [
+        "complete-refresh-original"
+      ],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3",
+      "dispatch_chain": {
+        "immediate_after": "complete-refresh-original",
+        "same_lane_no_intervening_job": true,
+        "maximum_reference_clock_age_seconds": 900,
+        "Source_actual_guide_end_clock_plus_seconds": 7200,
+        "no_clock_normalization": true
+      }
+    },
+    {
+      "name": "static-Chrome-HTML-browser",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-vod-api-contracts/run.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser",
+        "--mode",
+        "http",
+        "--packaged-unified",
+        "--packaged-html",
+        "--packaged-static",
+        "--unified-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "packaged-provider-actions",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-vod-api-contracts/run_provider_actions_packaged.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/packaged-provider-actions",
+        "--mode",
+        "http",
+        "--packaged-provider-actions",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "packaged-cached-provider-info",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-vod-api-contracts/run_packaged_cached_info.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/packaged-cached-provider-info",
+        "--mode",
+        "http",
+        "--packaged-cached-info",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "channel-logos",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/run_logo_contracts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/channel-logos",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "packaged-vod-images",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-vod-api-contracts/run_packaged_vod_images.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/packaged-vod-images",
+        "--mode",
+        "http",
+        "--packaged-vod-images",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "provider-modal-browser",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-vod-api-contracts/run_provider_modal_browser.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/provider-modal-browser",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "requires": [],
+      "kind": "packaged-functional",
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "fresh-Original17capture",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-operator-contracts/run_source.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/original17"
+      ],
+      "kind": "CLI-functional",
+      "requires": [],
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "shipped-safe17",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-operator-contracts/run_packaged.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/safe17",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--source-cases",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/original17/operator-cli-source.json"
+      ],
+      "kind": "CLI-functional",
+      "requires": [
+        "fresh-Original17capture"
+      ],
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "shipped-createsuperuser22",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-operator-contracts/createsuperuser-packaged/run_source.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/create22",
+        "--build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json"
+      ],
+      "kind": "CLI-functional",
+      "requires": [],
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "strict-typed154",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-operator-contracts/createsuperuser-native/verify.py",
+        "--source",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-operator-contracts/createsuperuser-native/source-createsuperuser-4.json",
+        "--native",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/create22/operator-cli-source.json"
+      ],
+      "kind": "offline-typed-comparison",
+      "requires": [
+        "shipped-createsuperuser22"
+      ],
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "ordinary-max3"
+    },
+    {
+      "name": "sharedTS18",
+      "kind": "native-lifecycle-functional",
+      "requires": [],
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/shared_ts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/sharedTS18",
+        "--candidate-image",
+        "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--backends",
+        "candidate",
+        "--cases",
+        "shared-demand",
+        "stop",
+        "owner-crash",
+        "--require-active-metadata"
+      ],
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "solo-heavy-functional"
+    },
+    {
+      "name": "sharedTS6-all-down",
+      "kind": "native-lifecycle-functional",
+      "requires": [],
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/shared_ts.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/sharedTS6-all-down",
+        "--candidate-image",
+        "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--backends",
+        "candidate",
+        "--cases",
+        "all-workers-down",
+        "--require-active-metadata"
+      ],
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "solo-heavy-functional"
+    },
+    {
+      "name": "retention100",
+      "kind": "native-retained-media-functional",
+      "requires": [],
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support/scripts/rust-integration/retention_probe.py",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/retention100",
+        "--candidate-image",
+        "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "--candidate-build-manifest",
+        "/home/justin/github/Dispatcharr/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json",
+        "--expected-local-limit",
+        "4194304",
+        "--late-history-viewers",
+        "100"
+      ],
+      "dispatch_authorized": false,
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+      "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+      "schedule_class": "solo-heavy-functional"
+    }
+  ],
+  "additional_separately_blocked_gates": [
+    {
+      "name": "Main4s53",
+      "dispatch_authorized": false,
+      "kind": "fresh-once-cue-solo-functional",
+      "requires": [
+        "baseline-all",
+        "proxy-auth",
+        "auth-hash",
+        "live-react-stats",
+        "user-agent",
+        "output-profile",
+        "profile-restart",
+        "guide-grid-packaged",
+        "current-packaged",
+        "m4-functional",
+        "clean-install",
+        "category-browser",
+        "unified-HTML-browser",
+        "complete-refresh-original",
+        "complete-refresh",
+        "static-Chrome-HTML-browser",
+        "packaged-provider-actions",
+        "packaged-cached-provider-info",
+        "channel-logos",
+        "packaged-vod-images",
+        "provider-modal-browser",
+        "fresh-Original17capture",
+        "shipped-safe17",
+        "shipped-createsuperuser22",
+        "strict-typed154",
+        "sharedTS18",
+        "sharedTS6-all-down",
+        "retention100"
+      ],
+      "code_status": "new53 closure required; old52 strict788 closure unchanged",
+      "fixed_cases": [
+        "success",
+        "busy",
+        "clientloss"
+      ],
+      "fixed_hold_seconds": 4,
+      "maximum_hold_seconds": 4.35,
+      "control_boundary_seconds": 3.1,
+      "Root_new_cue_required": true,
+      "Source_response_finalization_not_generator_finally": true,
+      "counter_parity_or_fullM4_claimed": false
+    },
+    {
+      "name": "worker-header-Main53",
+      "dispatch_authorized": false,
+      "kind": "new-dedicated-functional-controller-review-required",
+      "requires": [
+        "m4-functional"
+      ],
+      "fixed_branches": [
+        {
+          "request": "GET full",
+          "status": 200,
+          "worker_header": "actual process kernel hostname-PID; stable across requests"
+        },
+        {
+          "request": "GET Range bytes=0-8191",
+          "status": 206,
+          "worker_header": "same cached actual process identity"
+        },
+        {
+          "request": "HEAD",
+          "status": 405,
+          "worker_header": "absent; no upstream body request"
+        },
+        {
+          "request": "initial local provider failure",
+          "status": 500,
+          "worker_header": "absent"
+        },
+        {
+          "request": "invalid presented credential",
+          "status": 401,
+          "worker_header": "absent"
+        }
+      ],
+      "additional_controls": [
+        "provider X-Worker-ID spoof cannot win",
+        "HOSTNAME env spoof cannot replace kernel hostname",
+        "kernel hostname and real processPID witness from exact owned candidate"
+      ],
+      "Source_authority": "pinned Source branch context and9 primitives from worker-identity packet; new Main identity scope, not all-header parity",
+      "Source_syscall_failure_fallback_Main_claimed": false,
+      "Connection_difference_unchanged": true
+    },
+    {
+      "name": "notification-create-repeat-Main53",
+      "dispatch_authorized": false,
+      "kind": "new-dedicated-functional-controller-review-required",
+      "requires": [
+        "baseline-all"
+      ],
+      "Source8_sha256": "fadc5eb12f7b56e5717439da46cf754cc134c94e9bafb8314ed0a804c677c3d9",
+      "cases": [
+        "admin collectionPOST201 defaults/stablebody/own-request-clock",
+        "sequential repeat preserves recorded rows and sequences",
+        "truthy repeat changes action_taken only",
+        "ordinary duplicate rejection consumes no sequence",
+        "PUT/PATCH/DELETE guarded501"
+      ],
+      "scope": "Native normal SQL/Bearer/Main against retained Source framework8 authority; NOT paired Source credentialTCP or fullrolesCRUD",
+      "no_outcome_driven_expectation_change": true,
+      "authority_by_case": {
+        "admin collectionPOST201 defaults/stablebody/own-request-clock": "Source8 admin-create-positive observation",
+        "sequential repeat preserves recorded rows and sequences": "Source8 standard-dismiss-repeat with empty payload observation",
+        "truthy repeat changes action_taken only": "pinned Source dismissal branch + Native extra repeat-truthy-update-only; NOT measured Source8 truthy-repeat request",
+        "ordinary duplicate rejection consumes no sequence": "pinned Source unique model/ModelSerializer/UniqueValidator expectation + Native extra duplicate-key-no-sequence; NO Source8 duplicate-key request",
+        "PUT/PATCH/DELETE guarded501": "retained Native extra scope; broader Source CRUD authority remains separately captured/unclaimed"
+      }
+    }
+  ],
+  "scheduling": {
+    "maximum_ordinary_nodes": 3,
+    "shared_or_retention_only_when_all_other_heavy_idle": true,
+    "shared_order": [
+      "sharedTS18",
+      "sharedTS6-all-down",
+      "retention100"
+    ],
+    "Main4s_requires_new_review_and_quiet_cue": true,
+    "complete_refresh_Source_then_Native_same_lane": true,
+    "no_automatic_retries": true,
+    "failed_owned_cleanup_stops_lane": true
+  },
+  "historical52_failure": "first guidewindow refusal remains in52packet; never overwritten or adapted",
+  "old_source51_normal_sharing_or_M2_M4_gains_transferred": false,
+  "new_lifecycle_draft5_stays_UNBOUND": true,
+  "support_root": "/home/justin/github/Dispatcharr/artifacts/rust/image53-package-plan-1/support",
+  "preserved_plan1_selection_sha256": "264d784fedc7ca7b698abbba7a39810e447c835e9f64d04cd3827578498aac8d",
+  "source48_coordination_barrier": {
+    "owner": "source_contract_finish",
+    "proposed_controller": "artifacts/rust/m5-notification-mutations-source-executor-1",
+    "corrected_controller_status": "executor2 seed/target binding and exception coverage pending Root review",
+    "future_output": "artifacts/rust/m5-notification-mutations-source-1",
+    "must_finish_before_first28_dispatch": true,
+    "fresh_Root_finite_clearance_required": true,
+    "clearance_conditions": [
+      "Source48 attempt settled including failed observation",
+      "independent owned-resource cleanup",
+      "all Docker/heavy work idle before first dispatch"
+    ],
+    "Source48_PASS_or_business_outcome_condition": false,
+    "application_acceptance_prerequisite": false,
+    "no_outcome_driven_schedule": true
+  }
+}

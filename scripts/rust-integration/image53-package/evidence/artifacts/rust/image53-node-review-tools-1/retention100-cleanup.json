@@ -1,0 +1,133 @@
+{
+  "name": "retention100",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "49dd624cc5493c66d5813649ba083799ac135093bf027587f1621142e8f9ff23",
+  "observation": {
+    "name": "retention100",
+    "status": "reports-observed-not-accepted",
+    "classification": "Use explicit actual report scopes/flags; no synthesized all-application claim",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/retention100/retention.json",
+        "relative": "retention.json",
+        "sha256": "c27bab0581e77d78760839c153a226270ae43e6db5c20f3b61e6052e5ad5cc28",
+        "bytes": 208054,
+        "observed_fields": {
+          "scope": "candidate-only functional retained-media and database accounting",
+          "passed": true,
+          "application_performance_verified": false,
+          "milestone_complete": false,
+          "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "candidate_image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "candidate_source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "candidate_build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "commands": {
+            "length": 50,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "observer_scope": "bounded sequential admin/Redis/PG snapshots, not isolated CPU or memory measurements",
+          "project": "dispatcharr-retention-6e9cd42f7cc5",
+          "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "priming_spread_seconds": 0.014388237992534414,
+          "cleanup": "isolated Compose project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {
+          "candidate_image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "candidate_source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "candidate_build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+        },
+        "top_level_keys": [
+          "scope",
+          "passed",
+          "application_performance_verified",
+          "milestone_complete",
+          "baseline_commit",
+          "baseline_image",
+          "candidate_image_id",
+          "candidate_source_tree_sha256",
+          "candidate_build_manifest_sha256",
+          "commands",
+          "samples",
+          "observer_scope",
+          "project",
+          "ports",
+          "tool_sha256",
+          "baseline_archive_sha256",
+          "idle_postgres",
+          "priming",
+          "priming_spread_seconds",
+          "late_history",
+          "cleanup",
+          "changed_tool_sources",
+          "resources_retained"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-retention-6e9cd42f7cc5"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-retention-6e9cd42f7cc5"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794505010.0674343
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-retention-6e9cd42f7cc5"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794505010.0769837
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-retention-6e9cd42f7cc5"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794505010.0869741
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794505010.057402,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794505010.0871577
+}

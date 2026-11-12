@@ -1,0 +1,46 @@
+{
+  "name": "proxy-auth",
+  "controller_result_sha256": "c11cc56092bb01b0cf8dff089f316af2a989e9ba2d2efab82d9e598973903edf",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/proxy-auth/integration.json",
+      "sha256": "84f1defaf945ac1192ead8a556a8eca05e1bde94d5e3d3acd2fd432bc48d3bc5"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "No synthesized default_database audit; actual suite-isolation observations retained where report supplies them",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 38,
+    "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "contract_suites": [
+      "proxy_auth"
+    ],
+    "candidate_image_binding": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "suite_isolation_observation": null,
+    "application_performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-rust-probe-0b63185db9"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/proxy-auth-cleanup.json",
+      "sha256": "e32a4049640b9d1933bf9da6b080fd02aacf2614144b8f165067b3885f986a3a"
+    }
+  }
+}

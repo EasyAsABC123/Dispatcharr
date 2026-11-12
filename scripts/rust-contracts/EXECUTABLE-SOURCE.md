@@ -1,7 +1,7 @@
 # Partial executable Source contract assignments
 
 Original Dispatcharr authors retain all application/algorithm credit and licensing.
-The current register has 117 partial HTTP assignments and eight partial model,
+The current register has 120 partial HTTP assignments and eight partial model,
 task or consumer assignments. These preserve the initial and subsequent cohorts
 documented below. They do not resolve missing methods, complete endpoint role or
 grammar matrices, establish new Native behavior or accept M0/M1.
@@ -124,3 +124,5 @@ nonHTTP task assignments from74 retained worker observations. That cohort
 core suite discovers122 tests (121 pass, one existing optional skip). Exactly15
 already-public fixture/capture dependencies are included in the SDK COPY closure.
 The prior100/68 counts retain their historical cohort scopes.
+
+The [Source48 mutation cohort](notification-mutation-assignments.md) adds three partial detail-method definitions: PUT six cases, PATCH 34 and DELETE eight. They share one retained 48-request Original framework capture and 1,449 checks; counts are not multiplied per method. Source2 exits 0; the earlier preflight failure remains separate. All 795 unselected operation dictionaries and previous 117 assignments remain exact. Credentials/TCP, Native, full roles and full endpoints remain outside this assignment.

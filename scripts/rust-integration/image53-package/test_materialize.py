@@ -1,0 +1,72 @@
+"""Local Git/file-only qualification. No Docker/network/app/media/Cargo commands.
+Run with explicit repository/output; retain all actual child exits/stdout/stderr.
+"""
+import argparse,copy,hashlib,json,os,shutil,subprocess,sys
+from pathlib import Path
+HERE=Path(__file__).resolve().parent
+REV='f0bfc2f200dcfd1f64ae32a9855ea250731ce67f'
+MAP='evidence/artifacts/rust/image53-package-plan-2/support-inputs.json'
+PLAN='evidence/artifacts/rust/image53-package-plan-2/plan.json'
+BUILD='evidence/artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n')
+def reseal(root):
+ p=root/'closure.json';v=json.loads(p.read_text())
+ for x in v['files']:
+  f=root/x['packet_path'];x.update(bytes=f.stat().st_size,sha256=sha(f))
+ save(p,v)
+def change(root,path,fn):
+ p=root/path;v=json.loads(p.read_text());fn(v);save(p,v)
+def map_binding(root):change(root,PLAN,lambda v:v.update(support_input_map_sha256=sha(root/MAP)))
+def main():
+ parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--repository',required=True,type=Path);parser.add_argument('--output',required=True,type=Path);a=parser.parse_args();repo=a.repository.resolve();out=a.output.resolve()
+ if out.exists():raise ValueError('Fresh controls output required')
+ out.mkdir(parents=True);results=[];env={k:v for k,v in os.environ.items()if not k.startswith('GIT_')}
+ def run(name,packet,destination,expected_error=None):
+  existed_before=destination.exists()
+  command=[sys.executable,str(packet/'materialize.py'),'--repository',str(repo),'--output',str(destination)];p=subprocess.run(command,capture_output=True,env=env,timeout=120)
+  stdout=out/(name+'.stdout.log');stderr=out/(name+'.stderr.log');stdout.write_bytes(p.stdout);stderr.write_bytes(p.stderr)
+  result={'name':name,'argv':command,'actual_exit':p.returncode,'stdout_sha256':sha(stdout),'stderr_sha256':sha(stderr),'expected_error':expected_error,'destination_exists':destination.exists(),'helper_sha256':sha(packet/'materialize.py')}
+  results.append(result);save(out/'results-partial.json',{'passed':False,'controls':results,'scope':__doc__})
+  if expected_error is None:assert p.returncode==0,p.stderr.decode();return json.loads(p.stdout)
+  assert p.returncode!=0 and expected_error.encode()in p.stderr,result
+  if not existed_before:assert not(destination/'rendered-plan.json').exists(), 'Refusal must not emit a new executable proposal'
+  return result
+ # Actual successful reconstruction, then independent Git and rendered-command checks.
+ positive=out/'positive';value=run('positive',HERE,positive);assert value['support_files']==6148 and value['workloads_started']==0
+ support=positive/'artifacts/rust/image53-package-plan-1/support';environment=json.loads((positive/'environment.json').read_text());git_env=env|environment
+ head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=support,env=git_env,text=True).strip();assert head==REV
+ assert subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=support,env=git_env,text=True)==''
+ mapping=json.loads((HERE/MAP).read_text())['files'];actual={str(p.relative_to(support)):sha(p)for p in support.rglob('*')if p.is_file()and'.git'not in p.relative_to(support).parts};assert actual==mapping
+ old=json.loads((HERE/PLAN).read_text());new=json.loads((positive/'rendered-plan.json').read_text());assert len(new['groups'])==28
+ old_root=old['support_root'].removesuffix('/artifacts/rust/image53-package-plan-1/support')
+ def render(x):
+  if isinstance(x,str):return x.replace(old_root,str(positive))
+  if isinstance(x,list):return[render(y)for y in x]
+  if isinstance(x,dict):return{k:render(y)for k,y in x.items()}
+  return x
+ for previous,current in zip(old['groups'],new['groups']):
+  assert previous['name']==current['name'] and current['argv']==render(previous['argv'])and current['cwd']==render(previous['cwd'])and current['requires']==previous['requires']and current['schedule_class']==previous['schedule_class']and current['dispatch_authorized']is False
+ assert not(positive/'artifacts/rust/image53-packaged-matrix-1').exists()
+ checks={'private_HEAD':head,'all6148_hashes_recomputed':True,'rendered28_exact_path_substitution':True,'all_dispatch_flags_false':True,'output_application_directory_absent':True,'repository_object_alternates':(support/'.git/objects/info/alternates').read_text().strip()};save(out/'independent-positive-checks.json',checks)
+ # Existing destination must be refused without touching a successful reconstruction.
+ before={str(p.relative_to(positive)):sha(p)for p in [positive/'materialization.json',positive/'rendered-plan.json',support/'.git/HEAD',support/'.git/index']}
+ run('fresh-output-refusal',HERE,positive,'Fresh destination required');assert all(sha(positive/name)==digest for name,digest in before.items())
+ def variant(name,mutator,error):
+  root=out/(name+'-packet');shutil.copytree(HERE,root,ignore=shutil.ignore_patterns('__pycache__'));mutator(root);reseal(root);run(name,root,out/(name+'-output'),error)
+ # Actual copied report corruption, deliberately NOT resealed: byte-binding failure.
+ corrupt=out/'corrupt-packet';shutil.copytree(HERE,corrupt,ignore=shutil.ignore_patterns('__pycache__'));f=corrupt/'evidence/artifacts/rust/image53-packaged-matrix-1/aggregate-reviewed-1.json';f.write_bytes(f.read_bytes()+b' ');run('actual-report-corruption',corrupt,out/'corrupt-output','Packet input changed')
+ variant('manifest-revision',lambda root:change(root,MAP,lambda v:v.update(revision='0'*40)),'Support revision mismatch')
+ variant('manifest-count',lambda root:change(root,MAP,lambda v:v.update(file_count=6147)),'Support count mismatch')
+ variant('plan-map-binding',lambda root:change(root,MAP,lambda v:v.update(scope='resealed different map envelope')),'Plan support-map binding differs')
+ def wrong_file(root):
+  change(root,MAP,lambda v:v['files'].__setitem__('.dockerignore','0'*64));map_binding(root)
+ variant('wrong-support-file',wrong_file,'Support mismatch: .dockerignore')
+ def wrong_archive(root):
+  change(root,MAP,lambda v:v.update(support_archive_sha256='0'*64));map_binding(root)
+ variant('wrong-Git-archive',wrong_archive,'Immutable Git archive differs')
+ variant('candidate-manifest',lambda root:change(root,BUILD,lambda v:v.update(image_id='sha256:'+'0'*64)),'Candidate manifest binding differs')
+ # Keep path substitution independent from acceptance: no historical receipt altered.
+ save(out/'results.json',{'passed':True,'scope':__doc__,'actual_local_controls':len(results),'positive_checks':checks,'controls':results,'new_workloads_started':0,'new_Docker_network_Cargo_app_media_commands':0,'historical_reports_modified':False})
+ print(json.dumps({'passed':True,'local_controls':len(results),'workloads_started':0,'output':str(out)}))
+if __name__=='__main__':main()

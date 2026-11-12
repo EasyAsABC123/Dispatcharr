@@ -1,0 +1,49 @@
+{
+  "name": "user-agent",
+  "controller_result_sha256": "aa994f9a129a6d29b05121bf7a5ed51dc625e8368bbc689a0c2a6f180bdd540f",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/user-agent/integration.json",
+      "sha256": "63b78619aaab2ec82b0f22857c8330adaecd0721a6806c80ff6bc61104cf7469"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/user-agent/packaged-checks.json",
+      "sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Only actual Source/Native checks and cleanup; no implicit default-database audit field",
+  "observed_counts_and_candidate_Source_scope": {
+    "source_cases": 79,
+    "default_id_cases": 13,
+    "resource_checks": 3,
+    "checks": 95,
+    "candidate_image_binding": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "application_image_verified": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-user-agents-9b2b306019"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/user-agent-cleanup.json",
+      "sha256": "6783125b3a7d40988702fc8ae7d07e07c0695359c202cb07f2c3a05a13761a8c"
+    }
+  }
+}

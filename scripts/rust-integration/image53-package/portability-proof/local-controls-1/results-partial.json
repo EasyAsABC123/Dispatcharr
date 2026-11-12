@@ -1,0 +1,40 @@
+{
+  "passed": false,
+  "controls": [
+    {
+      "name": "positive",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-1/positive"
+      ],
+      "actual_exit": 0,
+      "stdout_sha256": "d20b36a192eb96c5cc63458af43d8cd3006e4bc466e6684a415c2b3ec9718434",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_error": null,
+      "destination_exists": true,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    },
+    {
+      "name": "fresh-output-refusal",
+      "argv": [
+        "/usr/bin/python",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/packet/materialize.py",
+        "--repository",
+        "/home/justin/github/Dispatcharr",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-1/positive"
+      ],
+      "actual_exit": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "4d0bd2a98fcf4c13832b33c97ae5d73fbf7d2665688bb7798780aa0fdfb3b786",
+      "expected_error": "Fresh destination required",
+      "destination_exists": true,
+      "helper_sha256": "146d9b41dd50c26ae15068acd3a3d5627d9a5213c993ec4b293cb007e4a95331"
+    }
+  ],
+  "scope": "Local Git/file-only qualification. No Docker/network/app/media/Cargo commands.\nRun with explicit repository/output; retain all actual child exits/stdout/stderr.\n"
+}

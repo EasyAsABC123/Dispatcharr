@@ -1,0 +1,48 @@
+{
+  "name": "profile-restart",
+  "controller_result_sha256": "b03429f5b355ff0ed69f277dd45c4a874408c46390eb0dc7c0bb9682285593cf",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/profile-restart/integration.json",
+      "sha256": "c14105a153e7863ef02dc59da9a833d86f8ab6cde3de46cb989fca44092d218c"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/profile-restart/packaged-checks.json",
+      "sha256": "c642a510c73fbb0f326786b4aeb949e7fe3f35343e133c6f9faf70a34a3c23a5"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped reports; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "backend_phases": 2,
+    "warmups": 2,
+    "scope": "Actual original/native same-service output-profile deletion/cache effects after owned Redis restart; fixture peer rewarms named cache keys, not an active media continuity gate",
+    "candidate_image_binding": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "candidate_process_preserved": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-output-profiles-536779a59a"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/profile-restart-cleanup-env.json",
+      "sha256": "d9954c613a29f1b7818fe88a9b23f3fb334187077629c24dd5ac608569cace76"
+    }
+  }
+}

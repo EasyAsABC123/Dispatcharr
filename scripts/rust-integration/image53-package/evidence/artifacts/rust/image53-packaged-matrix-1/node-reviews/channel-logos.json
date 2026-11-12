@@ -1,0 +1,49 @@
+{
+  "name": "channel-logos",
+  "controller_result_sha256": "e97aae529b3fd67aece0e645fb1be46606124268bccecc17797f2959832418c5",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/channel-logos/integration.json",
+      "sha256": "4665fdf674abea703c3d922248561e2047c948329fb52ec68923bc08819fbce3"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/channel-logos/packaged-checks.json",
+      "sha256": "0633ad7ab9085c3da41cb71e71969d3372e26b97d77cfefaf6dadbc06f74d1a2"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 101,
+    "Source_cases": 101,
+    "Source_HTTP_responses": 104,
+    "scope": "actual original logo bytes/CRUD/uploads versus native HTTP in original container network and disposable PostgreSQL",
+    "candidate_image_binding": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "application_image_verified": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-logos-72d2a945c6"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/channel-logos-cleanup.json",
+      "sha256": "00f227d5fd8bd8fe70d561f0fe8c9c9199723710c594453649d17221399e4f96"
+    }
+  }
+}

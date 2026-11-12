@@ -1,0 +1,229 @@
+{
+  "passed": true,
+  "actual_controller_exit": 0,
+  "cases": [
+    {
+      "case": "success",
+      "report_sha256": "4f2a9152951174d54b077fdaacd2b257b3f5c7024e23b61c125dc946eb384551",
+      "comparison": {
+        "observation_valid": true,
+        "parity_passed": true,
+        "status_equal": true,
+        "Source_status": 200,
+        "native_status": 200,
+        "full_M4_claim": false
+      },
+      "six_physical_hold_elapsed": {
+        "source": 4.000706010003341,
+        "native": 4.000566799018998
+      },
+      "source_signal_coverage_recomputed": {
+        "valid": true,
+        "started": 3,
+        "finished": 3,
+        "roles": [
+          "follower",
+          "initial",
+          "target"
+        ],
+        "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+      },
+      "default_named_table_count": 9,
+      "default_audit_exact": true,
+      "owned_cleanup_queries": {
+        "container": {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-a9fe831437",
+            "--format",
+            "{{.ID}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "network": {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-a9fe831437",
+            "--format",
+            "{{.ID}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "volume": {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-a9fe831437",
+            "--format",
+            "{{.Name}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "case": "busy",
+      "report_sha256": "fda224ea2fd08d4cdcbe793f1bcb9b187dcb6eb24a32748ad286644c856ee32d",
+      "comparison": {
+        "observation_valid": true,
+        "parity_passed": true,
+        "status_equal": true,
+        "Source_status": 429,
+        "native_status": 429,
+        "full_M4_claim": false
+      },
+      "six_physical_hold_elapsed": {
+        "source": 4.000760397990234,
+        "native": 4.0006267039862
+      },
+      "source_signal_coverage_recomputed": {
+        "valid": true,
+        "started": 4,
+        "finished": 4,
+        "roles": [
+          "follower",
+          "initial",
+          "other",
+          "target"
+        ],
+        "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+      },
+      "default_named_table_count": 9,
+      "default_audit_exact": true,
+      "owned_cleanup_queries": {
+        "container": {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-178b49da8e",
+            "--format",
+            "{{.ID}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "network": {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-178b49da8e",
+            "--format",
+            "{{.ID}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "volume": {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-178b49da8e",
+            "--format",
+            "{{.Name}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "case": "clientloss",
+      "report_sha256": "6e38d9f6d3b38309cff2076e055634af994921e3df5cf0159b021d9816b5bbec",
+      "comparison": {
+        "observation_valid": true,
+        "parity_passed": true,
+        "scope": "real client FD/read-thread closure with no pre-close HTTP outcome; no server-handler cancellation or counter equality inference",
+        "full_M4_claim": false
+      },
+      "six_physical_hold_elapsed": {
+        "source": 4.000783456984209,
+        "native": 4.000740624993341
+      },
+      "source_signal_coverage_recomputed": {
+        "valid": true,
+        "started": 3,
+        "finished": 3,
+        "roles": [
+          "follower",
+          "initial",
+          "target"
+        ],
+        "scope": "Django request_finished after response-close resource-closer attempts; not successful generator-finally, provider body EOF/TCP close or daemon completion"
+      },
+      "default_named_table_count": 9,
+      "default_audit_exact": true,
+      "owned_cleanup_queries": {
+        "container": {
+          "argv": [
+            "docker",
+            "container",
+            "ls",
+            "--all",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-442cf87362",
+            "--format",
+            "{{.ID}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "network": {
+          "argv": [
+            "docker",
+            "network",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-442cf87362",
+            "--format",
+            "{{.ID}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "volume": {
+          "argv": [
+            "docker",
+            "volume",
+            "ls",
+            "--filter",
+            "label=com.docker.compose.project=dispatcharr-pending-main-442cf87362",
+            "--format",
+            "{{.Name}}"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    }
+  ],
+  "scope": "three finiteMain4s53Source/native cases; nofullM4, counter/timer/bodysharing/defaultgraph orresource acceptance",
+  "reviewed_epoch": 1794505588.2898295
+}

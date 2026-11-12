@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/wrong-support-file-packet/materialize.py", line 56, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/wrong-support-file-packet/materialize.py", line 33, in main
+    if not f.is_file()or sha(f.read_bytes())!=digest:raise ValueError('Support mismatch: '+name)
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Support mismatch: .dockerignore

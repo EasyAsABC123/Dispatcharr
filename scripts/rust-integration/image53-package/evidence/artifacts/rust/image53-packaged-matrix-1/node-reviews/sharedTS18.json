@@ -1,0 +1,49 @@
+{
+  "name": "sharedTS18",
+  "controller_result_sha256": "10aeb1e37b1331aeb58add34a91682f312529b6ea799ff7562f64d42160c2e24",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/sharedTS18/shared-ts.json",
+      "sha256": "c59a5f2691455c92de60d954ba26320974865f4327ab904f37a5df1b7d949dc8"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/sharedTS18/candidate-image.json",
+      "sha256": "6c20805286cb7392271eafc268af6b2b2ed2475c095fdb548ef768d0f4b33961"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 24,
+    "lifecycle_cases": [
+      "shared-demand",
+      "stop",
+      "owner-crash"
+    ],
+    "scope": "two-worker-native-TS-functional-contracts",
+    "candidate_functional_and_recovery_passed": true,
+    "require_active_metadata": true,
+    "application_performance_verified": false,
+    "milestone_complete": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-shared-ts-557d3138c461"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/sharedTS18-cleanup.json",
+      "sha256": "c31fa2b8abb1557f9c29e253c3bcf00ca737b4f1404bdbaf6280a2af86d061b4"
+    }
+  }
+}

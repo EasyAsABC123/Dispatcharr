@@ -1,0 +1,55 @@
+{
+  "name": "complete-refresh",
+  "controller_result_sha256": "bbff75cf35e7a1e05d544ff444105d0ca335e499fb729d655fa7531caee31ea8",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/integration.json",
+      "sha256": "665db118a41ca75ab19496c056d5fdb0bc12155ccd3de93f31bc494d6a7f3cdb"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/source-refresh-workflow-private.json",
+      "sha256": "d5f35f04a8a52cde3795e9e00eb095613af8b66b32481c27b29e39ee5cb5fcc5"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/candidate-path-audit.txt",
+      "sha256": "8f347243be7a52e3ca4ad87ca1498d3d1484a19712c31e9e0e966cb8910a91ac"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "report": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/integration.json",
+      "field": "default_database_unchanged",
+      "value": true
+    }
+  ],
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 40,
+    "imports": 2,
+    "paired_projection_exact": true,
+    "candidate_UID": 65532,
+    "native_worker_execution_verified": true,
+    "original_complete_refresh_workflow_verified": false,
+    "native_jobs_verified": false,
+    "scope": "Manifest-bound Native import->Index+Series0->second import->Current/guide; outer Source wrapper flags retained separately"
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-refresh-workflow-original-557ea267dc"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/complete-refresh-cleanup.json",
+      "sha256": "4b05fee411af219d3c9699f26b3cc5be8756e7018867f276c0f3f22d306093ee"
+    }
+  }
+}

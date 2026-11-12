@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "observations": {
+    "original": {
+      "passed": true,
+      "scope": "Actual original network with owned PostgreSQL trigger fault; disabled flags do not skip writes; earlier category survives later failure",
+      "target": "original",
+      "application_headers": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "response": {
+        "status": 500,
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+        "content_type": "text/html; charset=utf-8",
+        "selected_headers": {
+          "Content-Length": "145",
+          "Allow": null,
+          "Vary": "origin",
+          "WWW-Authenticate": null
+        }
+      },
+      "committed_category_type_prefix": [
+        "movie"
+      ],
+      "provider_refresh_verified": false,
+      "native_verified": false,
+      "original_category_and_relationship_rows_exactly_restored": true
+    },
+    "candidate": {
+      "passed": true,
+      "scope": "Actual candidate network with owned PostgreSQL trigger fault; disabled flags do not skip writes; earlier category survives later failure",
+      "target": "candidate",
+      "application_headers": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "same-origin",
+        "Cross-Origin-Opener-Policy": "same-origin"
+      },
+      "response": {
+        "status": 500,
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+        "content_type": "text/html; charset=utf-8",
+        "selected_headers": {
+          "Content-Length": "145",
+          "Allow": null,
+          "Vary": "origin",
+          "WWW-Authenticate": null
+        }
+      },
+      "committed_category_type_prefix": [
+        "movie"
+      ],
+      "provider_refresh_verified": false,
+      "native_verified": false,
+      "original_category_and_relationship_rows_exactly_restored": true
+    }
+  }
+}

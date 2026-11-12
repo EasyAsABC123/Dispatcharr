@@ -1,0 +1,51 @@
+{
+  "name": "current-packaged",
+  "controller_result_sha256": "305735f2959276cbf23c5355818a3cd7ebba6cd4446626a4597f8ff3963fe38d",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/current-packaged/integration.json",
+      "sha256": "db2a337571a7fc1089d5c41821c32b12b5234ea6a0f080f8af4691c44fdca2c9"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/current-packaged/packaged-current.json",
+      "sha256": "80660ff796f204f0550c2c496b86a3b132e52fbe2bb55531df3dcf9b400efdbf"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped reports; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "source_cases": 104,
+    "native_verified": false,
+    "native_guide_http_verified": false,
+    "native_current_packaged_image_verified": true,
+    "performance_verified": false,
+    "packaged_current_cases": 64,
+    "differences": [],
+    "application_parity_verified": false,
+    "candidate_provenance": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+    }
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-epg-reads-840f35cd6e"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/current-packaged-cleanup-env.json",
+      "sha256": "d4011493f20c119a8c079b8b86b3b60dcb391aacae79ec861bc8c004206db88b"
+    }
+  }
+}

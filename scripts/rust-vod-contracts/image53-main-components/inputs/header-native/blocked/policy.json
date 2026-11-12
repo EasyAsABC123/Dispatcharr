@@ -1,0 +1,72 @@
+{
+  "scope": "Native-only routed worker-header feature witness using separately validated retained Source6; no application route/body/header/fullM4 parity",
+  "execution_authorized": false,
+  "Source_cases": [
+    "head405",
+    "invalid_get401",
+    "no_provider503",
+    "full200",
+    "range206",
+    "provider404_to500"
+  ],
+  "Native_cases": [
+    "head405",
+    "invalid_get401",
+    "no_provider503",
+    "full200",
+    "range206",
+    "provider404_to500",
+    "invalid_head_diagnostic"
+  ],
+  "status_expectations": {
+    "head405": 405,
+    "invalid_get401": 401,
+    "no_provider503": 503,
+    "full200": 200,
+    "range206": 206,
+    "provider404_to500": 500
+  },
+  "invalid_HEAD": {
+    "Source_request_authorized": false,
+    "Source_static_authentication_prediction": 401,
+    "Native_static_route_prediction": 405,
+    "literal_Native_observation_only": true,
+    "parity_gate": false,
+    "compatibility_boundary_open": true
+  },
+  "prefix_bytes": 8192,
+  "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+  "response_header_max_bytes": 65536,
+  "error_body_max_bytes": 65536,
+  "absolute_HTTP_observation_seconds": 8,
+  "backend_phase_max_seconds": 90,
+  "fixed_post_close_wait_seconds": 3,
+  "profile_and_account_max_streams_seed_once": 2,
+  "user_level": 10,
+  "user_stream_limit": 0,
+  "provider_response_canary": "owned-provider-spoof",
+  "HOSTNAME_environment_canary": "owned-environment-spoof",
+  "kernel_hostname_must_be_ASCII_fixture": true,
+  "Source_worker_PID": "known owned Source-web PID/starttime, not the probing process",
+  "Native_worker_PID": 1,
+  "Native_worker_UID": 65532,
+  "hostname_failure_fallback_Main_claimed": false,
+  "Connection_difference_preserved": true,
+  "Source500_error_body_parity_claimed": false,
+  "counter_or_timer_parity_claimed": false,
+  "resource_sampler": false,
+  "resource_acceptance": false,
+  "default_workers_activated": false,
+  "default_database_audit": "exact nine named models and nine sequences; no full-database claim",
+  "no_reply_hold_cap_change_or_counter_zero_polling": true,
+  "no_adaptive_retry": true,
+  "Source_VOD_requests_rerun": false,
+  "retained_Source_original_run_passed": false,
+  "malformed_UUID_SPA_branch_excluded": {
+    "actual_retained_status": 500,
+    "cause": "unrouted SPA TemplateView missing compiled index.html in Original Git archive fixture",
+    "Source_VOD_handler_authority": false,
+    "Native_status_change_authorized": false,
+    "proper_Original_compiled_template_fixture_required": true
+  }
+}

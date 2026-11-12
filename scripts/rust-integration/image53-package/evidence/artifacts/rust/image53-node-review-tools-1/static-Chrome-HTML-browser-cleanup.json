@@ -1,0 +1,469 @@
+{
+  "name": "static-Chrome-HTML-browser",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "0bc733decdd9a9bde886f523db547ef8f0a47a77fbd18015cacb5a04f50ebff1",
+  "observation": {
+    "name": "static-Chrome-HTML-browser",
+    "status": "reports-observed-not-accepted",
+    "classification": "Same wrapper separation; static/Chrome-source claims only observed explicit scopes",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/source-run.json",
+        "relative": "source-run.json",
+        "sha256": "24ec96fc5814b1d1b419cb035bdcc6555e91ce00a204bf98d25558c226bdaf59",
+        "bytes": 690,
+        "observed_fields": {
+          "scope": "Original VOD REST metadata-only capture; separate Factory and network fixtures",
+          "passed": true,
+          "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "native_verified": false,
+          "provider_refresh_verified": false,
+          "performance_verified": false
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "scope",
+          "passed",
+          "baseline_commit",
+          "baseline_image",
+          "native_verified",
+          "provider_refresh_verified",
+          "performance_verified",
+          "modes"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/All-browser-Original.json",
+        "relative": "http/All-browser-Original.json",
+        "sha256": "a8d47a950ac53a601189cfd4f9d2524671c3a1fdd2c8cab6d583e5fd42d45c1d",
+        "bytes": 6937,
+        "observed_fields": {
+          "exit_code": 0
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "capability",
+          "result",
+          "exit_code"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/All-browser-native.json",
+        "relative": "http/All-browser-native.json",
+        "sha256": "4a6d9f57a490cd9c9586694442d53fb7f11e13388f7bdac007784072c960da84",
+        "bytes": 9755,
+        "observed_fields": {
+          "exit_code": 0
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "capability",
+          "result",
+          "exit_code"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-Chrome-HTML.json",
+        "relative": "http/packaged-Chrome-HTML.json",
+        "sha256": "c8fc3f65d978c5344ae5154962c87c0745f3b4036bea57c3a0b76dd67160fcaf",
+        "bytes": 11105,
+        "observed_fields": {
+          "passed": true,
+          "compared": 32,
+          "records": {
+            "length": 32,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "differences": {
+            "length": 0,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "scope": "Exact captured56 Source/package observations, deterministic bytes/five headers and validated cookie/mask/expiry; no asset or fullHTML grammar acceptance",
+          "assets_verified": false,
+          "full_HTML_parity": false
+        },
+        "candidate_Source_binding_fields": {
+          "candidate_binding": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "passed",
+          "compared",
+          "records",
+          "differences",
+          "scope",
+          "assets_verified",
+          "full_HTML_parity",
+          "candidate_binding",
+          "private_observation_sha256"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-HTML.json",
+        "relative": "http/packaged-HTML.json",
+        "sha256": "8eeef81e12a99f28674df0a4b1904848e52bb60a2027e60a7f2baf8ec3f962e7",
+        "bytes": 18837,
+        "observed_fields": {
+          "passed": true,
+          "compared": 56,
+          "records": {
+            "length": 56,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "differences": {
+            "length": 0,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "scope": "Exact captured56 Source/package observations, deterministic bytes/five headers and validated cookie/mask/expiry; no asset or fullHTML grammar acceptance",
+          "assets_verified": false,
+          "full_HTML_parity": false
+        },
+        "candidate_Source_binding_fields": {
+          "candidate_binding": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "passed",
+          "compared",
+          "records",
+          "differences",
+          "scope",
+          "assets_verified",
+          "full_HTML_parity",
+          "candidate_binding",
+          "private_observation_sha256"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-effects.json",
+        "relative": "http/packaged-effects.json",
+        "sha256": "1c9867a29fe9751d6d4cdd061ee1ef4b76f201a378894068b8a59a00b3d57a32",
+        "bytes": 15738,
+        "observed_fields": {
+          "passed": true
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "before",
+          "after"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-http.json",
+        "relative": "http/packaged-http.json",
+        "sha256": "0d5e0c281ddf9fc1898c8f126a07b596a2307fc178c75ef58e427b9aa341f60d",
+        "bytes": 286341,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Original network VOD ordinary reads versus a manifest-bound native app.\nAll application credit remains with original Dispatcharr authors/contributors.\nNo performance, fullVOD, provider-refresh or browser acceptance is inferred.\n",
+          "compared": 393,
+          "outside_component_not_pass": 199,
+          "records": {
+            "length": 393,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "differences": {
+            "length": 0,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "burst_pass": true,
+          "candidate_start_spread_seconds": 0.0008486350125167519,
+          "performance_verified": false,
+          "browser_verified": false
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "compared",
+          "outside_component_not_pass",
+          "records",
+          "differences",
+          "source_simultaneous10",
+          "candidate_simultaneous10",
+          "burst_pass",
+          "candidate_start_spread_seconds",
+          "performance_verified",
+          "browser_verified"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-static.json",
+        "relative": "http/packaged-static.json",
+        "sha256": "b9f243867e2816f2deb2dae3e570d197546953dbfdf8ecb2c1cdeec92b310384",
+        "bytes": 17573,
+        "observed_fields": {
+          "passed": true,
+          "compared": 68,
+          "assets": 27,
+          "records": {
+            "length": 68,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "differences": {
+            "length": 0,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "source_nginx_version": "nginx version: nginx/1.28.3 (Ubuntu)",
+          "scope": "Captured27 assets/68 identity-encoding GET/HEAD/conditional/range/error observations; selected14 intrinsic headers and exactbody bytes; no general static grammar/gzip/proxy or full BrowsableAPI acceptance",
+          "performance_verified": false
+        },
+        "candidate_Source_binding_fields": {
+          "candidate_binding": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "passed",
+          "compared",
+          "assets",
+          "records",
+          "differences",
+          "source_nginx_version",
+          "scope",
+          "performance_verified",
+          "candidate_binding"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-unified-browser.json",
+        "relative": "http/packaged-unified-browser.json",
+        "sha256": "a302d25b99d55a73a7b7182c0bd9222b1bdc60c4736c7943f24c29e186292a8b",
+        "bytes": 18747,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Canonical-fixture actual unchanged React Both/All workflow.\nOriginal Dispatcharr authors retain credit; no resource/performance claim.\n",
+          "unchanged_React": true,
+          "browser_not_mocked": true,
+          "posters_provider_refresh_playback_episode_flows_excluded": true,
+          "login_policy": "Exactly one normal UI login per Original/native phase, no runtime3/min adjustment or cache clearing",
+          "Source_only": false,
+          "native_verified": true,
+          "exact_ordered_content_kind_ID_name_and_visible_cards": true
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "unchanged_React",
+          "browser_not_mocked",
+          "posters_provider_refresh_playback_episode_flows_excluded",
+          "login_policy",
+          "fixture",
+          "Source_only",
+          "native_verified",
+          "exact_ordered_content_kind_ID_name_and_visible_cards",
+          "restoration",
+          "observations"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-unified-http.json",
+        "relative": "http/packaged-unified-http.json",
+        "sha256": "77ff3e4eae4cbaddbfe2a3cb0a9bd16af7be69046f4fe1d1ed9cb57328137564",
+        "bytes": 60368,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Actual packaged native vs actual Original HTTP, allselected headers, sharedmetadataeffects; SourceRawbody ties use fixed fresh Original authority with historical non-orderfields; nofullroute/browser/performance acceptance",
+          "compared": 188,
+          "records": {
+            "length": 188,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "differences": {
+            "length": 0,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "fresh_predeclared_tie_authorities": 6,
+          "all_owned_rows_restored": true,
+          "native_fingerprint_matches_Original_before": true,
+          "native_fingerprint_matches_Original_after": true,
+          "separate_packaged_HTML56_passed": true
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "compared",
+          "records",
+          "differences",
+          "explicit_browsable_HTML_not_parity_pass",
+          "fresh_predeclared_tie_authorities",
+          "all_owned_rows_restored",
+          "provider_trap_attempts",
+          "Source_database",
+          "native_controller_database",
+          "native_fingerprint_matches_Original_before",
+          "native_fingerprint_matches_Original_after",
+          "separate_packaged_HTML56_passed"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/source-run.json",
+        "relative": "http/source-run.json",
+        "sha256": "850bd7107784e26019d2434e3e3c4d6fb706ef8c1f31edfa5efc1b65b10cc94e",
+        "bytes": 32391,
+        "observed_fields": {
+          "scope": "Original http VOD REST source capture",
+          "passed": true,
+          "project": "dispatcharr-vod-api-http-916ec2494a",
+          "observation": "http",
+          "commands": {
+            "length": 26,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "browser_network_guard": "IP lookup disabled by documentedenvironment flag onownedbrowser services; posters/provider/playback/episode flows excluded; Allview onlywhenexplicitrequested",
+          "cases": 592,
+          "corpus_sha256": "f88816abb3fd14ad9a136feebaa4428791c487d85fcc766702316067d0b4f181",
+          "provider_trap_attempts": 0,
+          "provider_refresh_rows_unchanged": true,
+          "unified_Source_observations": 189,
+          "unified_Source_restored": true,
+          "packaged_ordinary_http_passed": true,
+          "packaged_HTML_passed": true,
+          "packaged_static_passed": true,
+          "packaged_Chrome_HTML_passed": true,
+          "packaged_unified_passed": true,
+          "packaged_unified_browser_passed": true,
+          "application_image_verified": true,
+          "cleanup": "owned Compose project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "candidate_binding": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "scope",
+          "passed",
+          "project",
+          "tool_sha256",
+          "observation",
+          "commands",
+          "baseline_archive_sha256",
+          "ports",
+          "build_manifest_sha256",
+          "browser_network_guard",
+          "browser_frontend",
+          "cases",
+          "corpus_sha256",
+          "provider_trap_attempts",
+          "provider_refresh_rows_unchanged",
+          "unified_Source_observations",
+          "unified_Source_restored",
+          "candidate_binding",
+          "packaged_ordinary_http_passed",
+          "packaged_HTML_passed",
+          "packaged_static_passed",
+          "packaged_Chrome_HTML_passed",
+          "packaged_unified_passed",
+          "packaged_unified_browser_passed",
+          "candidate_shutdown",
+          "application_image_verified",
+          "cleanup",
+          "resources_retained"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-vod-api-http-916ec2494a"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-vod-api-http-916ec2494a"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504492.6719158
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-vod-api-http-916ec2494a"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504492.6810133
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-vod-api-http-916ec2494a"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504492.6909258
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504492.662878,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504492.691181
+}

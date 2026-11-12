@@ -1,0 +1,1893 @@
+{
+  "format_version": 1,
+  "scope": "Finite28 image53 scoped package/CLI/native-lifecycle gates; no new resource measurements, full application/milestone acceptance, or Main probes inferred",
+  "passed": true,
+  "nodes": 28,
+  "actual_controller_exits_zero": 28,
+  "ordinary_nodes": 25,
+  "solo_heavy_nodes": 3,
+  "state_sha256": "2ad29059d364e1fd4bce0a98b480322df59643ed0121f8021d31a5ee20316629",
+  "plan_sha256": "5b347b1c9f631f719489f4d934048184c5c20fe9a00afc27ce19abea2c7da7ad",
+  "scheduler_execution_seal_sha256": "9bba76d8a2e80447902765d06ff076c8e574da56b3e9f8b6c94e79466b9e2a90",
+  "clearance_sha256": "63bea498b73546d36c7c36c9e27a95d6374376e31b868a684cfc98a531f57f11",
+  "observed_epoch": 1794505060.9894633,
+  "per_node": [
+    {
+      "name": "baseline-all",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/baseline-all.result.json",
+        "sha256": "427ccacd9731417056bcfaa40cdffb890d08b28752f62318cfaea85ad7f3adbe"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/baseline-all.json",
+        "sha256": "6641306ce6dadf976f1d17952e53ab2a3251e5e31ef32e6cd98ae777cf37b2eb"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/baseline-all/integration.json",
+          "sha256": "71ceed307fd89535dad511de9721b457c1e1ee32b0a3b47bb131ab4b05c61bcd"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "checks": 1024,
+        "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "contract_suites": [
+          "accounts",
+          "account_crud",
+          "app_data",
+          "core",
+          "profiles",
+          "memberships",
+          "channel_reads",
+          "channel_crud",
+          "groups",
+          "channel_stops",
+          "group_cleanup",
+          "streams",
+          "provider_reads",
+          "server_group_crud",
+          "filter_crud",
+          "core_utilities",
+          "core_stream_crud",
+          "notifications"
+        ],
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "suite_isolation_observation": [
+          {
+            "before_suite": "core",
+            "reason": "independent login contracts share real per-IP 3/min budgets",
+            "wait_seconds": 62
+          }
+        ],
+        "application_performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "No synthesized default_database audit; actual suite-isolation observations retained where report supplies them",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-rust-probe-ae6249ff6a"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/baseline-all-cleanup.json",
+          "sha256": "6f236dd4a67cd57c209c886f491e7298667f42ac7d7152267f229dc4a8a32204"
+        }
+      }
+    },
+    {
+      "name": "proxy-auth",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/proxy-auth.result.json",
+        "sha256": "c11cc56092bb01b0cf8dff089f316af2a989e9ba2d2efab82d9e598973903edf"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/proxy-auth.json",
+        "sha256": "a00227e4c040029850543a052a2109277fe5d33a0137527ebc61b0abf332f085"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/proxy-auth/integration.json",
+          "sha256": "84f1defaf945ac1192ead8a556a8eca05e1bde94d5e3d3acd2fd432bc48d3bc5"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "checks": 38,
+        "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "contract_suites": [
+          "proxy_auth"
+        ],
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "suite_isolation_observation": null,
+        "application_performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "No synthesized default_database audit; actual suite-isolation observations retained where report supplies them",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-rust-probe-0b63185db9"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/proxy-auth-cleanup.json",
+          "sha256": "e32a4049640b9d1933bf9da6b080fd02aacf2614144b8f165067b3885f986a3a"
+        }
+      }
+    },
+    {
+      "name": "auth-hash",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/auth-hash.result.json",
+        "sha256": "c6a8ce58adc2615b7ccb69e3840d160aa25dd0b605db3add0a2d0c49aa0d5cd9"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/auth-hash.json",
+        "sha256": "8dcfccad9886ec43002bc2cde8ba2d2ee7b5cec77d362e367a0ce0e4edd98749"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/auth-hash/integration.json",
+          "sha256": "f36bd64e2851e1303ffb28948d3341d8f5e40cad471ca835122ef5930ec3b99c"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "checks": 34,
+        "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "contract_suites": [
+          "auth_hash"
+        ],
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "application_performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "No default_database audit invented; exact actual check and candidate binding scope",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-rust-probe-2becfb7788"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/auth-hash-cleanup.json",
+          "sha256": "51bc5794d4d12f083b73ac395da8cb4f67be76a1f0b35e83028fc71f4247dbd7"
+        }
+      }
+    },
+    {
+      "name": "live-react-stats",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/live-react-stats.result.json",
+        "sha256": "bf804cf995bfcd5638e1b47ace4329893a06e5c2710aaf0e024d8b27ac2ba667"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/live-react-stats/Root-node-review.json",
+        "sha256": "2d30a4dd00ef86de3232b1bbd97df9e131deb85c56c7958c2a11105d27c6fcdf"
+      },
+      "actual_reports": [
+        {
+          "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/live-react-stats/integration.json",
+          "sha256": "3e2c14ad528dc2b35990bce426640da0845810be5636b1fd853c4cb8225c902c"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "backends": {
+          "Original": {
+            "browser_exit": 0,
+            "normal_login": true,
+            "frames": [
+              26,
+              76
+            ],
+            "time": [
+              0.82492,
+              2.822394
+            ],
+            "stream_HTTP_200": 1,
+            "statistics_identity_verified": true,
+            "player_closed": true,
+            "uncaught_exceptions": 0
+          },
+          "native": {
+            "browser_exit": 0,
+            "normal_login": true,
+            "frames": [
+              25,
+              75
+            ],
+            "time": [
+              0.839013,
+              2.83563
+            ],
+            "stream_HTTP_200": 1,
+            "statistics_identity_verified": true,
+            "player_closed": true,
+            "uncaught_exceptions": 0
+          }
+        },
+        "frontend_assets_recorded": 112,
+        "candidate": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "resource_sampler": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Browser gate has no default-database audit field; no full/default SQL silence inferred",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-live-browser-3c7c24a376"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/live-react-stats/Root-independent-cleanup.json",
+          "sha256": "4e7d86a571d11a45de11fbf900ce190b9d19b970b429f030d249f2e921680915"
+        }
+      }
+    },
+    {
+      "name": "user-agent",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/user-agent.result.json",
+        "sha256": "aa994f9a129a6d29b05121bf7a5ed51dc625e8368bbc689a0c2a6f180bdd540f"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/user-agent.json",
+        "sha256": "fdf9e6bc3be77012e9b6108d6065804ecc942a78ba04b9dd8ae0aa150e5ddf25"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/user-agent/integration.json",
+          "sha256": "63b78619aaab2ec82b0f22857c8330adaecd0721a6806c80ff6bc61104cf7469"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/user-agent/packaged-checks.json",
+          "sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "source_cases": 79,
+        "default_id_cases": 13,
+        "resource_checks": 3,
+        "checks": 95,
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Only actual Source/Native checks and cleanup; no implicit default-database audit field",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-user-agents-9b2b306019"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/user-agent-cleanup.json",
+          "sha256": "6783125b3a7d40988702fc8ae7d07e07c0695359c202cb07f2c3a05a13761a8c"
+        }
+      }
+    },
+    {
+      "name": "output-profile",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/output-profile.result.json",
+        "sha256": "f934c4f20e4652fa9f6ed30860685c664697d4c3f8d842eb00ee1f837e5e7cbb"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/output-profile.json",
+        "sha256": "a2fcbe9e19bca9460c63ab3c124aeeee5bfede34eb67ad74ba146187cc2bdb27"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/output-profile/integration.json",
+          "sha256": "6efeb3be192b5cf814fe00762dcc18be3b0d424e0e129190d2f548f86a20afb8"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/output-profile/packaged-checks.json",
+          "sha256": "563963af071f3bf50f0566b45cbcfde77d3e78731765ad330268a834a8c77dd0"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "source_cases": 127,
+        "sql_fault_cases": 4,
+        "resource_checks": 3,
+        "checks": 130,
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Only actual Source/Native checks and cleanup; no implicit default-database audit field",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-output-profiles-c794d901b4"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/output-profile-cleanup.json",
+          "sha256": "afdd6ed24c054df78b8f11a2941e66a6069a1aeba599eb7f9e07c1c2870e3164"
+        }
+      }
+    },
+    {
+      "name": "profile-restart",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/profile-restart.result.json",
+        "sha256": "b03429f5b355ff0ed69f277dd45c4a874408c46390eb0dc7c0bb9682285593cf"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/profile-restart.json",
+        "sha256": "c47e8767ec1d17d8f00e18c984b8b5d97f68a6033625bf9372b8244a2b95d740"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/profile-restart/integration.json",
+          "sha256": "c14105a153e7863ef02dc59da9a833d86f8ab6cde3de46cb989fca44092d218c"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/profile-restart/packaged-checks.json",
+          "sha256": "c642a510c73fbb0f326786b4aeb949e7fe3f35343e133c6f9faf70a34a3c23a5"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "backend_phases": 2,
+        "warmups": 2,
+        "scope": "Actual original/native same-service output-profile deletion/cache effects after owned Redis restart; fixture peer rewarms named cache keys, not an active media continuity gate",
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "candidate_process_preserved": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped reports; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-output-profiles-536779a59a"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/profile-restart-cleanup-env.json",
+          "sha256": "d9954c613a29f1b7818fe88a9b23f3fb334187077629c24dd5ac608569cace76"
+        }
+      }
+    },
+    {
+      "name": "guide-grid-packaged",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/guide-grid-packaged.result.json",
+        "sha256": "27b4d58e7c908f6358836023b33ca3ecb22d7fc987c6322f2faf918e2153f3af"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/guide-grid-packaged.json",
+        "sha256": "5759916b1f96b2e099d4a12dc49761714a911a9da60d0ed8027fd2ab6265ac43"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/guide-grid-packaged/integration.json",
+          "sha256": "0727344e5b788b9a07602d6af3a78bbde1324075e894d50c6181c0643787788a"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/guide-grid-packaged/packaged-grid.json",
+          "sha256": "0231fcb64641eb3daa6d71337369771f861ef57a9cf7bfa7a1c1cdddd311b233"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/guide-grid-packaged/result.json",
+          "sha256": "0727344e5b788b9a07602d6af3a78bbde1324075e894d50c6181c0643787788a"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "counts": {
+          "Source_cases": 104,
+          "packaged_grid_cases": 43,
+          "differences": 0
+        },
+        "flags": {
+          "native_verified": false,
+          "native_guide_http_verified": false,
+          "native_grid_packaged_image_verified": true,
+          "application_parity_verified": false,
+          "performance_verified": false,
+          "candidate_provenance": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+          }
+        }
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Only explicit controller default_database_unchanged flag for Source workflow; guide default audit not claimed",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-epg-reads-75ba46f2ae"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/guide-grid-packaged-cleanup.json",
+          "sha256": "344170937231a35fbc2451930f0620dfd37e8b0ccd0703c00b81642ec5e9ff38"
+        }
+      }
+    },
+    {
+      "name": "current-packaged",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/current-packaged.result.json",
+        "sha256": "305735f2959276cbf23c5355818a3cd7ebba6cd4446626a4597f8ff3963fe38d"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/current-packaged.json",
+        "sha256": "a750e4e8142c227db482618baed7c3f4c7c0a561b38e844efe9161ab56591dec"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/current-packaged/integration.json",
+          "sha256": "db2a337571a7fc1089d5c41821c32b12b5234ea6a0f080f8af4691c44fdca2c9"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/current-packaged/packaged-current.json",
+          "sha256": "80660ff796f204f0550c2c496b86a3b132e52fbe2bb55531df3dcf9b400efdbf"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "source_cases": 104,
+        "native_verified": false,
+        "native_guide_http_verified": false,
+        "native_current_packaged_image_verified": true,
+        "performance_verified": false,
+        "packaged_current_cases": 64,
+        "differences": [],
+        "application_parity_verified": false,
+        "candidate_provenance": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+        }
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped reports; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-epg-reads-840f35cd6e"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/current-packaged-cleanup-env.json",
+          "sha256": "d4011493f20c119a8c079b8b86b3b60dcb391aacae79ec861bc8c004206db88b"
+        }
+      }
+    },
+    {
+      "name": "m4-functional",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/m4-functional.result.json",
+        "sha256": "57af037190524796f73a853741ff8ee16a1674b244bf0b12988aa830a97879c6"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/m4-functional.json",
+        "sha256": "96b4878a8a899119483d7e23ce76fff76c34e4f7eb5d8ee8b8c47031a3667f78"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/m4-functional/result.json",
+          "sha256": "06ec37d61e12e8a2cf8d95269e200c4c45c55a074513b68ac569ee85bfcfd659"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "scope": "Sustained native XC VOD and archive catch-up playback subset; not full application acceptance",
+        "functional_preflights": [
+          {
+            "protocol": "vod",
+            "backend": "source",
+            "prefix_bytes": 1048576,
+            "decoded_frames": 200,
+            "provider_counter_released": true
+          },
+          {
+            "protocol": "vod",
+            "backend": "candidate",
+            "prefix_bytes": 1048576,
+            "decoded_frames": 200,
+            "provider_counter_released": true
+          },
+          {
+            "protocol": "timeshift",
+            "backend": "source",
+            "prefix_bytes": 1048576,
+            "decoded_frames": 199,
+            "provider_counter_released": true
+          },
+          {
+            "protocol": "timeshift",
+            "backend": "candidate",
+            "prefix_bytes": 1048576,
+            "decoded_frames": 199,
+            "provider_counter_released": true
+          }
+        ],
+        "candidate_provenance": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "measurements_started": false,
+        "performance_verified": false,
+        "full_m4_parity_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-m4-perf-df6106ae54"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/m4-functional-cleanup.json",
+          "sha256": "d963b11890cd596c3b6f706c2ff8902409a09822c9c0a6f68d2d9f62e663fb01"
+        }
+      }
+    },
+    {
+      "name": "clean-install",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/clean-install.result.json",
+        "sha256": "60fa982349b3b941c05ba299df33b79611395b0b29fdc1c62ffccc6fade95017"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/clean-install.json",
+        "sha256": "9b659fa8e5263867ea73ad2391a34f9dc2dcb1f97d24c06c48780078eaf91cc8"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/clean-install/integration.json",
+          "sha256": "512ba5eb25c21a07b9a446b038fed141254a528f5824c42e98e29ed99f99963f"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "checks": 11,
+        "scope": "pure-native fresh empty officialPG17/Redis Compose; actual unchanged React first-admin/login/init/restart",
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "no_django_service": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-native-install-a870f36ba7"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/clean-install-cleanup.json",
+          "sha256": "2162a4db6706a9f6a6b7d56617d13fb54d9c3dd4b171f931079d04b39b9eb004"
+        }
+      }
+    },
+    {
+      "name": "category-browser",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/category-browser.result.json",
+        "sha256": "11f056adf258334d2f6343f54f7b24ae50ea30292a79328567a1ffcce1c74eab"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/category-browser.json",
+        "sha256": "fa12ef4420fad9ba17b3c8332c4365abfcfda7a17e82f757ee60c769d45134a0"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/category-browser/source-run.json",
+          "sha256": "4ccd57e197227fb2324ac153ddf36ff16ec123a0d21c542ec571e39d08f67795"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/category-browser/http/source-run.json",
+          "sha256": "f50fc8a563b10dafcab0ec5e71861304a86dd83108a082e0fb662819d9184c60"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/category-browser/http/packaged-category-browser.json",
+          "sha256": "68a9a3b0bccbd3bf3e576465c088d6b348c065e99779c26dd560ebd3b1543750"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/category-browser/http/packaged-category-defaults-wire.json",
+          "sha256": "163d8e47e49f993172b58ecc427664b5860cc9ed6e183230e24603a6e80a57ff"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/category-browser/http/packaged-category-http.json",
+          "sha256": "2aa029f6185134fd65e8ec36aeb3e7b590cb8b91907a7988fd8b242613d331cf"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/category-browser/http/packaged-category-initial.json",
+          "sha256": "c9304e6a3bf36619ff5fd4ffc73a14145a57702ea12f43edad5215bcc1a09311"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/category-browser/http/packaged-effects.json",
+          "sha256": "2b009925c86a4bbf81bc89a14ce60a094eb6faccda535480b206c584e8ca9a43"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/category-browser/http/packaged-http.json",
+          "sha256": "950b7e1993cf9422668e7d827f3b70f32f3231eaee2f8f95be61059c26a7958a"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "Source_cases": 664,
+        "ordinary_compared": 393,
+        "category_compared": 163,
+        "category_browser_comparisons": [
+          {
+            "kind": "movies",
+            "exact_selected_label_and_ordered_content_and_visible_count": true
+          },
+          {
+            "kind": "series",
+            "exact_selected_label_and_ordered_content_and_visible_count": true
+          }
+        ],
+        "restoration": {
+          "restored": true,
+          "users_passwords_and_rows_exact": true,
+          "poster_relations_exact": true,
+          "category_enabled_flags_exact": true
+        },
+        "application_image_verified": true,
+        "scope": "Ordinary/category API+React workflow subset; no provider refresh/playback/performance/fullVOD claim",
+        "source_wrapper_native_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-vod-api-http-6d1f28dd3b"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/category-browser-cleanup.json",
+          "sha256": "20da903c0262ddbb62a88d3a2c9ec1b4382d68c64f31082b714946536dc3815a"
+        }
+      }
+    },
+    {
+      "name": "unified-HTML-browser",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/unified-HTML-browser.result.json",
+        "sha256": "398a77cd6c2b5cff80178cb79d625db6cdc772960b81e2022cc301a63b62e61e"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/unified-HTML-browser.json",
+        "sha256": "9d97a7eca1ce88cef609c93bee1a03c31625c641610a844283d9d52d92099c30"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/source-run.json",
+          "sha256": "df038dc29980a7dd26b557100172213af5a83ebeb16b7c27532aba70d1cf7bec"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/http/source-run.json",
+          "sha256": "6e7c98c896261a934e81333bbb2205b8b295e62e863dd2e39faa46a67cab757e"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/http/packaged-unified-http.json",
+          "sha256": "9a3b750928c481c02229ca197941b99724508969dc0d222faabc0fde367ea522"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/http/packaged-unified-browser.json",
+          "sha256": "7b26ccf4061ee297141153c11720b687b9d4b9a35ac3187c11e5a724c699cbf0"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/http/packaged-HTML.json",
+          "sha256": "959f7efec83a1ad413dfd8bd76e52dd6a3325343d625d77ad278bb039ce1a30a"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/http/packaged-effects.json",
+          "sha256": "d49022ee5c5083706d560da748a6af160175576d92744b837499e645a8e146fd"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/http/packaged-http.json",
+          "sha256": "2b5c7d4b02e5537c92d588b0e48fd9291df1ff9a8d958f9d0de7af2433183fa7"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/http/All-browser-Original.json",
+          "sha256": "e09904a2b2dc96382e76402023ddc97a81b2dbac5edf73cd5f6ac08172d3f236"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/unified-HTML-browser/http/All-browser-native.json",
+          "sha256": "e394f686487304624e7bc82e35e1c61f5649e257bc7c109ca2b1865c6ca7009b"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "Source_cases": 592,
+        "Source_unified_observations": 189,
+        "ordinary_compared": 393,
+        "unified_compared": 188,
+        "HTML_compared": 56,
+        "HTML_assets_verified": false,
+        "full_HTML_parity": false,
+        "browser_exact_ordered_content": true,
+        "application_image_verified": true,
+        "scope": "Captured ordinary/unified HTTP+HTML56 and unchanged React All subset; no provider/artwork/playback/episode/fullHTML/performance claim"
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-vod-api-http-12768eb6ba"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/unified-HTML-browser-cleanup.json",
+          "sha256": "603e61389346f481c515b04af7413d0e471854d14d3b200c07d3704fd4408052"
+        }
+      }
+    },
+    {
+      "name": "complete-refresh-original",
+      "kind": "fresh-Original-prerequisite",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/complete-refresh-original.result.json",
+        "sha256": "486762252d98d934b5c2a8232aca8c5e4a9848f9bc50181f3ffe539948d04c42"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/complete-refresh-original.json",
+        "sha256": "4f2d0014555c535c89fca0f246637f905e554e77a38b85e796ad877786681027"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/integration.json",
+          "sha256": "39821f99172d03ce1e0bf94a7d10408fbed79d57034e5d14eb6ee3adaf661ca6"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/source-refresh-workflow-private.json",
+          "sha256": "cfec24aa2ac9da7405e30dcc176e7d9004be77c61ccc43c094bf5573fed55767"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "counts": {
+          "actual_Source_checks": 40,
+          "imports": 2,
+          "Source_workers": 6,
+          "fixture_clock": "2026-11-12T17:06:26+00:00"
+        },
+        "flags": {
+          "native_jobs_verified": false,
+          "performance_verified": false,
+          "original_complete_refresh_workflow_verified": true,
+          "native_worker_execution_verified": false
+        }
+      },
+      "observed_default_audits": [
+        {
+          "report": "artifacts/rust/image53-packaged-matrix-1/complete-refresh-original/integration.json",
+          "field": "default_database_unchanged",
+          "value": true,
+          "raw_manifest_pair_not_claimed_retained": true
+        }
+      ],
+      "audit_scope": "Only explicit controller default_database_unchanged flag for Source workflow; guide default audit not claimed",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-refresh-workflow-original-756a7e344e"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/complete-refresh-original-cleanup.json",
+          "sha256": "6236d02185481b18f93b31693a7793b1d12d38287780e78dcee49906893957bf"
+        }
+      }
+    },
+    {
+      "name": "complete-refresh",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/complete-refresh.result.json",
+        "sha256": "bbff75cf35e7a1e05d544ff444105d0ca335e499fb729d655fa7531caee31ea8"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/complete-refresh.json",
+        "sha256": "5ce07743919ad573605fb113134fceaf55a81b7956ac1fc1c01436b9325cde58"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/integration.json",
+          "sha256": "665db118a41ca75ab19496c056d5fdb0bc12155ccd3de93f31bc494d6a7f3cdb"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/source-refresh-workflow-private.json",
+          "sha256": "d5f35f04a8a52cde3795e9e00eb095613af8b66b32481c27b29e39ee5cb5fcc5"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/candidate-path-audit.txt",
+          "sha256": "8f347243be7a52e3ca4ad87ca1498d3d1484a19712c31e9e0e966cb8910a91ac"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "checks": 40,
+        "imports": 2,
+        "paired_projection_exact": true,
+        "candidate_UID": 65532,
+        "native_worker_execution_verified": true,
+        "original_complete_refresh_workflow_verified": false,
+        "native_jobs_verified": false,
+        "scope": "Manifest-bound Native import->Index+Series0->second import->Current/guide; outer Source wrapper flags retained separately"
+      },
+      "observed_default_audits": [
+        {
+          "report": "artifacts/rust/image53-packaged-matrix-1/complete-refresh/integration.json",
+          "field": "default_database_unchanged",
+          "value": true
+        }
+      ],
+      "audit_scope": null,
+      "audit_scope_field_observed": false,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-refresh-workflow-original-557ea267dc"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/complete-refresh-cleanup.json",
+          "sha256": "4b05fee411af219d3c9699f26b3cc5be8756e7018867f276c0f3f22d306093ee"
+        }
+      }
+    },
+    {
+      "name": "static-Chrome-HTML-browser",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/static-Chrome-HTML-browser.result.json",
+        "sha256": "0bc733decdd9a9bde886f523db547ef8f0a47a77fbd18015cacb5a04f50ebff1"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/static-Chrome-HTML-browser.json",
+        "sha256": "61153af1f53673d69e8a88e0f7ce0b3d629b03a0b8971bf7f2384a53a0774a8d"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/source-run.json",
+          "sha256": "24ec96fc5814b1d1b419cb035bdcc6555e91ce00a204bf98d25558c226bdaf59"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/source-run.json",
+          "sha256": "850bd7107784e26019d2434e3e3c4d6fb706ef8c1f31edfa5efc1b65b10cc94e"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-http.json",
+          "sha256": "0d5e0c281ddf9fc1898c8f126a07b596a2307fc178c75ef58e427b9aa341f60d"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-HTML.json",
+          "sha256": "8eeef81e12a99f28674df0a4b1904848e52bb60a2027e60a7f2baf8ec3f962e7"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-static.json",
+          "sha256": "b9f243867e2816f2deb2dae3e570d197546953dbfdf8ecb2c1cdeec92b310384"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-Chrome-HTML.json",
+          "sha256": "c8fc3f65d978c5344ae5154962c87c0745f3b4036bea57c3a0b76dd67160fcaf"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-unified-http.json",
+          "sha256": "77ff3e4eae4cbaddbfe2a3cb0a9bd16af7be69046f4fe1d1ed9cb57328137564"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-unified-browser.json",
+          "sha256": "a302d25b99d55a73a7b7182c0bd9222b1bdc60c4736c7943f24c29e186292a8b"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/packaged-effects.json",
+          "sha256": "1c9867a29fe9751d6d4cdd061ee1ef4b76f201a378894068b8a59a00b3d57a32"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/All-browser-Original.json",
+          "sha256": "a8d47a950ac53a601189cfd4f9d2524671c3a1fdd2c8cab6d583e5fd42d45c1d"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/static-Chrome-HTML-browser/http/All-browser-native.json",
+          "sha256": "4a6d9f57a490cd9c9586694442d53fb7f11e13388f7bdac007784072c960da84"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "Source_cases": 592,
+        "ordinary_compared": 393,
+        "unified_compared": 188,
+        "HTML_compared": 56,
+        "Chrome_HTML_compared": 32,
+        "static_compared": 68,
+        "assets": 27,
+        "scope": "Captured static27/68 +HTML56/Chrome32/unified188 +actualReactAll; no fullstatic/HTML grammar, provider, playback or performance claim",
+        "full_HTML_parity": false,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-vod-api-http-916ec2494a"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/static-Chrome-HTML-browser-cleanup.json",
+          "sha256": "58c00e480cc2748c85a8cbcd82f13a23a91de13f1b89881c05b9b0e820f8a6dc"
+        }
+      }
+    },
+    {
+      "name": "packaged-provider-actions",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/packaged-provider-actions.result.json",
+        "sha256": "3e416129148dd33c3c908fb95ad4a2583915981a461d2d627baf04a833ac22e2"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/packaged-provider-actions.json",
+        "sha256": "a57de47a669f4171c5a2f7cda4f0342b0093e3fc8ec9ad1851ebbeed8be05075"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-provider-actions/source-run.json",
+          "sha256": "743f16960d1842f5d420867407d0138a24a909393b1f5d0cb1cb7ad3aa4ffa10"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-provider-actions/http/source-run.json",
+          "sha256": "5a82988d90eb81aa18d0e2d26670d6d290b03e8605291ce8ee2cfa8ad168e09e"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-provider-actions/http/packaged-http.json",
+          "sha256": "0418a1f469b48fffa8421e4d32bf32b4c16a8a5faf13436638fbe4d0e3feb8f3"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-provider-actions/http/packaged-provider-actions.json",
+          "sha256": "3a969c0a5f6ce32d8fc1eeabda0ae6e18b812748b9ba004505335a14f3092309"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-provider-actions/http/packaged-effects.json",
+          "sha256": "6682be749f4f570e75a614b52b58879c5b6a58a90c683664d41a2246ae5ed3a0"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "Source_cases": 592,
+        "ordinary_compared": 393,
+        "provider_actions_compared": 150,
+        "predeclared_fresh_references": 25,
+        "owned_metadata_restored": true,
+        "scope": "actual canonical packaged provider-action150 TCP, fixed25 same-state freshSource; no cached-info/image/React/performance acceptance",
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-vod-api-http-456224019e"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/packaged-provider-actions-cleanup.json",
+          "sha256": "ae07ff4ed77f30f53f0363653502ea099f1626c57f1b64902fa2f99931dec932"
+        }
+      }
+    },
+    {
+      "name": "packaged-cached-provider-info",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/packaged-cached-provider-info.result.json",
+        "sha256": "ae61ae0e8972e21206b0d3c841105c6d4dae4c2d0355c21ebdc241dba9518cb7"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/packaged-cached-provider-info.json",
+        "sha256": "523dd181e5d9636ab77c2b70ed7bac4a09dabb559bb185c46f1877e48790593d"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-cached-provider-info/source-run.json",
+          "sha256": "8f66fe57ef3877816d6b557a2a6faa8f5211e72419b0049831e32b7f48ab29cb"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-cached-provider-info/http/source-run.json",
+          "sha256": "1a461669fee1218b58f9dfd4d321aa537c23102bba7715ac8ac10ea7ad315884"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-cached-provider-info/http/packaged-http.json",
+          "sha256": "dc20bf86f072ebca068c5521652045857d0d6f6c8668c97f85d840a6e7fdf031"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-cached-provider-info/http/packaged-cached-info.json",
+          "sha256": "d2d0d651d2b403d7f075eb8e32af0f2f825955c891c7c7199c7508100191e22f"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-cached-provider-info/http/packaged-effects.json",
+          "sha256": "e03f8dcef09ee1c43da26e3782a9279efddddae1c866bcae0886cfb47971003d"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "Source_cases": 592,
+        "ordinary_compared": 393,
+        "cached_info_compared": 90,
+        "Source_unstaggered": 10,
+        "candidate_unstaggered": 10,
+        "scope": "actual canonical packaged cached-info90 TCP and Source10/candidate10; no remote refresh/image/browser/performance acceptance",
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-vod-api-http-d8c780e14f"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/packaged-cached-provider-info-cleanup.json",
+          "sha256": "de1702e2f866089de6db263a7d5c60b71d0e05a95b282d68c80f9e8aeb839f80"
+        }
+      }
+    },
+    {
+      "name": "channel-logos",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/channel-logos.result.json",
+        "sha256": "e97aae529b3fd67aece0e645fb1be46606124268bccecc17797f2959832418c5"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/channel-logos.json",
+        "sha256": "d1a37c0e48df61822e59957a416421dc67626e21a97af0d5342a74295773231a"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/channel-logos/integration.json",
+          "sha256": "4665fdf674abea703c3d922248561e2047c948329fb52ec68923bc08819fbce3"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/channel-logos/packaged-checks.json",
+          "sha256": "0633ad7ab9085c3da41cb71e71969d3372e26b97d77cfefaf6dadbc06f74d1a2"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "checks": 101,
+        "Source_cases": 101,
+        "Source_HTTP_responses": 104,
+        "scope": "actual original logo bytes/CRUD/uploads versus native HTTP in original container network and disposable PostgreSQL",
+        "candidate_image_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "application_image_verified": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-logos-72d2a945c6"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/channel-logos-cleanup.json",
+          "sha256": "00f227d5fd8bd8fe70d561f0fe8c9c9199723710c594453649d17221399e4f96"
+        }
+      }
+    },
+    {
+      "name": "packaged-vod-images",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/packaged-vod-images.result.json",
+        "sha256": "c7d484875bdd35df4104a53ada6819f00c625ef4ba63083a259b56b6ebfb49d2"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/packaged-vod-images.json",
+        "sha256": "1e267867444619d1fd00892693d20b052b42977749e5561e6c5445d16b306810"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/source-run.json",
+          "sha256": "cd1954cb40548cc2bc56025e491cc67f9ae862d879a4645358eb031f9ed048d7"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/source-run.json",
+          "sha256": "20df60e3d8ad5e3a63c8ef580e9b3047ed39091e4c3052c30361eb629195ce5d"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-http.json",
+          "sha256": "06a0f437eb4ed2cb05f92b28b2e2106df84af041e39b65fec63935835241ae88"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-vod-images.json",
+          "sha256": "25f0aba10163c038ade53d855c84a8c1b57ab7ead1ff8feaf7b028f3ac5fc89e"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-effects.json",
+          "sha256": "3db4b4bb8185aa7970b801d8df5544682b03c7b75e4ac5706c5e9147ca7d7409"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "Source_cases": 592,
+        "ordinary_compared": 393,
+        "image_records": 240,
+        "FIFO_cancellation_audits": 2,
+        "scope": "actual Original/canonical packaged image TCP",
+        "owned_metadata_restored": true,
+        "owned_local_file_removed": true,
+        "provider_refresh_requests": 0,
+        "volatile_headers_not_selected": [
+          "Date",
+          "Server"
+        ],
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-vod-api-http-05ffa5f6fe"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/packaged-vod-images-cleanup.json",
+          "sha256": "8bafcc9a6b254a6d238be6d63039152836bfe6a9fb10c79740bd758870132fa1"
+        }
+      }
+    },
+    {
+      "name": "provider-modal-browser",
+      "kind": "packaged-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/provider-modal-browser.result.json",
+        "sha256": "3cfe4e07eb30551f0f7f88ea4161b8ececc3032a8de129afa9993dede7f35dfd"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/provider-modal-browser.json",
+        "sha256": "9f641c051ac3b0e607527d2a939f36e9e3916369bd8fa748370396ed50157d9b"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/provider-modal-browser/integration.json",
+          "sha256": "67a7750a16bfbaee891976193fc7fe3f5ac05c6650a4ccd789a17aeece176b2f"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/provider-modal-browser/provider-modal-browser.json",
+          "sha256": "e38decc8f47f2b107378a4de4ec21c54edbc5ba6c40348b940053c430ec20476"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/provider-modal-browser/provider-modal-Original.json",
+          "sha256": "ed45d6e8491eb0c55ec121988d036512ef14885ded3fb49baff65d526a43a533"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/provider-modal-browser/provider-modal-native.json",
+          "sha256": "54045992ba01d3d0473eb95ec4b2ca3bd2164318bd9389eec2d7b376f78a3a56"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "scope": "Actual unchanged React movie/series modals, provider selection, decoded proxied artwork; no resource claim",
+        "normal_login_count": 2,
+        "exact_ordered_modal_observations": true,
+        "restoration": {
+          "restored": true,
+          "seven_model_row_fingerprints_exact": true,
+          "user_full_microsecond_row_exact": true,
+          "origin_requests": [
+            {
+              "method": "GET",
+              "path": "/poster-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/episode-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/episode-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-b.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/poster-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/episode-a.svg",
+              "allowed": true
+            },
+            {
+              "method": "GET",
+              "path": "/episode-b.svg",
+              "allowed": true
+            }
+          ],
+          "no_provider_contact": true,
+          "scope": "Login audit events and sequence advancement remain genuine fixture effects; owned project must be destroyed."
+        },
+        "candidate_binding": {
+          "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "manifest_verified": true
+        },
+        "performance_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-provider-browser-48c88e5217"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/provider-modal-browser-cleanup.json",
+          "sha256": "18ac65e42f2dc1f540419aafe056769af07101424384d5a079e0b530b77aa857"
+        }
+      }
+    },
+    {
+      "name": "fresh-Original17capture",
+      "kind": "CLI-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/fresh-Original17capture.result.json",
+        "sha256": "f38caefaa40b15b8cc372995e0151af68f70c6105c135c2fa80f17888f0a23af"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/fresh-Original17capture.json",
+        "sha256": "2845f6f6b3ea39a58c6a5958d1031a4a71f71d8b067962309d02bb027c983cae"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/original17/integration.json",
+          "sha256": "c0b09bdff5b9dffbd6e60091bddba0c485a5bc4e99060d621aa14d58df3bcc64"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/original17/operator-cli-source.json",
+          "sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "cases": 17,
+        "scope": "Original actual operator subprocess oracle",
+        "native_verified": false,
+        "performance_verified": false
+      },
+      "observed_default_audits": [
+        {
+          "report": "artifacts/rust/image53-packaged-matrix-1/original17/integration.json",
+          "field": "default_database_unchanged",
+          "value": true
+        }
+      ],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-operator-cli-source-7e9603af78"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/fresh-Original17capture-cleanup.json",
+          "sha256": "9037bbccdb0e41b6f0d85e91a3116b184f711f8d93d5116a9334c6b1749a46f8"
+        }
+      }
+    },
+    {
+      "name": "shipped-safe17",
+      "kind": "CLI-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/shipped-safe17.result.json",
+        "sha256": "61866f18112d6aa6c411ee321a815df2a4187d3647dbcb2fb1e1ebda19fb7ec4"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/shipped-safe17.json",
+        "sha256": "5252760b8aee504075e6991fcd27a99f28500817f1cc64c20597e4b0bcb391fc"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/safe17/proof.json",
+          "sha256": "eb1749d1ebc095a75cad616c626add3e307e2c12253b39ed3f0eb833939b361e"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/safe17/source-cases.json",
+          "sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "cases": 17,
+        "scope": "Private packaged native safe CLI on official owned PostgreSQL/Redis; Original Python container is read/fixture/Channels observer only, no Original command/runtime service",
+        "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "source_cases_sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc",
+        "native_help_and_stderr_exact": false,
+        "full_django_cli_verified": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-operator-package-9554f8ecba"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/shipped-safe17-cleanup.json",
+          "sha256": "763fc7a3d4389a1e6d80e953b1ff399f992dcfa50323c901a197a04ae7a3bfbc"
+        }
+      }
+    },
+    {
+      "name": "shipped-createsuperuser22",
+      "kind": "CLI-functional",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/shipped-createsuperuser22.result.json",
+        "sha256": "bea62eef74d4d0e060d8b15735f368838d7e4c9cadcfc0d1c077725f6ac25a71"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/shipped-createsuperuser22.json",
+        "sha256": "6944f0e2ebc446d28bc125dbd887b396498423a3d8de9c44993738673f926d29"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/create22/integration.json",
+          "sha256": "81c8bfc5290dff794de3efebdcad527a1c32e48e113ee431aa666f6112d9bebe"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/create22/operator-cli-source.json",
+          "sha256": "2ffbe908e055534b167f51220d34d402f7fee8a9bd93b4f6a752a5461f76b964"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "cases": 22,
+        "scope": "Actual shipped UID65532 createsuperuser22 cases observed by Original Django on owned copied database; no performance/full CLI acceptance",
+        "native_verified": true,
+        "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "inspected_runtime_uid_readonly_capabilities": true,
+        "performance_verified": false
+      },
+      "observed_default_audits": [
+        {
+          "report": "artifacts/rust/image53-packaged-matrix-1/create22/integration.json",
+          "field": "default_database_unchanged",
+          "value": true
+        }
+      ],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-operator-cli-source-74b5c7d100"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/shipped-createsuperuser22-cleanup.json",
+          "sha256": "66048cd416bb21577b5fa17fba8585784de84fa7619731e9c30f3e3df0194424"
+        }
+      }
+    },
+    {
+      "name": "strict-typed154",
+      "kind": "offline-typed-comparison",
+      "schedule_class": "ordinary-max3",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/strict-typed154.result.json",
+        "sha256": "4ec836db4d3426959a5cb8a3e3fcaab61b7bd670c262a8c583cfbee6747cf3db"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/strict-typed154.json",
+        "sha256": "74782be148b4f0ca61c2def5c625d910cca19646f56257682d2e32f8c88de971"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/strict-typed154.stdout.log",
+          "sha256": "1a50989e9fe3951722965081a1ef6bc5e5f3640ff4330765392e890d1845320b"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "passed": true,
+        "cases": 22,
+        "strict_typed_comparisons": 154,
+        "actual_creation_clock_slots_per_backend": 10,
+        "full_CLI_byte_parity": false,
+        "full_M8_or_package_or_performance_acceptance": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Offline typed result comparison; no Docker/resource/default DB audit implied",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "offline-no-resources",
+        "verified": true,
+        "project_ids": [],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        }
+      }
+    },
+    {
+      "name": "sharedTS18",
+      "kind": "native-lifecycle-functional",
+      "schedule_class": "solo-heavy-functional",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/sharedTS18.result.json",
+        "sha256": "10aeb1e37b1331aeb58add34a91682f312529b6ea799ff7562f64d42160c2e24"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/sharedTS18.json",
+        "sha256": "6e4c0f2dbb9d29d28b9fbfdc499a19f1bf8dbed0e51edb7b89d787a0e34292af"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/sharedTS18/shared-ts.json",
+          "sha256": "c59a5f2691455c92de60d954ba26320974865f4327ab904f37a5df1b7d949dc8"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/sharedTS18/candidate-image.json",
+          "sha256": "6c20805286cb7392271eafc268af6b2b2ed2475c095fdb548ef768d0f4b33961"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "checks": 24,
+        "lifecycle_cases": [
+          "shared-demand",
+          "stop",
+          "owner-crash"
+        ],
+        "scope": "two-worker-native-TS-functional-contracts",
+        "candidate_functional_and_recovery_passed": true,
+        "require_active_metadata": true,
+        "application_performance_verified": false,
+        "milestone_complete": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-shared-ts-557d3138c461"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/sharedTS18-cleanup.json",
+          "sha256": "c31fa2b8abb1557f9c29e253c3bcf00ca737b4f1404bdbaf6280a2af86d061b4"
+        }
+      }
+    },
+    {
+      "name": "sharedTS6-all-down",
+      "kind": "native-lifecycle-functional",
+      "schedule_class": "solo-heavy-functional",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/sharedTS6-all-down.result.json",
+        "sha256": "c423f529f4476b39428bc54c6f3ef6737f1f4f641cdd62fe0cb3ae8defe4af1a"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/sharedTS6-all-down.json",
+        "sha256": "95fef482b6277070fee29162dca393a39477b82db46848c14755932b3c2ae72a"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/sharedTS6-all-down/shared-ts.json",
+          "sha256": "510cfb4aff63b78149ed3689a4a555a6f4a824b65f1fcd424392bd2eabe39d7f"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/sharedTS6-all-down/candidate-image.json",
+          "sha256": "6c20805286cb7392271eafc268af6b2b2ed2475c095fdb548ef768d0f4b33961"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "checks": 14,
+        "lifecycle_cases": [
+          "all-workers-down"
+        ],
+        "scope": "two-worker-native-TS-functional-contracts",
+        "candidate_functional_and_recovery_passed": true,
+        "require_active_metadata": true,
+        "application_performance_verified": false,
+        "milestone_complete": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-shared-ts-009a0868451e"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/sharedTS6-all-down-cleanup.json",
+          "sha256": "a0458a4f7a055e667c2797f3f26ca9f61d56eb749556eec10d4396433be92a49"
+        }
+      }
+    },
+    {
+      "name": "retention100",
+      "kind": "native-retained-media-functional",
+      "schedule_class": "solo-heavy-functional",
+      "process_exit": 0,
+      "process_settled": true,
+      "controller_result": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/controller-logs/retention100.result.json",
+        "sha256": "49dd624cc5493c66d5813649ba083799ac135093bf027587f1621142e8f9ff23"
+      },
+      "review": {
+        "path": "artifacts/rust/image53-packaged-matrix-1/node-reviews/retention100.json",
+        "sha256": "2b6be073bc01a6eb1f46781643554bc35e12249ee0d261cec31770065ad04937"
+      },
+      "actual_reports": [
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/retention100/retention.json",
+          "sha256": "c27bab0581e77d78760839c153a226270ae43e6db5c20f3b61e6052e5ad5cc28"
+        },
+        {
+          "path": "artifacts/rust/image53-packaged-matrix-1/retention100/candidate-image.json",
+          "sha256": "7c43141af415899b95b2d563e8476c63f465569531cfde0ff153f027331e930e"
+        }
+      ],
+      "observed_counts_and_scope": {
+        "scope": "candidate-only functional retained-media and database accounting",
+        "observer_scope": "bounded sequential admin/Redis/PG snapshots, not isolated CPU or memory measurements",
+        "channels": 10,
+        "late_history_viewers": 100,
+        "late_reader_prefix_matches": 100,
+        "representative_channel_decoders": 10,
+        "decoder_frames": [
+          69,
+          69,
+          69,
+          69,
+          69,
+          69,
+          69,
+          69,
+          69,
+          69
+        ],
+        "no_extra_upstream": true,
+        "local_limit_bytes_per_channel": 4194304,
+        "accounting_snapshots": 4,
+        "candidate_image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "application_performance_verified": false,
+        "milestone_complete": false
+      },
+      "observed_default_audits": [],
+      "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+      "audit_scope_field_observed": true,
+      "cleanup": {
+        "scope": "independent-owned-empty",
+        "verified": true,
+        "project_ids": [
+          "dispatcharr-retention-6e9cd42f7cc5"
+        ],
+        "inventories": {
+          "containers": [],
+          "networks": [],
+          "volumes": []
+        },
+        "query_receipt": {
+          "path": "artifacts/rust/image53-node-review-tools-1/retention100-cleanup.json",
+          "sha256": "4ec4b03b9ea6c886cbf7c3a7b9f496046130ca76fef148f0b834cdbaf4369212"
+        }
+      }
+    }
+  ],
+  "no_cross_schema_count_sum": true,
+  "missing_default_audits_not_inferred": true,
+  "author_credit": "Original Dispatcharr/dependency authors retain application/algorithm/license credit"
+}

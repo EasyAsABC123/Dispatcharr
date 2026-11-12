@@ -79,3 +79,12 @@ scripts/rust-contracts/notification-mutations-source/raw/Source2/command-012.std
 scripts/rust-contracts/notification-mutations-source/raw/Source2/command-013.stdout -text -whitespace
 scripts/rust-contracts/notification-mutations-source/raw/executor-review-2/correction.diff -text -whitespace
 scripts/rust-contracts/notification-mutations-source/raw/executor-review-3/correction.diff -text -whitespace
+
+# Preserve exact image53 historical evidence and Original authority whitespace.
+scripts/rust-integration/image53-package/evidence/artifacts/rust/image53-package-plan-2/static-source-reference/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-vod-contracts/image53-main-components/inputs/notification-failed/blocked/reference/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-vod-contracts/image53-main-components/inputs/notification-fixed/blocked/reference/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-vod-contracts/image53-main-components/inputs/notification-fixed/blocked/reference/core/apps.py -text whitespace=-blank-at-eof
+
+# Original dependency-license Markdown headings use seven equals signs.
+scripts/rust-vod-contracts/image53-main-components/Application-ATTRIBUTION.md conflict-marker-size=32

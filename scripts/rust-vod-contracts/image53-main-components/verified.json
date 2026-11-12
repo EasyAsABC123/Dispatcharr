@@ -1,0 +1,192 @@
+{
+  "passed": true,
+  "main4s": {
+    "passed": true,
+    "actual_exit_code": 0,
+    "cases": [
+      {
+        "case": "success",
+        "phases": {
+          "source": {
+            "status": 200,
+            "hold_seconds": 4.000706010003341,
+            "control_seconds": 2.0152980720158666,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": true
+          },
+          "native": {
+            "status": 200,
+            "hold_seconds": 4.000566799018998,
+            "control_seconds": 2.0141095930011943,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": true
+          }
+        },
+        "Source_signal_rows": 6,
+        "clones_equal": true,
+        "default9tables9sequences_equal": true,
+        "owned_project_empty": true
+      },
+      {
+        "case": "busy",
+        "phases": {
+          "source": {
+            "status": 429,
+            "hold_seconds": 4.000760397990234,
+            "control_seconds": 2.0170853710151277,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": true
+          },
+          "native": {
+            "status": 429,
+            "hold_seconds": 4.0006267039862,
+            "control_seconds": 2.012637691979762,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": true
+          }
+        },
+        "Source_signal_rows": 8,
+        "clones_equal": true,
+        "default9tables9sequences_equal": true,
+        "owned_project_empty": true
+      },
+      {
+        "case": "clientloss",
+        "phases": {
+          "source": {
+            "status": null,
+            "hold_seconds": 4.000783456984209,
+            "control_seconds": 2.0164203499734867,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": false
+          },
+          "native": {
+            "status": null,
+            "hold_seconds": 4.000740624993341,
+            "control_seconds": 2.014333593979245,
+            "actual_close_or_loss": true,
+            "semantic_response_headers_retained": false
+          }
+        },
+        "Source_signal_rows": 6,
+        "clones_equal": true,
+        "default9tables9sequences_equal": true,
+        "owned_project_empty": true
+      }
+    ],
+    "all3_observation_and_scoped_parity_passed": true,
+    "response_header_maps_retained": 4,
+    "header_redactions": 0,
+    "control_timestamp_limit": "Only elapsed control duration retained, not separate absolute control_done timestamp; physical hold clocks are independently retained in proxy traces.",
+    "Source_signal_scope": "request_finished after resource-closer attempts, not guaranteed generator-finally/providerEOF/TCP or server cancellation",
+    "full_M4_acceptance": false,
+    "performance_claim": false,
+    "application_rerun": false,
+    "default_recovery_enabled": false
+  },
+  "worker_header": {
+    "passed": true,
+    "Source6_offline": {
+      "Source_routed_six_header_subscope_offline_valid": true,
+      "actual_routed_cases": [
+        "head405",
+        "invalid_get401",
+        "no_provider503",
+        "full200",
+        "range206",
+        "provider404_to500"
+      ],
+      "actual_routed_statuses": [
+        405,
+        401,
+        503,
+        200,
+        206,
+        500
+      ],
+      "original_Source7_run_passed": false,
+      "original_Source7_qualification_preserved_false": true,
+      "Source_VOD_request_rerun": false,
+      "excluded_unrouted_SPA_diagnostic": {
+        "case": "bad_uuid404",
+        "status": 500,
+        "missing_template": "index.html",
+        "VOD_handler_authority": false,
+        "application_route_parity_claim": false,
+        "Native404_change_authorized": false
+      },
+      "error_body_or_full_header_or_M4_parity": false
+    },
+    "Native_routed_statuses": [
+      405,
+      401,
+      503,
+      200,
+      206,
+      500
+    ],
+    "Native_invalid_HEAD": 405,
+    "Source_invalid_HEAD_measured": false,
+    "original_Source7_exit": 1,
+    "Native_exit": 0,
+    "unrouted_missing_SPA_template_excluded": true,
+    "full_M4_or_header_or_route_parity": false
+  },
+  "notifications": [
+    {
+      "request_slice_qualified": true,
+      "statuses": [
+        201,
+        200,
+        200,
+        200,
+        400,
+        403,
+        501,
+        501,
+        501
+      ],
+      "actual_exit": 1,
+      "default_audit_qualified": false,
+      "changed_default_tables": [
+        "core_systemnotification"
+      ],
+      "full_M5_or_Source48_or_performance": false,
+      "Source8_framework_only_and_definition_extras_separate": true
+    },
+    {
+      "request_slice_qualified": true,
+      "statuses": [
+        201,
+        200,
+        200,
+        200,
+        400,
+        403,
+        501,
+        501,
+        501
+      ],
+      "actual_exit": 0,
+      "default_audit_qualified": true,
+      "changed_default_tables": [],
+      "full_M5_or_Source48_or_performance": false,
+      "Source8_framework_only_and_definition_extras_separate": true
+    }
+  ],
+  "once_receipts": {
+    "historical_attempts": 5,
+    "consumed_once_provenance_verified": true,
+    "new_authorization_granted": false
+  },
+  "notification_startup_fix": {
+    "only_helper_management_startup_changed": true,
+    "timestamp_restore_or_audit_mask": false,
+    "request_phase_qualifier_and_policy_unchanged": true
+  },
+  "full_M4": false,
+  "full_M5": false,
+  "full_body_header_timer_route_parity": false,
+  "performance_acceptance": false,
+  "application_rerun": false
+}

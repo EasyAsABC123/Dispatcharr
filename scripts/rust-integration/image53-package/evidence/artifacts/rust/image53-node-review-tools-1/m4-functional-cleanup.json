@@ -1,0 +1,134 @@
+{
+  "name": "m4-functional",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "57af037190524796f73a853741ff8ee16a1674b244bf0b12988aa830a97879c6",
+  "observation": {
+    "name": "m4-functional",
+    "status": "reports-observed-not-accepted",
+    "classification": "Use explicit actual report scopes/flags; no synthesized all-application claim",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/m4-functional/result.json",
+        "relative": "result.json",
+        "sha256": "06ec37d61e12e8a2cf8d95269e200c4c45c55a074513b68ac569ee85bfcfd659",
+        "bytes": 9646,
+        "observed_fields": {
+          "format_version": 1,
+          "scope": "Sustained native XC VOD and archive catch-up playback subset; not full application acceptance",
+          "project": "dispatcharr-m4-perf-df6106ae54",
+          "plan_sha256": "cebad4c1409679e7f5efc6b1544c9fb40fc1b9981789554c490c26d1acfc4f42",
+          "candidate_image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "source_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "tool_manifest_sha256": "7f498503d0adb9aca028c37cc8d767092df3a447d1872a8d4ec668581ea9e169",
+          "quiet_authorization_sha256": null,
+          "measurements_started": false,
+          "passed": true,
+          "performance_verified": false,
+          "application_performance_verified": false,
+          "full_m4_parity_verified": false,
+          "mode": "Functional preflight only; no resource measurements",
+          "cleanup_passed": true
+        },
+        "candidate_Source_binding_fields": {
+          "candidate_image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "tool_manifest_sha256": "7f498503d0adb9aca028c37cc8d767092df3a447d1872a8d4ec668581ea9e169",
+          "candidate_provenance": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "format_version",
+          "scope",
+          "project",
+          "plan_sha256",
+          "candidate_image_id",
+          "source_commit",
+          "build_manifest_sha256",
+          "tool_manifest_sha256",
+          "quiet_authorization_sha256",
+          "measurements_started",
+          "pairs",
+          "preflight",
+          "passed",
+          "performance_verified",
+          "application_performance_verified",
+          "full_m4_parity_verified",
+          "fixture_ports",
+          "host",
+          "fixture_auth",
+          "containers",
+          "candidate_provenance",
+          "fixture",
+          "mode",
+          "cleanup_passed"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-m4-perf-df6106ae54"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-m4-perf-df6106ae54"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504227.6506565
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-m4-perf-df6106ae54"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504227.6615055
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-m4-perf-df6106ae54"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504227.6724737
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504227.6401222,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504227.6927059
+}

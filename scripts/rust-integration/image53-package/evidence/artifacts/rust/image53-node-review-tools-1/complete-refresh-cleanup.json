@@ -1,0 +1,145 @@
+{
+  "name": "complete-refresh",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "bbff75cf35e7a1e05d544ff444105d0ca335e499fb729d655fa7531caee31ea8",
+  "observation": {
+    "name": "complete-refresh",
+    "status": "reports-observed-not-accepted",
+    "classification": "Use explicit actual report scopes/flags; no synthesized all-application claim",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/complete-refresh/integration.json",
+        "relative": "integration.json",
+        "sha256": "665db118a41ca75ab19496c056d5fdb0bc12155ccd3de93f31bc494d6a7f3cdb",
+        "bytes": 151373,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Actual Original HTTP import\u2192refresh+Index+Series0\u2192secondimport\u2192guide; no descendant quarantine",
+          "project": "dispatcharr-refresh-workflow-original-557ea267dc",
+          "copied_database": "rust_probe_backup_jobs_557ea267dc",
+          "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "native_jobs_verified": false,
+          "performance_verified": false,
+          "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "candidate_image": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+          "candidate_tree": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+          "reference_integration_sha256": "39821f99172d03ce1e0bf94a7d10408fbed79d57034e5d14eb6ee3adaf661ca6",
+          "copied_nonempty_tables": 26,
+          "candidate_path_audit_sha256": "8f347243be7a52e3ca4ad87ca1498d3d1484a19712c31e9e0e966cb8910a91ac",
+          "paired_complete_workflow_verified": true,
+          "checks": 40,
+          "default_database_unchanged": true,
+          "source_report_sha256": "d5f35f04a8a52cde3795e9e00eb095613af8b66b32481c27b29e39ee5cb5fcc5",
+          "original_complete_refresh_workflow_verified": false,
+          "native_worker_execution_verified": true,
+          "candidate_logs_sha256": "938a19667fec6ede91e950a2c39958e9dcf6f3291eea39f0d71a56905c75a95c",
+          "cleanup": "project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {
+          "candidate_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "candidate_image": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0"
+        },
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "project",
+          "copied_database",
+          "original_revision",
+          "tool_source_sha256",
+          "native_jobs_verified",
+          "performance_verified",
+          "original_archive_sha256",
+          "ports",
+          "candidate_manifest_sha256",
+          "candidate_image",
+          "candidate_tree",
+          "reference_integration_sha256",
+          "copied_nonempty_tables",
+          "candidate_path_audit_sha256",
+          "paired_projection",
+          "original_projection",
+          "paired_complete_workflow_verified",
+          "checks",
+          "default_database_unchanged",
+          "source_report_sha256",
+          "original_complete_refresh_workflow_verified",
+          "native_worker_execution_verified",
+          "candidate_shutdown",
+          "candidate_logs_sha256",
+          "cleanup",
+          "resources_retained"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [
+      {
+        "report": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/complete-refresh/integration.json",
+        "field": "default_database_unchanged",
+        "value": true
+      }
+    ],
+    "default_audit_missing": false,
+    "actual_explicit_project_ids": [
+      "dispatcharr-refresh-workflow-original-557ea267dc"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-refresh-workflow-original-557ea267dc"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503471.893543
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-refresh-workflow-original-557ea267dc"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503471.9032383
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-refresh-workflow-original-557ea267dc"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503471.9131122
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794503471.8828442,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794503471.9358556
+}

@@ -1,0 +1,69 @@
+{
+  "name": "baseline-all",
+  "controller_result_sha256": "427ccacd9731417056bcfaa40cdffb890d08b28752f62318cfaea85ad7f3adbe",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/baseline-all/integration.json",
+      "sha256": "71ceed307fd89535dad511de9721b457c1e1ee32b0a3b47bb131ab4b05c61bcd"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "No synthesized default_database audit; actual suite-isolation observations retained where report supplies them",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 1024,
+    "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "contract_suites": [
+      "accounts",
+      "account_crud",
+      "app_data",
+      "core",
+      "profiles",
+      "memberships",
+      "channel_reads",
+      "channel_crud",
+      "groups",
+      "channel_stops",
+      "group_cleanup",
+      "streams",
+      "provider_reads",
+      "server_group_crud",
+      "filter_crud",
+      "core_utilities",
+      "core_stream_crud",
+      "notifications"
+    ],
+    "candidate_image_binding": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "suite_isolation_observation": [
+      {
+        "before_suite": "core",
+        "reason": "independent login contracts share real per-IP 3/min budgets",
+        "wait_seconds": 62
+      }
+    ],
+    "application_performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-rust-probe-ae6249ff6a"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/baseline-all-cleanup.json",
+      "sha256": "6f236dd4a67cd57c209c886f491e7298667f42ac7d7152267f229dc4a8a32204"
+    }
+  }
+}

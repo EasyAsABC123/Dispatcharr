@@ -1,0 +1,77 @@
+{
+  "actual_controller_exit": 1,
+  "actual9request_statuses": [
+    201,
+    200,
+    200,
+    200,
+    400,
+    403,
+    501,
+    501,
+    501
+  ],
+  "phase_qualification_retained": {
+    "normal_Bearer_Main_notification_slice_qualified": true,
+    "Source8_framework_not_TCP": true,
+    "Native_definition_extra_cases": true,
+    "full_endpoint_or_Source48_parity": false,
+    "performance_acceptance": false
+  },
+  "default_audit_passed": false,
+  "changed_default_tables_or_sequences": [
+    {
+      "kind": "tables",
+      "name": "core_systemnotification"
+    }
+  ],
+  "cause": "OriginalCore.ready initialization duringaudit helpermissingmanagementshellmarker updatedbuiltinnotice.updated_at",
+  "owned_cleanup_independently_verified": true,
+  "queries": {
+    "container": {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-f159398833",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "network": {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-f159398833",
+        "--format",
+        "{{.ID}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "volume": {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-notification-main-f159398833",
+        "--format",
+        "{{.Name}}"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "reviewed_epoch": 1794506852.6197875,
+  "no_timestamp_restore_or_audit_mask": true
+}

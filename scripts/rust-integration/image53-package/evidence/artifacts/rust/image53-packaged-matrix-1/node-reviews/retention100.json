@@ -1,0 +1,62 @@
+{
+  "name": "retention100",
+  "controller_result_sha256": "49dd624cc5493c66d5813649ba083799ac135093bf027587f1621142e8f9ff23",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/retention100/retention.json",
+      "sha256": "c27bab0581e77d78760839c153a226270ae43e6db5c20f3b61e6052e5ad5cc28"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/retention100/candidate-image.json",
+      "sha256": "7c43141af415899b95b2d563e8476c63f465569531cfde0ff153f027331e930e"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "scope": "candidate-only functional retained-media and database accounting",
+    "observer_scope": "bounded sequential admin/Redis/PG snapshots, not isolated CPU or memory measurements",
+    "channels": 10,
+    "late_history_viewers": 100,
+    "late_reader_prefix_matches": 100,
+    "representative_channel_decoders": 10,
+    "decoder_frames": [
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69
+    ],
+    "no_extra_upstream": true,
+    "local_limit_bytes_per_channel": 4194304,
+    "accounting_snapshots": 4,
+    "candidate_image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+    "application_performance_verified": false,
+    "milestone_complete": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-retention-6e9cd42f7cc5"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/retention100-cleanup.json",
+      "sha256": "4ec4b03b9ea6c886cbf7c3a7b9f496046130ca76fef148f0b834cdbaf4369212"
+    }
+  }
+}

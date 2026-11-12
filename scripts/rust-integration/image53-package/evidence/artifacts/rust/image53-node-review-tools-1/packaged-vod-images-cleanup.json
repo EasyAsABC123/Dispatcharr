@@ -1,0 +1,254 @@
+{
+  "name": "packaged-vod-images",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "c7d484875bdd35df4104a53ada6819f00c625ef4ba63083a259b56b6ebfb49d2",
+  "observation": {
+    "name": "packaged-vod-images",
+    "status": "reports-observed-not-accepted",
+    "classification": "Use explicit actual report scopes/flags; no synthesized all-application claim",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/source-run.json",
+        "relative": "source-run.json",
+        "sha256": "cd1954cb40548cc2bc56025e491cc67f9ae862d879a4645358eb031f9ed048d7",
+        "bytes": 683,
+        "observed_fields": {
+          "scope": "Original VOD REST metadata-only capture; separate Factory and network fixtures",
+          "passed": true,
+          "baseline_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "native_verified": false,
+          "provider_refresh_verified": false,
+          "performance_verified": false
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "scope",
+          "passed",
+          "baseline_commit",
+          "baseline_image",
+          "native_verified",
+          "provider_refresh_verified",
+          "performance_verified",
+          "modes"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-effects.json",
+        "relative": "http/packaged-effects.json",
+        "sha256": "3db4b4bb8185aa7970b801d8df5544682b03c7b75e4ac5706c5e9147ca7d7409",
+        "bytes": 15738,
+        "observed_fields": {
+          "passed": true
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "before",
+          "after"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-http.json",
+        "relative": "http/packaged-http.json",
+        "sha256": "06a0f437eb4ed2cb05f92b28b2e2106df84af041e39b65fec63935835241ae88",
+        "bytes": 286339,
+        "observed_fields": {
+          "passed": true,
+          "scope": "Original network VOD ordinary reads versus a manifest-bound native app.\nAll application credit remains with original Dispatcharr authors/contributors.\nNo performance, fullVOD, provider-refresh or browser acceptance is inferred.\n",
+          "compared": 393,
+          "outside_component_not_pass": 199,
+          "records": {
+            "length": 393,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "differences": {
+            "length": 0,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "burst_pass": true,
+          "candidate_start_spread_seconds": 0.0006703190156258643,
+          "performance_verified": false,
+          "browser_verified": false
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "compared",
+          "outside_component_not_pass",
+          "records",
+          "differences",
+          "source_simultaneous10",
+          "candidate_simultaneous10",
+          "burst_pass",
+          "candidate_start_spread_seconds",
+          "performance_verified",
+          "browser_verified"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/packaged-vod-images.json",
+        "relative": "http/packaged-vod-images.json",
+        "sha256": "25f0aba10163c038ade53d855c84a8c1b57ab7ead1ff8feaf7b028f3ac5fc89e",
+        "bytes": 558944,
+        "observed_fields": {
+          "passed": true,
+          "scope": "actual Original/canonical packaged image TCP",
+          "records": {
+            "length": 240,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "fixture_origin": "http://172.20.0.3:38437",
+          "owned_metadata_restored": true,
+          "owned_local_file_removed": true,
+          "provider_refresh_requests": 0
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "records",
+          "FIFO_cancellation_audit",
+          "mixed",
+          "fixture_origin",
+          "origin_requests",
+          "full18_exact_before",
+          "full18_exact_after",
+          "owned_metadata_restored",
+          "owned_local_file_removed",
+          "volatile_headers_not_selected",
+          "provider_refresh_requests"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/packaged-vod-images/http/source-run.json",
+        "relative": "http/source-run.json",
+        "sha256": "20df60e3d8ad5e3a63c8ef580e9b3047ed39091e4c3052c30361eb629195ce5d",
+        "bytes": 14890,
+        "observed_fields": {
+          "scope": "Original http VOD REST source capture",
+          "passed": true,
+          "project": "dispatcharr-vod-api-http-05ffa5f6fe",
+          "observation": "http",
+          "commands": {
+            "length": 12,
+            "explicit_passed_true": 0,
+            "explicit_passed_false": 0,
+            "explicit_flags": 0
+          },
+          "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "cases": 592,
+          "corpus_sha256": "bcb0195915f0ce4739fab61c06ad6dc8defd3fda0fec25020e7254540777585c",
+          "provider_trap_attempts": 0,
+          "provider_refresh_rows_unchanged": true,
+          "packaged_ordinary_http_passed": true,
+          "packaged_images_passed": true,
+          "application_image_verified": true,
+          "cleanup": "owned Compose project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "candidate_binding": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "scope",
+          "passed",
+          "project",
+          "tool_sha256",
+          "observation",
+          "commands",
+          "baseline_archive_sha256",
+          "ports",
+          "build_manifest_sha256",
+          "owned_shared_local_files",
+          "cases",
+          "corpus_sha256",
+          "provider_trap_attempts",
+          "provider_refresh_rows_unchanged",
+          "candidate_binding",
+          "packaged_ordinary_http_passed",
+          "packaged_images_passed",
+          "candidate_shutdown",
+          "application_image_verified",
+          "cleanup",
+          "resources_retained"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-vod-api-http-05ffa5f6fe"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-vod-api-http-05ffa5f6fe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504454.8469384
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-vod-api-http-05ffa5f6fe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504454.8564804
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-vod-api-http-05ffa5f6fe"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504454.8678076
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504454.8364463,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504454.8681102
+}

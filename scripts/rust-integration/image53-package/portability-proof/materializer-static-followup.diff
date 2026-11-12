@@ -1,0 +1,25 @@
+--- publication1/materialize.py
++++ publication2/materialize.py
+@@ -15,7 +15,13 @@
+  for x in closure['files']:
+   f=HERE/x['packet_path']
+   if sha(f.read_bytes())!=x['sha256']:raise ValueError('Packet input changed: '+str(f))
+- evidence=HERE/'evidence';inputmap=json.loads((evidence/'artifacts/rust/image53-package-plan-2/support-inputs.json').read_text())
++ evidence=HERE/'evidence';mapfile=evidence/'artifacts/rust/image53-package-plan-2/support-inputs.json';inputmap=json.loads(mapfile.read_text())
++ plan=json.loads((evidence/'artifacts/rust/image53-package-plan-2/plan.json').read_text())
++ if inputmap['revision']!=REV or plan['support_revision']!=REV:raise ValueError('Support revision mismatch')
++ if inputmap['file_count']!=len(inputmap['files'])or inputmap['file_count']!=6148:raise ValueError('Support count mismatch')
++ if sha(mapfile.read_bytes())!=plan['support_input_map_sha256']:raise ValueError('Plan support-map binding differs')
++ manifest='artifacts/rust/candidate-build-worker-url-notifications-image53-1/build.json';build=json.loads((evidence/manifest).read_text())
++ if sha((evidence/manifest).read_bytes())!=plan['candidate']['manifest_sha256']or build['image_id']!=plan['candidate']['image_id']:raise ValueError('Candidate manifest binding differs')
+  base_env={k:v for k,v in os.environ.items()if not k.startswith('GIT_')}
+  archive=subprocess.check_output(['git','-C',str(repo),'archive','--format=tar',REV],env=base_env)
+  if sha(archive)!=inputmap['support_archive_sha256']:raise ValueError('Immutable Git archive differs')
+@@ -34,7 +40,6 @@
+  subprocess.run(['git','read-tree',REV],env=env,check=True)
+  status=subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=support,env=env,text=True)
+  if status:raise ValueError('Reconstructed tracked support is dirty')
+- plan=json.loads((evidence/'artifacts/rust/image53-package-plan-2/plan.json').read_text())
+  def render(x):
+   if isinstance(x,str):return x.replace(ORIGINAL,str(out))
+   if isinstance(x,list):return[render(y)for y in x]

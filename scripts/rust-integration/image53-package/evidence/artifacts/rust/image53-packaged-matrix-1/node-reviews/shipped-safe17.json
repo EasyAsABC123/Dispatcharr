@@ -1,0 +1,44 @@
+{
+  "name": "shipped-safe17",
+  "controller_result_sha256": "61866f18112d6aa6c411ee321a815df2a4187d3647dbcb2fb1e1ebda19fb7ec4",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/safe17/proof.json",
+      "sha256": "eb1749d1ebc095a75cad616c626add3e307e2c12253b39ed3f0eb833939b361e"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/safe17/source-cases.json",
+      "sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "cases": 17,
+    "scope": "Private packaged native safe CLI on official owned PostgreSQL/Redis; Original Python container is read/fixture/Channels observer only, no Original command/runtime service",
+    "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+    "source_cases_sha256": "d6fd7c35ff9dae0afd4fec4116bd349526292918728c0bdd2c180a98efa892bc",
+    "native_help_and_stderr_exact": false,
+    "full_django_cli_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-operator-package-9554f8ecba"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/shipped-safe17-cleanup.json",
+      "sha256": "763fc7a3d4389a1e6d80e953b1ff399f992dcfa50323c901a197a04ae7a3bfbc"
+    }
+  }
+}

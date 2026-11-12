@@ -1,0 +1,50 @@
+{
+  "name": "shipped-createsuperuser22",
+  "controller_result_sha256": "bea62eef74d4d0e060d8b15735f368838d7e4c9cadcfc0d1c077725f6ac25a71",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/create22/integration.json",
+      "sha256": "81c8bfc5290dff794de3efebdcad527a1c32e48e113ee431aa666f6112d9bebe"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/create22/operator-cli-source.json",
+      "sha256": "2ffbe908e055534b167f51220d34d402f7fee8a9bd93b4f6a752a5461f76b964"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "report": "artifacts/rust/image53-packaged-matrix-1/create22/integration.json",
+      "field": "default_database_unchanged",
+      "value": true
+    }
+  ],
+  "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "cases": 22,
+    "scope": "Actual shipped UID65532 createsuperuser22 cases observed by Original Django on owned copied database; no performance/full CLI acceptance",
+    "native_verified": true,
+    "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+    "inspected_runtime_uid_readonly_capabilities": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-operator-cli-source-74b5c7d100"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/shipped-createsuperuser22-cleanup.json",
+      "sha256": "66048cd416bb21577b5fa17fba8585784de84fa7619731e9c30f3e3df0194424"
+    }
+  }
+}

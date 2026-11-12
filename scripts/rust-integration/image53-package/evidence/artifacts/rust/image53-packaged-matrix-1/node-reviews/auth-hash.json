@@ -1,0 +1,45 @@
+{
+  "name": "auth-hash",
+  "controller_result_sha256": "c6a8ce58adc2615b7ccb69e3840d160aa25dd0b605db3add0a2d0c49aa0d5cd9",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/auth-hash/integration.json",
+      "sha256": "f36bd64e2851e1303ffb28948d3341d8f5e40cad471ca835122ef5930ec3b99c"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "No default_database audit invented; exact actual check and candidate binding scope",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 34,
+    "source_baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "contract_suites": [
+      "auth_hash"
+    ],
+    "candidate_image_binding": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "application_performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-rust-probe-2becfb7788"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/auth-hash-cleanup.json",
+      "sha256": "51bc5794d4d12f083b73ac395da8cb4f67be76a1f0b35e83028fc71f4247dbd7"
+    }
+  }
+}

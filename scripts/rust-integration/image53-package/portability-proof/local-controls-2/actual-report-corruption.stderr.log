@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/corrupt-packet/materialize.py", line 56, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/corrupt-packet/materialize.py", line 17, in main
+    if sha(f.read_bytes())!=x['sha256']:raise ValueError('Packet input changed: '+str(f))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Packet input changed: /home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/corrupt-packet/evidence/artifacts/rust/image53-packaged-matrix-1/aggregate-reviewed-1.json

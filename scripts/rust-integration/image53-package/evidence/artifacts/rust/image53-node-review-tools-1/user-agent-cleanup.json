@@ -1,0 +1,145 @@
+{
+  "name": "user-agent",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "aa994f9a129a6d29b05121bf7a5ed51dc625e8368bbc689a0c2a6f180bdd540f",
+  "observation": {
+    "name": "user-agent",
+    "status": "reports-observed-not-accepted",
+    "classification": "Use explicit actual report scopes/flags; no synthesized all-application claim",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/user-agent/integration.json",
+        "relative": "integration.json",
+        "sha256": "63b78619aaab2ec82b0f22857c8330adaecd0721a6806c80ff6bc61104cf7469",
+        "bytes": 87252,
+        "observed_fields": {
+          "passed": true,
+          "scope": "actual original UserAgent CRUD/cache/FK contracts versus native HTTP in original container network/PostgreSQL",
+          "project": "dispatcharr-user-agents-9b2b306019",
+          "performance_verified": false,
+          "application_image_verified": true,
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "source_cases": 79,
+          "default_id_cases": 13,
+          "resource_checks": 3,
+          "packaged_checks_sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542",
+          "cleanup": "project removed",
+          "resources_retained": false
+        },
+        "candidate_Source_binding_fields": {
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "candidate_image_binding": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "project",
+          "performance_verified",
+          "application_image_verified",
+          "tool_source_sha256",
+          "fixture_ports",
+          "build_manifest_sha256",
+          "candidate_image_binding",
+          "source_cases",
+          "default_id_cases",
+          "resource_checks",
+          "packaged_checks_sha256",
+          "cleanup",
+          "resources_retained"
+        ]
+      },
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/user-agent/packaged-checks.json",
+        "relative": "packaged-checks.json",
+        "sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542",
+        "bytes": 8794,
+        "observed_fields": {
+          "passed": true,
+          "checks": {
+            "length": 95,
+            "explicit_passed_true": 95,
+            "explicit_passed_false": 0,
+            "explicit_flags": 95
+          },
+          "source_cases": 79,
+          "default_id_cases": 13,
+          "resource_checks": 3
+        },
+        "candidate_Source_binding_fields": {},
+        "top_level_keys": [
+          "passed",
+          "checks",
+          "source_cases",
+          "default_id_cases",
+          "resource_checks"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-user-agents-9b2b306019"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-user-agents-9b2b306019"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503762.020408
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-user-agents-9b2b306019"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503762.030084
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-user-agents-9b2b306019"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794503762.039356
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794503762.010334,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794503762.0621789
+}

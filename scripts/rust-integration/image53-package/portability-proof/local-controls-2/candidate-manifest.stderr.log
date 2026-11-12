@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/candidate-manifest-packet/materialize.py", line 56, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/image53-matrix-publication-2/local-controls-2/candidate-manifest-packet/materialize.py", line 24, in main
+    if sha((evidence/manifest).read_bytes())!=plan['candidate']['manifest_sha256']or build['image_id']!=plan['candidate']['image_id']:raise ValueError('Candidate manifest binding differs')
+                                                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Candidate manifest binding differs

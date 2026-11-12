@@ -1,0 +1,59 @@
+{
+  "name": "guide-grid-packaged",
+  "controller_result_sha256": "27b4d58e7c908f6358836023b33ca3ecb22d7fc987c6322f2faf918e2153f3af",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/guide-grid-packaged/integration.json",
+      "sha256": "0727344e5b788b9a07602d6af3a78bbde1324075e894d50c6181c0643787788a"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/guide-grid-packaged/packaged-grid.json",
+      "sha256": "0231fcb64641eb3daa6d71337369771f861ef57a9cf7bfa7a1c1cdddd311b233"
+    },
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/guide-grid-packaged/result.json",
+      "sha256": "0727344e5b788b9a07602d6af3a78bbde1324075e894d50c6181c0643787788a"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Only explicit controller default_database_unchanged flag for Source workflow; guide default audit not claimed",
+  "observed_counts_and_candidate_Source_scope": {
+    "counts": {
+      "Source_cases": 104,
+      "packaged_grid_cases": 43,
+      "differences": 0
+    },
+    "flags": {
+      "native_verified": false,
+      "native_guide_http_verified": false,
+      "native_grid_packaged_image_verified": true,
+      "application_parity_verified": false,
+      "performance_verified": false,
+      "candidate_provenance": {
+        "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+        "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+        "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13"
+      }
+    }
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-epg-reads-75ba46f2ae"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/guide-grid-packaged-cleanup.json",
+      "sha256": "344170937231a35fbc2451930f0620dfd37e8b0ccd0703c00b81642ec5e9ff38"
+    }
+  }
+}

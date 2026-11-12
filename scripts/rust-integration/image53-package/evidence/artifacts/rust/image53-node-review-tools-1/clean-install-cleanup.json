@@ -1,0 +1,120 @@
+{
+  "name": "clean-install",
+  "scope": "Read-only exact owned cleanup queries; no stop/delete/prune",
+  "actual_node_result_sha256": "60fa982349b3b941c05ba299df33b79611395b0b29fdc1c62ffccc6fade95017",
+  "observation": {
+    "name": "clean-install",
+    "status": "reports-observed-not-accepted",
+    "classification": "Native empty official services/setup/login/restart; no Original service",
+    "reports": [
+      {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/image53-packaged-matrix-1/clean-install/integration.json",
+        "relative": "integration.json",
+        "sha256": "512ba5eb25c21a07b9a446b038fed141254a528f5824c42e98e29ed99f99963f",
+        "bytes": 89352,
+        "observed_fields": {
+          "passed": true,
+          "scope": "pure-native fresh empty officialPG17/Redis Compose; actual unchanged React first-admin/login/init/restart",
+          "project": "dispatcharr-native-install-a870f36ba7",
+          "checks": {
+            "length": 11,
+            "explicit_passed_true": 11,
+            "explicit_passed_false": 0,
+            "explicit_flags": 11
+          },
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "no_django_service": true,
+          "performance_verified": false,
+          "screenshot_sha256": "218b67fe1ed82971457ef9ac6ae8e891f08974bdedf278103161c5d700ed34b9",
+          "cleanup": "project removed"
+        },
+        "candidate_Source_binding_fields": {
+          "build_manifest_sha256": "d373bb672bc6f61357fa64c30d233b00356f06f0ff329498296a7416992f4c13",
+          "candidate_image_binding": {
+            "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+            "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+            "manifest_verified": true
+          }
+        },
+        "top_level_keys": [
+          "passed",
+          "scope",
+          "project",
+          "checks",
+          "tool_source_sha256",
+          "build_manifest_sha256",
+          "fixture_ports",
+          "no_django_service",
+          "performance_verified",
+          "candidate_image_binding",
+          "services",
+          "browser",
+          "screenshot_sha256",
+          "cleanup"
+        ]
+      }
+    ],
+    "missing_expected_reports": [],
+    "observed_default_audits": [],
+    "default_audit_missing": true,
+    "actual_explicit_project_ids": [
+      "dispatcharr-native-install-a870f36ba7"
+    ],
+    "actual_explicit_container_ids": [],
+    "unclassified_container_fields_manual_review": [],
+    "passed": null,
+    "semantic_review_complete": false,
+    "no_claim_from_historical52_schema": true
+  },
+  "queries": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-native-install-a870f36ba7"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504072.0297341
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-native-install-a870f36ba7"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504072.0391986
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-native-install-a870f36ba7"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "finished_epoch": 1794504072.0487454
+    }
+  ],
+  "passed": true,
+  "started_epoch": 1794504072.0195212,
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "completed_epoch": 1794504072.048874
+}

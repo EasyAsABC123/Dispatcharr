@@ -1,0 +1,16 @@
+--- artifacts/rust/image53-main-components-publication-1/selected/scripts/rust-vod-contracts/image53-main-components/inputs/notification-failed/blocked/tools/db.py	2026-11-12 13:29:41.802990288 -0500
++++ artifacts/rust/image53-main-components-publication-1/selected/scripts/rust-vod-contracts/image53-main-components/inputs/notification-fixed/blocked/tools/db.py	2026-11-12 13:29:41.807399704 -0500
+@@ -17,7 +17,13 @@
+         if name!='dispatcharr':raise ValueError('ReadOnlyDefaultAudit')
+     else:database(name)
+     sys.path.insert(0,'/app');os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
++    # Use Original's real management-command startup path for EVERY helper stage.
++    # The helper action remains argv[1]; append only an exact shell marker.
++    if 'shell' not in sys.argv[1:]:sys.argv.append('shell')
++    from dispatcharr.app_initialization import should_skip_initialization
++    if should_skip_initialization() is not True:raise ValueError('OriginalManagementSkipBeforeSetup')
+     import django;django.setup()
++    if should_skip_initialization() is not True:raise ValueError('OriginalManagementSkipAfterSetup')
+     from apps.accounts.models import User
+     from apps.m3u.models import M3UAccount,M3UAccountProfile
+     from apps.vod.models import Movie,M3UMovieRelation,Series,Episode,M3UEpisodeRelation

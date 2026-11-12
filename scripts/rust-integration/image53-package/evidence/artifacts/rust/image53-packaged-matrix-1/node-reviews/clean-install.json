@@ -1,0 +1,43 @@
+{
+  "name": "clean-install",
+  "controller_result_sha256": "60fa982349b3b941c05ba299df33b79611395b0b29fdc1c62ffccc6fade95017",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "artifacts/rust/image53-packaged-matrix-1/clean-install/integration.json",
+      "sha256": "512ba5eb25c21a07b9a446b038fed141254a528f5824c42e98e29ed99f99963f"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Actual scoped evidence; no implicit default-database audit",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 11,
+    "scope": "pure-native fresh empty officialPG17/Redis Compose; actual unchanged React first-admin/login/init/restart",
+    "candidate_image_binding": {
+      "image_id": "sha256:3f599a036bf0ba15f7d47f4f28016777fba9586cb328afd10a25cac16293f4f0",
+      "source_tree_sha256": "e581a28540d0e64e4007d0bf2a01feb3a1d611f5cde16d77b68e006c28fa9443",
+      "manifest_verified": true
+    },
+    "no_django_service": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-native-install-a870f36ba7"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "artifacts/rust/image53-node-review-tools-1/clean-install-cleanup.json",
+      "sha256": "2162a4db6706a9f6a6b7d56617d13fb54d9c3dd4b171f931079d04b39b9eb004"
+    }
+  }
+}
