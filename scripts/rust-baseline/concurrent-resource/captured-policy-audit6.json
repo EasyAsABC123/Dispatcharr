@@ -1,0 +1,67 @@
+{
+  "scope": "Proposed instrumentation/coverage/authorization changes only; Root review required",
+  "old_policy_sha256": "cd4a2117d9072778e99e433a6a5f2b098cab2c7440a2af707ed5f223a4fbf257",
+  "new_policy_sha256": "dca986f0efa0ac85fba6397ac6d3d02e2c4c873ab32215aa2bdbf2503dbec758",
+  "legacy_projection_exact": true,
+  "all_old_Source_budgets_caps_workload_and_minima_unchanged": true,
+  "changes": [
+    {
+      "path": "/resource_draft/authorization",
+      "change": "added",
+      "value": {
+        "maximum_cue_age_at_start_seconds": 300,
+        "maximum_cue_lifetime_seconds": 1800
+      }
+    },
+    {
+      "path": "/resource_draft/coverage_quality",
+      "change": "added",
+      "value": {
+        "idle_CPU_minimum_samples": 5,
+        "CPU_max_gap_seconds": 2.5,
+        "CPU_edge_slack_seconds": 2.5,
+        "census_max_gap_seconds": 5,
+        "census_edge_slack_seconds": 5,
+        "workload_complete_census_minimum": 30
+      }
+    },
+    {
+      "path": "/resource_draft/fixture_work_deadline_seconds",
+      "change": "added",
+      "value": 900
+    },
+    {
+      "path": "/resource_draft/repetition_deadline_seconds",
+      "change": "removed",
+      "old_value": 900
+    },
+    {
+      "path": "/resource_draft/resource_window_deadline_seconds",
+      "change": "added",
+      "value": 900
+    },
+    {
+      "path": "/resource_draft/supervision",
+      "change": "added",
+      "value": {
+        "grace_join_seconds": 5,
+        "owned_stop_seconds": 15,
+        "final_join_seconds": 30,
+        "maximum_commands": 4096,
+        "maximum_live_commands": 16,
+        "cleanup_reserved_commands": 32,
+        "cleanup_reserved_live_commands": 4,
+        "host_observer_retained_payload_bytes": 268435456,
+        "cleanup_reserved_payload_bytes": 4194304,
+        "external_child_payload_reservation_bytes": 67108864,
+        "cleanup_control_command_seconds": 30,
+        "cleanup_wall_quality_ceiling_seconds": 420,
+        "cleanup_compose_down_seconds": 120,
+        "cleanup_inventory_seconds": 15
+      }
+    }
+  ],
+  "deadline_scope": "900s fixture work starts before setup;900s observer window starts after setup; cleanup420s is post-action wall-quality ceiling, not hard total termination",
+  "no_resource_observation_or_result": true,
+  "both_entry_hardblocks_remain": true
+}

@@ -1,0 +1,72 @@
+{
+  "status": "PROPOSED UNEXECUTED private resource draft; requires Root review/seal and explicit quiet authorization",
+  "viewers": 1,
+  "warmup_seconds": 15,
+  "measure_seconds": 120,
+  "imports_at_seconds": [
+    5,
+    60
+  ],
+  "import_deadline_seconds": 50,
+  "prefix_bytes": 2097152,
+  "decode_seconds": 5,
+  "minimum_video_frames": 25,
+  "minimum_bytes_per_second": 100000,
+  "startup_p95_ms": 15000,
+  "cleanup_seconds": 45,
+  "caps": {
+    "baseline": {
+      "nano_cpus": 1000000000,
+      "memory_bytes": 1073741824
+    },
+    "source": {
+      "nano_cpus": 2000000000,
+      "memory_bytes": 536870912
+    },
+    "origin": {
+      "nano_cpus": 2000000000,
+      "memory_bytes": 536870912
+    },
+    "worker": {
+      "nano_cpus": 1000000000,
+      "memory_bytes": 536870912
+    }
+  },
+  "provider_max_streams": 1,
+  "Source_repetitions_now": 3,
+  "resource_acceptance": false,
+  "resource_draft": {
+    "observer_commit": "4b209bf8",
+    "sample_interval_seconds": 1,
+    "census_interval_seconds": 2,
+    "census_service_deadline_seconds": 5,
+    "maximum_resource_rows": 512,
+    "maximum_census_rows": 128,
+    "maximum_json_row_bytes": 1048576,
+    "maximum_stream_bytes": 16777216,
+    "idle_before_seconds": 20,
+    "retention_settle_seconds": 70,
+    "idle_after_seconds": 20,
+    "minimum_complete_stable_idle_censuses": 5,
+    "repetition_deadline_seconds": 900,
+    "aggregate_channel_events_bytes": 8388608,
+    "aggregate_worker_events_bytes": 8388608,
+    "maximum_event_records": 1024,
+    "maximum_event_bytes": 65536,
+    "repetitions": 3,
+    "minimum_workload_resource_samples": 60,
+    "budgets_inherited_without_tuning": {
+      "idle_cpu_percent_one_core": 50,
+      "whole_stack_cpu_percent_one_core": 500,
+      "post_idle_memory_growth_bytes": 67108864,
+      "post_idle_memory_growth_fraction": 0.1,
+      "post_idle_process_growth": 0,
+      "post_idle_thread_growth": 4,
+      "post_idle_fd_growth": 16,
+      "post_idle_socket_growth": 16,
+      "tcp_time_wait_ceiling": 1024,
+      "oom_events": 0
+    },
+    "minimum_workload_cpu_samples": 60
+  }
+}

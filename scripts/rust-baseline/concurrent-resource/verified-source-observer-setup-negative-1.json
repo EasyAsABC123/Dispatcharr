@@ -1,0 +1,117 @@
+{
+  "passed": false,
+  "scope": "ONE approved functional observer integration attempt; no retry or full resource window",
+  "plan_sha256": "ecd8ce3aeb5105cc734d34e4de94a6a7fd512ee74737cfcffc68626b3761d0c6",
+  "approval_sha256": "7fe55c476bb502341c022f46997cba54e8737e512c111b24af656bcaabfce773",
+  "all_34_captured_byte_hashes_match": true,
+  "first_fatal": {
+    "service": "baseline",
+    "collector_UID_GID": [
+      1000,
+      1000
+    ],
+    "host_command_stderr": "command-61.stderr",
+    "exit_code": 2,
+    "exact_error": "/dispatcharrpy/bin/python: can't open file '/m0-census.py': [Errno 13] Permission denied",
+    "classification": "mounted observer helper script not readable at UID1000; setup/permission failure, not a structured /proc denial",
+    "mounted_proc_script_mode": "0o600",
+    "cause": "contract copy omitted Resource6 main post-copy chmod0444; reviewed resource main contains it"
+  },
+  "sibling_results_retained": {
+    "baseline": {
+      "complete": false,
+      "error_type": "CollectionFailure"
+    },
+    "origin": {
+      "complete": true,
+      "error_type": null
+    },
+    "source": {
+      "complete": true,
+      "error_type": null
+    },
+    "worker": {
+      "complete": true,
+      "error_type": null
+    }
+  },
+  "resource_rows": 1,
+  "census_cycles": 1,
+  "complete_four_role_cycles": 0,
+  "metadata_captured": true,
+  "genuine_Django_overflow_control_passed": true,
+  "physical_helper_fault_reached": false,
+  "secondary_diagnostics": [
+    {
+      "kind": "counter_finish",
+      "error": "Capacity",
+      "classification": "normal admission closed by finalization before Window.close attempted final counters; no completed whole-window counter proof"
+    },
+    {
+      "kind": "default_database_audit",
+      "raw_label": "DefaultDatabaseChanged",
+      "effective_status": "NOT_RUN",
+      "actual_database_change_established": false,
+      "reason": "pre-stop manifest audit was not reached; draft audit callback used False for absent witness"
+    }
+  ],
+  "independent_cleanup_all_empty": true,
+  "host_collectors_drained": true,
+  "all_cleanup_actions_attempted": [
+    "observer_stop_join",
+    "physical_process_drain",
+    "default_database_audit",
+    "logs",
+    "compose_down",
+    "containers",
+    "networks",
+    "volumes"
+  ],
+  "raw_evidence": [
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/integration.json",
+      "sha256": "93e4539e868b35cc6109e6a143a3431439e073e3f5c9b96f98a74af28c33222e"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/approval-binding.json",
+      "sha256": "066843c1a5656b28437b79656f2a016786c3052503fcf304c7f92bc07ba57c4c"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/approved-plan.json",
+      "sha256": "ecd8ce3aeb5105cc734d34e4de94a6a7fd512ee74737cfcffc68626b3761d0c6"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/resource-metadata-private.json",
+      "sha256": "79e422fca1d4c08fc3d941062303421510bdf40160575126b1e3b8fdf0164bb1"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/observer-contract/window.json",
+      "sha256": "8ebd7654783fab1f2a71050b3b2c78ebb3d6322c4d69fd3987b407a21d597b3a"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/observer-contract/resources.jsonl",
+      "sha256": "a16c669dab08da0896cd65886dd07f2821668eefb3ac31ecec356e405bdd9b1c"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/observer-contract/censuses.jsonl",
+      "sha256": "e89d19499bd3cc5423129c44eb72cd5b81f49c6f41878df3ddc34198641b2cec"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/command-61.stderr",
+      "sha256": "cc6d29fe8c4da3d515de7933ae4f9bd1a68b4784753026a5c76d0d73fbcda8b9"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/observer-contract/census-failed-c99d0136fd0f.json",
+      "sha256": "190ff056c015076756ba76d170ad2f1a5a627a7f35fa9965a9aa5324ea36f888"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-1/independent-cleanup.json",
+      "sha256": "aa09a7e3363b14c24d468792521ce13a8cbae8160809a0f6ac05330d5e60c59f"
+    }
+  ],
+  "resource_acceptance": false,
+  "Native_enabled": false,
+  "M0_complete": false,
+  "Source_growth_inference": false,
+  "automatic_retry": false
+}

@@ -1,0 +1,150 @@
+{
+  "passed": true,
+  "scope": "ONE separately approved Original four-role functional observer contract; no full resource acceptance",
+  "plan_sha256": "716f98643a7ed0c0202da05a6fbe33a3c591554c488c57beea18f2bbcecfa32a",
+  "Root_approval_sha256": "b385e4058cd5305fc4ba6ebc30148e262290078e2864383eb2a9a91a6fe50519",
+  "captured_all36_hashes_match_exact_plan": true,
+  "Resource7_policy_unchanged_from_Root_reviewed_Resource6": true,
+  "runtime_proc_script_mode": "0o444",
+  "schedule_seconds": 10,
+  "counts": {
+    "resource_rows": 10,
+    "CPU_intervals": 9,
+    "complete_censuses": 5
+  },
+  "predeclared_functional_checks": {
+    "resource_rows": true,
+    "CPU_intervals": true,
+    "complete_censuses": true,
+    "no_observer_error": true,
+    "threads_drained": true,
+    "no_OOM_or_counter_reset": true
+  },
+  "observer_threads_drained": true,
+  "observer_errors": [],
+  "genuine_Django_overflow_control_passed": true,
+  "functional_collection_overhead_only": {
+    "resource_sample_wall_seconds_min": 0.004464167024707422,
+    "resource_sample_wall_seconds_max": 0.01920894900104031,
+    "census_cycle_wall_seconds_min": 0.2854939069948159,
+    "census_cycle_wall_seconds_max": 0.3275806489982642,
+    "no_second_sampler": true,
+    "no_gain_claim": true
+  },
+  "physical_fault": {
+    "fault": "actual owned-worker helper stdout pipe held; no application SQL/task stub",
+    "expected_collection_failure": "CollectionDeadline",
+    "actual_collection_failure": "CollectionDeadline",
+    "host_settlement": {
+      "drained": true,
+      "operation_successful": false,
+      "returncode": 137,
+      "invalid": "CollectionDeadline",
+      "output_bytes": 19,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": true
+    },
+    "elapsed_seconds": 1.0519998649833724,
+    "owned_stop": {
+      "container_count": 4,
+      "all_stopped_PID_zero": true,
+      "inspection_scope": "exact generated project IDs before and after kill; fixed state format"
+    },
+    "no_resource_sampling_during_fault": true
+  },
+  "default_database_audit": {
+    "scope": "full existing public-schema manifest BEFORE deliberate stop",
+    "unchanged": true,
+    "not_a_post_stop_SQL_query": true
+  },
+  "host_budget_after_cleanup": {
+    "used_bytes": 67901944,
+    "maximum_bytes": 268435456,
+    "cleanup_reserved_bytes": 4194304
+  },
+  "owned_cleanup_independently_empty": true,
+  "terminal_actions": {
+    "observer_stop_join": {
+      "ok": true,
+      "error_type": null
+    },
+    "physical_process_drain": {
+      "ok": true,
+      "error_type": null
+    },
+    "default_database_audit": {
+      "ok": true,
+      "error_type": null
+    },
+    "logs": {
+      "ok": true,
+      "error_type": null
+    },
+    "compose_down": {
+      "ok": true,
+      "error_type": null
+    },
+    "containers": {
+      "ok": true,
+      "error_type": null
+    },
+    "networks": {
+      "ok": true,
+      "error_type": null
+    },
+    "volumes": {
+      "ok": true,
+      "error_type": null
+    }
+  },
+  "bindings": [
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-2/integration.json",
+      "sha256": "afc4dbaf7edd8a9f52fe97e695fc03a5f06f71a56d70e2334fe3741a9779d451"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-2/approved-plan.json",
+      "sha256": "716f98643a7ed0c0202da05a6fbe33a3c591554c488c57beea18f2bbcecfa32a"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-2/approval-binding.json",
+      "sha256": "9e36dd92ffa5fecbaa056dd2710c42db17a5446cfc91744d1e013370ea8b7916"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-2/resource-metadata-private.json",
+      "sha256": "8f669bb890a47bd4cea2d1bd7d64208112c435cbf8784192c73cc84d8c2d2fe9"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-2/observer-contract/window.json",
+      "sha256": "6812dab65c48185ed4c51bc4a0cee30cac8001fd9fb02d56b548cca5a8f3f7c3"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-2/observer-contract/resources.jsonl",
+      "sha256": "66a42849c93ea017594f3b1b657a9a80dfd5e71300e06ca75ce003428e71b0a9"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-2/observer-contract/censuses.jsonl",
+      "sha256": "b22168dde4aedfb6a67f6da6a9f545b5b0581bd658752fbc97971633932a4fa3"
+    },
+    {
+      "path": "artifacts/rust/m0-resource-observer-contract-source-2/independent-cleanup.json",
+      "sha256": "34d223995c67cc81ca42a614ed42f9a1511b27cb9a04da5b4f98fb78cc681200"
+    }
+  ],
+  "Source1_failed_setup_preserved": {
+    "path": "artifacts/rust/m0-resource-observer-contract-source-1/sanitized-failure.json",
+    "sha256": "3a11ab9e1f34653222ab8dc81541398e001e9e4dc2d7d3d0cc0a155565563a7b"
+  },
+  "limits": [
+    "No120s import/playback resource workload",
+    "No workload growth/CPU/RAM thresholds evaluated",
+    "Actual physical helper is not a real held SQL task; no worker cancellation semantics claim",
+    "Metadata and functional rows do not establish full resource or Native/M0 acceptance",
+    "No automatic full-resource unblock or fresh quiet cue supplied"
+  ],
+  "resource_acceptance": false,
+  "Source_budget_acceptance": null,
+  "Native_enabled": false,
+  "M0_complete": false,
+  "performance_verified": false
+}
