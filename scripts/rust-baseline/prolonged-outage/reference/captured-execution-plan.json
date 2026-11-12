@@ -1,0 +1,57 @@
+{
+  "action": "execute-once-source-prolonged-outage-functional",
+  "source_plan": "/home/justin/github/Dispatcharr/artifacts/rust/m0-prolonged-outage-draft-5/review-plan.json",
+  "source_plan_sha256": "8e4a6ecf38fa2de8ea0361ecd4fd6b25142fa3945635c083e9f5e9dc0a42c022",
+  "repo": "/home/justin/github/Dispatcharr",
+  "activated_controller": "/home/justin/github/Dispatcharr/artifacts/rust/m0-prolonged-outage-execution-prep-1/activated-controller",
+  "output": "/home/justin/github/Dispatcharr/artifacts/rust/m0-prolonged-outage-source-1",
+  "claim": "/home/justin/github/Dispatcharr/artifacts/rust/m0-prolonged-outage-execution-prep-1/once-claim.json",
+  "blocked_launcher_sha256": "c3db3f484211b3bcf0a46a0da6db5202167b47dcb0ef762f415bee87e9ced892",
+  "activated_launcher_sha256": "745de189e11ddf45df06aff9b892d06d090199306517bf576fd414d4f44d9ebb",
+  "activated_source_sha256": {
+    "bounded_process.py": "5f90dfcded3226b245b72524004bbfec44f35aa1944cb6cfa05380754744a21d",
+    "http_adapter.py": "b12e9fa2b82b218e3cfb4840d8fa81afc056199065808a8b3d4a5ada3e9a4351",
+    "origin_fixture.py": "6fb600614e7d4a3922409fbe5bee111455169bd5835c0e98eccb1656f5d439e6",
+    "outage_protocol.py": "48dac756fdd93e2b4edac6cf6a13e974594363dfd08ee30ebf3f5db71c97292f",
+    "owned_stop.py": "5daaed50026473e10c93f489ebd00959edfbc4bbd2866d9fa54a1517947472b5",
+    "runtime_witness.py": "b13e400a3ec46f9dd92ab2ffde389ee962deaaf990ca887d3171179fc149291d",
+    "source-authority.json": "8acfa4638c2e2e3c31cf08aca279e2dc60e219cf355a44a0d7247e70433c20fa",
+    "source_controller.py": "a6f1f788c6f756efd0803b4d549036ed3bad9d15d721bf42271749f6b3fa1a39",
+    "supervision.py": "ecbca3ebc8d65e55d7f053bb74e1d7bd302676b62b3ec6ef6744a5ed717ebbbf",
+    "test_driver.py": "14139224e5e8875ba229e0b8c5b4a2263ec185e4a181facb2cea06df3d310cb1",
+    "test_origin.py": "17fe8d682ee865889983aa08bc5f347c567df24a11dfd58545f3fc4fc9e54d50",
+    "test_protocol.py": "5fcd3fc5af5c1150675fe340160b8154bff528f2fe779b5474076503e00a1cac"
+  },
+  "command": [
+    "python3",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m0-prolonged-outage-execution-prep-1/activated-controller/source_controller.py",
+    "--repo",
+    "/home/justin/github/Dispatcharr",
+    "--output",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m0-prolonged-outage-source-1"
+  ],
+  "activation": {
+    "source": "only3reviewedEXECUTION_BLOCKED=True\u2192False literals, fresh copy withoutbytecache",
+    "launcher": "onlyLAUNCH_EXECUTION_BLOCKED=True\u2192False in reviewedexactlauncher",
+    "materialized_now": false
+  },
+  "cue_limits": {
+    "same_boot": true,
+    "maximum_start_age_seconds": 300,
+    "maximum_cue_lifetime_seconds": 1800,
+    "functional_Source_only": true,
+    "must_be_fresh_Root_cue_with_independent_hash": true
+  },
+  "policy": {
+    "warm_seconds": 15,
+    "unavailable_seconds": 102,
+    "restore_observation_seconds": 88,
+    "retention_seconds": 70,
+    "origin_fixture_seconds": 600,
+    "Native": false,
+    "resource_sampler": false,
+    "retry": false
+  },
+  "output_absent_at_plan": true,
+  "Source_outcome_acceptance": null
+}

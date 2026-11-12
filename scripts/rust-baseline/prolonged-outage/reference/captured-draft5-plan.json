@@ -1,0 +1,57 @@
+{
+  "scope": "PRIVATE blocked Source-only prolonged outage functional plan; no Source/Docker/network execution",
+  "controller_sha256": {
+    "bounded_process.py": "5f90dfcded3226b245b72524004bbfec44f35aa1944cb6cfa05380754744a21d",
+    "http_adapter.py": "b12e9fa2b82b218e3cfb4840d8fa81afc056199065808a8b3d4a5ada3e9a4351",
+    "origin_fixture.py": "9e0da20010b458b51bc2283a6c0cfa6b2e1b94955466bf659dba1dd0fea12e06",
+    "outage_protocol.py": "0207b863338d40e996ecc3732326d6c1abcc92afc91214ba3ef1c400b878f7e5",
+    "owned_stop.py": "5daaed50026473e10c93f489ebd00959edfbc4bbd2866d9fa54a1517947472b5",
+    "runtime_witness.py": "b13e400a3ec46f9dd92ab2ffde389ee962deaaf990ca887d3171179fc149291d",
+    "source-authority.json": "8acfa4638c2e2e3c31cf08aca279e2dc60e219cf355a44a0d7247e70433c20fa",
+    "source_controller.py": "d82818aad7dd2ab8606e71ea0456a740b407256dd47425c8d390e52062d55a51",
+    "supervision.py": "ecbca3ebc8d65e55d7f053bb74e1d7bd302676b62b3ec6ef6744a5ed717ebbbf",
+    "test_driver.py": "14139224e5e8875ba229e0b8c5b4a2263ec185e4a181facb2cea06df3d310cb1",
+    "test_origin.py": "17fe8d682ee865889983aa08bc5f347c567df24a11dfd58545f3fc4fc9e54d50",
+    "test_protocol.py": "5fcd3fc5af5c1150675fe340160b8154bff528f2fe779b5474076503e00a1cac"
+  },
+  "PLAN_sha256": "7c10d9362f020cf44ed47bcda8d7c7f91ed116e08d2a496f18d7f2b0e4fd8474",
+  "ancestry_sha256": "454cf7a98efea9d17b8e9983e614ab125e2ba2d44612baf0e042cd3c1629a3c7",
+  "draft2_delta_sha256": "3050191a2ae5664c215a4bcee5376ff88868ff40b7b0dc3a717c40b3f7cccb9b",
+  "offline_controls": 21,
+  "offline_log_sha256": "b0956bc4d14c7f72c49aa424a169ac5e25f73c26185754fc866f673cd5489318",
+  "Source_execution_approved": false,
+  "resource_capture_approved": false,
+  "Resource7_full3_unchanged": true,
+  "activation_requires_exact_Root_review_and_three_flags_in_fresh_copy": {
+    "bounded_process.py": "5f90dfcded3226b245b72524004bbfec44f35aa1944cb6cfa05380754744a21d",
+    "http_adapter.py": "b12e9fa2b82b218e3cfb4840d8fa81afc056199065808a8b3d4a5ada3e9a4351",
+    "origin_fixture.py": "6fb600614e7d4a3922409fbe5bee111455169bd5835c0e98eccb1656f5d439e6",
+    "outage_protocol.py": "48dac756fdd93e2b4edac6cf6a13e974594363dfd08ee30ebf3f5db71c97292f",
+    "owned_stop.py": "5daaed50026473e10c93f489ebd00959edfbc4bbd2866d9fa54a1517947472b5",
+    "runtime_witness.py": "b13e400a3ec46f9dd92ab2ffde389ee962deaaf990ca887d3171179fc149291d",
+    "source-authority.json": "8acfa4638c2e2e3c31cf08aca279e2dc60e219cf355a44a0d7247e70433c20fa",
+    "source_controller.py": "a6f1f788c6f756efd0803b4d549036ed3bad9d15d721bf42271749f6b3fa1a39",
+    "supervision.py": "ecbca3ebc8d65e55d7f053bb74e1d7bd302676b62b3ec6ef6744a5ed717ebbbf",
+    "test_driver.py": "14139224e5e8875ba229e0b8c5b4a2263ec185e4a181facb2cea06df3d310cb1",
+    "test_origin.py": "17fe8d682ee865889983aa08bc5f347c567df24a11dfd58545f3fc4fc9e54d50",
+    "test_protocol.py": "5fcd3fc5af5c1150675fe340160b8154bff528f2fe779b5474076503e00a1cac"
+  },
+  "future_command_only": [
+    "python3",
+    "<Root-reviewed-activated-copy>/source_controller.py",
+    "--repo",
+    "/home/justin/github/Dispatcharr",
+    "--output",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m0-prolonged-outage-source-1"
+  ],
+  "remaining_gates": [
+    "Root review then exact activation authority",
+    "actual socket-close acknowledgment for warmed Source input and both503102s",
+    "actual original versus fresh-body outcome, DB/process/retention/cleanup qualification"
+  ],
+  "no_new_Source_acceptance_ceilings": true,
+  "supersedes": "draft4 with Root-required restore endpoints/receipt +mandatory original warm AV decode +scope clarification",
+  "draft3_delta_sha256": "b01e3168a85182ad60a6fc5542a5253dc01f4bb1b6192404168b9de9a62e2324",
+  "draft2_delta_scope": "historical delta throughdraft3; apply draft3_delta for latest2files",
+  "draft4_delta_sha256": "87345af900148550ca0bab23fe359c7932008657157660ca11722d9c5e030328"
+}

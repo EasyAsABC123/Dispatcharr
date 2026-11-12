@@ -1,0 +1,1158 @@
+{
+  "schema": 1,
+  "schedule": {
+    "outage_seconds": 102,
+    "restore_observation_seconds": 88,
+    "single_path_horizon_seconds": 40,
+    "per_candidate_backoff_seconds": 0.75
+  },
+  "events": [
+    {
+      "name": "all-unavailable-start",
+      "monotonic": 171296.478108092,
+      "acks": [
+        {
+          "path": "/live/0.ts",
+          "action": "fail",
+          "acknowledged_monotonic": 171296.473451332,
+          "physical_close": {
+            "requested_ids": [
+              1
+            ],
+            "closed_ids": [
+              1
+            ],
+            "all_closed": true,
+            "acknowledged_monotonic": 171296.473190465
+          }
+        },
+        {
+          "path": "/live/100.ts",
+          "action": "fail",
+          "acknowledged_monotonic": 171296.475275383,
+          "physical_close": {
+            "requested_ids": [],
+            "closed_ids": [],
+            "all_closed": true,
+            "acknowledged_monotonic": 171296.475089708
+          }
+        }
+      ],
+      "probes": [
+        {
+          "path": "/live/0.ts",
+          "status": 503,
+          "diagnostic_body_bytes": 367,
+          "begin": 171296.475282693,
+          "complete": 171296.476158068,
+          "scope": "fixture diagnostic request, not Source application attempt"
+        },
+        {
+          "path": "/live/100.ts",
+          "status": 503,
+          "diagnostic_body_bytes": 367,
+          "begin": 171296.476160048,
+          "complete": 171296.477157806,
+          "scope": "fixture diagnostic request, not Source application attempt"
+        }
+      ]
+    },
+    {
+      "name": "all-unavailable-end",
+      "monotonic": 171398.480398172,
+      "probes": [
+        {
+          "path": "/live/0.ts",
+          "status": 503,
+          "diagnostic_body_bytes": 367,
+          "begin": 171398.47818664,
+          "complete": 171398.479538727,
+          "scope": "fixture diagnostic request, not Source application attempt"
+        },
+        {
+          "path": "/live/100.ts",
+          "status": 503,
+          "diagnostic_body_bytes": 367,
+          "begin": 171398.479539687,
+          "complete": 171398.480392121,
+          "scope": "fixture diagnostic request, not Source application attempt"
+        }
+      ]
+    },
+    {
+      "name": "primary-restored",
+      "monotonic": 171398.666074003,
+      "receipt": {
+        "path": "/live/0.ts",
+        "action": "recover",
+        "acknowledged_monotonic": 171398.666070693,
+        "physical_close": {
+          "requested_ids": [],
+          "closed_ids": [],
+          "all_closed": true,
+          "acknowledged_monotonic": 171398.665812975
+        }
+      }
+    },
+    {
+      "name": "restore-observation-end",
+      "monotonic": 171486.666137738
+    }
+  ],
+  "before": {
+    "label": "before-outage",
+    "profile": {
+      "id": 1,
+      "max_streams": 0,
+      "is_active": true
+    },
+    "clients": 1,
+    "provider_slots": 0,
+    "owner": "31a47f4d8c87:9",
+    "metadata_fields": 17,
+    "input_index": "25",
+    "timestamps": 25,
+    "origin_active": 1,
+    "origin_connections": 1,
+    "started_monotonic": 171296.281808956,
+    "completed_monotonic": 171296.465770288,
+    "origin_socket_witness": {
+      "active": 1,
+      "maximum_active": 1,
+      "connections": 1,
+      "bytes": 6456296,
+      "disconnections": 0,
+      "eof_connections": 0,
+      "fault_requests": 0,
+      "fixture_sha256": "133ad67e0f2df954e896857ffac7a75cb613546d83926bb8aea442ab377ec99d",
+      "fixture_bytes": 150002004,
+      "bytes_per_second": 250000,
+      "duration_seconds": 600,
+      "codec": "h264",
+      "video": "h264 320x180 25fps",
+      "audio": "aac 48kHz",
+      "paths": {
+        "/live/0.ts": {
+          "active": 1,
+          "connections": 1,
+          "bytes": 6456296,
+          "other_request_attempts": 1
+        }
+      },
+      "controls": {
+        "/live/0.ts": {
+          "generation": 0,
+          "fail": false,
+          "stall_until": 0
+        }
+      },
+      "active_input_connections": [
+        {
+          "id": 1,
+          "path": "/live/0.ts",
+          "peer": [
+            "172.18.0.4",
+            52290
+          ]
+        }
+      ],
+      "physical_closed_inputs": []
+    },
+    "original_body": {
+      "status": 200,
+      "bytes": 5629096,
+      "prefix_bytes": 2097152,
+      "EOF": false,
+      "errors": [],
+      "reader_alive": true,
+      "started_monotonic": 171280.092905435,
+      "ended_monotonic": null,
+      "first_byte_monotonic": 171280.112978405
+    }
+  },
+  "before_restore": {
+    "label": "before-restore",
+    "profile": {
+      "id": 1,
+      "max_streams": 0,
+      "is_active": true
+    },
+    "clients": 0,
+    "provider_slots": 0,
+    "owner": "",
+    "metadata_fields": 0,
+    "input_index": "",
+    "timestamps": 0,
+    "origin_active": 0,
+    "origin_connections": 1,
+    "started_monotonic": 171398.480402622,
+    "completed_monotonic": 171398.663976224,
+    "origin_socket_witness": {
+      "active": 0,
+      "maximum_active": 1,
+      "connections": 1,
+      "bytes": 6457612,
+      "disconnections": 1,
+      "eof_connections": 0,
+      "fault_requests": 2,
+      "fixture_sha256": "133ad67e0f2df954e896857ffac7a75cb613546d83926bb8aea442ab377ec99d",
+      "fixture_bytes": 150002004,
+      "bytes_per_second": 250000,
+      "duration_seconds": 600,
+      "codec": "h264",
+      "video": "h264 320x180 25fps",
+      "audio": "aac 48kHz",
+      "paths": {
+        "/live/0.ts": {
+          "active": 0,
+          "connections": 1,
+          "bytes": 6457612,
+          "other_request_attempts": 3,
+          "fixture_probe_attempts": 2,
+          "fixture_probe_503": 2,
+          "other_request_503": 2
+        },
+        "/live/100.ts": {
+          "active": 0,
+          "connections": 0,
+          "bytes": 0,
+          "fixture_probe_attempts": 2,
+          "fixture_probe_503": 2,
+          "other_request_attempts": 3,
+          "other_request_503": 3
+        }
+      },
+      "controls": {
+        "/live/0.ts": {
+          "generation": 1,
+          "fail": true,
+          "stall_until": 0
+        },
+        "/live/100.ts": {
+          "generation": 1,
+          "fail": true,
+          "stall_until": 0
+        }
+      },
+      "active_input_connections": [],
+      "physical_closed_inputs": [
+        {
+          "id": 1,
+          "path": "/live/0.ts",
+          "peer": [
+            "172.18.0.4",
+            52290
+          ],
+          "physical_closed_monotonic": 171296.473156254,
+          "socket_fileno": -1
+        }
+      ]
+    },
+    "original_body": {
+      "status": 200,
+      "bytes": 5690008,
+      "prefix_bytes": 2097152,
+      "EOF": false,
+      "errors": [
+        "TimeoutError"
+      ],
+      "reader_alive": false,
+      "started_monotonic": 171280.092905435,
+      "ended_monotonic": 171347.847190239,
+      "first_byte_monotonic": 171280.112978405
+    }
+  },
+  "before_fresh": {
+    "label": "before-fresh-request",
+    "profile": {
+      "id": 1,
+      "max_streams": 0,
+      "is_active": true
+    },
+    "clients": 0,
+    "provider_slots": 0,
+    "owner": "",
+    "metadata_fields": 0,
+    "input_index": "",
+    "timestamps": 0,
+    "origin_active": 0,
+    "origin_connections": 1,
+    "started_monotonic": 171486.666587901,
+    "completed_monotonic": 171486.840416489,
+    "origin_socket_witness": {
+      "active": 0,
+      "maximum_active": 1,
+      "connections": 1,
+      "bytes": 6457612,
+      "disconnections": 1,
+      "eof_connections": 0,
+      "fault_requests": 3,
+      "fixture_sha256": "133ad67e0f2df954e896857ffac7a75cb613546d83926bb8aea442ab377ec99d",
+      "fixture_bytes": 150002004,
+      "bytes_per_second": 250000,
+      "duration_seconds": 600,
+      "codec": "h264",
+      "video": "h264 320x180 25fps",
+      "audio": "aac 48kHz",
+      "paths": {
+        "/live/0.ts": {
+          "active": 0,
+          "connections": 1,
+          "bytes": 6457612,
+          "other_request_attempts": 3,
+          "fixture_probe_attempts": 2,
+          "fixture_probe_503": 2,
+          "other_request_503": 2
+        },
+        "/live/100.ts": {
+          "active": 0,
+          "connections": 0,
+          "bytes": 0,
+          "fixture_probe_attempts": 2,
+          "fixture_probe_503": 2,
+          "other_request_attempts": 3,
+          "other_request_503": 3
+        }
+      },
+      "controls": {
+        "/live/0.ts": {
+          "generation": 1,
+          "fail": false,
+          "stall_until": 0
+        },
+        "/live/100.ts": {
+          "generation": 1,
+          "fail": true,
+          "stall_until": 0
+        }
+      },
+      "active_input_connections": [],
+      "physical_closed_inputs": [
+        {
+          "id": 1,
+          "path": "/live/0.ts",
+          "peer": [
+            "172.18.0.4",
+            52290
+          ],
+          "physical_closed_monotonic": 171296.473156254,
+          "socket_fileno": -1
+        }
+      ]
+    },
+    "original_body": {
+      "status": 200,
+      "bytes": 5690008,
+      "prefix_bytes": 2097152,
+      "EOF": false,
+      "errors": [
+        "TimeoutError"
+      ],
+      "reader_alive": false,
+      "started_monotonic": 171280.092905435,
+      "ended_monotonic": 171347.847190239,
+      "first_byte_monotonic": 171280.112978405
+    }
+  },
+  "primary_recover_receipt": {
+    "path": "/live/0.ts",
+    "action": "recover",
+    "acknowledged_monotonic": 171398.666070693,
+    "physical_close": {
+      "requested_ids": [],
+      "closed_ids": [],
+      "all_closed": true,
+      "acknowledged_monotonic": 171398.665812975
+    }
+  },
+  "restored_monotonic": 171398.666074003,
+  "restore_observation_end_monotonic": 171486.666137738,
+  "restore_observation_elapsed_seconds": 88.00006373500219,
+  "outage_elapsed_seconds": 102.00229007998132,
+  "decodes": [
+    {
+      "capture_scope": "warmup_original_prefix_only",
+      "prefix": "original-prefix.ts",
+      "bytes": 2097152,
+      "sha256": "4089161a84ba402353cbaeaad13d1e107d013e4e32e9688359d98c2e26dd797a",
+      "decoder_exit": 0,
+      "frames": 98
+    },
+    {
+      "capture_scope": "independent_fresh_postrestore_prefix",
+      "prefix": "fresh-prefix.ts",
+      "bytes": 2097152,
+      "sha256": "6249a5b72318a6ec1e9e558808ca706cc647a7a44c663b8bfad5dd8bb044a39e",
+      "decoder_exit": 0,
+      "frames": 124
+    }
+  ],
+  "original_body_outcome": {
+    "before_controlled_close": {
+      "status": 200,
+      "bytes": 5690008,
+      "prefix_bytes": 2097152,
+      "EOF": false,
+      "errors": [
+        "TimeoutError"
+      ],
+      "reader_alive": false,
+      "started_monotonic": 171280.092905435,
+      "ended_monotonic": 171347.847190239,
+      "first_byte_monotonic": 171280.112978405
+    },
+    "physical_close": {
+      "status": 200,
+      "bytes": 5690008,
+      "prefix_bytes": 2097152,
+      "EOF": false,
+      "errors": [
+        "TimeoutError"
+      ],
+      "reader_alive": false,
+      "started_monotonic": 171280.092905435,
+      "ended_monotonic": 171347.847190239,
+      "first_byte_monotonic": 171280.112978405,
+      "physical_socket_closed": true
+    },
+    "terminal_changes": [
+      {
+        "status": 200,
+        "bytes": 5629096,
+        "prefix_bytes": 2097152,
+        "EOF": false,
+        "errors": [],
+        "reader_alive": true,
+        "started_monotonic": 171280.092905435,
+        "ended_monotonic": null,
+        "first_byte_monotonic": 171280.112978405
+      },
+      {
+        "status": 200,
+        "bytes": 5690008,
+        "prefix_bytes": 2097152,
+        "EOF": false,
+        "errors": [
+          "TimeoutError"
+        ],
+        "reader_alive": false,
+        "started_monotonic": 171280.092905435,
+        "ended_monotonic": 171347.847190239,
+        "first_byte_monotonic": 171280.112978405
+      }
+    ],
+    "independent_of_fresh_request": true
+  },
+  "fresh_body_outcome": {
+    "status": 200,
+    "bytes": 2302812,
+    "prefix_bytes": 2097152,
+    "EOF": false,
+    "errors": [],
+    "reader_alive": true,
+    "started_monotonic": 171486.84151384,
+    "ended_monotonic": null,
+    "first_byte_monotonic": 171491.419480563,
+    "capture_observer_deadline_reached": false,
+    "physical_close": {
+      "status": 200,
+      "bytes": 2302812,
+      "prefix_bytes": 2097152,
+      "EOF": true,
+      "errors": [],
+      "reader_alive": false,
+      "started_monotonic": 171486.84151384,
+      "ended_monotonic": 171496.159141714,
+      "first_byte_monotonic": 171491.419480563,
+      "physical_socket_closed": true
+    }
+  },
+  "retention_outcome": {
+    "label": "retention-settled",
+    "profile": {
+      "id": 1,
+      "max_streams": 0,
+      "is_active": true
+    },
+    "clients": 0,
+    "provider_slots": 0,
+    "owner": "",
+    "metadata_fields": 0,
+    "input_index": "",
+    "timestamps": 0,
+    "origin_active": 0,
+    "origin_connections": 2,
+    "started_monotonic": 171566.161719484,
+    "completed_monotonic": 171566.355640251,
+    "Source_retention_settled": true
+  },
+  "path_witness": {
+    "profile_id": 3,
+    "profile_name": "Proxy",
+    "profile_locked": true,
+    "metadata_profile_raw": "3",
+    "metadata_profile_resolved_id": 3,
+    "metadata_profile_resolves_to_owned_locked_Proxy": true,
+    "initial_owner_transcode": false,
+    "context_not_exhausted": {
+      "retry_window_seconds": 1800,
+      "max_stream_switches": 10,
+      "stable_connection_threshold": 30,
+      "max_keepalive_duration": 300
+    },
+    "actual_HTTP_reader_code_file": "/app/apps/proxy/live_proxy/input/http_streamer.py",
+    "loaded_Source_sha256": {
+      "apps/proxy/config.py": "19877e97d291315d0a2b7d76865b592e907e208448376d8d7033e9dbbee28a61",
+      "apps/proxy/live_proxy/config_helper.py": "5f03c476d9e8a2cd3280ac444ece1577dde9c6412dae3598bb84bf501dce1283",
+      "apps/proxy/live_proxy/input/manager.py": "4f86253c4e3a30e62a49a335f1b494b9d0d4308eced0c79f11c98fa3128cb9a8",
+      "apps/proxy/live_proxy/input/http_streamer.py": "3186ce477cbacbe4d0b8c1f1acc3c87095e995c1e72dd5aaa0182a835c321833",
+      "apps/proxy/live_proxy/views.py": "68d3b4097536742945fcb9eccd2d5f95f1cedc0774367d61ba21f33b42bd29c8",
+      "core/models.py": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "apps/proxy/live_proxy/url_utils.py": "3209fbde7199732601f3213687285e700e4e8fb4c8f36a4e5edb128e283875d3",
+      "apps/proxy/live_proxy/server.py": "f6aecdd437c1931bc5bb18f2f005b000d32f4e695d1a85ef131550462806d4ea",
+      "apps/proxy/live_proxy/services/channel_service.py": "88bcaa20c6437d561003fd2f5ead9427265192d9713ad1509c3bb8c67a8c7f61"
+    },
+    "metadata_owner_present": true,
+    "metadata_stream_id": "1",
+    "metadata_input_url": "http://origin:8080/live/0.ts",
+    "owned_candidates": [
+      {
+        "id": 1,
+        "path": "/live/0.ts"
+      },
+      {
+        "id": 2,
+        "path": "/live/100.ts"
+      }
+    ],
+    "proof_scope": "initial-owner native Proxy branch from actual selected profile/metadata and pinned url_utils/Core/server/manager; later reconstructed/follower path not assumed"
+  },
+  "terminal_actions": {
+    "host-process-drain": {
+      "ok": true,
+      "value": {
+        "drained": true,
+        "host_clients_drained": true,
+        "remaining": [],
+        "owned_stop_acknowledged": false,
+        "owned_stop_error": null,
+        "commands_started": 44
+      }
+    },
+    "logs": {
+      "ok": true,
+      "value": {
+        "bytes": 14094
+      }
+    },
+    "down": {
+      "ok": true,
+      "value": "b''"
+    },
+    "after-down-HTTP-drain": {
+      "ok": true,
+      "value": {
+        "scope": "after-down final host HTTP drain",
+        "started_bodies": true,
+        "all_started_bodies_drained": true
+      }
+    },
+    "containers": {
+      "ok": true,
+      "value": ""
+    },
+    "networks": {
+      "ok": true,
+      "value": ""
+    },
+    "volumes": {
+      "ok": true,
+      "value": ""
+    }
+  },
+  "host_command_settlements": [
+    {
+      "command": 1,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 667,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 2,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 16,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 3,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 16,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 4,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 582,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 5,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 59,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 6,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 0,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 7,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 3,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 8,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 266,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 9,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 16,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 10,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 65,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 11,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 13887,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 12,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 180,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 13,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 14,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 15,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 16,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 17,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 18,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 19,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 20,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 21,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 22,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 7,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 23,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 6,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 24,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 65,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 25,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 13887,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 26,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 65,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 27,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 13568,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 28,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 65,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 29,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 12042,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 30,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 41,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 31,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 6,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 32,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 2119,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 33,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 50,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 34,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 34,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 35,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 50,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 36,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 16,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 37,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 50,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 38,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 16,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 39,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 50,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 40,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 32,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 41,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 50,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 42,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 16,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 43,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 2986,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 44,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 181,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 45,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 14094,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 46,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 933,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 47,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 0,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 48,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 0,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    },
+    {
+      "command": 49,
+      "drained": true,
+      "operation_successful": true,
+      "returncode": 0,
+      "invalid": null,
+      "output_bytes": 0,
+      "pipes_alive": 0,
+      "owned_stop_acknowledged": false
+    }
+  ],
+  "host_collector_budget": {
+    "used_bytes": 77067,
+    "maximum_bytes": 268435456,
+    "cleanup_reserved_bytes": 4194304
+  },
+  "physical_process_cleanup": {
+    "drained": true,
+    "host_clients_drained": true,
+    "remaining": [],
+    "owned_stop_acknowledged": false,
+    "owned_stop_error": null,
+    "commands_started": 44
+  },
+  "independent_cleanup": {
+    "scope": "independent post-terminal exact-owned project inventory only",
+    "project": "dispatcharr-m0-concurrent-4be39ac5fb",
+    "recorded_UTC": "2026-11-12T02:41:32.519298+00:00",
+    "boot_id": "0a40ae58-9e2b-4c07-9115-1250378d856a",
+    "inventories": {
+      "containers": {
+        "returncode": 0,
+        "ids": [],
+        "stderr_bytes": 0,
+        "empty": true
+      },
+      "networks": {
+        "returncode": 0,
+        "ids": [],
+        "stderr_bytes": 0,
+        "empty": true
+      },
+      "volumes": {
+        "returncode": 0,
+        "ids": [],
+        "stderr_bytes": 0,
+        "empty": true
+      }
+    },
+    "all_empty": true,
+    "no_Source_or_resource_probe": true,
+    "initial_inventory_setup_failure": "missing docker PATH before sourcing committed tooling environment; no Docker command ran",
+    "integration_sha256": "a3800bb9afd79e2547b6844e30718b0e175fca235753361a3c3a8c3beb76d741"
+  },
+  "controller_process_exit": 1,
+  "stored_report_passed": true,
+  "stored_observation_validity": true,
+  "process_success": false,
+  "reporting_failure": {
+    "type": "TypeError",
+    "message": "Object of type bytes is not JSON serializable",
+    "scope": "fixture context final report JSON serialization",
+    "location": "tools/scripts/rust-integration/run.py:64 fixture_source __exit__",
+    "detail": "Atomic terminal helper already persisted report with default=str; fixture context teardown then failed json.dumps(report) on down bytes before write; final scalar console print was not reached"
+  },
+  "original_timeout_scope": "HTTP observer configured50s socket read timeout; not Source EOF/internal timeout or observed original recovery",
+  "SQL_scope": "selected SQL account/profile/channel fields; not full model rows/sequences",
+  "runtime_scope": "separate Django exec+pinned files+metadata+owned socket imply initial Proxy branch; not instrumentation of the live HTTPStreamReader",
+  "Source_budget_acceptance": null,
+  "resource_measurement": false,
+  "Native_comparison": false,
+  "M0_complete": false,
+  "selected_services": {
+    "backend": {
+      "id": "31a47f4d8c875de673a040c87e66945a1e01730eb231ca7aeb7ca857da4e4053",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "StartedAt": "2026-11-12T02:34:33.700771747Z",
+      "NanoCpus": 2000000000,
+      "Memory": 536870912,
+      "IPs": [
+        "172.18.0.4"
+      ]
+    },
+    "infrastructure": {
+      "id": "f3b06db4b6e3018f0a2a2fd8afae8870c41e23181f09000dbf400ce5bee3f6d6",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "StartedAt": "2026-11-12T02:34:24.178868845Z",
+      "NanoCpus": 1000000000,
+      "Memory": 1073741824,
+      "IPs": [
+        "172.18.0.3"
+      ]
+    },
+    "origin": {
+      "id": "9b8b361ae414a8aa6ced2328314597af31130e2be646ce6ef7ea2afde1e65199",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "StartedAt": "2026-11-12T02:34:24.020391668Z",
+      "NanoCpus": 2000000000,
+      "Memory": 536870912,
+      "IPs": [
+        "172.18.0.2"
+      ]
+    }
+  }
+}
