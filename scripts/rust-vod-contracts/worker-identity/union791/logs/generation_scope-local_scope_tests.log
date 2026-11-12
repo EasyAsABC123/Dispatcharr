@@ -1,0 +1,25 @@
+
+running 20 tests
+test local_scope_acknowledged_entry_close_survives_missing_receipt_ttl ... ok
+test local_scope_anonymous_recreation_retains_old_body_private_ownership ... ok
+test local_scope_body_capability_bounds_and_shutdown_are_independent_of_public_counts ... ok
+test local_scope_body_drop_keeps_caller_until_real_owned_cleanup ... ok
+test local_scope_entry_receipt_count_and_bytes_are_bounded ... ok
+test local_scope_failed_pending_body_never_decrements_an_unrelated_public_body ... ok
+test local_scope_headerless_current_entry_preserves_public_subject ... ok
+test local_scope_idle_busy_rolls_back_only_claim_and_preserves_prior_timer ... ok
+test local_scope_idle_success_preserves_generation_request_and_prior_timer ... ok
+test local_scope_idle_unlimited_does_not_invent_provider_reservation ... ok
+test local_scope_missing_unique_ledger_activates_partial_state_guard ... ok
+test local_scope_never_delegates_through_foreign_or_changed_identity ... ok
+test local_scope_old_progress_and_close_delegate_to_current_without_ending_younger_body ... ok
+test local_scope_other_authenticated_subject_remains_rejected ... ok
+test local_scope_persistent_stop_does_not_prevent_owned_teardown ... ok
+test local_scope_public_stop_admission_and_single_body_consumption ... ok
+test local_scope_public_stop_never_consumes_foreign_generation_signal ... ok
+test local_scope_receipt_byte_guard_includes_new_field_headroom ... ok
+test local_scope_repeated_generations_do_not_pin_old_jobs_or_closed_body_permits ... ok
+test local_scope_retired_entry_private_receipt_is_reclaimed_after_generation_change ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 21 filtered out; finished in 15.16s
+

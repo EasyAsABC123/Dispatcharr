@@ -1,0 +1,33 @@
+{
+  "scope": "independent exact owned-container inventory after runner cleanup",
+  "passed": true,
+  "containers": [
+    {
+      "name": "dispatcharr-follower-media-4438aa76c537",
+      "query": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "name=^/dispatcharr-follower-media-4438aa76c537$"
+      ],
+      "stdout": "",
+      "absent": true
+    },
+    {
+      "name": "dispatcharr-follower-regressions-14674c28a9e5",
+      "query": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "name=^/dispatcharr-follower-regressions-14674c28a9e5$"
+      ],
+      "stdout": "",
+      "absent": true
+    }
+  ],
+  "named_networks_or_volumes_created": false,
+  "network_none_fixture": true,
+  "all_host_containers_empty_claimed": false
+}

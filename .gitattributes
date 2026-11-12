@@ -52,3 +52,6 @@ scripts/rust-contracts/notifications-source/executed/inputs/original/core/apps.p
 scripts/rust-contracts/notifications-native/raw/legacy-store-lib-sandbox.log -text -whitespace
 scripts/rust-contracts/notifications-native/raw/legacy-store-lib-host-loopback.log -text whitespace=-blank-at-eof
 scripts/rust-contracts/notifications-native/raw/native1-test.stdout -text whitespace=-blank-at-eof
+
+# Preserve the exact combined VOD test stdout, including terminal blank lines.
+scripts/rust-vod-contracts/worker-identity/union791/logs/*.log -text whitespace=-blank-at-eof

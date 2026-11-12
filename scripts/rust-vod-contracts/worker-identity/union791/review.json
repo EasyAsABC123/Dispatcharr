@@ -1,0 +1,107 @@
+{
+  "scope": "exact union791 Redis/media component regression; no Main/SQL/Bearer/Source-app/image/performance acceptance",
+  "passed": true,
+  "controller_observed_exit_code": 0,
+  "runtime_inputs": 791,
+  "source_map_sha256": "a729127b8f57f261433152d958b60695fb9e25ce824b65678b614378ac6bc8c5",
+  "outside_peers_sha256": "7471d2560c3a05ac597e181dcc807dc9ae99f2e18a0986fa6fef2f8e5494ffcd",
+  "executed_runner_sha256": "14a65dddca760d6c3153e9ce6e5ae1ef304c50a983e2dff1d23dacfa214ca71b",
+  "tool_binding_sha256": "3e9ec966fc31cba4b1d5d5efb0fbf081f220f9a7093af5950dd8648ed86d8496",
+  "runner_diff_sha256": "f598cb5de1cec8f1a417e8abbf268d5adb07e9f322c8d085ea9129847639d666",
+  "regressions_sha256": "c33a2c898a942f47aea058454829b1e7c5e3f7474aa14d783963e94287b81609",
+  "cleanup_sha256": "d0164e2fad0a851c24558a7f673ed4772440363397edfeb270d5c6bd0985efac",
+  "actual_batches": 10,
+  "actual_passed": 95,
+  "batches": [
+    {
+      "target": "http",
+      "filter": "",
+      "returncode": 0,
+      "passed_count": 15,
+      "log_sha256": "9b235254bc0b808b1cbc3a2c19d8dadc2bfcfb23ee06b7b2d78a42bdf107d658"
+    },
+    {
+      "target": "retained_reserve",
+      "filter": "retained_",
+      "returncode": 0,
+      "passed_count": 6,
+      "log_sha256": "dc1e2546f96b98a756b0e2795820b2c4fc2a7aa03e50cbacb4c2bfaa1b8d5ec9"
+    },
+    {
+      "target": "retained_reserve",
+      "filter": "ordinary_two_second_",
+      "returncode": 0,
+      "passed_count": 1,
+      "log_sha256": "00cf2cb472211075ca43e303d6e2aa79041ad92d9b268db1dd917e8e68f17f7b"
+    },
+    {
+      "target": "lease_physical",
+      "filter": "",
+      "returncode": 0,
+      "passed_count": 13,
+      "log_sha256": "48752cb4d84ec48b0df336cf47f2278e97d24a9f657d2795e85780d95237e78a"
+    },
+    {
+      "target": "idle_entry",
+      "filter": "pending_follower_",
+      "returncode": 0,
+      "passed_count": 4,
+      "log_sha256": "9d8ff083d0e82d1ae7464042d4ede837f3b8987e54b0f50e9ccd4d683235592c"
+    },
+    {
+      "target": "idle_entry",
+      "filter": "idle_entry_",
+      "returncode": 0,
+      "passed_count": 5,
+      "log_sha256": "41ddfd4c5fba79abcf44efe49cabcbf208d1a9adf24765ca3c9a6b2f6e7da93e"
+    },
+    {
+      "target": "generation_scope",
+      "filter": "local_scope_",
+      "returncode": 0,
+      "passed_count": 20,
+      "log_sha256": "0f4ba01d561f0b039d43467434e1593dca54a621818a9ca96dea065be1431678"
+    },
+    {
+      "target": "generation_scope_physical",
+      "filter": "local_physical_",
+      "returncode": 0,
+      "passed_count": 9,
+      "log_sha256": "1c674038ba997e3366be13c3848c9a76197301678702383259fb4a3a8b55caf9"
+    },
+    {
+      "target": "pending_follower_http",
+      "filter": "pending_http_",
+      "returncode": 0,
+      "passed_count": 9,
+      "log_sha256": "13365686bcbe42b8cc1db2f8dfab151c63ed25e138158b80f1ccd8aea1def3a0"
+    },
+    {
+      "target": "http_recovery",
+      "filter": "actual_http_",
+      "returncode": 0,
+      "passed_count": 13,
+      "log_sha256": "5077db8baa298d3c5ee5657466ad358dd67c24a994f5034cff632b994819db57"
+    }
+  ],
+  "binary_sha256": {
+    "generation_scope": "376c7efe9a7ba24fade7cab8dbde8c0d52382bb0d273e2aaf9cd09dcdb1b4fa6",
+    "generation_scope_physical": "2e5ac9ebad0886710305cd666ad50c6d749581a1ca21cb6a874298b88e15734b",
+    "http": "d442356cc00690daa185de3800ddbb7ea7a3bf0e6047750c48d9e840479454b7",
+    "http_recovery": "bad2280d4f740c858609b553b403ea7100a9aac4366a9a67a4ba0cbcd0ee7ab0",
+    "idle_entry": "b414f7afa83262b0e53390405725f8b484fee73650f32108d4340b28417c70e6",
+    "lease_physical": "420cae178322ff2aada6624eea22baee453232d649a39f9ca480fb28c19a20b0",
+    "pending_follower_http": "665d941a53d4d9a57eac155fbfcf43da6e42c996b7eed99196218b8e6012571e",
+    "retained_reserve": "9ae0871df43531d9d9b21d185cf9f9aba55e5ed62ec8716cd0a1bcf7304bdf82"
+  },
+  "media": {
+    "sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "bytes": 4299455,
+    "first_8192_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+  },
+  "default_workers_activated": false,
+  "runtime_rebuild_or_transplant": false,
+  "runtime_app_source_changed": false,
+  "accepted_package_or_performance_binding_changed": false,
+  "future_Main_package_regate_pending": true
+}

@@ -1,0 +1,79 @@
+{
+  "scope": "frozen791 whole workspace qualification; not Main/performance/defaultgraph activation",
+  "passed": true,
+  "commands": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "rust/Cargo.toml",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/integration-url-notifications-union791-1/source",
+      "actual_exit": 0,
+      "began_unix": 1794496104.0575492,
+      "ended_unix": 1794496105.8118942
+    },
+    {
+      "name": "non-test",
+      "argv": [
+        "cargo",
+        "build",
+        "--manifest-path",
+        "rust/Cargo.toml",
+        "--locked",
+        "--workspace"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/integration-url-notifications-union791-1/source",
+      "actual_exit": 0,
+      "began_unix": 1794496105.8316727,
+      "ended_unix": 1794496182.4651592
+    },
+    {
+      "name": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "rust/Cargo.toml",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/integration-url-notifications-union791-1/source",
+      "actual_exit": 0,
+      "began_unix": 1794496182.4852152,
+      "ended_unix": 1794496247.6011734
+    },
+    {
+      "name": "defaults",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "rust/Cargo.toml",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--message-format=json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/integration-url-notifications-union791-1/source",
+      "actual_exit": 0,
+      "began_unix": 1794496247.6242535,
+      "ended_unix": 1794496351.3931527
+    }
+  ],
+  "source_map_sha256": "a729127b8f57f261433152d958b60695fb9e25ce824b65678b614378ac6bc8c5",
+  "fresh_target": "/home/justin/github/Dispatcharr/artifacts/rust/target-integration-url-notifications-union791-1",
+  "debug": 0,
+  "incremental": false,
+  "jobs": 2,
+  "inputs_unchanged": true
+}
