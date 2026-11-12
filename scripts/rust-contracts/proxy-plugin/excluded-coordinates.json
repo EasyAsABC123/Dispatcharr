@@ -1,0 +1,16 @@
+{
+  "state": "Strict Source trace exclusion, not an Original test failure",
+  "cases": [
+    {
+      "test_id": "apps.timeshift.tests.test_views.CatchupProxyTests.test_xc_entry_delegates_to_serve_catchup",
+      "reason": "Creates _proxy_url() and calls views.timeshift_proxy, not the selected proxy/catchup UUID route/handler. No alias or helper-only route inference.",
+      "historical_named_result": "ok",
+      "historical_block_sha256": "5dc1694b649e86bfe7841df57bed8bbfe19566cdc5803f147259789cd6e67194",
+      "source_original_file": "apps/timeshift/tests/test_views.py",
+      "source_lines": [
+        5066,
+        5081
+      ]
+    }
+  ]
+}

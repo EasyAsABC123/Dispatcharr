@@ -1,0 +1,1043 @@
+{
+  "state": "Retained exact historical named Original successes; no new Source execution by adapter",
+  "full_log_sha256": "5ce7a671b204e8b1a444e2edbf51313363aaf385989e8268eee011ea1612ad35",
+  "full_log_bytes": 881752,
+  "cases": {
+    "apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_proxy_login_trip_records_identity": {
+      "historical_result": "ok",
+      "framework_log_block": "test_proxy_login_trip_records_identity (apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_proxy_login_trip_records_identity) ... 2026-11-09 07:40:24,549 WARNING py.warnings /dispatcharrpy/lib/python3.13/site-packages/jwt/api_jwt.py:149: InsecureKeyLengthWarning: The HMAC key is 28 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.\n  return self._jws.encode(\n\n2026-11-09 07:40:24,554 WARNING django.request Too Many Requests: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "6913bf9cb1fd5d9d188fcc90a984b294964eb60a5a966af6d89b88005899340a",
+      "full_log_byte_start": 44109,
+      "full_log_byte_end": 44656
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_disabled_by_default_even_with_the_header_present": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disabled_by_default_even_with_the_header_present (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_disabled_by_default_even_with_the_header_present) ... 2026-11-09 07:40:24,641 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "af8ace54bf5c04fe1276908671019191f675339ae7015ab7a8aa182d30fe39ab",
+      "full_log_byte_start": 50337,
+      "full_log_byte_end": 50613
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_enabled_trusted_peer_returns_tokens": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enabled_trusted_peer_returns_tokens (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_enabled_trusted_peer_returns_tokens) ... ok\n",
+      "framework_log_block_sha256": "22ff8a94799a9480b0f5a401851f9d13b725d4b6076758d55f07c801e9e0bc34",
+      "full_log_byte_start": 50879,
+      "full_log_byte_end": 51036
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_header_from_untrusted_peer_is_ignored": {
+      "historical_result": "ok",
+      "framework_log_block": "test_header_from_untrusted_peer_is_ignored (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_header_from_untrusted_peer_is_ignored) ... 2026-11-09 07:40:24,671 WARNING dispatcharr.utils Ignoring X-Forwarded-User from untrusted peer 203.0.113.7; add it to DISPATCHARR_TRUSTED_PROXIES to enable reverse proxy auth from that host\n2026-11-09 07:40:24,671 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "52ca244592dfaf81201bcba7ab63b98db3c75c2bbd8ed9fd2f6c85d19bcc43b2",
+      "full_log_byte_start": 51652,
+      "full_log_byte_end": 52097
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_explicitly_trusted_peer_is_honored": {
+      "historical_result": "ok",
+      "framework_log_block": "test_explicitly_trusted_peer_is_honored (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_explicitly_trusted_peer_is_honored) ... ok\n",
+      "framework_log_block_sha256": "59f529b36dcab27eb5cb1bc0a7836196ccf8237a8ccc635d90cd60a3b78aa222",
+      "full_log_byte_start": 51497,
+      "full_log_byte_end": 51652
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_unset_trusted_proxies_fails_closed_for_a_local_peer": {
+      "historical_result": "ok",
+      "framework_log_block": "test_unset_trusted_proxies_fails_closed_for_a_local_peer (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_unset_trusted_proxies_fails_closed_for_a_local_peer)\nUnset, the variable trusts private peers for X-Forwarded-For only. ... 2026-11-09 07:40:24,735 WARNING dispatcharr.utils Reverse proxy auth is enabled but DISPATCHARR_TRUSTED_PROXIES is not set; ignoring X-Forwarded-User. Set it to the authenticating proxy's IP or CIDR to turn the feature on.\n2026-11-09 07:40:24,735 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "7b99210a6458605a2d85e557ef968e4b8b795143e1710ab0709661cdb7be1320",
+      "full_log_byte_start": 54121,
+      "full_log_byte_end": 54693
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_trusting_no_proxy_signs_nobody_in": {
+      "historical_result": "ok",
+      "framework_log_block": "test_trusting_no_proxy_signs_nobody_in (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_trusting_no_proxy_signs_nobody_in) ... 2026-11-09 07:40:24,725 WARNING dispatcharr.utils Ignoring X-Forwarded-User from untrusted peer 127.0.0.1; add it to DISPATCHARR_TRUSTED_PROXIES to enable reverse proxy auth from that host\n2026-11-09 07:40:24,725 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "d5b279ddd2ddd25c8b40c67f2206389d7786dfb4279958afa861fd33482e49b2",
+      "full_log_byte_start": 53450,
+      "full_log_byte_end": 53885
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_missing_header_does_not_sign_anyone_in": {
+      "historical_result": "ok",
+      "framework_log_block": "test_missing_header_does_not_sign_anyone_in (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_missing_header_does_not_sign_anyone_in) ... 2026-11-09 07:40:24,689 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "d77ee2ac816114644d13fbe6b7431b004d6aa3ca90476e122148b5cffd5c546a",
+      "full_log_byte_start": 52514,
+      "full_log_byte_end": 52770
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_unknown_identity_is_rejected": {
+      "historical_result": "ok",
+      "framework_log_block": "test_unknown_identity_is_rejected (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_unknown_identity_is_rejected) ... 2026-11-09 07:40:24,731 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "380f3e1ccd063d625881900e28f2386efda01cf42e623c5a6ae1da487cb048b5",
+      "full_log_byte_start": 53885,
+      "full_log_byte_end": 54121
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_inactive_user_is_rejected": {
+      "historical_result": "ok",
+      "framework_log_block": "test_inactive_user_is_rejected (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_inactive_user_is_rejected) ... 2026-11-09 07:40:24,684 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "b33405aca2c39aa4627a4560a2dc603352ae8abdade3978d3f8301b087db7558",
+      "full_log_byte_start": 52284,
+      "full_log_byte_end": 52514
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_identity_matches_email_for_proxies_that_assert_one": {
+      "historical_result": "ok",
+      "framework_log_block": "test_identity_matches_email_for_proxies_that_assert_one (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_identity_matches_email_for_proxies_that_assert_one) ... ok\n",
+      "framework_log_block_sha256": "705c164604aec0e8d376732f5ad93b76644f4467ec8b162c3cd7ead59adff1b5",
+      "full_log_byte_start": 52097,
+      "full_log_byte_end": 52284
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_email_shared_by_two_accounts_matches_nobody": {
+      "historical_result": "ok",
+      "framework_log_block": "test_email_shared_by_two_accounts_matches_nobody (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_email_shared_by_two_accounts_matches_nobody) ... 2026-11-09 07:40:24,647 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "1e2b6aa1aa03a3710c4b6527ec31e8c5d7278a52c3b45a1f38ac021f779325b1",
+      "full_log_byte_start": 50613,
+      "full_log_byte_end": 50879
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_case_distinct_usernames_match_nobody": {
+      "historical_result": "ok",
+      "framework_log_block": "test_case_distinct_usernames_match_nobody (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_case_distinct_usernames_match_nobody) ... 2026-11-09 07:40:24,638 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "f74f7a2d0d208d21f12d451fdaaa43eadf5f09ee99f6c913f5d1c459523f9f03",
+      "full_log_byte_start": 50085,
+      "full_log_byte_end": 50337
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_exact_username_wins_over_a_case_variant": {
+      "historical_result": "ok",
+      "framework_log_block": "test_exact_username_wins_over_a_case_variant (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_exact_username_wins_over_a_case_variant) ... 2026-11-09 07:40:24,659 WARNING py.warnings /dispatcharrpy/lib/python3.13/site-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 28 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.\n  decoded = self.decode_complete(\n\nok\n",
+      "framework_log_block_sha256": "23fdd63a72fd6ff7785a1d0beace12d6c981371cab8a23b3450f8a3954c07c4d",
+      "full_log_byte_start": 51036,
+      "full_log_byte_end": 51497
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_repeated_sign_ins_share_the_login_throttle": {
+      "historical_result": "ok",
+      "framework_log_block": "test_repeated_sign_ins_share_the_login_throttle (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_repeated_sign_ins_share_the_login_throttle) ... 2026-11-09 07:40:24,712 WARNING django.request Too Many Requests: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "62cc28f17fcee325e6ec3d5e6a43cb035eb6011aa9228d9c1275bfc15df31346",
+      "full_log_byte_start": 53018,
+      "full_log_byte_end": 53287
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_availability_probes_do_not_spend_the_login_budget": {
+      "historical_result": "ok",
+      "framework_log_block": "test_availability_probes_do_not_spend_the_login_budget (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_availability_probes_do_not_spend_the_login_budget)\nThe web UI probes this endpoint on load; that must not lock out login. ... 2026-11-09 07:40:24,623 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\n2026-11-09 07:40:24,623 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\n2026-11-09 07:40:24,624 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\n2026-11-09 07:40:24,625 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\n2026-11-09 07:40:24,625 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "d5f2fc32e772fa1e8fb9bc72b4c75428cbaa04052d06e373b11c07ea29c2d311",
+      "full_log_byte_start": 49364,
+      "full_log_byte_end": 50085
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_only_the_configured_header_is_read": {
+      "historical_result": "ok",
+      "framework_log_block": "test_only_the_configured_header_is_read (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_only_the_configured_header_is_read) ... 2026-11-09 07:40:24,693 WARNING django.request Unauthorized: /api/accounts/auth/proxy-login/\nok\n",
+      "framework_log_block_sha256": "dc03ad08b89478f665b30730767bc90b0c16580bcdb8ec94bd3100d08dfe4ba1",
+      "full_log_byte_start": 52770,
+      "full_log_byte_end": 53018
+    },
+    "apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_returned_tokens_authenticate_api_calls": {
+      "historical_result": "ok",
+      "framework_log_block": "test_returned_tokens_authenticate_api_calls (apps.accounts.tests.test_reverse_proxy_auth.ReverseProxyAuthTests.test_returned_tokens_authenticate_api_calls) ... ok\n",
+      "framework_log_block_sha256": "a5a45cf5ddc05819ce62979daeb1c6d7821252a6b18ad739046685edcc5b3880",
+      "full_log_byte_start": 53287,
+      "full_log_byte_end": 53450
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_suspends_only_owned_enabled_rows_and_enable_restores_them": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_suspends_only_owned_enabled_rows_and_enable_restores_them (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_suspends_only_owned_enabled_rows_and_enable_restores_them) ... ok\n",
+      "framework_log_block_sha256": "3b66e7abd4a7f2ae963f05de532ddd0cc9ce5928020c33804a69e185353b8d27",
+      "full_log_byte_start": 428514,
+      "full_log_byte_end": 428744
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_tolerates_rows_deleted_while_disabled": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_tolerates_rows_deleted_while_disabled (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_tolerates_rows_deleted_while_disabled) ... ok\n",
+      "framework_log_block_sha256": "587507434f679b735424d6611af2aed8ef3d584ce317e2dc65bdac845f00f05b",
+      "full_log_byte_start": 431773,
+      "full_log_byte_end": 431961
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_suspends_a_schedule_created_by_stop": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_suspends_a_schedule_created_by_stop (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_suspends_a_schedule_created_by_stop) ... ok\n",
+      "framework_log_block_sha256": "72b24ef254309dc8a7fcb26b2fe5be5555e328caea069d70921049c14ecb4dcc",
+      "full_log_byte_start": 428328,
+      "full_log_byte_end": 428514
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_delete_after_disable_after_registry_reset": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_after_disable_after_registry_reset (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_delete_after_disable_after_registry_reset) ... ok\n",
+      "framework_log_block_sha256": "913acda2e3ef9791476ecb0233434bc17f92dcfad492b10fcb9b84be8aff3ee3",
+      "full_log_byte_start": 423084,
+      "full_log_byte_end": 423266
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_after_registry_reset": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_after_registry_reset (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_after_registry_reset) ... ok\n",
+      "framework_log_block_sha256": "87e8f68a544c077e33ee7b7843b75090ba854df50c0bf0ec71fe21d2fae40437",
+      "full_log_byte_start": 424684,
+      "full_log_byte_end": 424840
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_after_registry_reset_restores_suspended_rows": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_after_registry_reset_restores_suspended_rows (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_after_registry_reset_restores_suspended_rows) ... ok\n",
+      "framework_log_block_sha256": "a098f4a5e0edae25e740e6d4e150182271000ac6f2064558edea38927bc5d0d4",
+      "full_log_byte_start": 428744,
+      "full_log_byte_end": 428946
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_later_load_with_fewer_registered_tasks_keeps_recorded_names": {
+      "historical_result": "ok",
+      "framework_log_block": "test_later_load_with_fewer_registered_tasks_keeps_recorded_names (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_later_load_with_fewer_registered_tasks_keeps_recorded_names) ... ok\n",
+      "framework_log_block_sha256": "3e62eed499d536fdade3e1aafcc52d80ca17b919c3e3c0349a0ec1ee1d68b023",
+      "full_log_byte_start": 432395,
+      "full_log_byte_end": 432613
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_fails_before_rows_change_and_is_retryable": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_fails_before_rows_change_and_is_retryable (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_fails_before_rows_change_and_is_retryable) ... 2026-11-09 07:41:00,450 ERROR apps.plugins.api_views Failed to change enabled state of plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 646, in post\n    pm.suspend_schedules(cfg)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: injected\nok\n",
+      "framework_log_block_sha256": "9ffb5cd6f8838a4fd821c306bbd7ce6a767832f2a63782a041d43e94b604e8e8",
+      "full_log_byte_start": 425894,
+      "full_log_byte_end": 426805
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_fails_after_rows_change_and_rolls_them_back": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_fails_after_rows_change_and_rolls_them_back (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_fails_after_rows_change_and_rolls_them_back) ... 2026-11-09 07:41:00,429 ERROR apps.plugins.api_views Failed to change enabled state of plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 646, in post\n    pm.suspend_schedules(cfg)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/app/apps/plugins/loader.py\", line 518, in suspend_schedules\n    PeriodicTasks.update_changed()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: injected\nok\n",
+      "framework_log_block_sha256": "40fd225bf26639b8a8696227fc5236cfd94241392777b6e441b425d2c4e7030b",
+      "full_log_byte_start": 424840,
+      "full_log_byte_end": 425894
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_fails_saving_the_suspended_record_and_rolls_rows_back": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_fails_saving_the_suspended_record_and_rolls_rows_back (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_fails_saving_the_suspended_record_and_rolls_rows_back) ... 2026-11-09 07:41:00,497 ERROR apps.plugins.api_views Failed to change enabled state of plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 646, in post\n    pm.suspend_schedules(cfg)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/app/apps/plugins/loader.py\", line 520, in suspend_schedules\n    cfg.save(update_fields=[\"suspended_schedules\", \"updated_at\"])\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/apps/plugins/tests/test_plugin_schedule_lifecycle.py\", line 392, in save\n    raise RuntimeError(\"injected\")\nRuntimeError: injected\nok\n",
+      "framework_log_block_sha256": "83081d32657501a5e2bd0de42a641bd8d1267c43fedca10f613c782495ca64de",
+      "full_log_byte_start": 427502,
+      "full_log_byte_end": 428328
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_fails_saving_the_plugin_state_and_rolls_rows_back": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_fails_saving_the_plugin_state_and_rolls_rows_back (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_disable_fails_saving_the_plugin_state_and_rolls_rows_back) ... 2026-11-09 07:41:00,475 ERROR apps.plugins.api_views Failed to change enabled state of plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 659, in post\n    cfg.save(update_fields=[\"enabled\", \"ever_enabled\", \"updated_at\"])\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/apps/plugins/tests/test_plugin_schedule_lifecycle.py\", line 392, in save\n    raise RuntimeError(\"injected\")\nRuntimeError: injected\nok\n",
+      "framework_log_block_sha256": "d5f948b079dae5482c85ca053b80940fb7883127c7339c721d9f342b450a5c21",
+      "full_log_byte_start": 426805,
+      "full_log_byte_end": 427502
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_fails_restoring_rows_and_keeps_the_suspended_record": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_fails_restoring_rows_and_keeps_the_suspended_record (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_fails_restoring_rows_and_keeps_the_suspended_record) ... 2026-11-09 07:41:00,708 ERROR apps.plugins.api_views Failed to change enabled state of plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 661, in post\n    pm.restore_schedules(cfg)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/app/apps/plugins/loader.py\", line 549, in restore_schedules\n    PeriodicTasks.update_changed()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: injected\nok\n",
+      "framework_log_block_sha256": "9d7f3f584883bc5f206d316a3838609b98a12ff4ffb499d1be731da04a456b7a",
+      "full_log_byte_start": 429988,
+      "full_log_byte_end": 431056
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_fails_clearing_the_suspended_record_and_rolls_rows_back": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_fails_clearing_the_suspended_record_and_rolls_rows_back (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_fails_clearing_the_suspended_record_and_rolls_rows_back) ... 2026-11-09 07:41:00,672 ERROR apps.plugins.api_views Failed to change enabled state of plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 661, in post\n    pm.restore_schedules(cfg)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/app/apps/plugins/loader.py\", line 551, in restore_schedules\n    cfg.save(update_fields=[\"suspended_schedules\", \"updated_at\"])\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/apps/plugins/tests/test_plugin_schedule_lifecycle.py\", line 392, in save\n    raise RuntimeError(\"injected\")\nRuntimeError: injected\nok\n",
+      "framework_log_block_sha256": "e0bd5c90c89766551e18eda88daa7aff1c2d98604564083cc32a76a479a6e08c",
+      "full_log_byte_start": 429160,
+      "full_log_byte_end": 429988
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_fails_saving_the_plugin_state_and_keeps_the_suspended_record": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_fails_saving_the_plugin_state_and_keeps_the_suspended_record (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_fails_saving_the_plugin_state_and_keeps_the_suspended_record) ... 2026-11-09 07:41:00,744 ERROR apps.plugins.api_views Failed to change enabled state of plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 659, in post\n    cfg.save(update_fields=[\"enabled\", \"ever_enabled\", \"updated_at\"])\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/apps/plugins/tests/test_plugin_schedule_lifecycle.py\", line 392, in save\n    raise RuntimeError(\"injected\")\nRuntimeError: injected\nok\n",
+      "framework_log_block_sha256": "0d827918e8f4bacd48658c6d6ce441a6c71327b2774aca4d022faff932da89fc",
+      "full_log_byte_start": 431056,
+      "full_log_byte_end": 431773
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_does_not_restore_a_row_edited_to_an_unrelated_task": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_does_not_restore_a_row_edited_to_an_unrelated_task (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_enable_does_not_restore_a_row_edited_to_an_unrelated_task) ... ok\n",
+      "framework_log_block_sha256": "9119f845df2efe3b756fab1197a294ca9f778f8f7435aadd779ff50d0ef566c3",
+      "full_log_byte_start": 428946,
+      "full_log_byte_end": 429160
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reenabled_rows_do_not_fire_a_catch_up_run": {
+      "historical_result": "ok",
+      "framework_log_block": "test_reenabled_rows_do_not_fire_a_catch_up_run (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reenabled_rows_do_not_fire_a_catch_up_run) ... ok\n",
+      "framework_log_block_sha256": "c0d8dfeb4caf46eebc5959846e9d840240bee3a4062062fdacc5dd6382fd9305",
+      "full_log_byte_start": 433289,
+      "full_log_byte_end": 433471
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reenabled_crontab_row_with_start_time_waits_for_its_next_occurrence": {
+      "historical_result": "ok",
+      "framework_log_block": "test_reenabled_crontab_row_with_start_time_waits_for_its_next_occurrence (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reenabled_crontab_row_with_start_time_waits_for_its_next_occurrence) ... ok\n",
+      "framework_log_block_sha256": "a5f90a7fb19802d911aebaf606325e5a8666b765a30ba5cb8a99068e85ae7494",
+      "full_log_byte_start": 432613,
+      "full_log_byte_end": 432847
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reenabled_interval_row_with_start_time_waits_a_full_interval": {
+      "historical_result": "ok",
+      "framework_log_block": "test_reenabled_interval_row_with_start_time_waits_a_full_interval (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reenabled_interval_row_with_start_time_waits_a_full_interval) ... ok\n",
+      "framework_log_block_sha256": "e3b07f6489593bc773083885f3b5709ebfdd0caa1909f24b5b0bbace79f8f615",
+      "full_log_byte_start": 432847,
+      "full_log_byte_end": 433067
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reenabled_row_before_its_start_time_still_fires_at_start_time": {
+      "historical_result": "ok",
+      "framework_log_block": "test_reenabled_row_before_its_start_time_still_fires_at_start_time (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reenabled_row_before_its_start_time_still_fires_at_start_time) ... ok\n",
+      "framework_log_block_sha256": "1a7fa5b9df091db0aedaf4556e895d4927c2600f3cb484dfc7034b61666ef488",
+      "full_log_byte_start": 433067,
+      "full_log_byte_end": 433289
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_task_imported_through_the_folder_name_follows_disable_enable_and_delete": {
+      "historical_result": "ok",
+      "framework_log_block": "test_task_imported_through_the_folder_name_follows_disable_enable_and_delete (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_task_imported_through_the_folder_name_follows_disable_enable_and_delete) ... ok\n",
+      "framework_log_block_sha256": "d5fa107ff0e323548c48202762f90f4471542f66019bc06befd2eacd369ebe31",
+      "full_log_byte_start": 434081,
+      "full_log_byte_end": 434323
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_task_imported_relatively_follows_disable_enable_and_delete": {
+      "historical_result": "ok",
+      "framework_log_block": "test_task_imported_relatively_follows_disable_enable_and_delete (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_task_imported_relatively_follows_disable_enable_and_delete) ... ok\n",
+      "framework_log_block_sha256": "515f9757d38b597687ecf5ebbd46f0f1b1f8c7c3c8a7ba681daa2ca35d159adc",
+      "full_log_byte_start": 433865,
+      "full_log_byte_end": 434081
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_folder_name_that_differs_from_the_key_is_recognized": {
+      "historical_result": "ok",
+      "framework_log_block": "test_folder_name_that_differs_from_the_key_is_recognized (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_folder_name_that_differs_from_the_key_is_recognized) ... ok\n",
+      "framework_log_block_sha256": "b9e1129a6b993ea90d944785278c53a5786a61c463becb3fce32f1f93a18a678",
+      "full_log_byte_start": 432193,
+      "full_log_byte_end": 432395
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_tasks_of_similarly_named_modules_are_not_owned": {
+      "historical_result": "ok",
+      "framework_log_block": "test_tasks_of_similarly_named_modules_are_not_owned (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_tasks_of_similarly_named_modules_are_not_owned) ... ok\n",
+      "framework_log_block_sha256": "7dae13c5c0fd8e8548fe66988201c6c080fffe6a969924f850d05ab6570490b7",
+      "full_log_byte_start": 434323,
+      "full_log_byte_end": 434515
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reinstall_after_delete_recreates_a_single_schedule": {
+      "historical_result": "ok",
+      "framework_log_block": "test_reinstall_after_delete_recreates_a_single_schedule (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reinstall_after_delete_recreates_a_single_schedule) ... ok\n",
+      "framework_log_block_sha256": "151a1428bbd50a25fdd0e78cd2b79843f0646f9d97a57cf7f4f48d2543b0c0aa",
+      "full_log_byte_start": 433471,
+      "full_log_byte_end": 433671
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_stale_disable_after_a_concurrent_enable_still_suspends_schedules": {
+      "historical_result": "ok",
+      "framework_log_block": "test_stale_disable_after_a_concurrent_enable_still_suspends_schedules (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_stale_disable_after_a_concurrent_enable_still_suspends_schedules) ... ok\n",
+      "framework_log_block_sha256": "eff8e01e72b298330c85fc4240be089224c225a06b782aa01392ff82c7ee8e58",
+      "full_log_byte_start": 679436,
+      "full_log_byte_end": 679666
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_stale_enable_after_a_concurrent_disable_restores_schedules": {
+      "historical_result": "ok",
+      "framework_log_block": "test_stale_enable_after_a_concurrent_disable_restores_schedules (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_stale_enable_after_a_concurrent_disable_restores_schedules) ... ok\n",
+      "framework_log_block_sha256": "c3b71d501f70cb669d1c4ae3b3dd63470c6acdb9624647d2b119d6ea5fc13d95",
+      "full_log_byte_start": 679666,
+      "full_log_byte_end": 679884
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_enable_waits_for_a_disable_holding_the_row_lock": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_waits_for_a_disable_holding_the_row_lock (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_enable_waits_for_a_disable_holding_the_row_lock) ... ok\n",
+      "framework_log_block_sha256": "f330a37422cc384efd4dcbe0e1a7ca29891cabbe48d81b5ec43015ef3be5c085",
+      "full_log_byte_start": 678850,
+      "full_log_byte_end": 679046
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_enable_cannot_complete_between_a_disable_and_its_stop_callback": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_cannot_complete_between_a_disable_and_its_stop_callback (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_enable_cannot_complete_between_a_disable_and_its_stop_callback) ... ok\n",
+      "framework_log_block_sha256": "bdfd848e540546e7db8a92222a5af801abe8b4cd89abc33dd183aa3ea7e113cc",
+      "full_log_byte_start": 678624,
+      "full_log_byte_end": 678850
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_plain_disable_calls_stop_once": {
+      "historical_result": "ok",
+      "framework_log_block": "test_plain_disable_calls_stop_once (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_plain_disable_calls_stop_once) ... ok\n",
+      "framework_log_block_sha256": "e3d5f2384a90f5b9e93d4a0fb9b85cc3bb3b950678780139a3ba3878be53c51a",
+      "full_log_byte_start": 679046,
+      "full_log_byte_end": 679206
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_disable_stops_the_plugin_without_closing_the_transaction_connection": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_stops_the_plugin_without_closing_the_transaction_connection (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleConcurrencyTests.test_disable_stops_the_plugin_without_closing_the_transaction_connection) ... ok\n",
+      "framework_log_block_sha256": "bbef5484daed8c27db9cb734c5767ba0a9a424a1b9c086230cef59abf05d069f",
+      "full_log_byte_start": 678388,
+      "full_log_byte_end": 678624
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_stop_that_handles_its_database_error_does_not_block_disable_or_delete": {
+      "historical_result": "ok",
+      "framework_log_block": "test_stop_that_handles_its_database_error_does_not_block_disable_or_delete (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_stop_that_handles_its_database_error_does_not_block_disable_or_delete) ... 2026-11-09 07:41:18.702 UTC [1922] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.702 UTC [1922] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18.703 UTC [1922] ERROR:  current transaction is aborted, commands ignored until end of transaction block\n2026-11-09 07:41:18.703 UTC [1922] STATEMENT:  RELEASE SAVEPOINT \"s140637135155712_x12999\"\n2026-11-09 07:41:18,703 ERROR apps.plugins.loader Plugin 'stophandled' stop() failed\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 905, in stop_plugin\n    with savepoint():\n         ~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/transaction.py\", line 247, in __exit__\n    connection.savepoint_commit(sid)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/utils/asyncio.py\", line 26, in inner\n    return func(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/base/base.py\", line 431, in savepoint_commit\n    self._savepoint_commit(sid)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/base/base.py\", line 375, in _savepoint_commit\n    cursor.execute(self.ops.savepoint_commit_sql(sid))\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.InternalError: current transaction is aborted, commands ignored until end of transaction block\n2026-11-09 07:41:18.758 UTC [1925] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.758 UTC [1925] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18.759 UTC [1925] ERROR:  current transaction is aborted, commands ignored until end of transaction block\n2026-11-09 07:41:18.759 UTC [1925] STATEMENT:  RELEASE SAVEPOINT \"s140637135155712_x13003\"\n2026-11-09 07:41:18,759 ERROR apps.plugins.loader Plugin 'stophandled' stop() failed\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 905, in stop_plugin\n    with savepoint():\n         ~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/transaction.py\", line 247, in __exit__\n    connection.savepoint_commit(sid)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/utils/asyncio.py\", line 26, in inner\n    return func(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/base/base.py\", line 431, in savepoint_commit\n    self._savepoint_commit(sid)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/base/base.py\", line 375, in _savepoint_commit\n    cursor.execute(self.ops.savepoint_commit_sql(sid))\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.InternalError: current transaction is aborted, commands ignored until end of transaction block\nok\n",
+      "framework_log_block_sha256": "ca652bc82423d5d561c0561ee49c0f6c3d9dee3688d99349fc0dd0bc1943deb1",
+      "full_log_byte_start": 694108,
+      "full_log_byte_end": 700544
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_stop_that_raises_its_database_error_does_not_block_disable_or_delete": {
+      "historical_result": "ok",
+      "framework_log_block": "test_stop_that_raises_its_database_error_does_not_block_disable_or_delete (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_stop_that_raises_its_database_error_does_not_block_disable_or_delete) ... 2026-11-09 07:41:18.884 UTC [1929] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.884 UTC [1929] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18,884 ERROR apps.plugins.loader Plugin 'stopraised' stop() failed\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.UndefinedTable: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 906, in stop_plugin\n    stop_method(context)\n    ~~~~~~~~~~~^^^^^^^^^\n  File \"/tmp/dispatcharr-plugins-iuo_f4oa/stopraised/plugin.py\", line 32, in stop\n    cursor.execute(\"DELETE FROM plugin_stop_missing_table\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n2026-11-09 07:41:18.943 UTC [1932] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.943 UTC [1932] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18,943 ERROR apps.plugins.loader Plugin 'stopraised' stop() failed\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.UndefinedTable: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 906, in stop_plugin\n    stop_method(context)\n    ~~~~~~~~~~~^^^^^^^^^\n  File \"/tmp/dispatcharr-plugins-iuo_f4oa/stopraised/plugin.py\", line 32, in stop\n    cursor.execute(\"DELETE FROM plugin_stop_missing_table\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\nok\n",
+      "framework_log_block_sha256": "a1bca74d24d8fb5a39b1456a0d3e31a1511161ad73cb1ae4cf3fa1ce6df1e36c",
+      "full_log_byte_start": 700544,
+      "full_log_byte_end": 705694
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_legacy_stop_without_context_database_error_does_not_block_disable_or_delete": {
+      "historical_result": "ok",
+      "framework_log_block": "test_legacy_stop_without_context_database_error_does_not_block_disable_or_delete (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_legacy_stop_without_context_database_error_does_not_block_disable_or_delete) ... 2026-11-09 07:41:18.352 UTC [1908] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.352 UTC [1908] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18,353 ERROR apps.plugins.loader Plugin 'stoplegacy' stop() failed\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 906, in stop_plugin\n    stop_method(context)\n    ~~~~~~~~~~~^^^^^^^^^\nTypeError: Plugin.stop() takes 1 positional argument but 2 were given\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.UndefinedTable: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 911, in stop_plugin\n    stop_method()\n    ~~~~~~~~~~~^^\n  File \"/tmp/dispatcharr-plugins-bu0b8f60/stoplegacy/plugin.py\", line 32, in stop\n    cursor.execute(\"DELETE FROM plugin_stop_missing_table\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n2026-11-09 07:41:18.407 UTC [1911] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.407 UTC [1911] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18,408 ERROR apps.plugins.loader Plugin 'stoplegacy' stop() failed\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 906, in stop_plugin\n    stop_method(context)\n    ~~~~~~~~~~~^^^^^^^^^\nTypeError: Plugin.stop() takes 1 positional argument but 2 were given\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.UndefinedTable: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 911, in stop_plugin\n    stop_method()\n    ~~~~~~~~~~~^^\n  File \"/tmp/dispatcharr-plugins-bu0b8f60/stoplegacy/plugin.py\", line 32, in stop\n    cursor.execute(\"DELETE FROM plugin_stop_missing_table\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\nok\n",
+      "framework_log_block_sha256": "d7f0f5533ac12808aa8d53da05c896175b62946f718adc0ff9e980d5181336a0",
+      "full_log_byte_start": 683212,
+      "full_log_byte_end": 688924
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_stop_action_database_error_does_not_block_disable_or_delete": {
+      "historical_result": "ok",
+      "framework_log_block": "test_stop_action_database_error_does_not_block_disable_or_delete (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_stop_action_database_error_does_not_block_disable_or_delete) ... 2026-11-09 07:41:18.529 UTC [1915] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.529 UTC [1915] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18,529 ERROR apps.plugins.loader Plugin 'stopaction' stop action failed\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.UndefinedTable: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 926, in stop_plugin\n    run_method(\"stop\", {}, context)\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/dispatcharr-plugins-3ugs087v/stopaction/plugin.py\", line 34, in run\n    cursor.execute(\"DELETE FROM plugin_stop_missing_table\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n2026-11-09 07:41:18.584 UTC [1918] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.584 UTC [1918] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18,584 ERROR apps.plugins.loader Plugin 'stopaction' stop action failed\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.UndefinedTable: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 926, in stop_plugin\n    run_method(\"stop\", {}, context)\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/dispatcharr-plugins-3ugs087v/stopaction/plugin.py\", line 34, in run\n    cursor.execute(\"DELETE FROM plugin_stop_missing_table\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: relation \"plugin_stop_missing_table\" does not exist\nLINE 1: DELETE FROM plugin_stop_missing_table\n                    ^\nok\n",
+      "framework_log_block_sha256": "2ef39a553ee9ad600c58533184bc5046eb15e0b05298da9941bb4e2ce1fb296c",
+      "full_log_byte_start": 688924,
+      "full_log_byte_end": 694108
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_enable_restores_only_current_tasks_from_consolidated_history": {
+      "historical_result": "ok",
+      "framework_log_block": "test_enable_restores_only_current_tasks_from_consolidated_history (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_enable_restores_only_current_tasks_from_consolidated_history) ... ok\n",
+      "framework_log_block_sha256": "5c5e577fc31062cb3dd54a656a55623e7bf995390260965e1623caee1c4328ad",
+      "full_log_byte_start": 436519,
+      "full_log_byte_end": 436750
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_disabled_update_and_warm_delete_preserve_a_foreign_callable_in_history": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disabled_update_and_warm_delete_preserve_a_foreign_callable_in_history (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_disabled_update_and_warm_delete_preserve_a_foreign_callable_in_history) ... ok\n",
+      "framework_log_block_sha256": "fa3e10d27fe8ecac33ea5655e3a95126907cf78fe398f0ad953f5fb5d3137472",
+      "full_log_byte_start": 435822,
+      "full_log_byte_end": 436073
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_disabled_install_suspends_enabled_duplicate_schedules_on_update": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disabled_install_suspends_enabled_duplicate_schedules_on_update (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_disabled_install_suspends_enabled_duplicate_schedules_on_update) ... ok\n",
+      "framework_log_block_sha256": "34b596790e669ce50083f095e51675f47317662bb7d64117bf8b53ba992f1c6b",
+      "full_log_byte_start": 435585,
+      "full_log_byte_end": 435822
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_warm_peer_disable_suspends_inherited_schedule": {
+      "historical_result": "ok",
+      "framework_log_block": "test_warm_peer_disable_suspends_inherited_schedule (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_warm_peer_disable_suspends_inherited_schedule) ... ok\n",
+      "framework_log_block_sha256": "99e51ac0ffcc2eed64c07abde69d5d325d6ce4b6141a8efb780327dd3d71dee1",
+      "full_log_byte_start": 706504,
+      "full_log_byte_end": 706698
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_warm_peer_delete_removes_inherited_schedule": {
+      "historical_result": "ok",
+      "framework_log_block": "test_warm_peer_delete_removes_inherited_schedule (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_warm_peer_delete_removes_inherited_schedule) ... ok\n",
+      "framework_log_block_sha256": "02e8ca4066545a6aeb34e46ac12bd44921cb533a2ab3853d068cbae4ccf5834a",
+      "full_log_byte_start": 706314,
+      "full_log_byte_end": 706504
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_disabled_peer_disable_suspends_inherited_schedule": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disabled_peer_disable_suspends_inherited_schedule (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_disabled_peer_disable_suspends_inherited_schedule) ... ok\n",
+      "framework_log_block_sha256": "9c2d15ad56a223a3702e2989317ddbed32388c3f79a9f75fd75e9798e12e4ffb",
+      "full_log_byte_start": 705892,
+      "full_log_byte_end": 706094
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_disabled_peer_delete_removes_inherited_schedule": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disabled_peer_delete_removes_inherited_schedule (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_disabled_peer_delete_removes_inherited_schedule) ... ok\n",
+      "framework_log_block_sha256": "6f65d925fa3f7e6a169264a397e80a2fcbbd89351c6a917f24df0665d628f59d",
+      "full_log_byte_start": 705694,
+      "full_log_byte_end": 705892
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_disable_ignores_historical_name_now_registered_outside_plugin": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_ignores_historical_name_now_registered_outside_plugin (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_disable_ignores_historical_name_now_registered_outside_plugin) ... ok\n",
+      "framework_log_block_sha256": "fff5ca1e52ae90bd230a4e2444c7085a04520d98e7a8d34ca71e737a9c9832b5",
+      "full_log_byte_start": 439209,
+      "full_log_byte_end": 439431
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_delete_ignores_historical_name_now_registered_outside_plugin": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_ignores_historical_name_now_registered_outside_plugin (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_delete_ignores_historical_name_now_registered_outside_plugin) ... ok\n",
+      "framework_log_block_sha256": "bfe7524b95b529546f52eb70ff749c4bc67c5cca532dee8d1dc4428ab828b879",
+      "full_log_byte_start": 438755,
+      "full_log_byte_end": 438975
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_disable_ignores_historical_name_now_registered_through_foreign_alias": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_ignores_historical_name_now_registered_through_foreign_alias (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_disable_ignores_historical_name_now_registered_through_foreign_alias) ... ok\n",
+      "framework_log_block_sha256": "c1be2c6291d769ce13c4c0a7478d408caccb9b603c7288587604e905cd2c95f6",
+      "full_log_byte_start": 439431,
+      "full_log_byte_end": 439667
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_delete_ignores_historical_name_now_registered_through_foreign_alias": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_ignores_historical_name_now_registered_through_foreign_alias (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_delete_ignores_historical_name_now_registered_through_foreign_alias) ... ok\n",
+      "framework_log_block_sha256": "4d66d2529941fa894407959ad055f962a0b0e53d7ca6db31f0518d9d364df5cc",
+      "full_log_byte_start": 438975,
+      "full_log_byte_end": 439209
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_registered_callable_without_source_keeps_historical_cleanup": {
+      "historical_result": "ok",
+      "framework_log_block": "test_registered_callable_without_source_keeps_historical_cleanup (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_registered_callable_without_source_keeps_historical_cleanup) ... ok\n",
+      "framework_log_block_sha256": "c46194baff3787738a91caa64a8fb0954d6becb26a5efecaa777162550ec659d",
+      "full_log_byte_start": 446090,
+      "full_log_byte_end": 446308
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_colliding_package_names_keep_separate_schedule_ownership": {
+      "historical_result": "ok",
+      "framework_log_block": "test_colliding_package_names_keep_separate_schedule_ownership (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_colliding_package_names_keep_separate_schedule_ownership) ... ok\n",
+      "framework_log_block_sha256": "e90a2c6205de8db70aaac45d6b58e294891f903ad949821f96c2ca8b98acf1bd",
+      "full_log_byte_start": 438543,
+      "full_log_byte_end": 438755
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_upgrade_while_disabled_does_not_restore_removed_task_with_stale_registry": {
+      "historical_result": "ok",
+      "framework_log_block": "test_upgrade_while_disabled_does_not_restore_removed_task_with_stale_registry (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_upgrade_while_disabled_does_not_restore_removed_task_with_stale_registry) ... ok\n",
+      "framework_log_block_sha256": "ec9ab58c8203ec2a412c8487f83561f486d7c01150e693aa30a165fbb2e695cf",
+      "full_log_byte_start": 447410,
+      "full_log_byte_end": 447654
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_upgrade_while_disabled_does_not_restore_removed_task_after_restart": {
+      "historical_result": "ok",
+      "framework_log_block": "test_upgrade_while_disabled_does_not_restore_removed_task_after_restart (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_upgrade_while_disabled_does_not_restore_removed_task_after_restart) ... ok\n",
+      "framework_log_block_sha256": "e380a27e6c22414782ebf5ea5bd491f3371d0f20258a418d809b0f1e6aeb53cc",
+      "full_log_byte_start": 447178,
+      "full_log_byte_end": 447410
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_upgrade_does_not_restore_a_removed_task_imported_through_folder_name": {
+      "historical_result": "ok",
+      "framework_log_block": "test_upgrade_does_not_restore_a_removed_task_imported_through_folder_name (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_upgrade_does_not_restore_a_removed_task_imported_through_folder_name) ... ok\n",
+      "framework_log_block_sha256": "b5317527042b95a17a5258fdfd6db701ca602ba4675ea67c3af5f0854af80cc7",
+      "full_log_byte_start": 446724,
+      "full_log_byte_end": 446960
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_reload_keeps_a_task_name_replaced_by_an_outside_callable": {
+      "historical_result": "ok",
+      "framework_log_block": "test_reload_keeps_a_task_name_replaced_by_an_outside_callable (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_reload_keeps_a_task_name_replaced_by_an_outside_callable) ... ok\n",
+      "framework_log_block_sha256": "c7acead338c822d78dc572d29864d5c6666400699cf8884b593b232b2b3d87b2",
+      "full_log_byte_start": 446308,
+      "full_log_byte_end": 446520
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_same_size_overwrite_does_not_use_old_plugin_bytecode": {
+      "historical_result": "ok",
+      "framework_log_block": "test_same_size_overwrite_does_not_use_old_plugin_bytecode (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_same_size_overwrite_does_not_use_old_plugin_bytecode) ... ok\n",
+      "framework_log_block_sha256": "55ebe281e56958ddf45c2220ea36af4ad9e96b2a5f502b2e208b32bfd88e0e64",
+      "full_log_byte_start": 446520,
+      "full_log_byte_end": 446724
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_cold_restore_reads_changed_submodule_in_a_spaced_plugin_folder": {
+      "historical_result": "ok",
+      "framework_log_block": "test_cold_restore_reads_changed_submodule_in_a_spaced_plugin_folder (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_cold_restore_reads_changed_submodule_in_a_spaced_plugin_folder) ... ok\n",
+      "framework_log_block_sha256": "804a0547072b3f54cbc12a898a7e8d862af5d289448bd0df067fca5e88a1af72",
+      "full_log_byte_start": 438319,
+      "full_log_byte_end": 438543
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_reenabled_task_lazily_imports_current_helper_with_stale_cache": {
+      "historical_result": "ok",
+      "framework_log_block": "test_reenabled_task_lazily_imports_current_helper_with_stale_cache (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_reenabled_task_lazily_imports_current_helper_with_stale_cache) ... ok\n",
+      "framework_log_block_sha256": "dfe05af25337187d8c17c3ddf62b73e3b30ce86aa46026fd4eb1d7afb05b89e9",
+      "full_log_byte_start": 445868,
+      "full_log_byte_end": 446090
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_upgrade_keeps_a_still_defined_task_eligible_for_restoration": {
+      "historical_result": "ok",
+      "framework_log_block": "test_upgrade_keeps_a_still_defined_task_eligible_for_restoration (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_upgrade_keeps_a_still_defined_task_eligible_for_restoration) ... ok\n",
+      "framework_log_block_sha256": "d3e4bcf8f2f59a5b2a2908bd4954871ceeecbca20399c8384fded8a11251e757",
+      "full_log_byte_start": 446960,
+      "full_log_byte_end": 447178
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_failed_import_keeps_suspended_row_for_a_later_retry": {
+      "historical_result": "ok",
+      "framework_log_block": "test_failed_import_keeps_suspended_row_for_a_later_retry (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_failed_import_keeps_suspended_row_for_a_later_retry) ... 2026-11-09 07:41:02,114 ERROR apps.plugins.loader Error importing module _dispatcharr_plugin_vod2mlib.plugin\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 618, in _load_plugin\n    module = self._load_module_from_path(module_name, plugin_path, is_package=False)\n  File \"/app/apps/plugins/loader.py\", line 1117, in _load_module_from_path\n    spec.loader.exec_module(module)\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"<frozen importlib._bootstrap_external>\", line 1027, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/tmp/dispatcharr-plugins-0jciw1wc/vod2mlib/plugin.py\", line 1, in <module>\n    raise ImportError('injected plugin import failure')\nImportError: injected plugin import failure\n2026-11-09 07:41:02,115 ERROR apps.plugins.api_views Failed to change enabled state of plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 661, in post\n    pm.restore_schedules(cfg)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/app/apps/plugins/loader.py\", line 534, in restore_schedules\n    names = self._load_current_task_names(cfg)\n  File \"/app/apps/plugins/loader.py\", line 476, in _load_current_task_names\n    loaded, package = self._load_plugin(\n                      ~~~~~~~~~~~~~~~~~^\n        cfg.key, path, folder_name=folder, force_reload=True,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        previous_package=package,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/app/apps/plugins/loader.py\", line 644, in _load_plugin\n    raise last_error\n  File \"/app/apps/plugins/loader.py\", line 618, in _load_plugin\n    module = self._load_module_from_path(module_name, plugin_path, is_package=False)\n  File \"/app/apps/plugins/loader.py\", line 1117, in _load_module_from_path\n    spec.loader.exec_module(module)\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"<frozen importlib._bootstrap_external>\", line 1027, in exec_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\n  File \"/tmp/dispatcharr-plugins-0jciw1wc/vod2mlib/plugin.py\", line 1, in <module>\n    raise ImportError('injected plugin import failure')\nImportError: injected plugin import failure\nok\n",
+      "framework_log_block_sha256": "3885e3a45dd36a5c5a920e2dbde6a7b603ff275f759e4017b1019d767c8b1748",
+      "full_log_byte_start": 443434,
+      "full_log_byte_end": 445868
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleReadonlyCacheTests.test_readonly_plugin_loads_current_source_without_changing_cache": {
+      "historical_result": "ok",
+      "framework_log_block": "test_readonly_plugin_loads_current_source_without_changing_cache (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleReadonlyCacheTests.test_readonly_plugin_loads_current_source_without_changing_cache) ... ok\n",
+      "framework_log_block_sha256": "686a46b7a91b46331b50fef48bce2d7fcc97ba2d0d20772515f83ca2585fd517",
+      "full_log_byte_start": 712074,
+      "full_log_byte_end": 712296
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipConcurrencyTests.test_disable_waits_for_schedule_repoint_and_leaves_unrelated_row_enabled": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_waits_for_schedule_repoint_and_leaves_unrelated_row_enabled (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipConcurrencyTests.test_disable_waits_for_schedule_repoint_and_leaves_unrelated_row_enabled) ... ok\n",
+      "framework_log_block_sha256": "4fe34d1f1378b30576107f45797e08b1fa31a13ddb7f02a568c9429966436bcb",
+      "full_log_byte_start": 707365,
+      "full_log_byte_end": 707610
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipConcurrencyTests.test_delete_waits_for_schedule_repoint_and_keeps_unrelated_row": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_waits_for_schedule_repoint_and_keeps_unrelated_row (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipConcurrencyTests.test_delete_waits_for_schedule_repoint_and_keeps_unrelated_row) ... ok\n",
+      "framework_log_block_sha256": "ce37d8d33af6c47337c242adc966d6c4b50b1fae487a311e4342d400bd1ea97e",
+      "full_log_byte_start": 707140,
+      "full_log_byte_end": 707365
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleRegistryTests.test_disable_preserves_foreign_row_during_concurrent_registration": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_preserves_foreign_row_during_concurrent_registration (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleRegistryTests.test_disable_preserves_foreign_row_during_concurrent_registration) ... ok\n",
+      "framework_log_block_sha256": "6a2a8016ac5c6d52eb22dbcd333c8f1ca4fb93235bfe7296050cd78e50057441",
+      "full_log_byte_start": 455189,
+      "full_log_byte_end": 455408
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleRegistryTests.test_delete_preserves_foreign_row_during_concurrent_registration": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_preserves_foreign_row_during_concurrent_registration (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleRegistryTests.test_delete_preserves_foreign_row_during_concurrent_registration) ... ok\n",
+      "framework_log_block_sha256": "5b918e66638c0f61c68d69b5da92cce21f598b24e329e6cbcfb423978ab6d7fb",
+      "full_log_byte_start": 450420,
+      "full_log_byte_end": 450637
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleRegistryTests.test_disable_preserves_current_foreign_task_when_discovery_fails": {
+      "historical_result": "ok",
+      "framework_log_block": "test_disable_preserves_current_foreign_task_when_discovery_fails (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleRegistryTests.test_disable_preserves_current_foreign_task_when_discovery_fails) ... 2026-11-09 07:41:02,535 ERROR apps.plugins.loader Could not read registered Celery tasks for plugin 'registry_owner'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 390, in _owned_task_names\n    names |= self._task_names_from_path(root)\n             ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: dictionary changed size during iteration\n2026-11-09 07:41:02,537 ERROR apps.plugins.loader Could not read registered Celery tasks for plugin 'registry_owner'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 390, in _owned_task_names\n    names |= self._task_names_from_path(root)\n             ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\n  File \"/app/apps/plugins/loader.py\", line 390, in _owned_task_names\n    names |= self._task_names_from_path(root)\n             ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: dictionary changed size during iteration\n2026-11-09 07:41:02,549 ERROR apps.plugins.loader Could not record Celery tasks owned by plugin 'registry_foreign'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 370, in _record_owned_tasks\n    registered = self._registered_task_names(key)\n  File \"/app/apps/plugins/loader.py\", line 364, in _registered_task_names\n    return self._task_names_from_path(self.get_plugin_path(key))\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\n  File \"/app/apps/plugins/loader.py\", line 390, in _owned_task_names\n    names |= self._task_names_from_path(root)\n             ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\n  File \"/app/apps/plugins/loader.py\", line 390, in _owned_task_names\n    names |= self._task_names_from_path(root)\n             ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: dictionary changed size during iteration\nok\n",
+      "framework_log_block_sha256": "f1feb9b4ff7aaa8e5435425f45d010ca9312a8b187ba2994cf11aa7ecec3ceb8",
+      "full_log_byte_start": 450637,
+      "full_log_byte_end": 455189
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_delete_removes_custom_and_default_named_rows_of_an_enabled_plugin": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_removes_custom_and_default_named_rows_of_an_enabled_plugin (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_delete_removes_custom_and_default_named_rows_of_an_enabled_plugin) ... ok\n",
+      "framework_log_block_sha256": "f581af1f18047f28d80ad47c76d9554ed31de269023c75a9bf2d8ab48ac91876",
+      "full_log_byte_start": 424454,
+      "full_log_byte_end": 424684
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_delete_fails_cleaning_schedules_keeps_ownership_and_is_retryable": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_fails_cleaning_schedules_keeps_ownership_and_is_retryable (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_delete_fails_cleaning_schedules_keeps_ownership_and_is_retryable) ... 2026-11-09 07:41:00,355 ERROR apps.plugins.api_views Failed to delete plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 738, in delete\n    pm.delete_plugin_periodic_tasks(key, path=target_dir)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: injected\nok\n",
+      "framework_log_block_sha256": "47bd6d8934a9f0b8ff1077b7e4c2bd65acb729a735a6135ae4c0bb554362e7eb",
+      "full_log_byte_start": 423266,
+      "full_log_byte_end": 424248
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_upgrade_keeps_names_of_removed_tasks_for_delete_after_registry_reset": {
+      "historical_result": "ok",
+      "framework_log_block": "test_upgrade_keeps_names_of_removed_tasks_for_delete_after_registry_reset (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_upgrade_keeps_names_of_removed_tasks_for_delete_after_registry_reset) ... ok\n",
+      "framework_log_block_sha256": "89313b4532e864b14b3dfa15530cbe63c1795b0fc77a7b616762a3ebc0b3fbf5",
+      "full_log_byte_start": 434515,
+      "full_log_byte_end": 434751
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reserved_and_invalid_folder_names_match_nothing": {
+      "historical_result": "ok",
+      "framework_log_block": "test_reserved_and_invalid_folder_names_match_nothing (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_reserved_and_invalid_folder_names_match_nothing) ... ok\n",
+      "framework_log_block_sha256": "0e6bb60c5e2c8ff73a62717e0ce39363d6224c7db5d21ac666e35a05ebc3c2f9",
+      "full_log_byte_start": 433671,
+      "full_log_byte_end": 433865
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_folder_name_matching_an_unrelated_module_matches_none_of_its_tasks": {
+      "historical_result": "ok",
+      "framework_log_block": "test_folder_name_matching_an_unrelated_module_matches_none_of_its_tasks (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_folder_name_matching_an_unrelated_module_matches_none_of_its_tasks) ... ok\n",
+      "framework_log_block_sha256": "5845926a0f0e86eb81b12d91817746ca3decb1a9d8e395f5293f733cad089a0f",
+      "full_log_byte_start": 431961,
+      "full_log_byte_end": 432193
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_delete_leaves_rows_of_a_plugin_that_was_never_enabled": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_leaves_rows_of_a_plugin_that_was_never_enabled (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginScheduleLifecycleTests.test_delete_leaves_rows_of_a_plugin_that_was_never_enabled) ... ok\n",
+      "framework_log_block_sha256": "5c74f7ba133d732d9c7b56c0e34af671eaf11fb0fcfe57cd4cebc04bc6fa7933",
+      "full_log_byte_start": 424248,
+      "full_log_byte_end": 424454
+    },
+    "apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_delete_of_an_enabled_plugin_whose_stop_handles_its_database_error": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_of_an_enabled_plugin_whose_stop_handles_its_database_error (apps.plugins.tests.test_plugin_schedule_lifecycle.PluginStopDatabaseErrorTests.test_delete_of_an_enabled_plugin_whose_stop_handles_its_database_error) ... 2026-11-09 07:41:18.228 UTC [1904] ERROR:  relation \"plugin_stop_missing_table\" does not exist at character 13\n2026-11-09 07:41:18.228 UTC [1904] STATEMENT:  DELETE FROM plugin_stop_missing_table\n2026-11-09 07:41:18.228 UTC [1904] ERROR:  current transaction is aborted, commands ignored until end of transaction block\n2026-11-09 07:41:18.228 UTC [1904] STATEMENT:  RELEASE SAVEPOINT \"s140637135155712_x12968\"\n2026-11-09 07:41:18,228 ERROR apps.plugins.loader Plugin 'stopdelete' stop() failed\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.InFailedSqlTransaction: current transaction is aborted, commands ignored until end of transaction block\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 905, in stop_plugin\n    with savepoint():\n         ~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/transaction.py\", line 247, in __exit__\n    connection.savepoint_commit(sid)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/utils/asyncio.py\", line 26, in inner\n    return func(*args, **kwargs)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/base/base.py\", line 431, in savepoint_commit\n    self._savepoint_commit(sid)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/base/base.py\", line 375, in _savepoint_commit\n    cursor.execute(self.ops.savepoint_commit_sql(sid))\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.InternalError: current transaction is aborted, commands ignored until end of transaction block\nok\n",
+      "framework_log_block_sha256": "7f3e2563de12c1f4f07ea7df516f29b9492469cefccb5661eb4e4bda098c4c26",
+      "full_log_byte_start": 679884,
+      "full_log_byte_end": 683212
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_duplicate_history_survives_consolidation_and_cold_delete": {
+      "historical_result": "ok",
+      "framework_log_block": "test_duplicate_history_survives_consolidation_and_cold_delete (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_duplicate_history_survives_consolidation_and_cold_delete) ... ok\n",
+      "framework_log_block_sha256": "4abb65234ded78103baa6f32e8cb06dade0b778098d684f407456015bb70920f",
+      "full_log_byte_start": 436073,
+      "full_log_byte_end": 436296
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_duplicate_history_survives_consolidation_and_warm_delete": {
+      "historical_result": "ok",
+      "framework_log_block": "test_duplicate_history_survives_consolidation_and_warm_delete (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_duplicate_history_survives_consolidation_and_warm_delete) ... ok\n",
+      "framework_log_block_sha256": "cb7d12e308003b20f5aa472efbc1482dabcb031c2b8b195b1ad33c0a316beb97",
+      "full_log_byte_start": 436296,
+      "full_log_byte_end": 436519
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_retirement_rechecks_a_task_replaced_after_consolidation": {
+      "historical_result": "ok",
+      "framework_log_block": "test_retirement_rechecks_a_task_replaced_after_consolidation (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_retirement_rechecks_a_task_replaced_after_consolidation) ... ok\n",
+      "framework_log_block_sha256": "2c46de2235ee868fae85c06d6e31d88a2f4385de01bba6af573017030efa096e",
+      "full_log_byte_start": 437702,
+      "full_log_byte_end": 437923
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_file_removal_failure_retains_both_histories_for_retry": {
+      "historical_result": "ok",
+      "framework_log_block": "test_file_removal_failure_retains_both_histories_for_retry (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_file_removal_failure_retains_both_histories_for_retry) ... 2026-11-09 07:41:01,638 ERROR apps.plugins.api_views Failed to consolidate managed plugin 'registry-plugin'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 373, in _finish_managed_plugin_install\n    shutil.rmtree(stale_dir)\n    ~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nOSError: injected\nok\n",
+      "framework_log_block_sha256": "419257bf3bd502cbee9bcd19231d4aea04cb4e0962c6121ee48d698efa67f172",
+      "full_log_byte_start": 436750,
+      "full_log_byte_end": 437702
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_database_failure_after_file_removal_retains_history_for_retry": {
+      "historical_result": "ok",
+      "framework_log_block": "test_database_failure_after_file_removal_retains_history_for_retry (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleConsolidationTests.test_database_failure_after_file_removal_retains_history_for_retry) ... 2026-11-09 07:41:01,262 ERROR apps.plugins.api_views Failed to consolidate managed plugin 'registry-plugin'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 384, in _finish_managed_plugin_install\n    retained.save(update_fields=[\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\n        \"owned_tasks\", \"suspended_schedules\", \"updated_at\",\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ])\n    ^^\n  File \"/app/apps/plugins/tests/test_plugin_schedule_ownership.py\", line 208, in fail_transfer\n    raise DatabaseError(\"injected\")\ndjango.db.utils.DatabaseError: injected\nok\n",
+      "framework_log_block_sha256": "a70f11ae08bf0b4e63bacea31a0302c67880d6f3e2425c3bd9d5c053f3b3bb45",
+      "full_log_byte_start": 434751,
+      "full_log_byte_end": 435585
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_successful_update_retires_duplicate_tasks_before_returning": {
+      "historical_result": "ok",
+      "framework_log_block": "test_successful_update_retires_duplicate_tasks_before_returning (apps.plugins.tests.test_plugin_schedule_ownership.ManagedPluginScheduleCommitTests.test_successful_update_retires_duplicate_tasks_before_returning) ... ok\n",
+      "framework_log_block_sha256": "16dcae568679b10f7be561bb9e20767ddd227717ac64c1c80bf9552e88d3ecc7",
+      "full_log_byte_start": 706094,
+      "full_log_byte_end": 706314
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_cold_delete_does_not_import_enabled_plugin": {
+      "historical_result": "ok",
+      "framework_log_block": "test_cold_delete_does_not_import_enabled_plugin (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_cold_delete_does_not_import_enabled_plugin) ... ok\n",
+      "framework_log_block_sha256": "9e0dc1713a157e9af42c5936419292e3809b12301e4aa3fbb24a0b359bf909ca",
+      "full_log_byte_start": 437923,
+      "full_log_byte_end": 438107
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_cold_delete_uses_actual_folder_for_warm_registered_tasks": {
+      "historical_result": "ok",
+      "framework_log_block": "test_cold_delete_uses_actual_folder_for_warm_registered_tasks (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_cold_delete_uses_actual_folder_for_warm_registered_tasks) ... ok\n",
+      "framework_log_block_sha256": "3b44fea1d6efe9fb6aee0d9d85cf052880eac3117388928a10d7fb05c2a10ab9",
+      "full_log_byte_start": 438107,
+      "full_log_byte_end": 438319
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_failed_cleanup_can_retry_with_missing_folder_and_warm_registered_tasks": {
+      "historical_result": "ok",
+      "framework_log_block": "test_failed_cleanup_can_retry_with_missing_folder_and_warm_registered_tasks (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipTests.test_failed_cleanup_can_retry_with_missing_folder_and_warm_registered_tasks) ... 2026-11-09 07:41:02.070 UTC [1459] ERROR:  relation \"history_missing_schedule_table\" does not exist at character 13\n2026-11-09 07:41:02.070 UTC [1459] STATEMENT:  DELETE FROM history_missing_schedule_table\n2026-11-09 07:41:02,071 ERROR apps.plugins.api_views Failed to delete plugin 'mixed_case'\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.UndefinedTable: relation \"history_missing_schedule_table\" does not exist\nLINE 1: DELETE FROM history_missing_schedule_table\n                    ^\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 740, in delete\n    cfg.delete()\n    ~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 1300, in delete\n    return collector.delete()\n           ~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/deletion.py\", line 452, in delete\n    count = sql.DeleteQuery(model).delete_batch(\n        [instance.pk], self.using\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/subqueries.py\", line 43, in delete_batch\n    num_deleted += self.do_query(\n                   ~~~~~~~~~~~~~^\n        self.get_meta().db_table, self.where, using=using\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/subqueries.py\", line 25, in do_query\n    return self.get_compiler(using).execute_sql(ROW_COUNT)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1624, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/app/apps/plugins/tests/test_plugin_schedule_ownership.py\", line 474, in fail_config_delete\n    return execute(\"DELETE FROM history_missing_schedule_table\", None, False, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 103, in _execute\n    return self.cursor.execute(sql)\n           ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: relation \"history_missing_schedule_table\" does not exist\nLINE 1: DELETE FROM history_missing_schedule_table\n                    ^\nok\n",
+      "framework_log_block_sha256": "d17d33a0b85ff5a7a1a92673de384699edfa87071589eec2467b5edb15b8dada",
+      "full_log_byte_start": 439667,
+      "full_log_byte_end": 443434
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipConcurrencyTests.test_delete_does_not_remove_a_new_row_reusing_the_selected_name": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_does_not_remove_a_new_row_reusing_the_selected_name (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipConcurrencyTests.test_delete_does_not_remove_a_new_row_reusing_the_selected_name) ... ok\n",
+      "framework_log_block_sha256": "619160ea21fa2c620291ea8f804f44d262429669dac3137d18c70aa7645214ca",
+      "full_log_byte_start": 706698,
+      "full_log_byte_end": 706925
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipConcurrencyTests.test_delete_keeps_a_schedule_with_a_new_foreign_reference": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_keeps_a_schedule_with_a_new_foreign_reference (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipConcurrencyTests.test_delete_keeps_a_schedule_with_a_new_foreign_reference) ... ok\n",
+      "framework_log_block_sha256": "09d7a1dbef60739f8e15341d57bb56cf77ec468c342848dc9dabbad7d4915242",
+      "full_log_byte_start": 706925,
+      "full_log_byte_end": 707140
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipDeleteTests.test_file_removal_failure_keeps_config_and_schedules_for_retry": {
+      "historical_result": "ok",
+      "framework_log_block": "test_file_removal_failure_keeps_config_and_schedules_for_retry (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipDeleteTests.test_file_removal_failure_keeps_config_and_schedules_for_retry) ... 2026-11-09 07:41:20,840 ERROR apps.plugins.api_views Failed to delete plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 737, in delete\n    shutil.rmtree(target_dir)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nOSError: injected\nok\n",
+      "framework_log_block_sha256": "268bb1ed53982502ef751aa166e42cd40181787fca200ffae031859dfd99f83b",
+      "full_log_byte_start": 710050,
+      "full_log_byte_end": 710963
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipDeleteTests.test_partial_file_removal_failure_keeps_schedule_history_for_retry": {
+      "historical_result": "ok",
+      "framework_log_block": "test_partial_file_removal_failure_keeps_schedule_history_for_retry (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipDeleteTests.test_partial_file_removal_failure_keeps_schedule_history_for_retry) ... 2026-11-09 07:41:20,941 ERROR apps.plugins.api_views Failed to delete plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 737, in delete\n    shutil.rmtree(target_dir)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1240, in _execute_mock_call\n    result = effect(*args, **kwargs)\n  File \"/app/apps/plugins/tests/test_plugin_schedule_ownership.py\", line 1095, in remove_one_file_then_fail\n    raise OSError(\"injected partial removal\")\nOSError: injected partial removal\nok\n",
+      "framework_log_block_sha256": "ca424f45d198fb464075afbf39c5eeaf6a1c08153f83d6491a974cf6583eab3f",
+      "full_log_byte_start": 710963,
+      "full_log_byte_end": 712074
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipDeleteTests.test_database_failure_after_file_removal_is_reported_and_retryable": {
+      "historical_result": "ok",
+      "framework_log_block": "test_database_failure_after_file_removal_is_reported_and_retryable (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleOwnershipDeleteTests.test_database_failure_after_file_removal_is_reported_and_retryable) ... 2026-11-09 07:41:20,739 ERROR apps.plugins.api_views Failed to delete plugin 'vod2mlib'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/api_views.py\", line 740, in delete\n    cfg.delete()\n    ~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/base.py\", line 1300, in delete\n    return collector.delete()\n           ~~~~~~~~~~~~~~~~^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/deletion.py\", line 452, in delete\n    count = sql.DeleteQuery(model).delete_batch(\n        [instance.pk], self.using\n    )\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/subqueries.py\", line 43, in delete_batch\n    num_deleted += self.do_query(\n                   ~~~~~~~~~~~~~^\n        self.get_meta().db_table, self.where, using=using\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/subqueries.py\", line 25, in do_query\n    return self.get_compiler(using).execute_sql(ROW_COUNT)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1624, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/app/apps/plugins/tests/test_plugin_schedule_ownership.py\", line 1120, in fail_config_delete\n    raise DatabaseError(\"injected config deletion failure\")\ndjango.db.utils.DatabaseError: injected config deletion failure\nok\n",
+      "framework_log_block_sha256": "678a9e55d48d687cc40e116dfff6ad71b88b9861e656bff92870c07417d7dcc6",
+      "full_log_byte_start": 707841,
+      "full_log_byte_end": 710050
+    },
+    "apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleRegistryTests.test_delete_preserves_current_foreign_task_when_discovery_fails": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_preserves_current_foreign_task_when_discovery_fails (apps.plugins.tests.test_plugin_schedule_ownership.PluginScheduleRegistryTests.test_delete_preserves_current_foreign_task_when_discovery_fails) ... 2026-11-09 07:41:02,465 ERROR apps.plugins.loader Could not read registered Celery tasks for plugin 'registry_owner'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 390, in _owned_task_names\n    names |= self._task_names_from_path(root)\n             ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: dictionary changed size during iteration\n2026-11-09 07:41:02,477 ERROR apps.plugins.loader Could not record Celery tasks owned by plugin 'registry_foreign'\nTraceback (most recent call last):\n  File \"/app/apps/plugins/loader.py\", line 370, in _record_owned_tasks\n    registered = self._registered_task_names(key)\n  File \"/app/apps/plugins/loader.py\", line 364, in _registered_task_names\n    return self._task_names_from_path(self.get_plugin_path(key))\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\n  File \"/app/apps/plugins/loader.py\", line 390, in _owned_task_names\n    names |= self._task_names_from_path(root)\n             ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: dictionary changed size during iteration\nok\n",
+      "framework_log_block_sha256": "9bf9a7fb30719f3daed72c80790372958055bfff12ad455bf6d43369307813c5",
+      "full_log_byte_start": 447853,
+      "full_log_byte_end": 450420
+    },
+    "apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_update_uses_managed_install_key_when_zip_key_differs_from_slug": {
+      "historical_result": "ok",
+      "framework_log_block": "test_update_uses_managed_install_key_when_zip_key_differs_from_slug (apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_update_uses_managed_install_key_when_zip_key_differs_from_slug) ... ok\n",
+      "framework_log_block_sha256": "e99fab7c9f694ef72c47854c0b14df198f433aa7041d63b35ac65eb0fee84ebd",
+      "full_log_byte_start": 422628,
+      "full_log_byte_end": 422848
+    },
+    "apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_legacy_normalized_key_lookup_remains_available": {
+      "historical_result": "ok",
+      "framework_log_block": "test_legacy_normalized_key_lookup_remains_available (apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_legacy_normalized_key_lookup_remains_available) ... ok\n",
+      "framework_log_block_sha256": "8035a781088e002be4868d85aa7c43d27d44401bb225b31baf0ac5dfe5574713",
+      "full_log_byte_start": 421954,
+      "full_log_byte_end": 422142
+    },
+    "apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_failed_managed_update_preserves_existing_configuration": {
+      "historical_result": "ok",
+      "framework_log_block": "test_failed_managed_update_preserves_existing_configuration (apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_failed_managed_update_preserves_existing_configuration) ... 2026-11-09 07:41:00,271 WARNING django.request Bad Request: /api/plugins/repos/install/\nok\n",
+      "framework_log_block_sha256": "0ed3f4b58bfa336f7fbc358c46c9de718ee7a95a63653b80af83798bd6923297",
+      "full_log_byte_start": 421662,
+      "full_log_byte_end": 421954
+    },
+    "apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_update_deleted_while_waiting_for_lock_is_not_recreated": {
+      "historical_result": "ok",
+      "framework_log_block": "test_update_deleted_while_waiting_for_lock_is_not_recreated (apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_update_deleted_while_waiting_for_lock_is_not_recreated) ... 2026-11-09 07:41:00,288 WARNING django.request Not Found: /api/plugins/repos/install/\nok\n",
+      "framework_log_block_sha256": "87752e99038931706dcfe268f316efcc73f9a1b232caa7d9622627e13e7fc8fa",
+      "full_log_byte_start": 422338,
+      "full_log_byte_end": 422628
+    },
+    "apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_update_consolidates_duplicate_managed_slug_records": {
+      "historical_result": "ok",
+      "framework_log_block": "test_update_consolidates_duplicate_managed_slug_records (apps.plugins.tests.test_managed_repo_install.ManagedPluginRepoInstallTests.test_update_consolidates_duplicate_managed_slug_records) ... ok\n",
+      "framework_log_block_sha256": "6b148650688005f17aaf1d1dd20a75ef15005c5e05a127b57bde754b201c7a21",
+      "full_log_byte_start": 422142,
+      "full_log_byte_end": 422338
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_creates_session_without_start_in_playback_url": {
+      "historical_result": "ok",
+      "framework_log_block": "test_post_creates_session_without_start_in_playback_url (apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_creates_session_without_start_in_playback_url) ... ok\n",
+      "framework_log_block_sha256": "24bcdba9b3f3455e200686db8543f1a5da6371907e2b73348038fbd391ce2745",
+      "full_log_byte_start": 511714,
+      "full_log_byte_end": 511893
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_accepts_duration": {
+      "historical_result": "ok",
+      "framework_log_block": "test_post_accepts_duration (apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_accepts_duration) ... ok\n",
+      "framework_log_block_sha256": "33a8c1a166fb2be5456fcedb66adb304803fd96cd9df4695842998a4399875a2",
+      "full_log_byte_start": 511593,
+      "full_log_byte_end": 511714
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_rejects_out_of_range_duration": {
+      "historical_result": "ok",
+      "framework_log_block": "test_post_rejects_out_of_range_duration (apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_rejects_out_of_range_duration) ... 2026-11-09 07:41:05,759 WARNING django.request Bad Request: /api/catchup/sessions/\nok\n",
+      "framework_log_block_sha256": "2b6fb7986836e52d85997e570419fc9f8be4c9c279d37d4e50a6ce3aa60e3cb5",
+      "full_log_byte_start": 512119,
+      "full_log_byte_end": 512349
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_rejects_non_catchup_channel": {
+      "historical_result": "ok",
+      "framework_log_block": "test_post_rejects_non_catchup_channel (apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_rejects_non_catchup_channel) ... 2026-11-09 07:41:05,758 WARNING django.request Bad Request: /api/catchup/sessions/\nok\n",
+      "framework_log_block_sha256": "5206b47e96b029d279506caa5cd042f038d0ddff205d063dd07093f3d52f2ad7",
+      "full_log_byte_start": 511893,
+      "full_log_byte_end": 512119
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_rejects_when_catchup_disabled": {
+      "historical_result": "ok",
+      "framework_log_block": "test_post_rejects_when_catchup_disabled (apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_post_rejects_when_catchup_disabled) ... 2026-11-09 07:41:05,761 WARNING django.request Forbidden: /api/catchup/sessions/\nok\n",
+      "framework_log_block_sha256": "d1f54c51aaf37242a8e6e2cb880ee8aa97d8bb88f297db4fc584005a20a7e02c",
+      "full_log_byte_start": 512349,
+      "full_log_byte_end": 512577
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_delete_revokes_own_session": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_revokes_own_session (apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_delete_revokes_own_session) ... ok\n",
+      "framework_log_block_sha256": "af3036feb58822db9b33fda58e728b2fa6cd9d8764ba4dd0433c348489d6ba9c",
+      "full_log_byte_start": 511462,
+      "full_log_byte_end": 511593
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_delete_rejects_other_users_session": {
+      "historical_result": "ok",
+      "framework_log_block": "test_delete_rejects_other_users_session (apps.timeshift.tests.test_sessions.CatchupSessionApiTests.test_delete_rejects_other_users_session) ... 2026-11-09 07:41:05,736 WARNING django.request Not Found: /api/catchup/sessions/mjsYuLQuVjYWDBm391NW_w/\nok\n",
+      "framework_log_block_sha256": "36c856ccda1dd1a5fef30d67076130b83b9275f217bdd41da2dcf44dc33d00fd",
+      "full_log_byte_start": 511211,
+      "full_log_byte_end": 511462
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionPositionApiTests.test_position_updates_active_session": {
+      "historical_result": "ok",
+      "framework_log_block": "test_position_updates_active_session (apps.timeshift.tests.test_sessions.CatchupSessionPositionApiTests.test_position_updates_active_session) ... ok\n",
+      "framework_log_block_sha256": "b98ac3523c63829eabe7dd5daab1f66108e7603ff9696a3d3090b6127251ea8e",
+      "full_log_byte_start": 512577,
+      "full_log_byte_end": 512726
+    },
+    "apps.timeshift.tests.test_sessions.CatchupSessionPositionApiTests.test_position_without_playback_returns_404": {
+      "historical_result": "ok",
+      "framework_log_block": "test_position_without_playback_returns_404 (apps.timeshift.tests.test_sessions.CatchupSessionPositionApiTests.test_position_without_playback_returns_404) ... 2026-11-09 07:41:05,791 WARNING django.request Not Found: /api/catchup/sessions/aFrc1wNgKIyv5J2LC_ukPg/position/\nok\n",
+      "framework_log_block_sha256": "bf1b36982ed85098c6225fc0b91234355c4775933e1364d139e8b99e3dc8b83c",
+      "full_log_byte_start": 512726,
+      "full_log_byte_end": 513000
+    },
+    "apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_owner_stop_returns_204": {
+      "historical_result": "ok",
+      "framework_log_block": "test_owner_stop_returns_204 (apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_owner_stop_returns_204) ... ok\n",
+      "framework_log_block_sha256": "8896044101f4f5ba649c8d2ea4c5bbad48ce4f827272c6979b72fb0a5daa35c6",
+      "full_log_byte_start": 467957,
+      "full_log_byte_end": 468099
+    },
+    "apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_non_owner_returns_404": {
+      "historical_result": "ok",
+      "framework_log_block": "test_non_owner_returns_404 (apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_non_owner_returns_404) ... 2026-11-09 07:41:02,702 WARNING django.request Not Found: /api/proxy/hls/sessions/opaque-hls-stop-token/\nok\n",
+      "framework_log_block_sha256": "c9c81364ce14fda0abf1aef769087821a6a727c2916e0ea8bc3ae1d1dd9beede",
+      "full_log_byte_start": 467712,
+      "full_log_byte_end": 467957
+    },
+    "apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_anonymous_session_returns_404": {
+      "historical_result": "ok",
+      "framework_log_block": "test_anonymous_session_returns_404 (apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_anonymous_session_returns_404) ... 2026-11-09 07:41:02,701 WARNING django.request Not Found: /api/proxy/hls/sessions/opaque-hls-stop-token/\nok\n",
+      "framework_log_block_sha256": "f59cb1b237f5087a1c8d2eccaae65b00ba32681e01bc0b66d1d117109fec2a26",
+      "full_log_byte_start": 467451,
+      "full_log_byte_end": 467712
+    },
+    "apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_unknown_token_returns_404": {
+      "historical_result": "ok",
+      "framework_log_block": "test_unknown_token_returns_404 (apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_unknown_token_returns_404) ... 2026-11-09 07:41:02,710 WARNING django.request Not Found: /api/proxy/hls/sessions/opaque-hls-stop-token/\nok\n",
+      "framework_log_block_sha256": "bfc4fe8a14cc862e9a5db47a4afc521f6c501cc3b8e3735b02487418851a0ff4",
+      "full_log_byte_start": 468359,
+      "full_log_byte_end": 468612
+    },
+    "apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_unauthenticated_is_rejected": {
+      "historical_result": "ok",
+      "framework_log_block": "test_unauthenticated_is_rejected (apps.proxy.live_proxy.tests.test_hls_session_stop_api.HlsSessionStopApiTests.test_unauthenticated_is_rejected) ... 2026-11-09 07:41:02,708 WARNING django.request Unauthorized: /api/proxy/hls/sessions/opaque-hls-stop-token/\nok\n",
+      "framework_log_block_sha256": "f32fc60c939633ee33cf526a8fd199c983a42f58e4b64ec400110e71b987cc14",
+      "full_log_byte_start": 468099,
+      "full_log_byte_end": 468359
+    },
+    "apps.proxy.tests.test_combined_stats.CombinedStatsApiTests.test_combined_stats_returns_all_sections": {
+      "historical_result": "ok",
+      "framework_log_block": "test_combined_stats_returns_all_sections (apps.proxy.tests.test_combined_stats.CombinedStatsApiTests.test_combined_stats_returns_all_sections) ... ok\n",
+      "framework_log_block_sha256": "597518526c6dd05c10eef1630b7b41135b0f56fe65c5407981b2965a05c3dd19",
+      "full_log_byte_start": 474735,
+      "full_log_byte_end": 474885
+    },
+    "apps.proxy.tests.test_combined_stats.CombinedStatsApiTests.test_combined_stats_redis_unavailable": {
+      "historical_result": "ok",
+      "framework_log_block": "test_combined_stats_redis_unavailable (apps.proxy.tests.test_combined_stats.CombinedStatsApiTests.test_combined_stats_redis_unavailable) ... ok\n",
+      "framework_log_block_sha256": "c5d19b457366202d9a8127e23bc01559db2033c0f6df0ad32e98cc7a680e7bce",
+      "full_log_byte_start": 474591,
+      "full_log_byte_end": 474735
+    },
+    "apps.timeshift.tests.test_stats.TimeshiftStatsApiTests.test_timeshift_stats_requires_admin": {
+      "historical_result": "ok",
+      "framework_log_block": "test_timeshift_stats_requires_admin (apps.timeshift.tests.test_stats.TimeshiftStatsApiTests.test_timeshift_stats_requires_admin) ... ok\n",
+      "framework_log_block_sha256": "3d6c02e60dbe850c543787cd479a41714445ac5cdcd4b0913e81aa4c41a1efd0",
+      "full_log_byte_start": 517723,
+      "full_log_byte_end": 517859
+    },
+    "apps.timeshift.tests.test_stats.TimeshiftStatsApiTests.test_catchup_programmes_batch": {
+      "historical_result": "ok",
+      "framework_log_block": "test_catchup_programmes_batch (apps.timeshift.tests.test_stats.TimeshiftStatsApiTests.test_catchup_programmes_batch) ... ok\n",
+      "framework_log_block_sha256": "8061d5486c973eac60e91a5a1e204bab75ffd0017eaf81f8d2af85133b0dbfe9",
+      "full_log_byte_start": 517479,
+      "full_log_byte_end": 517603
+    },
+    "apps.timeshift.tests.test_stats.TimeshiftStatsApiTests.test_stop_timeshift_session": {
+      "historical_result": "ok",
+      "framework_log_block": "test_stop_timeshift_session (apps.timeshift.tests.test_stats.TimeshiftStatsApiTests.test_stop_timeshift_session) ... ok\n",
+      "framework_log_block_sha256": "5c84688538a2a8bb43488965c9aea5a3080cb04f7c1fc4572980aa44fe8b1c23",
+      "full_log_byte_start": 517603,
+      "full_log_byte_end": 517723
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_unknown_token_returns_410": {
+      "historical_result": "ok",
+      "framework_log_block": "test_unknown_token_returns_410 (apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_unknown_token_returns_410) ... ok\n",
+      "framework_log_block_sha256": "e5ab7b7dc7d8145bc989e11d256c283e5bbd43a9f5b0549a224d9175008585c5",
+      "full_log_byte_start": 747585,
+      "full_log_byte_end": 747720
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_session_gone_returns_410": {
+      "historical_result": "ok",
+      "framework_log_block": "test_session_gone_returns_410 (apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_session_gone_returns_410) ... ok\n",
+      "framework_log_block_sha256": "97b90a1660fe6211a05c2dae37211fc2e753f8be7da09f9b8929cb4b92633332",
+      "full_log_byte_start": 747161,
+      "full_log_byte_end": 747294
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_lapsed_client_returns_410_without_reregister": {
+      "historical_result": "ok",
+      "framework_log_block": "test_lapsed_client_returns_410_without_reregister (apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_lapsed_client_returns_410_without_reregister) ... ok\n",
+      "framework_log_block_sha256": "4c91f900c87806f5f5bbe40f42ba01cc62620c834bb87ca3828192cad06c6ba9",
+      "full_log_byte_start": 746189,
+      "full_log_byte_end": 746362
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_stale_playlist_descriptor_returns_404": {
+      "historical_result": "ok",
+      "framework_log_block": "test_stale_playlist_descriptor_returns_404 (apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_stale_playlist_descriptor_returns_404) ... 2026-11-09 07:41:23,026 WARNING live_proxy.views [client-1] HLS playlist for aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee stopped advancing\nok\n",
+      "framework_log_block_sha256": "64013e6aa6e5adf23018a983fb100c48de3c9e6e3f0205d068227474d41e6660",
+      "full_log_byte_start": 747294,
+      "full_log_byte_end": 747585
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_malformed_playlist_descriptor_returns_500_not_stale": {
+      "historical_result": "ok",
+      "framework_log_block": "test_malformed_playlist_descriptor_returns_500_not_stale (apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_malformed_playlist_descriptor_returns_500_not_stale)\nBad JSON is a ValueError too; it must not be reported as stale. ... 2026-11-09 07:41:23,022 ERROR live_proxy.views [client-1] Malformed HLS playlist state for aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n2026-11-09 07:41:23,022 ERROR live_proxy.views [client-1] Malformed HLS playlist state for aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee: string indices must be integers, not 'str'\nok\n",
+      "framework_log_block_sha256": "60f585ca4035fb2944122d3d1f88e7832e835ed3b62e722b3b99140c5ca8b7d7",
+      "full_log_byte_start": 746362,
+      "full_log_byte_end": 746990
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_fresh_playlist_returns_m3u8": {
+      "historical_result": "ok",
+      "framework_log_block": "test_fresh_playlist_returns_m3u8 (apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_fresh_playlist_returns_m3u8) ... ok\n",
+      "framework_log_block_sha256": "2d1c09f6fd176996f1dd97b465612820dc78e4ff0570075f485dc078e3d43cf2",
+      "full_log_byte_start": 746050,
+      "full_log_byte_end": 746189
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_missing_playlist_returns_streaming_response": {
+      "historical_result": "ok",
+      "framework_log_block": "test_missing_playlist_returns_streaming_response (apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_missing_playlist_returns_streaming_response) ... ok\n",
+      "framework_log_block_sha256": "30ec5fb37a733ae6b8b666f1d700ac1bd30c89077ed3dbfddc29cb8576c8769d",
+      "full_log_byte_start": 746990,
+      "full_log_byte_end": 747161
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_dead_channel_before_stream_returns_410": {
+      "historical_result": "ok",
+      "framework_log_block": "test_dead_channel_before_stream_returns_410 (apps.proxy.live_proxy.tests.test_hls_views.HLSPlaylistViewTests.test_dead_channel_before_stream_returns_410) ... ok\n",
+      "framework_log_block_sha256": "b5e2f366b5ce425ebc74742e2350a892fb8731f2e5d122adcabd52054a5227cc",
+      "full_log_byte_start": 745889,
+      "full_log_byte_end": 746050
+    },
+    "apps.proxy.live_proxy.tests.test_hls_views.HLSSegmentViewTests.test_lapsed_client_returns_410": {
+      "historical_result": "ok",
+      "framework_log_block": "test_lapsed_client_returns_410 (apps.proxy.live_proxy.tests.test_hls_views.HLSSegmentViewTests.test_lapsed_client_returns_410) ... ok\n",
+      "framework_log_block_sha256": "a43e8c20a3d8f61d3669146aab09aef1e8a3266a018a875e401bb1269d46d5a2",
+      "full_log_byte_start": 747720,
+      "full_log_byte_end": 747854
+    },
+    "apps.timeshift.tests.test_sessions.CatchupProxySessionAuthTests.test_session_auth_without_jwt": {
+      "historical_result": "ok",
+      "framework_log_block": "test_session_auth_without_jwt (apps.timeshift.tests.test_sessions.CatchupProxySessionAuthTests.test_session_auth_without_jwt) ... ok\n",
+      "framework_log_block_sha256": "faf645f789b904773c4a58b6e756f8e72884a9d041f41b23962896f5e52bce4e",
+      "full_log_byte_start": 510959,
+      "full_log_byte_end": 511092
+    },
+    "apps.timeshift.tests.test_sessions.CatchupProxySessionAuthTests.test_expired_session_without_jwt_returns_401": {
+      "historical_result": "ok",
+      "framework_log_block": "test_expired_session_without_jwt_returns_401 (apps.timeshift.tests.test_sessions.CatchupProxySessionAuthTests.test_expired_session_without_jwt_returns_401) ... ok\n",
+      "framework_log_block_sha256": "d89348aa5a8fa81a3ca265d27c9c21369a0f985cd999c919f33676a066fa580b",
+      "full_log_byte_start": 510494,
+      "full_log_byte_end": 510657
+    },
+    "apps.timeshift.tests.test_sessions.CatchupProxySessionAuthTests.test_mismatched_jwt_and_session_returns_403": {
+      "historical_result": "ok",
+      "framework_log_block": "test_mismatched_jwt_and_session_returns_403 (apps.timeshift.tests.test_sessions.CatchupProxySessionAuthTests.test_mismatched_jwt_and_session_returns_403) ... ok\n",
+      "framework_log_block_sha256": "ac8fb756c87882690512bc8253fcbbeb4d6f64a0fd1acda1da3023fc49872101",
+      "full_log_byte_start": 510798,
+      "full_log_byte_end": 510959
+    },
+    "apps.timeshift.tests.test_sessions.CatchupProxySessionAuthTests.test_legacy_jwt_start_still_works": {
+      "historical_result": "ok",
+      "framework_log_block": "test_legacy_jwt_start_still_works (apps.timeshift.tests.test_sessions.CatchupProxySessionAuthTests.test_legacy_jwt_start_still_works) ... ok\n",
+      "framework_log_block_sha256": "ee4da712761b35b87d69501674eb049d70b98f9ae279864d562061ab9cfc6742",
+      "full_log_byte_start": 510657,
+      "full_log_byte_end": 510798
+    },
+    "apps.timeshift.tests.test_views.CatchupProxyTests.test_requires_authentication": {
+      "historical_result": "ok",
+      "framework_log_block": "test_requires_authentication (apps.timeshift.tests.test_views.CatchupProxyTests.test_requires_authentication) ... ok\n",
+      "framework_log_block_sha256": "084aaac33223a2fcd6774e1abbdd15d31ed28b46b4ce65049f9842547ac32a71",
+      "full_log_byte_start": 519515,
+      "full_log_byte_end": 519632
+    },
+    "apps.timeshift.tests.test_views.CatchupProxyTests.test_missing_start_returns_400": {
+      "historical_result": "ok",
+      "framework_log_block": "test_missing_start_returns_400 (apps.timeshift.tests.test_views.CatchupProxyTests.test_missing_start_returns_400) ... ok\n",
+      "framework_log_block_sha256": "d00f2b00f5a041b7bd528e10a0b06784f87522db32ad2622f17f639997b3337f",
+      "full_log_byte_start": 519394,
+      "full_log_byte_end": 519515
+    },
+    "apps.timeshift.tests.test_views.CatchupProxyTests.test_catchup_disabled_returns_403": {
+      "historical_result": "ok",
+      "framework_log_block": "test_catchup_disabled_returns_403 (apps.timeshift.tests.test_views.CatchupProxyTests.test_catchup_disabled_returns_403) ... ok\n",
+      "framework_log_block_sha256": "ce2c823355b1e1baed9386bb70e8587f5a62ab650d2025f25614249708682cfb",
+      "full_log_byte_start": 519140,
+      "full_log_byte_end": 519267
+    },
+    "apps.timeshift.tests.test_views.CatchupProxyTests.test_missing_session_id_redirects": {
+      "historical_result": "ok",
+      "framework_log_block": "test_missing_session_id_redirects (apps.timeshift.tests.test_views.CatchupProxyTests.test_missing_session_id_redirects) ... ok\n",
+      "framework_log_block_sha256": "0b2d4195c6dffc78174f97ebeb066fd5fd38eb52fb2200cf982c6de31c41c777",
+      "full_log_byte_start": 519267,
+      "full_log_byte_end": 519394
+    },
+    "apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_player_api": {
+      "historical_result": "ok",
+      "framework_log_block": "test_player_api (apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_player_api) ... ok\n",
+      "framework_log_block_sha256": "4df5fbe9870001de49747d6e1c8809ecb61464893c7f457e699c0930db61d0b4",
+      "full_log_byte_start": 676921,
+      "full_log_byte_end": 677024
+    },
+    "apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_panel_api": {
+      "historical_result": "ok",
+      "framework_log_block": "test_panel_api (apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_panel_api) ... ok\n",
+      "framework_log_block_sha256": "18f8a68ff22706540be8018f3460971199080063345549971a083cde68383494",
+      "full_log_byte_start": 676820,
+      "full_log_byte_end": 676921
+    },
+    "apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_get_php": {
+      "historical_result": "ok",
+      "framework_log_block": "test_get_php (apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_get_php) ... ok\n",
+      "framework_log_block_sha256": "9fe5992a0267b8a7a55ac4131cf543f5b7f1c7452cac482d4ec93bac431f3989",
+      "full_log_byte_start": 676723,
+      "full_log_byte_end": 676820
+    },
+    "apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_get_logs_network_separately_from_credentials": {
+      "historical_result": "ok",
+      "framework_log_block": "test_get_logs_network_separately_from_credentials (apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_get_logs_network_separately_from_credentials) ... ok\n",
+      "framework_log_block_sha256": "b070cfc4d9295ef404468506d86de02de1a449d0b6d8c10fa01c6bb27f65ee61",
+      "full_log_byte_start": 676552,
+      "full_log_byte_end": 676723
+    },
+    "apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_xmltv_php": {
+      "historical_result": "ok",
+      "framework_log_block": "test_xmltv_php (apps.output.tests.test_xc_auth_responses.XcApiAuthStatusTests.test_xmltv_php) ... ok\n",
+      "framework_log_block_sha256": "9caf713c0436b75ab2b1e30315cfddde0c44a138b960fc7a822f615b47578281",
+      "full_log_byte_start": 677024,
+      "full_log_byte_end": 677125
+    }
+  }
+}

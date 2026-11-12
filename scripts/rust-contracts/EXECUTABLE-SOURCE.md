@@ -1,11 +1,15 @@
 # Partial executable Source contract assignments
 
 Original Dispatcharr authors retain all application/algorithm credit and licensing.
-The initial cohort assigned concrete fixtures/assertions/results to thirteen
-existing operation identities. The account/settings cohort adds sixteen more
-HTTP assignments and one typed CoreSettings model candidate. Current totals are
-29 HTTP assignments and seven nonHTTP assignments; all remain partial. It does not resolve missing methods, complete an
-endpoint's role/grammar matrix, establish new Native behavior or accept M0/M1.
+The current register has 114 partial HTTP assignments and eight partial model,
+task or consumer assignments. These preserve the initial and subsequent cohorts
+documented below. They do not resolve missing methods, complete endpoint role or
+grammar matrices, establish new Native behavior or accept M0/M1.
+
+The latest [proxy/plugin and playback cohort](proxy-plugin/README.md) adds 19
+assignments from 148 existing named successes, with exact setup, helper, actor,
+mock, assertion and result definitions. Its [verification record](verified-proxy-plugin-bindings-1.json)
+retains host checks, the recovered successful SDK exit and its interrupted log.
 
 `register.py` consumes `executable-source-inputs.json`, verifies each input hash,
 validates the declared Source authority and applies exact operation-ID, handler,
@@ -110,7 +114,7 @@ remain separate from pure SDK tests. Root decides the next contract cohort and
 formal milestone status; there is no all-798 completion claim here.
 
 The subsequent [six-task Source cohort](scanner-tasks/README.md) adds six typed
-nonHTTP task assignments from74 retained worker observations. The current selected
+nonHTTP task assignments from74 retained worker observations. That cohort
 core suite discovers122 tests (121 pass, one existing optional skip). Exactly15
 already-public fixture/capture dependencies are included in the SDK COPY closure.
 The prior100/68 counts retain their historical cohort scopes.
