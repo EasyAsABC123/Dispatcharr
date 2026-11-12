@@ -359,6 +359,10 @@ pub fn source_scanner_epoch_string(value: f64) -> Option<String> {
     }
     // std::Display chooses the other shortest decimal on observed halfway
     // cases. Existing serde_json's round-to-even formatter matches Source.
-    // Keep json_compat/cache formatting unchanged outside scanner authority.
+    // This adapter retains its finite-epoch bounds; general JSON float
+    // formatting has its own independently qualified compatibility profile.
     serde_json::Number::from_f64(value).map(|number| number.to_string())
 }
+
+#[cfg(test)]
+mod json_float_peer;

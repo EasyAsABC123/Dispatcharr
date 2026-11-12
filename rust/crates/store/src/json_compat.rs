@@ -3,6 +3,8 @@ use num_bigint::BigInt;
 use serde_json::{Number, Value};
 use std::str::FromStr;
 
+/// Callers validate finite JSON floats before formatting. Keep Python's
+/// notation thresholds while using the existing round-to-even shortest digits.
 pub(crate) fn float_string(value: f64) -> String {
     if value == 0.0 {
         return if value.is_sign_negative() {
@@ -11,17 +13,63 @@ pub(crate) fn float_string(value: f64) -> String {
             "0.0".into()
         };
     }
-    if value.abs() < 1e-4 || value.abs() >= 1e16 {
-        let raw = format!("{value:e}");
-        let (mantissa, exponent) = raw.split_once('e').unwrap();
-        let exponent: i32 = exponent.parse().unwrap();
-        return format!("{mantissa}e{exponent:+03}");
+    let raw = Number::from_f64(value)
+        .expect("JSON helpers validate finite floats")
+        .to_string();
+    if (1e-4..1e16).contains(&value.abs()) && raw.contains('.') && !raw.contains('e') {
+        return raw;
     }
-    let mut raw = value.to_string();
-    if !raw.contains('.') {
-        raw.push_str(".0");
+    let unsigned = raw.strip_prefix('-').unwrap_or(&raw);
+    let (coefficient, scale) =
+        unsigned
+            .split_once('e')
+            .map_or((unsigned, 0), |(digits, exponent)| {
+                (
+                    digits,
+                    exponent.parse::<i32>().expect("serde_json float exponent"),
+                )
+            });
+    let before_dot = coefficient.find('.').unwrap_or(coefficient.len());
+    let mut digits: String = coefficient.chars().filter(|ch| *ch != '.').collect();
+    let leading = digits
+        .bytes()
+        .position(|byte| byte != b'0')
+        .expect("nonzero finite float");
+    digits.drain(..leading);
+    let exponent = scale + before_dot as i32 - leading as i32 - 1;
+    while digits.ends_with('0') {
+        digits.pop();
     }
-    raw
+    let mut result = if value.is_sign_negative() {
+        "-".to_owned()
+    } else {
+        String::new()
+    };
+    if !(-4..16).contains(&exponent) {
+        result.push_str(&digits[..1]);
+        if digits.len() > 1 {
+            result.push('.');
+            result.push_str(&digits[1..]);
+        }
+        result.push_str(&format!("e{exponent:+03}"));
+    } else {
+        let point = exponent + 1;
+        if point <= 0 {
+            result.push_str("0.");
+            result.extend(std::iter::repeat_n('0', (-point) as usize));
+            result.push_str(&digits);
+        } else if point as usize >= digits.len() {
+            result.push_str(&digits);
+            result.extend(std::iter::repeat_n('0', point as usize - digits.len()));
+            result.push_str(".0");
+        } else {
+            let point = point as usize;
+            result.push_str(&digits[..point]);
+            result.push('.');
+            result.push_str(&digits[point..]);
+        }
+    }
+    result
 }
 
 fn is_float(number: &Number) -> bool {
