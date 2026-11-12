@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "Root_recomputed_full_coverage_equal": true,
+  "all_actual_controller_bytes_match_reviewed_execution": true,
+  "trace_rows": 634,
+  "wire_rows": 16,
+  "unique_effects": [
+    {
+      "seq": 27,
+      "family": "INCR",
+      "value": 1,
+      "via": "direct",
+      "role": "initial",
+      "generator": null,
+      "callback": null,
+      "writer_firstline": 391
+    },
+    {
+      "seq": 69,
+      "family": "INCR",
+      "value": 2,
+      "via": "direct",
+      "role": "other",
+      "generator": null,
+      "callback": null,
+      "writer_firstline": 391
+    },
+    {
+      "seq": 96,
+      "family": "DECR",
+      "value": 1,
+      "via": "EXEC",
+      "role": "initial",
+      "generator": 2,
+      "callback": null,
+      "writer_firstline": 321
+    },
+    {
+      "seq": 114,
+      "family": "INCR",
+      "value": 2,
+      "via": "direct",
+      "role": "target",
+      "generator": null,
+      "callback": null,
+      "writer_firstline": 391
+    },
+    {
+      "seq": 140,
+      "family": "DECR",
+      "value": 1,
+      "via": "direct",
+      "role": "target",
+      "generator": null,
+      "callback": null,
+      "writer_firstline": 391
+    },
+    {
+      "seq": 148,
+      "family": "DECR",
+      "value": 0,
+      "via": "EXEC",
+      "role": "follower",
+      "generator": 11,
+      "callback": null,
+      "writer_firstline": 321
+    }
+  ],
+  "other_generator4_postzero_yields": 57,
+  "three_observed_callbacks": 3,
+  "default_named_table_sequences_unchanged": true,
+  "all_validity_layers": {
+    "HTTP_cohort_valid": true,
+    "causal_coverage_valid": true,
+    "request_finalization_valid": true,
+    "owned_cleanup_valid": true
+  },
+  "no_Native_or_performance_or_fullM4_acceptance": true
+}

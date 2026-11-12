@@ -1,0 +1,155 @@
+{
+  "HTTP_cohort_valid": true,
+  "request_finalization_valid": true,
+  "owned_cleanup_valid": true,
+  "causal_coverage_valid": true,
+  "observation_valid": true,
+  "Source_reference_expectation_matched": true,
+  "actual_SQL_Bearer_user_verified": true,
+  "status": 429,
+  "held_boundary_monotonic": 185758.365251211,
+  "hold_observation": {
+    "target_seconds": 4,
+    "maximum_seconds": 4.35,
+    "actual_seconds": 4.000781788985478,
+    "overshoot_seconds": 0.0007817889854777604,
+    "control_seconds": 2.0387268719787244
+  },
+  "target_headers_received": 185762.401298144,
+  "client_closes": [
+    {
+      "role": "initial",
+      "close_begin": 185756.35299829,
+      "socket_observed": true,
+      "server_cancellation_inferred": false,
+      "fd_before": 12,
+      "local_shutdown": true,
+      "fd_after": -1,
+      "close_complete": 185756.353105073
+    },
+    {
+      "role": "target",
+      "close_begin": 185762.401734136,
+      "socket_observed": true,
+      "server_cancellation_inferred": false,
+      "fd_before": 15,
+      "local_shutdown": true,
+      "fd_after": -1,
+      "close_complete": 185762.401764827
+    },
+    {
+      "role": "follower",
+      "close_begin": 185762.401767877,
+      "socket_observed": true,
+      "server_cancellation_inferred": false,
+      "fd_before": 16,
+      "local_shutdown": true,
+      "fd_after": -1,
+      "close_complete": 185762.401814799
+    },
+    {
+      "role": "other",
+      "close_begin": 185777.402309712,
+      "socket_observed": true,
+      "server_cancellation_inferred": false,
+      "fd_before": 14,
+      "local_shutdown": true,
+      "fd_after": -1,
+      "close_complete": 185777.402376634
+    }
+  ],
+  "early_follower_valid": true,
+  "follower_status": 200,
+  "follower_prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+  "admin_stop_status": 200,
+  "counter_snapshots": [
+    {
+      "label": "actual_reply_held",
+      "provider": "2",
+      "began_monotonic": 185758.374123866,
+      "completed_monotonic": 185758.374376643
+    },
+    {
+      "label": "absolute_3_1s",
+      "provider": "2",
+      "began_monotonic": 185761.46531617,
+      "completed_monotonic": 185761.46566698
+    },
+    {
+      "label": "immediately_before_release",
+      "provider": "2",
+      "began_monotonic": 185762.36531813,
+      "completed_monotonic": 185762.36567358
+    },
+    {
+      "label": "immediately_after_release",
+      "provider": "1",
+      "began_monotonic": 185762.36671842,
+      "completed_monotonic": 185762.367045419
+    },
+    {
+      "label": "post_close_1.5",
+      "provider": "0",
+      "began_monotonic": 185763.901895177,
+      "completed_monotonic": 185763.902222807
+    },
+    {
+      "label": "post_close_3",
+      "provider": "0",
+      "began_monotonic": 185765.401888923,
+      "completed_monotonic": 185765.40215045
+    },
+    {
+      "label": "post_close_6",
+      "provider": "0",
+      "began_monotonic": 185768.401888473,
+      "completed_monotonic": 185768.402153041
+    },
+    {
+      "label": "post_close_15",
+      "provider": "0",
+      "began_monotonic": 185777.40188932,
+      "completed_monotonic": 185777.402188539
+    }
+  ],
+  "other_next_prefix": "1e5ff7cc43f1c07e665ad794635d3e2fe08f7d9ea648d6fecef559bb8776c213",
+  "Source_client_config": {
+    "socket_timeout": 60,
+    "connect_timeout": 5,
+    "retry_on_timeout": true,
+    "proxy_port": 6383,
+    "method_replaced": false
+  },
+  "clock_binding": {
+    "host_before": 185750.758551687,
+    "Source_service_monotonic": 185750.856074371,
+    "host_after": 185750.870380382,
+    "bracketed": true
+  },
+  "default_named_tables_sequences_unchanged": true,
+  "remaining": {
+    "containers": "",
+    "networks": "",
+    "volumes": ""
+  },
+  "performance_acceptance": false,
+  "Native_requests": false,
+  "early_stop_witness": {
+    "stop": "true",
+    "active_streams": "2",
+    "request_count": "2",
+    "idle_created_at": "1794465357.2748873",
+    "follower_created_at": "1794465357.2748873",
+    "atomic": false
+  },
+  "origin_preflight": {
+    "passed": true,
+    "scope": "owned origin readiness and one direct bounded Range preflight, not Source/native playback",
+    "fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "fixture_bytes": 4299455,
+    "status": 206,
+    "prefix_bytes": 8192,
+    "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+    "preflight_origin_GET_requests": 1
+  }
+}

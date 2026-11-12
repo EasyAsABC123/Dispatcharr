@@ -1,0 +1,26 @@
+test_HTTP_layer_not_substituted_by_causal_success (__main__.PublicControls.test_HTTP_layer_not_substituted_by_causal_success) ... ok
+test_ambiguous_actual_zero_caller_rejected (__main__.PublicControls.test_ambiguous_actual_zero_caller_rejected) ... FAIL
+test_boolean_fd_is_not_integer_close_ack (__main__.PublicControls.test_boolean_fd_is_not_integer_close_ack) ... ok
+test_empty_writes_never_vacuously_qualify (__main__.PublicControls.test_empty_writes_never_vacuously_qualify) ... ok
+test_exact_execution_restoration_and_existing_output_rejection (__main__.PublicControls.test_exact_execution_restoration_and_existing_output_rejection) ... ok
+test_explicit_client_shutdown_boundary_not_generator_completion (__main__.PublicControls.test_explicit_client_shutdown_boundary_not_generator_completion) ... ok
+test_historical_zero_creator_corruption_rejected (__main__.PublicControls.test_historical_zero_creator_corruption_rejected) ... ok
+test_missing_admin_action_invalidates_causal_coverage (__main__.PublicControls.test_missing_admin_action_invalidates_causal_coverage) ... ok
+test_public_historical_recomputation (__main__.PublicControls.test_public_historical_recomputation) ... ok
+test_raw_byte_corruption_rejected_by_evidence_seal (__main__.PublicControls.test_raw_byte_corruption_rejected_by_evidence_seal) ... ok
+test_sticky_invalid_or_incomplete_proxy_rejected (__main__.PublicControls.test_sticky_invalid_or_incomplete_proxy_rejected) ... ok
+test_unknown_writer_cannot_hide_owned_actual_zero (__main__.PublicControls.test_unknown_writer_cannot_hide_owned_actual_zero) ... ok
+
+======================================================================
+FAIL: test_ambiguous_actual_zero_caller_rejected (__main__.PublicControls.test_ambiguous_actual_zero_caller_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source-causal-busy-publication-1/selected/scripts/rust-vod-contracts/source-causal/test_public.py", line 30, in test_ambiguous_actual_zero_caller_rejected
+    with self.assertRaisesRegex(ValueError,'IncompleteWireCallerAttribution'):self.analyze()
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.124s
+
+FAILED (failures=1)

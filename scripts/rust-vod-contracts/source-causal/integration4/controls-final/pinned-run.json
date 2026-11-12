@@ -1,0 +1,317 @@
+{
+  "passed": true,
+  "name": "dispatcharr-causal-pinned-f3d5cacddbe8",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Source_WSGI_case_executed": false,
+  "native_threads_wire_only": false,
+  "resource_sampling": false,
+  "input_sha256": {
+    "controller/activation.py": "2a5a40287f87e892b3033d4bd54dc92c2d9a225f13b93f39bd695631ff3d8afb",
+    "controller/attribution.py": "6944e56376de7c9b53c98587a706beac8c1a8df01fe3ee44329eb02b32ca945d",
+    "controller/bounded_process.py": "0ca7491087ae756d667dbb9dc1655dbb0f8b0fd0c32b8bfa6592b1f7a16f9867",
+    "controller/causal_probe.py": "1fbd41947d66178ff82f9de79488f588dd2f425b33ad1d00ff7f9a2ebeec4bc4",
+    "controller/coverage.py": "7e31df0b4396a2c567071a1033fad46085e5bffd0dc93aa26f986759c9138dc9",
+    "controller/db_fixture.py": "8b753fb3077062c16218eff1387047c107acbc1af827aa2909799bc4c8138080",
+    "controller/fixture_guards.py": "da5861e4d23b8a66219e3ce6ef338858be5bd4cd277be8e5f7878cd34216e882",
+    "controller/observation.py": "88657ecec27c59de9ccfaf9ec08e70fa7a695b8cbe96359759faf9500cab913b",
+    "controller/origin_guard.py": "8574dd691d6c1b3713c679652e41913729a9245c456c4d7b4d413fbbd980ff4e",
+    "controller/owned_process.py": "299de4784c940a59142ca38e7681402359f65b1cc90af5452a382ba047b4309f",
+    "controller/passive_relay.py": "daa7067e7439322e4ab29fd2465e4dfa86e7c417dddc030d31ffe5080fdb9c3f",
+    "controller/phase.py": "2dacdd5be895be471340abdefe5ee11ec9e011ee69b0ef4f64e9de04fe20ec48",
+    "controller/pinned_probe.py": "1e3e51a43816ec127d842a3291bc5a7479a4d5402fdc975232978bae54554ab0",
+    "controller/pinned_source.py": "495e452ffbcb09214c6b2457a93b140b4a1ae40c1be90a37c9c6c242cb4cff2c",
+    "controller/qualified_resp.py": "5d0796b969df112973d4f6203e0d044654e3a823e1efb23069201427493e3b8e",
+    "controller/raw_redis.py": "240bded7cfa3632bf545a3bf8374d3845bdb32e22526e532894d01baf32e9da0",
+    "controller/redis_binding.py": "8fbc780410f84fde5a46a64df269e94b19d864d6648160811e8a2e5d5e473c12",
+    "controller/request_observer.py": "bcc43687845d98114588a9ee1442a29ad834e0d3c5d0ba9a9cd0972073f23fc0",
+    "controller/resp_gate.py": "5d0796b969df112973d4f6203e0d044654e3a823e1efb23069201427493e3b8e",
+    "controller/run.py": "740f51b041cf2268ef5075f2ea63c39c8a59a20bbddfede439aa76dae2bbb6f2",
+    "controller/source_install.py": "8894c8b38d487733b9a128b5b7a11f93da29469e8e8baee6be98cf5bee00f3bc",
+    "controller/source_resp_gate.py": "9222bb0ccf83b552f34a92e3eb66d9869de974ab45dcba37d60e12321f9d903a",
+    "controller/source_wsgi.py": "fd4d38c87decc3ba24c0a7626d6d8fe53aa6a30f0989d73370148f8550804064",
+    "controller/std_wire_probe.py": "78c5203af46b9e1956de06624f22b7c59e877b99b80e5a6f4893b13d1bb75dcb",
+    "controller/target_client.py": "da4519334f849b53f6251277b8f97e427011c9a25b09bf8d601931574322d20a",
+    "controller/test_causal_probe.py": "9f5aa82a421127ef6455682c0c5d60594caf81c10b7a7e8bb2f5cb9fca5a378e",
+    "controller/test_integration.py": "14ace723f2313b8647bbc81e7c09858e6b18fdc1526ffdb6d43580c1383c23ed",
+    "controller/test_real_redis.py": "2d23f6986a596d429bd90719280cd3ae3a0bf6a47557a952ced03282c55d78ba",
+    "controller/test_wire_attribution.py": "8963786fb463f25eb92731281f741e08dff446300dd213d0545b4714cb0a622b",
+    "pinned-source/apps/m3u/connection_pool.py": "e79c8d663818068d71b23b2404e9a313ce566bd6a51d4ae217211ac72fc83bfb",
+    "pinned-source/apps/proxy/vod_proxy/multi_worker_connection_manager.py": "8a63d669219d149293da592d1d9a4e77db4d0c8b253baaf29c44e2e766c72c4a",
+    "pinned-source/apps/proxy/vod_proxy/views.py": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e"
+  },
+  "proof": {
+    "Source_application_executed": false,
+    "WSGI_busy_case_executed": false,
+    "forced_GC": false,
+    "Source_method_or_Redis_method_replacement": false,
+    "Python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "gevent": "26.9.0",
+    "threading_Thread_module": "gevent.threading",
+    "threading_local_module": "gevent._gevent_clocal",
+    "tests": {
+      "run": 57,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "pinned_code_registry": [
+      {
+        "qualname": "stop_vod_client",
+        "firstline": 1410,
+        "filename": "/app/apps/proxy/vod_proxy/views.py",
+        "code_sha256": "4c5320ed90758bc5658eb7c9b87345c70acc7a108db16bc2d24c5e02c7591079",
+        "kind": "function",
+        "markers": {}
+      },
+      {
+        "qualname": "_ClosingVODStream.__init__",
+        "firstline": 31,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "3016da8077cbe14bb23f1eb4c8b7b3aa9faed67fa43ccba52b58e4801ed5fc35",
+        "kind": "generator_ctor",
+        "markers": {}
+      },
+      {
+        "qualname": "_ClosingVODStream.close",
+        "firstline": 41,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "116ee6d693d8b113f7209aa98f6ed2158b522fdc3ea70096b4e0ccddd6dc2b92",
+        "kind": "function",
+        "markers": {}
+      },
+      {
+        "qualname": "RedisBackedVODConnection.__init__",
+        "firstline": 318,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "2291102d5923caaf9dd26164eb104109a873e77d60ff38a926f7daa209013ee0",
+        "kind": "connection_ctor",
+        "markers": {}
+      },
+      {
+        "qualname": "RedisBackedVODConnection._close_local_http",
+        "firstline": 326,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "b77ca9e34a271c4020632c1dc23d568e7be25985bbf97d7f36e8040c69a3805d",
+        "kind": "function",
+        "markers": {}
+      },
+      {
+        "qualname": "RedisBackedVODConnection._get_connection_state",
+        "firstline": 345,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "831fec7f8f8bf9ac5a2016ec5f496514afd43eee8a613f73e3a3d60f16dc73af",
+        "kind": "state_read",
+        "markers": {}
+      },
+      {
+        "qualname": "RedisBackedVODConnection.get_stream",
+        "firstline": 525,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "20ae189d961b69ece1689508c7dc1b7f5de9bccaa98c226c2c76c18cfd2e97a4",
+        "kind": "function",
+        "markers": {}
+      },
+      {
+        "qualname": "RedisBackedVODConnection.decrement_active_streams_and_check",
+        "firstline": 729,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "134d0ca3aa35e27ad60d8475a3a0270830d2981b5e508fd4a2643738a750b386",
+        "kind": "active_decr",
+        "markers": {}
+      },
+      {
+        "qualname": "RedisBackedVODConnection.cleanup",
+        "firstline": 832,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "26934afdfdef62f7b1c6be2fbebae6dd7db2c7d2f64ab5ff7664c64f6ebd1b16",
+        "kind": "function",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager._decrement_profile_connections",
+        "firstline": 1094,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "963929be7c588034f0eab68886314abb1e07c30facb098374d5721da4c244940",
+        "kind": "counter",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager._rollback_setup_reservations",
+        "firstline": 1108,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "985d7279a12b8ee3a38522e9e9125b85529172556cfcb8dcf11e4d74e157beec",
+        "kind": "function",
+        "markers": {
+          "1174": "callback_create"
+        }
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager._rollback_setup_reservations.<locals>.delayed_cleanup",
+        "firstline": 1159,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "97b9b6a44a6173d4867ba28afdbd88ce2dbfa5933a92f7f797ac755de6b9c48e",
+        "kind": "callback",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.stream_content_with_session",
+        "firstline": 1180,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "ce5084226aee81325685c6225edd7babca3340ab6e1e1e5f244f06be8e2690e7",
+        "kind": "function",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.stream_content_with_session.<locals>.stream_generator",
+        "firstline": 1440,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "28a47f0ec2728c397cb53f3913ecdb52c6692aae2a20e3a0a8f24e007753e116",
+        "kind": "generator",
+        "markers": {
+          "1640": "finally_enter",
+          "1575": "callback_create",
+          "1609": "callback_create",
+          "1634": "callback_create",
+          "1661": "callback_create"
+        }
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.stream_content_with_session.<locals>.stream_generator.<locals>.delayed_cleanup",
+        "firstline": 1655,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "558a2c23faabf82614020dc0666183713ca8483fc45d5b875b707ca5f903b2c9",
+        "kind": "callback",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.stream_content_with_session.<locals>.stream_generator.<locals>.delayed_cleanup",
+        "firstline": 1561,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "f418de3f331faae3a129fa9ea43dc7d0d704be010021af6e8610516c65840b96",
+        "kind": "callback",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.stream_content_with_session.<locals>.stream_generator.<locals>.delayed_cleanup",
+        "firstline": 1595,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "f418de3f331faae3a129fa9ea43dc7d0d704be010021af6e8610516c65840b96",
+        "kind": "callback",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.stream_content_with_session.<locals>.stream_generator.<locals>.delayed_cleanup",
+        "firstline": 1628,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "558a2c23faabf82614020dc0666183713ca8483fc45d5b875b707ca5f903b2c9",
+        "kind": "callback",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.stream_content_with_session.<locals>.release_unstarted_active_streams",
+        "firstline": 1665,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "6dc0b46a8cc3216c099300fb93dfc12136391d226cc1491818814d4702eb4bb3",
+        "kind": "function",
+        "markers": {
+          "1702": "callback_create"
+        }
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.stream_content_with_session.<locals>.release_unstarted_active_streams.<locals>.delayed_cleanup",
+        "firstline": 1685,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "432376d49dd625bd611ac3ebe11d317c4715d809348af69a623b05477707b887",
+        "kind": "callback",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.cleanup_persistent_connection",
+        "firstline": 1886,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "0847db2f835981c0d29de1004752640997b128a221b67d0becab77444a2fc15b",
+        "kind": "function",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.cleanup_stale_persistent_connections",
+        "firstline": 1895,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "91c2654cce53693d47e7796a6d2e42dc358a60a3ce2feb60a590abd49f19b6f5",
+        "kind": "function",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.create_connection",
+        "firstline": 1951,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "adeb7ffce9bec82340ad457ab42a6b62fdb4ecdc55598ee94308d8cb344e689f",
+        "kind": "counter",
+        "markers": {}
+      },
+      {
+        "qualname": "MultiWorkerVODConnectionManager.remove_connection",
+        "firstline": 2011,
+        "filename": "/app/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+        "code_sha256": "38cbd89d379a84fae690c2754489b460f5db47d2d1a33b3e829c5edc9ce130e7",
+        "kind": "counter",
+        "markers": {}
+      },
+      {
+        "qualname": "_release_credential_slot_by_profile_id",
+        "firstline": 321,
+        "filename": "/app/apps/m3u/connection_pool.py",
+        "code_sha256": "13434e20192cf76104862716bc64e98b8430104d6563b8f42c581189c22eace8",
+        "kind": "counter",
+        "markers": {}
+      },
+      {
+        "qualname": "reserve_profile_slot",
+        "firstline": 391,
+        "filename": "/app/apps/m3u/connection_pool.py",
+        "code_sha256": "9aa6a03f65a7f80d1dd4edaccd762ef52e7217b543e24d78dedbb0dff69f094e",
+        "kind": "counter",
+        "markers": {}
+      },
+      {
+        "qualname": "release_profile_slot",
+        "firstline": 427,
+        "filename": "/app/apps/m3u/connection_pool.py",
+        "code_sha256": "8ee4296a1332dbb280ace8ccc60aaf66906ce95913c9df74557e1b35d223be03",
+        "kind": "counter",
+        "markers": {}
+      }
+    ],
+    "redis_py_wire_binding": {
+      "version": "6.4.0",
+      "files": {
+        "/dispatcharrpy/lib/python3.13/site-packages/redis/client.py": "5e6a3abdaf282a0ee4b03f2dbf9f8412b085ab73a1a5f7884ae47e9d60484520"
+      },
+      "codes": [
+        {
+          "qualname": "Redis._send_command_parse_response",
+          "firstline": 599,
+          "code_sha256": "52c46ab92e34cf97b1029c35778ee3816e515adffd29e624f2231e3fc12b1356"
+        },
+        {
+          "qualname": "Pipeline._execute_transaction",
+          "firstline": 1444,
+          "code_sha256": "5d85cdb973b0ebac1351b1e6fdb41b87227540d852d08a13095f4c0f774e332e"
+        },
+        {
+          "qualname": "Pipeline._execute_pipeline",
+          "firstline": 1515,
+          "code_sha256": "989a71d8a3fb8a8ed67d22fc0ee2765d0c4d51728b4dda901c6bcc904284d1c3"
+        }
+      ]
+    },
+    "interpreter_yield_profile": "CPython3.13 trace-return at adjacent RESUME after YIELD_VALUE; direct YIELD_VALUE also recognized; unknown nonexception generator return invalidates coverage",
+    "passed": true,
+    "owned_Redis_PID_reaped": true,
+    "Django_or_Source_modules_imported": true,
+    "Django_framework_signal_control_only": true,
+    "Source_application_modules_imported": false
+  },
+  "output_cap_bytes": 1048576,
+  "owned_container_removed": true
+}

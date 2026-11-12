@@ -1,0 +1,173 @@
+{
+  "schema": 1,
+  "scope": "NEW blocked complete integration4, ONE fixed Source busy4s causal cohort; admin action scope is observational, viewer cohort unchanged",
+  "execution_authorized": false,
+  "resource_sampling": false,
+  "Native_requests": false,
+  "Source_bug_or_native_fix_inferred": false,
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "reference_scope": "image51 scoped Main busy source phase; historical counter values are not expected-result filters",
+  "fixed_cohort": {
+    "case": "busy",
+    "repetitions": 1,
+    "warm_capacity": 2,
+    "target_capacity": 1,
+    "role_names": [
+      "initial",
+      "target",
+      "follower",
+      "other"
+    ],
+    "hold_seconds": 4,
+    "hold_max_seconds": 4.35,
+    "control_checkpoint_seconds": 3.1,
+    "checkpoint_overshoot_seconds": 0.35,
+    "early_follower_bytes": 8192,
+    "target_HTTP_reference": 429,
+    "post_close_seconds": [
+      1.5,
+      3,
+      6,
+      15
+    ],
+    "Source_INCR_reply": 2,
+    "counter_zero_required_for_observation_validity": false,
+    "adaptive_zero_hunting": false
+  },
+  "bounds": {
+    "journal_rows": 4096,
+    "row_bytes": 2048,
+    "journal_bytes": 8388608,
+    "live_weak_identities": 128,
+    "trace_frames": 128,
+    "code_rules": 48,
+    "relay_connections": 64,
+    "pending_commands_per_connection": 128,
+    "RESP_frame_bytes": 1048576,
+    "RESP_line_bytes": 8192,
+    "RESP_depth": 16,
+    "EXEC_array_items": 1024,
+    "gate_rows": 1024,
+    "gate_internal_deadline_seconds": 10,
+    "Source_trace_rows": 3072,
+    "Source_trace_bytes": 6291456,
+    "wire_rows": 1024,
+    "wire_bytes": 2097152,
+    "hot_status_bytes": 8192,
+    "terminal_status_bytes": 65536,
+    "status_pool_connections": 2,
+    "terminal_pool_connections": 1
+  },
+  "pinned_redis_library": {
+    "version": "6.4.0",
+    "files": {
+      "/dispatcharrpy/lib/python3.13/site-packages/redis/client.py": "5e6a3abdaf282a0ee4b03f2dbf9f8412b085ab73a1a5f7884ae47e9d60484520"
+    },
+    "codes": [
+      {
+        "qualname": "Redis._send_command_parse_response",
+        "firstline": 599,
+        "code_sha256": "52c46ab92e34cf97b1029c35778ee3816e515adffd29e624f2231e3fc12b1356"
+      },
+      {
+        "qualname": "Pipeline._execute_transaction",
+        "firstline": 1444,
+        "code_sha256": "5d85cdb973b0ebac1351b1e6fdb41b87227540d852d08a13095f4c0f774e332e"
+      },
+      {
+        "qualname": "Pipeline._execute_pipeline",
+        "firstline": 1515,
+        "code_sha256": "989a71d8a3fb8a8ed67d22fc0ee2765d0c4d51728b4dda901c6bcc904284d1c3"
+      }
+    ]
+  },
+  "pre_execution_blockers": [
+    "Root review exact complete integration3 selection/plan and control proofs",
+    "Create a NEW activation copy changing ONLY controller/run.py EXECUTION_BLOCKED=True to False, recompute its selection (no policy/other tool edits), and have Root bind that exact selection SHA in fresh once cue",
+    "No Source WSGI requests until Root issues that fresh 1200s/boot/Original/source-only/action/output/selection/policy bound cue"
+  ],
+  "evidence_rule": "No missing callback means did-not-run without complete coverage; no normal wrapper close/request_finished implies successful generator finally; no buffered consumer/origin progress substitutes actual other generator yield; no QUEUED/no-op/method-True implies write; all unexpected actual-counter effects must be uniquely attributed or explicitly incomplete",
+  "fixed_observation_tail": {
+    "seconds": 2,
+    "boundary": "after all four independently witnessed Django request-finalization signals; fixed wait, no counter/callback conditioning",
+    "does_not_extend_4s_hold_or_3_1s_controls": true
+  },
+  "source_integration": {
+    "startup": "install selected interpreter hooks and Django signal receivers BEFORE django.setup and dispatcharr.wsgi import in the owned5657 process",
+    "actual_original_source_functions_replaced": false,
+    "actual_Redis_methods_replaced": false,
+    "six_Source_callback_code_objects_unchanged": true,
+    "request_finalized": "Django request_finished after response-close closer attempts, never proof of successful generator finally",
+    "read_only_signal_status_ports": [
+      6385,
+      6386
+    ],
+    "transparent_relay": "SourceGate exact existing INCR/INCRBY1 hold injected into passive relay, never local-no-hold default",
+    "proxy_port": 6383,
+    "backend_port": 6390,
+    "trace_context": "weak identities/scalars only; request sequence kept separate from weak generator metadata",
+    "supported_profile_mutations": [
+      "INCR or INCRBY key 1",
+      "DECR or DECRBY key 1, direct or matched full EXEC"
+    ],
+    "unmodeled_owned_profile_deletion": "sticky invalid, forwarded unchanged; never hidden counter0",
+    "unrelated_binary_Redis_replies": "forwarded unchanged and not treated as ASCII status/counter reply",
+    "extra_pinned_counter_rules": [
+      "MultiWorkerVODConnectionManager.create_connection:1951",
+      "MultiWorkerVODConnectionManager.remove_connection:2011"
+    ],
+    "metadata_only_RedisBacked_create_not_counter": true,
+    "admin_stop_rule": "stop_vod_client:1413",
+    "admin_action_scope": {
+      "path": "/proxy/vod/stop_client/",
+      "fixture_User_Agent": "owned-causal-admin-stop",
+      "viewer_owner_inferred": false,
+      "business_body_or_auth_changed": false,
+      "observer_reads_business_body": false,
+      "separate_signal_kinds": [
+        "admin_action_started",
+        "admin_action_finalized"
+      ]
+    },
+    "background_scope": {
+      "roles": [
+        "owned_object",
+        "owned_profile"
+      ],
+      "evidence": "exact declared SID from existing object __dict__/primitive session_id or client_id argument, or exact declared positive profile integer/canonical decimal argument",
+      "viewer_or_callback_creator_inferred": false,
+      "unknown_writes": "terminal causal_coverage valid=false/incomplete=true; never did-not-run"
+    },
+    "owned_counter_reference_guard": "any exact owned counter argument must have supported typed command grammar; multi-key DEL including nonfirst key, SET/EXPIRE/EVAL/other unmodeled commands invalidate; credential release DEL with a different exact key does not"
+  },
+  "coverage_must_gate_attribution": [
+    "exact row/byte/status/marker counts for both Source and wire journals; tracer ownership and default future-thread hook",
+    "all physical relay threads/connections settled, exactly one held Source INCR reply",
+    "nonempty uniquely matched original counter caller/socket windows, target-role INCR2 and DECR1",
+    "actual pinned reserve_profile_slot and release_profile_slot call hits",
+    "initial/follower/other identified generator binds and yields; actual finally-entry separate from terminal return/unwind",
+    "four causal request starts/finalizations paired to roles and independent original request observer completion",
+    "actual weak creator-attributed callback call on a different logical thread from its bound creator, with native thread separately recorded",
+    "all unexpected/ambiguous/missing paths invalidate coverage; no claim that unobserved six branches did not run",
+    "distinct one admin action start/finalization without viewer SID, exact stop_vod_client code hit; original independent four-viewer signal coverage remains four"
+  ],
+  "counter_zero_not_required_for_validity": true,
+  "other_body_causality": "actual OTHER generator yield after exact typed profile0 and before finalization; consumer next8192/origin bytes remain separate",
+  "new_output": "artifacts/rust/m4-vod-source-causal-busy-1",
+  "activation_action": "source-causal-one-fixed-busy-four-second-once",
+  "full_M4_acceptance": false,
+  "capture_validity_distinct_from_reference_status_expectation": true,
+  "standard_thread_relay_local_controls": 12,
+  "result_dimensions": [
+    "HTTP_cohort_valid",
+    "request_finalization_valid",
+    "owned_cleanup_valid",
+    "causal_coverage_valid",
+    "scalar_observations.zero_observed",
+    "scalar_observations.raw_other_generator_yields_after_zero",
+    "Source_reference_expectation_matched"
+  ],
+  "zero_not_expected_filter": true
+}

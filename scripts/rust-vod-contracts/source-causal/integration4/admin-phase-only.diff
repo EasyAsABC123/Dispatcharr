@@ -1,0 +1,11 @@
+--- integration3/controller/phase.py
++++ integration4/controller/phase.py
+@@ -119,7 +119,7 @@
+  pool=ThreadPoolExecutor(max_workers=1)
+  try:
+   future=pool.submit(target_request);wait(reached,5);held_at=physical_boundary();report['held_boundary_monotonic']=held_at;checkpoint('actual_reply_held')
+-  stop=requests.post(base+'/proxy/vod/stop_client/',headers=auth,json={'client_id':sid},timeout=5);report['admin_stop']={'status':stop.status_code,'body':stop.text};assert stop.status_code==200;assert early_stop(snapshot())
++  stop=requests.post(base+'/proxy/vod/stop_client/',headers={**auth,'User-Agent':'owned-causal-admin-stop'},json={'client_id':sid},timeout=5);report['admin_stop']={'status':stop.status_code,'body':stop.text};assert stop.status_code==200;assert early_stop(snapshot())
+   follower=get(seed['movie_uuid'],sid,{'User-Agent':'owned-pending-follower'});assert follower.status_code==200;assert prefix(follower)=='02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f';state=snapshot();assert state['metadata']['created_at']==created;assert state['metadata']['active_streams']=='2'and state['metadata']['request_count']=='2'and state['metadata']['user_id']==str(seed['real_user_id']);assert early_stop(state);report['early_follower_valid']=True;report['follower']={'status':follower.status_code,'prefix_sha256':'02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f','prefix_bytes':8192,'state':state}
+   if case=='clientloss':
+    abort_target.abort();future.result(timeout=max(.001,held_at+3.1-time.monotonic()));report['target_client_loss']=abort_target.joined();report.setdefault('client_closes',[]).append(report['target_client_loss'])

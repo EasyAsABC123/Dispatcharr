@@ -1,0 +1,102 @@
+[
+  {
+    "role": "follower",
+    "sid_sha256": "5c1da3dcb6e654178a0a1a28ec600cf58220836fa234afc3b90a2edc19b38cfe",
+    "frame": 1,
+    "code": "b93534ca609599537d167cef4633ed1cf13d1977da6b52defd0ed3e496ee7a79",
+    "firstline": 10,
+    "rule_kind": "counter",
+    "writer_frame": 1,
+    "kind": "call",
+    "at": 184562.582707092,
+    "logical_thread_id": 139681348084224,
+    "native_thread_id": 1
+  },
+  {
+    "kind": "wire_connection_open",
+    "at": 184562.583389572,
+    "connection": 1,
+    "peer_port": 48816,
+    "local_port": 33767
+  },
+  {
+    "role": "follower",
+    "sid_sha256": "5c1da3dcb6e654178a0a1a28ec600cf58220836fa234afc3b90a2edc19b38cfe",
+    "parent_frame": 1,
+    "writer_frame": 1,
+    "frame": 2,
+    "code": "52c46ab92e34cf97b1029c35778ee3816e515adffd29e624f2231e3fc12b1356",
+    "firstline": 599,
+    "rule_kind": "wire_call",
+    "kind": "call",
+    "at": 184562.584187715,
+    "logical_thread_id": 139681348084224,
+    "native_thread_id": 1
+  },
+  {
+    "role": "follower",
+    "sid_sha256": "5c1da3dcb6e654178a0a1a28ec600cf58220836fa234afc3b90a2edc19b38cfe",
+    "parent_frame": 1,
+    "writer_frame": 1,
+    "frame": 2,
+    "code": "52c46ab92e34cf97b1029c35778ee3816e515adffd29e624f2231e3fc12b1356",
+    "firstline": 599,
+    "rule_kind": "wire_call",
+    "kind": "wire_link",
+    "at": 184562.584251747,
+    "logical_thread_id": 139681348084224,
+    "native_thread_id": 1,
+    "local_port": 48816,
+    "remote_port": 33767,
+    "socket_inode": 52154777
+  },
+  {
+    "kind": "actual_counter_commit",
+    "at": 184562.584492674,
+    "connection": 1,
+    "sequence": 3,
+    "command_at": 184562.584425982,
+    "family": "DECR",
+    "value": 0,
+    "via": "direct"
+  },
+  {
+    "role": "follower",
+    "sid_sha256": "5c1da3dcb6e654178a0a1a28ec600cf58220836fa234afc3b90a2edc19b38cfe",
+    "parent_frame": 1,
+    "writer_frame": 1,
+    "frame": 2,
+    "code": "52c46ab92e34cf97b1029c35778ee3816e515adffd29e624f2231e3fc12b1356",
+    "firstline": 599,
+    "rule_kind": "wire_call",
+    "kind": "normal_exit",
+    "at": 184562.584647769,
+    "logical_thread_id": 139681348084224,
+    "native_thread_id": 1,
+    "op": "RETURN_VALUE",
+    "finally_entered": false,
+    "is_generator": false
+  },
+  {
+    "role": "follower",
+    "sid_sha256": "5c1da3dcb6e654178a0a1a28ec600cf58220836fa234afc3b90a2edc19b38cfe",
+    "frame": 1,
+    "code": "b93534ca609599537d167cef4633ed1cf13d1977da6b52defd0ed3e496ee7a79",
+    "firstline": 10,
+    "rule_kind": "counter",
+    "writer_frame": 1,
+    "kind": "normal_exit",
+    "at": 184562.584724941,
+    "logical_thread_id": 139681348084224,
+    "native_thread_id": 1,
+    "op": "RETURN_VALUE",
+    "finally_entered": false,
+    "is_generator": false,
+    "result": 0
+  },
+  {
+    "kind": "wire_connection_close",
+    "at": 184562.584944337,
+    "connection": 1
+  }
+]
