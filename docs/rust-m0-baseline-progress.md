@@ -4,6 +4,8 @@ Original Dispatcharr authors retain all application/algorithm credit and license
 M0 remains open for Source characterization and evidence accounting. It does not
 require completing the later Native milestones first.
 
+The [full unchanged Original framework suite](../scripts/rust-baseline/verified-full-baseline.json) passes3,362 tests. Earlier48/526-test runs have narrower, separate scopes. The [closure map](rust-m0-closure-map.md) lists exact remaining characterization work: fixed worker-inclusive resource repetitions, a settings-derived prolonged outage and explicit measurement-field accounting. Valid Source budget failures remain negative observations; they do not require repairing Original or completing all798 Native operations.
+
 The [live benchmark](../scripts/rust-live-perf/image47/README.md) now includes
 nine Source measurement phases at1/10/100 viewers:333 authenticated readers and
 531 resource samples. The [same-runtime churn](../scripts/rust-live-perf/churn/README.md)
@@ -17,7 +19,7 @@ These support the baseline; they are not full worker-graph measurements.
 | Ten distinct channels and configured capacity | Warmed ten-channel Source accounting passes with limit0 explicitly unlimited. Separate configured capacity1 and10 references now verify shared reuse, refusal, release and later admission. They remain Source-only functional gates. |
 | Slow plus fast readers | Qualified same-container accounting now records before/active/local-close/70s-retention states with the existing observer. It remains Source functional evidence, with no isolated resource acceptance. |
 | Stall, failure, stream change and recovery | Stall/failover now have qualified observer/state/cleanup attachments. Interior warning and healthy recovery remain separate. Actual admin POST stream-change and same-container sustained15/60/70 references now pass, separately scoped without CPU/memory acceptance. |
-| Import/EPG refresh during playback | One real bounded Source workload now verifies2 imports/6 tasks/44 durable checks during continuous playback. Worker-inclusive resource cost remains unmeasured; resource controller stays blocked pending qualification. |
+| Import/EPG refresh during playback | One real bounded Source workload now verifies2 imports/6 tasks/44 durable checks during continuous playback. Worker-inclusive resource cost remains unmeasured. Resource7’s actual10s observer/physical-teardown contract passed; its separate three-repetition activation and fresh quiet cues remain pending. |
 | Sustained playback followed by disconnect | Reconcile same-run post-close retention/footprint evidence, or add that accounting to the declared sustained workload. An unrelated short cleanup run cannot substitute. |
 
 The [public observer controller](../scripts/rust-baseline/idle-churn/README.md)'s short contract test passed18 offline controls, ten real observer

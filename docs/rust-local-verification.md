@@ -127,6 +127,7 @@ schema. The [runtime snapshot metadata](rust-runtime-contracts.json) records
 these limitations. A broader run of the live proxy, proxy, and VOD proxy suites
 also passed 526 tests; this is a separate run, not 526 additional tests beyond
 the focused 48.
+The later [full unchanged Original suite](../scripts/rust-baseline/verified-full-baseline.json) passed3,362 tests across its explicit application/core/test labels on the same pinned source/image. These are separate run scopes; do not add the earlier48/526 counts to3,362.
 Do not infer success from the existence of a directory or a partially written
 log. The source revision is pinned, but the image's dependency versions are its
 own recorded environment and must be checked for compatibility with that source.
