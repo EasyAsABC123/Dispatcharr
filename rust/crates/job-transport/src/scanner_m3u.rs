@@ -8,9 +8,10 @@ use crate::{
 };
 use dispatcharr_contracts::UpdateEventSink;
 use dispatcharr_coordination::{TaskLease, TaskLockDetailedError, TaskLockError, TaskLocks};
-use dispatcharr_ingest_core::{project_entry, ProjectionContext};
+use dispatcharr_ingest_core::{project_entry, stream_hash, ProjectionContext, StreamIdentity};
 use dispatcharr_store::{
-    AuthService, GroupCleanupAccount, ImportedGroup, ImportedStream, Store, StoreError,
+    AuthService, BoundedM3uBatchError, GroupCleanupAccount, ImportedGroup, ImportedStream,
+    ScannerM3uLookupCap, Store,
 };
 use serde_json::{json, Value};
 use sqlx::{Connection, Row};
@@ -87,7 +88,21 @@ struct Operation {
     _caller: Owner,
     _done: Done,
 }
+#[derive(Clone, Copy)]
+enum HashMode {
+    Empty,
+    Url,
+}
+impl HashMode {
+    fn keys(self) -> &'static [&'static str] {
+        match self {
+            Self::Empty => &[],
+            Self::Url => &["url"],
+        }
+    }
+}
 pub(crate) struct Prepared {
+    hash_mode: HashMode,
     account: Account,
     input: Option<Catalog>,
     cached: Option<Catalog>,
@@ -242,8 +257,8 @@ impl Service {
         {
             return Err(Error::Unsupported);
         }
-        self.require_empty_hash_setting(owner.clone()).await?;
-        let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1 OR s.stream_hash='44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a') OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+        let hash_mode = self.hash_setting(owner.clone()).await?;
+        let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
         if forbidden {
             return Err(Error::Unsupported);
         }
@@ -252,6 +267,7 @@ impl Service {
             return Err(Error::Capacity);
         }
         let mut prepared = Prepared {
+            hash_mode,
             account,
             input: None,
             cached: None,
@@ -271,6 +287,52 @@ impl Service {
             prepared.input = Some(input);
             prepared.cached = cached;
         } else if kind == Kind::Single {
+            return Err(Error::Unsupported);
+        }
+        // Bounded conservative superset from both owned catalogs. This is
+        // admission only: never change input order or first-row deduplication.
+        let mut hashes = Vec::new();
+        if matches!(hash_mode, HashMode::Empty) {
+            hashes.push(
+                "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a".to_owned(),
+            );
+        } else {
+            for catalog in prepared.input.iter().chain(prepared.cached.iter()) {
+                for entry in &catalog.entries {
+                    let url = entry.url.as_deref().ok_or(Error::Unsupported)?;
+                    hashes.push(stream_hash(
+                        &StreamIdentity {
+                            name: &entry.name,
+                            url,
+                            tvg_id: "",
+                            m3u_id: Some(id),
+                            group: None,
+                            account_type: "STD",
+                            stream_id: None,
+                        },
+                        hash_mode.keys(),
+                    ));
+                }
+            }
+        }
+        if hashes.len() > 16 {
+            return Err(Error::Capacity);
+        }
+        hashes.sort();
+        hashes.dedup();
+        let mapped: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.stream_hash=ANY($1))")
+            .bind(&hashes).fetch_one(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
+        if mapped {
+            return Err(Error::Unsupported);
+        }
+        // Fetch only a boolean, never a large matched field. This rejects
+        // known unsupported rows before ACK, but is not a stability promise:
+        // the actual Store SELECT still performs its own CASE/flag checks.
+        // Serialized JSON text size matters, not compressed TOAST storage.
+        let supported: bool = sqlx::query_scalar("SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) AND ((logo_url IS NOT NULL AND octet_length(logo_url)>$2) OR (custom_properties IS NOT NULL AND octet_length(custom_properties::text)>$2)))")
+            .bind(&hashes).bind(ScannerM3uLookupCap::FIELD_TEXT_BYTES)
+            .fetch_one(self.inner.store.pool()).await.map_err(|_| Error::Operational)?;
+        if !supported {
             return Err(Error::Unsupported);
         }
         if kind == Kind::Single && prepared.account.active {
@@ -307,7 +369,7 @@ impl Service {
         }
         Ok(prepared)
     }
-    async fn require_empty_hash_setting(&self, owner: Owner) -> Result<(), Error> {
+    async fn hash_setting(&self, owner: Owner) -> Result<HashMode, Error> {
         let cached = self
             .inner
             .ports
@@ -349,8 +411,9 @@ impl Service {
             }
         };
         match hash {
-            Value::Null => Ok(()),
-            Value::String(value) if value.is_empty() => Ok(()),
+            Value::Null => Ok(HashMode::Empty),
+            Value::String(value) if value.is_empty() => Ok(HashMode::Empty),
+            Value::String(value) if value == "url" => Ok(HashMode::Url),
             _ => Err(Error::Unsupported),
         }
     }
@@ -736,7 +799,7 @@ impl Service {
             account_id: account.id,
             account_type: "STD",
             groups: &groups,
-            hash_keys: &[],
+            hash_keys: p.hash_mode.keys(),
             max_name_characters: 512,
         };
         let projected = catalog
@@ -774,7 +837,11 @@ impl Service {
         let first = self
             .inner
             .store
-            .import_m3u_batch(account.id, rows.clone())
+            .import_m3u_batch_with_lookup_cap(
+                account.id,
+                rows.clone(),
+                ScannerM3uLookupCap::local_std_file8(),
+            )
             .await;
         let counts = match first {
             Ok(v) => v,
@@ -783,7 +850,16 @@ impl Service {
                 if !caught_batch(&e) {
                     return Err(Error::Operational);
                 }
-                match self.inner.store.import_m3u_batch(account.id, rows).await {
+                match self
+                    .inner
+                    .store
+                    .import_m3u_batch_with_lookup_cap(
+                        account.id,
+                        rows,
+                        ScannerM3uLookupCap::local_std_file8(),
+                    )
+                    .await
+                {
                     Ok(v) => v,
                     Err(e) => {
                         self.settle().await?;
@@ -870,8 +946,12 @@ fn hash_cache_error(error: crate::transport::Error) -> Error {
         _ => Error::Operational,
     }
 }
-fn caught_batch(error: &StoreError) -> bool {
-    let StoreError::Database(sqlx::Error::Database(error)) = error else {
+fn caught_batch(error: &BoundedM3uBatchError) -> bool {
+    let BoundedM3uBatchError::MutationRolledBack {
+        source: sqlx::Error::Database(error),
+        ..
+    } = error
+    else {
         return false;
     };
     error.code().as_deref() == Some("P0001")

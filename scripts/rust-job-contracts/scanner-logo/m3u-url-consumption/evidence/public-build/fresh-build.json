@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "scope": "Fresh source-bound fixture peers, no resource/ELF transfer claim",
+  "source_file_count": 788,
+  "input_manifest_sha256": "fc69f7c1fcb1386e478f845e6c364e8514c0c8731bae2027862d14737d476c7a",
+  "elf_sha256": {
+    "dispatcharr_store": "dbe1e79f4818c94b5036d37ad94ac5d45a1e2512c03f269507b65607278334e1",
+    "dispatcharr_job_transport": "de432034253e64b201454608b2d4cf9d544f05a8c00f312d0eeaa57cfa142934",
+    "import_sql": "fbf6e36b6327618e2eadbd4b54b3d91bd7e7093c99a2eef108176f6838f8a7b8"
+  },
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: x86_64-unknown-linux-gnu\nrelease: 1.90.0\nLLVM version: 20.1.8\n",
+  "cargo": "cargo 1.90.0 (840b83a10 2025-07-30)\n",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "/home/justin/github/Dispatcharr/artifacts/rust/scanner-m3u-url-public-source-1/rust/Cargo.toml",
+    "--locked",
+    "--offline",
+    "-p",
+    "dispatcharr-store",
+    "-p",
+    "dispatcharr-job-transport",
+    "--lib",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "legacy_command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "/home/justin/github/Dispatcharr/artifacts/rust/scanner-m3u-url-public-source-1/rust/Cargo.toml",
+    "--locked",
+    "--offline",
+    "-p",
+    "dispatcharr-store",
+    "--test",
+    "import_sql",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "legacy_compiler_json_sha256": "cd25d7c214c024809b630ee237e5539802f3a8389c38f0b080a80f3ba7f26f2c",
+  "compiler_json_sha256": "8461ae0d4abe47f6ed7733804ba8491799d4b7dfe414be97e040261b7693688f"
+}

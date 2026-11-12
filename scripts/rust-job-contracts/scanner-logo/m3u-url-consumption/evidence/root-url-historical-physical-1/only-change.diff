@@ -1,0 +1,11 @@
+--- original/source_pair.py
++++ adapted/source_pair.py
+@@ -49,7 +49,7 @@
+   path=Path('/data/m3us/rust-owned-children-hash-physical-'+mode+'.m3u');path.write_text('#EXTM3U\n');os.utime(path,(1699999993,1699999993));tid=str(uuid.uuid4());Path('/evidence/owned-scanner-config.json').write_text(json.dumps({'task_id':tid,'now':1700000000.125}));worker=start('rust-owned-scanner-parents');parent=app.tasks['core.tasks.scan_and_process_files'].apply_async(args=[],task_id=tid,queue='rust-owned-scanner-parents');wait(lambda:any(v['id']==tid for v in records('postrun')));check(mode+'-real-parent-null',parent.get(timeout=2)is None);stop();account=M3UAccount.objects.get(file_path=str(path));head=broker.lindex('celery',-1);ident=json.loads(head)['headers']['id'];CoreSettings._update_group(STREAM_SETTINGS_KEY,'Stream Settings',{'m3u_hash_key':''});django_cache.delete(GROUP)
+   cfg={'parent_id':tid,'account_id':account.id}
+   if mode=='cache-reply':
+-   django_cache.set(GROUP,{'m3u_hash_key':'url'},timeout=300);proxy=CacheProxy(RAW);cfg['cache_url']='redis://:playback-fixture-only@127.0.0.1:61611/0'
++   django_cache.set(GROUP,{'m3u_hash_key':'name'},timeout=300);proxy=CacheProxy(RAW);cfg['cache_url']='redis://:playback-fixture-only@127.0.0.1:61611/0'
+   else:
+    role='rust_m3u_preflight_'+str(account.id);quoted=connection.ops.quote_name(role)
+    with connection.cursor()as cursor:

@@ -1,0 +1,63 @@
+{
+  "scope": "unchanged legacy audit regressions against new URL-import QA4; not fresh URL Source reference or performance",
+  "recorded_utc": "2026-11-12T14:50:49.665559+00:00",
+  "support_git": "b355195a73ee1ee400a7e48aa0a426026108ff96",
+  "source_map_sha256": "fc69f7c1fcb1386e478f845e6c364e8514c0c8731bae2027862d14737d476c7a",
+  "peer_sha256": "2715ef8f0f7f29e3e322fac67032cbf70143b2bd8b55de5bb1d1ff899d7f4832",
+  "runs": [
+    {
+      "name": "interop",
+      "argv": [
+        "python3",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-job-contracts/scanner-logo/m3u-audit-consumption/run_pair.py",
+        "--repo",
+        ".",
+        "--support-root",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-core-perf/support",
+        "--native-binary",
+        "artifacts/rust/scanner-m3u-url-qa-private-4/outside-peers/dispatcharr_job_transport",
+        "--reference",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-job-contracts/scanner-logo/m3u-audit-reference/source-audit-3.json",
+        "--output",
+        "artifacts/rust/root-url-audit-regression-1/interop"
+      ],
+      "expected_checks": 634
+    },
+    {
+      "name": "physical",
+      "argv": [
+        "python3",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-job-contracts/scanner-logo/m3u-audit-consumption/sql-physical/run_pair.py",
+        "--repo",
+        ".",
+        "--support-root",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-core-perf/support",
+        "--native-binary",
+        "artifacts/rust/scanner-m3u-url-qa-private-4/outside-peers/dispatcharr_job_transport",
+        "--reference",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-job-contracts/scanner-logo/m3u-audit-reference/source-audit-3.json",
+        "--output",
+        "artifacts/rust/root-url-audit-regression-1/physical"
+      ],
+      "expected_checks": 63
+    },
+    {
+      "name": "capacity",
+      "argv": [
+        "python3",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-job-contracts/scanner-logo/m3u-audit-consumption/capacity/run_pair.py",
+        "--repo",
+        ".",
+        "--support-root",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-core-perf/support",
+        "--native-binary",
+        "artifacts/rust/scanner-m3u-url-qa-private-4/outside-peers/dispatcharr_job_transport",
+        "--reference",
+        "artifacts/rust/root-url-audit-regression-1/support/scripts/rust-job-contracts/scanner-logo/m3u-audit-reference/source-audit-3.json",
+        "--output",
+        "artifacts/rust/root-url-audit-regression-1/capacity"
+      ],
+      "expected_checks": 25
+    }
+  ]
+}

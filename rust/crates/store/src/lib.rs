@@ -70,7 +70,8 @@ pub mod realtime;
 mod startup;
 mod startup_bootstrap;
 pub use import_batches::{
-    ImportCounts, ImportedStream, MAX_IMPORT_BATCH_BYTES, MAX_IMPORT_BATCH_ROWS,
+    BoundedM3uBatchError, BoundedM3uSnapshotIssue, ImportCounts, ImportedStream,
+    M3uMutationStatement, ScannerM3uLookupCap, MAX_IMPORT_BATCH_BYTES, MAX_IMPORT_BATCH_ROWS,
 };
 mod image_proxy;
 pub use image_proxy::SourceImageResponse;

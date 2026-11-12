@@ -144,6 +144,93 @@ const CHANGED_FIELDS: &[&str] = &[
     "is_radio",
 ];
 
+/// Explicit conservative read cap for the bounded local STD scanner only.
+#[derive(Clone, Copy, Debug)]
+pub struct ScannerM3uLookupCap {
+    unique_hashes: usize,
+    logo_bytes: i64,
+    properties_text_bytes: i64,
+}
+impl ScannerM3uLookupCap {
+    /// Same serialized-text cap for early admission and the actual Store fetch.
+    pub const FIELD_TEXT_BYTES: i64 = 8192;
+    pub const fn local_std_file8() -> Self {
+        Self {
+            unique_hashes: 8,
+            logo_bytes: Self::FIELD_TEXT_BYTES,
+            properties_text_bytes: Self::FIELD_TEXT_BYTES,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum BoundedM3uSnapshotIssue {
+    RequestedRows,
+    ReturnedRows,
+    LogoBytes,
+    PropertiesTextBytes,
+    UnexpectedHash,
+    DuplicateHash,
+}
+#[derive(Clone, Copy, Debug)]
+pub enum M3uMutationStatement {
+    Insert,
+    Touch,
+    Update,
+}
+#[derive(Debug)]
+pub enum BoundedM3uBatchError {
+    Input(StoreError),
+    AccountRead(sqlx::Error),
+    AccountMissing,
+    ExistingSnapshotUnsupported(BoundedM3uSnapshotIssue),
+    SnapshotRead(sqlx::Error),
+    SnapshotDecode(sqlx::Error),
+    TransactionBegin(sqlx::Error),
+    MutationRolledBack {
+        statement: M3uMutationStatement,
+        source: sqlx::Error,
+    },
+    TransactionCommit(sqlx::Error),
+    RollbackFailed {
+        statement: M3uMutationStatement,
+        mutation: sqlx::Error,
+        rollback: sqlx::Error,
+    },
+}
+// Text/wire size, not compressed pg_column_size. Original NULL stays NULL;
+// masking is never consumed before every independent flag is validated.
+const SCANNER_EXISTING: &str = "SELECT id,stream_hash,name,url,tvg_id,(logo_url IS NULL OR octet_length(logo_url)<=$2) AS logo_bounded,CASE WHEN logo_url IS NULL OR octet_length(logo_url)<=$2 THEN logo_url ELSE NULL END AS logo_url,(custom_properties IS NULL OR octet_length(custom_properties::text)<=$3) AS properties_bounded,CASE WHEN custom_properties IS NULL OR octet_length(custom_properties::text)<=$3 THEN custom_properties ELSE NULL END AS custom_properties,is_adult,stream_id,stream_chno,channel_group_id,is_catchup,catchup_days,is_radio FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) LIMIT $4";
+
+// One authoritative execution path. Callers retain their own transaction
+// commit/error/drop or explicit rollback policy; this helper never rolls back.
+async fn execute_import_mutations(
+    transaction: &mut sqlx::Transaction<'_, sqlx::Postgres>,
+    creates: &[Value],
+    touches: &[Value],
+    updates: &[Value],
+) -> Result<(), (M3uMutationStatement, sqlx::Error)> {
+    if !creates.is_empty() {
+        sqlx::query(&format!("INSERT INTO dispatcharr_channels_stream ({COLUMNS}) SELECT {COLUMNS} FROM jsonb_populate_recordset(NULL::dispatcharr_channels_stream,$1) ON CONFLICT DO NOTHING"))
+                .bind(json!(creates)).execute(&mut **transaction).await.map_err(|error| (M3uMutationStatement::Insert, error))?;
+    }
+    if !touches.is_empty() {
+        sqlx::query("UPDATE dispatcharr_channels_stream AS target SET last_seen=incoming.last_seen,is_stale=false FROM jsonb_populate_recordset(NULL::dispatcharr_channels_stream,$1) AS incoming WHERE target.id=incoming.id")
+                .bind(json!(touches)).execute(&mut **transaction).await.map_err(|error| (M3uMutationStatement::Touch, error))?;
+    }
+    if !updates.is_empty() {
+        let assignments = CHANGED_FIELDS
+            .iter()
+            .map(|field| format!("{field}=incoming.{field}"))
+            .collect::<Vec<_>>()
+            .join(",");
+        // Keep existing account ownership/profile/stats/local-file fields;
+        // the source changes only its explicit bulk-update field list.
+        sqlx::query(&format!("UPDATE dispatcharr_channels_stream AS target SET {assignments} FROM jsonb_populate_recordset(NULL::dispatcharr_channels_stream,$1) AS incoming WHERE target.id=incoming.id"))
+                .bind(json!(updates)).execute(&mut **transaction).await.map_err(|error| (M3uMutationStatement::Update, error))?;
+    }
+    Ok(())
+}
+
 impl Store {
     /// Bounded transactional sink only; no public refresh route calls this yet.
     /// Preserve first-row hash deduplication and source attempted-create counts,
@@ -216,26 +303,167 @@ impl Store {
             unchanged: touches.len(),
         };
         let mut transaction = self.pool.begin().await?;
-        if !creates.is_empty() {
-            sqlx::query(&format!("INSERT INTO dispatcharr_channels_stream ({COLUMNS}) SELECT {COLUMNS} FROM jsonb_populate_recordset(NULL::dispatcharr_channels_stream,$1) ON CONFLICT DO NOTHING"))
-                .bind(json!(creates)).execute(&mut *transaction).await?;
-        }
-        if !touches.is_empty() {
-            sqlx::query("UPDATE dispatcharr_channels_stream AS target SET last_seen=incoming.last_seen,is_stale=false FROM jsonb_populate_recordset(NULL::dispatcharr_channels_stream,$1) AS incoming WHERE target.id=incoming.id")
-                .bind(json!(touches)).execute(&mut *transaction).await?;
-        }
-        if !updates.is_empty() {
-            let assignments = CHANGED_FIELDS
-                .iter()
-                .map(|field| format!("{field}=incoming.{field}"))
-                .collect::<Vec<_>>()
-                .join(",");
-            // Keep existing account ownership/profile/stats/local-file fields;
-            // the source changes only its explicit bulk-update field list.
-            sqlx::query(&format!("UPDATE dispatcharr_channels_stream AS target SET {assignments} FROM jsonb_populate_recordset(NULL::dispatcharr_channels_stream,$1) AS incoming WHERE target.id=incoming.id"))
-                .bind(json!(updates)).execute(&mut *transaction).await?;
-        }
+        execute_import_mutations(&mut transaction, &creates, &touches, &updates)
+            .await
+            .map_err(|(_, error)| StoreError::Database(error))?;
         transaction.commit().await?;
+        Ok(counts)
+    }
+
+    /// Additive scanner-only read bounds; legacy import_m3u_batch stays unchanged.
+    pub async fn import_m3u_batch_with_lookup_cap(
+        &self,
+        account_id: i64,
+        rows: Vec<ImportedStream>,
+        cap: ScannerM3uLookupCap,
+    ) -> Result<ImportCounts, BoundedM3uBatchError> {
+        if rows.len() > MAX_IMPORT_BATCH_ROWS {
+            return Err(BoundedM3uBatchError::Input(invalid()));
+        }
+        let mut budget = Budget {
+            remaining: MAX_IMPORT_BATCH_BYTES,
+        };
+        for row in &rows {
+            if row.stream_hash.len() != 64
+                || !row.stream_hash.bytes().all(|byte| byte.is_ascii_hexdigit())
+            {
+                return Err(BoundedM3uBatchError::Input(invalid()));
+            }
+            serde_json::to_writer(&mut budget, row)
+                .map_err(|_| BoundedM3uBatchError::Input(invalid()))?;
+        }
+        let exists: bool =
+            sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE id=$1)")
+                .bind(account_id)
+                .fetch_one(&self.pool)
+                .await
+                .map_err(BoundedM3uBatchError::AccountRead)?;
+        if !exists {
+            return Err(BoundedM3uBatchError::AccountMissing);
+        }
+        let mut seen = HashSet::new();
+        let unique = rows
+            .into_iter()
+            .filter(|row| seen.insert(row.stream_hash.clone()))
+            .collect::<Vec<_>>();
+        if unique.is_empty() {
+            return Ok(ImportCounts::default());
+        }
+        let hashes = unique
+            .iter()
+            .map(|row| row.stream_hash.as_str())
+            .collect::<Vec<_>>();
+        if hashes.len() > cap.unique_hashes {
+            return Err(BoundedM3uBatchError::ExistingSnapshotUnsupported(
+                BoundedM3uSnapshotIssue::RequestedRows,
+            ));
+        }
+        let limit = hashes
+            .len()
+            .checked_add(1)
+            .and_then(|v| i64::try_from(v).ok())
+            .ok_or(BoundedM3uBatchError::ExistingSnapshotUnsupported(
+                BoundedM3uSnapshotIssue::RequestedRows,
+            ))?;
+        // These flags and CASE values share the actual fetch snapshot. Never
+        // hide an oversized matching hash and accidentally classify it as new.
+        let existing = sqlx::query(SCANNER_EXISTING)
+            .bind(&hashes)
+            .bind(cap.logo_bytes)
+            .bind(cap.properties_text_bytes)
+            .bind(limit)
+            .fetch_all(&self.pool)
+            .await
+            .map_err(BoundedM3uBatchError::SnapshotRead)?;
+        if existing.len() > hashes.len() {
+            return Err(BoundedM3uBatchError::ExistingSnapshotUnsupported(
+                BoundedM3uSnapshotIssue::ReturnedRows,
+            ));
+        }
+        let mut matched = HashSet::new();
+        for row in &existing {
+            if !row
+                .try_get::<bool, _>("logo_bounded")
+                .map_err(BoundedM3uBatchError::SnapshotDecode)?
+            {
+                return Err(BoundedM3uBatchError::ExistingSnapshotUnsupported(
+                    BoundedM3uSnapshotIssue::LogoBytes,
+                ));
+            }
+            if !row
+                .try_get::<bool, _>("properties_bounded")
+                .map_err(BoundedM3uBatchError::SnapshotDecode)?
+            {
+                return Err(BoundedM3uBatchError::ExistingSnapshotUnsupported(
+                    BoundedM3uSnapshotIssue::PropertiesTextBytes,
+                ));
+            }
+            let hash: String = row
+                .try_get("stream_hash")
+                .map_err(BoundedM3uBatchError::SnapshotDecode)?;
+            if !hashes.contains(&hash.as_str()) {
+                return Err(BoundedM3uBatchError::ExistingSnapshotUnsupported(
+                    BoundedM3uSnapshotIssue::UnexpectedHash,
+                ));
+            }
+            if !matched.insert(hash) {
+                return Err(BoundedM3uBatchError::ExistingSnapshotUnsupported(
+                    BoundedM3uSnapshotIssue::DuplicateHash,
+                ));
+            }
+        }
+        let existing = existing
+            .into_iter()
+            .map(|row| Ok((row.try_get::<String, _>("stream_hash")?, row)))
+            .collect::<Result<HashMap<_, _>, sqlx::Error>>()
+            .map_err(BoundedM3uBatchError::SnapshotDecode)?;
+        let mut creates = Vec::new();
+        let mut updates = Vec::new();
+        let mut touches = Vec::new();
+        for row in &unique {
+            let mut data = record(row, account_id);
+            if let Some(old) = existing.get(&row.stream_hash) {
+                data["id"] = json!(old
+                    .try_get::<i64, _>("id")
+                    .map_err(BoundedM3uBatchError::SnapshotDecode)?);
+                if changed(old, row).map_err(BoundedM3uBatchError::SnapshotDecode)? {
+                    updates.push(data);
+                } else {
+                    touches.push(data);
+                }
+            } else {
+                creates.push(data);
+            }
+        }
+        let counts = ImportCounts {
+            created: creates.len(),
+            updated: updates.len(),
+            unchanged: touches.len(),
+        };
+        let mut transaction = self
+            .pool
+            .begin()
+            .await
+            .map_err(BoundedM3uBatchError::TransactionBegin)?;
+        if let Err((statement, error)) =
+            execute_import_mutations(&mut transaction, &creates, &touches, &updates).await
+        {
+            return match transaction.rollback().await {
+                Ok(()) => Err(BoundedM3uBatchError::MutationRolledBack {
+                    statement,
+                    source: error,
+                }),
+                Err(rollback) => Err(BoundedM3uBatchError::RollbackFailed {
+                    statement,
+                    mutation: error,
+                    rollback,
+                }),
+            };
+        }
+        transaction
+            .commit()
+            .await
+            .map_err(BoundedM3uBatchError::TransactionCommit)?;
         Ok(counts)
     }
 }

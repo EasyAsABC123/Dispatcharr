@@ -9,6 +9,7 @@ use crate::{
 use dispatcharr_coordination::{TaskLockConfig, TaskLocks};
 use dispatcharr_store::{AuthConfig, AuthService, NotificationCache, Store};
 use serde_json::{json, Value};
+use sqlx::Connection;
 use std::{
     io::{BufRead, Write},
     sync::Arc,
@@ -153,6 +154,54 @@ async fn native_scanner_m3u_peer() {
     loop {
         let request = read(&mut input);
         match request["action"].as_str().unwrap() {
+            "batch" => {
+                // QA for the same normal Store API, never a second batch engine.
+                let rows: Vec<dispatcharr_store::ImportedStream> =
+                    serde_json::from_value(request["rows"].clone()).unwrap();
+                let reply = if request["legacy"].as_bool().unwrap_or(false) {
+                    match store.import_m3u_batch(account, rows).await {
+                        Ok(v) => {
+                            json!({"ok":true,"created":v.created,"updated":v.updated,"unchanged":v.unchanged})
+                        }
+                        Err(e) => {
+                            json!({"ok":false,"stage":"LegacyStoreError","diagnostic":format!("{e:?}")})
+                        }
+                    }
+                } else {
+                    use dispatcharr_store::BoundedM3uBatchError as E;
+                    match store
+                        .import_m3u_batch_with_lookup_cap(
+                            account,
+                            rows,
+                            dispatcharr_store::ScannerM3uLookupCap::local_std_file8(),
+                        )
+                        .await
+                    {
+                        Ok(v) => {
+                            json!({"ok":true,"created":v.created,"updated":v.updated,"unchanged":v.unchanged})
+                        }
+                        Err(e) => {
+                            let stage = match &e {
+                                E::Input(_) => "Input",
+                                E::AccountRead(_) => "AccountRead",
+                                E::AccountMissing => "AccountMissing",
+                                E::ExistingSnapshotUnsupported(_) => "ExistingSnapshotUnsupported",
+                                E::SnapshotRead(_) => "SnapshotRead",
+                                E::SnapshotDecode(_) => "SnapshotDecode",
+                                E::TransactionBegin(_) => "TransactionBegin",
+                                E::MutationRolledBack { .. } => "MutationRolledBack",
+                                E::TransactionCommit(_) => "TransactionCommit",
+                                E::RollbackFailed { .. } => "RollbackFailed",
+                            };
+                            json!({"ok":false,"stage":stage,"diagnostic":format!("{e:?}")})
+                        }
+                    }
+                };
+                let mut connection = store.pool().acquire().await.unwrap();
+                connection.ping().await.unwrap();
+                connection.close().await.unwrap();
+                output(json!({"batch":reply,"driver_fenced":true}));
+            }
             "run" => {
                 let run = worker.run_once(Arc::new(())).await;
                 output(json!({"run":format!("{run:?}"),"slots":worker.available_slots()}));

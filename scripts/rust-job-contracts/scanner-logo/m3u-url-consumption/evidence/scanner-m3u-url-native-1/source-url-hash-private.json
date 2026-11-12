@@ -1,0 +1,992 @@
+{
+  "passed": false,
+  "native_verified": true,
+  "performance_verified": false,
+  "scope": "Actual Original scanner producer and AsyncResult around normal native URL/Empty M3U worker; Source17 authority, explicit mapped/normalization refusals with real Original fallback; no Main/performance/fullhash authority",
+  "plan_sha256": "1bfedac35b79a0c263037601d64734e0d7e2f05929751b1c037ab683be10b0f4",
+  "cases": [
+    {
+      "label": "distinct-three",
+      "Source_case_index": 0,
+      "native_refusal": false,
+      "native_outputs": [
+        {
+          "run": "Ok(Completed(28bd16cb-319c-4f44-ad82-90a79f92e5a8))",
+          "slots": 1
+        },
+        {
+          "run": "Ok(Completed(ad2a53cd-9623-4e10-a1d0-edb973f28e96))",
+          "slots": 1
+        }
+      ],
+      "before": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url"
+            }
+          }
+        ],
+        "accounts": [],
+        "profiles": [],
+        "streams": [],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          }
+        ],
+        "group_links": [],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTk4MDM1MzEwOTM2DwA8Kd4TgDyjNw==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 293
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTk2Nzc4NzE5MDgxDwD7OmjXPNWX0w==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTkwNzk2ODEwNTA1DwDy98HLPA1KhQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTkwODAxNjY2NzYyDwC9HdLqJlU6jw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTk4MDM1MTg0OTMyDwDDK8PmDu6sEw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTk4MDI5NjU5OTg2DwCv8xXtkjp6PA==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "asgi:group:updates": {
+            "type": "zset",
+            "dump_base64": "EUBFRQAAAAIApXNwZWNpZmljLnJ1c3Rfb3duZWRfdXJsX2hhc2ghcmVjZWl2ZXImlTEuNzk0NDkzNTk4MDM2MTc4OGUrORb/DwDebsYvezV8fQ==",
+            "ttl": 86400
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0OJR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9iOWZmMWM4Ni1lMzk1LTQ5ZDEtOWIyNy01MmFjN2NhYQMyNzg5QC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE0OjI2OjQyLjAwODYzMCswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMRZ2VuMzA1QGMyZDJhZTRmMThhYOoFaWdub3JlIWMCc3VsQKsEZmFsc2UgXiBaBWxhY2VkX0GSBF9uZXN0gf5A2wRzdGFtcCAa4QHcoJNgGEE2Ant9fSBDBnByb3BlcnSBFAB7IkwDcnJlbGIfgMnhIMpAjAN5X3RvQMcfYTI1ZTFjM2QtMDE3Mi0zYjMyLWEwM2YtOWRmMzU4YTECNjYzYf4AZCF+B3ZlcnlfbW9kQp4AMiCQ4AATAmluZkBMAHsh6QFjaCKWQCAAIkEvIedA6AJfa2VjawJjZWwgQgAigMwAaSFMAHRAFkEDQ40AX+MDFgViYXNlNjRAQ+AAZQF0YWMwHzFjMWU3NDk2LTQyOWMtNGE3NC1hMzkwLTM0ODA1NmQ0CGViY2QifX0H5OP/5UHmCjkzNjVlYWFlLTYxIAQUNDRjNS1iOWUxLTM4NTUwYzc1ZjZhZITjIOUDMC43OCF1ADHjauXgH8vjPeUCMjcy44Xl4B/+4wPlHzExMDYxNmU5LWQ1OWEtM2UyYi1hOGM3LTY1NjlkZTNkAzAzM2PjBGvjeOUMODgwYTkyMGUtODk0ZiPlJJIQOGVhMy0xZDc3NzA0MWI0MzFD5QHk/w8AUai2xgqkhxE=",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3600
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3600
+          },
+          "live:worker:c2d2ae4f18a0:305:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABExNzk0NDkzNTk3Ljk3MjU4Ng8AguAy7xJSzp0=",
+            "ttl": 30
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-url-distinct.m3u",
+            "bytes": 329,
+            "mtime_ns": 1700000003000000000,
+            "sha256": "b7669f9e54d4a8d3a97d9bd8c9005af4f16fbe2272c287dd4998bfc2690760cb"
+          }
+        ]
+      },
+      "before_native": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url"
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-url-distinct",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-url-distinct.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 14:26:39.192599+00:00",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-url-distinct.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          }
+        ],
+        "group_links": [],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [],
+        "events": [
+          {
+            "type": "update",
+            "data": {
+              "success": true,
+              "type": "m3u_file",
+              "filename": "rust-owned-children-url-distinct.m3u"
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_url_hash!receiver"
+            ]
+          }
+        ],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNjAwOTMzNDU3NzY1DwDI08AP2hTxhA==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 290
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 298
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTk2Nzc4NzE5MDgxDwD7OmjXPNWX0w==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTkwNzk2ODEwNTA1DwDy98HLPA1KhQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTkwODAxNjY2NzYyDwC9HdLqJlU6jw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNjAwOTMzMzE1MzQxDwAu4bYl0woXKg==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTk4MDI5NjU5OTg2DwCv8xXtkjp6PA==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "asgi:group:updates": {
+            "type": "zset",
+            "dump_base64": "EUBFRQAAAAIApXNwZWNpZmljLnJ1c3Rfb3duZWRfdXJsX2hhc2ghcmVjZWl2ZXImlTEuNzk0NDkzNTk4MDM2MTc4OGUrORb/DwDebsYvezV8fQ==",
+            "ttl": 86397
+          },
+          "asgispecific.rust_owned_url_hash!": {
+            "type": "zset",
+            "dump_base64": "BQFAngjNMA7uyz074SOfUIOkdHlwZaZ1cGRhdGWkZGF0YYOnc3VjY2Vzc8OkdHlwZahtM3VfZmlsZahmaWxlbmFtZdkkcnVzdC1vd25lZC1jaGlsZHJlbi11cmwtZGlzdGluY3QubTN1sF9fYXNnaV9jaGFubmVsX1+R2SVzcGVjaWZpYy5ydXN0X293bmVkX3VybF9oYXNoIXJlY2VpdmVy5X3NJ3O92kEPAFD0++VXh4mM",
+            "ttl": 58
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0OJR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9iOWZmMWM4Ni1lMzk1LTQ5ZDEtOWIyNy01MmFjN2NhYQMyNzg5QC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE0OjI2OjQyLjAwODYzMCswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMRZ2VuMzA1QGMyZDJhZTRmMThhYOoFaWdub3JlIWMCc3VsQKsEZmFsc2UgXiBaBWxhY2VkX0GSBF9uZXN0gf5A2wRzdGFtcCAa4QHcoJNgGEE2Ant9fSBDBnByb3BlcnSBFAB7IkwDcnJlbGIfgMnhIMpAjAN5X3RvQMcfYTI1ZTFjM2QtMDE3Mi0zYjMyLWEwM2YtOWRmMzU4YTECNjYzYf4AZCF+B3ZlcnlfbW9kQp4AMiCQ4AATAmluZkBMAHsh6QFjaCKWQCAAIkEvIedA6AJfa2VjawJjZWwgQgAigMwAaSFMAHRAFkEDQ40AX+MDFgViYXNlNjRAQ+AAZQF0YWMwHzFjMWU3NDk2LTQyOWMtNGE3NC1hMzkwLTM0ODA1NmQ0CGViY2QifX0H5OP/5UHmCjkzNjVlYWFlLTYxIAQUNDRjNS1iOWUxLTM4NTUwYzc1ZjZhZITjIOUDMC43OCF1ADHjauXgH8vjPeUCMjcy44Xl4B/+4wPlHzExMDYxNmU5LWQ1OWEtM2UyYi1hOGM3LTY1NjlkZTNkAzAzM2PjBGvjeOUMODgwYTkyMGUtODk0ZiPlJJIQOGVhMy0xZDc3NzA0MWI0MzFD5QHk/w8AUai2xgqkhxE=",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3597
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3597
+          },
+          "live:worker:c2d2ae4f18a0:305:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABIxNzk0NDkzNjAwLjk3NjQ4OTMPAJD69aU8tLFc",
+            "ttl": 30
+          },
+          "processed_file:/data/m3us/rust-owned-children-url-distinct.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDAzLjAPAMlhuUltxA2i",
+            "ttl": 259198
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-url-distinct.m3u",
+            "bytes": 329,
+            "mtime_ns": 1700000003000000000,
+            "sha256": "b7669f9e54d4a8d3a97d9bd8c9005af4f16fbe2272c287dd4998bfc2690760cb"
+          }
+        ]
+      },
+      "after": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url"
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-url-distinct",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-url-distinct.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 14:26:39.192599+00:00",
+            "updated_at": "2026-11-12 14:26:41.264457+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 3 created, 0 updated, 0 marked stale, 0 removed. Total processed: 3.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-url-distinct.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [
+          {
+            "id": 2,
+            "name": "Owned URL u1",
+            "url": "http://127.0.0.1:9/owned-url-u1.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "owned.u1",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 14:26:41.234118+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "4b1636ec3c717e102472f4bfd2dc8f88d743d263cecd0d5c3326777516700b7e",
+            "last_seen": "2026-11-12 14:26:41.234118+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "tvg-id": "owned.u1",
+              "group-title": "Owned URL Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 3,
+            "name": "Owned URL u2",
+            "url": "http://127.0.0.1:9/owned-url-u2.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "owned.u2",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 14:26:41.234156+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "478be7faf1632d1873e2f95c8dfb25ca819d28352927c5c033d849e5899dc0ee",
+            "last_seen": "2026-11-12 14:26:41.234156+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "tvg-id": "owned.u2",
+              "group-title": "Owned URL Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 4,
+            "name": "Owned URL u3",
+            "url": "http://127.0.0.1:9/owned-url-u3.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "owned.u3",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 14:26:41.234181+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "a8d234ebdade8ed0a6a0dd03109158bd1f3aa63ff8d6e9850acb0c94d32e2e89",
+            "last_seen": "2026-11-12 14:26:41.234181+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "tvg-id": "owned.u3",
+              "group-title": "Owned URL Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          },
+          {
+            "id": 2,
+            "name": "Default Group"
+          },
+          {
+            "id": 3,
+            "name": "Owned URL Group"
+          }
+        ],
+        "group_links": [
+          {
+            "id": 2,
+            "channel_group_id": 2,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 14:26:41.044442+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 3,
+            "channel_group_id": 3,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 14:26:41.044442+00:00",
+            "is_stale": true
+          }
+        ],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [
+          {
+            "id": 1,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 14:26:41.265594+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-url-distinct",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 3,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 3
+            }
+          }
+        ],
+        "events": [
+          {
+            "type": "update",
+            "data": {
+              "success": true,
+              "type": "m3u_file",
+              "filename": "rust-owned-children-url-distinct.m3u"
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_url_hash!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "progress": 0,
+              "type": "m3u_refresh",
+              "account": 3,
+              "action": "processing_groups",
+              "status": "idle"
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_url_hash!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "progress": 100,
+              "type": "m3u_refresh",
+              "account": 3,
+              "action": "processing_groups",
+              "status": "pending_setup",
+              "message": "M3U groups loaded. Please select groups or refresh M3U to complete setup."
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_url_hash!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "progress": 100,
+              "type": "m3u_refresh",
+              "account": 3,
+              "action": "parsing",
+              "status": "parsing",
+              "message": "Refresh in progress...",
+              "elapsed_time": 0.0,
+              "time_remaining": 0,
+              "streams_processed": 3
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_url_hash!receiver"
+            ]
+          },
+          {
+            "type": "update",
+            "data": {
+              "progress": 100,
+              "type": "m3u_refresh",
+              "account": 3,
+              "action": "parsing",
+              "status": "success",
+              "message": "Processing completed in 0.0 seconds. Streams: 3 created, 0 updated, 0 marked stale, 0 removed. Total processed: 3.",
+              "elapsed_time": 0.0,
+              "time_remaining": 0,
+              "streams_processed": 3,
+              "streams_created": 3,
+              "streams_updated": 0,
+              "streams_stale": 0,
+              "streams_deleted": 0,
+              "channels_created": 0,
+              "channels_updated": 0,
+              "channels_deleted": 0,
+              "channels_failed": 0,
+              "failed_stream_details": []
+            },
+            "__asgi_channel__": [
+              "specific.rust_owned_url_hash!receiver"
+            ]
+          }
+        ],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNjAwOTMzNDU3NzY1DwDI08AP2hTxhA==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 289
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 298
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTk2Nzc4NzE5MDgxDwD7OmjXPNWX0w==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTkwNzk2ODEwNTA1DwDy98HLPA1KhQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTkwODAxNjY2NzYyDwC9HdLqJlU6jw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNjAwOTMzMzE1MzQxDwAu4bYl0woXKg==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDkzNTk4MDI5NjU5OTg2DwCv8xXtkjp6PA==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "asgi:group:updates": {
+            "type": "zset",
+            "dump_base64": "EUBFRQAAAAIApXNwZWNpZmljLnJ1c3Rfb3duZWRfdXJsX2hhc2ghcmVjZWl2ZXImlTEuNzk0NDkzNTk4MDM2MTc4OGUrORb/DwDebsYvezV8fQ==",
+            "ttl": 86397
+          },
+          "asgispecific.rust_owned_url_hash!": {
+            "type": "zset",
+            "dump_base64": "BQXDQYZB8Rk0kNZ35z0Wqfzxz8yDpHR5cGWmdXBkYXRlpCAEDWHeABKocHJvZ3Jlc3NkYB0Hq20zdV9yZWYgER9op2FjY291bnQDpmFjdGlvbqdwYXJzaW5npnN0YXR1cwSnc3VjYyA4AadtIAQHYWdl2XJQcm9AECAiHyBjb21wbGV0ZWQgaW4gMC4wIHNlY29uZHMuIFN0cmVhBm1zOiAzIGMgCSAiAywgMCCAlGAKA21hcmsgNyBkAWxlQBoKcmVtb3ZlZC4gVG8gEgAgIK9AZAFlZCBBBS6sZWxhcCALBl90aW1lywCgAACuQA0gxQNtYWluIIwCALFzgHMAX+AAOwEDr8ASoIMAA+AAEKCJAQCtwCFgiAAA4AAfAWRlYNcJALBjaGFubmVsc8BC4AIRwEPgASPANQCv4AA1A2ZhaWwgNAC1gAcgZSEMAG0gJwB0IBcJc5CwX19hc2dpX6AuFV9fkdklc3BlY2lmaWMucnVzdF9vd24gNhB1cmxfaGFzaCFyZWNlaXZlcsO2UihzvdpBw0DfQPIZ+4cfn70VCGygRAdIg6R0eXBlpnVwZGF0ZaQgBAthiahwcm9ncmVzc2RgGwerbTN1X3JlZiARH2inYWNjb3VudAOmYWN0aW9up3BhcnNpbmemc3RhdHVzwA4Bp20gPQRhZ2W2UoA2AyBpbiDAVBEuLi6sZWxhcHNlZF90aW1lywCgAACuQA0gaANtYWluIFIJALFzdHJlYW1zXyA5AGMgTx9lZAOwX19hc2dpX2NoYW5uZWxfX5HZJXNwZWNpZmljLgdydXN0X293biBXEHVybF9oYXNoIXJlY2VpdmVy+RRPKHO92kHDQO1A/RldKFLzBUHzk51y8/iDpHR5cGWmdXBkYXRlpCAEC2GGqHByb2dyZXNzZGAbB6ttM3VfcmVmIBERaKdhY2NvdW50A6ZhY3Rpb26xICoAYyApFWluZ19ncm91cHOmc3RhdHVzrXBlbmRAFQZzZXR1cKdtICMIYWdl2UlNM1UggCgVIGxvYWRlZC4gUGxlYXNlIHNlbGVjdMAcAm9yIKByACBAMgl0byBjb21wbGV0QCggUR8usF9fYXNnaV9jaGFubmVsX1+R2SVzcGVjaWZpYy5ydRlzdF9vd25lZF91cmxfaGFzaCFyZWNlaXZlctpQRihzvdpBQKEVNR0pl+5iXJwDyyKDpHR5cGWmdXBkYXRlpGRhdGGFqHByb2dyZXNzAKR0eXBlq20zdV9yZWZyZXNop2FjY291bnQDpmFjdGlvbrFwcm9jZXNzaW5nX2dyb3Vwc6ZzdGF0dXOkaWRsZbBfX2FzZ2lfY2hhbm5lbF9fkdklc3BlY2lmaWMucnVzdF9vd25lZF91cmxfaGFzaCFyZWNlaXZlcqjTQihzvdpBQJ4IzTAO7ss9O+Ejn1CDpHR5cGWmdXBkYXRlpGRhdGGDp3N1Y2Nlc3PDpHR5cGWobTN1X2ZpbGWoZmlsZW5hbWXZJHJ1c3Qtb3duZWQtY2hpbGRyZW4tdXJsLWRpc3RpbmN0Lm0zdbBfX2FzZ2lfY2hhbm5lbF9fkdklc3BlY2lmaWMucnVzdF9vd25lZF91cmxfaGFzaCFyZWNlaXZlcuV9zSdzvdpBDwCf9H1sAtYbvA==",
+            "ttl": 60
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0OJR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9iOWZmMWM4Ni1lMzk1LTQ5ZDEtOWIyNy01MmFjN2NhYQMyNzg5QC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE0OjI2OjQyLjAwODYzMCswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMRZ2VuMzA1QGMyZDJhZTRmMThhYOoFaWdub3JlIWMCc3VsQKsEZmFsc2UgXiBaBWxhY2VkX0GSBF9uZXN0gf5A2wRzdGFtcCAa4QHcoJNgGEE2Ant9fSBDBnByb3BlcnSBFAB7IkwDcnJlbGIfgMnhIMpAjAN5X3RvQMcfYTI1ZTFjM2QtMDE3Mi0zYjMyLWEwM2YtOWRmMzU4YTECNjYzYf4AZCF+B3ZlcnlfbW9kQp4AMiCQ4AATAmluZkBMAHsh6QFjaCKWQCAAIkEvIedA6AJfa2VjawJjZWwgQgAigMwAaSFMAHRAFkEDQ40AX+MDFgViYXNlNjRAQ+AAZQF0YWMwHzFjMWU3NDk2LTQyOWMtNGE3NC1hMzkwLTM0ODA1NmQ0CGViY2QifX0H5OP/5UHmCjkzNjVlYWFlLTYxIAQUNDRjNS1iOWUxLTM4NTUwYzc1ZjZhZITjIOUDMC43OCF1ADHjauXgH8vjPeUCMjcy44Xl4B/+4wPlHzExMDYxNmU5LWQ1OWEtM2UyYi1hOGM3LTY1NjlkZTNkAzAzM2PjBGvjeOUMODgwYTkyMGUtODk0ZiPlJJIQOGVhMy0xZDc3NzA0MWI0MzFD5QHk/w8AUai2xgqkhxE=",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3596
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3596
+          },
+          "epg_content_generation": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": -1
+          },
+          "live:worker:c2d2ae4f18a0:305:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABIxNzk0NDkzNjAwLjk3NjQ4OTMPAJD69aU8tLFc",
+            "ttl": 30
+          },
+          "processed_file:/data/m3us/rust-owned-children-url-distinct.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDAzLjAPAMlhuUltxA2i",
+            "ttl": 259198
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-url-distinct.m3u",
+            "bytes": 329,
+            "mtime_ns": 1700000003000000000,
+            "sha256": "b7669f9e54d4a8d3a97d9bd8c9005af4f16fbe2272c287dd4998bfc2690760cb"
+          }
+        ]
+      },
+      "actual_command_windows": {
+        "parent": [
+          1794493598.0725718,
+          1794493599.228817
+        ],
+        "child": [
+          1794493600.9807374,
+          1794493601.3854263
+        ]
+      },
+      "Source_command_windows": {
+        "parent": [
+          1794487096.8718436,
+          1794487098.0297165
+        ],
+        "child": [
+          1794487099.78731,
+          1794487103.0118449
+        ]
+      },
+      "comparison": {
+        "passed": false,
+        "differences": [
+          {
+            "path": "accounts/0/created_at",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:17.999858+00:00",
+            "native": "2026-11-12 14:26:39.192599+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "accounts/0/updated_at",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:21.153022+00:00",
+            "native": "2026-11-12 14:26:41.264457+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "streams/0/updated_at",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:21.027887+00:00",
+            "native": "2026-11-12 14:26:41.234118+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "streams/0/last_seen",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:21.027488+00:00",
+            "native": "2026-11-12 14:26:41.234118+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "streams/1/updated_at",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:21.027896+00:00",
+            "native": "2026-11-12 14:26:41.234156+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "streams/1/last_seen",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:21.027606+00:00",
+            "native": "2026-11-12 14:26:41.234156+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "streams/2/updated_at",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:21.027900+00:00",
+            "native": "2026-11-12 14:26:41.234181+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "streams/2/last_seen",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:21.027642+00:00",
+            "native": "2026-11-12 14:26:41.234181+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "group_links/0/last_seen",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:20.936067+00:00",
+            "native": "2026-11-12 14:26:41.044442+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "group_links/1/last_seen",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:20.936067+00:00",
+            "native": "2026-11-12 14:26:41.044442+00:00",
+            "error": "Timestamp must remain a string"
+          },
+          {
+            "path": "system_events/0/timestamp",
+            "kind": "timestamp-type",
+            "Source": "2026-11-12 12:38:21.154431+00:00",
+            "native": "2026-11-12 14:26:41.265594+00:00",
+            "error": "Timestamp must remain a string"
+          }
+        ],
+        "temporal_fields_retained": [
+          {
+            "path": "streams/0/stream_stats_updated_at",
+            "kind": "null-retained",
+            "Source": null,
+            "native": null
+          },
+          {
+            "path": "streams/1/stream_stats_updated_at",
+            "kind": "null-retained",
+            "Source": null,
+            "native": null
+          },
+          {
+            "path": "streams/2/stream_stats_updated_at",
+            "kind": "null-retained",
+            "Source": null,
+            "native": null
+          }
+        ],
+        "timestamp_fields_dropped": 0
+      },
+      "frames": [
+        {
+          "body": "W1szXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.m3u.tasks.refresh_m3u_groups",
+            "id": "28bd16cb-319c-4f44-ad82-90a79f92e5a8",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              null,
+              null
+            ],
+            "root_id": "c7d0fd4a-1fbd-4607-aea2-db8bca6ea3d3",
+            "parent_id": "c7d0fd4a-1fbd-4607-aea2-db8bca6ea3d3",
+            "argsrepr": "(3,)",
+            "kwargsrepr": "{}",
+            "origin": "gen436@c2d2ae4f18a0",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "28bd16cb-319c-4f44-ad82-90a79f92e5a8",
+            "reply_to": "e778b6d4-0b37-30b5-9179-b217a90c2df0",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "d3b57cfc-b2d1-4841-a5c5-5e8b5dbc0225"
+          }
+        },
+        {
+          "body": "W1szXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+          "content-encoding": "utf-8",
+          "content-type": "application/json",
+          "headers": {
+            "lang": "py",
+            "task": "apps.m3u.tasks.refresh_single_m3u_account",
+            "id": "ad2a53cd-9623-4e10-a1d0-edb973f28e96",
+            "shadow": null,
+            "eta": null,
+            "expires": null,
+            "group": null,
+            "group_index": null,
+            "retries": 0,
+            "timelimit": [
+              3600,
+              3500
+            ],
+            "root_id": "c7d0fd4a-1fbd-4607-aea2-db8bca6ea3d3",
+            "parent_id": "c7d0fd4a-1fbd-4607-aea2-db8bca6ea3d3",
+            "argsrepr": "(3,)",
+            "kwargsrepr": "{}",
+            "origin": "gen436@c2d2ae4f18a0",
+            "ignore_result": false,
+            "replaced_task_nesting": 0,
+            "stamped_headers": null,
+            "stamps": {}
+          },
+          "properties": {
+            "correlation_id": "ad2a53cd-9623-4e10-a1d0-edb973f28e96",
+            "reply_to": "e778b6d4-0b37-30b5-9179-b217a90c2df0",
+            "delivery_mode": 2,
+            "delivery_info": {
+              "exchange": "",
+              "routing_key": "celery"
+            },
+            "priority": 0,
+            "body_encoding": "base64",
+            "delivery_tag": "038b0ff2-3ca4-475a-9641-d462b9cd6b1e"
+          }
+        }
+      ],
+      "parent_id": "c7d0fd4a-1fbd-4607-aea2-db8bca6ea3d3",
+      "results": {}
+    }
+  ],
+  "checks": [
+    {
+      "name": "fresh-root-/data/m3us",
+      "passed": true
+    },
+    {
+      "name": "fresh-root-/data/epgs",
+      "passed": true
+    },
+    {
+      "name": "fresh-root-/data/logos",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-sealed-case-order",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-actual-parent-success-null",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-actual-created-existing-frames",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-normal-native-constructor",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-native-completed-0",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-native-completed-1",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-actual-native-drain",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-queue-unacked-drained",
+      "passed": true
+    },
+    {
+      "name": "distinct-three-Source-row-event-file-and-temporal-comparison",
+      "passed": false
+    }
+  ],
+  "deferred_native_groups": [
+    13,
+    14
+  ],
+  "transport_ledger": "transport-ledger.jsonl",
+  "status": "UNEXECUTED_REDESIGN_ROOT_REVIEW_REQUIRED",
+  "reference_sha256": "f97ed710872694abaa79fa1dc0d0abda3f2393912aa561f2fc69ef4f706fc15f",
+  "execution_input_receipt": {
+    "status": "PRE_NATIVE_FIXTURE_EXECUTION_INPUT_RECEIPT",
+    "native_fixture_started": false,
+    "case_plan": {
+      "path": "artifacts/rust/scanner-m3u-url-qa-tools-1/predeclared-qa-plan.json",
+      "sha256": "aef21d8c8a1091e11cd4c6648a9df8a002d9c8f02d0e53f00ee4baa7dde25d2b"
+    },
+    "full_QA_source": {
+      "path": "artifacts/rust/scanner-m3u-url-qa-private-4/inputs-4.json",
+      "sha256": "fc69f7c1fcb1386e478f845e6c364e8514c0c8731bae2027862d14737d476c7a",
+      "count": 788
+    },
+    "qualified_runtime3_map": "8765bc797235c46e200e0ec14d850ef27fcec4127d8a97383b144a99579ecbe5",
+    "outside_ELFs": {
+      "dispatcharr_store": {
+        "path": "artifacts/rust/scanner-m3u-url-qa-private-4/outside-peers/dispatcharr_store",
+        "sha256": "e44a40d1bd86cfb7fe240ef123bb34a354ecde8e7686e4e8a5bb8f7054836d46"
+      },
+      "dispatcharr_job_transport": {
+        "path": "artifacts/rust/scanner-m3u-url-qa-private-4/outside-peers/dispatcharr_job_transport",
+        "sha256": "2715ef8f0f7f29e3e322fac67032cbf70143b2bd8b55de5bb1d1ff899d7f4832"
+      }
+    },
+    "compiler_record": {
+      "path": "artifacts/rust/scanner-m3u-url-qa-private-4/outside-peers.json",
+      "sha256": "8dac4f169f56e8f9cbfbb25394bb481817df18dac1b6806f73f7544ace938eb0"
+    },
+    "coupled98e": {
+      "scripts/rust-timeshift-contracts/python-busy-control-vectors.json": "525b94bf280220da168ee7d61555815a4142f4f57092b4b779226efe6652fd66",
+      "scripts/rust-timeshift-contracts/python-busy-seek-goldens.json": "a96b907d0cf15d2babb9aca6d344d94ec1aa7d6af4908aa9733da6eaf258cc12",
+      "scripts/rust-timeshift-contracts/python-helper-goldens.json": "0119158a5dd4b37e9e7f75808e90ecad6df455904187bbd51cc46892f4deaeb5",
+      "scripts/rust-timeshift-contracts/python-range-goldens.json": "8de35e29739283f7098db98b775e3b90260d9478a190bc3315e7ceb3ac178a32",
+      "scripts/rust-timeshift-contracts/python-session-goldens.json": "1bce13ac33a1b991fce8fcd8020aa0abebfb7cfadd1e674452bf2da4a923a67c"
+    },
+    "Source_reference": {
+      "path": "artifacts/rust/scanner-m3u-url-source-authority-1/extracted-1/Source-URL-completed17.json",
+      "sha256": "f97ed710872694abaa79fa1dc0d0abda3f2393912aa561f2fc69ef4f706fc15f"
+    },
+    "temporal_policy": {
+      "path": "artifacts/rust/scanner-m3u-url-qa-private-4/TEMPORAL-POLICY.md",
+      "sha256": "4cdd878ae08c1b488b300adbd3061edac6adc74ee8352289d09a21258a548c47"
+    },
+    "no_Source4_capture": true
+  },
+  "Source_cohort_passed": false,
+  "known_backend_keys": "Explicit app.backend.get_key_for_task only; historical wildcard gap not reused"
+}

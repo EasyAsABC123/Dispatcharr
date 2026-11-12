@@ -1,0 +1,27 @@
+{
+  "status": "FROZEN_BEFORE_ANY_NEW_EXECUTION",
+  "changes": [
+    "Success SELECT exact alias/table identity, per-query/per-connection DataRow and CommandComplete, then Ready; excludes prepare Ready and unrelated query rows",
+    "Persist relay partial diagnostics in finally on failed phase"
+  ],
+  "physical1": "artifacts/rust/scanner-m3u-url-physical-1",
+  "mechanism": "SQLx can obtain Ready while preparing a statement before execution. Physical1 relay did not require execution frames; actual raw count was not persisted, so underlying early-Ready diagnosis is protocol/code-based rather than a retained wire count. New pure control rejects it.",
+  "runtime_ELFs_case_order_hold_budgets_unchanged": true,
+  "files": {
+    "Ready-barrier-pure-controls.json": "34b390d4d477d4d8f4c11ee10e73713fd72e04b78944638b835e3c88db204e90",
+    "Source-plan.json": "1bfedac35b79a0c263037601d64734e0d7e2f05929751b1c037ab683be10b0f4",
+    "compare_trace.py": "26d5ad09968342e3f0dda4b0d09883da1f73700fecce30f096ecb5d81a29c49f",
+    "execution-input-receipt-1.json": "e625e311584dd0543c78f26b845d2c707861d1b479d2b2162fd5ad225468f95f",
+    "ledger_io.py": "90d0bfccbca71719e31c7009572b7debcf68157e26a7652c5085bb70b7a87e5e",
+    "owned_cache_reply_proxy.py": "073e2f3914f2550e790c180d2d0de61191f1c9cd244a081ab418af4f3bfc5e71",
+    "owned_pg_physical_proxy.py": "e329ccf83186cd4d506d5b7b0fe4f3b531925ca32cba707e1181101fd9c14f8b",
+    "periodic_worker_observer.py": "366d7a7efd61330a37ee251fb84a7b21d4bed437bef6a917390db879000ac557",
+    "predeclared-qa-plan.json": "aef21d8c8a1091e11cd4c6648a9df8a002d9c8f02d0e53f00ee4baa7dde25d2b",
+    "pure-controls.json": "25edd43661b39312a12ada0e61d09303b718370ef5f87ab98ac29483849d0ff2",
+    "qa-source-inputs.json": "fc69f7c1fcb1386e478f845e6c364e8514c0c8731bae2027862d14737d476c7a",
+    "reference-input.json": "0315615034cd4fa27e7fecec3a5f2c919ca08f840f3fa5f067a7cc795ecbac70",
+    "run_pair.py": "4849bee8700df2fde755722b1a319bbd28f6712a98a0ad5ce73646d6032b156a",
+    "source_pair.py": "42a34a52e9cb4e690021035e33cb861a59acd3a4a0e9d1143f694f04fe00bbf0",
+    "support-inputs.json": "674e5ac616f4403abe8f6858193dbbecce8b41fb118df1860b2cfa3ec01f3990"
+  }
+}

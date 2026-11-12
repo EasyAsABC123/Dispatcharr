@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "cases": 14,
+  "recorded_checks_true": 100,
+  "independently_decoded_actual_DataRows": [
+    {
+      "case": "logo-sql-null",
+      "wire_DataRow_bytes": 225,
+      "field_bytes": null,
+      "flag": true
+    },
+    {
+      "case": "logo-exact8192",
+      "wire_DataRow_bytes": 8417,
+      "field_bytes": 8192,
+      "flag": true
+    },
+    {
+      "case": "logo8193",
+      "wire_DataRow_bytes": 225,
+      "field_bytes": null,
+      "flag": false
+    },
+    {
+      "case": "logo-compressible262144",
+      "wire_DataRow_bytes": 225,
+      "field_bytes": null,
+      "flag": false
+    },
+    {
+      "case": "properties-sql-null",
+      "wire_DataRow_bytes": 222,
+      "field_bytes": null,
+      "flag": true
+    },
+    {
+      "case": "properties-json-null",
+      "wire_DataRow_bytes": 227,
+      "field_bytes": 5,
+      "flag": true
+    },
+    {
+      "case": "properties-exact8192",
+      "wire_DataRow_bytes": 8415,
+      "field_bytes": 8193,
+      "flag": true
+    },
+    {
+      "case": "properties8193",
+      "wire_DataRow_bytes": 222,
+      "field_bytes": null,
+      "flag": false
+    },
+    {
+      "case": "properties-compressible262144",
+      "wire_DataRow_bytes": 222,
+      "field_bytes": null,
+      "flag": false
+    },
+    {
+      "case": "postadmission-logo-enlargement",
+      "wire_DataRow_bytes": 225,
+      "field_bytes": null,
+      "flag": false
+    },
+    {
+      "case": "postadmission-properties-enlargement",
+      "wire_DataRow_bytes": 222,
+      "field_bytes": null,
+      "flag": false
+    }
+  ],
+  "same_snapshot_flags_and_NULL_masks_verified": true,
+  "post_admission_retention_and_settlement_verified": 2,
+  "default_audit_bytes_exact": true,
+  "all_executed_tool_hashes_exact": true,
+  "actual_owned_inventory": {
+    "container": [],
+    "network": [],
+    "volume": []
+  },
+  "raw_sha256": "52f5364aa5a00d221ec3fe211ea0879f8c1aa332b9fa2a877168c2cab6a757ab",
+  "scope": "Native bounded Store controls; not Source parity, Main or performance",
+  "prior_review_attempt": "Host Python conditional-expression typo failed parsing before any operation; retained tool receipt, corrected without data changes"
+}

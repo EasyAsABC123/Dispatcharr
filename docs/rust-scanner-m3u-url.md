@@ -1,0 +1,9 @@
+# Bounded URL-hash M3U import
+
+The inert Rust scanner now accepts the exact global `url` hash setting alongside its existing empty/null setting. It preserves first-entry deduplication, repeat imports, cross-account stream ownership and cached-setting precedence within the tested local-file domain. Original Dispatcharr authors and dependency contributors retain full application, algorithm and licensing credit.
+
+Matching stream lookups check serialized field size in PostgreSQL. Oversized logo and JSON fields are masked before transfer, with independent flags that cause refusal rather than treating the row as absent. The actual fetch repeats these checks after admission. Only a mutation error followed by successful rollback and physical connection settlement can use the existing single retry; read, BEGIN, COMMIT and rollback failures remain operational failures.
+
+The [reproducible component packet](../scripts/rust-job-contracts/scanner-logo/m3u-url-consumption/README.md) records 17 comparison cases/393 checks, 14 size-limit cases/100 checks and nine physical recovery phases/182 checks. Separate admission and legacy regressions, unchanged default-database audits, cleanup, exact source reconstruction and a fresh portable compile also pass. Failed fixture attempts remain recorded alongside their corrections. The historical component map has 788 inputs; later combined-source tests have their own binding.
+
+This does not activate Main or default workers. CSV/normalized hash settings, account overrides, mapped-stream mutation, other provider types, plugins and general concurrent-writer behavior remain outside the admitted domain. M6 remains in progress. No import performance gain has been measured here; [image52 live-playback gains](rust-image52-live-performance.md) retain their original source/image scope.

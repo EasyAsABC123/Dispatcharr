@@ -1,0 +1,355 @@
+{
+  "status": "SEALED_BEFORE_NATIVE_FIXTURE_RESULTS",
+  "runtime3_map_sha256": "8765bc797235c46e200e0ec14d850ef27fcec4127d8a97383b144a99579ecbe5",
+  "runtime_lint_followup": "Equivalentcontains fix in distinctQA4source, preservingruntime3",
+  "Source_reference_sha256": "f97ed710872694abaa79fa1dc0d0abda3f2393912aa561f2fc69ef4f706fc15f",
+  "Source_cohort_failed_retained": true,
+  "Source4_capture": false,
+  "temporal_policy_sha256": "4cdd878ae08c1b488b300adbd3061edac6adc74ee8352289d09a21258a548c47",
+  "Source_derived_case_order": [
+    {
+      "ordinal": 0,
+      "label": "distinct-three",
+      "group": 1,
+      "input_sha256": "b7669f9e54d4a8d3a97d9bd8c9005af4f16fbe2272c287dd4998bfc2690760cb",
+      "account_created": true,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 0
+    },
+    {
+      "ordinal": 1,
+      "label": "repeat-identical",
+      "group": 2,
+      "input_sha256": "b7669f9e54d4a8d3a97d9bd8c9005af4f16fbe2272c287dd4998bfc2690760cb",
+      "account_created": false,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 1
+    },
+    {
+      "ordinal": 2,
+      "label": "duplicate-first-wins",
+      "group": 3,
+      "input_sha256": "38a842bc0aa5a6a3655a3583c869610dd1534eb0dc8eff05455a29380c3385a3",
+      "account_created": true,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 2
+    },
+    {
+      "ordinal": 3,
+      "label": "repeat-changed",
+      "group": 4,
+      "input_sha256": "da503e85f5720e1378f89b3b3f2700211fc4fd1444cc469ebc7a66c7f161e60f",
+      "account_created": false,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 3
+    },
+    {
+      "ordinal": 4,
+      "label": "cross-A-setup",
+      "group": 5,
+      "input_sha256": "fc3cafd029cb0d6a352a2e388d5c4ad644661d2297558a88cca56d79cb67af40",
+      "account_created": true,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 4
+    },
+    {
+      "ordinal": 5,
+      "label": "cross-B-identical",
+      "group": 5,
+      "input_sha256": "81bb2c11197c9ea63304cfff9857f6e5ceb033911a1ecafe3b651cbe20dfe90c",
+      "account_created": true,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 5
+    },
+    {
+      "ordinal": 6,
+      "label": "cross-B-update-create",
+      "group": 6,
+      "input_sha256": "8cf12e56ec6ab92254d5b5951871eeae31a54d8cbd1b8daeb7a72ccc94dcf5b9",
+      "account_created": false,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 6
+    },
+    {
+      "ordinal": 7,
+      "label": "cross-B-unrelated-stale",
+      "group": 7,
+      "input_sha256": "00150dcb9a3700b8bd678183a7ccc2539f730fcea0ea8ee4fd07269677aae9ff",
+      "account_created": false,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 7
+    },
+    {
+      "ordinal": 8,
+      "label": "cached-url-over-db-empty",
+      "group": 8,
+      "input_sha256": "e153a39266349102f204505c8ffc9e9180d4c7d3f674b46df6e726bbb9c1e4ec",
+      "account_created": true,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 8
+    },
+    {
+      "ordinal": 9,
+      "label": "cached-empty-map-over-db-url",
+      "group": 8,
+      "input_sha256": "9b0a8b3ae5e094ddffa35dbb933419ad131481ccbaf44d4891364d21bfad2151",
+      "account_created": true,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "empty",
+      "source_case_index": 9
+    },
+    {
+      "ordinal": 10,
+      "label": "mapped-own-setup",
+      "group": 9,
+      "input_sha256": "c10c56a6d9b3a5e8a496500fce768a1f42a03ea7fd333c635ae54f0c0d181240",
+      "account_created": true,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 10
+    },
+    {
+      "ordinal": 11,
+      "label": "mapped-own-update",
+      "group": 9,
+      "input_sha256": "23b66cddf46ee8b9ad49e906d2c23362be917fae2a09c449c9bf3c6b4249cd38",
+      "account_created": false,
+      "native_expectation": "preACK-retained-refusal-then-real-Original-fallback",
+      "proposed_hash_mode": "url",
+      "source_case_index": 11
+    },
+    {
+      "ordinal": 12,
+      "label": "mapped-foreign-collision",
+      "group": 10,
+      "input_sha256": "e21faa9cf043592f201b31ccf0d93b52fbbaf4f4584beca3861e48b760cf18db",
+      "account_created": true,
+      "native_expectation": "preACK-retained-refusal-then-real-Original-fallback",
+      "proposed_hash_mode": "url",
+      "source_case_index": 12
+    },
+    {
+      "ordinal": 13,
+      "label": "unrelated-foreign-mapped",
+      "group": 11,
+      "input_sha256": "dbc6767f4e850ddeda7af8a27987a231250115f479d32d895a242853797045d0",
+      "account_created": true,
+      "native_expectation": "normal-native-groups/single-Source-derived-effects-and-Original-result-decode",
+      "proposed_hash_mode": "url",
+      "source_case_index": 13
+    },
+    {
+      "ordinal": 14,
+      "label": "unsupported-space",
+      "group": 12,
+      "input_sha256": "5f9513cdcd911ed6e11af97ee51f1c2b79c91d3de1b9ed9cf824d6675595c163",
+      "account_created": true,
+      "native_expectation": "preACK-retained-refusal-then-real-Original-fallback",
+      "proposed_hash_mode": "url",
+      "source_case_index": 14
+    },
+    {
+      "ordinal": 15,
+      "label": "unsupported-uppercase",
+      "group": 12,
+      "input_sha256": "79c4e4cef032727e8984c331bd2fe2913c3d3fcffddbf227d8647e814c194ec7",
+      "account_created": true,
+      "native_expectation": "preACK-retained-refusal-then-real-Original-fallback",
+      "proposed_hash_mode": "url",
+      "source_case_index": 15
+    },
+    {
+      "ordinal": 16,
+      "label": "unsupported-duplicate-csv",
+      "group": 12,
+      "input_sha256": "202261f158d898eeff8b573d104b3b3072de94ef345939cdc571a9391277da64",
+      "account_created": true,
+      "native_expectation": "preACK-retained-refusal-then-real-Original-fallback",
+      "proposed_hash_mode": "url",
+      "source_case_index": 16
+    }
+  ],
+  "Store_projection_and_refusal_order": [
+    {
+      "label": "logo-sql-null",
+      "field": "logo_url",
+      "value": "SQLNULL",
+      "accept": true
+    },
+    {
+      "label": "logo-exact8192",
+      "field": "logo_url",
+      "bytes": 8192,
+      "accept": true
+    },
+    {
+      "label": "logo8193",
+      "field": "logo_url",
+      "bytes": 8193,
+      "accept": false
+    },
+    {
+      "label": "logo-compressible262144",
+      "field": "logo_url",
+      "bytes": 262144,
+      "accept": false
+    },
+    {
+      "label": "properties-sql-null",
+      "field": "custom_properties",
+      "value": "SQLNULL",
+      "accept": true
+    },
+    {
+      "label": "properties-json-null",
+      "field": "custom_properties",
+      "value": "JSONnull",
+      "accept": true
+    },
+    {
+      "label": "properties-exact8192",
+      "field": "custom_properties",
+      "serialized_text_bytes": 8192,
+      "accept": true
+    },
+    {
+      "label": "properties8193",
+      "field": "custom_properties",
+      "serialized_text_bytes": 8193,
+      "accept": false
+    },
+    {
+      "label": "properties-compressible262144",
+      "field": "custom_properties",
+      "serialized_text_bytes": 262144,
+      "accept": false
+    },
+    {
+      "label": "preACK-known-logo8193",
+      "field": "logo_url",
+      "bytes": 8193,
+      "worker": true,
+      "accept": false
+    },
+    {
+      "label": "preACK-known-properties8193",
+      "field": "custom_properties",
+      "serialized_text_bytes": 8193,
+      "worker": true,
+      "accept": false
+    },
+    {
+      "label": "postadmission-logo-enlargement",
+      "field": "logo_url",
+      "bytes": 262144,
+      "worker": true,
+      "expect": "ACK already observed; actualSELECTmaskedunsupported; foreignrow unchanged/noInsertUpdate/noResult/noRetry"
+    },
+    {
+      "label": "postadmission-properties-enlargement",
+      "field": "custom_properties",
+      "serialized_text_bytes": 262144,
+      "worker": true,
+      "expect": "ACK already observed; actualSELECTmaskedunsupported; foreignrow unchanged/noInsertUpdate/noResult/noRetry"
+    },
+    {
+      "label": "legacy-public-Store-oversize-read",
+      "legacy": true,
+      "expect": "Oldcaller semantics preserved; no new cap refusal; no bounded-transfer claim"
+    }
+  ],
+  "physical_order": [
+    {
+      "label": "cache-name-unsupported-reply",
+      "kind": "actualcachedreply",
+      "setting": "name",
+      "expect": "callerabort retainsowner beyond2s; noACK/result beforeorafterunsupported; release+drain; Sourcefallback"
+    },
+    {
+      "label": "cache-url-positive-abort-drain",
+      "kind": "actualcachedreply",
+      "setting": "url",
+      "expect": "callerabort retainsowner beyond2s; noACK whilepreflightblocked; release maycompleteownedjob; actualdrain/result/effects; nofakecancellationstop"
+    },
+    {
+      "label": "preACK-support-SQL-Error-Ready",
+      "kind": "RLSactualserverErrorResponseheldReady",
+      "hold_seconds": 6.2,
+      "expect": "onepreflightquery/noACK/result/effects; retainedowner/slot/shutdownuntilrelease"
+    },
+    {
+      "label": "snapshot-SQL-Error-Ready",
+      "kind": "RLSactualserverErrorResponseheldReady",
+      "hold_seconds": 6.2,
+      "expect": "SnapshotRead operational/noRetry/terminal; ACK/status/events explicit; retainedowneruntilReady"
+    },
+    {
+      "label": "snapshot-success-DataRow-Ready",
+      "kind": "actualboundedDataRowCommandCompleteheldReady",
+      "hold_seconds": 6.2,
+      "expect": "physicalcaller/admission retained; no premature result; release completes/drains"
+    },
+    {
+      "label": "transaction-BEGIN-loss",
+      "kind": "ownedrelayclosedbeforeforwardBEGIN",
+      "expect": "TransactionBegin operational/noRetry, physicalsocketcleanup"
+    },
+    {
+      "label": "mutation-P0001-rollback",
+      "kind": "actualimmediatetrigger",
+      "expect": "onlyknownmutationstageP0001 mayoneexistingretryaftersettledrollback"
+    },
+    {
+      "label": "rollback-loss",
+      "kind": "actualmutationP0001 thenownedrelaydisconnectatROLLBACK",
+      "expect": "RollbackFailed operational/noRetry/terminal"
+    },
+    {
+      "label": "COMMIT-P0001-Ready",
+      "kind": "actualdeferredconstrainttrigger",
+      "hold_seconds": 6.2,
+      "expect": "TransactionCommit operational/noRetry; physicalReady/callerretained"
+    }
+  ],
+  "query_bounds": "actualDataRowrecords preserveJSONNULL/SQLNULL/8192/8193; no largevalue transferred onunsupported; compressedsize diagnostic neverbound",
+  "hash_row_sentinel": "8requesteduniquehashes/checked+1returned sentinel; duplicates/unknowns mustrefusebeforemap, canonicaluniqueindexretained",
+  "adapted_historical_replay": {
+    "176": [
+      "DBurl andcachedurl positives replace former intentionalrefusals; allotherassertions retained"
+    ],
+    "32": [
+      "oldurlunsupported heldcase becomesname; separatepositiveurlabort/drain; sameholdbudgets"
+    ],
+    "unchanged": [
+      "audit634",
+      "auditphysical63",
+      "auditcapacity25",
+      "legacy58",
+      "normalStorecaller tests"
+    ]
+  },
+  "fixed_budgets": {
+    "peer_response_seconds": 35,
+    "normal_case_seconds": 65,
+    "held_SQL_seconds": 6.2,
+    "existing_logical_cache_seconds": 2,
+    "SQL_pool_seconds": 5,
+    "physical_drain_seconds": 10,
+    "input_entries": 8,
+    "input_bytes": 16384,
+    "cache_bytes": 131072,
+    "projected_field_text_bytes": 8192
+  },
+  "limits": "NoMain/registry/graph/performanceactivation, noCSV/XC/plugins/overrides/mappedupdates/nativeSource18failuremapping; unsupported observations stayrefusals",
+  "failures": "Preserve failures/newsource snapshots; no outcome-driven assertion/timeout widening",
+  "original_authors_credit": "Original Dispatcharr/dependency authors retaincode/algorithm/licenses"
+}

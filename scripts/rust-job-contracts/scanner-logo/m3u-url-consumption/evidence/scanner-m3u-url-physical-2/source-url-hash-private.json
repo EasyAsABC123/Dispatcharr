@@ -1,0 +1,3332 @@
+{
+  "passed": false,
+  "native_verified": true,
+  "performance_verified": false,
+  "scope": "Same normal bounded StoreAPI and scanner preACK/actualSELECT refusal controls; Source producer/decoder only, no new Source oracle or Main/performance claim",
+  "plan_sha256": "1bfedac35b79a0c263037601d64734e0d7e2f05929751b1c037ab683be10b0f4",
+  "cases": [
+    {
+      "label": "cache-name-unsupported-reply",
+      "retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "metadata": null,
+      "Original_decoded": null,
+      "before": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-physical-0.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 15:10:39.701276+00:00",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-physical-0.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          }
+        ],
+        "group_links": [],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQ2MzE4NDY0DwBK5UJz5xxztw==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 289
+          },
+          ":1:coresettings:group:stream_settings": {
+            "type": "string",
+            "dump_base64": "ACWABJUaAAAAAAAAAH2UjAxtM3VfaGFzaF9rZXmUjARuYW1llHMuDwCUTjGEROAr7Q==",
+            "ttl": 300
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 298
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM2OTc5NzkyMjg0DwDUGObpghl8IA==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDMyNDc0Mjk5DwDZb/bIalaRjw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDM5MDI0NTg5DwAIdcAz5vsQcQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQ2MTc5OTQwDwAO3V+ALEQqvQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQzOTMxODk2DwB78Eb+2+XwIQ==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0ONR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9mNDNkMDNhZi1jMWNmLTQyZjctOTljOS1mNmMzMWY2NgNjZjZhQC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE1OjEwOjQxLjQzOTA1MSswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMSZ2VuMzExQDA3MWIxMjkwZDE1ZkAgBWlnbm9yZSFjAnN1bECrBGZhbHNlIF4gWgVsYWNlZF9BkgRfbmVzdIH+QNsEc3RhbXAgGuEB3KCTYBhBNgJ7fX0gQwZwcm9wZXJ0gRQAeyJMA3JyZWxiH4DJ4SDKQIwDeV90b0DHHzg5YjcxOTZhLTE3MGEtMzJhYi1iYTYzLTA1NzA3NjJhA2EyZjlA2ABkIX4HdmVyeV9tb2RCngAyIJDgABMCaW5mQEwAeyHpAWNoIpZAIAAiQDUh50DoAl9rZWNrAmNlbCBCACKAzABpIUwAdEAWQQNDjQBf4wMWBWJhc2U2NEBD4ABlAXRhYzAfM2NkYjQ0NzUtNmUwMy00ZWEwLWIzNGYtZGRkODIzYjIivQUyIn19B+Tj/+VB5gxhMWMwYjljMy0yZjYxITQEZDgtYjIjuQFkOSRQBmM1YmNmMzFBbOMg5QcwLjAxMTMzM+Nq5eAfy+M95QIyNzjjheXgH/7jA+UGMGE2NTQ3YSH0GWI0Ny0zNjhiLWEwZWUtODUxNDQwYTRlZWQzQf7jAGvjeOUQN2QzNjQ3OWUtMWRkNS00NWIgsQ8zMzAtNjYzMWM2YzQ0OGJhQ+UB5P8PAMveRk1g1Idn",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3596
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3596
+          },
+          "live:worker:071b1290d15f:311:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABExNzk0NDk2MjQxLjM5MTU5OQ8Am/Bw69EG05I=",
+            "ttl": 30
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-0.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNjk5OTk5OTkzLjAPADau/vGQOufk",
+            "ttl": 259198
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "bytes": 108,
+            "mtime_ns": 1699999993000000000,
+            "sha256": "6912e665ec88dca1ba08464aea222007dcd0a61cf83a4aa436cbbb487a1255a4"
+          }
+        ]
+      },
+      "after": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-physical-0.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 15:10:39.701276+00:00",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-physical-0.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          }
+        ],
+        "group_links": [],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQ2MzE4NDY0DwBK5UJz5xxztw==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 286
+          },
+          ":1:coresettings:group:stream_settings": {
+            "type": "string",
+            "dump_base64": "ACWABJUaAAAAAAAAAH2UjAxtM3VfaGFzaF9rZXmUjARuYW1llHMuDwCUTjGEROAr7Q==",
+            "ttl": 297
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 296
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM2OTc5NzkyMjg0DwDUGObpghl8IA==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDMyNDc0Mjk5DwDZb/bIalaRjw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDM5MDI0NTg5DwAIdcAz5vsQcQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQ2MTc5OTQwDwAO3V+ALEQqvQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQzOTMxODk2DwB78Eb+2+XwIQ==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0ONR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9mNDNkMDNhZi1jMWNmLTQyZjctOTljOS1mNmMzMWY2NgNjZjZhQC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE1OjEwOjQxLjQzOTA1MSswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMSZ2VuMzExQDA3MWIxMjkwZDE1ZkAgBWlnbm9yZSFjAnN1bECrBGZhbHNlIF4gWgVsYWNlZF9BkgRfbmVzdIH+QNsEc3RhbXAgGuEB3KCTYBhBNgJ7fX0gQwZwcm9wZXJ0gRQAeyJMA3JyZWxiH4DJ4SDKQIwDeV90b0DHHzg5YjcxOTZhLTE3MGEtMzJhYi1iYTYzLTA1NzA3NjJhA2EyZjlA2ABkIX4HdmVyeV9tb2RCngAyIJDgABMCaW5mQEwAeyHpAWNoIpZAIAAiQDUh50DoAl9rZWNrAmNlbCBCACKAzABpIUwAdEAWQQNDjQBf4wMWBWJhc2U2NEBD4ABlAXRhYzAfM2NkYjQ0NzUtNmUwMy00ZWEwLWIzNGYtZGRkODIzYjIivQUyIn19B+Tj/+VB5gxhMWMwYjljMy0yZjYxITQEZDgtYjIjuQFkOSRQBmM1YmNmMzFBbOMg5QcwLjAxMTMzM+Nq5eAfy+M95QIyNzjjheXgH/7jA+UGMGE2NTQ3YSH0GWI0Ny0zNjhiLWEwZWUtODUxNDQwYTRlZWQzQf7jAGvjeOUQN2QzNjQ3OWUtMWRkNS00NWIgsQ8zMzAtNjYzMWM2YzQ0OGJhQ+UB5P8PAMveRk1g1Idn",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3594
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3594
+          },
+          "live:worker:071b1290d15f:311:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABExNzk0NDk2MjQzLjM5Mzg4MQ8AsddHH+KuSZQ=",
+            "ttl": 29
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-0.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNjk5OTk5OTkzLjAPADau/vGQOufk",
+            "ttl": 259196
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "bytes": 108,
+            "mtime_ns": 1699999993000000000,
+            "sha256": "6912e665ec88dca1ba08464aea222007dcd0a61cf83a4aa436cbbb487a1255a4"
+          }
+        ]
+      },
+      "queries": [],
+      "error_codes": [],
+      "timeline": [],
+      "actual_matching_DataRows": null,
+      "actual_matching_CommandComplete": null,
+      "no_new_Source_reference": true,
+      "Source_fallback": true
+    },
+    {
+      "label": "cache-url-positive-abort-drain",
+      "retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "metadata": null,
+      "Original_decoded": null,
+      "before": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-physical-0.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:39.701276+00:00",
+            "updated_at": "2026-11-12 15:10:45.683118+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-owned-children-physical-1.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-1.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 15:10:48.325622+00:00",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 3,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-physical-0.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 3,
+            "m3u_account_id": 4,
+            "name": "rust-owned-children-physical-1.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [
+          {
+            "id": 2,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-0.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:45.522725+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "5cb032da8e75851f5b664b3f518846f860844e7edd1a326adefe9f13f3b36580",
+            "last_seen": "2026-11-12 15:10:45.522510+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          },
+          {
+            "id": 2,
+            "name": "Default Group"
+          },
+          {
+            "id": 3,
+            "name": "Owned Physical Group"
+          }
+        ],
+        "group_links": [
+          {
+            "id": 2,
+            "channel_group_id": 2,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 3,
+            "channel_group_id": 3,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          }
+        ],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [
+          {
+            "id": 1,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:45.684635+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-0.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          }
+        ],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjQ3MTE4NDg2MDc0DwABxcJzYpDzrA==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 280
+          },
+          ":1:coresettings:group:stream_settings": {
+            "type": "string",
+            "dump_base64": "ACSABJUZAAAAAAAAAH2UjAxtM3VfaGFzaF9rZXmUjAN1cmyUcy4PANFpO06snRl0",
+            "ttl": 300
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 290
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM2OTc5NzkyMjg0DwDUGObpghl8IA==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDMyNDc0Mjk5DwDZb/bIalaRjw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDM5MDI0NTg5DwAIdcAz5vsQcQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjQ3MTE4MzQ3OTYwDwDB/yD5Pf5ZuQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQzOTMxODk2DwB78Eb+2+XwIQ==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0ONR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9mNDNkMDNhZi1jMWNmLTQyZjctOTljOS1mNmMzMWY2NgNjZjZhQC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE1OjEwOjQxLjQzOTA1MSswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMSZ2VuMzExQDA3MWIxMjkwZDE1ZkAgBWlnbm9yZSFjAnN1bECrBGZhbHNlIF4gWgVsYWNlZF9BkgRfbmVzdIH+QNsEc3RhbXAgGuEB3KCTYBhBNgJ7fX0gQwZwcm9wZXJ0gRQAeyJMA3JyZWxiH4DJ4SDKQIwDeV90b0DHHzg5YjcxOTZhLTE3MGEtMzJhYi1iYTYzLTA1NzA3NjJhA2EyZjlA2ABkIX4HdmVyeV9tb2RCngAyIJDgABMCaW5mQEwAeyHpAWNoIpZAIAAiQDUh50DoAl9rZWNrAmNlbCBCACKAzABpIUwAdEAWQQNDjQBf4wMWBWJhc2U2NEBD4ABlAXRhYzAfM2NkYjQ0NzUtNmUwMy00ZWEwLWIzNGYtZGRkODIzYjIivQUyIn19B+Tj/+VB5gxhMWMwYjljMy0yZjYxITQEZDgtYjIjuQFkOSRQBmM1YmNmMzFBbOMg5QcwLjAxMTMzM+Nq5eAfy+M95QIyNzjjheXgH/7jA+UGMGE2NTQ3YSH0GWI0Ny0zNjhiLWEwZWUtODUxNDQwYTRlZWQzQf7jAGvjeOUQN2QzNjQ3OWUtMWRkNS00NWIgsQ8zMzAtNjYzMWM2YzQ0OGJhQ+UB5P8PAMveRk1g1Idn",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3588
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3588
+          },
+          "epg_content_generation": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": -1
+          },
+          "live:worker:071b1290d15f:311:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABIxNzk0NDk2MjQ5LjQwMDU3NjQPAMhedsReqyw4",
+            "ttl": 29
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-0.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNjk5OTk5OTkzLjAPADau/vGQOufk",
+            "ttl": 259190
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-1.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDAzLjAPAMlhuUltxA2i",
+            "ttl": 259198
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-physical-1.m3u",
+            "bytes": 108,
+            "mtime_ns": 1700000003000000000,
+            "sha256": "57f1668d112e8a2778c3b94c968452fffe57f32088969ab3645b3b8457ff0d10"
+          }
+        ]
+      },
+      "after": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-physical-0.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:39.701276+00:00",
+            "updated_at": "2026-11-12 15:10:45.683118+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-owned-children-physical-1.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-1.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 15:10:48.325622+00:00",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 3,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-physical-0.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 3,
+            "m3u_account_id": 4,
+            "name": "rust-owned-children-physical-1.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [
+          {
+            "id": 2,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-0.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:45.522725+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "5cb032da8e75851f5b664b3f518846f860844e7edd1a326adefe9f13f3b36580",
+            "last_seen": "2026-11-12 15:10:45.522510+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          },
+          {
+            "id": 2,
+            "name": "Default Group"
+          },
+          {
+            "id": 3,
+            "name": "Owned Physical Group"
+          }
+        ],
+        "group_links": [
+          {
+            "id": 2,
+            "channel_group_id": 2,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 3,
+            "channel_group_id": 3,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          }
+        ],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [
+          {
+            "id": 1,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:45.684635+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-0.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          }
+        ],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjQ3MTE4NDg2MDc0DwABxcJzYpDzrA==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 278
+          },
+          ":1:coresettings:group:stream_settings": {
+            "type": "string",
+            "dump_base64": "ACSABJUZAAAAAAAAAH2UjAxtM3VfaGFzaF9rZXmUjAN1cmyUcy4PANFpO06snRl0",
+            "ttl": 297
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 287
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM2OTc5NzkyMjg0DwDUGObpghl8IA==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDMyNDc0Mjk5DwDZb/bIalaRjw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDM5MDI0NTg5DwAIdcAz5vsQcQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjQ3MTE4MzQ3OTYwDwDB/yD5Pf5ZuQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQzOTMxODk2DwB78Eb+2+XwIQ==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0ONR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9mNDNkMDNhZi1jMWNmLTQyZjctOTljOS1mNmMzMWY2NgNjZjZhQC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE1OjEwOjQxLjQzOTA1MSswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMSZ2VuMzExQDA3MWIxMjkwZDE1ZkAgBWlnbm9yZSFjAnN1bECrBGZhbHNlIF4gWgVsYWNlZF9BkgRfbmVzdIH+QNsEc3RhbXAgGuEB3KCTYBhBNgJ7fX0gQwZwcm9wZXJ0gRQAeyJMA3JyZWxiH4DJ4SDKQIwDeV90b0DHHzg5YjcxOTZhLTE3MGEtMzJhYi1iYTYzLTA1NzA3NjJhA2EyZjlA2ABkIX4HdmVyeV9tb2RCngAyIJDgABMCaW5mQEwAeyHpAWNoIpZAIAAiQDUh50DoAl9rZWNrAmNlbCBCACKAzABpIUwAdEAWQQNDjQBf4wMWBWJhc2U2NEBD4ABlAXRhYzAfM2NkYjQ0NzUtNmUwMy00ZWEwLWIzNGYtZGRkODIzYjIivQUyIn19B+Tj/+VB5gxhMWMwYjljMy0yZjYxITQEZDgtYjIjuQFkOSRQBmM1YmNmMzFBbOMg5QcwLjAxMTMzM+Nq5eAfy+M95QIyNzjjheXgH/7jA+UGMGE2NTQ3YSH0GWI0Ny0zNjhiLWEwZWUtODUxNDQwYTRlZWQzQf7jAGvjeOUQN2QzNjQ3OWUtMWRkNS00NWIgsQ8zMzAtNjYzMWM2YzQ0OGJhQ+UB5P8PAMveRk1g1Idn",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3585
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3585
+          },
+          "epg_content_generation": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": -1
+          },
+          "live:worker:071b1290d15f:311:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABExNzk0NDk2MjUyLjQwMzU3OA8AiVqEu/qlpU8=",
+            "ttl": 30
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-0.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNjk5OTk5OTkzLjAPADau/vGQOufk",
+            "ttl": 259187
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-1.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDAzLjAPAMlhuUltxA2i",
+            "ttl": 259196
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-physical-1.m3u",
+            "bytes": 108,
+            "mtime_ns": 1700000003000000000,
+            "sha256": "57f1668d112e8a2778c3b94c968452fffe57f32088969ab3645b3b8457ff0d10"
+          }
+        ]
+      },
+      "queries": [],
+      "error_codes": [],
+      "timeline": [],
+      "actual_matching_DataRows": null,
+      "actual_matching_CommandComplete": null,
+      "no_new_Source_reference": true,
+      "Source_fallback": true
+    },
+    {
+      "label": "preACK-support-SQL-Error-Ready",
+      "retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "metadata": null,
+      "Original_decoded": null,
+      "before": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-physical-0.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:39.701276+00:00",
+            "updated_at": "2026-11-12 15:10:45.683118+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-owned-children-physical-1.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-1.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:48.325622+00:00",
+            "updated_at": "2026-11-12 15:10:54.208658+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 3,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "rust-owned-children-physical-2.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-2.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 15:10:56.926997+00:00",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-physical-0.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 3,
+            "m3u_account_id": 4,
+            "name": "rust-owned-children-physical-1.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 4,
+            "m3u_account_id": 5,
+            "name": "rust-owned-children-physical-2.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [
+          {
+            "id": 2,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-0.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:45.522725+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "5cb032da8e75851f5b664b3f518846f860844e7edd1a326adefe9f13f3b36580",
+            "last_seen": "2026-11-12 15:10:45.522510+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 3,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-1.ts",
+            "m3u_account_id": 4,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:54.049123+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "827c3526c9a3a6aebcbfbe11c3a698554f538567e42ce2bab35c3e4cca32dd27",
+            "last_seen": "2026-11-12 15:10:54.048906+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 4,
+            "name": "Owned physical original",
+            "url": "http://127.0.0.1:9/owned-physical-2.ts",
+            "m3u_account_id": 1,
+            "logo_url": "",
+            "tvg_id": null,
+            "local_file": "owned-protect.ts",
+            "current_viewers": 3,
+            "updated_at": "2026-11-12 15:10:36.966451+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": 6,
+            "is_custom": false,
+            "stream_hash": "6937189f68c8b4b211a7e953a6725fcd62b79f3a2a239987f4a1b22a740e6e97",
+            "last_seen": "2026-11-12 15:10:36.966283+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {},
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": {
+              "owned": "preserve"
+            },
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          },
+          {
+            "id": 2,
+            "name": "Default Group"
+          },
+          {
+            "id": 3,
+            "name": "Owned Physical Group"
+          }
+        ],
+        "group_links": [
+          {
+            "id": 2,
+            "channel_group_id": 2,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 3,
+            "channel_group_id": 3,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 4,
+            "channel_group_id": 2,
+            "m3u_account_id": 4,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:53.945760+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 5,
+            "channel_group_id": 3,
+            "m3u_account_id": 4,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:53.945760+00:00",
+            "is_stale": true
+          }
+        ],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [
+          {
+            "id": 1,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:45.684635+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-0.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          },
+          {
+            "id": 2,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:54.210976+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-1.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          }
+        ],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjU1Njg3NzUyNTM4DwDibYvwsPy/Rg==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 271
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 281
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM2OTc5NzkyMjg0DwDUGObpghl8IA==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDMyNDc0Mjk5DwDZb/bIalaRjw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDM5MDI0NTg5DwAIdcAz5vsQcQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjU1Njg3NjA4MTA0DwA4FTjoQsIlKg==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQzOTMxODk2DwB78Eb+2+XwIQ==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0ONR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9mNDNkMDNhZi1jMWNmLTQyZjctOTljOS1mNmMzMWY2NgNjZjZhQC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE1OjEwOjQxLjQzOTA1MSswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMSZ2VuMzExQDA3MWIxMjkwZDE1ZkAgBWlnbm9yZSFjAnN1bECrBGZhbHNlIF4gWgVsYWNlZF9BkgRfbmVzdIH+QNsEc3RhbXAgGuEB3KCTYBhBNgJ7fX0gQwZwcm9wZXJ0gRQAeyJMA3JyZWxiH4DJ4SDKQIwDeV90b0DHHzg5YjcxOTZhLTE3MGEtMzJhYi1iYTYzLTA1NzA3NjJhA2EyZjlA2ABkIX4HdmVyeV9tb2RCngAyIJDgABMCaW5mQEwAeyHpAWNoIpZAIAAiQDUh50DoAl9rZWNrAmNlbCBCACKAzABpIUwAdEAWQQNDjQBf4wMWBWJhc2U2NEBD4ABlAXRhYzAfM2NkYjQ0NzUtNmUwMy00ZWEwLWIzNGYtZGRkODIzYjIivQUyIn19B+Tj/+VB5gxhMWMwYjljMy0yZjYxITQEZDgtYjIjuQFkOSRQBmM1YmNmMzFBbOMg5QcwLjAxMTMzM+Nq5eAfy+M95QIyNzjjheXgH/7jA+UGMGE2NTQ3YSH0GWI0Ny0zNjhiLWEwZWUtODUxNDQwYTRlZWQzQf7jAGvjeOUQN2QzNjQ3OWUtMWRkNS00NWIgsQ8zMzAtNjYzMWM2YzQ0OGJhQ+UB5P8PAMveRk1g1Idn",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3579
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3579
+          },
+          "epg_content_generation": {
+            "type": "string",
+            "dump_base64": "AMACDwCUJtWwVniDMw==",
+            "ttl": -1
+          },
+          "live:worker:071b1290d15f:311:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABIxNzk0NDk2MjU4LjQwODkzMDgPAJcP1B/fL94A",
+            "ttl": 30
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-0.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNjk5OTk5OTkzLjAPADau/vGQOufk",
+            "ttl": 259181
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-1.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDAzLjAPAMlhuUltxA2i",
+            "ttl": 259190
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-2.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDEzLjAPAJ3yotrk15BB",
+            "ttl": 259198
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-physical-2.m3u",
+            "bytes": 108,
+            "mtime_ns": 1700000013000000000,
+            "sha256": "7e54c7d66821bbface2fc92737ed116b0b30b56866d71871a4eb99142f79336a"
+          }
+        ]
+      },
+      "after": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-physical-0.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:39.701276+00:00",
+            "updated_at": "2026-11-12 15:10:45.683118+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-owned-children-physical-1.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-1.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:48.325622+00:00",
+            "updated_at": "2026-11-12 15:10:54.208658+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 3,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "rust-owned-children-physical-2.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-2.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 15:10:56.926997+00:00",
+            "updated_at": null,
+            "status": "idle",
+            "last_message": null,
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-physical-0.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 3,
+            "m3u_account_id": 4,
+            "name": "rust-owned-children-physical-1.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 4,
+            "m3u_account_id": 5,
+            "name": "rust-owned-children-physical-2.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [
+          {
+            "id": 2,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-0.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:45.522725+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "5cb032da8e75851f5b664b3f518846f860844e7edd1a326adefe9f13f3b36580",
+            "last_seen": "2026-11-12 15:10:45.522510+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 3,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-1.ts",
+            "m3u_account_id": 4,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:54.049123+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "827c3526c9a3a6aebcbfbe11c3a698554f538567e42ce2bab35c3e4cca32dd27",
+            "last_seen": "2026-11-12 15:10:54.048906+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 4,
+            "name": "Owned physical original",
+            "url": "http://127.0.0.1:9/owned-physical-2.ts",
+            "m3u_account_id": 1,
+            "logo_url": "",
+            "tvg_id": null,
+            "local_file": "owned-protect.ts",
+            "current_viewers": 3,
+            "updated_at": "2026-11-12 15:10:36.966451+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": 6,
+            "is_custom": false,
+            "stream_hash": "6937189f68c8b4b211a7e953a6725fcd62b79f3a2a239987f4a1b22a740e6e97",
+            "last_seen": "2026-11-12 15:10:36.966283+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {},
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": {
+              "owned": "preserve"
+            },
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          },
+          {
+            "id": 2,
+            "name": "Default Group"
+          },
+          {
+            "id": 3,
+            "name": "Owned Physical Group"
+          }
+        ],
+        "group_links": [
+          {
+            "id": 2,
+            "channel_group_id": 2,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 3,
+            "channel_group_id": 3,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 4,
+            "channel_group_id": 2,
+            "m3u_account_id": 4,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:53.945760+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 5,
+            "channel_group_id": 3,
+            "m3u_account_id": 4,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:53.945760+00:00",
+            "is_stale": true
+          }
+        ],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [
+          {
+            "id": 1,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:45.684635+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-0.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          },
+          {
+            "id": 2,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:54.210976+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-1.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          }
+        ],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjU1Njg3NzUyNTM4DwDibYvwsPy/Rg==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 264
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 273
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM2OTc5NzkyMjg0DwDUGObpghl8IA==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDMyNDc0Mjk5DwDZb/bIalaRjw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDM5MDI0NTg5DwAIdcAz5vsQcQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjU1Njg3NjA4MTA0DwA4FTjoQsIlKg==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQzOTMxODk2DwB78Eb+2+XwIQ==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0ONR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9mNDNkMDNhZi1jMWNmLTQyZjctOTljOS1mNmMzMWY2NgNjZjZhQC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE1OjEwOjQxLjQzOTA1MSswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMSZ2VuMzExQDA3MWIxMjkwZDE1ZkAgBWlnbm9yZSFjAnN1bECrBGZhbHNlIF4gWgVsYWNlZF9BkgRfbmVzdIH+QNsEc3RhbXAgGuEB3KCTYBhBNgJ7fX0gQwZwcm9wZXJ0gRQAeyJMA3JyZWxiH4DJ4SDKQIwDeV90b0DHHzg5YjcxOTZhLTE3MGEtMzJhYi1iYTYzLTA1NzA3NjJhA2EyZjlA2ABkIX4HdmVyeV9tb2RCngAyIJDgABMCaW5mQEwAeyHpAWNoIpZAIAAiQDUh50DoAl9rZWNrAmNlbCBCACKAzABpIUwAdEAWQQNDjQBf4wMWBWJhc2U2NEBD4ABlAXRhYzAfM2NkYjQ0NzUtNmUwMy00ZWEwLWIzNGYtZGRkODIzYjIivQUyIn19B+Tj/+VB5gxhMWMwYjljMy0yZjYxITQEZDgtYjIjuQFkOSRQBmM1YmNmMzFBbOMg5QcwLjAxMTMzM+Nq5eAfy+M95QIyNzjjheXgH/7jA+UGMGE2NTQ3YSH0GWI0Ny0zNjhiLWEwZWUtODUxNDQwYTRlZWQzQf7jAGvjeOUQN2QzNjQ3OWUtMWRkNS00NWIgsQ8zMzAtNjYzMWM2YzQ0OGJhQ+UB5P8PAMveRk1g1Idn",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3572
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3572
+          },
+          "epg_content_generation": {
+            "type": "string",
+            "dump_base64": "AMACDwCUJtWwVniDMw==",
+            "ttl": -1
+          },
+          "live:worker:071b1290d15f:311:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABIxNzk0NDk2MjY1LjQxNzU4NjgPAOXTDUSJ8N1X",
+            "ttl": 29
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-0.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNjk5OTk5OTkzLjAPADau/vGQOufk",
+            "ttl": 259173
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-1.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDAzLjAPAMlhuUltxA2i",
+            "ttl": 259182
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-2.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDEzLjAPAJ3yotrk15BB",
+            "ttl": 259191
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-physical-2.m3u",
+            "bytes": 108,
+            "mtime_ns": 1700000013000000000,
+            "sha256": "7e54c7d66821bbface2fc92737ed116b0b30b56866d71871a4eb99142f79336a"
+          }
+        ]
+      },
+      "queries": [
+        "SELECT id::bigint,name,file_path,is_active,status,CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1",
+        "SELECT octet_length(value::text)<=65536 AS bounded,CASE WHEN octet_length(value::text)<=65536 THEN CASE WHEN jsonb_typeof(value)='object' THEN COALESCE(value->'m3u_hash_key','\"\"'::jsonb) ELSE '\"\"'::jsonb END ELSE NULL END AS hash_value FROM core_coresettings WHERE key='stream_settings'",
+        "SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))",
+        "SELECT (SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_stream WHERE m3u_account_id=$1 LIMIT 65)s)+(SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 LIMIT 17)g)",
+        "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.stream_hash=ANY($1))",
+        "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) AND ((logo_url IS NOT NULL AND octet_length(logo_url)>$2) OR (custom_properties IS NOT NULL AND octet_length(custom_properties::text)>$2)))"
+      ],
+      "error_codes": [
+        "P0001"
+      ],
+      "timeline": [
+        {
+          "stage": "real-Ready-held",
+          "epoch": 1794496259.888865,
+          "query_identity": "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) AND ((logo_url IS NOT NULL AND octet_length(logo_url)>$2) OR (custom_properties IS NOT NULL AND octet_length(custom_properties::text)>$2)))",
+          "matching_DataRows": 0,
+          "matching_CommandComplete": 0
+        }
+      ],
+      "actual_matching_DataRows": 0,
+      "actual_matching_CommandComplete": 0,
+      "no_new_Source_reference": true,
+      "Source_fallback": true
+    },
+    {
+      "label": "snapshot-SQL-Error-Ready",
+      "retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "metadata": null,
+      "Original_decoded": null,
+      "before": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-physical-0.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:39.701276+00:00",
+            "updated_at": "2026-11-12 15:10:45.683118+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-owned-children-physical-1.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-1.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:48.325622+00:00",
+            "updated_at": "2026-11-12 15:10:54.208658+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 3,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "rust-owned-children-physical-2.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-2.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:56.926997+00:00",
+            "updated_at": "2026-11-12 15:11:07.924288+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 0 created, 1 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "rust-owned-children-physical-3.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-3.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 15:11:10.631221+00:00",
+            "updated_at": null,
+            "status": "pending_setup",
+            "last_message": "M3U groups loaded. Please select groups or refresh M3U to complete setup.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 5,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-physical-0.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 3,
+            "m3u_account_id": 4,
+            "name": "rust-owned-children-physical-1.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 4,
+            "m3u_account_id": 5,
+            "name": "rust-owned-children-physical-2.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 5,
+            "m3u_account_id": 6,
+            "name": "rust-owned-children-physical-3.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [
+          {
+            "id": 2,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-0.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:45.522725+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "5cb032da8e75851f5b664b3f518846f860844e7edd1a326adefe9f13f3b36580",
+            "last_seen": "2026-11-12 15:10:45.522510+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 3,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-1.ts",
+            "m3u_account_id": 4,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:54.049123+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "827c3526c9a3a6aebcbfbe11c3a698554f538567e42ce2bab35c3e4cca32dd27",
+            "last_seen": "2026-11-12 15:10:54.048906+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 4,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-2.ts",
+            "m3u_account_id": 1,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "owned-protect.ts",
+            "current_viewers": 3,
+            "updated_at": "2026-11-12 15:11:07.762756+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": 6,
+            "is_custom": false,
+            "stream_hash": "6937189f68c8b4b211a7e953a6725fcd62b79f3a2a239987f4a1b22a740e6e97",
+            "last_seen": "2026-11-12 15:11:07.762752+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": {
+              "owned": "preserve"
+            },
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 5,
+            "name": "Owned physical original",
+            "url": "http://127.0.0.1:9/owned-physical-3.ts",
+            "m3u_account_id": 1,
+            "logo_url": "",
+            "tvg_id": null,
+            "local_file": "owned-protect.ts",
+            "current_viewers": 3,
+            "updated_at": "2026-11-12 15:10:36.966451+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": 6,
+            "is_custom": false,
+            "stream_hash": "70c4ad5a210ffc936f02c34ff726d5b628931eeee9cecde367815ff02ff873ae",
+            "last_seen": "2026-11-12 15:10:36.966283+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {},
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": {
+              "owned": "preserve"
+            },
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          },
+          {
+            "id": 2,
+            "name": "Default Group"
+          },
+          {
+            "id": 3,
+            "name": "Owned Physical Group"
+          }
+        ],
+        "group_links": [
+          {
+            "id": 2,
+            "channel_group_id": 2,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 3,
+            "channel_group_id": 3,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 4,
+            "channel_group_id": 2,
+            "m3u_account_id": 4,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:53.945760+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 5,
+            "channel_group_id": 3,
+            "m3u_account_id": 4,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:53.945760+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 6,
+            "channel_group_id": 2,
+            "m3u_account_id": 5,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:11:07.648359+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 7,
+            "channel_group_id": 3,
+            "m3u_account_id": 5,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:11:07.648359+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 8,
+            "channel_group_id": 2,
+            "m3u_account_id": 6,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:11:12.450476+00:00",
+            "is_stale": false
+          },
+          {
+            "id": 9,
+            "channel_group_id": 3,
+            "m3u_account_id": 6,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:11:12.450476+00:00",
+            "is_stale": false
+          }
+        ],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [
+          {
+            "id": 1,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:45.684635+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-0.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          },
+          {
+            "id": 2,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:54.210976+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-1.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          },
+          {
+            "id": 3,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:11:07.925914+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-2.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 0,
+              "streams_deleted": 0,
+              "streams_updated": 1,
+              "total_processed": 1
+            }
+          }
+        ],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjY5MzgyMzU5NzU1DwCx/i5jNc0G4g==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 258
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 267
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM2OTc5NzkyMjg0DwDUGObpghl8IA==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDMyNDc0Mjk5DwDZb/bIalaRjw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDM5MDI0NTg5DwAIdcAz5vsQcQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjY5MzgyMjEwMTUxDwCy/pJ3/pOlRw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQzOTMxODk2DwB78Eb+2+XwIQ==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0ONR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9mNDNkMDNhZi1jMWNmLTQyZjctOTljOS1mNmMzMWY2NgNjZjZhQC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE1OjEwOjQxLjQzOTA1MSswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMSZ2VuMzExQDA3MWIxMjkwZDE1ZkAgBWlnbm9yZSFjAnN1bECrBGZhbHNlIF4gWgVsYWNlZF9BkgRfbmVzdIH+QNsEc3RhbXAgGuEB3KCTYBhBNgJ7fX0gQwZwcm9wZXJ0gRQAeyJMA3JyZWxiH4DJ4SDKQIwDeV90b0DHHzg5YjcxOTZhLTE3MGEtMzJhYi1iYTYzLTA1NzA3NjJhA2EyZjlA2ABkIX4HdmVyeV9tb2RCngAyIJDgABMCaW5mQEwAeyHpAWNoIpZAIAAiQDUh50DoAl9rZWNrAmNlbCBCACKAzABpIUwAdEAWQQNDjQBf4wMWBWJhc2U2NEBD4ABlAXRhYzAfM2NkYjQ0NzUtNmUwMy00ZWEwLWIzNGYtZGRkODIzYjIivQUyIn19B+Tj/+VB5gxhMWMwYjljMy0yZjYxITQEZDgtYjIjuQFkOSRQBmM1YmNmMzFBbOMg5QcwLjAxMTMzM+Nq5eAfy+M95QIyNzjjheXgH/7jA+UGMGE2NTQ3YSH0GWI0Ny0zNjhiLWEwZWUtODUxNDQwYTRlZWQzQf7jAGvjeOUQN2QzNjQ3OWUtMWRkNS00NWIgsQ8zMzAtNjYzMWM2YzQ0OGJhQ+UB5P8PAMveRk1g1Idn",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3565
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3565
+          },
+          "epg_content_generation": {
+            "type": "string",
+            "dump_base64": "AMADDwAqHpV+fymRxw==",
+            "ttl": -1
+          },
+          "live:worker:071b1290d15f:311:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABIxNzk0NDk2MjcyLjQyNjg4MzcPABmPIhitve9U",
+            "ttl": 30
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-0.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNjk5OTk5OTkzLjAPADau/vGQOufk",
+            "ttl": 259167
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-1.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDAzLjAPAMlhuUltxA2i",
+            "ttl": 259176
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-2.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDEzLjAPAJ3yotrk15BB",
+            "ttl": 259184
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-3.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDIzLjAPAArUGTctxW5O",
+            "ttl": 259198
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-physical-3.m3u",
+            "bytes": 108,
+            "mtime_ns": 1700000023000000000,
+            "sha256": "979d14eea329b2770b707b53896a11d35ba9943f266a1762bfb8c34605eb7585"
+          }
+        ]
+      },
+      "after": {
+        "stream_settings_rows": [
+          {
+            "id": 13,
+            "key": "stream_settings",
+            "name": "Stream Settings",
+            "value": {
+              "m3u_hash_key": "url",
+              "default_user_agent": 1,
+              "default_stream_profile": 1
+            }
+          }
+        ],
+        "accounts": [
+          {
+            "id": 3,
+            "name": "rust-owned-children-physical-0.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-0.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:39.701276+00:00",
+            "updated_at": "2026-11-12 15:10:45.683118+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 2,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 4,
+            "name": "rust-owned-children-physical-1.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-1.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:48.325622+00:00",
+            "updated_at": "2026-11-12 15:10:54.208658+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 1 created, 0 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 3,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 5,
+            "name": "rust-owned-children-physical-2.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-2.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": false,
+            "created_at": "2026-11-12 15:10:56.926997+00:00",
+            "updated_at": "2026-11-12 15:11:07.924288+00:00",
+            "status": "success",
+            "last_message": "Processing completed in 0.0 seconds. Streams: 0 created, 1 updated, 0 marked stale, 0 removed. Total processed: 1.",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 4,
+            "stale_stream_days": 7,
+            "priority": 0
+          },
+          {
+            "id": 6,
+            "name": "rust-owned-children-physical-3.m3u",
+            "server_url": null,
+            "file_path": "/data/m3us/rust-owned-children-physical-3.m3u",
+            "server_group_id": null,
+            "max_streams": 0,
+            "is_active": true,
+            "created_at": "2026-11-12 15:11:10.631221+00:00",
+            "updated_at": null,
+            "status": "parsing",
+            "last_message": "Refresh in progress...",
+            "user_agent_id": null,
+            "locked": false,
+            "stream_profile_id": null,
+            "account_type": "STD",
+            "username": null,
+            "password": null,
+            "custom_properties": {},
+            "refresh_interval": 0,
+            "refresh_task_id": 5,
+            "stale_stream_days": 7,
+            "priority": 0
+          }
+        ],
+        "profiles": [
+          {
+            "id": 2,
+            "m3u_account_id": 3,
+            "name": "rust-owned-children-physical-0.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 3,
+            "m3u_account_id": 4,
+            "name": "rust-owned-children-physical-1.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 4,
+            "m3u_account_id": 5,
+            "name": "rust-owned-children-physical-2.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          },
+          {
+            "id": 5,
+            "m3u_account_id": 6,
+            "name": "rust-owned-children-physical-3.m3u Default",
+            "is_default": true,
+            "max_streams": 0,
+            "is_active": true,
+            "search_pattern": "^(.*)$",
+            "replace_pattern": "$1",
+            "current_viewers": 0,
+            "custom_properties": {},
+            "exp_date": null
+          }
+        ],
+        "streams": [
+          {
+            "id": 2,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-0.ts",
+            "m3u_account_id": 3,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:45.522725+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "5cb032da8e75851f5b664b3f518846f860844e7edd1a326adefe9f13f3b36580",
+            "last_seen": "2026-11-12 15:10:45.522510+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 3,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-1.ts",
+            "m3u_account_id": 4,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "",
+            "current_viewers": 0,
+            "updated_at": "2026-11-12 15:10:54.049123+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": null,
+            "is_custom": false,
+            "stream_hash": "827c3526c9a3a6aebcbfbe11c3a698554f538567e42ce2bab35c3e4cca32dd27",
+            "last_seen": "2026-11-12 15:10:54.048906+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": null,
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 4,
+            "name": "Owned physical",
+            "url": "http://127.0.0.1:9/owned-physical-2.ts",
+            "m3u_account_id": 1,
+            "logo_url": "",
+            "tvg_id": "",
+            "local_file": "owned-protect.ts",
+            "current_viewers": 3,
+            "updated_at": "2026-11-12 15:11:07.762756+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": 6,
+            "is_custom": false,
+            "stream_hash": "6937189f68c8b4b211a7e953a6725fcd62b79f3a2a239987f4a1b22a740e6e97",
+            "last_seen": "2026-11-12 15:11:07.762752+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {
+              "group-title": "Owned Physical Group"
+            },
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": {
+              "owned": "preserve"
+            },
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          },
+          {
+            "id": 5,
+            "name": "Owned physical original",
+            "url": "http://127.0.0.1:9/owned-physical-3.ts",
+            "m3u_account_id": 1,
+            "logo_url": "",
+            "tvg_id": null,
+            "local_file": "owned-protect.ts",
+            "current_viewers": 3,
+            "updated_at": "2026-11-12 15:10:36.966451+00:00",
+            "channel_group_id": 3,
+            "stream_profile_id": 6,
+            "is_custom": false,
+            "stream_hash": "70c4ad5a210ffc936f02c34ff726d5b628931eeee9cecde367815ff02ff873ae",
+            "last_seen": "2026-11-12 15:10:36.966283+00:00",
+            "is_stale": false,
+            "is_adult": false,
+            "custom_properties": {},
+            "stream_id": null,
+            "stream_chno": null,
+            "stream_stats": {
+              "owned": "preserve"
+            },
+            "stream_stats_updated_at": null,
+            "is_catchup": false,
+            "catchup_days": 0,
+            "is_radio": false
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "name": "rust-probe-backup-channel-group"
+          },
+          {
+            "id": 2,
+            "name": "Default Group"
+          },
+          {
+            "id": 3,
+            "name": "Owned Physical Group"
+          }
+        ],
+        "group_links": [
+          {
+            "id": 2,
+            "channel_group_id": 2,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 3,
+            "channel_group_id": 3,
+            "m3u_account_id": 3,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:45.381982+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 4,
+            "channel_group_id": 2,
+            "m3u_account_id": 4,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:53.945760+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 5,
+            "channel_group_id": 3,
+            "m3u_account_id": 4,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:10:53.945760+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 6,
+            "channel_group_id": 2,
+            "m3u_account_id": 5,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:11:07.648359+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 7,
+            "channel_group_id": 3,
+            "m3u_account_id": 5,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:11:07.648359+00:00",
+            "is_stale": true
+          },
+          {
+            "id": 8,
+            "channel_group_id": 2,
+            "m3u_account_id": 6,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:11:12.450476+00:00",
+            "is_stale": false
+          },
+          {
+            "id": 9,
+            "channel_group_id": 3,
+            "m3u_account_id": 6,
+            "custom_properties": {},
+            "enabled": true,
+            "auto_channel_sync": false,
+            "auto_sync_channel_start": null,
+            "auto_sync_channel_end": null,
+            "last_seen": "2026-11-12 15:11:12.450476+00:00",
+            "is_stale": false
+          }
+        ],
+        "channels": [],
+        "channel_streams": [],
+        "system_events": [
+          {
+            "id": 1,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:45.684635+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-0.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          },
+          {
+            "id": 2,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:10:54.210976+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-1.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 1,
+              "streams_deleted": 0,
+              "streams_updated": 0,
+              "total_processed": 1
+            }
+          },
+          {
+            "id": 3,
+            "event_type": "m3u_refresh",
+            "timestamp": "2026-11-12 15:11:07.925914+00:00",
+            "channel_id": null,
+            "channel_name": null,
+            "details": {
+              "account_name": "rust-owned-children-physical-2.m3u",
+              "elapsed_time": 0.0,
+              "streams_stale": 0,
+              "streams_created": 0,
+              "streams_deleted": 0,
+              "streams_updated": 1,
+              "total_processed": 1
+            }
+          }
+        ],
+        "events": [],
+        "cache": {
+          ":1:coresettings:default_user_agent:ver": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjY5MzgyMzU5NzU1DwCx/i5jNc0G4g==",
+            "ttl": -1
+          },
+          ":1:coresettings:group:proxy_settings": {
+            "type": "string",
+            "dump_base64": "AMNAqkDLBIAElcAAgAAXfZQojA9idWZmZXJpbmdfc3BlZWSURz/wgB0VjA9yZWRpc19jaHVua190dGyUSzyMEeABLh90aW1lb3V0lEsPjBZjaGFubmVsX3NodXRkb3duX2RlbAZheZRLBYwZwBoLaW5pdF9ncmFjZV9wIG8Bb2RAThkZbmV3X2NsaWVudF9iZWhpbmRfc2Vjb25kc0A7ABrAO6AhAXdhIELAPAIFdS4PAPPENO3tT2wA",
+            "ttl": 249
+          },
+          ":1:coresettings:group:system_settings": {
+            "type": "string",
+            "dump_base64": "AEBsgASVYQAAAAAAAAB9lCiMCXRpbWVfem9uZZSMA1VUQ5SMEHByZWZlcnJlZF9yZWdpb26UjAJ1c5SMEW1heF9zeXN0ZW1fZXZlbnRzlEtkjBhhdXRvX2ltcG9ydF9tYXBwZWRfZmlsZXOUiHUuDwBqJwEMvYK08Q==",
+            "ttl": 258
+          },
+          ":1:coresettings:groupver:backup_fixture": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM2OTc5NzkyMjg0DwDUGObpghl8IA==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:network_access": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDMyNDc0Mjk5DwDZb/bIalaRjw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:proxy_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjMwMDM5MDI0NTg5DwAIdcAz5vsQcQ==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:stream_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjY5MzgyMjEwMTUxDwCy/pJ3/pOlRw==",
+            "ttl": -1
+          },
+          ":1:coresettings:groupver:system_settings": {
+            "type": "string",
+            "dump_base64": "ABMxNzk0NDk2MjM4NDQzOTMxODk2DwB78Eb+2+XwIQ==",
+            "ttl": -1
+          },
+          "_kombu.binding.celery": {
+            "type": "set",
+            "dump_base64": "FBkZAAAAAQCQY2VsZXJ5BhYGFmNlbGVyeRH/DwBY2zEKMpJXgA==",
+            "ttl": -1
+          },
+          "celery": {
+            "type": "list",
+            "dump_base64": "EgECw0ONR9Mf0wcAAAIA4+J7ImJvZHkiOiAiVzF0ZExDQjdmU3dnZXkSSmpZV3hzWW1GamEzTWlPaUJ1ZCAPB0xDQWlaWEp54AsXBlkyaGhhVzTgBCsgEwN2Y21R4AATF2ZWMD0iLCAiY29udGVudC1lbmNvZGluZ0B/BHV0Zi044AMcA3R5cGVAGA9hcHBsaWNhdGlvbi9qc29uQCMGaGVhZGVycyAeA3sibGGAQAFweUAZA3Rhc2sgFkA1CXMucGx1Z2lucy5AFAlzLnJlZnJlc2hfgBUFX3JlcG9zQDIBaWRAMB9mNDNkMDNhZi1jMWNmLTQyZjctOTljOS1mNmMzMWY2NgNjZjZhQC0Fc2hhZG93IDEDbnVsbCDLAmV0YSAMHyIyMDI2LTExLTEyVDE1OjEwOjQxLjQzOTA1MSswMDowADBAOgNleHBpIIEgLqA7BGdyb3Vw4AYOBV9pbmRleOABFARyZXRyaWA0ADAgbQh0aW1lbGltaXQgIABbgEVABQBdIBoEcm9vdF/gJcsCcGFyIYaANEBGIEUDYXJncyEZAHIgXwIiKClAtQFrd+ADEwF7fUATAm9yaSFYQCMSZ2VuMzExQDA3MWIxMjkwZDE1ZkAgBWlnbm9yZSFjAnN1bECrBGZhbHNlIF4gWgVsYWNlZF9BkgRfbmVzdIH+QNsEc3RhbXAgGuEB3KCTYBhBNgJ7fX0gQwZwcm9wZXJ0gRQAeyJMA3JyZWxiH4DJ4SDKQIwDeV90b0DHHzg5YjcxOTZhLTE3MGEtMzJhYi1iYTYzLTA1NzA3NjJhA2EyZjlA2ABkIX4HdmVyeV9tb2RCngAyIJDgABMCaW5mQEwAeyHpAWNoIpZAIAAiQDUh50DoAl9rZWNrAmNlbCBCACKAzABpIUwAdEAWQQNDjQBf4wMWBWJhc2U2NEBD4ABlAXRhYzAfM2NkYjQ0NzUtNmUwMy00ZWEwLWIzNGYtZGRkODIzYjIivQUyIn19B+Tj/+VB5gxhMWMwYjljMy0yZjYxITQEZDgtYjIjuQFkOSRQBmM1YmNmMzFBbOMg5QcwLjAxMTMzM+Nq5eAfy+M95QIyNzjjheXgH/7jA+UGMGE2NTQ3YSH0GWI0Ny0zNjhiLWEwZWUtODUxNDQwYTRlZWQzQf7jAGvjeOUQN2QzNjQ3OWUtMWRkNS00NWIgsQ8zMzAtNjYzMWM2YzQ0OGJhQ+UB5P8PAMveRk1g1Idn",
+            "ttl": -1
+          },
+          "core:version_check_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3557
+          },
+          "dvr:recover_dispatch_lock": {
+            "type": "string",
+            "dump_base64": "AMABDwA9/IK6f63sBA==",
+            "ttl": 3557
+          },
+          "epg_content_generation": {
+            "type": "string",
+            "dump_base64": "AMADDwAqHpV+fymRxw==",
+            "ttl": -1
+          },
+          "live:worker:071b1290d15f:311:heartbeat": {
+            "type": "string",
+            "dump_base64": "ABIxNzk0NDk2MjgwLjQzNTk0OTgPAJ2HXrNxflPb",
+            "ttl": 29
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-0.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNjk5OTk5OTkzLjAPADau/vGQOufk",
+            "ttl": 259158
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-1.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDAzLjAPAMlhuUltxA2i",
+            "ttl": 259167
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-2.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDEzLjAPAJ3yotrk15BB",
+            "ttl": 259176
+          },
+          "processed_file:/data/m3us/rust-owned-children-physical-3.m3u": {
+            "type": "string",
+            "dump_base64": "AAwxNzAwMDAwMDIzLjAPAArUGTctxW5O",
+            "ttl": 259189
+          }
+        },
+        "files": [
+          {
+            "path": "/data/m3us/rust-owned-children-physical-3.m3u",
+            "bytes": 108,
+            "mtime_ns": 1700000023000000000,
+            "sha256": "979d14eea329b2770b707b53896a11d35ba9943f266a1762bfb8c34605eb7585"
+          }
+        ]
+      },
+      "queries": [
+        "SELECT id::bigint,name,file_path,is_active,status,CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1",
+        "SELECT octet_length(value::text)<=65536 AS bounded,CASE WHEN octet_length(value::text)<=65536 THEN CASE WHEN jsonb_typeof(value)='object' THEN COALESCE(value->'m3u_hash_key','\"\"'::jsonb) ELSE '\"\"'::jsonb END ELSE NULL END AS hash_value FROM core_coresettings WHERE key='stream_settings'",
+        "SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))",
+        "SELECT (SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_stream WHERE m3u_account_id=$1 LIMIT 65)s)+(SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 LIMIT 17)g)",
+        "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.stream_hash=ANY($1))",
+        "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) AND ((logo_url IS NOT NULL AND octet_length(logo_url)>$2) OR (custom_properties IS NOT NULL AND octet_length(custom_properties::text)>$2)))",
+        "WITH history AS MATERIALIZED(SELECT timestamp FROM core_systemevent LIMIT 10001) SELECT (SELECT count(*) FROM history)::bigint AS total,EXISTS(SELECT 1 FROM history GROUP BY timestamp HAVING count(*)>1) AS tied",
+        "UPDATE m3u_m3uaccount SET status=$2,last_message=$3 WHERE id=$1",
+        "UPDATE m3u_m3uaccount SET status=$2,last_message=$3 WHERE id=$1",
+        "SELECT g.id::bigint,g.name FROM dispatcharr_channels_channelgroup g JOIN dispatcharr_channels_channelgroupm3uaccount r ON r.channel_group_id=g.id WHERE r.m3u_account_id=$1 AND r.enabled LIMIT 17",
+        "SELECT EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE id=$1)",
+        "SELECT id,stream_hash,name,url,tvg_id,(logo_url IS NULL OR octet_length(logo_url)<=$2) AS logo_bounded,CASE WHEN logo_url IS NULL OR octet_length(logo_url)<=$2 THEN logo_url ELSE NULL END AS logo_url,(custom_properties IS NULL OR octet_length(custom_properties::text)<=$3) AS properties_bounded,CASE WHEN custom_properties IS NULL OR octet_length(custom_properties::text)<=$3 THEN custom_properties ELSE NULL END AS custom_properties,is_adult,stream_id,stream_chno,channel_group_id,is_catchup,catchup_days,is_radio FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) LIMIT $4"
+      ],
+      "error_codes": [
+        "P0001"
+      ],
+      "timeline": [
+        {
+          "stage": "real-Ready-held",
+          "epoch": 1794496274.8401573,
+          "query_identity": "SELECT id,stream_hash,name,url,tvg_id,(logo_url IS NULL OR octet_length(logo_url)<=$2) AS logo_bounded,CASE WHEN logo_url IS NULL OR octet_length(logo_url)<=$2 THEN logo_url ELSE NULL END AS logo_url,(custom_properties IS NULL OR octet_length(custom_properties::text)<=$3) AS properties_bounded,CASE WHEN custom_properties IS NULL OR octet_length(custom_properties::text)<=$3 THEN custom_properties ELSE NULL END AS custom_properties,is_adult,stream_id,stream_chno,channel_group_id,is_catchup,catchup_days,is_radio FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) LIMIT $4",
+          "matching_DataRows": 0,
+          "matching_CommandComplete": 0
+        }
+      ],
+      "actual_matching_DataRows": 0,
+      "actual_matching_CommandComplete": 0,
+      "no_new_Source_reference": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "fresh-root-/data/m3us",
+      "passed": true
+    },
+    {
+      "name": "fresh-root-/data/epgs",
+      "passed": true
+    },
+    {
+      "name": "fresh-root-/data/logos",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-real-parent-success-null",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-actual-created-groups-single",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-normal-native-constructor",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-start",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-real-physical-gate",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-physical-caller-admission-drain-retained",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-beyond-cache-logical-timeout",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-ACK-boundary",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-no-premature-result",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-preACK-model-effects-retained",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-actual-settlement-releases-owner",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-operational-no-fabricated-terminal",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-unsupported-head-retained",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-actual-native-drain",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "cache-name-unsupported-reply-proxy-clean",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-real-parent-success-null",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-actual-created-groups-single",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-normal-native-constructor",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-start",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-real-physical-gate",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-physical-caller-admission-drain-retained",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-beyond-cache-logical-timeout",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-ACK-boundary",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-no-premature-result",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-preACK-model-effects-retained",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-actual-settlement-releases-owner",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-actual-native-drain",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "cache-url-positive-abort-drain-proxy-clean",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-real-parent-success-null",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-actual-created-groups-single",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-normal-native-constructor",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-start",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-real-physical-gate",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-actual-P0001",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-physical-caller-admission-drain-retained",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-ACK-boundary",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-no-premature-result",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-preACK-model-effects-retained",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-actual-settlement-releases-owner",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-operational-no-fabricated-terminal",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-no-read-retry",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-actual-snapshot-attempts",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-foreign-row-protected",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-actual-native-drain",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "preACK-support-SQL-Error-Ready-proxy-clean",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-real-parent-success-null",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-actual-created-groups-single",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-groups-normal-native-constructor",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-Groups-completes",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-Groups-actual-native-drain",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-Groups-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-normal-native-constructor",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-start",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-real-physical-gate",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-actual-P0001",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-physical-caller-admission-drain-retained",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-ACK-boundary",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-no-premature-result",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-actual-settlement-releases-owner",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-operational-no-fabricated-terminal",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-no-read-retry",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-actual-snapshot-attempts",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-foreign-row-protected",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-actual-native-drain",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "snapshot-SQL-Error-Ready-proxy-clean",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-real-parent-success-null",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-actual-created-groups-single",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-groups-normal-native-constructor",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-Groups-completes",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-Groups-actual-native-drain",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-Groups-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-normal-native-constructor",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-start",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-real-physical-gate",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-actual-DataRow-CommandComplete",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-physical-caller-admission-drain-retained",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-ACK-boundary",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-no-premature-result",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-actual-settlement-releases-owner",
+      "passed": true
+    },
+    {
+      "name": "snapshot-success-DataRow-Ready-success-after-physical-ready",
+      "passed": false
+    }
+  ],
+  "deferred_native_groups": [
+    13,
+    14
+  ],
+  "transport_ledger": "transport-ledger.jsonl",
+  "status": "UNEXECUTED_REDESIGN_ROOT_REVIEW_REQUIRED",
+  "partial_physical_diagnostics": {
+    "mode": "snapshot-success-DataRow-Ready",
+    "queries": [
+      "SELECT id::bigint,name,file_path,is_active,status,CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1",
+      "SELECT octet_length(value::text)<=65536 AS bounded,CASE WHEN octet_length(value::text)<=65536 THEN CASE WHEN jsonb_typeof(value)='object' THEN COALESCE(value->'m3u_hash_key','\"\"'::jsonb) ELSE '\"\"'::jsonb END ELSE NULL END AS hash_value FROM core_coresettings WHERE key='stream_settings'",
+      "SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))",
+      "SELECT (SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_stream WHERE m3u_account_id=$1 LIMIT 65)s)+(SELECT count(*) FROM(SELECT id FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 LIMIT 17)g)",
+      "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.stream_hash=ANY($1))",
+      "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) AND ((logo_url IS NOT NULL AND octet_length(logo_url)>$2) OR (custom_properties IS NOT NULL AND octet_length(custom_properties::text)>$2)))",
+      "WITH history AS MATERIALIZED(SELECT timestamp FROM core_systemevent LIMIT 10001) SELECT (SELECT count(*) FROM history)::bigint AS total,EXISTS(SELECT 1 FROM history GROUP BY timestamp HAVING count(*)>1) AS tied",
+      "UPDATE m3u_m3uaccount SET status=$2,last_message=$3 WHERE id=$1",
+      "UPDATE m3u_m3uaccount SET status=$2,last_message=$3 WHERE id=$1",
+      "SELECT g.id::bigint,g.name FROM dispatcharr_channels_channelgroup g JOIN dispatcharr_channels_channelgroupm3uaccount r ON r.channel_group_id=g.id WHERE r.m3u_account_id=$1 AND r.enabled LIMIT 17",
+      "SELECT EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE id=$1)",
+      "SELECT id,stream_hash,name,url,tvg_id,(logo_url IS NULL OR octet_length(logo_url)<=$2) AS logo_bounded,CASE WHEN logo_url IS NULL OR octet_length(logo_url)<=$2 THEN logo_url ELSE NULL END AS logo_url,(custom_properties IS NULL OR octet_length(custom_properties::text)<=$3) AS properties_bounded,CASE WHEN custom_properties IS NULL OR octet_length(custom_properties::text)<=$3 THEN custom_properties ELSE NULL END AS custom_properties,is_adult,stream_id,stream_chno,channel_group_id,is_catchup,catchup_days,is_radio FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) LIMIT $4",
+      "BEGIN",
+      "UPDATE dispatcharr_channels_stream AS target SET name=incoming.name,url=incoming.url,logo_url=incoming.logo_url,tvg_id=incoming.tvg_id,custom_properties=incoming.custom_properties,is_adult=incoming.is_adult,last_seen=incoming.last_seen,updated_at=incoming.updated_at,is_stale=incoming.is_stale,stream_id=incoming.stream_id,stream_chno=incoming.stream_chno,channel_group_id=incoming.channel_group_id,is_catchup=incoming.is_catchup,catchup_days=incoming.catchup_days,is_radio=incoming.is_radio FROM jsonb_populate_recordset(NULL::dispatcharr_channels_stream,$1) AS incoming WHERE target.id=incoming.id",
+      "COMMIT",
+      "UPDATE dispatcharr_channels_stream SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2",
+      "UPDATE dispatcharr_channels_channelgroupm3uaccount SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2",
+      "SELECT stale_stream_days::bigint FROM m3u_m3uaccount WHERE id=$1 AND is_active",
+      "SELECT count(*) FILTER(WHERE NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r WHERE r.m3u_account_id=s.m3u_account_id AND r.channel_group_id=s.channel_group_id AND r.enabled))::bigint AS disabled,count(*) FILTER(WHERE s.last_seen<$2)::bigint AS stale,count(*) FILTER(WHERE NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r WHERE r.m3u_account_id=s.m3u_account_id AND r.channel_group_id=s.channel_group_id AND r.enabled) OR s.last_seen<$2)::bigint AS unique_rows FROM dispatcharr_channels_stream s WHERE s.m3u_account_id=$1",
+      "BEGIN",
+      "SELECT s.id::bigint FROM dispatcharr_channels_stream s WHERE s.m3u_account_id=$1 AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r WHERE r.m3u_account_id=s.m3u_account_id AND r.channel_group_id=s.channel_group_id AND r.enabled) AND $2::timestamptz IS NOT NULL ORDER BY s.id LIMIT 1000 FOR UPDATE OF s",
+      "COMMIT",
+      "BEGIN",
+      "SELECT s.id::bigint FROM dispatcharr_channels_stream s WHERE s.m3u_account_id=$1 AND s.last_seen<$2 AND $2::timestamptz IS NOT NULL ORDER BY s.id LIMIT 1000 FOR UPDATE OF s",
+      "COMMIT",
+      "SELECT channel_group_id::bigint AS group_id FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND last_seen<$2 LIMIT 32769",
+      "UPDATE m3u_m3uaccount SET status=$2,last_message=$3,updated_at=$4 WHERE id=$1",
+      "INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)",
+      "WITH history AS MATERIALIZED(SELECT id,timestamp FROM core_systemevent LIMIT 10002) SELECT (SELECT count(*) FROM history)::bigint AS total,EXISTS(SELECT 1 FROM history GROUP BY timestamp HAVING count(*)>1) AS tied,(SELECT id FROM history ORDER BY timestamp DESC LIMIT 1 OFFSET $1) AS cutoff"
+    ],
+    "error_codes": [],
+    "data_rows": 1,
+    "command_complete": 1,
+    "backend_pids": [
+      870,
+      873,
+      876,
+      879,
+      882,
+      885,
+      888,
+      891
+    ],
+    "timeline": [
+      {
+        "stage": "real-Ready-held",
+        "epoch": 1794496287.4576771,
+        "query_identity": "SELECT id,stream_hash,name,url,tvg_id,(logo_url IS NULL OR octet_length(logo_url)<=$2) AS logo_bounded,CASE WHEN logo_url IS NULL OR octet_length(logo_url)<=$2 THEN logo_url ELSE NULL END AS logo_url,(custom_properties IS NULL OR octet_length(custom_properties::text)<=$3) AS properties_bounded,CASE WHEN custom_properties IS NULL OR octet_length(custom_properties::text)<=$3 THEN custom_properties ELSE NULL END AS custom_properties,is_adult,stream_id,stream_chno,channel_group_id,is_catchup,catchup_days,is_radio FROM dispatcharr_channels_stream WHERE stream_hash=ANY($1) LIMIT $4",
+        "matching_DataRows": 1,
+        "matching_CommandComplete": 1
+      }
+    ],
+    "disconnections": 0,
+    "errors": [],
+    "held": true
+  },
+  "finally_diagnostics_retained": true
+}
