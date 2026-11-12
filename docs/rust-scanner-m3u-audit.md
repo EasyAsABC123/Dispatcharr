@@ -1,0 +1,13 @@
+# Bounded M3U audit-history checkpoint
+
+Original Dispatcharr and dependency authors retain full application and algorithm credit and licensing. React remains unchanged.
+
+The scanner-owned import library now handles qualified full audit histories using the Original timestamp-descending offset and id-based deletion. It preserves zero-row deletion and max+1 retention behavior. Only known PostgreSQL ERROR/P0001 audit INSERT/DELETE failures are caught, after physical Ready/close settlement; unknown errors remain operational. Equal-timestamp trimming and unsupported settings still refuse before ACK.
+
+Root rebuilt the exact788-input qualified map independently. One Root job executable passed634 comparisons across15 cases,63 physical checks across3 SQL-error cases,25 capacity checks across2 boundaries, and61 pure controls. All three Root fixture projects and eighteen agent fixture projects were independently empty, with default databases unchanged. The same source passed formatting, strict workspace Clippy and566 default tests;703 fixture-dependent cases remained ignored there and the named dedicated cohorts ran separately. [Root raw results and bindings](../scripts/rust-job-contracts/scanner-logo/m3u-audit-consumption/root-verified788/verified.json) and [portable reproduction](../scripts/rust-job-contracts/scanner-logo/m3u-audit-consumption/README.md) retain the exact bounds and failed predecessors.
+
+The count/tie/cutoff materialization is bounded to10001/10002 tuples. This is not a strict bound on PostgreSQL physical scans, deletion work, CPU or I/O. The qualified fixture has stable injected settings and empty effective hash keys. Inherited nonempty-hash admission still needs its own pre-Main guard. Native settings are read before INSERT; Source reads them afterward. Source logs caught audit failures while Native currently returns silently. Concurrent configuration changes, operator-log parity and the whole audit helper remain unqualified.
+
+Known-fault fixtures install triggers after real admission while a completed CAS reply is held; preinstalled triggers remain refused. Of15 single-task cases,9 execute natively and6 retain their queue frame then use actual Original fallback. All15 groups tasks execute natively. Normal missing-file/group-SQL failures, broad provider grammar, plugins, Connect, concurrency/restart recovery and new packaged application attachment remain open.
+
+Main/default consumers are unchanged. This is M6 component progress, with no new numerical performance claim or complete milestone acceptance. Image51 remains the qualified packaged application.

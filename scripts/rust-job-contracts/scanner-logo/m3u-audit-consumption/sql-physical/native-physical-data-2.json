@@ -1,0 +1,475 @@
+{
+  "passed": true,
+  "native_verified": true,
+  "scope": "Native-only actual physical preflight SQL fence; actual Original producer.\nKnown real server P0001 is forwarded before held ReadyForQuery, with one owned\nRLS role/policy in the copied DB. No Original-handler parity/performance claim.\n",
+  "checks": [
+    {
+      "name": "fresh-empty-/data/m3us",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/epgs",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/logos",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-prior-default-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-actual-Source-parent-null",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-same-normal-path-prepared",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-actual-groups-completed",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-actual-single-head",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-single-started",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-admitted-real-CAS-held",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-ACK-no-result-before-fault",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-real-error-and-Ready-held",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-caller-slot-shutdown-retained",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-one-actual-error-no-query-retry",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-no-result-before-physical-settlement",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-settled-owner-release",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-Original-typed-normal-result",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-exact-partial-audit-row-count",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-filelock-released",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-cache-file-cleaned",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-normal-drain",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0001-proxies-clean",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-prior-default-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-actual-Source-parent-null",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-same-normal-path-prepared",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-actual-groups-completed",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-actual-single-head",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-single-started",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-admitted-real-CAS-held",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-ACK-no-result-before-fault",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-real-error-and-Ready-held",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-caller-slot-shutdown-retained",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-one-actual-error-no-query-retry",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-no-result-before-physical-settlement",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-settled-owner-release",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-Original-typed-normal-result",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-exact-partial-audit-row-count",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-filelock-released",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-cache-file-cleaned",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-normal-drain",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "DELETE-P0001-proxies-clean",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-prior-default-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-actual-Source-parent-null",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-same-normal-path-prepared",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-actual-groups-completed",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-actual-single-head",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-single-started",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-admitted-real-CAS-held",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-ACK-no-result-before-fault",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-real-error-and-Ready-held",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-caller-slot-shutdown-retained",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-one-actual-error-no-query-retry",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-no-result-before-physical-settlement",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-settled-owner-release",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-unknown-code-remains-operational",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-exact-partial-audit-row-count",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-filelock-released",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-cache-file-cleaned",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-normal-drain",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "INSERT-P0002-proxies-clean",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "INSERT-P0001",
+      "task_id": "951363a9-9325-4f53-afe2-d2dfe0507c47",
+      "actual_code": "P0001",
+      "actual_severity": "ERROR",
+      "backend_pid": 484,
+      "error_calls": 1,
+      "observed_retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "actual_result_state": "SUCCESS",
+      "partial_audit_rows": [
+        {
+          "id": 1,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:00+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 0,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 2,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:01+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 1,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 3,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:02+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 2,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 4,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:03+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 3,
+            "rust_owned_audit": true
+          }
+        }
+      ],
+      "fault_timing": "post-admission real CAS held, then owned trigger installed before reply release"
+    },
+    {
+      "name": "DELETE-P0001",
+      "task_id": "0f43ab07-f45d-4f70-9c92-18161d347156",
+      "actual_code": "P0001",
+      "actual_severity": "ERROR",
+      "backend_pid": 570,
+      "error_calls": 1,
+      "observed_retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "actual_result_state": "SUCCESS",
+      "partial_audit_rows": [
+        {
+          "id": 6,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:00+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 0,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 7,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:01+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 1,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 8,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:02+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 2,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 9,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:03+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 3,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 10,
+          "event_type": "m3u_refresh",
+          "timestamp": "2026-11-12 08:37:48.671380+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "account_name": "rust-owned-children-audit-held-DELETE-P0001.m3u",
+            "elapsed_time": 0.0,
+            "streams_stale": 0,
+            "streams_created": 0,
+            "streams_deleted": 0,
+            "streams_updated": 0,
+            "total_processed": 1
+          }
+        }
+      ],
+      "fault_timing": "post-admission real CAS held, then owned trigger installed before reply release"
+    },
+    {
+      "name": "INSERT-P0002",
+      "task_id": "62a2999a-aec3-4fce-a198-459eddd738b1",
+      "actual_code": "P0002",
+      "actual_severity": "ERROR",
+      "backend_pid": 656,
+      "error_calls": 1,
+      "observed_retention": {
+        "caller_retained": true,
+        "slots": 0,
+        "admission": "Err(Capacity)",
+        "drain": "Err(DrainTimeout)"
+      },
+      "actual_result_state": "PENDING",
+      "partial_audit_rows": [
+        {
+          "id": 11,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:00+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 0,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 12,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:01+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 1,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 13,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:02+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 2,
+            "rust_owned_audit": true
+          }
+        },
+        {
+          "id": 14,
+          "event_type": "m3u_refresh",
+          "timestamp": "2010-01-01 00:00:03+00:00",
+          "channel_id": null,
+          "channel_name": null,
+          "details": {
+            "ordinal": 3,
+            "rust_owned_audit": true
+          }
+        }
+      ],
+      "fault_timing": "post-admission real CAS held, then owned trigger installed before reply release"
+    }
+  ],
+  "predeclared": {
+    "held_ready_seconds": 6.2,
+    "existing_pool_acquire_timeout_seconds": 5,
+    "shutdown_probe_seconds": 0.03,
+    "no_application_SQL_retry": true,
+    "cases": [
+      "INSERT-P0001",
+      "DELETE-P0001",
+      "INSERT-P0002"
+    ],
+    "fault_install": "after admitted real CAS/pop before reply release"
+  }
+}

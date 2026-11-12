@@ -35,6 +35,29 @@ pub enum Error {
     Operational,
     DrainTimeout,
 }
+// Only these observed audit statements may produce a caught normal return.
+// The owned error is constructed into this type only after Ready/close settles.
+#[derive(Clone, Copy)]
+enum AuditStage {
+    Insert,
+    Delete,
+}
+struct SettledAuditFailure {
+    stage: AuditStage,
+    source: sqlx::Error,
+}
+impl SettledAuditFailure {
+    fn caught(self) -> bool {
+        let allowed_stage = matches!(self.stage, AuditStage::Insert | AuditStage::Delete);
+        allowed_stage
+            && self.source.as_database_error().is_some_and(|error| {
+                error.code().as_deref() == Some("P0001")
+                    && error
+                        .try_downcast_ref::<sqlx::postgres::PgDatabaseError>()
+                        .is_some_and(|pg| pg.severity() == sqlx::postgres::PgSeverity::Error)
+            })
+    }
+}
 #[derive(Clone)]
 pub struct Roots {
     pub input: PathBuf,
@@ -272,14 +295,25 @@ impl Service {
                 .await
                 .map_err(|_| Error::Operational)?;
             let limit = audit_limit(&settings)?;
-            let existing: i64 = sqlx::query_scalar(
-                "SELECT count(*) FROM(SELECT id FROM core_systemevent LIMIT 10001)s",
+            // Count and tie materialization share one bounded statement snapshot.
+            // Even an unqualified concurrent writer cannot grow the GROUP BY input.
+            let history = sqlx::query(
+                "WITH history AS MATERIALIZED(SELECT timestamp FROM core_systemevent LIMIT 10001) SELECT (SELECT count(*) FROM history)::bigint AS total,EXISTS(SELECT 1 FROM history GROUP BY timestamp HAVING count(*)>1) AS tied",
             )
             .fetch_one(self.inner.store.pool())
             .await
             .map_err(|_| Error::Operational)?;
-            // Timestamp-cutoff/tie/history trimming is not this qualified lane.
-            if existing >= limit || existing > 10000 {
+            let existing: i64 = history.try_get("total").map_err(|_| Error::Operational)?;
+            if existing > 10000 {
+                return Err(Error::Unsupported);
+            }
+            if existing >= limit
+                && history
+                    .try_get::<bool, _>("tied")
+                    .map_err(|_| Error::Operational)?
+            {
+                // Source has no secondary ordering; the captured equal-timestamp
+                // observation is not stable native tie authority.
                 return Err(Error::Unsupported);
             }
         }
@@ -397,6 +431,16 @@ impl Service {
             .await
             .map_err(|_| Error::Operational)
     }
+    async fn settled_audit_failure(
+        &self,
+        stage: AuditStage,
+        source: sqlx::Error,
+    ) -> Result<SettledAuditFailure, Error> {
+        // Retain the actual cause and outer operation/caller through trailing
+        // ReadyForQuery, pool rollback/ping and explicit physical close.
+        self.settle().await?;
+        Ok(SettledAuditFailure { stage, source })
+    }
     async fn audit(&self, kind: &str, details: Value, owner: Owner) -> Result<(), Error> {
         let settings = self
             .inner
@@ -407,21 +451,63 @@ impl Service {
             .await
             .map_err(|_| Error::Operational)?;
         let max = audit_limit(&settings)?;
-        sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)").bind(kind).bind(details).bind(self.now()).execute(self.inner.store.pool()).await.map_err(|_|Error::Operational)?;
-        let count: i64 = sqlx::query_scalar(
-            "SELECT count(*) FROM(SELECT id FROM core_systemevent LIMIT 10002)s",
+        let inserted = sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)")
+            .bind(kind).bind(details).bind(self.now()).execute(self.inner.store.pool()).await;
+        if let Err(source) = inserted {
+            return if self
+                .settled_audit_failure(AuditStage::Insert, source)
+                .await?
+                .caught()
+            {
+                Ok(())
+            } else {
+                Err(Error::Operational)
+            };
+        }
+        // The server may read at most10002 rows into this materialization.
+        // Count/ties/cutoff use that same snapshot, so a separate check cannot
+        // race an unbounded GROUP BY or ORDER BY. Concurrency parity stays open.
+        let history = sqlx::query(
+            "WITH history AS MATERIALIZED(SELECT id,timestamp FROM core_systemevent LIMIT 10002) SELECT (SELECT count(*) FROM history)::bigint AS total,EXISTS(SELECT 1 FROM history GROUP BY timestamp HAVING count(*)>1) AS tied,(SELECT id FROM history ORDER BY timestamp DESC LIMIT 1 OFFSET $1) AS cutoff",
         )
+        .bind(max)
         .fetch_one(self.inner.store.pool())
         .await
         .map_err(|_| Error::Operational)?;
-        if count > 10000 {
+        let count: i64 = history.try_get("total").map_err(|_| Error::Operational)?;
+        // At most10000 pre-admitted rows plus this owned insertion. An observed
+        // crossing of that bound remains operational, never guessed normal.
+        if count > 10001 {
             return Err(Error::Capacity);
         }
-        // A concurrent history writer can invalidate pre-CAS admission. Never
-        // delete unqualified history: return operational after the actual
-        // settled INSERT, with no fabricated normal task result.
         if count > max {
-            return Err(Error::Operational);
+            if history
+                .try_get::<bool, _>("tied")
+                .map_err(|_| Error::Operational)?
+            {
+                return Err(Error::Unsupported);
+            }
+            // Exact Source ordering/cutoff: no id tie-break, no OFFSET max-1,
+            // and DELETE id<cutoff can remove zero rows or keep max+1 rows.
+            let cutoff = history
+                .try_get::<Option<i64>, _>("cutoff")
+                .map_err(|_| Error::Operational)?
+                .ok_or(Error::Operational)?;
+            let removed = sqlx::query("DELETE FROM core_systemevent WHERE id<$1")
+                .bind(cutoff)
+                .execute(self.inner.store.pool())
+                .await;
+            if let Err(source) = removed {
+                return if self
+                    .settled_audit_failure(AuditStage::Delete, source)
+                    .await?
+                    .caught()
+                {
+                    Ok(())
+                } else {
+                    Err(Error::Operational)
+                };
+            }
         }
         self.settle().await
     }

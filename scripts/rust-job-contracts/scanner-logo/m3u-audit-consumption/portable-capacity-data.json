@@ -1,0 +1,142 @@
+{
+  "passed": true,
+  "native_verified": true,
+  "scope": "Actual Original scanner producer; native bounded-history capacity positive/negative, not Source large-history handler parity",
+  "checks": [
+    {
+      "name": "fresh-empty-/data/m3us",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/epgs",
+      "passed": true
+    },
+    {
+      "name": "fresh-empty-/data/logos",
+      "passed": true
+    },
+    {
+      "name": "10000-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "10000-real-parent-null",
+      "passed": true
+    },
+    {
+      "name": "10000-actual-unique-history-count",
+      "passed": true
+    },
+    {
+      "name": "10000-normal-path-prepared",
+      "passed": true
+    },
+    {
+      "name": "10000-group-completed",
+      "passed": true
+    },
+    {
+      "name": "10000-positive-completion",
+      "passed": true
+    },
+    {
+      "name": "10000-queue-consumed",
+      "passed": true
+    },
+    {
+      "name": "10000-exact-history-boundary",
+      "passed": true
+    },
+    {
+      "name": "10000-no-single-lease-remains",
+      "passed": true
+    },
+    {
+      "name": "10000-drain",
+      "passed": true
+    },
+    {
+      "name": "10000-native-exit0",
+      "passed": true
+    },
+    {
+      "name": "10001-prior-queue-empty",
+      "passed": true
+    },
+    {
+      "name": "10001-real-parent-null",
+      "passed": true
+    },
+    {
+      "name": "10001-actual-unique-history-count",
+      "passed": true
+    },
+    {
+      "name": "10001-normal-path-prepared",
+      "passed": true
+    },
+    {
+      "name": "10001-group-completed",
+      "passed": true
+    },
+    {
+      "name": "10001-overflow-before-ACK",
+      "passed": true
+    },
+    {
+      "name": "10001-no-account-or-cache-effects",
+      "passed": true
+    },
+    {
+      "name": "10001-exact-history-boundary",
+      "passed": true
+    },
+    {
+      "name": "10001-no-single-lease-remains",
+      "passed": true
+    },
+    {
+      "name": "10001-drain",
+      "passed": true
+    },
+    {
+      "name": "10001-native-exit0",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "10000",
+      "history_before": 10000,
+      "history_after": 10001,
+      "oldest_id_unchanged": true,
+      "native_observation": {
+        "run": "Ok(Completed(b7889300-1220-4ec7-9727-672f4a10972a))",
+        "slots": 1
+      },
+      "task_id": "b7889300-1220-4ec7-9727-672f4a10972a",
+      "scope": "native bounds; no Source large-history handler comparison"
+    },
+    {
+      "name": "10001",
+      "history_before": 10001,
+      "history_after": 10001,
+      "oldest_id_unchanged": true,
+      "native_observation": {
+        "run": "Err(Domain(Unsupported))",
+        "slots": 1
+      },
+      "task_id": "3693c322-3b0e-4074-b593-f2cf7b202075",
+      "scope": "native bounds; no Source large-history handler comparison"
+    }
+  ],
+  "predeclared": {
+    "limit": 10000,
+    "cases": [
+      10000,
+      10001
+    ],
+    "one_owned_pending_insertion": 1,
+    "overflow": "beforeSingleACK"
+  }
+}
