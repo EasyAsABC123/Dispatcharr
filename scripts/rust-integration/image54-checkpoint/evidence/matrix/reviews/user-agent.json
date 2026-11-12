@@ -1,0 +1,43 @@
+{
+  "name": "user-agent",
+  "controller_result_sha256": "65ed572e5eb99db84c18d71e367f2c22083344dbe5d98347ff1845de2e37b3ac",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/user-agent/integration.json",
+      "sha256": "778d7e4676f303ff9bc1712f3dfa3545e3e99fdaaceb5214a8e252e268359ccd"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/user-agent/packaged-checks.json",
+      "sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Exact own SQL/cache/race state comparisons within packaged-checks; no whole default-database-before/after11 audit exposed or inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "source_cases": 79,
+    "default_id_cases": 13,
+    "resource_checks": 3,
+    "actual_packaged_check_rows": 95,
+    "reported_subcategories_not_summed": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-user-agents-68dadbff41"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/ua-output-cleanup.json",
+      "sha256": "23ab503775eaea9825d664d767240dca156008b111eb4245ce62a043501aca25"
+    }
+  }
+}

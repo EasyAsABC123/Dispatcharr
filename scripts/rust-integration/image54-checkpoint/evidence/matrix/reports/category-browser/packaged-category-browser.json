@@ -1,0 +1,355 @@
+{
+  "passed": true,
+  "scope": "Manifest-fixture unchanged React category workflow, no resource claim.\nOriginal Dispatcharr authors retain all application credit; AGPL retained.\n",
+  "browser_not_mocked": true,
+  "frontend_unchanged": true,
+  "unified_provider_artwork_episode_flows_verified": false,
+  "fixture": {
+    "prepared": true,
+    "roles": [
+      {
+        "username": "rust-probe-vod-rest-series_off",
+        "kind": "movies",
+        "label": "rust-probe-vod-rest-Drama (movie)",
+        "category": "rust-probe-vod-rest-Drama|movie"
+      },
+      {
+        "username": "rust-probe-vod-rest-movies_off",
+        "kind": "series",
+        "label": "rust-probe-vod-rest-Drama (series)",
+        "category": "rust-probe-vod-rest-Drama|series"
+      }
+    ],
+    "scope": "Actual unchanged React category selection on seeded movies/series, single-type Standard roles; posters removed only for this separate UI phase; provider/artwork/unified flows not claimed",
+    "posters_deliberately_excluded": true
+  },
+  "phase_login_isolation": {
+    "original": {
+      "cleared_owned_login_buckets": 0,
+      "observed_owned_login_buckets": 0,
+      "history_entry_counts": [],
+      "history_before_clear": [],
+      "scope": "Independent original/native browser phase isolation only; unchanged3/min login policy, no other caches or production state cleared"
+    },
+    "candidate": {
+      "cleared_owned_login_buckets": 1,
+      "observed_owned_login_buckets": 1,
+      "history_entry_counts": [
+        3
+      ],
+      "history_before_clear": [
+        {
+          "key": ":1:throttle_login_172.18.0.1",
+          "timestamps": [
+            1794520049.848237,
+            1794520048.2404866,
+            1794520046.9287715
+          ]
+        }
+      ],
+      "scope": "Independent original/native browser phase isolation only; unchanged3/min login policy, no other caches or production state cleared"
+    }
+  },
+  "login_history_before_witness": {
+    "cleared_owned_login_buckets": 0,
+    "observed_owned_login_buckets": 1,
+    "history_entry_counts": [
+      2
+    ],
+    "history_before_clear": [
+      {
+        "key": ":1:throttle_login_172.18.0.1",
+        "timestamps": [
+          1794520048.2404866,
+          1794520046.9287715
+        ]
+      }
+    ],
+    "scope": "Independent original/native browser phase isolation only; unchanged3/min login policy, no other caches or production state cleared"
+  },
+  "actual_login_budget_witness": {
+    "passed": true,
+    "records": [
+      {
+        "ordinal_in_owned_phase": 3,
+        "status": 200,
+        "body": {
+          "redacted_success_token_fields": [
+            "access",
+            "refresh"
+          ],
+          "access_present": true,
+          "refresh_present": true
+        },
+        "retry_after": null
+      },
+      {
+        "ordinal_in_owned_phase": 4,
+        "status": 429,
+        "body": {
+          "detail": "Request was throttled. Expected available in 57 seconds."
+        },
+        "retry_after": "57"
+      }
+    ],
+    "scope": "Actual original shared3/min bucket: two completed UI logins followed by valid third/fourth token requests; successful JWTs redacted, fourth rejection body retained; no runtime/policy modification"
+  },
+  "comparisons": [
+    {
+      "kind": "movies",
+      "exact_selected_label_and_ordered_content_and_visible_count": true
+    },
+    {
+      "kind": "series",
+      "exact_selected_label_and_ordered_content_and_visible_count": true
+    }
+  ],
+  "observations": {
+    "original": [
+      {
+        "passed": true,
+        "scope": "Actual unchanged React normal login and category selection/display; single-type Standard accounts; unified/provider/artwork/episode flows excluded",
+        "kind": "movies",
+        "selected_category": "rust-probe-vod-rest-Drama (movie)",
+        "content": [
+          {
+            "id": 1,
+            "name": "rust-probe-vod-rest-Alpha"
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-vod-rest-Movie03"
+          },
+          {
+            "id": 7,
+            "name": "rust-probe-vod-rest-Movie06"
+          },
+          {
+            "id": 10,
+            "name": "rust-probe-vod-rest-Movie09"
+          },
+          {
+            "id": 13,
+            "name": "rust-probe-vod-rest-Movie12"
+          },
+          {
+            "id": 16,
+            "name": "rust-probe-vod-rest-Movie15"
+          },
+          {
+            "id": 19,
+            "name": "rust-probe-vod-rest-Movie18"
+          },
+          {
+            "id": 22,
+            "name": "rust-probe-vod-rest-Movie21"
+          },
+          {
+            "id": 25,
+            "name": "rust-probe-vod-rest-Movie24"
+          }
+        ],
+        "visible_cards": 9,
+        "filtered_request": {
+          "path": "/api/vod/movies/",
+          "query": "?page=1&page_size=24&category=rust-probe-vod-rest-Drama%7Cmovie",
+          "status": 200
+        },
+        "category200": true,
+        "VOD_HTTP_failures": [],
+        "unified_requests": 0,
+        "uncaught_exceptions": 0,
+        "ambient_API_failures": [
+          {
+            "path": "/api/accounts/auth/proxy-login/",
+            "query": "",
+            "status": 401,
+            "request_id": "1077360.8",
+            "stage": "vod-login"
+          },
+          {
+            "path": "/api/accounts/auth/logout/",
+            "query": "",
+            "status": 401,
+            "request_id": "1077360.11",
+            "stage": "vod-login"
+          }
+        ],
+        "stored_token_present": true
+      },
+      {
+        "passed": true,
+        "scope": "Actual unchanged React normal login and category selection/display; single-type Standard accounts; unified/provider/artwork/episode flows excluded",
+        "kind": "series",
+        "selected_category": "rust-probe-vod-rest-Drama (series)",
+        "content": [
+          {
+            "id": 1,
+            "name": "rust-probe-vod-rest-Series0"
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-vod-rest-Series1"
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-vod-rest-Series2"
+          }
+        ],
+        "visible_cards": 3,
+        "filtered_request": {
+          "path": "/api/vod/series/",
+          "query": "?page=1&page_size=24&category=rust-probe-vod-rest-Drama%7Cseries",
+          "status": 200
+        },
+        "category200": true,
+        "VOD_HTTP_failures": [],
+        "unified_requests": 0,
+        "uncaught_exceptions": 0,
+        "ambient_API_failures": [
+          {
+            "path": "/api/accounts/auth/proxy-login/",
+            "query": "",
+            "status": 401,
+            "request_id": "1077700.8",
+            "stage": "vod-login"
+          },
+          {
+            "path": "/api/accounts/auth/logout/",
+            "query": "",
+            "status": 401,
+            "request_id": "1077700.11",
+            "stage": "vod-login"
+          }
+        ],
+        "stored_token_present": true
+      }
+    ],
+    "candidate": [
+      {
+        "passed": true,
+        "scope": "Actual unchanged React normal login and category selection/display; single-type Standard accounts; unified/provider/artwork/episode flows excluded",
+        "kind": "movies",
+        "selected_category": "rust-probe-vod-rest-Drama (movie)",
+        "content": [
+          {
+            "id": 1,
+            "name": "rust-probe-vod-rest-Alpha"
+          },
+          {
+            "id": 4,
+            "name": "rust-probe-vod-rest-Movie03"
+          },
+          {
+            "id": 7,
+            "name": "rust-probe-vod-rest-Movie06"
+          },
+          {
+            "id": 10,
+            "name": "rust-probe-vod-rest-Movie09"
+          },
+          {
+            "id": 13,
+            "name": "rust-probe-vod-rest-Movie12"
+          },
+          {
+            "id": 16,
+            "name": "rust-probe-vod-rest-Movie15"
+          },
+          {
+            "id": 19,
+            "name": "rust-probe-vod-rest-Movie18"
+          },
+          {
+            "id": 22,
+            "name": "rust-probe-vod-rest-Movie21"
+          },
+          {
+            "id": 25,
+            "name": "rust-probe-vod-rest-Movie24"
+          }
+        ],
+        "visible_cards": 9,
+        "filtered_request": {
+          "path": "/api/vod/movies/",
+          "query": "?page=1&page_size=24&category=rust-probe-vod-rest-Drama%7Cmovie",
+          "status": 200
+        },
+        "category200": true,
+        "VOD_HTTP_failures": [],
+        "unified_requests": 0,
+        "uncaught_exceptions": 0,
+        "ambient_API_failures": [
+          {
+            "path": "/api/accounts/auth/proxy-login/",
+            "query": "",
+            "status": 401,
+            "request_id": "1078300.8",
+            "stage": "vod-login"
+          },
+          {
+            "path": "/api/accounts/auth/logout/",
+            "query": "",
+            "status": 401,
+            "request_id": "1078300.12",
+            "stage": "vod-login"
+          }
+        ],
+        "stored_token_present": true
+      },
+      {
+        "passed": true,
+        "scope": "Actual unchanged React normal login and category selection/display; single-type Standard accounts; unified/provider/artwork/episode flows excluded",
+        "kind": "series",
+        "selected_category": "rust-probe-vod-rest-Drama (series)",
+        "content": [
+          {
+            "id": 1,
+            "name": "rust-probe-vod-rest-Series0"
+          },
+          {
+            "id": 2,
+            "name": "rust-probe-vod-rest-Series1"
+          },
+          {
+            "id": 3,
+            "name": "rust-probe-vod-rest-Series2"
+          }
+        ],
+        "visible_cards": 3,
+        "filtered_request": {
+          "path": "/api/vod/series/",
+          "query": "?page=1&page_size=24&category=rust-probe-vod-rest-Drama%7Cseries",
+          "status": 200
+        },
+        "category200": true,
+        "VOD_HTTP_failures": [],
+        "unified_requests": 0,
+        "uncaught_exceptions": 0,
+        "ambient_API_failures": [
+          {
+            "path": "/api/accounts/auth/proxy-login/",
+            "query": "",
+            "status": 401,
+            "request_id": "1078804.8",
+            "stage": "vod-login"
+          },
+          {
+            "path": "/api/accounts/auth/logout/",
+            "query": "",
+            "status": 401,
+            "request_id": "1078804.12",
+            "stage": "vod-login"
+          }
+        ],
+        "stored_token_present": true
+      }
+    ]
+  },
+  "restoration": {
+    "restored": true,
+    "users_passwords_and_rows_exact": true,
+    "poster_relations_exact": true,
+    "category_enabled_flags_exact": true
+  }
+}

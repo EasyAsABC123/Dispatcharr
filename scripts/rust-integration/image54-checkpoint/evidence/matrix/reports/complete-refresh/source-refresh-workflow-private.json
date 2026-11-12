@@ -1,0 +1,952 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "startup-only-known-plugin",
+      "passed": true
+    },
+    {
+      "name": "web-startup-only-known-plugin",
+      "passed": true
+    },
+    {
+      "name": "event-subscriber-ready",
+      "passed": true
+    },
+    {
+      "name": "import1-http202",
+      "passed": true
+    },
+    {
+      "name": "import1-all-three-normal",
+      "passed": true
+    },
+    {
+      "name": "import1-two-result-children",
+      "passed": true
+    },
+    {
+      "name": "resultTTL1-apps.epg.tasks.refresh_epg_data",
+      "passed": true
+    },
+    {
+      "name": "result1-apps.epg.tasks.refresh_epg_data",
+      "passed": true
+    },
+    {
+      "name": "resultTTL1-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "result1-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "resultTTL1-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "result1-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "import1-stored-index",
+      "passed": true
+    },
+    {
+      "name": "import1-source-success",
+      "passed": true
+    },
+    {
+      "name": "import1-programme",
+      "passed": true
+    },
+    {
+      "name": "import1-current-and-guide",
+      "passed": true
+    },
+    {
+      "name": "import1-queue-and-locks-drained",
+      "passed": true
+    },
+    {
+      "name": "import1-child-parent-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "import1-child-parent-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "import1-realtime-refresh",
+      "passed": true
+    },
+    {
+      "name": "import2-http202",
+      "passed": true
+    },
+    {
+      "name": "import2-all-three-normal",
+      "passed": true
+    },
+    {
+      "name": "import2-two-result-children",
+      "passed": true
+    },
+    {
+      "name": "resultTTL2-apps.epg.tasks.refresh_epg_data",
+      "passed": true
+    },
+    {
+      "name": "result2-apps.epg.tasks.refresh_epg_data",
+      "passed": true
+    },
+    {
+      "name": "resultTTL2-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "result2-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "resultTTL2-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "result2-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "import2-stored-index",
+      "passed": true
+    },
+    {
+      "name": "import2-source-success",
+      "passed": true
+    },
+    {
+      "name": "import2-programme",
+      "passed": true
+    },
+    {
+      "name": "import2-current-and-guide",
+      "passed": true
+    },
+    {
+      "name": "import2-queue-and-locks-drained",
+      "passed": true
+    },
+    {
+      "name": "import2-child-parent-apps.epg.tasks.build_programme_index_task",
+      "passed": true
+    },
+    {
+      "name": "import2-child-parent-apps.channels.tasks.evaluate_series_rules",
+      "passed": true
+    },
+    {
+      "name": "import2-realtime-refresh",
+      "passed": true
+    },
+    {
+      "name": "only-three-owned-families-executed",
+      "passed": true
+    },
+    {
+      "name": "recordings-unchanged",
+      "passed": true
+    },
+    {
+      "name": "event-reader-no-errors",
+      "passed": true
+    }
+  ],
+  "imports": [
+    {
+      "iteration": 1,
+      "http": {
+        "status": 202,
+        "body": {
+          "success": true,
+          "message": "EPG data refresh initiated."
+        }
+      },
+      "completed": [
+        {
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "ee20d7e9-4ae3-425b-803e-6de5eedd9b28",
+          "state": "SUCCESS",
+          "result": null
+        },
+        {
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "54ca6d42-71c6-4cbe-9dfe-e19bb7f1564e",
+          "state": "SUCCESS",
+          "result": null
+        },
+        {
+          "task": "apps.channels.tasks.evaluate_series_rules",
+          "id": "40bddaf9-dc11-4bd0-bcc3-cb4ee3c69a14",
+          "state": "SUCCESS",
+          "result": {
+            "scheduled": 0,
+            "details": []
+          }
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "54ca6d42-71c6-4cbe-9dfe-e19bb7f1564e",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "40bddaf9-dc11-4bd0-bcc3-cb4ee3c69a14",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-12T21:52:45.808138+00:00",
+        "task_id": "ee20d7e9-4ae3-425b-803e-6de5eedd9b28"
+      },
+      "source_status": "success",
+      "index": {
+        "channels": {
+          "workflow-owned": [
+            86
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "current": [
+        {
+          "id": 1,
+          "start_time": "2026-11-12T21:32:32Z",
+          "end_time": "2026-11-12T23:47:32Z",
+          "title": "Owned first import",
+          "sub_title": null,
+          "description": null,
+          "tvg_id": "workflow-owned",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "channel_uuid": "117e9aa2-802c-4adb-985c-404017923012"
+        }
+      ],
+      "programmes": [
+        {
+          "id": 1,
+          "start_time": "2026-11-12T21:32:32Z",
+          "end_time": "2026-11-12T23:47:32Z",
+          "title": "Owned first import",
+          "sub_title": null,
+          "description": null,
+          "tvg_id": "workflow-owned",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false
+        }
+      ],
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "downloading",
+            "status": "success"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 0,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 10,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 25,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels",
+            "total_channels": 1
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 96,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels",
+            "processed": 1,
+            "total": 1
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 96,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels",
+            "processed": 1,
+            "total": 1
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels",
+            "status": "success",
+            "channels_count": 1
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 0,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_programs"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 10,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_programs",
+            "message": "Parsing programs..."
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 90,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_programs",
+            "message": "Updating database..."
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_programs",
+            "status": "success",
+            "message": "Parsed 1 programs for 1 channels (skipped 0 programs for 0 unmapped channels)",
+            "updated_at": "2026-11-12T21:52:45.801068+00:00"
+          }
+        }
+      ],
+      "file_sha256": "0e06c1d41e480a072d304e9435d7840358f6ae3d92820100b424fd865ae82b9a",
+      "file_mode": "0o644"
+    },
+    {
+      "iteration": 2,
+      "http": {
+        "status": 202,
+        "body": {
+          "success": true,
+          "message": "EPG data refresh initiated."
+        }
+      },
+      "completed": [
+        {
+          "task": "apps.epg.tasks.refresh_epg_data",
+          "id": "23ee9da6-7909-4ef5-927e-c1894671de1c",
+          "state": "SUCCESS",
+          "result": null
+        },
+        {
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "53b30f10-feac-4901-8824-ca312506133e",
+          "state": "SUCCESS",
+          "result": null
+        },
+        {
+          "task": "apps.channels.tasks.evaluate_series_rules",
+          "id": "516dfb58-1562-4fcb-b6e4-30fb17d74eb8",
+          "state": "SUCCESS",
+          "result": {
+            "scheduled": 0,
+            "details": []
+          }
+        }
+      ],
+      "metadata": {
+        "status": "SUCCESS",
+        "result": null,
+        "traceback": null,
+        "children": [
+          [
+            [
+              "53b30f10-feac-4901-8824-ca312506133e",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "516dfb58-1562-4fcb-b6e4-30fb17d74eb8",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-12T21:52:46.103758+00:00",
+        "task_id": "23ee9da6-7909-4ef5-927e-c1894671de1c"
+      },
+      "source_status": "success",
+      "index": {
+        "channels": {
+          "workflow-owned": [
+            86
+          ]
+        },
+        "interleaved_channels": []
+      },
+      "current": [
+        {
+          "id": 2,
+          "start_time": "2026-11-12T21:32:32Z",
+          "end_time": "2026-11-12T23:47:32Z",
+          "title": "Owned second import",
+          "sub_title": null,
+          "description": null,
+          "tvg_id": "workflow-owned",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false,
+          "channel_uuid": "117e9aa2-802c-4adb-985c-404017923012"
+        }
+      ],
+      "programmes": [
+        {
+          "id": 2,
+          "start_time": "2026-11-12T21:32:32Z",
+          "end_time": "2026-11-12T23:47:32Z",
+          "title": "Owned second import",
+          "sub_title": null,
+          "description": null,
+          "tvg_id": "workflow-owned",
+          "season": null,
+          "episode": null,
+          "is_new": false,
+          "is_live": false,
+          "is_premiere": false,
+          "is_finale": false
+        }
+      ],
+      "events": [
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "downloading",
+            "status": "success"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 0,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 10,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 25,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels",
+            "total_channels": 1
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 96,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels",
+            "processed": 1,
+            "total": 1
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 96,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels",
+            "processed": 1,
+            "total": 1
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_channels",
+            "status": "success",
+            "channels_count": 1
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 0,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_programs"
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 10,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_programs",
+            "message": "Parsing programs..."
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 90,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_programs",
+            "message": "Updating database..."
+          }
+        },
+        {
+          "type": "update",
+          "data": {
+            "progress": 100,
+            "type": "epg_refresh",
+            "source": 1,
+            "action": "parsing_programs",
+            "status": "success",
+            "message": "Parsed 1 programs for 1 channels (skipped 0 programs for 0 unmapped channels)",
+            "updated_at": "2026-11-12T21:52:46.094304+00:00"
+          }
+        }
+      ],
+      "file_sha256": "ed510a2561905180b15b8fbb478c51ec71627d2cf862208f9bccc287b0d338aa",
+      "file_mode": "0o644"
+    }
+  ],
+  "scope": "Actual Original HTTP\u2192refresh+Index+Series0\u2192second import\u2192Current/programme APIs; no descendant route override",
+  "fixture_clock": "2026-11-12T21:47:32+00:00",
+  "startup_removed": [],
+  "native_candidate": true,
+  "path_context": {
+    "file": "/evidence/workflow-files/guide.xml",
+    "uid": 0,
+    "cwd": "/app",
+    "workers": []
+  },
+  "observed_events": [
+    {
+      "type": "update",
+      "data": {
+        "progress": 100,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "downloading",
+        "status": "success"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 0,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 10,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 25,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels",
+        "total_channels": 1
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 96,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels",
+        "processed": 1,
+        "total": 1
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 96,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels",
+        "processed": 1,
+        "total": 1
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 100,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels",
+        "status": "success",
+        "channels_count": 1
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 0,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_programs"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 10,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_programs",
+        "message": "Parsing programs..."
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 90,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_programs",
+        "message": "Updating database..."
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 100,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_programs",
+        "status": "success",
+        "message": "Parsed 1 programs for 1 channels (skipped 0 programs for 0 unmapped channels)",
+        "updated_at": "2026-11-12T21:52:45.801068+00:00"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 100,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "downloading",
+        "status": "success"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 0,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 10,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 25,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels",
+        "total_channels": 1
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 96,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels",
+        "processed": 1,
+        "total": 1
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 96,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels",
+        "processed": 1,
+        "total": 1
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 100,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_channels",
+        "status": "success",
+        "channels_count": 1
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 0,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_programs"
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 10,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_programs",
+        "message": "Parsing programs..."
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 90,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_programs",
+        "message": "Updating database..."
+      }
+    },
+    {
+      "type": "update",
+      "data": {
+        "progress": 100,
+        "type": "epg_refresh",
+        "source": 1,
+        "action": "parsing_programs",
+        "status": "success",
+        "message": "Parsed 1 programs for 1 channels (skipped 0 programs for 0 unmapped channels)",
+        "updated_at": "2026-11-12T21:52:46.094304+00:00"
+      }
+    }
+  ],
+  "precleanup_sources": [
+    {
+      "id": 1,
+      "status": "success",
+      "last_message": "Parsed 1 programs for 1 channels (skipped 0 programs for 0 unmapped channels)",
+      "file_path": "/evidence/workflow-files/guide.xml",
+      "custom_properties": {}
+    }
+  ],
+  "precleanup_results": [
+    {
+      "status": "SUCCESS",
+      "result": null,
+      "traceback": null,
+      "children": [
+        [
+          [
+            "54ca6d42-71c6-4cbe-9dfe-e19bb7f1564e",
+            null
+          ],
+          null
+        ],
+        [
+          [
+            "40bddaf9-dc11-4bd0-bcc3-cb4ee3c69a14",
+            null
+          ],
+          null
+        ]
+      ],
+      "date_done": "2026-11-12T21:52:45.808138+00:00",
+      "task_id": "ee20d7e9-4ae3-425b-803e-6de5eedd9b28"
+    },
+    {
+      "status": "SUCCESS",
+      "result": {
+        "scheduled": 0,
+        "details": []
+      },
+      "traceback": null,
+      "children": [],
+      "date_done": "2026-11-12T21:52:45.981677+00:00",
+      "parent_id": "ee20d7e9-4ae3-425b-803e-6de5eedd9b28",
+      "task_id": "40bddaf9-dc11-4bd0-bcc3-cb4ee3c69a14"
+    },
+    {
+      "status": "SUCCESS",
+      "result": null,
+      "traceback": null,
+      "children": [],
+      "date_done": "2026-11-12T21:52:45.882754+00:00",
+      "parent_id": "ee20d7e9-4ae3-425b-803e-6de5eedd9b28",
+      "task_id": "54ca6d42-71c6-4cbe-9dfe-e19bb7f1564e"
+    },
+    {
+      "status": "SUCCESS",
+      "result": null,
+      "traceback": null,
+      "children": [
+        [
+          [
+            "53b30f10-feac-4901-8824-ca312506133e",
+            null
+          ],
+          null
+        ],
+        [
+          [
+            "516dfb58-1562-4fcb-b6e4-30fb17d74eb8",
+            null
+          ],
+          null
+        ]
+      ],
+      "date_done": "2026-11-12T21:52:46.103758+00:00",
+      "task_id": "23ee9da6-7909-4ef5-927e-c1894671de1c"
+    },
+    {
+      "status": "SUCCESS",
+      "result": {
+        "scheduled": 0,
+        "details": []
+      },
+      "traceback": null,
+      "children": [],
+      "date_done": "2026-11-12T21:52:46.284402+00:00",
+      "parent_id": "23ee9da6-7909-4ef5-927e-c1894671de1c",
+      "task_id": "516dfb58-1562-4fcb-b6e4-30fb17d74eb8"
+    },
+    {
+      "status": "SUCCESS",
+      "result": null,
+      "traceback": null,
+      "children": [],
+      "date_done": "2026-11-12T21:52:46.186510+00:00",
+      "parent_id": "23ee9da6-7909-4ef5-927e-c1894671de1c",
+      "task_id": "53b30f10-feac-4901-8824-ca312506133e"
+    }
+  ],
+  "precleanup_queue": [],
+  "precleanup_unacked_count": 0,
+  "precleanup_owned_locks": {
+    "task_lock_refresh_epg_data_1": null,
+    "task_lock_epg_source_file_1": null
+  },
+  "precleanup_file": {
+    "path": "/evidence/workflow-files/guide.xml",
+    "bytes": 230,
+    "mode": "0o644",
+    "parent_mode": "0o755",
+    "sha256": "ed510a2561905180b15b8fbb478c51ec71627d2cf862208f9bccc287b0d338aa"
+  },
+  "event_reader_errors": [],
+  "queue_and_results_after_cleanup": [
+    0,
+    0
+  ]
+}

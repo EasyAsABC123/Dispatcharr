@@ -1,0 +1,121 @@
+{
+  "actual_process_exit": 0,
+  "session": 53960,
+  "summary_sha256": "fc2684b0a9b6ee6ea0147f6990bd00a310ff4a8d56d2d2d42ee2c30b8c9a3719",
+  "cases": [
+    {
+      "case": "success",
+      "project": "dispatcharr-pending-main-dbc9857010",
+      "report_sha256": "3224b107409eb7a1e3b7726b71445672cd2a5cfdea0c494212682ce8f944056a",
+      "observation_valid": true,
+      "scoped_comparison_passed": true,
+      "default_named_tables_sequences_unchanged": true,
+      "terminal_source_signals_valid": true,
+      "holds": [
+        {
+          "backend": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.0006852360093035,
+          "overshoot_seconds": 0.0006852360093034804,
+          "control_seconds": 2.015758243011078
+        },
+        {
+          "backend": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000707227998646,
+          "overshoot_seconds": 0.0007072279986459762,
+          "control_seconds": 2.0142525359988213
+        }
+      ],
+      "literal_comparison": {
+        "observation_valid": true,
+        "parity_passed": true,
+        "status_equal": true,
+        "Source_status": 200,
+        "native_status": 200,
+        "full_M4_claim": false
+      },
+      "source_target_outcome_kind": "HTTP_headers",
+      "native_target_outcome_kind": "HTTP_headers"
+    },
+    {
+      "case": "busy",
+      "project": "dispatcharr-pending-main-60aca02d79",
+      "report_sha256": "da6c8a93666b2d642b62aabd3536100e8e2c210e5d0724ffd06bed8c96e1c9be",
+      "observation_valid": true,
+      "scoped_comparison_passed": true,
+      "default_named_tables_sequences_unchanged": true,
+      "terminal_source_signals_valid": true,
+      "holds": [
+        {
+          "backend": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000840683991555,
+          "overshoot_seconds": 0.0008406839915551245,
+          "control_seconds": 2.0165053609816823
+        },
+        {
+          "backend": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000774242012994,
+          "overshoot_seconds": 0.0007742420129943639,
+          "control_seconds": 2.012598886009073
+        }
+      ],
+      "literal_comparison": {
+        "observation_valid": true,
+        "parity_passed": true,
+        "status_equal": true,
+        "Source_status": 429,
+        "native_status": 429,
+        "full_M4_claim": false
+      },
+      "source_target_outcome_kind": "HTTP_headers",
+      "native_target_outcome_kind": "HTTP_headers"
+    },
+    {
+      "case": "clientloss",
+      "project": "dispatcharr-pending-main-b981da6905",
+      "report_sha256": "3dc89edac67cb600d33cdd10d5ee1c9694732f6b6205560cf89f8251d5ca28d3",
+      "observation_valid": true,
+      "scoped_comparison_passed": true,
+      "default_named_tables_sequences_unchanged": true,
+      "terminal_source_signals_valid": true,
+      "holds": [
+        {
+          "backend": "source",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000646333995974,
+          "overshoot_seconds": 0.0006463339959736913,
+          "control_seconds": 2.019862251006998
+        },
+        {
+          "backend": "native",
+          "target_seconds": 4,
+          "maximum_seconds": 4.35,
+          "actual_seconds": 4.000649966998026,
+          "overshoot_seconds": 0.000649966998025775,
+          "control_seconds": 2.0143109469790943
+        }
+      ],
+      "literal_comparison": {
+        "observation_valid": true,
+        "parity_passed": true,
+        "scope": "real client FD/read-thread closure with no pre-close HTTP outcome; no server-handler cancellation or counter equality inference",
+        "full_M4_claim": false
+      },
+      "source_target_outcome_kind": "client_transport_error",
+      "native_target_outcome_kind": "client_transport_error"
+    }
+  ],
+  "independent_cleanup_sha256": "c2b75edc7cfb13d5db967933edeafc6fd876a6ba346ad4e0554ff8d8547dc540",
+  "all_three_owned_projects_empty": true,
+  "scope": "Only exact Source-first image54 fixed4s success/busy/clientloss functional witness; no full M4/counter/timer/header parity or performance claim.",
+  "source_request_finished_not_inner_generator_finally": true,
+  "source_counter_differences_retained": true
+}

@@ -1,0 +1,48 @@
+{
+  "name": "shipped-createsuperuser22",
+  "controller_result_sha256": "a6340d42d446ed274ef7992399fc2b5837e5929f11a0c17440c1b7ecb3790fc6",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/create22/integration.json",
+      "sha256": "145da511d177da3e1f61cea62f188669807beed7e574625b50fd05f7a0b5c489"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/create22/operator-cli-source.json",
+      "sha256": "11041cf3bb236442e5240b32ec070e8ac2d78b005a312cbe3e11df8910d5ab60"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "default_database_unchanged": true,
+      "copied_database": "rust_probe_backup_operator_6780b87cdb"
+    }
+  ],
+  "observed_counts_and_candidate_Source_scope": {
+    "actual_cases": 22,
+    "actual_checks": 95,
+    "UID65532_readonly_capabilities_inspected": true,
+    "image_id": "sha256:8e3c133c0639d60057d8d05a5be2fce66e0f0968c35e29f674c348495a1a9ca0",
+    "source_commit": "044f3ad0fb3ee68ffb17b23bbb796ccdae954298",
+    "Source_Django_observed_owned_copied_database": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-operator-cli-source-6780b87cdb"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/create22-cleanup.json",
+      "sha256": "9e55b82abb582431d0843631fc100da2d346784073eb26efc9199a5acea57be5"
+    }
+  }
+}

@@ -6,8 +6,10 @@ parity or milestone completion. React remains unchanged.
 
 The authoritative acceptance ledger is [rust-milestones.md](rust-milestones.md).
 Image53 has scoped package/Main and live-performance evidence. The later image54
-build and SDK verification pass; all28 selected corrected package groups pass, while its subsequent Main
-checks are ongoing. Performance figures stay bound to the measured image/workload.
+build, SDK, all 28 selected corrected package groups and three scoped Main gates
+pass. Its portable evidence and reproduction instructions are in
+[rust-image54-validation.md](rust-image54-validation.md). Performance figures stay
+bound to the measured image/workload.
 
 | Milestone | Owner | Remaining work | Acceptance evidence |
 | --- | --- | --- | --- |
@@ -24,14 +26,17 @@ checks are ongoing. Performance figures stay bound to the measured image/workloa
 
 ## Current executable queues
 
-- **Streaming/integration:** corrected image54 package cohort, then the separately
-  defined lifecycle, worker-header and notification Main gates. Notification Main
-  preparation belongs to the API agent; the primary agent coordinates admission.
-- **API/operations:** eight-case notification physical SQL test overlay, isolated
-  compilation, completed-binary binding, then the owned PostgreSQL/Redis fixture.
-- **Ingestion:** the M3U candidate passes affected-crate build, strict checks and
-  library tests. Complete and qualify the actual eight-domain collector and
-  physical fault controls before promoting its runtime changes.
+- **Streaming/integration:** image54 package/Main evidence is qualified. Capture
+  bounded Original profile and Xtream action behavior, then implement and verify
+  confirmed remaining format/profile/output gaps.
+- **API/operations:** physical notification cases preserve connection-drain
+  failures in cases 2, 4 and 6; the composite remains negative. The new 20-request
+  Original JWT/API-key capture passes. Implement and compare the observed personal
+  notification permissions, preserving separate administrative write checks.
+- **Ingestion:** the M3U candidate passes affected-crate checks and all 189
+  eight-domain guest comparisons. Its host cleanup-parser failure remains
+  recorded. Finish the distinct lease and corrected result-denial controls;
+  configured Series/recurring jobs and clocked scheduling remain separate work.
 - **Primary agent:** review/integrate the three tracks, finish Source-contract
   assignments, keep evidence and milestone status current, and commit/push scoped
   completed work with receiving-ref verification.

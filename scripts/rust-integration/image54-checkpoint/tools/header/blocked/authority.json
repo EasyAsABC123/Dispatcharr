@@ -1,0 +1,56 @@
+{
+  "scope": "static pinned code authority; no new Source request measurement",
+  "files": [
+    {
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "path": "apps/proxy/vod_proxy/views.py",
+      "retained": "reference/1241b3f7/apps/proxy/vod_proxy/views.py",
+      "sha256": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e"
+    },
+    {
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "path": "apps/proxy/vod_proxy/urls.py",
+      "retained": "reference/1241b3f7/apps/proxy/vod_proxy/urls.py",
+      "sha256": "8fee6b6403ba88ab80097a0e31ad33928990fa28be668e041b4efb84e4ca56e4"
+    },
+    {
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "path": "apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+      "retained": "reference/1241b3f7/apps/proxy/vod_proxy/multi_worker_connection_manager.py",
+      "sha256": "8a63d669219d149293da592d1d9a4e77db4d0c8b253baaf29c44e2e766c72c4a"
+    },
+    {
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "path": "LICENSE",
+      "retained": "reference/1241b3f7/LICENSE",
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+    },
+    {
+      "revision": "f0bfc2f200dcfd1f64ae32a9855ea250731ce67f",
+      "path": "rust/crates/vod-http/src/engine.rs",
+      "retained": "reference/f0bfc2f2/rust/crates/vod-http/src/engine.rs",
+      "sha256": "8f821c150c08d58ec11e74d5a7a291900cd863fad312a935b8155635793c84e0"
+    },
+    {
+      "revision": "f0bfc2f200dcfd1f64ae32a9855ea250731ce67f",
+      "path": "rust/crates/vod-http/src/worker_identity.rs",
+      "retained": "reference/f0bfc2f2/rust/crates/vod-http/src/worker_identity.rs",
+      "sha256": "32102659b3935c88b36bbe130a5b35a89a029cb7d5a85477f986af423a5e76ff"
+    },
+    {
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "path": "dispatcharr/urls.py",
+      "retained": "reference/1241b3f7/dispatcharr/urls.py",
+      "sha256": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f"
+    }
+  ],
+  "branches": {
+    "healthy200206": "manager get_stream before StreamingHttpResponse; status206 iff Range, local self.worker_id header",
+    "provider404_to500": "get_stream requests.raise_for_status rethrows; manager except rollback returns HttpResponse500 before success header",
+    "no_provider503": "stream_vod selected is None returns503 before manager",
+    "head405": "routed api_view GET rejects valid-credential HEAD; unrouted head_vod does not apply",
+    "invalidGET401": "JWT authentication declared on stream_vod; retained shared-auth authority; presented invalidcredential fails before view/manager",
+    "invalidHEAD": "static Source DRF authentication-before-method expectation401; actual SourceHEADnotcaptured or authorized here. Native explicit head handler may405; literalNative diagnostic only",
+    "excluded_unrouted_SPA": "Retained Source500 is TemplateDoesNotExist:index.html in bare-Git fixture; no VOD handler or application route-parity authority. Proper Original compiled frontend fixture remains required."
+  }
+}

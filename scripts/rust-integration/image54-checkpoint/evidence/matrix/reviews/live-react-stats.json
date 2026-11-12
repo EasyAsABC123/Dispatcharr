@@ -1,0 +1,76 @@
+{
+  "name": "live-react-stats",
+  "controller_result_sha256": "c3acd9eea5089234cd1743a0f3a5539a2e4d317bcc579c0db00f4796d203b501",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/live-react-stats/integration.json",
+      "sha256": "2506704dd1024b2ac1e51fe2bc706641c279e8036dc9791ee30264d3f3fab3e6"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "No named default-before/after audit is exposed by this generic node; disposable seeded schema / individual SQL assertions remain the recorded scope. No inferred default audit.",
+  "observed_counts_and_candidate_Source_scope": {
+    "browser_backends": {
+      "Original": {
+        "actual_video_frames": [
+          25,
+          75
+        ],
+        "actual_video_times": [
+          0.689198,
+          2.688019
+        ],
+        "stats_sections": [
+          "catchup",
+          "live",
+          "timestamp",
+          "vod"
+        ],
+        "stats_status": 200,
+        "normal_login_player_close_no_uncaught": true,
+        "API_response_count": 51
+      },
+      "native": {
+        "actual_video_frames": [
+          25,
+          75
+        ],
+        "actual_video_times": [
+          0.822036,
+          2.822229
+        ],
+        "stats_sections": [
+          "catchup",
+          "live",
+          "timestamp",
+          "vod"
+        ],
+        "stats_status": 200,
+        "normal_login_player_close_no_uncaught": true,
+        "API_response_count": 53
+      }
+    },
+    "resource_sampler": false,
+    "browser_decode_is_not_FFmpeg_prefix_decode": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-live-browser-621aadece6"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/baseline-auth-live-cleanup.json",
+      "sha256": "c538dd6a7a23a1864ac6e8d4b4f87f27a8a139105b135d937f2cbe3002913f9a"
+    }
+  }
+}

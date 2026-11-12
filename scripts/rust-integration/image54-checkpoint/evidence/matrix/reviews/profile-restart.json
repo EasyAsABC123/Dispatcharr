@@ -1,0 +1,46 @@
+{
+  "name": "profile-restart",
+  "controller_result_sha256": "8405867edc5564206a31f3358f13f774cf74e719bd5e593016961fbcec7f48f4",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/profile-restart/integration.json",
+      "sha256": "5a6e164c804ddb0d22979b61860dd5653004a87489ad734e96cec49fee156791"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/profile-restart/output-profile-restart.json",
+      "sha256": "c642a510c73fbb0f326786b4aeb949e7fe3f35343e133c6f9faf70a34a3c23a5"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Own copied/seeded fixture state comparisons as recorded; no whole default11 before/after audit field exposed or inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "Source_native_phases": 2,
+    "actual_case": "role-DELETE-above_admin",
+    "same_candidate_process_and_Source_workers": true,
+    "each_actual_first_post_restart_response_SQL_cache_equals_retained_expected": true,
+    "actual_Redis_run_id_changed_each": true,
+    "warmup_attempts_per_backend": 1,
+    "later_logical_attempts_per_backend": 2,
+    "ordinary130_check_suite_not_run_in_this_restart_mode": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-output-profiles-90e8278a8b"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/restart-current-cleanup.json",
+      "sha256": "d0140dd5bfe219ff493bd94e6f16488a80539b03e9352a6e2474b02ef1c4691b"
+    }
+  }
+}

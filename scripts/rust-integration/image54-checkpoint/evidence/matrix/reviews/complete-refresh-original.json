@@ -1,0 +1,55 @@
+{
+  "name": "complete-refresh-original",
+  "controller_result_sha256": "e8db8c622d69a03a03e4801b7480625d513a6fa069e70f13b038e0b1768a9b13",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/complete-refresh-original/integration.json",
+      "sha256": "543a6eca14eea79b6e17534c297ff4a44d0660e44c3e116efb2d71cce7b3ceaa"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/complete-refresh-original/source-refresh-workflow-private.json",
+      "sha256": "adb78821bb47dce0bac2496b924c18a6a61d51541433c83336dfde12228d4452"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "report": "integration.json",
+      "field": "default_database_unchanged",
+      "observed": true
+    }
+  ],
+  "audit_scope": "Copied-database refresh workflow; raw controller unchanged-default boolean is observed, no unexported named-table count inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "Source_checks": 40,
+    "imports": 2,
+    "tasks": 6,
+    "all_three_families_per_import_SUCCESS": true,
+    "queue_and_results_after_cleanup": [
+      0,
+      0
+    ],
+    "fixture_clock": "2026-11-12T21:47:32+00:00",
+    "reference_age_at_review_seconds": 281.45529103279114,
+    "Source_only_prerequisite_not_Native_graph_acceptance": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-refresh-workflow-original-42ca55ed94"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/complete-refresh-original-cleanup.json",
+      "sha256": "5d987014b1300c2ee0c45b144962c9cd8ee43d10dcab0789f191c0affef2c646"
+    }
+  }
+}

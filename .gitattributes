@@ -96,3 +96,8 @@ scripts/rust-contracts/notification-mutations-native67/build/notification-pure.s
 
 # Preserve exact SDK044f Docker output bytes, including historical whitespace.
 scripts/rust-integration/sdk044f/raw/compose.log -text -whitespace
+
+# Preserve exact image54 Original license headings and source EOF bytes.
+scripts/rust-integration/image54-checkpoint/Application-ATTRIBUTION.md conflict-marker-size=32
+scripts/rust-integration/image54-checkpoint/tools/notifications/blocked/reference/core/api_views.py -text whitespace=-blank-at-eof
+scripts/rust-integration/image54-checkpoint/tools/notifications/blocked/reference/core/apps.py -text whitespace=-blank-at-eof

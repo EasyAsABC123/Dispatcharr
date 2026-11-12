@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "scope": "independent exact-owned Docker inventories; no resource removal/creation",
+  "projects": [
+    "dispatcharr-operator-package-4730757f39"
+  ],
+  "queries": [
+    {
+      "project": "dispatcharr-operator-package-4730757f39",
+      "kind": "containers",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-package-4730757f39"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "project": "dispatcharr-operator-package-4730757f39",
+      "kind": "networks",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-package-4730757f39"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "project": "dispatcharr-operator-package-4730757f39",
+      "kind": "volumes",
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--format",
+        "{{.Name}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-operator-package-4730757f39"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "inventories": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "bound_environment_file_sha256": "1c84cc61d16e227c14652f98a3d6d9bffc0030f918ee7147312365c318b8ebdc",
+  "tooling_metadata_sha256": "1c82ae02de1562d80052ab79d1f38ec3e27ed12aea24bdb65f31442105ba6a38"
+}

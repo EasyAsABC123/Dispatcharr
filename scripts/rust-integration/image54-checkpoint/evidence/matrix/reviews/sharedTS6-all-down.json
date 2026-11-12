@@ -1,0 +1,63 @@
+{
+  "name": "sharedTS6-all-down",
+  "controller_result_sha256": "d41d5c87ab1ee95a00b69117860b9a39b7fb8d63e161e94b0189366e04feadab",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/sharedTS6-all-down/shared-ts.json",
+      "sha256": "cf9b2fb2e5236291c132d4951d86c1877dafca5d031f01cfbec4651e6e658f4a"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Owned streaming fixture; no unexposed default11 inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "actual_checks": 14,
+    "active_metadata_required": true,
+    "before_restart_literal": {
+      "owner": null,
+      "provider_slots": 1,
+      "clients": 0,
+      "metadata_fields": 0,
+      "input_index": 4,
+      "timestamps": 0,
+      "state": null
+    },
+    "after_restart_literal": {
+      "owner": null,
+      "provider_slots": 0,
+      "clients": 0,
+      "metadata_fields": 0,
+      "input_index": null,
+      "timestamps": 0,
+      "state": null
+    },
+    "restart_cleanup_seconds": 6.239591755991569,
+    "total_cleanup_seconds": 71.51470247501857,
+    "two_decoder_frames": [
+      74,
+      74
+    ],
+    "reader_IncompleteRead_preserved": true,
+    "candidate_only_no_Source_owner_death_parity": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-shared-ts-03e4e085b0c4"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/allDown14-cleanup.json",
+      "sha256": "17f602c77b851a8cb1da1a15454d9a20fa7313d8a36add1b04710faf5a20bc0c"
+    }
+  }
+}

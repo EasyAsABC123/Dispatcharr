@@ -1,0 +1,70 @@
+{
+  "name": "retention100",
+  "controller_result_sha256": "3b6ac73f2943a5664c688ae2e20b03ade293b13d59bc62e1411cfa037475e2db",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/retention100/retention.json",
+      "sha256": "09fde6bd9a48b984e9196e97d5610f5a9efc081d3ca748931ad2d4329453208e"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Owned retention fixture; no unexposed default11 inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "historical_readers": 100,
+    "channels": 10,
+    "concurrency": 32,
+    "behind_seconds": 45,
+    "prefix_reference_age_range_seconds": [
+      35,
+      55
+    ],
+    "read_bytes_each": 1500000,
+    "all100_prefix_receipts_match_retained_reference": true,
+    "retained_first10_captures_prefix_hash_recomputed": true,
+    "ten_decoder_frames": [
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69,
+      69
+    ],
+    "samples_elapsed_seconds": [
+      5.1594107749988325,
+      30.158814661001088,
+      60.16378274699673,
+      75.1615059460164
+    ],
+    "configured_local_limit_per_channel": 4194304,
+    "max_observed_local_payload_per_channel": 4093888,
+    "authoritative_history_limit_per_channel": 16777216,
+    "configured_retention_seconds": 60,
+    "no_extra_origin_connections": true,
+    "resource_scope": "Payload and known-key allocations only; not total process memory/allocator or performance comparison.",
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-retention-096839e24165"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/retention100-cleanup.json",
+      "sha256": "0a1e8b4f7bec02d8f3fdc3aead2d914e5420ef5f646cdff54a6b6d3aca14477f"
+    }
+  }
+}

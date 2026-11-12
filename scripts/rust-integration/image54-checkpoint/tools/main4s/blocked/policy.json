@@ -1,0 +1,220 @@
+{
+  "schema": 1,
+  "scope": "NEW BLOCKED image54 exact792 three-case Main4s plan; observations and parity separate",
+  "fixture_execution_authorized": false,
+  "hardblock": "UNVALIDATED_MAIN_FIXTURE_DRAFT",
+  "candidate": {
+    "status": "BLOCKED input-bound only, no new cue",
+    "execution_authorized": false,
+    "Root_reviewed_Rust_input_count": 792,
+    "Root_reviewed_input_map_sha256": "7acb3cf3c8777286cbfab1a8e338920ede7151d9ef173db5b259f77e3b6e802f",
+    "build_manifest": "artifacts/rust/candidate-build-notification-mutations-image54-1/build.json",
+    "build_manifest_sha256": "cac7bcdcc60dff6f26e233e78c2737b7f5d9450cf54042719b8d5cd61cf5ff8b",
+    "candidate_tag": "dispatcharr-rust-app:notification-mutations-image54",
+    "candidate_image": "sha256:8e3c133c0639d60057d8d05a5be2fce66e0f0968c35e29f674c348495a1a9ca0",
+    "git_revision": "044f3ad0fb3ee68ffb17b23bbb796ccdae954298",
+    "source_tree_sha256": "a8ab7ab0e400c1ebcdc1bc0e232434bb9408ba5165a048d1cbf2c0716f501256",
+    "source_archive": "artifacts/rust/candidate-build-notification-mutations-image54-1/source.tar",
+    "source_archive_sha256": "86fb4e93032cc1565ada0d0935e21805dc6e0352897f5eeed06b7a0748b3c880",
+    "reserve_script_sha1": "d757c8db4c0aa5a26a91e84d2dcbfb4047589be0",
+    "proposed_fresh_output": "artifacts/rust/m4-vod-four-second-main-image54-1",
+    "cue": null
+  },
+  "cases": [
+    "success",
+    "busy",
+    "clientloss"
+  ],
+  "per_case": {
+    "independent_owned_databases": [
+      "template",
+      "source",
+      "native"
+    ],
+    "named_table_count": 9,
+    "default_database_named_table_sequence_audit": true,
+    "dedicated_source_native_redis_ports": [
+      6390,
+      6391
+    ],
+    "native_proxy_port": 6381,
+    "local_origin_only": true,
+    "origin_preflight": {
+      "explicit_owned_compose_up": true,
+      "health_readiness": true,
+      "full_fixture_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+      "range": "bytes=0-8191",
+      "required_status": 206,
+      "max_read_bytes": 8193,
+      "prefix_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+      "stats_max_bytes": 65536,
+      "direct_origin_request_count": 1
+    },
+    "dedicated_source_proxy": {
+      "listen": 6383,
+      "loopback_control": 6384,
+      "backend": 6390,
+      "target": "exact owned profile key, INCR or INCRBY increment1 only",
+      "Source_actual_client_socket_timeout": 60,
+      "Source_actual_client_connect_timeout": 5,
+      "no_client_method_replacement": true
+    }
+  },
+  "fixed_observations": {
+    "gate_hold_seconds": 4,
+    "existing_Main_observer_seconds": 3,
+    "early_body_bytes": 8192,
+    "early_body_sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f",
+    "source_gate": "actual Original Redis INCR/INCRBY reply read but not delivered; no method wrapper",
+    "native_gate": "actual Redis reserve-provider reply read but not delivered",
+    "reserve_script_sha1": "d757c8db4c0aa5a26a91e84d2dcbfb4047589be0",
+    "maximum_hold_seconds": 4.35,
+    "hold_boundary": "actual Source INCR reply read vsnative Lua reply read",
+    "release_boundary": "actual proxy reply release for each backend",
+    "control_work_must_finish_before_target": true,
+    "exact_pause_schedule_identity_claimed": false,
+    "reserve_reply_by_case": {
+      "success": 1,
+      "busy": -2,
+      "clientloss": 1
+    },
+    "unexpected_redis_error_or_type": "invalid, never held",
+    "stop_witness": "stop key exists after admin200 and early8192, no late100unit claim",
+    "busy_native_ownership": "same other movie owner+metadata token+ledger token/fence/profile/reserved1 and globalcount1 after followerclose; Source publiccounter separately observed",
+    "private_fence_schema": {
+      "type": "canonical positive decimal string",
+      "minimum": 1,
+      "maximum": 9223372036854775807,
+      "maximum_digits": 19,
+      "required_at_both_snapshots": true,
+      "unchanged": true
+    },
+    "source_reply_by_case": {
+      "success": 1,
+      "busy": 2,
+      "clientloss": 1
+    },
+    "native_reply_by_case": {
+      "success": 1,
+      "busy": -2,
+      "clientloss": 1
+    },
+    "Source_error_or_unexpected_type": "invalid/nohold, including NOSCRIPT (not meaningful for INCR)",
+    "control_work_deadline_seconds": 3.1,
+    "absolute_while_held_checkpoint_seconds": 3.1,
+    "post_close_seconds": [
+      1.5,
+      3,
+      6,
+      15
+    ],
+    "checkpoint_overshoot_seconds": 0.35,
+    "actual_target_header_time_recorded_inside_thread": true,
+    "immediate_target_outcome_state_recorded_inside_thread": true,
+    "target_status_acceptance": "record actual; native503 remains parityfailure versus Source200/429, never validity-pass\u21d2parity-pass",
+    "Source_reference_status_hypotheses": {
+      "success": 200,
+      "busy": 429,
+      "clientloss": "No HTTP headers before actual owned client close; expected read termination after shutdown, not an HTTP server status"
+    },
+    "explicit_consumer_socket_shutdown": true,
+    "HTTP_client_timeout_seconds": 8,
+    "observer_direct_Redis_read_timeout_seconds": 3,
+    "Source_method_or_view_replacement": false,
+    "snapshots_are_atomic": false,
+    "snapshot_interval_start_and_complete_captured": true,
+    "post_outcome_snapshot_max_delay_seconds": 0.35
+  },
+  "limits": {
+    "command_aggregate_bytes": 8388608,
+    "command_input_bytes": 1048576,
+    "resp_frame_bytes": 1048576,
+    "resp_line_bytes": 8192,
+    "resp_depth": 16,
+    "resp_array_items": 1024,
+    "proxy_connections": 64,
+    "pending_commands_per_connection": 128,
+    "proxy_trace_events": 1024,
+    "held_reply_seconds": 10,
+    "control_body_bytes": 4096,
+    "phase_seconds": 90
+  },
+  "remaining_open": [
+    "Source later-body timeout",
+    "Source post-close metadata",
+    "Source/native public counter divergence preserving other movie reservation",
+    "Main older-timer beyond3s",
+    "full headers/late body parity"
+  ],
+  "resource_sampling": false,
+  "performance_acceptance": false,
+  "full_M3_M4_acceptance": false,
+  "normal_recovery_default": "OFF, fixture explicitly opts in",
+  "Source_request_signal_observer": {
+    "journal_max_rows": 256,
+    "journal_max_bytes": 1048576,
+    "row_max_bytes": 4096,
+    "read_only_status_port": 6385,
+    "status_max_bytes": 4096,
+    "status_pool_connections": 2,
+    "finish_coverage_wait_seconds": 10,
+    "exact_roles_per_case": {
+      "success": [
+        "initial",
+        "target",
+        "follower"
+      ],
+      "busy": [
+        "initial",
+        "target",
+        "follower",
+        "other"
+      ],
+      "clientloss": [
+        "initial",
+        "target",
+        "follower"
+      ]
+    },
+    "allowed_event_fields": [
+      "request",
+      "role",
+      "sid_sha256",
+      "kind",
+      "monotonic"
+    ],
+    "no_auth_header_cookie_environ_or_argv_persistence": true,
+    "failure_visibility": "sticky memory status plus durable bounded marker; invalidity never raisesintoDjango",
+    "claim": "Django request_finished after response-close resource-closer attempts, not necessarily successful generator-finally (Django may swallow closer exceptions), not providerEOF/TCPclose/daemoncompletion",
+    "genuine_dispatch_failure_contract_gate": "not executed; requiresRootreview beforefixture",
+    "provider_generator_normal_EOF_claimed": false,
+    "terminal_status_after_native_phase_required": true,
+    "sticky_invalid_stops_further_retention": true,
+    "role_rows_memory_count_must_match_file": true
+  },
+  "passed2_4_policy_unchanged": true,
+  "parity_separate_from_observation_validity": true,
+  "main_or_coordinator_budget_change": false,
+  "source_reference_strategy": "Fresh genuine physical Original phases for ALL THREE cases, each preceding its corresponding native phase on independent clones; all historical image50/image51 references remain unchanged.",
+  "clientloss": {
+    "request_transport": "new-case-only http.client actual owned TCP reader; success/busy requests transport unchanged",
+    "abort_at": "Immediately after early follower8192/metadata/stop witness, before control_done; control still <=held+3.1s",
+    "read_join_deadline": "same existing absolute held+3.1s control deadline, no extension",
+    "client_timeout_seconds": 8,
+    "actual_shutdown": true,
+    "physical_close_ack": "ONLY after real reader future joins: socket fd=-1 AND original descriptor inode absent",
+    "allowed_client_errors": [
+      "RemoteDisconnected",
+      "ConnectionResetError",
+      "ConnectionAbortedError",
+      "BrokenPipeError",
+      "OSError"
+    ],
+    "server_cancellation_inferred": false,
+    "early_HTTP503_or_timeout_is_not_success": true,
+    "no_target_body_or_HTTPstatus_inferred_from_abort": true,
+    "no_headers_key_absent_required": true,
+    "fd_after_strict_integer_minus_one_required": true
+  },
+  "native_transition_policy_scope": "Expected new candidate idle-only3s active control plus separately bounded60s first-read reservation observation; ordinaryCoordinator2s and otherRecovery3s unchanged. Controller time limits unchanged."
+}

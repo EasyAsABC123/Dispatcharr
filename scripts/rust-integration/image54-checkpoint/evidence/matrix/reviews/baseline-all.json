@@ -1,0 +1,56 @@
+{
+  "name": "baseline-all",
+  "controller_result_sha256": "be25bd10318cf9ca0197da2b821d7f450f5281182fb051935d96eede82d067f5",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/baseline-all/integration.json",
+      "sha256": "bb0f6f2716fe8b3c494d06ea22cc4308b8aec1f92ab7519f1a3e0623bc12f7bb"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "No named default-before/after audit is exposed by this generic node; disposable seeded schema / individual SQL assertions remain the recorded scope. No inferred default audit.",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 1024,
+    "contract_suites": [
+      "accounts",
+      "account_crud",
+      "app_data",
+      "core",
+      "profiles",
+      "memberships",
+      "channel_reads",
+      "channel_crud",
+      "groups",
+      "channel_stops",
+      "group_cleanup",
+      "streams",
+      "provider_reads",
+      "server_group_crud",
+      "filter_crud",
+      "core_utilities",
+      "core_stream_crud",
+      "notifications"
+    ],
+    "all_checks_passed": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-rust-probe-0659ccf0a5"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/baseline-auth-live-cleanup.json",
+      "sha256": "c538dd6a7a23a1864ac6e8d4b4f87f27a8a139105b135d937f2cbe3002913f9a"
+    }
+  }
+}

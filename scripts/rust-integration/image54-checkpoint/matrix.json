@@ -1,0 +1,305 @@
+{
+  "required_nodes": 28,
+  "corrected_actual_children": 28,
+  "corrected_exit0_children": 28,
+  "all_actual_fixture_attempts": 31,
+  "initial_cohort_overall_passed": false,
+  "initial_three_result_projections": [
+    "evidence/initial-cohort1/baseline-all.result.json",
+    "evidence/initial-cohort1/guide-grid-packaged.result.json",
+    "evidence/initial-cohort1/proxy-auth.result.json"
+  ],
+  "initial_host_tooling_negative": "evidence/initial-cohort1/tooling-negative-review.json",
+  "typed154_preadmission_refusal_not_child": "evidence/preadmission-typed154-refusal.json",
+  "Root_matrix_review": "evidence/Root-matrix-review.json",
+  "rows": [
+    {
+      "required_node": "baseline-all",
+      "controller": "evidence/matrix/controllers/baseline-all.json",
+      "review": "evidence/matrix/reviews/baseline-all.json",
+      "reports": [
+        "evidence/matrix/reports/baseline-all/integration.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/baseline-auth-live-cleanup.json"
+    },
+    {
+      "required_node": "proxy-auth",
+      "controller": "evidence/matrix/controllers/proxy-auth.json",
+      "review": "evidence/matrix/reviews/proxy-auth.json",
+      "reports": [
+        "evidence/matrix/reports/proxy-auth/integration.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/proxy-auth-cleanup.json"
+    },
+    {
+      "required_node": "auth-hash",
+      "controller": "evidence/matrix/controllers/auth-hash.json",
+      "review": "evidence/matrix/reviews/auth-hash.json",
+      "reports": [
+        "evidence/matrix/reports/auth-hash/integration.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/baseline-auth-live-cleanup.json"
+    },
+    {
+      "required_node": "live-react-stats",
+      "controller": "evidence/matrix/controllers/live-react-stats.json",
+      "review": "evidence/matrix/reviews/live-react-stats.json",
+      "reports": [
+        "evidence/matrix/reports/live-react-stats/integration.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/baseline-auth-live-cleanup.json"
+    },
+    {
+      "required_node": "user-agent",
+      "controller": "evidence/matrix/controllers/user-agent.json",
+      "review": "evidence/matrix/reviews/user-agent.json",
+      "reports": [
+        "evidence/matrix/reports/user-agent/integration.json",
+        "evidence/matrix/reports/user-agent/packaged-checks.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/ua-output-cleanup.json"
+    },
+    {
+      "required_node": "output-profile",
+      "controller": "evidence/matrix/controllers/output-profile.json",
+      "review": "evidence/matrix/reviews/output-profile.json",
+      "reports": [
+        "evidence/matrix/reports/output-profile/integration.json",
+        "evidence/matrix/reports/output-profile/packaged-checks.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/ua-output-cleanup.json"
+    },
+    {
+      "required_node": "profile-restart",
+      "controller": "evidence/matrix/controllers/profile-restart.json",
+      "review": "evidence/matrix/reviews/profile-restart.json",
+      "reports": [
+        "evidence/matrix/reports/profile-restart/integration.json",
+        "evidence/matrix/reports/profile-restart/output-profile-restart.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/restart-current-cleanup.json"
+    },
+    {
+      "required_node": "guide-grid-packaged",
+      "controller": "evidence/matrix/controllers/guide-grid-packaged.json",
+      "review": "evidence/matrix/reviews/guide-grid-packaged.json",
+      "reports": [
+        "evidence/matrix/reports/guide-grid-packaged/integration.json",
+        "evidence/matrix/reports/guide-grid-packaged/packaged-grid.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/guide-grid-packaged-cleanup.json"
+    },
+    {
+      "required_node": "current-packaged",
+      "controller": "evidence/matrix/controllers/current-packaged.json",
+      "review": "evidence/matrix/reviews/current-packaged.json",
+      "reports": [
+        "evidence/matrix/reports/current-packaged/integration.json",
+        "evidence/matrix/reports/current-packaged/packaged-current.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/restart-current-cleanup.json"
+    },
+    {
+      "required_node": "m4-functional",
+      "controller": "evidence/matrix/controllers/m4-functional.json",
+      "review": "evidence/matrix/reviews/m4-functional.json",
+      "reports": [
+        "evidence/matrix/reports/m4-functional/result.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/m4-install-cleanup.json"
+    },
+    {
+      "required_node": "clean-install",
+      "controller": "evidence/matrix/controllers/clean-install.json",
+      "review": "evidence/matrix/reviews/clean-install.json",
+      "reports": [
+        "evidence/matrix/reports/clean-install/integration.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/m4-install-cleanup.json"
+    },
+    {
+      "required_node": "category-browser",
+      "controller": "evidence/matrix/controllers/category-browser.json",
+      "review": "evidence/matrix/reviews/category-browser.json",
+      "reports": [
+        "evidence/matrix/reports/category-browser/source-run.json",
+        "evidence/matrix/reports/category-browser/packaged-http.json",
+        "evidence/matrix/reports/category-browser/packaged-category-http.json",
+        "evidence/matrix/reports/category-browser/packaged-category-defaults-wire.json",
+        "evidence/matrix/reports/category-browser/packaged-category-browser.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/category-unified-cleanup.json"
+    },
+    {
+      "required_node": "unified-HTML-browser",
+      "controller": "evidence/matrix/controllers/unified-HTML-browser.json",
+      "review": "evidence/matrix/reviews/unified-HTML-browser.json",
+      "reports": [
+        "evidence/matrix/reports/unified-HTML-browser/source-run.json",
+        "evidence/matrix/reports/unified-HTML-browser/packaged-http.json",
+        "evidence/matrix/reports/unified-HTML-browser/packaged-unified-http.json",
+        "evidence/matrix/reports/unified-HTML-browser/packaged-HTML.json",
+        "evidence/matrix/reports/unified-HTML-browser/packaged-unified-browser.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/category-unified-cleanup.json"
+    },
+    {
+      "required_node": "complete-refresh-original",
+      "controller": "evidence/matrix/controllers/complete-refresh-original.json",
+      "review": "evidence/matrix/reviews/complete-refresh-original.json",
+      "reports": [
+        "evidence/matrix/reports/complete-refresh-original/integration.json",
+        "evidence/matrix/reports/complete-refresh-original/source-refresh-workflow-private.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/complete-refresh-original-cleanup.json"
+    },
+    {
+      "required_node": "complete-refresh",
+      "controller": "evidence/matrix/controllers/complete-refresh.json",
+      "review": "evidence/matrix/reviews/complete-refresh.json",
+      "reports": [
+        "evidence/matrix/reports/complete-refresh/integration.json",
+        "evidence/matrix/reports/complete-refresh/source-refresh-workflow-private.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/complete-refresh-cleanup.json"
+    },
+    {
+      "required_node": "static-Chrome-HTML-browser",
+      "controller": "evidence/matrix/controllers/static-Chrome-HTML-browser.json",
+      "review": "evidence/matrix/reviews/static-Chrome-HTML-browser.json",
+      "reports": [
+        "evidence/matrix/reports/static-Chrome-HTML-browser/source-run.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/packaged-http.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/packaged-static.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/packaged-Chrome-HTML.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/packaged-HTML.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/packaged-unified-http.json",
+        "evidence/matrix/reports/static-Chrome-HTML-browser/packaged-unified-browser.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/static-actions-cached-cleanup.json"
+    },
+    {
+      "required_node": "packaged-provider-actions",
+      "controller": "evidence/matrix/controllers/packaged-provider-actions.json",
+      "review": "evidence/matrix/reviews/packaged-provider-actions.json",
+      "reports": [
+        "evidence/matrix/reports/packaged-provider-actions/source-run.json",
+        "evidence/matrix/reports/packaged-provider-actions/packaged-http.json",
+        "evidence/matrix/reports/packaged-provider-actions/packaged-provider-actions.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/static-actions-cached-cleanup.json"
+    },
+    {
+      "required_node": "packaged-cached-provider-info",
+      "controller": "evidence/matrix/controllers/packaged-cached-provider-info.json",
+      "review": "evidence/matrix/reviews/packaged-cached-provider-info.json",
+      "reports": [
+        "evidence/matrix/reports/packaged-cached-provider-info/source-run.json",
+        "evidence/matrix/reports/packaged-cached-provider-info/packaged-http.json",
+        "evidence/matrix/reports/packaged-cached-provider-info/packaged-cached-info.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/static-actions-cached-cleanup.json"
+    },
+    {
+      "required_node": "channel-logos",
+      "controller": "evidence/matrix/controllers/channel-logos.json",
+      "review": "evidence/matrix/reviews/channel-logos.json",
+      "reports": [
+        "evidence/matrix/reports/channel-logos/integration.json",
+        "evidence/matrix/reports/channel-logos/packaged-checks.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/logos-images-modal-cleanup.json"
+    },
+    {
+      "required_node": "packaged-vod-images",
+      "controller": "evidence/matrix/controllers/packaged-vod-images.json",
+      "review": "evidence/matrix/reviews/packaged-vod-images.json",
+      "reports": [
+        "evidence/matrix/reports/packaged-vod-images/source-run.json",
+        "evidence/matrix/reports/packaged-vod-images/packaged-http.json",
+        "evidence/matrix/reports/packaged-vod-images/packaged-vod-images.json",
+        "evidence/matrix/reports/packaged-vod-images/packaged-effects.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/logos-images-modal-cleanup.json"
+    },
+    {
+      "required_node": "provider-modal-browser",
+      "controller": "evidence/matrix/controllers/provider-modal-browser.json",
+      "review": "evidence/matrix/reviews/provider-modal-browser.json",
+      "reports": [
+        "evidence/matrix/reports/provider-modal-browser/integration.json",
+        "evidence/matrix/reports/provider-modal-browser/provider-modal-browser.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/logos-images-modal-cleanup.json"
+    },
+    {
+      "required_node": "fresh-Original17capture",
+      "controller": "evidence/matrix/controllers/fresh-Original17capture.json",
+      "review": "evidence/matrix/reviews/fresh-Original17capture.json",
+      "reports": [
+        "evidence/matrix/reports/fresh-Original17capture/integration.json",
+        "evidence/matrix/reports/fresh-Original17capture/operator-cli-source.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/original17-cleanup.json"
+    },
+    {
+      "required_node": "shipped-safe17",
+      "controller": "evidence/matrix/controllers/shipped-safe17.json",
+      "review": "evidence/matrix/reviews/shipped-safe17.json",
+      "reports": [
+        "evidence/matrix/reports/shipped-safe17/proof.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/safe17-cleanup.json"
+    },
+    {
+      "required_node": "shipped-createsuperuser22",
+      "controller": "evidence/matrix/controllers/shipped-createsuperuser22.json",
+      "review": "evidence/matrix/reviews/shipped-createsuperuser22.json",
+      "reports": [
+        "evidence/matrix/reports/shipped-createsuperuser22/integration.json",
+        "evidence/matrix/reports/shipped-createsuperuser22/operator-cli-source.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/create22-cleanup.json"
+    },
+    {
+      "required_node": "strict-typed154",
+      "controller": "evidence/matrix/controllers/strict-typed154.json",
+      "review": "evidence/matrix/reviews/strict-typed154.json",
+      "reports": [
+        "evidence/matrix/reports/strict-typed154/strict-typed154.stdout.log",
+        "evidence/matrix/reports/strict-typed154/strict-typed154.stderr.log"
+      ],
+      "cleanup": null
+    },
+    {
+      "required_node": "sharedTS18",
+      "controller": "evidence/matrix/controllers/sharedTS18.json",
+      "review": "evidence/matrix/reviews/sharedTS18.json",
+      "reports": [
+        "evidence/matrix/reports/sharedTS18/shared-ts.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/shared24-cleanup.json"
+    },
+    {
+      "required_node": "sharedTS6-all-down",
+      "controller": "evidence/matrix/controllers/sharedTS6-all-down.json",
+      "review": "evidence/matrix/reviews/sharedTS6-all-down.json",
+      "reports": [
+        "evidence/matrix/reports/sharedTS6-all-down/shared-ts.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/allDown14-cleanup.json"
+    },
+    {
+      "required_node": "retention100",
+      "controller": "evidence/matrix/controllers/retention100.json",
+      "review": "evidence/matrix/reviews/retention100.json",
+      "reports": [
+        "evidence/matrix/reports/retention100/retention.json"
+      ],
+      "cleanup": "evidence/artifacts/rust/image54-packaged-matrix-2/reviews/retention100-cleanup.json"
+    }
+  ],
+  "worker_graph_activation": false,
+  "Source_counts_not_summed": true,
+  "performance_claim": false
+}

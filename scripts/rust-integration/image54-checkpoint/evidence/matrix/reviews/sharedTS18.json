@@ -1,0 +1,43 @@
+{
+  "name": "sharedTS18",
+  "controller_result_sha256": "3a491eca5e1b9725bdacab81c24cb67b5023c43f597313b5f1ba92aede1db0bd",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/sharedTS18/shared-ts.json",
+      "sha256": "2e97fc963df14d69d48ecfec6b1d39de674d60aa12c15085f538635e0201eb37"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Owned streaming fixture; no unexposed default11 inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "actual_checks": 24,
+    "cases": 3,
+    "active_metadata_required": true,
+    "two_worker_same_owner_one_provider_slot_two_clients": true,
+    "all_cases_cleanup_zero": true,
+    "owner_crash_reader_IncompleteRead_retained": true,
+    "crash_no_automatic_takeover": true,
+    "candidate_only_not_Source_owner_death_parity": true,
+    "performance_verified": false
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-shared-ts-4bdce7d015e1"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/shared24-cleanup.json",
+      "sha256": "e0cf64cf77c07269994b5f8fe0a256862d2c7127836fcb03ef0db84d6ee2dff7"
+    }
+  }
+}

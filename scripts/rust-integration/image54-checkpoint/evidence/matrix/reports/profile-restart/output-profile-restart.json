@@ -1,0 +1,1800 @@
+{
+  "capture_complete": true,
+  "passed": true,
+  "scope": "Owned same-service OutputProfile DELETE/cache restart comparison.\nOriginal Dispatcharr authors retain full application and algorithm credit/AGPL.\nFixture JWTs are used only in memory; this output contains no authorization data.\n",
+  "case": "role-DELETE-above_admin",
+  "fixture_policy": "Only named original cache fixture keys re-warmed by an independent peer after each NOSAVE restart; same SQL rows, writer services and container generations remain",
+  "phases": [
+    {
+      "backend": "candidate",
+      "warmup_attempts": [
+        {
+          "ordinal": 1,
+          "matches_expected": true,
+          "actual": {
+            "response": {
+              "status": 204,
+              "headers": {
+                "content-length": "0",
+                "x-content-type-options": "nosniff"
+              },
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "body_length": 0
+            },
+            "db": {
+              "settings_sequence": [
+                18,
+                true
+              ],
+              "profile_sequence": [
+                110720,
+                true
+              ],
+              "profiles": [
+                {
+                  "id": 91002,
+                  "name": "rust-probe-output-profile-two",
+                  "command": "other",
+                  "parameters": "other parameters",
+                  "locked": false,
+                  "is_active": false
+                },
+                {
+                  "id": 91003,
+                  "name": "rust-probe-output-profile-locked",
+                  "command": "locked",
+                  "parameters": "locked parameters",
+                  "locked": true,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740992,
+                  "name": "rust-probe-output-profile-huge-9007199254740992",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740993,
+                  "name": "rust-probe-output-profile-huge-9007199254740993",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740994,
+                  "name": "rust-probe-output-profile-huge-9007199254740994",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9223372036854775807,
+                  "name": "rust-probe-output-profile-huge-9223372036854775807",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                }
+              ],
+              "users": [
+                {
+                  "suffix": "reference-integer",
+                  "custom_properties": {
+                    "keep": "integer"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-string",
+                  "custom_properties": {
+                    "keep": "string"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-float",
+                  "custom_properties": {
+                    "keep": "float"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-other",
+                  "custom_properties": {
+                    "keep": "other",
+                    "output_profile": 91002
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-null",
+                  "custom_properties": null,
+                  "sql_null": true
+                },
+                {
+                  "suffix": "reference-array",
+                  "custom_properties": [
+                    91001
+                  ],
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-boolean",
+                  "custom_properties": {
+                    "keep": "boolean",
+                    "output_profile": true
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-padded",
+                  "custom_properties": {
+                    "keep": "padded",
+                    "output_profile": "091001"
+                  },
+                  "sql_null": false
+                }
+              ],
+              "settings": [
+                {
+                  "id": 14,
+                  "key": "dvr_settings",
+                  "name": "Original DVR name",
+                  "value": {
+                    "keep": "dvr",
+                    "output_profile_id": null
+                  }
+                },
+                {
+                  "id": 13,
+                  "key": "stream_settings",
+                  "name": "Original stream name",
+                  "value": {
+                    "keep": "stream",
+                    "hdhr_output_profile_id": null
+                  }
+                }
+              ]
+            },
+            "cache": {
+              "coresettings:group:stream_settings": null,
+              "coresettings:group:dvr_settings": null,
+              "coresettings:groupver:stream_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:groupver:dvr_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:default_user_agent": null,
+              "coresettings:default_user_agent:ver": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              }
+            }
+          }
+        }
+      ],
+      "run_id_changed": true,
+      "same_observer_client": true,
+      "same_source_worker_pids": true,
+      "first_post_restart": {
+        "response": {
+          "status": 204,
+          "headers": {
+            "content-length": "0",
+            "x-content-type-options": "nosniff"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_length": 0
+        },
+        "db": {
+          "settings_sequence": [
+            18,
+            true
+          ],
+          "profile_sequence": [
+            110720,
+            true
+          ],
+          "profiles": [
+            {
+              "id": 91002,
+              "name": "rust-probe-output-profile-two",
+              "command": "other",
+              "parameters": "other parameters",
+              "locked": false,
+              "is_active": false
+            },
+            {
+              "id": 91003,
+              "name": "rust-probe-output-profile-locked",
+              "command": "locked",
+              "parameters": "locked parameters",
+              "locked": true,
+              "is_active": true
+            },
+            {
+              "id": 9007199254740992,
+              "name": "rust-probe-output-profile-huge-9007199254740992",
+              "command": "ffmpeg",
+              "parameters": "huge parameters",
+              "locked": false,
+              "is_active": true
+            },
+            {
+              "id": 9007199254740993,
+              "name": "rust-probe-output-profile-huge-9007199254740993",
+              "command": "ffmpeg",
+              "parameters": "huge parameters",
+              "locked": false,
+              "is_active": true
+            },
+            {
+              "id": 9007199254740994,
+              "name": "rust-probe-output-profile-huge-9007199254740994",
+              "command": "ffmpeg",
+              "parameters": "huge parameters",
+              "locked": false,
+              "is_active": true
+            },
+            {
+              "id": 9223372036854775807,
+              "name": "rust-probe-output-profile-huge-9223372036854775807",
+              "command": "ffmpeg",
+              "parameters": "huge parameters",
+              "locked": false,
+              "is_active": true
+            }
+          ],
+          "users": [
+            {
+              "suffix": "reference-integer",
+              "custom_properties": {
+                "keep": "integer"
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-string",
+              "custom_properties": {
+                "keep": "string"
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-float",
+              "custom_properties": {
+                "keep": "float"
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-other",
+              "custom_properties": {
+                "keep": "other",
+                "output_profile": 91002
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-null",
+              "custom_properties": null,
+              "sql_null": true
+            },
+            {
+              "suffix": "reference-array",
+              "custom_properties": [
+                91001
+              ],
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-boolean",
+              "custom_properties": {
+                "keep": "boolean",
+                "output_profile": true
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-padded",
+              "custom_properties": {
+                "keep": "padded",
+                "output_profile": "091001"
+              },
+              "sql_null": false
+            }
+          ],
+          "settings": [
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "Original DVR name",
+              "value": {
+                "keep": "dvr",
+                "output_profile_id": null
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Original stream name",
+              "value": {
+                "keep": "stream",
+                "hdhr_output_profile_id": null
+              }
+            }
+          ]
+        },
+        "cache": {
+          "coresettings:group:stream_settings": null,
+          "coresettings:group:dvr_settings": null,
+          "coresettings:groupver:stream_settings": {
+            "type": "int",
+            "old": false,
+            "advanced": true,
+            "persistent": true
+          },
+          "coresettings:groupver:dvr_settings": {
+            "type": "int",
+            "old": false,
+            "advanced": true,
+            "persistent": true
+          },
+          "coresettings:default_user_agent": null,
+          "coresettings:default_user_agent:ver": {
+            "type": "int",
+            "old": false,
+            "advanced": true,
+            "persistent": true
+          }
+        }
+      },
+      "matches_pre_restart_expected": true,
+      "later_logical_attempts": [
+        {
+          "ordinal": 2,
+          "actual": {
+            "response": {
+              "status": 204,
+              "headers": {
+                "content-length": "0",
+                "x-content-type-options": "nosniff"
+              },
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "body_length": 0
+            },
+            "db": {
+              "settings_sequence": [
+                18,
+                true
+              ],
+              "profile_sequence": [
+                110720,
+                true
+              ],
+              "profiles": [
+                {
+                  "id": 91002,
+                  "name": "rust-probe-output-profile-two",
+                  "command": "other",
+                  "parameters": "other parameters",
+                  "locked": false,
+                  "is_active": false
+                },
+                {
+                  "id": 91003,
+                  "name": "rust-probe-output-profile-locked",
+                  "command": "locked",
+                  "parameters": "locked parameters",
+                  "locked": true,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740992,
+                  "name": "rust-probe-output-profile-huge-9007199254740992",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740993,
+                  "name": "rust-probe-output-profile-huge-9007199254740993",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740994,
+                  "name": "rust-probe-output-profile-huge-9007199254740994",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9223372036854775807,
+                  "name": "rust-probe-output-profile-huge-9223372036854775807",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                }
+              ],
+              "users": [
+                {
+                  "suffix": "reference-integer",
+                  "custom_properties": {
+                    "keep": "integer"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-string",
+                  "custom_properties": {
+                    "keep": "string"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-float",
+                  "custom_properties": {
+                    "keep": "float"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-other",
+                  "custom_properties": {
+                    "keep": "other",
+                    "output_profile": 91002
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-null",
+                  "custom_properties": null,
+                  "sql_null": true
+                },
+                {
+                  "suffix": "reference-array",
+                  "custom_properties": [
+                    91001
+                  ],
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-boolean",
+                  "custom_properties": {
+                    "keep": "boolean",
+                    "output_profile": true
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-padded",
+                  "custom_properties": {
+                    "keep": "padded",
+                    "output_profile": "091001"
+                  },
+                  "sql_null": false
+                }
+              ],
+              "settings": [
+                {
+                  "id": 14,
+                  "key": "dvr_settings",
+                  "name": "Original DVR name",
+                  "value": {
+                    "keep": "dvr",
+                    "output_profile_id": null
+                  }
+                },
+                {
+                  "id": 13,
+                  "key": "stream_settings",
+                  "name": "Original stream name",
+                  "value": {
+                    "keep": "stream",
+                    "hdhr_output_profile_id": null
+                  }
+                }
+              ]
+            },
+            "cache": {
+              "coresettings:group:stream_settings": null,
+              "coresettings:group:dvr_settings": null,
+              "coresettings:groupver:stream_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:groupver:dvr_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:default_user_agent": null,
+              "coresettings:default_user_agent:ver": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              }
+            }
+          },
+          "matches_expected": true
+        },
+        {
+          "ordinal": 3,
+          "actual": {
+            "response": {
+              "status": 204,
+              "headers": {
+                "content-length": "0",
+                "x-content-type-options": "nosniff"
+              },
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "body_length": 0
+            },
+            "db": {
+              "settings_sequence": [
+                18,
+                true
+              ],
+              "profile_sequence": [
+                110720,
+                true
+              ],
+              "profiles": [
+                {
+                  "id": 91002,
+                  "name": "rust-probe-output-profile-two",
+                  "command": "other",
+                  "parameters": "other parameters",
+                  "locked": false,
+                  "is_active": false
+                },
+                {
+                  "id": 91003,
+                  "name": "rust-probe-output-profile-locked",
+                  "command": "locked",
+                  "parameters": "locked parameters",
+                  "locked": true,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740992,
+                  "name": "rust-probe-output-profile-huge-9007199254740992",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740993,
+                  "name": "rust-probe-output-profile-huge-9007199254740993",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740994,
+                  "name": "rust-probe-output-profile-huge-9007199254740994",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9223372036854775807,
+                  "name": "rust-probe-output-profile-huge-9223372036854775807",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                }
+              ],
+              "users": [
+                {
+                  "suffix": "reference-integer",
+                  "custom_properties": {
+                    "keep": "integer"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-string",
+                  "custom_properties": {
+                    "keep": "string"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-float",
+                  "custom_properties": {
+                    "keep": "float"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-other",
+                  "custom_properties": {
+                    "keep": "other",
+                    "output_profile": 91002
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-null",
+                  "custom_properties": null,
+                  "sql_null": true
+                },
+                {
+                  "suffix": "reference-array",
+                  "custom_properties": [
+                    91001
+                  ],
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-boolean",
+                  "custom_properties": {
+                    "keep": "boolean",
+                    "output_profile": true
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-padded",
+                  "custom_properties": {
+                    "keep": "padded",
+                    "output_profile": "091001"
+                  },
+                  "sql_null": false
+                }
+              ],
+              "settings": [
+                {
+                  "id": 14,
+                  "key": "dvr_settings",
+                  "name": "Original DVR name",
+                  "value": {
+                    "keep": "dvr",
+                    "output_profile_id": null
+                  }
+                },
+                {
+                  "id": 13,
+                  "key": "stream_settings",
+                  "name": "Original stream name",
+                  "value": {
+                    "keep": "stream",
+                    "hdhr_output_profile_id": null
+                  }
+                }
+              ]
+            },
+            "cache": {
+              "coresettings:group:stream_settings": null,
+              "coresettings:group:dvr_settings": null,
+              "coresettings:groupver:stream_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:groupver:dvr_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:default_user_agent": null,
+              "coresettings:default_user_agent:ver": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              }
+            }
+          },
+          "matches_expected": true
+        }
+      ]
+    },
+    {
+      "backend": "source",
+      "warmup_attempts": [
+        {
+          "ordinal": 1,
+          "matches_expected": true,
+          "actual": {
+            "response": {
+              "status": 204,
+              "headers": {
+                "content-length": "0",
+                "x-content-type-options": "nosniff"
+              },
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "body_length": 0
+            },
+            "db": {
+              "settings_sequence": [
+                18,
+                true
+              ],
+              "profile_sequence": [
+                110720,
+                true
+              ],
+              "profiles": [
+                {
+                  "id": 91002,
+                  "name": "rust-probe-output-profile-two",
+                  "command": "other",
+                  "parameters": "other parameters",
+                  "locked": false,
+                  "is_active": false
+                },
+                {
+                  "id": 91003,
+                  "name": "rust-probe-output-profile-locked",
+                  "command": "locked",
+                  "parameters": "locked parameters",
+                  "locked": true,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740992,
+                  "name": "rust-probe-output-profile-huge-9007199254740992",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740993,
+                  "name": "rust-probe-output-profile-huge-9007199254740993",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740994,
+                  "name": "rust-probe-output-profile-huge-9007199254740994",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9223372036854775807,
+                  "name": "rust-probe-output-profile-huge-9223372036854775807",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                }
+              ],
+              "users": [
+                {
+                  "suffix": "reference-integer",
+                  "custom_properties": {
+                    "keep": "integer"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-string",
+                  "custom_properties": {
+                    "keep": "string"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-float",
+                  "custom_properties": {
+                    "keep": "float"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-other",
+                  "custom_properties": {
+                    "keep": "other",
+                    "output_profile": 91002
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-null",
+                  "custom_properties": null,
+                  "sql_null": true
+                },
+                {
+                  "suffix": "reference-array",
+                  "custom_properties": [
+                    91001
+                  ],
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-boolean",
+                  "custom_properties": {
+                    "keep": "boolean",
+                    "output_profile": true
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-padded",
+                  "custom_properties": {
+                    "keep": "padded",
+                    "output_profile": "091001"
+                  },
+                  "sql_null": false
+                }
+              ],
+              "settings": [
+                {
+                  "id": 14,
+                  "key": "dvr_settings",
+                  "name": "Original DVR name",
+                  "value": {
+                    "keep": "dvr",
+                    "output_profile_id": null
+                  }
+                },
+                {
+                  "id": 13,
+                  "key": "stream_settings",
+                  "name": "Original stream name",
+                  "value": {
+                    "keep": "stream",
+                    "hdhr_output_profile_id": null
+                  }
+                }
+              ]
+            },
+            "cache": {
+              "coresettings:group:stream_settings": null,
+              "coresettings:group:dvr_settings": null,
+              "coresettings:groupver:stream_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:groupver:dvr_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:default_user_agent": null,
+              "coresettings:default_user_agent:ver": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              }
+            }
+          }
+        }
+      ],
+      "run_id_changed": true,
+      "same_observer_client": true,
+      "same_source_worker_pids": true,
+      "first_post_restart": {
+        "response": {
+          "status": 204,
+          "headers": {
+            "content-length": "0",
+            "x-content-type-options": "nosniff"
+          },
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_length": 0
+        },
+        "db": {
+          "settings_sequence": [
+            18,
+            true
+          ],
+          "profile_sequence": [
+            110720,
+            true
+          ],
+          "profiles": [
+            {
+              "id": 91002,
+              "name": "rust-probe-output-profile-two",
+              "command": "other",
+              "parameters": "other parameters",
+              "locked": false,
+              "is_active": false
+            },
+            {
+              "id": 91003,
+              "name": "rust-probe-output-profile-locked",
+              "command": "locked",
+              "parameters": "locked parameters",
+              "locked": true,
+              "is_active": true
+            },
+            {
+              "id": 9007199254740992,
+              "name": "rust-probe-output-profile-huge-9007199254740992",
+              "command": "ffmpeg",
+              "parameters": "huge parameters",
+              "locked": false,
+              "is_active": true
+            },
+            {
+              "id": 9007199254740993,
+              "name": "rust-probe-output-profile-huge-9007199254740993",
+              "command": "ffmpeg",
+              "parameters": "huge parameters",
+              "locked": false,
+              "is_active": true
+            },
+            {
+              "id": 9007199254740994,
+              "name": "rust-probe-output-profile-huge-9007199254740994",
+              "command": "ffmpeg",
+              "parameters": "huge parameters",
+              "locked": false,
+              "is_active": true
+            },
+            {
+              "id": 9223372036854775807,
+              "name": "rust-probe-output-profile-huge-9223372036854775807",
+              "command": "ffmpeg",
+              "parameters": "huge parameters",
+              "locked": false,
+              "is_active": true
+            }
+          ],
+          "users": [
+            {
+              "suffix": "reference-integer",
+              "custom_properties": {
+                "keep": "integer"
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-string",
+              "custom_properties": {
+                "keep": "string"
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-float",
+              "custom_properties": {
+                "keep": "float"
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-other",
+              "custom_properties": {
+                "keep": "other",
+                "output_profile": 91002
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-null",
+              "custom_properties": null,
+              "sql_null": true
+            },
+            {
+              "suffix": "reference-array",
+              "custom_properties": [
+                91001
+              ],
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-boolean",
+              "custom_properties": {
+                "keep": "boolean",
+                "output_profile": true
+              },
+              "sql_null": false
+            },
+            {
+              "suffix": "reference-padded",
+              "custom_properties": {
+                "keep": "padded",
+                "output_profile": "091001"
+              },
+              "sql_null": false
+            }
+          ],
+          "settings": [
+            {
+              "id": 14,
+              "key": "dvr_settings",
+              "name": "Original DVR name",
+              "value": {
+                "keep": "dvr",
+                "output_profile_id": null
+              }
+            },
+            {
+              "id": 13,
+              "key": "stream_settings",
+              "name": "Original stream name",
+              "value": {
+                "keep": "stream",
+                "hdhr_output_profile_id": null
+              }
+            }
+          ]
+        },
+        "cache": {
+          "coresettings:group:stream_settings": null,
+          "coresettings:group:dvr_settings": null,
+          "coresettings:groupver:stream_settings": {
+            "type": "int",
+            "old": false,
+            "advanced": true,
+            "persistent": true
+          },
+          "coresettings:groupver:dvr_settings": {
+            "type": "int",
+            "old": false,
+            "advanced": true,
+            "persistent": true
+          },
+          "coresettings:default_user_agent": null,
+          "coresettings:default_user_agent:ver": {
+            "type": "int",
+            "old": false,
+            "advanced": true,
+            "persistent": true
+          }
+        }
+      },
+      "matches_pre_restart_expected": true,
+      "later_logical_attempts": [
+        {
+          "ordinal": 2,
+          "actual": {
+            "response": {
+              "status": 204,
+              "headers": {
+                "content-length": "0",
+                "x-content-type-options": "nosniff"
+              },
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "body_length": 0
+            },
+            "db": {
+              "settings_sequence": [
+                18,
+                true
+              ],
+              "profile_sequence": [
+                110720,
+                true
+              ],
+              "profiles": [
+                {
+                  "id": 91002,
+                  "name": "rust-probe-output-profile-two",
+                  "command": "other",
+                  "parameters": "other parameters",
+                  "locked": false,
+                  "is_active": false
+                },
+                {
+                  "id": 91003,
+                  "name": "rust-probe-output-profile-locked",
+                  "command": "locked",
+                  "parameters": "locked parameters",
+                  "locked": true,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740992,
+                  "name": "rust-probe-output-profile-huge-9007199254740992",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740993,
+                  "name": "rust-probe-output-profile-huge-9007199254740993",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740994,
+                  "name": "rust-probe-output-profile-huge-9007199254740994",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9223372036854775807,
+                  "name": "rust-probe-output-profile-huge-9223372036854775807",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                }
+              ],
+              "users": [
+                {
+                  "suffix": "reference-integer",
+                  "custom_properties": {
+                    "keep": "integer"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-string",
+                  "custom_properties": {
+                    "keep": "string"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-float",
+                  "custom_properties": {
+                    "keep": "float"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-other",
+                  "custom_properties": {
+                    "keep": "other",
+                    "output_profile": 91002
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-null",
+                  "custom_properties": null,
+                  "sql_null": true
+                },
+                {
+                  "suffix": "reference-array",
+                  "custom_properties": [
+                    91001
+                  ],
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-boolean",
+                  "custom_properties": {
+                    "keep": "boolean",
+                    "output_profile": true
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-padded",
+                  "custom_properties": {
+                    "keep": "padded",
+                    "output_profile": "091001"
+                  },
+                  "sql_null": false
+                }
+              ],
+              "settings": [
+                {
+                  "id": 14,
+                  "key": "dvr_settings",
+                  "name": "Original DVR name",
+                  "value": {
+                    "keep": "dvr",
+                    "output_profile_id": null
+                  }
+                },
+                {
+                  "id": 13,
+                  "key": "stream_settings",
+                  "name": "Original stream name",
+                  "value": {
+                    "keep": "stream",
+                    "hdhr_output_profile_id": null
+                  }
+                }
+              ]
+            },
+            "cache": {
+              "coresettings:group:stream_settings": null,
+              "coresettings:group:dvr_settings": null,
+              "coresettings:groupver:stream_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:groupver:dvr_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:default_user_agent": null,
+              "coresettings:default_user_agent:ver": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              }
+            }
+          },
+          "matches_expected": true
+        },
+        {
+          "ordinal": 3,
+          "actual": {
+            "response": {
+              "status": 204,
+              "headers": {
+                "content-length": "0",
+                "x-content-type-options": "nosniff"
+              },
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "body_length": 0
+            },
+            "db": {
+              "settings_sequence": [
+                18,
+                true
+              ],
+              "profile_sequence": [
+                110720,
+                true
+              ],
+              "profiles": [
+                {
+                  "id": 91002,
+                  "name": "rust-probe-output-profile-two",
+                  "command": "other",
+                  "parameters": "other parameters",
+                  "locked": false,
+                  "is_active": false
+                },
+                {
+                  "id": 91003,
+                  "name": "rust-probe-output-profile-locked",
+                  "command": "locked",
+                  "parameters": "locked parameters",
+                  "locked": true,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740992,
+                  "name": "rust-probe-output-profile-huge-9007199254740992",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740993,
+                  "name": "rust-probe-output-profile-huge-9007199254740993",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9007199254740994,
+                  "name": "rust-probe-output-profile-huge-9007199254740994",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                },
+                {
+                  "id": 9223372036854775807,
+                  "name": "rust-probe-output-profile-huge-9223372036854775807",
+                  "command": "ffmpeg",
+                  "parameters": "huge parameters",
+                  "locked": false,
+                  "is_active": true
+                }
+              ],
+              "users": [
+                {
+                  "suffix": "reference-integer",
+                  "custom_properties": {
+                    "keep": "integer"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-string",
+                  "custom_properties": {
+                    "keep": "string"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-float",
+                  "custom_properties": {
+                    "keep": "float"
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-other",
+                  "custom_properties": {
+                    "keep": "other",
+                    "output_profile": 91002
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-null",
+                  "custom_properties": null,
+                  "sql_null": true
+                },
+                {
+                  "suffix": "reference-array",
+                  "custom_properties": [
+                    91001
+                  ],
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-boolean",
+                  "custom_properties": {
+                    "keep": "boolean",
+                    "output_profile": true
+                  },
+                  "sql_null": false
+                },
+                {
+                  "suffix": "reference-padded",
+                  "custom_properties": {
+                    "keep": "padded",
+                    "output_profile": "091001"
+                  },
+                  "sql_null": false
+                }
+              ],
+              "settings": [
+                {
+                  "id": 14,
+                  "key": "dvr_settings",
+                  "name": "Original DVR name",
+                  "value": {
+                    "keep": "dvr",
+                    "output_profile_id": null
+                  }
+                },
+                {
+                  "id": 13,
+                  "key": "stream_settings",
+                  "name": "Original stream name",
+                  "value": {
+                    "keep": "stream",
+                    "hdhr_output_profile_id": null
+                  }
+                }
+              ]
+            },
+            "cache": {
+              "coresettings:group:stream_settings": null,
+              "coresettings:group:dvr_settings": null,
+              "coresettings:groupver:stream_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:groupver:dvr_settings": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              },
+              "coresettings:default_user_agent": null,
+              "coresettings:default_user_agent:ver": {
+                "type": "int",
+                "old": false,
+                "advanced": true,
+                "persistent": true
+              }
+            }
+          },
+          "matches_expected": true
+        }
+      ]
+    }
+  ],
+  "warmups": {
+    "candidate": [
+      {
+        "ordinal": 1,
+        "matches_expected": true,
+        "actual": {
+          "response": {
+            "status": 204,
+            "headers": {
+              "content-length": "0",
+              "x-content-type-options": "nosniff"
+            },
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "body_length": 0
+          },
+          "db": {
+            "settings_sequence": [
+              18,
+              true
+            ],
+            "profile_sequence": [
+              110720,
+              true
+            ],
+            "profiles": [
+              {
+                "id": 91002,
+                "name": "rust-probe-output-profile-two",
+                "command": "other",
+                "parameters": "other parameters",
+                "locked": false,
+                "is_active": false
+              },
+              {
+                "id": 91003,
+                "name": "rust-probe-output-profile-locked",
+                "command": "locked",
+                "parameters": "locked parameters",
+                "locked": true,
+                "is_active": true
+              },
+              {
+                "id": 9007199254740992,
+                "name": "rust-probe-output-profile-huge-9007199254740992",
+                "command": "ffmpeg",
+                "parameters": "huge parameters",
+                "locked": false,
+                "is_active": true
+              },
+              {
+                "id": 9007199254740993,
+                "name": "rust-probe-output-profile-huge-9007199254740993",
+                "command": "ffmpeg",
+                "parameters": "huge parameters",
+                "locked": false,
+                "is_active": true
+              },
+              {
+                "id": 9007199254740994,
+                "name": "rust-probe-output-profile-huge-9007199254740994",
+                "command": "ffmpeg",
+                "parameters": "huge parameters",
+                "locked": false,
+                "is_active": true
+              },
+              {
+                "id": 9223372036854775807,
+                "name": "rust-probe-output-profile-huge-9223372036854775807",
+                "command": "ffmpeg",
+                "parameters": "huge parameters",
+                "locked": false,
+                "is_active": true
+              }
+            ],
+            "users": [
+              {
+                "suffix": "reference-integer",
+                "custom_properties": {
+                  "keep": "integer"
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-string",
+                "custom_properties": {
+                  "keep": "string"
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-float",
+                "custom_properties": {
+                  "keep": "float"
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-other",
+                "custom_properties": {
+                  "keep": "other",
+                  "output_profile": 91002
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-null",
+                "custom_properties": null,
+                "sql_null": true
+              },
+              {
+                "suffix": "reference-array",
+                "custom_properties": [
+                  91001
+                ],
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-boolean",
+                "custom_properties": {
+                  "keep": "boolean",
+                  "output_profile": true
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-padded",
+                "custom_properties": {
+                  "keep": "padded",
+                  "output_profile": "091001"
+                },
+                "sql_null": false
+              }
+            ],
+            "settings": [
+              {
+                "id": 14,
+                "key": "dvr_settings",
+                "name": "Original DVR name",
+                "value": {
+                  "keep": "dvr",
+                  "output_profile_id": null
+                }
+              },
+              {
+                "id": 13,
+                "key": "stream_settings",
+                "name": "Original stream name",
+                "value": {
+                  "keep": "stream",
+                  "hdhr_output_profile_id": null
+                }
+              }
+            ]
+          },
+          "cache": {
+            "coresettings:group:stream_settings": null,
+            "coresettings:group:dvr_settings": null,
+            "coresettings:groupver:stream_settings": {
+              "type": "int",
+              "old": false,
+              "advanced": true,
+              "persistent": true
+            },
+            "coresettings:groupver:dvr_settings": {
+              "type": "int",
+              "old": false,
+              "advanced": true,
+              "persistent": true
+            },
+            "coresettings:default_user_agent": null,
+            "coresettings:default_user_agent:ver": {
+              "type": "int",
+              "old": false,
+              "advanced": true,
+              "persistent": true
+            }
+          }
+        }
+      }
+    ],
+    "source": [
+      {
+        "ordinal": 1,
+        "matches_expected": true,
+        "actual": {
+          "response": {
+            "status": 204,
+            "headers": {
+              "content-length": "0",
+              "x-content-type-options": "nosniff"
+            },
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "body_length": 0
+          },
+          "db": {
+            "settings_sequence": [
+              18,
+              true
+            ],
+            "profile_sequence": [
+              110720,
+              true
+            ],
+            "profiles": [
+              {
+                "id": 91002,
+                "name": "rust-probe-output-profile-two",
+                "command": "other",
+                "parameters": "other parameters",
+                "locked": false,
+                "is_active": false
+              },
+              {
+                "id": 91003,
+                "name": "rust-probe-output-profile-locked",
+                "command": "locked",
+                "parameters": "locked parameters",
+                "locked": true,
+                "is_active": true
+              },
+              {
+                "id": 9007199254740992,
+                "name": "rust-probe-output-profile-huge-9007199254740992",
+                "command": "ffmpeg",
+                "parameters": "huge parameters",
+                "locked": false,
+                "is_active": true
+              },
+              {
+                "id": 9007199254740993,
+                "name": "rust-probe-output-profile-huge-9007199254740993",
+                "command": "ffmpeg",
+                "parameters": "huge parameters",
+                "locked": false,
+                "is_active": true
+              },
+              {
+                "id": 9007199254740994,
+                "name": "rust-probe-output-profile-huge-9007199254740994",
+                "command": "ffmpeg",
+                "parameters": "huge parameters",
+                "locked": false,
+                "is_active": true
+              },
+              {
+                "id": 9223372036854775807,
+                "name": "rust-probe-output-profile-huge-9223372036854775807",
+                "command": "ffmpeg",
+                "parameters": "huge parameters",
+                "locked": false,
+                "is_active": true
+              }
+            ],
+            "users": [
+              {
+                "suffix": "reference-integer",
+                "custom_properties": {
+                  "keep": "integer"
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-string",
+                "custom_properties": {
+                  "keep": "string"
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-float",
+                "custom_properties": {
+                  "keep": "float"
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-other",
+                "custom_properties": {
+                  "keep": "other",
+                  "output_profile": 91002
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-null",
+                "custom_properties": null,
+                "sql_null": true
+              },
+              {
+                "suffix": "reference-array",
+                "custom_properties": [
+                  91001
+                ],
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-boolean",
+                "custom_properties": {
+                  "keep": "boolean",
+                  "output_profile": true
+                },
+                "sql_null": false
+              },
+              {
+                "suffix": "reference-padded",
+                "custom_properties": {
+                  "keep": "padded",
+                  "output_profile": "091001"
+                },
+                "sql_null": false
+              }
+            ],
+            "settings": [
+              {
+                "id": 14,
+                "key": "dvr_settings",
+                "name": "Original DVR name",
+                "value": {
+                  "keep": "dvr",
+                  "output_profile_id": null
+                }
+              },
+              {
+                "id": 13,
+                "key": "stream_settings",
+                "name": "Original stream name",
+                "value": {
+                  "keep": "stream",
+                  "hdhr_output_profile_id": null
+                }
+              }
+            ]
+          },
+          "cache": {
+            "coresettings:group:stream_settings": null,
+            "coresettings:group:dvr_settings": null,
+            "coresettings:groupver:stream_settings": {
+              "type": "int",
+              "old": false,
+              "advanced": true,
+              "persistent": true
+            },
+            "coresettings:groupver:dvr_settings": {
+              "type": "int",
+              "old": false,
+              "advanced": true,
+              "persistent": true
+            },
+            "coresettings:default_user_agent": null,
+            "coresettings:default_user_agent:ver": {
+              "type": "int",
+              "old": false,
+              "advanced": true,
+              "persistent": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  "performance_verified": false
+}

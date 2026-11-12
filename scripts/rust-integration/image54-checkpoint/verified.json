@@ -1,0 +1,134 @@
+{
+  "scope": "Bounded public retained evidence integrity and Main derivation; no application or resource rerun",
+  "passed": true,
+  "public_verifier_result": {
+    "passed": true,
+    "scope": "Portable retained-evidence integrity plus finite independent Main derivation; no workload rerun",
+    "matrix": {
+      "corrected_nodes": 28,
+      "actual_fixture_attempts": 31,
+      "prior_failed_cohort_unchanged": true,
+      "typed_refusal_not_fixture": true,
+      "observed_maximum_parallel_children": 3,
+      "three_heavy_nodes_solo": true
+    },
+    "Main4s": {
+      "passed": true,
+      "actual_exit_code": 0,
+      "cases": [
+        {
+          "case": "success",
+          "phases": {
+            "source": {
+              "status": 200,
+              "hold_seconds": 4.0006852360093035,
+              "control_seconds": 2.015758243011078,
+              "actual_close_or_loss": true,
+              "semantic_response_headers_retained": true
+            },
+            "native": {
+              "status": 200,
+              "hold_seconds": 4.000707227998646,
+              "control_seconds": 2.0142525359988213,
+              "actual_close_or_loss": true,
+              "semantic_response_headers_retained": true
+            }
+          },
+          "Source_signal_rows": 6,
+          "clones_equal": true,
+          "default9tables9sequences_equal": true,
+          "owned_project_empty": true
+        },
+        {
+          "case": "busy",
+          "phases": {
+            "source": {
+              "status": 429,
+              "hold_seconds": 4.000840683991555,
+              "control_seconds": 2.0165053609816823,
+              "actual_close_or_loss": true,
+              "semantic_response_headers_retained": true
+            },
+            "native": {
+              "status": 429,
+              "hold_seconds": 4.000774242012994,
+              "control_seconds": 2.012598886009073,
+              "actual_close_or_loss": true,
+              "semantic_response_headers_retained": true
+            }
+          },
+          "Source_signal_rows": 8,
+          "clones_equal": true,
+          "default9tables9sequences_equal": true,
+          "owned_project_empty": true
+        },
+        {
+          "case": "clientloss",
+          "phases": {
+            "source": {
+              "status": null,
+              "hold_seconds": 4.000646333995974,
+              "control_seconds": 2.019862251006998,
+              "actual_close_or_loss": true,
+              "semantic_response_headers_retained": false
+            },
+            "native": {
+              "status": null,
+              "hold_seconds": 4.000649966998026,
+              "control_seconds": 2.0143109469790943,
+              "actual_close_or_loss": true,
+              "semantic_response_headers_retained": false
+            }
+          },
+          "Source_signal_rows": 6,
+          "clones_equal": true,
+          "default9tables9sequences_equal": true,
+          "owned_project_empty": true
+        }
+      ],
+      "all3_observation_and_scoped_parity_passed": true,
+      "response_header_maps_retained": 4,
+      "header_redactions": 0,
+      "control_timestamp_limit": "Only elapsed control duration retained, not separate absolute control_done timestamp; physical hold clocks are independently retained in proxy traces.",
+      "Source_signal_scope": "request_finished after resource-closer attempts, not guaranteed generator-finally/providerEOF/TCP or server cancellation",
+      "full_M4_acceptance": false,
+      "performance_claim": false,
+      "application_rerun": false,
+      "default_recovery_enabled": false
+    },
+    "worker_header_Native7": {
+      "capture_valid": true,
+      "worker_header_branch_scope_qualified": true,
+      "full_header_or_M4_parity": false,
+      "Source_invalid_HEAD_observed": false,
+      "Native_invalid_HEAD": 405,
+      "invalid_HEAD_compatibility_open": true,
+      "resource_acceptance": false
+    },
+    "notifications_Main9": {
+      "normal_Bearer_Main_notification_slice_qualified": true,
+      "Source8_framework_not_TCP": true,
+      "Native_definition_extra_cases": true,
+      "Source48_bounded_JSON_mutation_rules": true,
+      "Source_credential_TCP_parity": false,
+      "physical_SQL_concurrency_cancel_qualified": false,
+      "full_endpoint_or_Source48_parity": false,
+      "performance_acceptance": false
+    },
+    "image": "sha256:8e3c133c0639d60057d8d05a5be2fce66e0f0968c35e29f674c348495a1a9ca0",
+    "performance_claim": false,
+    "full_milestone_acceptance": false
+  },
+  "public_corruption_restoration_tests": 38,
+  "private_raw_projection_bindings": 168,
+  "private_full_Main4s_summary_exact": true,
+  "actual_JWT_and_hex_base64_variants_matches": 0,
+  "literal_JWT_matches": 0,
+  "public_verifier_stdout_sha256": "deea06c7176255b4bede13e424d259e525a4e0beb6813b18399d638c15196fbf",
+  "public_controls_log_sha256": "db62caf46e0f52d76dab3ed3eb30b02f00e15d2941c965defaafd82251802059",
+  "private_projection_result_sha256": "ab8f42bb34fb4e3ea92b01dbd734c0b1d58fb565be97616bbc1aa505a8049381",
+  "historical_curation_negative": "First exporter tried parsing empty stderr as JSON; retained selected-first-json-log-failure and fixed text projection before any seal; no app rerun.",
+  "Root_independently_reconstructed_app1289_and_support6148": true,
+  "reconstruction_note": "Root performed both actual Git-only helpers and independently reviewed normalized app archive86fb/supportc9b55; separate Root final review will bind its receipts.",
+  "Original_credit": "Original Dispatcharr authors retain application/algorithm/AGPL attribution; Application-ATTRIBUTION.md and Original-LICENSE retained."
+}

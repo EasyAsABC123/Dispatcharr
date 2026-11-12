@@ -1,0 +1,53 @@
+{
+  "name": "complete-refresh",
+  "controller_result_sha256": "9c363da007a752b76e4061e86e04e3ab1758c41afb0b67d6ff5f283cb17db944",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/complete-refresh/integration.json",
+      "sha256": "1730fb9a52453afa44b2ccf6212747e5dbe333de75b27a22c82dd50168efb616"
+    },
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/complete-refresh/source-refresh-workflow-private.json",
+      "sha256": "b37ea1795d4b5391ef1f53880003fc8dbf97b5df921ee3a4bb94017667d35549"
+    }
+  ],
+  "observed_default_audits": [
+    {
+      "report": "integration.json",
+      "field": "default_database_unchanged",
+      "observed": true
+    }
+  ],
+  "audit_scope": "Copied fixture database; exact controller before/after default-database equality asserted, no unnamed table-count assumption.",
+  "observed_counts_and_candidate_Source_scope": {
+    "checks": 40,
+    "imports": 2,
+    "task_results": 6,
+    "projection_exact_against_fresh_Original": true,
+    "only_existing_named_runtime_timestamp_projection": true,
+    "native_worker_execution_verified_literal": true,
+    "native_jobs_verified_legacy_field_literal": false,
+    "fixture_opt_in_refresh_not_default_graph_enablement": true,
+    "Series_scope": "zero scheduled recordings"
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-refresh-workflow-original-dd75ecffba"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/complete-refresh-cleanup.json",
+      "sha256": "4be6689f9149e2d17b23da6d0f31cdc16a3934b4540f559e1eb2a60ab9347da0"
+    }
+  }
+}

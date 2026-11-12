@@ -1,0 +1,47 @@
+{
+  "name": "clean-install",
+  "controller_result_sha256": "d59f37e291d4ff13ed4c9d79366a59eb15aec4bf0f4530b97bcef56f1ca3f0a5",
+  "actual_process_exit": 0,
+  "actual_process_settled": true,
+  "passed": true,
+  "semantic_review_complete": true,
+  "actual_reports": [
+    {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/clean-install/integration.json",
+      "sha256": "7071c9f3cd9a9a5349e9b9071b7e200c58825d2ac4daf02d6c581fc7e03366dc"
+    }
+  ],
+  "observed_default_audits": [],
+  "audit_scope": "Own isolated playback state or explicit fresh-schema/restart checks; no separate named default11 audit field exposed or inferred.",
+  "observed_counts_and_candidate_Source_scope": {
+    "actual_checks": 11,
+    "required_React_API_responses_first_and_restart": [
+      16,
+      16
+    ],
+    "no_Django_backend": true,
+    "actual_services": [
+      "cache",
+      "candidate",
+      "data-init",
+      "database"
+    ],
+    "native_schema_admin_and_tokens_persisted": true
+  },
+  "cleanup": {
+    "scope": "independent-owned-empty",
+    "verified": true,
+    "project_ids": [
+      "dispatcharr-native-install-a5b1f3d053"
+    ],
+    "inventories": {
+      "containers": [],
+      "networks": [],
+      "volumes": []
+    },
+    "query_receipt": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/image54-packaged-matrix-2/reviews/m4-install-cleanup.json",
+      "sha256": "44371abde579301c79272826b6a4b5398b4e423834b96ad0c37b553a737bc9ce"
+    }
+  }
+}

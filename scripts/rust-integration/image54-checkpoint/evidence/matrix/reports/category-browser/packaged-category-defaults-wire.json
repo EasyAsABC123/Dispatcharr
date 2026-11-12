@@ -1,0 +1,911 @@
+{
+  "passed": true,
+  "observations": {
+    "original": {
+      "passed": true,
+      "scope": "Actual original HTTP default coercions/exception bodies and committed effects; exact restored category-link rows; target comparison is owned by caller",
+      "target": "original",
+      "records": [
+        {
+          "default": true,
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": false,
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": 0,
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": 1,
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "0",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "1",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "true",
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": "True",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "false",
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": "False",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "t",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "f",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": null,
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": "",
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": 2,
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": [],
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": {},
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": 2,
+          "missing": false,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        }
+      ],
+      "normal_fixture_props_and_exact_links_restored": true
+    },
+    "candidate": {
+      "passed": true,
+      "scope": "Actual candidate HTTP default coercions/exception bodies and committed effects; exact restored category-link rows; target comparison is owned by caller",
+      "target": "candidate",
+      "records": [
+        {
+          "default": true,
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": false,
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": 0,
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": 1,
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "0",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "1",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "true",
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": "True",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "false",
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": "False",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "t",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": true,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": true,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": "f",
+          "missing": true,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        },
+        {
+          "default": null,
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": "",
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": 2,
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": [],
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": {},
+          "missing": true,
+          "outcome": {
+            "status": 500,
+            "body_bytes": 145,
+            "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "body": "\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Server Error (500)</title>\n</head>\n<body>\n  <h1>Server Error (500)</h1><p></p>\n</body>\n</html>\n",
+            "content_type": "text/html; charset=utf-8",
+            "selected_headers": {
+              "Content-Length": "145",
+              "Allow": null,
+              "Vary": "origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": []
+        },
+        {
+          "default": 2,
+          "missing": false,
+          "outcome": {
+            "status": 200,
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "body": "[]",
+            "content_type": "application/json",
+            "selected_headers": {
+              "Content-Length": "2",
+              "Allow": "GET, HEAD, OPTIONS",
+              "Vary": "Accept, origin",
+              "WWW-Authenticate": null
+            }
+          },
+          "committed_links": [
+            {
+              "category__category_type": "movie",
+              "enabled": false,
+              "custom_properties": {}
+            },
+            {
+              "category__category_type": "series",
+              "enabled": false,
+              "custom_properties": {}
+            }
+          ]
+        }
+      ],
+      "normal_fixture_props_and_exact_links_restored": true
+    }
+  }
+}
