@@ -80,3 +80,12 @@ methods remain historical. Regeneration consumes the exact additive input manife
 Stable 592/798/250 identities, 322 unresolved methods and fully_verified=0 remain.
 The separate Django/DRF passive-binding fixture needs its supported Original
 image/mounts; it is not a portable host/SDK discovery module.
+
+## Additional account/settings Source cohort
+
+[Account/CoreSettings assignments](accounts-settings/README.md) add16 partial HTTP
+operation definitions from45 exact Original workflows and one partial CoreSettings
+model candidate from35 tests. The register now has29 partial HTTP Source
+assignments and1 partial non-HTTP assignment. Stable592/798/250 identities,322
+unresolved methods and fully_verified=0 remain unchanged. The80 historical named
+successes do not claim new Source execution, Native parity or a settings REST test.

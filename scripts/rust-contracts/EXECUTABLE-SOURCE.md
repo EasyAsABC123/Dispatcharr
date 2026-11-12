@@ -1,8 +1,10 @@
 # Partial executable Source contract assignments
 
 Original Dispatcharr authors retain all application/algorithm credit and licensing.
-This additive layer assigns concrete fixtures/assertions/results to thirteen
-existing operation identities. It does not resolve missing methods, complete an
+The initial cohort assigned concrete fixtures/assertions/results to thirteen
+existing operation identities. The account/settings cohort adds sixteen more
+HTTP assignments and one typed CoreSettings model candidate. Current totals are
+29 HTTP assignments and one nonHTTP assignment; all remain partial. It does not resolve missing methods, complete an
 endpoint's role/grammar matrix, establish new Native behavior or accept M0/M1.
 
 `register.py` consumes `executable-source-inputs.json`, verifies each input hash,
@@ -56,7 +58,10 @@ python3 -m unittest discover -s scripts/rust-contracts -p test_framework_auth_co
 ```
 
 The selected core three modules include the new Source and framework controls:
-68 tests discovered, 67 passed, one optional retained-private-raw test skipped.
+The initial cohort discovered68 tests (67 passed, one optional retained-private-raw
+test skipped). The current account/settings cohort discovers100 (99 passed, one
+optional skip); its32 new controls and typed model stage are described in
+[accounts-settings/README.md](accounts-settings/README.md).
 Provider-specific nineteen fixture/code/role/response guards run separately:
 
 ```sh

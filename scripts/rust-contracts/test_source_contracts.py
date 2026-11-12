@@ -30,6 +30,13 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        account = json.loads((ROOT / 'scripts/rust-contracts/accounts-settings/bindings.json').read_text())
+        dependencies = ['scripts/rust-contracts/accounts-settings/bindings.json']
+        dependencies += [r['path'] for r in account['authorities'] + account['original_test_files']]
+        for name in dependencies:
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         self.value = json.loads((self.root / 'scripts/rust-contracts/executable-source-bindings.json').read_text())
         self.bindings = json.loads((self.root / 'scripts/rust-contracts/case-bindings.json').read_text())
         self.register = json.loads((self.root / 'docs/rust-contract-register.json').read_text())
@@ -46,10 +53,10 @@ class SourceContracts(unittest.TestCase):
 
     def test_exact13_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 13)
+        self.assertEqual(result['operations'], 29)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 13)
-        self.assertEqual(sum(o['method'] is None for o in assigned), 2)
+        self.assertEqual(len(assigned), 29)
+        self.assertEqual(sum(o['method'] is None for o in assigned), 8)
         self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))
 

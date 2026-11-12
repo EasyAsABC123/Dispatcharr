@@ -15,6 +15,7 @@ import unittest
 # These portable Source-input classes are included in the existing SDK module.
 from test_source_contracts import SourceContracts
 from test_framework_auth_contracts import Controls as FrameworkAuthControls
+from test_account_settings_contracts import AccountSettingsControls
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -28,6 +29,11 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs = {'docs/rust-runtime-contracts.json', 'docs/rust-runtime-methods.json', 'docs/rust-contract-inventory.json'}
         refs.update({'scripts/rust-contracts/executable-source-inputs.json', 'scripts/rust-contracts/executable-source-bindings.json'})
         refs.update({'scripts/rust-contracts/framework-auth/' + name for name in ['bindings.json', 'full-suite-reference.json', 'observations.json', 'original/test_accounts.py', 'original/test_login_rate_limit_inbox.py']})
+        account_input = json.loads((REPO / 'scripts/rust-contracts/accounts-settings/bindings.json').read_text())
+        refs.add('docs/rust-contract-register.json')
+        refs.add('scripts/rust-contracts/accounts-settings/bindings.json')
+        refs.update(x['path'] for x in account_input['authorities'])
+        refs.update(x['path'] for x in account_input['original_test_files'])
         refs.update(item['packaged_report'] for item in self.bindings['bindings'])
         refs.update(item['attestation']['path'] for item in self.bindings.get('evidence_datasets', []))
         for relative in refs:

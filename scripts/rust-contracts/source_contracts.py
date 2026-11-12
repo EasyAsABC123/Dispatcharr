@@ -108,6 +108,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'pinned_original_framework_tests':
             import framework_auth_contracts
             framework_auth_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'pinned_original_account_settings_tests':
+            import account_settings_contracts
+            account_settings_contracts.validate(root, value, bindings)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
@@ -125,10 +128,39 @@ def apply(root, rows, bindings):
             operation['executable_Source_contract'] = copy.deepcopy(contract)
             operation['role_matrix']['observed_fixture_definitions'] = copy.deepcopy(contract['source_role_specs'])
             operation['role_matrix']['complete'] = False
-            if reference['kind'] == 'pinned_original_framework_tests':
+            if reference['kind'] in ['pinned_original_framework_tests', 'pinned_original_account_settings_tests']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_test_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'
         loaded.append({'path': reference['path'], 'sha256': reference['sha256'], 'kind': reference['kind']})
     return {'state': 'partial executable Source definitions, not endpoint verification',
             'operations': len(seen), 'inputs': loaded, 'fully_verified_added': 0}
+
+
+def apply_non_HTTP(root, entries):
+    """Only the reviewed CoreSettings model candidate; no arbitrary importer."""
+    root = Path(root)
+    manifest = json.loads((root / 'scripts/rust-contracts/executable-source-inputs.json').read_text())
+    index = {entry['candidate_id']: entry for entry in entries}
+    seen = set()
+    for reference in manifest['inputs']:
+        if reference['kind'] != 'pinned_original_account_settings_tests':
+            continue
+        value = checked(root, reference)
+        import account_settings_contracts
+        account_settings_contracts.validate(root, value)
+        for contract in value['non_HTTP_contracts']:
+            identifier = contract['candidate_id']
+            assert identifier not in seen, 'conflicting nonHTTP Source inputs'
+            seen.add(identifier)
+            entry = index[identifier]
+            assert entry['source'] == contract['source'], 'exact nonHTTP source identity'
+            assert entry['source']['kind'] == 'model_candidate'
+            assert entry['fully_verified'] is False and contract['fully_verified'] is False
+            entry['setup_fixture'] = copy.deepcopy(value['fixtures'][contract['fixture_id']])
+            entry['assertions'] = copy.deepcopy(contract['assertions'])
+            entry['result'] = copy.deepcopy(contract['result'])
+            entry['executable_Source_contract'] = copy.deepcopy(contract)
+            entry['state'] = 'partial_executable_Original_model_tests'
+    return {'state': 'typed partial Original model assertions, not HTTP or Native verification',
+            'candidates': len(seen), 'fully_verified_added': 0}
