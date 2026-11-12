@@ -10,7 +10,7 @@ from pathlib import Path
 
 EXPECTED_FILES = [{'original_path': 'apps/accounts/tests/test_accounts.py', 'path': 'scripts/rust-contracts/framework-auth/original/test_accounts.py', 'sha256': 'abb5476c7a08e28c195bea4ee6359d591db6d611f019daeb718e4090b6643ab0'}, {'original_path': 'apps/accounts/tests/test_login_rate_limit_inbox.py', 'path': 'scripts/rust-contracts/framework-auth/original/test_login_rate_limit_inbox.py', 'sha256': 'f651a3cc1ffc6c84f930d80eb0af0d54dd5dc78b734ae243a8a2ca40b7747550'}]
 
-EXPECTED_AUTHORITIES = [{'path': 'scripts/rust-contracts/framework-auth/full-suite-reference.json', 'sha256': '494e9945c39e94c2c05301efed9bba3ba89b5da3b60eb55142f2c701729091c6'}, {'path': 'scripts/rust-contracts/framework-auth/observations.json', 'sha256': 'ab827e9ea2256527ea1c373ba0db59289052ca628fbe71f00c4f87be1b2c2b45'}]
+EXPECTED_AUTHORITIES = [{'path': 'scripts/rust-contracts/framework-auth/full-suite-reference.json', 'sha256': '494e9945c39e94c2c05301efed9bba3ba89b5da3b60eb55142f2c701729091c6'}, {'path': 'scripts/rust-contracts/framework-auth/observations.json', 'sha256': '4a02a87c970ead7d8e2f5126c7f8c9fcff03c6ac91ca6c38f5b9478ccdb5dbd9'}]
 
 EXPECTED_IDENTITIES = {'route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED': {'pattern_exact': 'api/accounts/initialize-superuser/', 'source_handler': 'apps.accounts.api_views.initialize_superuser', 'method': None, 'source_action': None, 'owning_milestone': 'M5'}, 'route-f7c174fdedb4d5f479b2:METHOD_UNRESOLVED': {'pattern_exact': 'api/accounts/token/', 'source_handler': 'apps.accounts.api_views.TokenObtainPairView', 'method': None, 'source_action': None, 'owning_milestone': 'M5'}}
 
@@ -21,6 +21,42 @@ EXPECTED_ASSERTIONS = ['Execute the exact named unmodified Original test methods
 EXPECTED_FIXTURE = {'framework-auth18': {'id': 'framework-auth18', 'baseline_revision': '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430', 'baseline_image': 'ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f', 'roles': {'anonymous': None}, 'setup': ['Archive pinned Original revision with the existing baseline runner; no working application edits', 'Use only a new unique disposable Compose project, local PostgreSQL/Redis and original CI bootstrap', 'Run the exact eighteen selected Original test labels; preserve their unmodified fixtures, mocks and APIClient transport', 'Retain tests.log, run.json and dependency records; inspect process exit and each selected test result', 'Remove only the owned project/container; no production database or live provider'], 'execution': {'entrypoint': 'scripts/rust-baseline/run.py', 'argv': ['--output', '<fresh-empty-output>', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_true_when_superuser_exists', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_true_when_admin_level_user_exists', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_false_when_no_admin_exists', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_false_when_no_users_exist', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_create_superuser_when_none_exists', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_cannot_create_superuser_when_admin_exists', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_blocked_from_public_ip_by_default', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_get_reports_setup_not_allowed_for_public_ip', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_from_private_lan', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_for_env_override_ip', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_blocked_when_env_ip_does_not_match', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_spoofed_x_real_ip_ignored_without_trusted_proxy', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_x_real_ip_used_when_peer_is_trusted_proxy', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_for_ipv4_mapped_private_address', 'apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_invalid_setup_allowed_ip_env_denies_post', 'apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_jwt_trip_creates_event_and_inbox_once', 'apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_repeat_429_does_not_parse_username', 'apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_recorder_error_still_returns_429'], 'fresh_live_replay_qualified_this_task': False}, 'ownership': 'Original TestCase transactional database/cache fixtures in the existing disposable baseline environment; no production credentials or paid upstream', 'test_mocks_are_preserved': True}}
 
 def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def stable_ast(node):
+    """Preserve every field, empty list and None; only empty PEP695 fields differ.
+    CPython3.11 has no type_params field; 3.12+ add it empty to nongeneric code.
+    Nonempty generics fail rather than receiving invented compatibility.
+    """
+    if isinstance(node, ast.AST):
+        fields = []
+        for name in node._fields:
+            value = getattr(node, name)
+            if name == 'type_params' and type(node).__name__ in ['FunctionDef', 'AsyncFunctionDef', 'ClassDef']:
+                if type(value) is not list or value:
+                    raise ValueError('NonemptyGenericParametersNotQualified')
+                continue
+            fields.append([name, stable_ast(value)])
+        return {'node': type(node).__name__, 'fields': fields}
+    if type(node) is list:
+        return [stable_ast(value) for value in node]
+    if node is None:
+        return {'scalar': 'NoneType', 'value': None}
+    if type(node) in [str, int, bool]:
+        return {'scalar': type(node).__name__, 'value': node}
+    if type(node) is float:
+        import math
+        if not math.isfinite(node):
+            raise ValueError('NonfiniteASTLiteralNotQualified')
+        return {'scalar': 'float', 'value': node.hex()}
+    if type(node) is bytes:
+        return {'scalar': 'bytes', 'value': node.hex()}
+    raise ValueError('UnsupportedASTScalar')
+
+
+def ast_fingerprint(node):
+    raw = json.dumps(stable_ast(node), sort_keys=True, separators=(',', ':'), ensure_ascii=False, allow_nan=False).encode()
     return hashlib.sha256(raw).hexdigest()
 
 
@@ -72,7 +108,8 @@ def validate(root, value, bindings=None):
             cls = next(n for n in original[case['source_path']].body if isinstance(n,ast.ClassDef) and n.name == case['class'])
             method = next(n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name == case['method'])
             assert case['test_id'] == case['source_path'][:-3].replace('/','.')+'.'+cls.name+'.'+method.name
-            assert sha(ast.dump(method,include_attributes=False).encode()) == case['source_ast_sha256'], 'exact test AST'
+            assert case['source_ast_fingerprint_format'] == 'dispatcharr-source-test-ast-v1'
+            assert ast_fingerprint(method) == case['source_ast_sha256'], 'exact test AST'
             assertions = [ast.unparse(n)for n in ast.walk(method)if isinstance(n,ast.Call)and isinstance(n.func,ast.Attribute)and n.func.attr.startswith('assert')]
             assert assertions and case['assertion_expressions'] == assertions, 'unmodified executable assertions'
             block = case['framework_log_block']

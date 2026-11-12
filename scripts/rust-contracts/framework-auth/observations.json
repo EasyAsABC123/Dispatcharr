@@ -8,7 +8,7 @@
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_returns_true_when_superuser_exists",
-      "source_ast_sha256": "2f875158fd07ee1a3712127cebf5f8d8974f3d99732f18106c041d728485a7da",
+      "source_ast_sha256": "1c9bc8d2384ccd5a3ad42ffc2e8bc3774390f0f6fe4bb71ca2d05fd540a46dfa",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertTrue(response.json()['superuser_exists'])"
@@ -17,14 +17,15 @@
       "framework_log_block": "test_returns_true_when_superuser_exists (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_true_when_superuser_exists)\nSuperuser with is_superuser=True should be detected ... ok\n",
       "framework_log_block_sha256": "1ea2d99f078b1cfcf0a2db404dc435b6d73afe508f348608ed3a906f87e87246",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_true_when_admin_level_user_exists",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_returns_true_when_admin_level_user_exists",
-      "source_ast_sha256": "8ad84dc9f41616efea2efa1ebd5d7974929085b2e1180e129b4fc56caa3db4d4",
+      "source_ast_sha256": "727242b9e02d19f8d3eb29dfb8f05f272f6a984b59b0885c6caea559bf580fff",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertTrue(response.json()['superuser_exists'])"
@@ -33,14 +34,15 @@
       "framework_log_block": "test_returns_true_when_admin_level_user_exists (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_true_when_admin_level_user_exists)\nUser with user_level=10 but is_superuser=False should be detected ... ok\n",
       "framework_log_block_sha256": "7e6ed6132a54ae598f4854826fdcf1ba4011af7a0b929310f63cb0d26e993e56",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_false_when_no_admin_exists",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_returns_false_when_no_admin_exists",
-      "source_ast_sha256": "23fadc944eccff642c564edffb32615d0303cec9a1f6dc6e6f5a212da19b738e",
+      "source_ast_sha256": "db218bbef1bddec47363fbb13626cbde0d289baa31447f4eda9816df9eb8bf8b",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertFalse(data['superuser_exists'])",
@@ -51,14 +53,15 @@
       "framework_log_block": "test_returns_false_when_no_admin_exists (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_false_when_no_admin_exists)\nNo admin or superuser should return false ... ok\n",
       "framework_log_block_sha256": "37b7c72314de0894cfc3c47b4591032906459ae8853d6cf70cecaa2015493542",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_false_when_no_users_exist",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_returns_false_when_no_users_exist",
-      "source_ast_sha256": "b865d863b1b4477a162f8d794311e43366047419be85076363618a7729b638e4",
+      "source_ast_sha256": "36e3f331cd1ff34b8fecb430dd4764ae1b92339f114365c8fdd799a2f3fb698d",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertFalse(data['superuser_exists'])",
@@ -68,14 +71,15 @@
       "framework_log_block": "test_returns_false_when_no_users_exist (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_returns_false_when_no_users_exist)\nEmpty database should return false ... ok\n",
       "framework_log_block_sha256": "4f0df8001b107c94748c13525e8cdf21616ec9efbbd5da170a5f40087ad00e8c",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_create_superuser_when_none_exists",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_create_superuser_when_none_exists",
-      "source_ast_sha256": "93e94f51f6fe87d27a8fb94c80d751c77fb14af4773e36445f040a0f42789ea2",
+      "source_ast_sha256": "128c855de559e785bbd55fcff7af687fcdbf0b072bb2934ff94a85eb61aa9a28",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertTrue(response.json()['superuser_exists'])",
@@ -85,14 +89,15 @@
       "framework_log_block": "test_create_superuser_when_none_exists (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_create_superuser_when_none_exists)\nPOST should create superuser when none exists ... ok\n",
       "framework_log_block_sha256": "b5fa608a5e74fcf79f6b0db14003381476b2897bab3ac9cc5011cda898582930",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_cannot_create_superuser_when_admin_exists",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_cannot_create_superuser_when_admin_exists",
-      "source_ast_sha256": "d0b2670884d7584f47a077164a868076adc9edb116a16fb3e4250508903a3bc8",
+      "source_ast_sha256": "a4690e64f8cc9e18c110900af1a902254f4b8752c2e4077c00e0e10c7fde6a35",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertTrue(response.json()['superuser_exists'])",
@@ -102,14 +107,15 @@
       "framework_log_block": "test_cannot_create_superuser_when_admin_exists (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_cannot_create_superuser_when_admin_exists)\nPOST should fail when an admin-level user already exists ... ok\n",
       "framework_log_block_sha256": "2504fee9bcf501cc1c5e1d8e22879d194447d989e5e5ba3b99a04d4d444b4b4e",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_blocked_from_public_ip_by_default",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_post_blocked_from_public_ip_by_default",
-      "source_ast_sha256": "3f78c9894cf4d238c523ec08304127072ce77e08868eb0eb83f525e73cd44658",
+      "source_ast_sha256": "ee2ef2447f3d0d7b95d75d2727ae754859c0267b08feac60b8c8001f537a589a",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 403)",
         "self.assertEqual(data['client_ip'], '203.0.113.50')",
@@ -120,14 +126,15 @@
       "framework_log_block": "test_post_blocked_from_public_ip_by_default (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_blocked_from_public_ip_by_default)\nRemote public IPs cannot complete web setup without the env override. ... 2026-11-09 07:40:24,125 WARNING django.request Forbidden: /api/accounts/initialize-superuser/\nok\n",
       "framework_log_block_sha256": "55109020ec808d2e68bbd6386572bb98e6e8a627fe283f0d1ce6bf9942414ab4",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_get_reports_setup_not_allowed_for_public_ip",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_get_reports_setup_not_allowed_for_public_ip",
-      "source_ast_sha256": "6354c43c785de92737af8708c6f77add2ac501239e9acb933e2ccbe15c800a75",
+      "source_ast_sha256": "33fc8ed306ada36e01b2972541a7b945f30a73f9cacf5dce560fa2b8dbbfb624",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertFalse(data['superuser_exists'])",
@@ -138,14 +145,15 @@
       "framework_log_block": "test_get_reports_setup_not_allowed_for_public_ip (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_get_reports_setup_not_allowed_for_public_ip) ... ok\n",
       "framework_log_block_sha256": "850771b85ccf42da2ec3045cafd8331c486e9abb1d89f7007eb458efa3170c53",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_from_private_lan",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_post_allowed_from_private_lan",
-      "source_ast_sha256": "56bbf46507e6512bf2e5cbd8516d4bcb1983c5e246b1810d531649aa12d70bcd",
+      "source_ast_sha256": "fc9325d256dc2e4b7c797fc3fd3aa4932da8343b65617e716e36b9a81161911c",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertTrue(User.objects.filter(username='lanadmin', user_level=10).exists())"
@@ -154,14 +162,15 @@
       "framework_log_block": "test_post_allowed_from_private_lan (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_from_private_lan) ... ok\n",
       "framework_log_block_sha256": "4e561b2831639829999cbc15fc9223bfb1aa021dcc149ea0b27ec0660bcdbdc5",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_for_env_override_ip",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_post_allowed_for_env_override_ip",
-      "source_ast_sha256": "ca88a4093c4a306fd70a708c3b02e889acf7492d2e1ba0e3afad8a5c71252f8f",
+      "source_ast_sha256": "5804719e19422ae10cee661d02d0b17083fe278bb95b1e48326342ca2a64b4cc",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertTrue(User.objects.filter(username='vpsadmin', user_level=10).exists())"
@@ -170,14 +179,15 @@
       "framework_log_block": "test_post_allowed_for_env_override_ip (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_for_env_override_ip) ... ok\n",
       "framework_log_block_sha256": "8343b8d4dec85883a6db9d823652f62894241f02340045d198c4b2b2cd84185d",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_blocked_when_env_ip_does_not_match",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_post_blocked_when_env_ip_does_not_match",
-      "source_ast_sha256": "d1ddfa3db12e882f2823150cb4f4f056fa060ca931328df90da79877ef7ffcfb",
+      "source_ast_sha256": "a444f48eb05a95334bc169c1cc01558e4c076a6db62b9d4ee7c31fb205d21a80",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 403)",
         "self.assertFalse(User.objects.filter(username='other').exists())"
@@ -186,14 +196,15 @@
       "framework_log_block": "test_post_blocked_when_env_ip_does_not_match (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_blocked_when_env_ip_does_not_match)\nWhen the override is set, only that exact IP may set up (not local). ... 2026-11-09 07:40:24,126 WARNING django.request Forbidden: /api/accounts/initialize-superuser/\nok\n",
       "framework_log_block_sha256": "97d6429bb4e233cebf9f42eb1a82f3bcab291a43a49f1dc7f360fa2cd9f7c269",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_spoofed_x_real_ip_ignored_without_trusted_proxy",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_spoofed_x_real_ip_ignored_without_trusted_proxy",
-      "source_ast_sha256": "0396ebb7684216e830aca7b5de0a18adefe30294d8e039d202333e21b64455c5",
+      "source_ast_sha256": "d38bffdb9dea39b52aa88c79f2cc897cf5c677a889fc7ad6adcd315ef9bfdb22",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 403)",
         "self.assertEqual(response.json()['client_ip'], '203.0.113.99')",
@@ -203,14 +214,15 @@
       "framework_log_block": "test_spoofed_x_real_ip_ignored_without_trusted_proxy (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_spoofed_x_real_ip_ignored_without_trusted_proxy)\nClient-supplied X-Real-IP must not bypass the setup gate. ... 2026-11-09 07:40:24,134 WARNING django.request Forbidden: /api/accounts/initialize-superuser/\nok\n",
       "framework_log_block_sha256": "ebdc5fc0805164391444c32ddeccfddb35048968b6ec7fca9c0c90363065effb",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_x_real_ip_used_when_peer_is_trusted_proxy",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_x_real_ip_used_when_peer_is_trusted_proxy",
-      "source_ast_sha256": "3784f67eac417b438d4083d4287fe953395400e4ac7b79bab36229f441f118e6",
+      "source_ast_sha256": "97164aa490fda07b3d01d12dcecb03ee030b340a5af94cab7b3750aa0e83df1d",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertTrue(User.objects.filter(username='proxied', user_level=10).exists())"
@@ -219,14 +231,15 @@
       "framework_log_block": "test_x_real_ip_used_when_peer_is_trusted_proxy (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_x_real_ip_used_when_peer_is_trusted_proxy) ... ok\n",
       "framework_log_block_sha256": "0cb1ccaf258912b93a3ef97f3d5f100418ba59b387c8929a3cbbcbf925a1a10a",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_for_ipv4_mapped_private_address",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_post_allowed_for_ipv4_mapped_private_address",
-      "source_ast_sha256": "1686884efba1fcbcc4540fed1eaef6b197331d007b438f9c85ff41aad43674b1",
+      "source_ast_sha256": "c65f6a0577fa07a92d3766aa77976627ff2476cf47a99f2e580e9908f02dd6ae",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 200)",
         "self.assertTrue(User.objects.filter(username='mapped', user_level=10).exists())"
@@ -235,14 +248,15 @@
       "framework_log_block": "test_post_allowed_for_ipv4_mapped_private_address (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_post_allowed_for_ipv4_mapped_private_address)\nProxies may present LAN clients as ::ffff:x.x.x.x. ... ok\n",
       "framework_log_block_sha256": "fb7e973e095a2c65481ae1d21d7e7db68efc693acaa1783f1cb9c9483bf00587",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_invalid_setup_allowed_ip_env_denies_post",
       "source_path": "apps/accounts/tests/test_accounts.py",
       "class": "InitializeSuperuserTests",
       "method": "test_invalid_setup_allowed_ip_env_denies_post",
-      "source_ast_sha256": "e74c552c0b3ed7a57e8ca61ebcb634885d1bed2eae4690b863a6e42697e7af20",
+      "source_ast_sha256": "dea8db049de033352a13b95eafb58a6547415d3c86e45db6cc612bb7b7c5571e",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 403)",
         "self.assertFalse(User.objects.filter(username='badenv').exists())"
@@ -251,14 +265,15 @@
       "framework_log_block": "test_invalid_setup_allowed_ip_env_denies_post (apps.accounts.tests.test_accounts.InitializeSuperuserTests.test_invalid_setup_allowed_ip_env_denies_post) ... 2026-11-09 07:40:24,118 WARNING dispatcharr.utils Invalid DISPATCHARR_SETUP_ALLOWED_IP='not-an-ip'; denying initialize-superuser POST\n2026-11-09 07:40:24,119 WARNING django.request Forbidden: /api/accounts/initialize-superuser/\nok\n",
       "framework_log_block_sha256": "53ce1904c42f1566f4e2a6a82e6e7cf4f93f0859621f4de16020277657e2cfda",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_jwt_trip_creates_event_and_inbox_once",
       "source_path": "apps/accounts/tests/test_login_rate_limit_inbox.py",
       "class": "LoginRateLimitInboxTests",
       "method": "test_jwt_trip_creates_event_and_inbox_once",
-      "source_ast_sha256": "3d943bb96c8d51e65c77fffa1858ad11a0c3949e31fdec43c9d18c2f9590e5b7",
+      "source_ast_sha256": "ef5de637f98910b61e4c8ef1799965f8247cac70e17b27eaa969881a90c48b28",
       "assertion_expressions": [
         "self.assertIn('Retry-After', response)",
         "self.assertEqual(notice.title, 'Login rate limit triggered')",
@@ -280,14 +295,15 @@
       "framework_log_block": "test_jwt_trip_creates_event_and_inbox_once (apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_jwt_trip_creates_event_and_inbox_once) ... 2026-11-09 07:40:24,535 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,535 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,537 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,537 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,538 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,538 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,540 WARNING django.request Too Many Requests: /api/accounts/token/\n2026-11-09 07:40:24,541 WARNING django.request Too Many Requests: /api/accounts/token/\nok\n",
       "framework_log_block_sha256": "1fc7bba4fcc893ecb750c87e940824b0d7ff0786e2ef4a408b053b860007c346",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_repeat_429_does_not_parse_username",
       "source_path": "apps/accounts/tests/test_login_rate_limit_inbox.py",
       "class": "LoginRateLimitInboxTests",
       "method": "test_repeat_429_does_not_parse_username",
-      "source_ast_sha256": "355f48f8ea01d9f36623b60a42b8c2407a4cb78de23ecb4cfc7a1452b2acc2d8",
+      "source_ast_sha256": "31c15dc53c8b11b25aa4c13342f94a1af42357175e6fe949fa16cd347248f6d7",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 429)",
         "read_username.assert_not_called()"
@@ -296,14 +312,15 @@
       "framework_log_block": "test_repeat_429_does_not_parse_username (apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_repeat_429_does_not_parse_username) ... 2026-11-09 07:40:24,574 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,574 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,577 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,577 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,579 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,579 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,582 WARNING django.request Too Many Requests: /api/accounts/token/\n2026-11-09 07:40:24,582 WARNING django.request Too Many Requests: /api/accounts/token/\nok\n",
       "framework_log_block_sha256": "cbc10291e95cf76deb16f0b5acd9b4ec1a631676e33febfe9246f56cb2f0270f",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     },
     {
       "test_id": "apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_recorder_error_still_returns_429",
       "source_path": "apps/accounts/tests/test_login_rate_limit_inbox.py",
       "class": "LoginRateLimitInboxTests",
       "method": "test_recorder_error_still_returns_429",
-      "source_ast_sha256": "72dcc5f54e5de5fb7f54690a79888a1fad1562649ffadafc8a9c8df646711c16",
+      "source_ast_sha256": "3163def3fb929cb2df5a7d2d8ca1524c90b2bd4b7198601d514ed399bd73cba8",
       "assertion_expressions": [
         "self.assertEqual(response.status_code, 429)",
         "self.assertNotEqual(self._jwt_login().status_code, 429)"
@@ -312,7 +329,8 @@
       "framework_log_block": "test_recorder_error_still_returns_429 (apps.accounts.tests.test_login_rate_limit_inbox.LoginRateLimitInboxTests.test_recorder_error_still_returns_429) ... 2026-11-09 07:40:24,561 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,561 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,564 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,564 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,566 ERROR apps.accounts.api_views Login error for user=adminuser: No active account found with the given credentials\n2026-11-09 07:40:24,566 WARNING django.request Unauthorized: /api/accounts/token/\n2026-11-09 07:40:24,567 ERROR apps.accounts.throttling Failed to record login rate limit lockout\nTraceback (most recent call last):\n  File \"/app/apps/accounts/throttling.py\", line 146, in emit_login_rate_limit_lockout\n    if not cache.add(emit_key, True, timeout=timeout):\n           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1169, in __call__\n    return self._mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1173, in _mock_call\n    return self._execute_mock_call(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/unittest/mock.py\", line 1234, in _execute_mock_call\n    raise effect\nRuntimeError: cache down\n2026-11-09 07:40:24,568 WARNING django.request Too Many Requests: /api/accounts/token/\nok\n",
       "framework_log_block_sha256": "e25f5a61a2d62e3d4f783369d6c81c4bef58fb3ed473960e10798a217fef1c42",
       "historical_result": "ok",
-      "transport": "Original Django APIClient; no TCP transcript claim"
+      "transport": "Original Django APIClient; no TCP transcript claim",
+      "source_ast_fingerprint_format": "dispatcharr-source-test-ast-v1"
     }
   ]
 }

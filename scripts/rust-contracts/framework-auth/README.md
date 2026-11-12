@@ -47,3 +47,13 @@ The deterministic register input manifest must list this binding file and use
 Unrelated rows, required-role completeness, methods, existing case associations
 and fully-verified counts must stay unchanged. This is progress on the executable
 Source-contract criterion, not acceptance of M0/M1 or full account API parity.
+
+The first published fingerprint used CPython-dependent `ast.dump` formatting. The
+actual SDK Python3.11 check exposed five failures despite host Python3.14 success.
+The historical source/result snapshots remain unchanged. The corrected explicit
+`dispatcharr-source-test-ast-v1` serializer preserves every field, empty list and
+None scalar; it reconciles only absent-versus-empty PEP695 type_params on known
+definition nodes. Nonempty generics are rejected. Derived AST/projection hashes
+change; original test files, test labels, raw log blocks and 18 old outcomes do
+not. Twenty-three controls now include empty-field and generic-field boundaries;
+actual host and SDK execution results are recorded separately.

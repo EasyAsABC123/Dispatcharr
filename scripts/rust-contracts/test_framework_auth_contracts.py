@@ -1,4 +1,5 @@
 """Pure rejection controls for scoped Original framework-test assignments."""
+import ast
 import copy
 import hashlib
 import importlib.util
@@ -94,9 +95,34 @@ class Controls(unittest.TestCase):
             root = Path(temporary)
             shutil.copytree(HERE / 'framework-auth', root / 'scripts/rust-contracts/framework-auth')
             path = root / ORIGINAL['original_test_files'][0]['path']
+            path.chmod(0o600)  # Only the owned temporary corruption copy.
             path.write_bytes(path.read_bytes() + b'\n# changed\n')
             with self.assertRaisesRegex(AssertionError, 'unmodified Original'):
                 module.validate(root, ORIGINAL)
+
+
+    def test_empty_fields_and_none_are_preserved(self):
+        node = ast.parse('def f(): pass').body[0].args
+        fields = dict(module.stable_ast(node)['fields'])
+        self.assertEqual(fields['args'], [])
+        self.assertEqual(fields['vararg'], {'scalar': 'NoneType', 'value': None})
+
+    def test_only_absent_empty_generic_field_reconciled(self):
+        node = ast.parse('def f(): pass').body[0]
+        initial = module.ast_fingerprint(node)
+        node._fields = tuple(name for name in node._fields if name != 'type_params')
+        self.assertEqual(module.ast_fingerprint(node), initial)
+        node._fields = node._fields + ('type_params',)
+        node.type_params = []
+        self.assertEqual(module.ast_fingerprint(node), initial)
+
+    def test_nonempty_generic_field_rejected(self):
+        node = ast.parse('def f(): pass').body[0]
+        if 'type_params' not in node._fields:
+            node._fields = node._fields + ('type_params',)
+        node.type_params = [ast.Name(id='Unqualified', ctx=ast.Load())]
+        with self.assertRaisesRegex(ValueError, 'NonemptyGeneric'):
+            module.ast_fingerprint(node)
 
 
 if __name__ == '__main__':
