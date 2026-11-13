@@ -1,0 +1,21 @@
+
+running 16 tests
+test notifications::tests::cache_and_user_agent_server_error_classifications_stay_distinct ... ignored, actual owned Redis wrongtype/ACL distinguishes generic503 and UAserver500
+test notifications::tests::cache_cancelled_burst_cannot_reuse_sixteen_pending_slots ... ignored, actual owned Redis cancellation storm with bounded physical/queued admission
+test notifications::tests::cache_logical_timeout_retains_pending_reply_and_composed_scopes ... ignored, actual owned Redis delayed reply beyond logical cache deadline
+test notifications::tests::cache_waiter_bound_and_cancelled_queue_restore_admission ... ignored, actual owned Redis physical16/queue256 hard admission and cancelled waiters
+test notifications::tests::cancelled_cache_command_retains_physical_slot_and_scope ... ignored, actual owned Redis pause/caller cancellation and scoped admission
+test notifications::tests::redis_cache_interoperates_with_original_python_and_bounds_values ... ignored, requires isolated REDIS_TEST_URL and original Python cache fixtures
+test notifications::tests::known_condition_uses_literal_network_membership ... ok
+test notifications::tests::create_uses_model_defaults_and_ignores_readonly_input ... ok
+test notifications::tests::conditions_preserve_source_iterable_and_hashability_rules ... ok
+test notifications::tests::create_character_limits_count_unicode_and_keep_message_unbounded ... ok
+test notifications::tests::create_collects_required_and_independent_field_errors ... ok
+test notifications::tests::update_patch_empty_readonly_and_unknown_have_no_default_fields ... ok
+test notifications::tests::update_parser_retains_source_json_error_after_target_lookup ... ok
+test notifications::tests::update_put_requires_fields_but_does_not_apply_optional_model_defaults ... ok
+test notifications::tests::update_patch_validates_explicit_fields_and_preserves_json_replacement ... ok
+test notifications::tests::create_preserves_json_choices_boolean_and_nullable_expiry_fields ... ok
+
+test result: ok. 10 passed; 0 failed; 6 ignored; 0 measured; 230 filtered out; finished in 0.00s
+

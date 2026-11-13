@@ -1,0 +1,32 @@
+{
+  "base_revision": "044f3ad0fb3ee68ffb17b23bbb796ccdae954298",
+  "variant_order": [
+    "baseline",
+    "candidate"
+  ],
+  "source_count_each": 898,
+  "rust_tree_inputs_each": 893,
+  "coupled_inputs_each": 5,
+  "test_code_identical": true,
+  "candidate_only_changed_path": [
+    "rust/vendor/sqlx-core/src/pool/inner.rs"
+  ],
+  "jobs": 2,
+  "debug": 0,
+  "incremental": false,
+  "offline": true,
+  "locked": true,
+  "fresh_targets": [
+    "/tmp/dispatcharr-sqlx-close-baseline-qa2-target-1",
+    "/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1"
+  ],
+  "commands": [
+    "cargo fmt --all --check",
+    "cargo build --offline --locked -p dispatcharr-store --lib",
+    "cargo clippy --offline --locked -p dispatcharr-store --all-targets -- -D warnings",
+    "cargo test --offline --locked -p dispatcharr-store --lib notifications::tests::",
+    "cargo test --offline --locked -p dispatcharr-store --test sqlx_pool_close_dependency --no-run"
+  ],
+  "actual_SQL_or_Docker_runs": 0,
+  "next_gate": "completed baseline/candidate ELFs plus fixed-three-case controller/default11/cleanup execution seals; Root global admission before either actual fixture"
+}

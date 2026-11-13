@@ -1,0 +1,106 @@
+{
+  "state": "SETTLED",
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-qa-2/candidate-source",
+  "target": "/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1",
+  "source_count": 898,
+  "jobs": 2,
+  "debug": 0,
+  "incremental": false,
+  "Cargo_network": "offline",
+  "format_note": "cargo fmt performs no dependency resolution; offline env applies; build/clippy/test commands explicitly --offline --locked",
+  "commands": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "started_utc": "2026-11-13T00:13:14.063123+00:00",
+      "state": "SETTLED",
+      "pid": 3,
+      "starttime": "24918910",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:13:15.880019+00:00"
+    },
+    {
+      "name": "non-test-store",
+      "argv": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib"
+      ],
+      "started_utc": "2026-11-13T00:13:15.880211+00:00",
+      "state": "SETTLED",
+      "pid": 30,
+      "starttime": "24919092",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:14:05.269779+00:00"
+    },
+    {
+      "name": "strict-alltargets",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started_utc": "2026-11-13T00:14:05.270010+00:00",
+      "state": "SETTLED",
+      "pid": 4156,
+      "starttime": "24924031",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:14:34.229037+00:00"
+    },
+    {
+      "name": "existing-pure-notifications",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "notifications::tests::"
+      ],
+      "started_utc": "2026-11-13T00:14:34.229266+00:00",
+      "state": "SETTLED",
+      "pid": 5786,
+      "starttime": "24926927",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 101,
+      "actual_poll": 101,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:14:59.280031+00:00"
+    }
+  ],
+  "started_utc": "2026-11-13T00:13:14.063044+00:00",
+  "wrapper_pid": 2,
+  "failure": "RuntimeError:ActualStageFailed:existing-pure-notifications:101",
+  "source_bytes_unchanged": true,
+  "completed_utc": "2026-11-13T00:14:59.326477+00:00",
+  "passed": false,
+  "all_started_commands_settled": true,
+  "actual_wrapper_exit": 1
+}

@@ -1,0 +1,84 @@
+{
+  "state": "SETTLED",
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-qa-1/baseline-source",
+  "target": "/tmp/dispatcharr-sqlx-close-baseline-qa1-target-1",
+  "source_count": 898,
+  "jobs": 2,
+  "debug": 0,
+  "incremental": false,
+  "Cargo_network": "offline",
+  "format_note": "cargo fmt performs no dependency resolution; offline env applies; build/clippy/test commands explicitly --offline --locked",
+  "commands": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "started_utc": "2026-11-12T23:52:19.734371+00:00",
+      "state": "SETTLED",
+      "pid": 3,
+      "starttime": "24793478",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-12T23:52:21.450695+00:00"
+    },
+    {
+      "name": "non-test-store",
+      "argv": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib"
+      ],
+      "started_utc": "2026-11-12T23:52:21.450892+00:00",
+      "state": "SETTLED",
+      "pid": 30,
+      "starttime": "24793649",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-12T23:53:09.988683+00:00"
+    },
+    {
+      "name": "strict-alltargets",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started_utc": "2026-11-12T23:53:09.988928+00:00",
+      "state": "SETTLED",
+      "pid": 4156,
+      "starttime": "24798503",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 101,
+      "actual_poll": 101,
+      "after_starttime": null,
+      "settled_utc": "2026-11-12T23:53:39.047571+00:00"
+    }
+  ],
+  "started_utc": "2026-11-12T23:52:19.734295+00:00",
+  "wrapper_pid": 2,
+  "failure": "RuntimeError:ActualStageFailed:strict-alltargets:101",
+  "source_bytes_unchanged": true,
+  "completed_utc": "2026-11-12T23:53:39.089042+00:00",
+  "passed": false,
+  "all_started_commands_settled": true,
+  "actual_wrapper_exit": 1
+}

@@ -1,0 +1,13 @@
+{
+  "QA1_baseline_actual_negative": "artifacts/rust/m5-sqlx-close-dependency-build-baseline-qa1-1",
+  "QA1_fmt_exit": 0,
+  "QA1_non_test_exit": 0,
+  "QA1_strict_exit": 101,
+  "error": "E0716 temporary output.join borrowed into future",
+  "fix": "let case_output owns PathBuf until case future await completes",
+  "test_code_change_only": true,
+  "candidate_dependency_patch_unchanged": true,
+  "proxy_gates_three_cases_budgets_effects_unchanged": true,
+  "candidate_QA1_not_built": true,
+  "new_fresh_targets_required": true
+}

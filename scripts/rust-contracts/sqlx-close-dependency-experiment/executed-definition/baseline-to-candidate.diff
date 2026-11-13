@@ -1,0 +1,18 @@
+--- upstream/rust/vendor/sqlx-core/src/pool/inner.rs
++++ candidate/rust/vendor/sqlx-core/src/pool/inner.rs
+@@ -110,6 +110,15 @@
+ 
+                 // Wait for all permits to be released.
+                 let _permits = self.semaphore.acquire(permits).await;
++                if permits == self.options.max_connections {
++                    // A return task may have passed its closed check before an
++                    // async callback/ping, then queued idle just before releasing
++                    // the final permit. Drain that queue while all permits are
++                    // still held so awaiting close also closes these connections.
++                    while let Some(idle) = self.idle_conns.pop() {
++                        let _ = idle.live.float((*self).clone()).close().await;
++                    }
++                }
+             }
+         }
+     }

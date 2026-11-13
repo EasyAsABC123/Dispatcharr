@@ -1,0 +1,79 @@
+   Compiling tokio v1.54.1
+   Compiling hyper v1.12.0
+   Compiling hyper-util v0.1.21
+   Compiling tokio-util v0.7.20
+   Compiling tower v0.5.3
+   Compiling tokio-stream v0.1.19
+   Compiling tokio-rustls v0.26.6
+   Compiling sqlx-core v0.8.6 (/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-qa-2/candidate-source/rust/vendor/sqlx-core)
+   Compiling hyper-rustls v0.27.10
+   Compiling tower-http v0.6.11
+   Compiling reqwest v0.12.28
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: `sqlx-core` (lib) generated 3 warnings
+   Compiling sqlx-postgres v0.8.6
+   Compiling combine v4.6.9
+   Compiling redis v0.32.7
+   Compiling sqlx v0.8.6
+   Compiling dispatcharr-upstream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-qa-2/candidate-source/rust/crates/upstream-http)
+   Compiling axum v0.8.9
+   Compiling dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-qa-2/candidate-source/rust/crates/store)
+rustc-LLVM ERROR: IO failure on output stream: No space left on device
+error: could not compile `dispatcharr-store` (lib test)
+
+Caused by:
+  No space left on device (os error 28)
+
+Caused by:
+  failed to parse process output: `/home/justin/github/Dispatcharr/artifacts/rust/tooling/rustup/toolchains/1.90.0-x86_64-unknown-linux-gnu/bin/rustc --crate-name dispatcharr_store --edition=2021 crates/store/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=6d215e4b0d8c57e9 -C extra-filename=-eb948e6e71ad09a8 --out-dir /tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps -C strip=debuginfo -L dependency=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps --extern async_stream=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libasync_stream-ea6ecc7c048abd1c.rlib --extern axum=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libaxum-4d64332d10c7895b.rlib --extern base64=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libbase64-c99419686a03d6ee.rlib --extern bytes=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libbytes-d156d616c16b4db4.rlib --extern chrono=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libchrono-01e177dd7142ef64.rlib --extern dispatcharr_contracts=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libdispatcharr_contracts-e14a0bc42f36a0ab.rlib --extern dispatcharr_ingest_core=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libdispatcharr_ingest_core-205cc35ac767c04e.rlib --extern dispatcharr_upstream_http=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libdispatcharr_upstream_http-0836d437547d8d08.rlib --extern futures_util=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libfutures_util-504483f9b20e60e2.rlib --extern httpdate=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libhttpdate-c64c57c910096f73.rlib --extern ipnet=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libipnet-c88e4ca625f4f004.rlib --extern jsonwebtoken=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libjsonwebtoken-a3260c00225ef55a.rlib --extern md5=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libmd5-e38fb47b82f17c3c.rlib --extern mime_guess=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libmime_guess-1f514a9de241d6cf.rlib --extern multer=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libmulter-b4d30e7ecad26dc7.rlib --extern num_bigint=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libnum_bigint-05f14b776da7a5ea.rlib --extern pbkdf2=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libpbkdf2-dd6766a30e7bf790.rlib --extern rand=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/librand-3b2e90d777972437.rlib --extern redis=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libredis-bef8e638e13ec07d.rlib --extern regex=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libregex-73f8db4993e1b6ad.rlib --extern reqwest=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libreqwest-611d4b206b9c63ac.rlib --extern scrypt=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libscrypt-a2115c51b5ce821d.rlib --extern serde=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libserde-408cdb8ce110d509.rlib --extern serde_json=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libserde_json-e86363b6e6aed9b7.rlib --extern sha1=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libsha1-8c7fb5e0f5e80b94.rlib --extern sha2=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libsha2-206dedac365e2f4e.rlib --extern sqlx=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libsqlx-9eff78ac41d711ee.rlib --extern subtle=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libsubtle-d71de2984af510fa.rlib --extern tokio=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libtokio-5e77f173b9f8373d.rlib --extern tokio_util=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libtokio_util-4aadad2b4d330b37.rlib --extern tracing=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libtracing-703222d9453f4406.rlib --extern unicode_normalization=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libunicode_normalization-556f302f31ff8ea5.rlib --extern url=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/liburl-05bda3c9bc0f02cc.rlib --extern uuid=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/deps/libuuid-5d61c1b0deae0a01.rlib -L native=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/build/lzma-sys-7d410939e36e3ae4/out -L native=/tmp/dispatcharr-sqlx-close-candidate-qa2-target-1/debug/build/ring-4096f2277bfd86a6/out` (exit status: 101)

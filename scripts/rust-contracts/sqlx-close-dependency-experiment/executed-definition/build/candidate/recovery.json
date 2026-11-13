@@ -1,0 +1,62 @@
+{
+  "state": "SETTLED",
+  "recovery_of": "preserved candidate QA2 unit compile ENOSPC; no source change",
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-qa-2/candidate-source",
+  "target": "/home/justin/github/Dispatcharr/artifacts/rust/target-sqlx-close-dependency-candidate-qa2-recovery-1",
+  "TMPDIR": "/home/justin/github/Dispatcharr/artifacts/rust/tmp-sqlx-close-dependency-candidate-qa2-recovery-1",
+  "source_count": 898,
+  "new_Cargo_commands": 2,
+  "repeated_successful_fmt_non_test_strict_commands": 0,
+  "target_reused_or_transplanted": false,
+  "commands": [
+    {
+      "name": "existing-pure-notifications",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "notifications::tests::"
+      ],
+      "state": "SETTLED",
+      "started_utc": "2026-11-13T00:23:09.847572+00:00",
+      "pid": 6,
+      "starttime": "24978489",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "completed_utc": "2026-11-13T00:24:06.800399+00:00"
+    },
+    {
+      "name": "dependency-test-ELF-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--test",
+        "sqlx_pool_close_dependency",
+        "--no-run"
+      ],
+      "state": "SETTLED",
+      "started_utc": "2026-11-13T00:24:06.800597+00:00",
+      "pid": 4165,
+      "starttime": "24984184",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "completed_utc": "2026-11-13T00:24:19.182828+00:00"
+    }
+  ],
+  "started_utc": "2026-11-13T00:23:09.847501+00:00",
+  "source_898_unchanged": true,
+  "completed_utc": "2026-11-13T00:24:19.225449+00:00",
+  "passed": true,
+  "all_started_commands_settled": true,
+  "actual_wrapper_exit": 0
+}

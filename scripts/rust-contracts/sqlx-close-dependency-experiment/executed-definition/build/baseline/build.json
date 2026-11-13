@@ -1,0 +1,128 @@
+{
+  "state": "SETTLED",
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-qa-2/baseline-source",
+  "target": "/tmp/dispatcharr-sqlx-close-baseline-qa2-target-1",
+  "source_count": 898,
+  "jobs": 2,
+  "debug": 0,
+  "incremental": false,
+  "Cargo_network": "offline",
+  "format_note": "cargo fmt performs no dependency resolution; offline env applies; build/clippy/test commands explicitly --offline --locked",
+  "commands": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "started_utc": "2026-11-13T00:01:27.386009+00:00",
+      "state": "SETTLED",
+      "pid": 4,
+      "starttime": "24848243",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:01:29.152451+00:00"
+    },
+    {
+      "name": "non-test-store",
+      "argv": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib"
+      ],
+      "started_utc": "2026-11-13T00:01:29.152662+00:00",
+      "state": "SETTLED",
+      "pid": 31,
+      "starttime": "24848419",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:02:17.690132+00:00"
+    },
+    {
+      "name": "strict-alltargets",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started_utc": "2026-11-13T00:02:17.690390+00:00",
+      "state": "SETTLED",
+      "pid": 4157,
+      "starttime": "24853273",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:02:46.899048+00:00"
+    },
+    {
+      "name": "existing-pure-notifications",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "notifications::tests::"
+      ],
+      "started_utc": "2026-11-13T00:02:46.899281+00:00",
+      "state": "SETTLED",
+      "pid": 5787,
+      "starttime": "24856194",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:03:13.903289+00:00"
+    },
+    {
+      "name": "dependency-test-ELF-no-run",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--test",
+        "sqlx_pool_close_dependency",
+        "--no-run"
+      ],
+      "started_utc": "2026-11-13T00:03:13.903536+00:00",
+      "state": "SETTLED",
+      "pid": 6089,
+      "starttime": "24858894",
+      "stdio": "regular files; no pipe readers",
+      "actual_wait": 0,
+      "actual_poll": 0,
+      "after_starttime": null,
+      "settled_utc": "2026-11-13T00:03:25.984857+00:00"
+    }
+  ],
+  "started_utc": "2026-11-13T00:01:27.385934+00:00",
+  "wrapper_pid": 2,
+  "source_bytes_unchanged": true,
+  "completed_utc": "2026-11-13T00:03:26.026323+00:00",
+  "passed": true,
+  "all_started_commands_settled": true,
+  "actual_wrapper_exit": 0
+}

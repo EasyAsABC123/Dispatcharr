@@ -1,0 +1,140 @@
+{
+  "state": "FIVE_REQUIRED_STAGES_QUALIFIED_ACROSS_NAMED_ATTEMPTS",
+  "original_attempt_passed": false,
+  "original_unit_compile_exit": 101,
+  "original_ENOSPC_negative_retained": true,
+  "recovery_new_commands": 2,
+  "repeated_successful_commands": 0,
+  "source_root": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-qa-2/candidate-source",
+  "exact_898_source_pre_post_all_attempts": true,
+  "required_successful_stages": [
+    {
+      "attempt": "original-three-successes-before-ENOSPC",
+      "receipt": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-build-candidate-qa2-1/build.json",
+      "command": {
+        "name": "fmt",
+        "argv": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--check"
+        ],
+        "started_utc": "2026-11-13T00:13:14.063123+00:00",
+        "state": "SETTLED",
+        "pid": 3,
+        "starttime": "24918910",
+        "stdio": "regular files; no pipe readers",
+        "actual_wait": 0,
+        "actual_poll": 0,
+        "after_starttime": null,
+        "settled_utc": "2026-11-13T00:13:15.880019+00:00"
+      }
+    },
+    {
+      "attempt": "original-three-successes-before-ENOSPC",
+      "receipt": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-build-candidate-qa2-1/build.json",
+      "command": {
+        "name": "non-test-store",
+        "argv": [
+          "cargo",
+          "build",
+          "--offline",
+          "--locked",
+          "-p",
+          "dispatcharr-store",
+          "--lib"
+        ],
+        "started_utc": "2026-11-13T00:13:15.880211+00:00",
+        "state": "SETTLED",
+        "pid": 30,
+        "starttime": "24919092",
+        "stdio": "regular files; no pipe readers",
+        "actual_wait": 0,
+        "actual_poll": 0,
+        "after_starttime": null,
+        "settled_utc": "2026-11-13T00:14:05.269779+00:00"
+      }
+    },
+    {
+      "attempt": "original-three-successes-before-ENOSPC",
+      "receipt": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-build-candidate-qa2-1/build.json",
+      "command": {
+        "name": "strict-alltargets",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--offline",
+          "--locked",
+          "-p",
+          "dispatcharr-store",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "started_utc": "2026-11-13T00:14:05.270010+00:00",
+        "state": "SETTLED",
+        "pid": 4156,
+        "starttime": "24924031",
+        "stdio": "regular files; no pipe readers",
+        "actual_wait": 0,
+        "actual_poll": 0,
+        "after_starttime": null,
+        "settled_utc": "2026-11-13T00:14:34.229037+00:00"
+      }
+    },
+    {
+      "attempt": "fresh-home-two-stage-recovery",
+      "receipt": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-build-candidate-qa2-recovery-1/recovery.json",
+      "command": {
+        "name": "existing-pure-notifications",
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "dispatcharr-store",
+          "--lib",
+          "notifications::tests::"
+        ],
+        "state": "SETTLED",
+        "started_utc": "2026-11-13T00:23:09.847572+00:00",
+        "pid": 6,
+        "starttime": "24978489",
+        "actual_wait": 0,
+        "actual_poll": 0,
+        "after_starttime": null,
+        "completed_utc": "2026-11-13T00:24:06.800399+00:00"
+      }
+    },
+    {
+      "attempt": "fresh-home-two-stage-recovery",
+      "receipt": "/home/justin/github/Dispatcharr/artifacts/rust/m5-sqlx-close-dependency-build-candidate-qa2-recovery-1/recovery.json",
+      "command": {
+        "name": "dependency-test-ELF-no-run",
+        "argv": [
+          "cargo",
+          "test",
+          "--offline",
+          "--locked",
+          "-p",
+          "dispatcharr-store",
+          "--test",
+          "sqlx_pool_close_dependency",
+          "--no-run"
+        ],
+        "state": "SETTLED",
+        "started_utc": "2026-11-13T00:24:06.800597+00:00",
+        "pid": 4165,
+        "starttime": "24984184",
+        "actual_wait": 0,
+        "actual_poll": 0,
+        "after_starttime": null,
+        "completed_utc": "2026-11-13T00:24:19.182828+00:00"
+      }
+    }
+  ],
+  "both_targets_distinct_no_transplant": true,
+  "actual_SQL_or_app_runs": 0
+}

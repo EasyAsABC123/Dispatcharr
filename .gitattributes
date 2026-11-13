@@ -111,3 +111,9 @@ scripts/rust-job-contracts/scanner-logo/m3u-known-failures/proofs/runtime3/check
 # Preserve actual SDK terminal output and Original attribution underlines.
 scripts/rust-integration/sdkaca6/raw/compose.log -text -whitespace
 scripts/rust-integration/sdkaca6/inputs/ATTRIBUTION.md conflict-marker-size=32
+
+# Preserve exact SQLx experiment diffs and executed test output bytes.
+scripts/rust-contracts/sqlx-close-dependency-experiment/executed-definition/Cargo-override.diff -text -whitespace
+scripts/rust-contracts/sqlx-close-dependency-experiment/executed-definition/baseline-to-candidate.diff -text -whitespace
+scripts/rust-contracts/sqlx-close-dependency-experiment/executed-definition/build/baseline/03-existing-pure-notifications.stdout -text whitespace=-blank-at-eof
+scripts/rust-contracts/sqlx-close-dependency-experiment/executed-definition/build/candidate/00-existing-pure-notifications.stdout -text whitespace=-blank-at-eof

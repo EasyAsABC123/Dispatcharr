@@ -1,0 +1,199 @@
+{
+  "baseline": {
+    "variant": "baseline",
+    "actual_contract_passed": false,
+    "all3_raw_observations_validated": true,
+    "cases": [
+      {
+        "case": 1,
+        "first_close_contract_passed": true,
+        "samples": 1,
+        "elapsed_millis": 7,
+        "initial_pool_metadata": {
+          "pool_size": 0,
+          "num_idle": 1,
+          "is_closed": true,
+          "observed_utc": "2026-11-13T00:55:27.454487135Z"
+        },
+        "terminal_pool_metadata": {
+          "size": 0,
+          "num_idle": 1,
+          "is_closed": true
+        },
+        "terminal_old_FDs_absent": true,
+        "terminal_backends_absent": true,
+        "terminal_relay_directions_joined": true,
+        "terminal_current_SQLx_sockets": [],
+        "actual_after_release_calls": 1,
+        "subject_close_calls": 1,
+        "separate_last_handle_DROP_cleanup_qualified": true,
+        "peer_cleanup_forced": false,
+        "peer_cleanup_wait": 0,
+        "cleanup_cannot_waive_first_close_negative": true
+      },
+      {
+        "case": 2,
+        "first_close_contract_passed": true,
+        "samples": 1,
+        "elapsed_millis": 7,
+        "initial_pool_metadata": {
+          "pool_size": 0,
+          "num_idle": 0,
+          "is_closed": true,
+          "observed_utc": "2026-11-13T00:55:28.131320984Z"
+        },
+        "terminal_pool_metadata": {
+          "size": 0,
+          "num_idle": 0,
+          "is_closed": true
+        },
+        "terminal_old_FDs_absent": true,
+        "terminal_backends_absent": true,
+        "terminal_relay_directions_joined": true,
+        "terminal_current_SQLx_sockets": [],
+        "actual_after_release_calls": 0,
+        "subject_close_calls": 1,
+        "separate_last_handle_DROP_cleanup_qualified": true,
+        "peer_cleanup_forced": false,
+        "peer_cleanup_wait": 0,
+        "cleanup_cannot_waive_first_close_negative": true
+      },
+      {
+        "case": 3,
+        "first_close_contract_passed": false,
+        "samples": 96,
+        "elapsed_millis": 10010,
+        "initial_pool_metadata": {
+          "pool_size": 1,
+          "num_idle": 1,
+          "is_closed": true,
+          "observed_utc": "2026-11-13T00:55:28.831312026Z"
+        },
+        "terminal_pool_metadata": {
+          "size": 1,
+          "num_idle": 1,
+          "is_closed": true
+        },
+        "terminal_old_FDs_absent": false,
+        "terminal_backends_absent": false,
+        "terminal_relay_directions_joined": false,
+        "terminal_current_SQLx_sockets": [
+          {
+            "fd": "8",
+            "inode": "65834852",
+            "link": "socket:[65834852]",
+            "proc_tcp_line": "  13: 0100007F:9A1C 0100007F:B2EB 01 00000000:00000000 00:00000000 00000000     0        0 65834852 1 0000000000000000 20 4 12 10 -1                 "
+          }
+        ],
+        "actual_after_release_calls": 1,
+        "subject_close_calls": 1,
+        "separate_last_handle_DROP_cleanup_qualified": true,
+        "peer_cleanup_forced": false,
+        "peer_cleanup_wait": 0,
+        "cleanup_cannot_waive_first_close_negative": true
+      }
+    ],
+    "actual_controller_exit": 1,
+    "default11_exact": true,
+    "target_backends_absent_after_ELF": true,
+    "all_commands_pipes_settled": true,
+    "runtime_scope": "max1 pinned SQLx dependency first-close contract; no Main/API/general shutdown claim",
+    "original_notification2_4_6_negatives_waived": false,
+    "raw_execution_report_sha256": "2be26fba1c201935c1126f6d970fa60ba75caa458d09c0ee1433d72c0bedea62"
+  },
+  "candidate": {
+    "variant": "candidate",
+    "actual_contract_passed": true,
+    "all3_raw_observations_validated": true,
+    "cases": [
+      {
+        "case": 1,
+        "first_close_contract_passed": true,
+        "samples": 1,
+        "elapsed_millis": 7,
+        "initial_pool_metadata": {
+          "pool_size": 0,
+          "num_idle": 1,
+          "is_closed": true,
+          "observed_utc": "2026-11-13T00:57:05.463578647Z"
+        },
+        "terminal_pool_metadata": {
+          "size": 0,
+          "num_idle": 1,
+          "is_closed": true
+        },
+        "terminal_old_FDs_absent": true,
+        "terminal_backends_absent": true,
+        "terminal_relay_directions_joined": true,
+        "terminal_current_SQLx_sockets": [],
+        "actual_after_release_calls": 1,
+        "subject_close_calls": 1,
+        "separate_last_handle_DROP_cleanup_qualified": true,
+        "peer_cleanup_forced": false,
+        "peer_cleanup_wait": 0,
+        "cleanup_cannot_waive_first_close_negative": true
+      },
+      {
+        "case": 2,
+        "first_close_contract_passed": true,
+        "samples": 1,
+        "elapsed_millis": 7,
+        "initial_pool_metadata": {
+          "pool_size": 0,
+          "num_idle": 0,
+          "is_closed": true,
+          "observed_utc": "2026-11-13T00:57:06.139352179Z"
+        },
+        "terminal_pool_metadata": {
+          "size": 0,
+          "num_idle": 0,
+          "is_closed": true
+        },
+        "terminal_old_FDs_absent": true,
+        "terminal_backends_absent": true,
+        "terminal_relay_directions_joined": true,
+        "terminal_current_SQLx_sockets": [],
+        "actual_after_release_calls": 0,
+        "subject_close_calls": 1,
+        "separate_last_handle_DROP_cleanup_qualified": true,
+        "peer_cleanup_forced": false,
+        "peer_cleanup_wait": 0,
+        "cleanup_cannot_waive_first_close_negative": true
+      },
+      {
+        "case": 3,
+        "first_close_contract_passed": true,
+        "samples": 1,
+        "elapsed_millis": 7,
+        "initial_pool_metadata": {
+          "pool_size": 0,
+          "num_idle": 1,
+          "is_closed": true,
+          "observed_utc": "2026-11-13T00:57:06.826717703Z"
+        },
+        "terminal_pool_metadata": {
+          "size": 0,
+          "num_idle": 1,
+          "is_closed": true
+        },
+        "terminal_old_FDs_absent": true,
+        "terminal_backends_absent": true,
+        "terminal_relay_directions_joined": true,
+        "terminal_current_SQLx_sockets": [],
+        "actual_after_release_calls": 1,
+        "subject_close_calls": 1,
+        "separate_last_handle_DROP_cleanup_qualified": true,
+        "peer_cleanup_forced": false,
+        "peer_cleanup_wait": 0,
+        "cleanup_cannot_waive_first_close_negative": true
+      }
+    ],
+    "actual_controller_exit": 0,
+    "default11_exact": true,
+    "target_backends_absent_after_ELF": true,
+    "all_commands_pipes_settled": true,
+    "runtime_scope": "max1 pinned SQLx dependency first-close contract; no Main/API/general shutdown claim",
+    "original_notification2_4_6_negatives_waived": false,
+    "raw_execution_report_sha256": "2d35b0f0b0eb2afa03cd0f7a9d18353f649afedebbae07f4d555e84c6dc5f99f"
+  }
+}

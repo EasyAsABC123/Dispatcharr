@@ -1,0 +1,29 @@
+--- 044f/rust/Cargo.toml
++++ private-both/rust/Cargo.toml
+@@ -1,6 +1,7 @@
+ [workspace]
+ members = ["crates/job-transport", "crates/xmltv-http", "crates/backups", "crates/xc-http", "crates/ingest-epg", "crates/xmltv-parser", "crates/hdhr-http", "crates/output-http", "crates/realtime", "crates/ingest-http", "crates/upstream-http", "crates/ingest-core", "crates/timeshift-http", "crates/timeshift-core", "crates/vod-http", "crates/app", "crates/clients", "crates/contracts", "crates/coordination", "crates/fmp4-core", "crates/fmp4-http", "crates/hls-core", "crates/hls-http", "crates/output-store", "crates/input-store", "crates/store", "crates/stream-core", "crates/stream-runtime", "crates/stream-http"]
+ resolver = "2"
++exclude = ["vendor/sqlx-core"]
+ 
+ [workspace.package]
+ version = "0.1.0"
+@@ -16,3 +17,7 @@
+ [profile.test]
+ debug = 0
+ incremental = false
++
++# Private pinned SQLx dependency contract experiment only.
++[patch.crates-io]
++sqlx-core = { path = "vendor/sqlx-core" }
+--- 044f/rust/Cargo.lock
++++ private-both/rust/Cargo.lock
+@@ -2686,8 +2686,6 @@
+ [[package]]
+ name = "sqlx-core"
+ version = "0.8.6"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "ee6798b1838b6a0f69c007c133b8df5866302197e404e8b6ee8ed3e3a5e68dc6"
+ dependencies = [
+  "base64 0.22.1",
+  "bytes",

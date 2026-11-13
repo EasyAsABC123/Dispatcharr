@@ -1,0 +1,14 @@
+--- QA1/rust/crates/store/tests/sqlx_pool_close_dependency.rs
++++ QA2/rust/crates/store/tests/sqlx_pool_close_dependency.rs
+@@ -591,9 +591,10 @@
+     save(&path, &report);
+     for (number, database) in databases.iter().enumerate() {
+         let url = format!("postgres://dispatch:playback-fixture-only@127.0.0.1:5432/{database}");
++        let case_output = output.join(format!("case-{}", number + 1));
+         let case = AssertUnwindSafe(run_case(
+             &root,
+-            &output.join(format!("case-{}", number + 1)),
++            &case_output,
+             &url,
+             number + 1,
+         ))

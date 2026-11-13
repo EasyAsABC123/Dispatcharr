@@ -34,7 +34,9 @@ bound to the measured image/workload.
   failures in cases 2, 4 and 6; the composite remains negative. The new 20-request
   Original JWT/API-key capture and matching Native20 effects pass. The personal
   permission fix is in the qualified source union; preserve separate administrative
-  write checks and finish the dependency shutdown/other API and operational gaps.
+  write checks. The separate [SQLx experiment](rust-sqlx-close-dependency-experiment.md)
+  reproduces a baseline first-close failure and passes three max1 cases with a
+  private candidate; wider shutdown, other API and operational gaps stay open.
 - **Ingestion:** the M3U candidate passes affected-crate checks and all 189
   eight-domain guest comparisons. Its host cleanup-parser failure remains
   recorded. Three lease controls and the corrected remaining two physical cases21
