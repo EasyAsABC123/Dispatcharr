@@ -7,6 +7,8 @@ mod app_data;
 mod auth;
 mod auth_events;
 mod auth_network;
+mod rest_reads;
+pub use rest_reads::{RestReadLimits, RetainedRestReads, RetainedRestSubject};
 mod auth_throttle;
 mod cache_codec;
 mod channel_groups;

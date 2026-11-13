@@ -9,6 +9,8 @@ alone does not establish application parity or an application performance gain.
 
 The [current Core settings library validation](rust-core-settings-current-validation.md) passes whole-workspace formatting, compilation, strict checks and 725 default tests (736 ignored). Its historical component qualifies 32 requests and seven finite ownership predicates; Main integration and full M5 remain open.
 
+The [bounded REST reader library](rust-rest-read-ownership.md) passes the current 851-input workspace gates (741 tests passed, 737 ignored). Two historical physical read-cancellation cases independently pass; adoption into Core/Main and duplicate-key error compatibility remain open.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime

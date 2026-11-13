@@ -1,0 +1,9 @@
+# Bounded REST subject and network reads
+
+An opt-in adapter now bounds user properties and cold network settings before JSON allocation. Its SQL task retains the original request permit through PostgreSQL Ready and explicit pool return or close, including observer cancellation. It uses the existing four writer slots and introduces no pool. Existing authentication paths remain on their prior strategy.
+
+The combined library has 851 Rust inputs and five coupled inputs. Formatting, compilation and strict checks pass; workspace tests pass with 741 passed and 737 ignored. The initial sandbox attempt failed because four existing HTTP tests could not bind loopback sockets. The unchanged source passes in the host environment; both actual attempts are retained in the [Root review](../scripts/rust-contracts/rest-read-Root-current851-review.json).
+
+Two separately compiled historical physical cases pass: API-key SQL cancellation followed by direct observer loss, and cold network SQL cancellation followed by a logical deadline. Independent review verifies the same request permit remains held while Ready is delayed, actual pool reuse, first close, no remaining SQL backends, unchanged database/cache state and owned cleanup. Portable physical evidence is a separate publication; these historical runs do not establish execution of the newer combined source.
+
+Main and Core service adoption remain open. Duplicate API keys still follow the existing Native behavior; fresh Original observations establish HTML 500 responses, so that compatibility fix remains separate. Full M5 and new API performance measurements remain open. All application and algorithm credit belongs to the original Dispatcharr authors.

@@ -362,6 +362,20 @@ impl AuthService {
         &self,
         request: &PlaybackRequest,
     ) -> Result<Option<User>, StoreError> {
+        Ok(self
+            .authenticate_read_strategy(request, None)
+            .await?
+            .map(|subject| subject.user))
+    }
+
+    pub(crate) async fn authenticate_read_strategy(
+        &self,
+        request: &PlaybackRequest,
+        limits: Option<crate::rest_reads::RestReadLimits>,
+    ) -> Result<Option<crate::rest_reads::ReadSubject>, StoreError> {
+        if limits.is_some() {
+            let _original = self.rest_writer()?;
+        }
         let auth: Vec<_> = request
             .header("authorization")
             .unwrap_or("")
@@ -375,8 +389,8 @@ impl AuthService {
                 })));
             }
             let claims = self.decode_token(auth[1], "access")?;
-            return match self.store.user_by_id(claims.id().unwrap()).await? {
-                Some(user) if user.is_active => Ok(Some(user)),
+            return match self.rest_read_user_id(claims.id().unwrap(), limits).await? {
+                Some(user) if user.user.is_active => Ok(Some(user)),
                 Some(_) => Err(StoreError::AuthenticationBody(
                     json!({"detail":"User is inactive","code":"user_inactive"}),
                 )),
@@ -403,8 +417,8 @@ impl AuthService {
                 false,
             )
             .await?;
-            match self.store.user_by_api_key(key).await? {
-                Some(user) if user.is_active => return Ok(Some(user)),
+            match self.rest_read_user_key(key, limits).await? {
+                Some(user) if user.user.is_active => return Ok(Some(user)),
                 user => {
                     if self
                         .shared_auth_budget(
@@ -420,7 +434,7 @@ impl AuthService {
                             "login_failed",
                             json!(user
                                 .as_ref()
-                                .map_or("api_key", |user| user.username.as_str())),
+                                .map_or("api_key", |user| user.user.username.as_str())),
                             Some("API key rate limited"),
                         )
                         .await;

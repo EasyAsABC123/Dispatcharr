@@ -56,7 +56,7 @@ impl AuthService {
         })
     }
 }
-fn ui_permission_error(error: StoreError) -> StoreError {
+pub(crate) fn ui_permission_error(error: StoreError) -> StoreError {
     match error {
         StoreError::StatusBody(500, _) => StoreError::UiPermissionFault,
         other => other,
