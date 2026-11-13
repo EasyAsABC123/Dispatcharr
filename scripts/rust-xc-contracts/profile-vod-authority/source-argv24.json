@@ -1,0 +1,572 @@
+{
+  "scope": "Literal 24 model/SQL observations from an overall-failed first attempt; no process delivery",
+  "cases": [
+    {
+      "name": "plain",
+      "SQL_profile_id": 3,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "-i pipe:0 -c:v copy -c:a copy -f mpegts pipe:1",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-i",
+          "pipe:0",
+          "-c:v",
+          "copy",
+          "-c:a",
+          "copy",
+          "-f",
+          "mpegts",
+          "pipe:1"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            3
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "empty-parameters",
+      "SQL_profile_id": 4,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            4
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "command-not-split",
+      "SQL_profile_id": 5,
+      "SQL_command": "ffmpeg -extra",
+      "SQL_parameters": "-i pipe:0",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg -extra",
+          "-i",
+          "pipe:0"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            5
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "empty-command",
+      "SQL_profile_id": 6,
+      "SQL_command": "",
+      "SQL_parameters": "-i pipe:0",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "",
+          "-i",
+          "pipe:0"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            6
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "single-quote",
+      "SQL_profile_id": 7,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "-vf 'scale=-2:720'",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-vf",
+          "scale=-2:720"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            7
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "double-quote",
+      "SQL_profile_id": 8,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "-metadata \"title=two words\"",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-metadata",
+          "title=two words"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            8
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "empty-quoted",
+      "SQL_profile_id": 9,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "\"\" ''",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "",
+          ""
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            9
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "adjacent-quoted",
+      "SQL_profile_id": 10,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "one\"two\"'three'",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "onetwothree"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            10
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "escaped-whitespace",
+      "SQL_profile_id": 11,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "two\\ words",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "two words"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            11
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "escaped-quote",
+      "SQL_profile_id": 12,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "a\\\"b",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a\"b"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            12
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "double-escaped-quote",
+      "SQL_profile_id": 13,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "\"a\\\"b\"",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a\"b"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            13
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "double-unknown-escape",
+      "SQL_profile_id": 14,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "\"a\\qb\"",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a\\qb"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            14
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "single-backslash-literal",
+      "SQL_profile_id": 15,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "'a\\b'",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a\\b"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            15
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "backslash",
+      "SQL_profile_id": 16,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "a\\\\b",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a\\b"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            16
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "hash-not-comment",
+      "SQL_profile_id": 17,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "value #literal",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "value",
+          "#literal"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            17
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "shell-metachar-literal",
+      "SQL_profile_id": 18,
+      "SQL_command": "custom-helper",
+      "SQL_parameters": "a;b | x && y",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "custom-helper",
+          "a;b",
+          "|",
+          "x",
+          "&&",
+          "y"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            18
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "ascii-whitespace",
+      "SQL_profile_id": 19,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "a\tb\nc\rd",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a",
+          "b",
+          "c",
+          "d"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            19
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "nonbreaking-space",
+      "SQL_profile_id": 20,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "a\u00a0b",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a\u00a0b"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            20
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "unicode",
+      "SQL_profile_id": 21,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "-metadata \"title=\u6771\u4eac caf\u00e9\"",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "-metadata",
+          "title=\u6771\u4eac caf\u00e9"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            21
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "escaped-newline",
+      "SQL_profile_id": 22,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "a\\\nb",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a\nb"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            22
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "double-escaped-newline",
+      "SQL_profile_id": 23,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "\"a\\\nb\"",
+      "observed": {
+        "kind": "return",
+        "argv": [
+          "ffmpeg",
+          "a\\\nb"
+        ]
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            23
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "unclosed-single",
+      "SQL_profile_id": 24,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "'unfinished",
+      "observed": {
+        "kind": "raise",
+        "exception_type": "ValueError",
+        "message": "No closing quotation"
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            24
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "unclosed-double",
+      "SQL_profile_id": 25,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "\"unfinished",
+      "observed": {
+        "kind": "raise",
+        "exception_type": "ValueError",
+        "message": "No closing quotation"
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            25
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    },
+    {
+      "name": "trailing-escape",
+      "SQL_profile_id": 26,
+      "SQL_command": "ffmpeg",
+      "SQL_parameters": "unfinished\\",
+      "observed": {
+        "kind": "raise",
+        "exception_type": "ValueError",
+        "message": "No escaped character"
+      },
+      "actual_SQL": [
+        {
+          "sql": "SELECT \"core_outputprofile\".\"id\", \"core_outputprofile\".\"name\", \"core_outputprofile\".\"command\", \"core_outputprofile\".\"parameters\", \"core_outputprofile\".\"locked\", \"core_outputprofile\".\"is_active\" FROM \"core_outputprofile\" WHERE \"core_outputprofile\".\"id\" = %s LIMIT 21",
+          "params": [
+            26
+          ],
+          "many": false
+        }
+      ],
+      "SQL_journal_invalid": null
+    }
+  ]
+}

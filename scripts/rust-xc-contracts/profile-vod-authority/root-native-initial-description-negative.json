@@ -1,0 +1,96 @@
+{
+  "review_passed": true,
+  "overall_fixture_passed": false,
+  "actual_host_exit": 1,
+  "qualified_scope": "Literal seven Native physical SQL/cache/held-frame test results and actual SQL nonmutation/cleanup only",
+  "seven_Native_tests_actual0": [
+    {
+      "filter": "gateway::tests::held_final_frame_keeps_exact_capacity_lease_after_shutdown",
+      "actual_exit": 0,
+      "command_number": 32,
+      "Rust_seconds": 5.06,
+      "exact_stdout_bound": true
+    },
+    {
+      "filter": "gateway::tests::cancelled_sql_caller_retains_admission_until_owned_worker_finishes",
+      "actual_exit": 0,
+      "command_number": 34,
+      "Rust_seconds": 0.07,
+      "exact_stdout_bound": true
+    },
+    {
+      "filter": "gateway::tests::epg_sql_cancellation_and_detached_body_keep_bounded_lifetimes",
+      "actual_exit": 0,
+      "command_number": 36,
+      "Rust_seconds": 0.13,
+      "exact_stdout_bound": true
+    },
+    {
+      "filter": "gateway::tests::category_sql_after_observer_deadline_keeps_physical_owner",
+      "actual_exit": 0,
+      "command_number": 38,
+      "Rust_seconds": 15.07,
+      "exact_stdout_bound": true
+    },
+    {
+      "filter": "gateway::tests::category_sql_after_caller_loss_keeps_physical_owner",
+      "actual_exit": 0,
+      "command_number": 40,
+      "Rust_seconds": 0.12,
+      "exact_stdout_bound": true
+    },
+    {
+      "filter": "gateway::tests::auth_cache_logical_error_keeps_admission_until_actual_reply",
+      "actual_exit": 0,
+      "command_number": 42,
+      "Rust_seconds": 6.29,
+      "exact_stdout_bound": true
+    },
+    {
+      "filter": "gateway::tests::auth_cache_caller_loss_and_shutdown_keep_admission_until_actual_reply",
+      "actual_exit": 0,
+      "command_number": 44,
+      "Rust_seconds": 6.33,
+      "exact_stdout_bound": true
+    }
+  ],
+  "full_owned_and_default_SQL_sequences_exact": true,
+  "native_phase_seconds": 34.48971055299626,
+  "all_command_waits_pipes_settled": true,
+  "Redis_actual_exit0_and_terminal_stop": true,
+  "independent_project_CID_and_host_PIDs_absent": true,
+  "host_PID_records_checked": 56,
+  "terminal_origin_audit_failed": "Origin service was never started; terminal journal audit failed DNS. No measured no-provider-contact journal claim or retroactive audit.",
+  "seven_case_rerun_performed": false,
+  "performance_or_Source_Main_parity_claimed": false,
+  "query_receipts": [
+    {
+      "resource_scope": "exact owned project/CID",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "private_argv_sha256": "22284efe08cfbf2d0c8ceddb312472b8c535f4b9ed872c425b2c5f5b0c9fd85e"
+    },
+    {
+      "resource_scope": "exact owned project/CID",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "private_argv_sha256": "7c59063d76981fcbcbc8a4bbdefb6342e693a8c7df9c4380125b4ed74ccae622"
+    },
+    {
+      "resource_scope": "exact owned project/CID",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "private_argv_sha256": "f8da87c6665c63c549b1f92eeecd72c2ade5868ef29f005cabb3edbffae12f5b"
+    },
+    {
+      "resource_scope": "exact owned project/CID",
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "private_argv_sha256": "3e6bbb5e5019a560153a3df2090c64a06b59b137e094deefd0902f390b0214ac"
+    }
+  ]
+}
