@@ -13,6 +13,8 @@ The [bounded REST reader library](rust-rest-read-ownership.md) passes the curren
 
 The [remaining acceptance work](rust-remaining-acceptance.md) separates the measured packaged checkpoint, newer library checks and the executable gates still needed for full parity.
 
+The [inert plugin metadata service](rust-plugin-repositories-current-validation.md) passes current 854-input workspace checks (757 tests, 738 ignored); its confirmed HTML/duplicate-key differences and Main integration remain open.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime
