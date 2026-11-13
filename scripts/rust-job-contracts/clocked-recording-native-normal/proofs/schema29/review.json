@@ -1,0 +1,105 @@
+{
+  "review_completed": true,
+  "actual_host_controller_peer_exit0": true,
+  "actual29_exact_SQL_order_bound_types_and_result_column_metadata": true,
+  "same_SQL_connection_actual_ReadOnly_Ready_close": true,
+  "scope": {
+    "schema_verified": true,
+    "prepared_statement_occurrences": 29,
+    "DVR_normal_verified": false,
+    "Source_verified": false,
+    "task_media_or_transaction_execution_verified": false
+  },
+  "default6259_bytes_equal": true,
+  "default_schema": {
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "sequences": 59,
+    "tables": 62
+  },
+  "actual_commands_settled": 45,
+  "original_recorded_container_identities_absent": 9,
+  "fresh_exact_owned_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-dvr-schema-5e1201f6f7"
+      ],
+      "pid": 3034179,
+      "starttime": "32744266",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-dvr-schema-5e1201f6f7"
+      ],
+      "pid": 3034196,
+      "starttime": "32744267",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--format",
+        "{{.Name}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-dvr-schema-5e1201f6f7"
+      ],
+      "pid": 3034214,
+      "starttime": "32744268",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=fba2b6d20f6354688cbbdcdf93678798e5f9021e76e0ed3d2c3852979b931dad"
+      ],
+      "pid": 3034231,
+      "starttime": "32744269",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "cleanup_seconds": 1.479640546021983,
+  "raw_hashes": {
+    "integration.json": "95150a707ee5e5edef7937bb182af9504b81aa328a57f153db9ff7724944dc26",
+    "schema-guest-private.json": "159d7ab2a83bf5e8b44a010f5805198bd3707877b98c9d23c02378a33a88fe27",
+    "native-dvr-schema-private.json": "062e7376027c7257db42388648892a6657c2806a43d0f01de565c069ce577c4a"
+  },
+  "no_Source_task_Beat_DVR_origin_media_execution": true,
+  "normal_DVR_qualification": false
+}

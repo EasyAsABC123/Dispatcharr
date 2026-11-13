@@ -1,0 +1,58 @@
+{
+  "scope": "retained one Source workflow vs one Native no-hold-PG-relayed functional workflow; not matched performance measurement; durations do not establish runtime regression or causal overhead",
+  "raw_sha256": {
+    "Source3": "323c396c00b88fa48459a61a63799c5f2529919554b529778aa3b7a221b0a7b8",
+    "Native3": "ee5b9c6b1ee8351ecb4f012df504ea82c3d24cc58b25dee4211bd37165b44893",
+    "NativePeer": "e03a042bc3c805e30ebe510926b47dde7e57d0dcdbead2cec9055efda93a6ecb"
+  },
+  "Original": {
+    "nominal_seconds": 30,
+    "scheduled_start": "2026-11-13 16:06:43+00:00",
+    "prerun": "2026-11-13T16:06:44.718355+00:00",
+    "capture_spawn_invocation": "2026-11-13T16:06:44.787016+00:00",
+    "due_to_prerun_seconds": 1.7183549404144287,
+    "prerun_to_capture_spawn_seconds": 0.06866097450256348,
+    "due_to_capture_spawn_seconds": 1.7870159149169922,
+    "actual_video_duration_seconds": 26.48,
+    "actual_MKV_bytes": 947301,
+    "task_SQL_before_capture_count": 35,
+    "sum_actual_SQL_execute_wrapper_seconds": 0.008023262023925781,
+    "Beat_related_SQL_count": 14,
+    "sum_Beat_related_SQL_execute_wrapper_seconds": 0.002636432647705078,
+    "Source_BEGIN_COMMIT_packets_measured": false
+  },
+  "Native": {
+    "nominal_seconds": 30,
+    "scheduled_start": "2026-11-13 22:08:37+00:00",
+    "library_run_began": "2026-11-13T22:08:37.630122207Z",
+    "NX_acquire_before": "2026-11-13T22:08:38.919017359Z",
+    "NX_acquire_after": "2026-11-13T22:08:38.919103642Z",
+    "capture_spawn_invocation": "2026-11-13T22:08:43.858799572Z",
+    "due_to_capture_spawn_seconds": 6.858798980712891,
+    "run_to_capture_spawn_seconds": 6.228677034378052,
+    "acquire_after_to_capture_spawn_seconds": 4.9396960735321045,
+    "actual_video_duration_seconds": 21.36,
+    "actual_MKV_bytes": 782570,
+    "capture_owned_wait_seconds": 23.378164052963257,
+    "pre_capture_relay_connections": 8,
+    "pre_capture_execute_occurrences": 40,
+    "sum_execute_to_first_matching_Ready_seconds": 1.6446573734283447,
+    "execute_to_ready_median_seconds": 0.04100167751312256,
+    "cleanup_21_execute_count": 23,
+    "cleanup_first_execute_to_last_Ready_seconds": 3.466012477874756,
+    "pre_capture_sync_ready_pairs": 83,
+    "sync_ready_median_seconds": 0.04092884063720703,
+    "sync_ready_pairs_30_to_60ms": 72
+  },
+  "media_difference": {
+    "Source_minus_Native_decoded_seconds": 5.120000000000001,
+    "no_equal_delivered_work_claim": true
+  },
+  "inference": [
+    "Most observed Native pre-capture elapsed time coincides with sequential relayed SQL operations; many replies occur around a TCP delayed-ACK interval.",
+    "Frozen Python no-hold relay does not set TCP_NODELAY; Source Django SQL path uses its own connection, not that relay. Nagle/delayed-ACK is a plausible fixture cause, not a measured socket-state/counter proof.",
+    "Per-operation connection settlement/close and additional bounded admission checks also differ; cannot assign their hypothetical direct-PG cost from this fixture.",
+    "No frozen transport changes or replay, no timing guard change, no equal bytes/duration or performance claim.",
+    "Actual whole ffprobe Native duration21.36s is authoritative; ffmpeg progress stderr time21.32s is a separate progress reading."
+  ]
+}

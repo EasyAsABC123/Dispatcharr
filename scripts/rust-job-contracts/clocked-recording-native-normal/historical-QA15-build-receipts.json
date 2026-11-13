@@ -1,0 +1,113 @@
+{
+  "source_map_sha256": "b8c467e2cc154f4fe14c2f81004ce86d8f6720a8f731c1518d55a83ea52a7b58",
+  "commands": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/frozen-schema-qa-15/source/rust",
+      "pid": 14,
+      "actual_wait_exit": 0,
+      "start_epoch": 1794606295.9386182,
+      "end_epoch": 1794606298.1519575,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "test-driver-check",
+      "argv": [
+        "cargo",
+        "check",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-job-transport",
+        "--all-targets"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/frozen-schema-qa-15/source/rust",
+      "pid": 41,
+      "actual_wait_exit": 0,
+      "start_epoch": 1794606298.1750371,
+      "end_epoch": 1794606307.8184261,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "76c33146efb3ad77447ff80310ec432f8a2e2fe0ccb7a1de6ec20b9c7f5b2a8e"
+    },
+    {
+      "name": "strict",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "-p",
+        "dispatcharr-job-transport",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/frozen-schema-qa-15/source/rust",
+      "pid": 66,
+      "actual_wait_exit": 0,
+      "start_epoch": 1794606307.840109,
+      "end_epoch": 1794606325.4169698,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "6c897b6202f1f3e2b0af284fdfe08b2666850de13ccf070d4ebd13648f9acbb2"
+    },
+    {
+      "name": "focused-authority",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "recording_sql_schema_peer::compiled_statement_inventory_and_actual_bound_types",
+        "--",
+        "--exact"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/frozen-schema-qa-15/source/rust",
+      "pid": 306,
+      "actual_wait_exit": 0,
+      "start_epoch": 1794606325.4398484,
+      "end_epoch": 1794606350.156315,
+      "stdout_sha256": "f2aab1073c5dccfbd0e4512cd78e608ad17c74c5bdc93841ff0a75d8f4cd0e96",
+      "stderr_sha256": "f8e209eb4570cf8b415831222f1134e7242c627307fd660dad70e41e4da17856"
+    },
+    {
+      "name": "artifact-json",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "dispatcharr-job-transport",
+        "-p",
+        "dispatcharr-store",
+        "--lib",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "cwd": "/home/justin/github/Dispatcharr/artifacts/rust/clocked-recording-native-1/frozen-schema-qa-15/source/rust",
+      "pid": 370,
+      "actual_wait_exit": 0,
+      "start_epoch": 1794606350.1791232,
+      "end_epoch": 1794606388.3621223,
+      "stdout_sha256": "cd495524c1ba48109241a3f6cc27477e797f16d3b8620dcfd125f81452c67a71",
+      "stderr_sha256": "23642f932a97fd677f64b6ca8a2efb9d4e63623bd0456f597b3ac2e25bbc3cf7"
+    }
+  ],
+  "app_or_media_executed": false
+}

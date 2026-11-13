@@ -1,0 +1,300 @@
+[
+  {
+    "source": "recording_capture.rs",
+    "sql": "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog),NOT EXISTS(SELECT 1 FROM plugins_pluginconfig),(SELECT count(*)::bigint FROM core_systemevent)",
+    "production_path": "rust/crates/store/src/recording_capture.rs",
+    "production_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "sql_sha256": "6c23a80a5787e06004d73c1197459d1bef3da6d0b653ec3e4634942faf936b75",
+    "bound_types": [],
+    "column_count": 5
+  },
+  {
+    "source": "recording_capture.rs",
+    "sql": "SELECT CASE WHEN octet_length(value::text)<=8192 THEN value ELSE NULL END,(value IS NULL OR octet_length(value::text)<=8192) FROM core_coresettings WHERE key='system_settings' LIMIT 1",
+    "production_path": "rust/crates/store/src/recording_capture.rs",
+    "production_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "sql_sha256": "f2634b5c6dffe18b598fd1bd28cfabc4932e41f00fdd80b6cdeb04320de692e7",
+    "bound_types": [],
+    "column_count": 2
+  },
+  {
+    "source": "recording_capture.rs",
+    "sql": "SELECT r.id::bigint AS recording,r.channel_id::bigint AS channel,r.start_time,r.end_time,r.task_id,CASE WHEN octet_length(r.custom_properties::text)<=8192 THEN r.custom_properties ELSE NULL END AS properties,(r.custom_properties IS NOT NULL AND octet_length(r.custom_properties::text)<=8192) AS properties_supported,c.uuid AS channel_uuid,CASE WHEN octet_length(c.name)<=255 THEN c.name ELSE NULL END AS channel_name,c.epg_data_id::bigint AS epg_data_id,(c.stream_profile_id IS NULL AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id)) AS profile_supported,CASE WHEN octet_length(s.value::text)<=8192 THEN s.value ELSE NULL END AS dvr_settings,(s.value IS NOT NULL AND octet_length(s.value::text)<=8192) AS settings_supported FROM dispatcharr_channels_recording r JOIN dispatcharr_channels_channel c ON c.id=r.channel_id LEFT JOIN core_coresettings s ON s.key='dvr_settings' WHERE r.id=$1 LIMIT 1",
+    "production_path": "rust/crates/store/src/recording_capture.rs",
+    "production_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "sql_sha256": "267999d22e195e88dd528bedb4805e327c409da44a70ac3d8cd79de254d8cfa5",
+    "bound_types": [
+      "INT8"
+    ],
+    "column_count": 13
+  },
+  {
+    "source": "recording_capture.rs",
+    "sql": "SELECT l.id::bigint,CASE WHEN octet_length(l.url)<=1024 THEN l.url ELSE NULL END,(l.url IS NOT NULL AND octet_length(l.url)<=1024) FROM vod_movie m LEFT JOIN vod_vodlogo l ON l.id=m.logo_id WHERE UPPER(m.name::text)=UPPER($1) ORDER BY m.name LIMIT 2",
+    "production_path": "rust/crates/store/src/recording_capture.rs",
+    "production_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "sql_sha256": "d49f5c04bfd13ae6f56936417aa0b3dc882bbbebb46db7de93e8b5218cbbbb08",
+    "bound_types": [
+      "TEXT"
+    ],
+    "column_count": 3
+  },
+  {
+    "source": "recording_capture.rs",
+    "sql": "SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,(custom_properties IS NOT NULL AND octet_length(custom_properties::text)<=8192) FROM dispatcharr_channels_recording WHERE id=$1 LIMIT 1",
+    "production_path": "rust/crates/store/src/recording_capture.rs",
+    "production_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "sql_sha256": "85a199e627a381c6f76bdb459844a863f03b6840f4827358de877e10374ba679",
+    "bound_types": [
+      "INT8"
+    ],
+    "column_count": 2
+  },
+  {
+    "source": "recording_capture.rs",
+    "sql": "UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties=$3",
+    "production_path": "rust/crates/store/src/recording_capture.rs",
+    "production_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "sql_sha256": "c8579ce24a1d3fd1a43910ba2325a6e0a2c3862c8356dbac596288f931b1a1e6",
+    "bound_types": [
+      "INT8",
+      "JSONB",
+      "JSONB"
+    ],
+    "column_count": 0
+  },
+  {
+    "source": "recording_capture.rs",
+    "sql": "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog),NOT EXISTS(SELECT 1 FROM plugins_pluginconfig),(SELECT count(*)::bigint FROM core_systemevent)",
+    "production_path": "rust/crates/store/src/recording_capture.rs",
+    "production_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "sql_sha256": "6c23a80a5787e06004d73c1197459d1bef3da6d0b653ec3e4634942faf936b75",
+    "bound_types": [],
+    "column_count": 5
+  },
+  {
+    "source": "recording_capture.rs",
+    "sql": "INSERT INTO core_systemevent (event_type,timestamp,channel_id,channel_name,details) VALUES ($1,$2,$3,$4,$5) RETURNING id::bigint",
+    "production_path": "rust/crates/store/src/recording_capture.rs",
+    "production_sha256": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "sql_sha256": "fd10df4b5f7713dd26accdc321319e1c6c122891f7b409d42935e7a83af07652",
+    "bound_types": [
+      "TEXT",
+      "TIMESTAMPTZ",
+      "UUID",
+      "TEXT",
+      "JSONB"
+    ],
+    "column_count": 1
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "BEGIN",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "SAVEPOINT native_dvr_predelete",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "23af2de14b29cba93efd1676ce93a385471f71183432d375d6d0eba30ba8e79f",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "RELEASE SAVEPOINT native_dvr_predelete",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "58872d83efaa662dbe3d11b23dab12a4c2c29c4c79deb018ced57aeddeb07594",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "UPDATE epg_epgsource SET refresh_task_id=NULL WHERE refresh_task_id=$1",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "2e621e2d4caf4d9f51aed517d7be61f4ef83325d78d2d29d95bf1649c80d5c54",
+    "bound_types": [
+      "INT8"
+    ],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "UPDATE m3u_m3uaccount SET refresh_task_id=NULL WHERE refresh_task_id=$1",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "e0791648843dac23493fc128f4f5cf8136bf4fd7d5eb9ba35c5699e5f80f76a7",
+    "bound_types": [
+      "INT8"
+    ],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "DELETE FROM django_celery_beat_periodictask WHERE id=$1 AND name=$2 AND clocked_id=$3",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "c5b2af313477bc6d8d8b635eb184025bc87a8aae2409c73200dd404db6bf4491",
+    "bound_types": [
+      "INT8",
+      "TEXT",
+      "INT8"
+    ],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "COMMIT",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "BEGIN",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "COMMIT",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "b1ba34aacea37f22c6ab7fab7da718ea993f0aa74b8eab6bd6028d7ecb872423",
+    "bound_types": [
+      "INT8"
+    ],
+    "column_count": 1
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "BEGIN",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "a8402858d4f1e1d27afee976520485ebb4b96a5387355b823f0d0b8079729032",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "DELETE FROM django_celery_beat_clockedschedule WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "5abf4bce0f58bdc961aedb93d4f54cfbba5b274b3f99e765503ce70d9ff2db8e",
+    "bound_types": [
+      "INT8"
+    ],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "SAVEPOINT native_dvr_clocked_postdelete",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "330fe17103b53f3bbb59e0b8fff0c78b8d712aaa6d76e631f6fcb68538fa8414",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "RELEASE SAVEPOINT native_dvr_clocked_postdelete",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "2ad2f348a942d39a5b4a70e97cb542903dfef2e714beb8c4afba69e3cc76c46c",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "COMMIT",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "SELECT ident::bigint FROM django_celery_beat_periodictasks WHERE ident=1 FOR UPDATE",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "a954e11addbce63e430718dfe7e079561a148870e631382ad22fd7f342314563",
+    "bound_types": [],
+    "column_count": 1
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "UPDATE django_celery_beat_periodictasks SET last_update=$1 WHERE ident=1",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "f28a3e2a8488a797ded39f23349c42c5fda9fb5b99c2815df7c926267c8f7481",
+    "bound_types": [
+      "TIMESTAMPTZ"
+    ],
+    "column_count": 0
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "SELECT p.id::bigint,p.clocked_id::bigint,c.clocked_time,jsonb_build_object('task',p.task,'args',CASE WHEN octet_length(p.args)<=2048 THEN p.args ELSE NULL END,'kwargs',CASE WHEN octet_length(p.kwargs)<=1024 THEN p.kwargs ELSE NULL END,'headers',CASE WHEN octet_length(p.headers)<=1024 THEN p.headers ELSE NULL END,'bounded',octet_length(p.args)<=2048 AND octet_length(p.kwargs)<=1024 AND (p.headers IS NULL OR octet_length(p.headers)<=1024),'queue',p.queue,'exchange',p.exchange,'routing_key',p.routing_key,'priority',p.priority,'expires',p.expires,'expire_seconds',p.expire_seconds,'one_off',p.one_off,'start_time',p.start_time,'other_schedule',p.interval_id IS NOT NULL OR p.crontab_id IS NOT NULL OR p.solar_id IS NOT NULL) FROM django_celery_beat_periodictask p JOIN django_celery_beat_clockedschedule c ON c.id=p.clocked_id WHERE p.name=$1 LIMIT 2",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "6939bb448343c654a89ca8dd9c5030304389712a7b38989d29b574b7bb936a91",
+    "bound_types": [
+      "TEXT"
+    ],
+    "column_count": 4
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictasks WHERE ident=1),EXISTS(SELECT 1 FROM epg_epgsource WHERE refresh_task_id=$1),EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE refresh_task_id=$1),EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$2 AND id<>$1)",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "1830460d45df5f83cc041664f3384702da4ae180ca717bfff88c6a1a09fa4456",
+    "bound_types": [
+      "INT8",
+      "INT8"
+    ],
+    "column_count": 4
+  },
+  {
+    "source": "recording_beat_cleanup.rs",
+    "sql": "ROLLBACK",
+    "production_path": "rust/crates/store/src/recording_beat_cleanup.rs",
+    "production_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "sql_sha256": "587fa628a9fe4642ac0e22825a97e81d388af674f7251a9fb699f96901dcb710",
+    "bound_types": [],
+    "column_count": 0
+  },
+  {
+    "source": "ingest-epg/cache_policy.rs",
+    "sql": "SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key=$1",
+    "production_path": "rust/crates/ingest-epg/src/cache_policy.rs",
+    "production_sha256": "3fcf3f6d76f2397205e665f5f3f4eacdb3e5c0e6c1c8b775f48c10e207899b79",
+    "sql_sha256": "db1d22d63053547b2ee28718889eaf75be2a6447b691629530611c3d24bb96fd",
+    "bound_types": [
+      "TEXT"
+    ],
+    "column_count": 2
+  }
+]

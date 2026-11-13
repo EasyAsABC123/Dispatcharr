@@ -1,0 +1,282 @@
+[
+  {
+    "sql": "SELECT current_database()",
+    "connection": 0,
+    "execute_epoch": 1794607717.5476544,
+    "ready_epoch": 1794607717.5886133,
+    "execute_to_ready_seconds": 0.04095888137817383
+  },
+  {
+    "sql": "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog),NOT EXISTS(SELECT 1 FROM plugins_pluginconfig),(SELECT count(*)::bigint FROM core_systemevent)",
+    "connection": 0,
+    "execute_epoch": 1794607717.7137005,
+    "ready_epoch": 1794607717.7546334,
+    "execute_to_ready_seconds": 0.04093289375305176
+  },
+  {
+    "sql": "SELECT CASE WHEN octet_length(value::text)<=8192 THEN value ELSE NULL END,(value IS NULL OR octet_length(value::text)<=8192) FROM core_coresettings WHERE key='system_settings' LIMIT 1",
+    "connection": 0,
+    "execute_epoch": 1794607717.8776753,
+    "ready_epoch": 1794607717.9196823,
+    "execute_to_ready_seconds": 0.0420069694519043
+  },
+  {
+    "sql": "SELECT r.id::bigint AS recording,r.channel_id::bigint AS channel,r.start_time,r.end_time,r.task_id,CASE WHEN octet_length(r.custom_properties::text)<=8192 THEN r.custom_properties ELSE NULL END AS properties,(r.custom_properties IS NOT NULL AND octet_length(r.custom_properties::text)<=8192) AS properties_supported,c.uuid AS channel_uuid,CASE WHEN octet_length(c.name)<=255 THEN c.name ELSE NULL END AS channel_name,c.epg_data_id::bigint AS epg_data_id,(c.stream_profile_id IS NULL AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id)) AS profile_supported,CASE WHEN octet_length(s.value::text)<=8192 THEN s.value ELSE NULL END AS dvr_settings,(s.value IS NOT NULL AND octet_length(s.value::text)<=8192) AS settings_supported FROM dispatcharr_channels_recording r JOIN dispatcharr_channels_channel c ON c.id=r.channel_id LEFT JOIN core_coresettings s ON s.key='dvr_settings' WHERE r.id=$1 LIMIT 1",
+    "connection": 0,
+    "execute_epoch": 1794607718.042705,
+    "ready_epoch": 1794607718.083676,
+    "execute_to_ready_seconds": 0.04097104072570801
+  },
+  {
+    "sql": "SELECT l.id::bigint,CASE WHEN octet_length(l.url)<=1024 THEN l.url ELSE NULL END,(l.url IS NOT NULL AND octet_length(l.url)<=1024) FROM vod_movie m LEFT JOIN vod_vodlogo l ON l.id=m.logo_id WHERE UPPER(m.name::text)=UPPER($1) ORDER BY m.name LIMIT 2",
+    "connection": 0,
+    "execute_epoch": 1794607718.206767,
+    "ready_epoch": 1794607718.2477057,
+    "execute_to_ready_seconds": 0.040938615798950195
+  },
+  {
+    "sql": "SELECT p.id::bigint,p.clocked_id::bigint,c.clocked_time,jsonb_build_object('task',p.task,'args',CASE WHEN octet_length(p.args)<=2048 THEN p.args ELSE NULL END,'kwargs',CASE WHEN octet_length(p.kwargs)<=1024 THEN p.kwargs ELSE NULL END,'headers',CASE WHEN octet_length(p.headers)<=1024 THEN p.headers ELSE NULL END,'bounded',octet_length(p.args)<=2048 AND octet_length(p.kwargs)<=1024 AND (p.headers IS NULL OR octet_length(p.headers)<=1024),'queue',p.queue,'exchange',p.exchange,'routing_key',p.routing_key,'priority',p.priority,'expires',p.expires,'expire_seconds',p.expire_seconds,'one_off',p.one_off,'start_time',p.start_time,'other_schedule',p.interval_id IS NOT NULL OR p.crontab_id IS NOT NULL OR p.solar_id IS NOT NULL) FROM django_celery_beat_periodictask p JOIN django_celery_beat_clockedschedule c ON c.id=p.clocked_id WHERE p.name=$1 LIMIT 2",
+    "connection": 1,
+    "execute_epoch": 1794607718.4378004,
+    "ready_epoch": 1794607718.4789786,
+    "execute_to_ready_seconds": 0.041178226470947266
+  },
+  {
+    "sql": "SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictasks WHERE ident=1),EXISTS(SELECT 1 FROM epg_epgsource WHERE refresh_task_id=$1),EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE refresh_task_id=$1),EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$2 AND id<>$1)",
+    "connection": 1,
+    "execute_epoch": 1794607718.6018665,
+    "ready_epoch": 1794607718.6428678,
+    "execute_to_ready_seconds": 0.041001319885253906
+  },
+  {
+    "sql": "SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key=$1",
+    "connection": 2,
+    "execute_epoch": 1794607718.834732,
+    "ready_epoch": 1794607718.875665,
+    "execute_to_ready_seconds": 0.04093289375305176
+  },
+  {
+    "sql": "SELECT p.id::bigint,p.clocked_id::bigint,c.clocked_time,jsonb_build_object('task',p.task,'args',CASE WHEN octet_length(p.args)<=2048 THEN p.args ELSE NULL END,'kwargs',CASE WHEN octet_length(p.kwargs)<=1024 THEN p.kwargs ELSE NULL END,'headers',CASE WHEN octet_length(p.headers)<=1024 THEN p.headers ELSE NULL END,'bounded',octet_length(p.args)<=2048 AND octet_length(p.kwargs)<=1024 AND (p.headers IS NULL OR octet_length(p.headers)<=1024),'queue',p.queue,'exchange',p.exchange,'routing_key',p.routing_key,'priority',p.priority,'expires',p.expires,'expire_seconds',p.expire_seconds,'one_off',p.one_off,'start_time',p.start_time,'other_schedule',p.interval_id IS NOT NULL OR p.crontab_id IS NOT NULL OR p.solar_id IS NOT NULL) FROM django_celery_beat_periodictask p JOIN django_celery_beat_clockedschedule c ON c.id=p.clocked_id WHERE p.name=$1 LIMIT 2",
+    "connection": 3,
+    "execute_epoch": 1794607719.068654,
+    "ready_epoch": 1794607719.1096911,
+    "execute_to_ready_seconds": 0.04103708267211914
+  },
+  {
+    "sql": "SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictasks WHERE ident=1),EXISTS(SELECT 1 FROM epg_epgsource WHERE refresh_task_id=$1),EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE refresh_task_id=$1),EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$2 AND id<>$1)",
+    "connection": 3,
+    "execute_epoch": 1794607719.2328255,
+    "ready_epoch": 1794607719.2737477,
+    "execute_to_ready_seconds": 0.04092216491699219
+  },
+  {
+    "sql": "BEGIN",
+    "connection": 3,
+    "execute_epoch": 1794607719.3966491,
+    "ready_epoch": 1794607719.4376233,
+    "execute_to_ready_seconds": 0.04097414016723633
+  },
+  {
+    "sql": "SAVEPOINT native_dvr_predelete",
+    "connection": 3,
+    "execute_epoch": 1794607719.5606728,
+    "ready_epoch": 1794607719.601641,
+    "execute_to_ready_seconds": 0.04096817970275879
+  },
+  {
+    "sql": "SELECT ident::bigint FROM django_celery_beat_periodictasks WHERE ident=1 FOR UPDATE",
+    "connection": 3,
+    "execute_epoch": 1794607719.7246768,
+    "ready_epoch": 1794607719.7657318,
+    "execute_to_ready_seconds": 0.04105496406555176
+  },
+  {
+    "sql": "UPDATE django_celery_beat_periodictasks SET last_update=$1 WHERE ident=1",
+    "connection": 3,
+    "execute_epoch": 1794607719.8887122,
+    "ready_epoch": 1794607719.9297278,
+    "execute_to_ready_seconds": 0.041015625
+  },
+  {
+    "sql": "RELEASE SAVEPOINT native_dvr_predelete",
+    "connection": 3,
+    "execute_epoch": 1794607720.0526905,
+    "ready_epoch": 1794607720.093709,
+    "execute_to_ready_seconds": 0.04101848602294922
+  },
+  {
+    "sql": "UPDATE epg_epgsource SET refresh_task_id=NULL WHERE refresh_task_id=$1",
+    "connection": 3,
+    "execute_epoch": 1794607720.2177308,
+    "ready_epoch": 1794607720.2586732,
+    "execute_to_ready_seconds": 0.04094243049621582
+  },
+  {
+    "sql": "UPDATE m3u_m3uaccount SET refresh_task_id=NULL WHERE refresh_task_id=$1",
+    "connection": 3,
+    "execute_epoch": 1794607720.381674,
+    "ready_epoch": 1794607720.4226685,
+    "execute_to_ready_seconds": 0.04099440574645996
+  },
+  {
+    "sql": "DELETE FROM django_celery_beat_periodictask WHERE id=$1 AND name=$2 AND clocked_id=$3",
+    "connection": 3,
+    "execute_epoch": 1794607720.545686,
+    "ready_epoch": 1794607720.5867047,
+    "execute_to_ready_seconds": 0.04101872444152832
+  },
+  {
+    "sql": "COMMIT",
+    "connection": 3,
+    "execute_epoch": 1794607720.7097213,
+    "ready_epoch": 1794607720.7511413,
+    "execute_to_ready_seconds": 0.04141998291015625
+  },
+  {
+    "sql": "BEGIN",
+    "connection": 3,
+    "execute_epoch": 1794607720.7917905,
+    "ready_epoch": 1794607720.8327441,
+    "execute_to_ready_seconds": 0.040953636169433594
+  },
+  {
+    "sql": "SELECT ident::bigint FROM django_celery_beat_periodictasks WHERE ident=1 FOR UPDATE",
+    "connection": 3,
+    "execute_epoch": 1794607720.8738341,
+    "ready_epoch": 1794607720.9147713,
+    "execute_to_ready_seconds": 0.040937185287475586
+  },
+  {
+    "sql": "UPDATE django_celery_beat_periodictasks SET last_update=$1 WHERE ident=1",
+    "connection": 3,
+    "execute_epoch": 1794607720.9568434,
+    "ready_epoch": 1794607720.998772,
+    "execute_to_ready_seconds": 0.04192852973937988
+  },
+  {
+    "sql": "COMMIT",
+    "connection": 3,
+    "execute_epoch": 1794607721.0408463,
+    "ready_epoch": 1794607721.082693,
+    "execute_to_ready_seconds": 0.04184675216674805
+  },
+  {
+    "sql": "SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)",
+    "connection": 3,
+    "execute_epoch": 1794607721.205869,
+    "ready_epoch": 1794607721.2467897,
+    "execute_to_ready_seconds": 0.04092073440551758
+  },
+  {
+    "sql": "BEGIN",
+    "connection": 3,
+    "execute_epoch": 1794607721.2887564,
+    "ready_epoch": 1794607721.3296623,
+    "execute_to_ready_seconds": 0.04090595245361328
+  },
+  {
+    "sql": "DELETE FROM django_celery_beat_clockedschedule WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)",
+    "connection": 3,
+    "execute_epoch": 1794607721.4526849,
+    "ready_epoch": 1794607721.4937625,
+    "execute_to_ready_seconds": 0.041077613830566406
+  },
+  {
+    "sql": "SAVEPOINT native_dvr_clocked_postdelete",
+    "connection": 3,
+    "execute_epoch": 1794607721.6166844,
+    "ready_epoch": 1794607721.657699,
+    "execute_to_ready_seconds": 0.041014671325683594
+  },
+  {
+    "sql": "SELECT ident::bigint FROM django_celery_beat_periodictasks WHERE ident=1 FOR UPDATE",
+    "connection": 3,
+    "execute_epoch": 1794607721.6987045,
+    "ready_epoch": 1794607721.739921,
+    "execute_to_ready_seconds": 0.04121661186218262
+  },
+  {
+    "sql": "UPDATE django_celery_beat_periodictasks SET last_update=$1 WHERE ident=1",
+    "connection": 3,
+    "execute_epoch": 1794607721.7807364,
+    "ready_epoch": 1794607721.8217592,
+    "execute_to_ready_seconds": 0.04102277755737305
+  },
+  {
+    "sql": "RELEASE SAVEPOINT native_dvr_clocked_postdelete",
+    "connection": 3,
+    "execute_epoch": 1794607721.9446828,
+    "ready_epoch": 1794607721.9856389,
+    "execute_to_ready_seconds": 0.04095602035522461
+  },
+  {
+    "sql": "COMMIT",
+    "connection": 3,
+    "execute_epoch": 1794607722.0267181,
+    "ready_epoch": 1794607722.067879,
+    "execute_to_ready_seconds": 0.04116082191467285
+  },
+  {
+    "sql": "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog),NOT EXISTS(SELECT 1 FROM plugins_pluginconfig),(SELECT count(*)::bigint FROM core_systemevent)",
+    "connection": 4,
+    "execute_epoch": 1794607722.2587035,
+    "ready_epoch": 1794607722.2996213,
+    "execute_to_ready_seconds": 0.04091787338256836
+  },
+  {
+    "sql": "SELECT CASE WHEN octet_length(value::text)<=8192 THEN value ELSE NULL END,(value IS NULL OR octet_length(value::text)<=8192) FROM core_coresettings WHERE key='system_settings' LIMIT 1",
+    "connection": 4,
+    "execute_epoch": 1794607722.422635,
+    "ready_epoch": 1794607722.46362,
+    "execute_to_ready_seconds": 0.0409848690032959
+  },
+  {
+    "sql": "SELECT r.id::bigint AS recording,r.channel_id::bigint AS channel,r.start_time,r.end_time,r.task_id,CASE WHEN octet_length(r.custom_properties::text)<=8192 THEN r.custom_properties ELSE NULL END AS properties,(r.custom_properties IS NOT NULL AND octet_length(r.custom_properties::text)<=8192) AS properties_supported,c.uuid AS channel_uuid,CASE WHEN octet_length(c.name)<=255 THEN c.name ELSE NULL END AS channel_name,c.epg_data_id::bigint AS epg_data_id,(c.stream_profile_id IS NULL AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.channel_id=c.id)) AS profile_supported,CASE WHEN octet_length(s.value::text)<=8192 THEN s.value ELSE NULL END AS dvr_settings,(s.value IS NOT NULL AND octet_length(s.value::text)<=8192) AS settings_supported FROM dispatcharr_channels_recording r JOIN dispatcharr_channels_channel c ON c.id=r.channel_id LEFT JOIN core_coresettings s ON s.key='dvr_settings' WHERE r.id=$1 LIMIT 1",
+    "connection": 4,
+    "execute_epoch": 1794607722.5866628,
+    "ready_epoch": 1794607722.6276648,
+    "execute_to_ready_seconds": 0.04100203514099121
+  },
+  {
+    "sql": "SELECT l.id::bigint,CASE WHEN octet_length(l.url)<=1024 THEN l.url ELSE NULL END,(l.url IS NOT NULL AND octet_length(l.url)<=1024) FROM vod_movie m LEFT JOIN vod_vodlogo l ON l.id=m.logo_id WHERE UPPER(m.name::text)=UPPER($1) ORDER BY m.name LIMIT 2",
+    "connection": 4,
+    "execute_epoch": 1794607722.7506974,
+    "ready_epoch": 1794607722.7918825,
+    "execute_to_ready_seconds": 0.04118514060974121
+  },
+  {
+    "sql": "SELECT NOT EXISTS(SELECT 1 FROM dispatcharr_connect_integration),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription),NOT EXISTS(SELECT 1 FROM dispatcharr_connect_deliverylog),NOT EXISTS(SELECT 1 FROM plugins_pluginconfig),(SELECT count(*)::bigint FROM core_systemevent)",
+    "connection": 5,
+    "execute_epoch": 1794607722.9846482,
+    "ready_epoch": 1794607723.0256174,
+    "execute_to_ready_seconds": 0.040969133377075195
+  },
+  {
+    "sql": "INSERT INTO core_systemevent (event_type,timestamp,channel_id,channel_name,details) VALUES ($1,$2,$3,$4,$5) RETURNING id::bigint",
+    "connection": 5,
+    "execute_epoch": 1794607723.1486638,
+    "ready_epoch": 1794607723.1899006,
+    "execute_to_ready_seconds": 0.04123687744140625
+  },
+  {
+    "sql": "SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=1048576 THEN value ELSE NULL END AS value FROM core_coresettings WHERE key=$1",
+    "connection": 6,
+    "execute_epoch": 1794607723.37964,
+    "ready_epoch": 1794607723.4206066,
+    "execute_to_ready_seconds": 0.04096651077270508
+  },
+  {
+    "sql": "SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,(custom_properties IS NOT NULL AND octet_length(custom_properties::text)<=8192) FROM dispatcharr_channels_recording WHERE id=$1 LIMIT 1",
+    "connection": 7,
+    "execute_epoch": 1794607723.6106377,
+    "ready_epoch": 1794607723.6527095,
+    "execute_to_ready_seconds": 0.04207181930541992
+  },
+  {
+    "sql": "UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties=$3",
+    "connection": 7,
+    "execute_epoch": 1794607723.7756405,
+    "ready_epoch": 1794607723.8167353,
+    "execute_to_ready_seconds": 0.04109477996826172
+  }
+]

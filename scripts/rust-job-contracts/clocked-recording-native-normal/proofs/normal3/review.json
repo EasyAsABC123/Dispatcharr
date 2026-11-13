@@ -1,0 +1,132 @@
+{
+  "review_completed": true,
+  "executed_host_exit_preserved": 1,
+  "actual_guest_exit": 0,
+  "actual_peer_exit": 0,
+  "actual_guest_checks": 18,
+  "original_validator_failure_preserved": "ActualAbsentThenNXAcquireThenRemoveReplies",
+  "classification": "collector wrongly requires bool true for actual i64 Lua renewal/remove replies; runtime typed values agree with compiled code",
+  "default6259_bytes_equal": true,
+  "default_schema": {
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "sequences": 59,
+    "tables": 62
+  },
+  "actual_host_commands_settled": 49,
+  "original_container_PID_records_absent": 11,
+  "cleanup_seconds": 2.059537724009715,
+  "fresh_exact_owned_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-af5e878b64"
+      ],
+      "pid": 3102163,
+      "starttime": "32843236",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-af5e878b64"
+      ],
+      "pid": 3102182,
+      "starttime": "32843237",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--format",
+        "{{.Name}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-af5e878b64"
+      ],
+      "pid": 3102199,
+      "starttime": "32843238",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=ca6a84c7e3afcb5d5c60f041f257307aba78a0dcb464250b98fe4b4010936e27"
+      ],
+      "pid": 3102218,
+      "starttime": "32843239",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=b0698448fe014e02b0c8584d07c86f7319e17af1dc4f5d06673c8664cb5b2771"
+      ],
+      "pid": 3102237,
+      "starttime": "32843240",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "raw_hashes": {
+    "integration.json": "d06ea509ae1c9e355f555c27c7f485d003cfafd211ff4a82b59cc39cdcaf53e4",
+    "native-clocked-recording-private.json": "ee5b9c6b1ee8351ecb4f012df504ea82c3d24cc58b25dee4211bd37165b44893",
+    "native-dvr-private.json": "e03a042bc3c805e30ebe510926b47dde7e57d0dcdbead2cec9055efda93a6ecb"
+  },
+  "raw_outcome_summary": {
+    "task_result": null,
+    "backend_status": "SUCCESS",
+    "source_artwork_return": "ok",
+    "MKV_bytes": 782570,
+    "decoded_video_duration": "21.360000",
+    "fresh_root_created": true,
+    "capture_exit": 255,
+    "remux_exit": 0,
+    "full_video_decode_exit": 0
+  },
+  "no_app_repeat_raw_or_executed_tool_mutation": true,
+  "full_offline_comparison_separate": "normal3-offline-correction-1/offline-full-comparison.json",
+  "media_duration_equality_or_resource_gain_claim": false
+}

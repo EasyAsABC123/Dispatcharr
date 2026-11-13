@@ -1,0 +1,57 @@
+{
+  "compiled_source_sha256": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+  "contracts": {
+    "0": {
+      "sql": "BEGIN"
+    },
+    "1": {
+      "sql": "SAVEPOINT native_dvr_predelete"
+    },
+    "2": {
+      "sql": "RELEASE SAVEPOINT native_dvr_predelete"
+    },
+    "3": {
+      "sql": "UPDATE epg_epgsource SET refresh_task_id=NULL WHERE refresh_task_id=$1"
+    },
+    "4": {
+      "sql": "UPDATE m3u_m3uaccount SET refresh_task_id=NULL WHERE refresh_task_id=$1"
+    },
+    "5": {
+      "sql": "DELETE FROM django_celery_beat_periodictask WHERE id=$1 AND name=$2 AND clocked_id=$3"
+    },
+    "6": {
+      "sql": "COMMIT"
+    },
+    "7": {
+      "sql": "SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)"
+    },
+    "8": {
+      "sql": "DELETE FROM django_celery_beat_clockedschedule WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)"
+    },
+    "9": {
+      "sql": "SAVEPOINT native_dvr_clocked_postdelete"
+    },
+    "10": {
+      "sql": "RELEASE SAVEPOINT native_dvr_clocked_postdelete"
+    },
+    "11": {
+      "sql": "SELECT ident::bigint FROM django_celery_beat_periodictasks WHERE ident=1 FOR UPDATE"
+    },
+    "12": {
+      "sql": "UPDATE django_celery_beat_periodictasks SET last_update=$1 WHERE ident=1"
+    },
+    "13": {
+      "sql": "SELECT p.id::bigint,p.clocked_id::bigint,c.clocked_time,jsonb_build_object('task',p.task,'args',CASE WHEN octet_length(p.args)<=2048 THEN p.args ELSE NULL END,'kwargs',CASE WHEN octet_length(p.kwargs)<=1024 THEN p.kwargs ELSE NULL END,'headers',CASE WHEN octet_length(p.headers)<=1024 THEN p.headers ELSE NULL END,'bounded',octet_length(p.args)<=2048 AND octet_length(p.kwargs)<=1024 AND (p.headers IS NULL OR octet_length(p.headers)<=1024),'queue',p.queue,'exchange',p.exchange,'routing_key',p.routing_key,'priority',p.priority,'expires',p.expires,'expire_seconds',p.expire_seconds,'one_off',p.one_off,'start_time',p.start_time,'other_schedule',p.interval_id IS NOT NULL OR p.crontab_id IS NOT NULL OR p.solar_id IS NOT NULL) FROM django_celery_beat_periodictask p JOIN django_celery_beat_clockedschedule c ON c.id=p.clocked_id WHERE p.name=$1 LIMIT 2"
+    },
+    "14": {
+      "sql": "SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictasks WHERE ident=1),EXISTS(SELECT 1 FROM epg_epgsource WHERE refresh_task_id=$1),EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE refresh_task_id=$1),EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$2 AND id<>$1)"
+    },
+    "15": {
+      "sql": "ROLLBACK"
+    }
+  },
+  "observer_only_no_hold_stages": [],
+  "connection_cap": 32,
+  "event_cap": 6000,
+  "ledger_bytes_cap": 16777216
+}

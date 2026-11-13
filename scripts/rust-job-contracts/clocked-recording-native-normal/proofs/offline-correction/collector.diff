@@ -1,0 +1,16 @@
+--- executed-normal3/native_contract.py
++++ offline-only/native_contract.py
+@@ -147,11 +147,11 @@
+  require(len(active)>=2 and active[-1]['monotonic']-active[0]['monotonic']>=.25,'SustainedActualActiveKeyObservation')
+  trace=native['actual_run']['active_observations'];kinds=[row['kind']for row in trace]
+  require(kinds[:3]==['before-active','before-auxiliary','acquired']and kinds[-2:]==['after-auxiliary','removed']and all(kind=='renewed'for kind in kinds[3:-2]),'DeclaredActualActiveLifecycleOrder')
+- require(trace[0]['observation']['value']==[0,-2]and trace[2]['observation']['value']is True and trace[-1]['observation']['value']is True,'ActualAbsentThenNXAcquireThenRemoveReplies')
++ require(exact(trace[0]['observation']['value'],[0,-2])and trace[2]['observation']['value']is True and integer(trace[-1]['observation']['value'],1,1),'ActualAbsentThenNXAcquireThenRemoveReplies')
+  require(trace[1]['observation']['absent']is True and trace[-2]['observation']['absent']is True,'ActualViewerAndProxyAbsenceObservations')
+  for row in trace:
+   observed=row['observation'];require(begin<=utc(observed['before_utc'])<=utc(observed['after_utc'])<=end,'OwnActiveCommandClockIntervals')
+-  if row['kind']=='renewed':require(observed['value']is True,'ActualRenewalReplyTrue')
++  if row['kind']=='renewed':require(integer(observed['value'],1,1),'ActualRenewalReplyIntegerOne')
+  capture_elapsed=(utc(processes[0]['settled_utc'])-utc(processes[0]['started_utc'])).total_seconds()
+  if capture_elapsed>20:
+   require('renewed'in kinds and any(later['active_rows'][0]['ttl']>earlier['active_rows'][0]['ttl']+5 for earlier,later in zip(active,active[1:])),'Actual45SecondTTLResetDuringCapturedLongerThan20SecondBody')

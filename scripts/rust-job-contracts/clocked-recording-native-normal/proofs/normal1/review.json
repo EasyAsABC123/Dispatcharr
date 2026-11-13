@@ -1,0 +1,119 @@
+{
+  "review_completed": true,
+  "Native_normal_qualification": false,
+  "actual_host_exit": 1,
+  "actual_guest_exit": 1,
+  "exact_pre_Native_exception": "[Errno 2] No such file or directory: '/data/recordings'",
+  "Source_prefix_checks_passed": 12,
+  "Native_ELF_or_task_started": false,
+  "Native_runtime_constructor_executed": false,
+  "Native_SQL_connections": 0,
+  "default6259_bytes_equal": true,
+  "default_schema": {
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "sequences": 59,
+    "tables": 62
+  },
+  "actual_host_commands_settled": 50,
+  "original_container_PID_records_absent": 11,
+  "cleanup_seconds": 2.0672712000086904,
+  "fresh_exact_owned_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-18527867f9"
+      ],
+      "pid": 2776292,
+      "starttime": "32339793",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-18527867f9"
+      ],
+      "pid": 2776311,
+      "starttime": "32339795",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--format",
+        "{{.Name}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-18527867f9"
+      ],
+      "pid": 2776328,
+      "starttime": "32339797",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=18e5e6723b90f5df7a6792238de11a4e7c4571120c9968cd696181428a405448"
+      ],
+      "pid": 2776346,
+      "starttime": "32339799",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=10ec74569a6a7462638f1b10e9de284ef4bda4bb11b73ee50b565484072e9f00"
+      ],
+      "pid": 2776364,
+      "starttime": "32339802",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "raw_integration_sha256": "0b70b7666e43226bf946779c08f9dac1f83688b330748fd1eb6694d407acc61b",
+  "raw_mixed_sha256": "28409f21c89d3fb79838bb3e92f7838805eea3ae8086902cc54bef398a15d904",
+  "classification": "collector failed at os.stat root UID before NativeJob construction. Library also currently requires a pre-existing owned root; Source3 starts absent and Original creates it. Pre-provisioning as explicit fixture infrastructure is a narrower context, not proof of fresh-root creation parity. No Native result/ACK/media acceptance.",
+  "no_repeat_or_raw_mutation": true
+}

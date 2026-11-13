@@ -1,0 +1,129 @@
+{
+  "review_completed": true,
+  "Native_normal_qualification": false,
+  "actual_host_exit": 1,
+  "actual_guest_exit": 1,
+  "Source_prefix_checks_passed": 12,
+  "Native_ELF_started": true,
+  "actual_runtime_outcome": {
+    "kind": "Operational",
+    "diagnostic": "Store(Sql { stage: Context, source: Database(PgDatabaseError { severity: Error, code: \"42P01\", message: \"relation \\\"connect_integration\\\" does not exist\", detail: None, hint: None, position: Some(Original(33)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_relation.c\"), line: Some(1449), routine: Some(\"parserOpenTable\") }), settlement: None })"
+  },
+  "root_before_admission": {
+    "exists": false,
+    "parent_uid": 0,
+    "parent_inode": 1
+  },
+  "root_after_failure_observed": false,
+  "fresh_root_creation_qualified": false,
+  "actual_snapshot_scope": "one during-peer sample: DVR frame retained, scheduled row, absent backend/active key; no post-failure FIFO/root snapshot claim",
+  "default6259_bytes_equal": true,
+  "default_schema": {
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "sequences": 59,
+    "tables": 62
+  },
+  "actual_host_commands_settled": 49,
+  "original_container_PID_records_absent": 11,
+  "cleanup_seconds": 2.044853614002932,
+  "fresh_exact_owned_queries": [
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-9b1eb6898b"
+      ],
+      "pid": 2961327,
+      "starttime": "32636183",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-9b1eb6898b"
+      ],
+      "pid": 2961345,
+      "starttime": "32636184",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "--format",
+        "{{.Name}}",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-configured-source-9b1eb6898b"
+      ],
+      "pid": 2961364,
+      "starttime": "32636185",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=50c31c48c5bc45fb89d73cfbec81d4010cbc943119a360e007e8dc5573e2eb6d"
+      ],
+      "pid": 2961382,
+      "starttime": "32636186",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}",
+        "--filter",
+        "id=4afef5c555513b39ce6d13fbd18c4e121ce491a81e370f07fc4054045a8b7c68"
+      ],
+      "pid": 2961399,
+      "starttime": "32636187",
+      "actual_exit": 0,
+      "physically_settled": true,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "raw_integration_sha256": "da0b44cd20d61597b5f7f4cb3ca960259995c91fe12aac17bcd6b9623943fc6b",
+  "raw_mixed_sha256": "f9b9f5738d111b75f3870041564513c90ea01af25f9ae198e7c26bfcb66427e6",
+  "raw_peer_sha256": "3f69e686ca3702e15fec129f2ba4b232e0f6891a4a8fa6e7c3df69759cd18dea",
+  "classification": "real incorrect Context relation identifier before admission/ACK or root creation; physical resources settled; no Native media/result qualification",
+  "no_repeat_or_raw_mutation": true
+}

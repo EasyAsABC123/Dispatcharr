@@ -1,0 +1,88 @@
+{
+  "base": "7e62363e06a3119c45436db7d2b01887317d279c",
+  "preimages": {
+    "rust/crates/store/src/lib.rs": "d97356c1a785355884b333f4b29743a71070b7308d90d964fbaa5d5e053b4728",
+    "rust/crates/job-transport/src/lib.rs": "8b8aa0389cd8381ca1363b08a0154643ed8ef8260972f6910769a7e870d38513",
+    "rust/crates/job-transport/src/transport.rs": "93c71688a8390f1e1f1fcbe43659dcd1ee238a9c65554addce722f9c5c5de7d4",
+    "rust/crates/ingest-epg/src/cache_policy.rs": "ea4569b9aa822645afc1d6e870d1538492f2afc848cc09eb3d815f33e74e32ed",
+    "rust/crates/job-transport/Cargo.toml": "aeab8d68c9f389c6bc14a553c66851e7487970e730cea5ab24cf7abad4bb2dad",
+    "rust/Cargo.lock": "fb06215cf3ea06811face8905f8015a9992376e9c992a2ce5887e220432f167e"
+  },
+  "new_or_changed": {
+    "rust/crates/job-transport/src/recording_active.rs": "54603963ef96e23a9c27493e5448e1ab5a8fd57b7a5ceaa978ee3aca10c419c1",
+    "rust/crates/job-transport/src/recording_cleanup.rs": "3809e22245a524f09e0f2d199f1ff7a4d22ff80fa34e7f9958d31ce14d8db1e1",
+    "rust/crates/job-transport/src/recording_dvr.rs": "25966d199911166bc9d421faf0477393820016d3eec0fd17dcd8c4ad1017f971",
+    "rust/crates/job-transport/src/recording_dvr_transport.rs": "a629659bea2f4fd28a70176e387c1c6e25153ddbfe9cfa0f4f8849dd96e3f79f",
+    "rust/crates/job-transport/src/recording_events.rs": "225b2c6cc03a37bb092020970c015555397fd0393017627663f192e338a05694",
+    "rust/crates/job-transport/src/recording_files.rs": "3c4f665ed80abd09348e64074e836bf64ff6cfcd24a5e3316d2be23b30c40c56",
+    "rust/crates/job-transport/src/recording_normal.rs": "7ee30758265fa8d23f6036b580bdc071f141a5c9ea13d3f4006974452deb578e",
+    "rust/crates/job-transport/src/recording_process.rs": "723ab9affae85718b2d93ae35b9890f30a1b25fc3e2c7b08b7add2e7c42d0cde",
+    "rust/crates/job-transport/src/recording_settings.rs": "b70e98763a9477c3dbb4735eb09ce006353a17d8a37733424167216ea670b417",
+    "rust/crates/store/src/recording_beat_cleanup.rs": "fabee69ed74fdb0f7b246b28a767fbcdfc488fc20ce72e5d619dbd572f4f78cd",
+    "rust/crates/store/src/recording_capture.rs": "71091cb4dd39fc4bf81547296a2e816a21ebb4a19604b027e87a04e43af9443f",
+    "rust/crates/store/src/lib.rs": "39517cb82a2fb46bf5a3675dab6499cbee60510d9feb1de07658017895c50807",
+    "rust/crates/job-transport/src/lib.rs": "3571e199e390fa7b0c2662b106f97753cb45e49fcb24a6ced6cd0561febf461a",
+    "rust/crates/job-transport/src/transport.rs": "91c1e08314cf00273abf814858f0b8ceff917ccb6ee769f77986137a6fa62e2d",
+    "rust/crates/ingest-epg/src/cache_policy.rs": "3fcf3f6d76f2397205e665f5f3f4eacdb3e5c0e6c1c8b775f48c10e207899b79",
+    "rust/crates/job-transport/Cargo.toml": "bbf404d296607eef2d7ba1eaee36e52978010238e8a72b4b76d6dca6c6e732de",
+    "rust/Cargo.lock": "380d1097e3b320e7354074f7ca9d25995dd40d68a5e732b76fa8eca3e02d4ed9",
+    "rust/crates/job-transport/src/recording_dvr_authority_tests.rs": "58edda990cd58ad166d9a8959541dde5fe077d7ed6a4a689a219e0da73e962dc",
+    "rust/crates/job-transport/src/recording_dvr_peer.rs": "67b922699e0ee8cd7464839ca487e3363d7b6440e490d3129f567ff053069e99",
+    "rust/crates/job-transport/src/recording_process_owned_tests.rs": "746559afde7b5740f5a4567fb23686e3ab09151b2fe1b7dff322cfd8c47c0c05",
+    "rust/crates/job-transport/src/recording_root.rs": "a60aa8764e3de8a02a9d289a496492868c68808dba11b5efad7428275856037b",
+    "rust/crates/job-transport/src/recording_dvr_physical_peer.rs": "efa8d23d73472aa45a04455e701a30a52ffebd448b1c81bcd6219df6a2d41a52",
+    "rust/crates/store/src/recording_sql_schema_peer.rs": "7a4a7050d2eda20a860706575a324d6e176a08daa27a163bb5c44841844ae2f1"
+  },
+  "exact_old_generic_role_allowlist": [
+    "Fixture",
+    "Index",
+    "Refresh",
+    "LocalArtworkFixture(cfgtest only)"
+  ],
+  "13_existing_methods_use_positive_allowlist": true,
+  "old_role_truth_tables_preserved": true,
+  "external_packages_versions_checksums_unchanged": true,
+  "build_or_app_executed": false,
+  "qa3_source2_preimages": {
+    "rust/crates/job-transport/src/recording_dvr_authority_tests.rs": null,
+    "rust/crates/job-transport/src/recording_process.rs": "b54333b91f4704115226d55ab580b2b32f8b15a71877b2b5f510b01d361a565f",
+    "rust/crates/job-transport/src/transport.rs": "a6e1a9d04663f253f061831812fdd1b87d296c593b8ab5ce32819eb354a5e233"
+  },
+  "qa4_preimages": {
+    "rust/crates/store/src/recording_beat_cleanup.rs": "c6a6ed363e2f3f61d207e691506585588d6f87859ba175d3e4f9e0b5abef4f2a"
+  },
+  "qa5_preimages": {
+    "rust/crates/job-transport/src/recording_process.rs": "c7778fa2c37cd275e19148c94980bcb022a135c8b2b4790c76c2321cb57f7e1d",
+    "rust/crates/job-transport/src/recording_dvr.rs": "954df1b516b606393d49d32752897d477ee795da2ccdf5c992ea2c474f5c7d4c"
+  },
+  "normal_qa6_preimages": {
+    "rust/crates/job-transport/src/recording_dvr_peer.rs": null,
+    "rust/crates/job-transport/src/lib.rs": "f06b6a4ce26ad6e9b1f054b931a6b2add41c73dcf68b5ba640315a133a0150e7"
+  },
+  "normal_qa7_preimages": {
+    "rust/crates/job-transport/src/recording_dvr_peer.rs": "87300a9d2d1495c1c5a855ea824c1019748ea6c1132cde8d3861e9d54bd92482"
+  },
+  "process8_preimages": {
+    "rust/crates/job-transport/src/recording_process_owned_tests.rs": null,
+    "rust/crates/job-transport/src/recording_process.rs": "e35b2c1ff31206a988d97fad57c1c71cc34faa1e0fc85e18b09c90d82be12572"
+  },
+  "root9_preimages": {
+    "rust/crates/job-transport/src/recording_root.rs": null,
+    "rust/crates/job-transport/src/recording_files.rs": "c296bfd4e63737dd3764299517aa1ac655c412eb1797765410c35bdfa7b3ce2e",
+    "rust/crates/job-transport/src/recording_dvr_peer.rs": "e8fdd1fe36be2ad555d52dd62f95a06b77c6c58746637c72b4f53d52cdfa0b33"
+  },
+  "physical10_preimages": {
+    "rust/crates/job-transport/src/recording_dvr_physical_peer.rs": null,
+    "rust/crates/job-transport/src/lib.rs": "8d36dc4e33a3c380e3791a3a8c6cf71b3bc89be9d4b841ecf617036819da8a99"
+  },
+  "sql13_preimages": {
+    "rust/crates/store/src/recording_capture.rs": "1d3281901b3e9dbe5ad95cc3aed54a4af2df9577879e156aee1e58fcd816f4a0"
+  },
+  "schema14_preimages": {
+    "rust/crates/store/src/lib.rs": "b457215e42d52f96e5d8e9ef7b6d8ab2a8883daaf510b3141144480a341f33ff",
+    "rust/crates/store/src/recording_sql_schema_peer.rs": null
+  },
+  "schema15_preimages": {
+    "rust/crates/store/src/recording_sql_schema_peer.rs": "8fcf04435fcb99ad9479ed8eb66e28abd1270c39f71c053898b1934adec1d3c9"
+  }
+}

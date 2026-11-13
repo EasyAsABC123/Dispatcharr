@@ -1,0 +1,1852 @@
+{
+  "offline_comparison_passed": true,
+  "executed_host_exit_preserved": 1,
+  "actual_guest_exit": 0,
+  "no_app_replay": true,
+  "raw_sha256": "ee5b9c6b1ee8351ecb4f012df504ea82c3d24cc58b25dee4211bd37165b44893",
+  "correction_seal_sha256": "b990e4654edff2ec0ac090e314e8f860b6a475c1943becf6372bfa6b565050a8",
+  "acceptance": {
+    "passed": true,
+    "scope": "one fresh Source model/artwork/Beat \u2192 inert Native normal DVR; no full graph/fault/cache-decoder/long lock claim",
+    "actual_Task_UUID": "5e0244a4-253a-48d5-903c-ab8726c0dda7",
+    "actual_model_Recording_id": 1,
+    "all_temporal_fields_retained": true,
+    "temporal_inventory": [
+      {
+        "path": "$.cases[0].anchor_utc",
+        "raw": "2026-11-13T22:07:37+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37+00:00"
+      },
+      {
+        "path": "$.cases[0].finished_utc",
+        "raw": "2026-11-13T22:09:08.784660+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.784660+00:00"
+      },
+      {
+        "path": "$.worker_exit_receipts[0].began_utc",
+        "raw": "2026-11-13T22:07:37.437202+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.437202+00:00"
+      },
+      {
+        "path": "$.worker_exit_receipts[0].finished_utc",
+        "raw": "2026-11-13T22:07:40.651793+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.651793+00:00"
+      },
+      {
+        "path": "$.worker_exit_receipts[1].began_utc",
+        "raw": "2026-11-13T22:07:40.698990+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.698990+00:00"
+      },
+      {
+        "path": "$.worker_exit_receipts[1].finished_utc",
+        "raw": "2026-11-13T22:08:37.330799+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.330799+00:00"
+      },
+      {
+        "path": "$.worker_exit_receipts[2].began_utc",
+        "raw": "2026-11-13T22:08:37.393518+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.393518+00:00"
+      },
+      {
+        "path": "$.worker_exit_receipts[2].finished_utc",
+        "raw": "2026-11-13T22:09:08.516604+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.516604+00:00"
+      },
+      {
+        "path": "$.initial_periodic_rows[0].date_changed",
+        "raw": "2026-11-13 22:07:32.553226+00:00",
+        "parsed_UTC": "2026-11-13T22:07:32.553226+00:00"
+      },
+      {
+        "path": "$.seed.anchor_utc",
+        "raw": "2026-11-13T22:07:37+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37+00:00"
+      },
+      {
+        "path": "$.seed.start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.seed.end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.setup.utc",
+        "raw": "2026-11-13T22:07:37.383463+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.383463+00:00"
+      },
+      {
+        "path": "$.setup.channels[0].created_at",
+        "raw": "2026-11-13 22:07:34.579470+00:00",
+        "parsed_UTC": "2026-11-13T22:07:34.579470+00:00"
+      },
+      {
+        "path": "$.setup.channels[0].updated_at",
+        "raw": "2026-11-13 22:07:34.579474+00:00",
+        "parsed_UTC": "2026-11-13T22:07:34.579474+00:00"
+      },
+      {
+        "path": "$.setup.channels[1].created_at",
+        "raw": "2026-11-13 22:07:37.324783+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324783+00:00"
+      },
+      {
+        "path": "$.setup.channels[1].updated_at",
+        "raw": "2026-11-13 22:07:37.324789+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324789+00:00"
+      },
+      {
+        "path": "$.setup.recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.setup.recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.setup.periodic[0].date_changed",
+        "raw": "2026-11-13 22:07:32.553226+00:00",
+        "parsed_UTC": "2026-11-13T22:07:32.553226+00:00"
+      },
+      {
+        "path": "$.setup.periodic[1].date_changed",
+        "raw": "2026-11-13 22:07:37.344317+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.344317+00:00"
+      },
+      {
+        "path": "$.setup.clocked[0].clocked_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.setup.sentinel[0].last_update",
+        "raw": "2026-11-13 22:07:37.345718+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.345718+00:00"
+      },
+      {
+        "path": "$.setup.plugin_repos[0].created_at",
+        "raw": "2026-11-13 22:07:33.754163+00:00",
+        "parsed_UTC": "2026-11-13T22:07:33.754163+00:00"
+      },
+      {
+        "path": "$.setup.plugin_repos[0].updated_at",
+        "raw": "2026-11-13 22:07:33.754169+00:00",
+        "parsed_UTC": "2026-11-13T22:07:33.754169+00:00"
+      },
+      {
+        "path": "$.setup.movies[0].created_at",
+        "raw": "2026-11-13 22:07:37.322976+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322976+00:00"
+      },
+      {
+        "path": "$.setup.movies[0].updated_at",
+        "raw": "2026-11-13 22:07:37.322984+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322984+00:00"
+      },
+      {
+        "path": "$.setup_publications[0].headers.eta",
+        "raw": "2026-11-13T22:07:38.372026+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.372026+00:00"
+      },
+      {
+        "path": "$.setup_publications[0].utc",
+        "raw": "2026-11-13T22:07:37.379977+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.379977+00:00"
+      },
+      {
+        "path": "$.admission_celery.utc",
+        "raw": "2026-11-13T22:07:37.429321+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.429321+00:00"
+      },
+      {
+        "path": "$.admission_celery.frames[0].frame.headers.eta",
+        "raw": "2026-11-13T22:07:38.372026+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.372026+00:00"
+      },
+      {
+        "path": "$.admission_celery.all_publications[0].headers.eta",
+        "raw": "2026-11-13T22:07:38.372026+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.372026+00:00"
+      },
+      {
+        "path": "$.admission_celery.all_publications[0].utc",
+        "raw": "2026-11-13T22:07:37.379977+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.379977+00:00"
+      },
+      {
+        "path": "$.worker_starts[0].utc",
+        "raw": "2026-11-13T22:07:37.439805+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.439805+00:00"
+      },
+      {
+        "path": "$.worker_starts[1].utc",
+        "raw": "2026-11-13T22:07:40.700744+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.700744+00:00"
+      },
+      {
+        "path": "$.worker_starts[2].utc",
+        "raw": "2026-11-13T22:08:37.395119+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.395119+00:00"
+      },
+      {
+        "path": "$.artwork.raw_result.metadata.date_done",
+        "raw": "2026-11-13T22:07:38.801544+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.801544+00:00"
+      },
+      {
+        "path": "$.artwork.prerun[0].utc",
+        "raw": "2026-11-13T22:07:38.772789+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.772789+00:00"
+      },
+      {
+        "path": "$.artwork.postrun[0].utc",
+        "raw": "2026-11-13T22:07:38.803042+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.803042+00:00"
+      },
+      {
+        "path": "$.artwork.publications[0].headers.eta",
+        "raw": "2026-11-13T22:07:38.372026+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.372026+00:00"
+      },
+      {
+        "path": "$.artwork.publications[0].utc",
+        "raw": "2026-11-13T22:07:37.379977+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.379977+00:00"
+      },
+      {
+        "path": "$.artwork.Original_AsyncResult_get.began_utc",
+        "raw": "2026-11-13T22:07:40.654955+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.654955+00:00"
+      },
+      {
+        "path": "$.artwork.Original_AsyncResult_get.finished_utc",
+        "raw": "2026-11-13T22:07:40.655744+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.655744+00:00"
+      },
+      {
+        "path": "$.after_artwork.utc",
+        "raw": "2026-11-13T22:07:40.655757+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.655757+00:00"
+      },
+      {
+        "path": "$.after_artwork.channels[0].created_at",
+        "raw": "2026-11-13 22:07:34.579470+00:00",
+        "parsed_UTC": "2026-11-13T22:07:34.579470+00:00"
+      },
+      {
+        "path": "$.after_artwork.channels[0].updated_at",
+        "raw": "2026-11-13 22:07:34.579474+00:00",
+        "parsed_UTC": "2026-11-13T22:07:34.579474+00:00"
+      },
+      {
+        "path": "$.after_artwork.channels[1].created_at",
+        "raw": "2026-11-13 22:07:37.324783+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324783+00:00"
+      },
+      {
+        "path": "$.after_artwork.channels[1].updated_at",
+        "raw": "2026-11-13 22:07:37.324789+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324789+00:00"
+      },
+      {
+        "path": "$.after_artwork.recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.after_artwork.recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.after_artwork.periodic[0].date_changed",
+        "raw": "2026-11-13 22:07:32.553226+00:00",
+        "parsed_UTC": "2026-11-13T22:07:32.553226+00:00"
+      },
+      {
+        "path": "$.after_artwork.periodic[1].date_changed",
+        "raw": "2026-11-13 22:07:37.344317+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.344317+00:00"
+      },
+      {
+        "path": "$.after_artwork.clocked[0].clocked_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.after_artwork.sentinel[0].last_update",
+        "raw": "2026-11-13 22:07:37.345718+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.345718+00:00"
+      },
+      {
+        "path": "$.after_artwork.plugin_repos[0].created_at",
+        "raw": "2026-11-13 22:07:33.754163+00:00",
+        "parsed_UTC": "2026-11-13T22:07:33.754163+00:00"
+      },
+      {
+        "path": "$.after_artwork.plugin_repos[0].updated_at",
+        "raw": "2026-11-13 22:07:33.754169+00:00",
+        "parsed_UTC": "2026-11-13T22:07:33.754169+00:00"
+      },
+      {
+        "path": "$.after_artwork.movies[0].created_at",
+        "raw": "2026-11-13 22:07:37.322976+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322976+00:00"
+      },
+      {
+        "path": "$.after_artwork.movies[0].updated_at",
+        "raw": "2026-11-13 22:07:37.322984+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322984+00:00"
+      },
+      {
+        "path": "$.after_artwork.backend.8c144ef0-fb5d-4ea5-b945-1b994c015176.metadata.date_done",
+        "raw": "2026-11-13T22:07:38.801544+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.801544+00:00"
+      },
+      {
+        "path": "$.admission_dvr.utc",
+        "raw": "2026-11-13T22:08:37.334932+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.334932+00:00"
+      },
+      {
+        "path": "$.admission_dvr.frames[0].decoded_body[0][2]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.admission_dvr.frames[0].decoded_body[0][3]",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.admission_dvr.all_publications[0].headers.eta",
+        "raw": "2026-11-13T22:07:38.372026+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.372026+00:00"
+      },
+      {
+        "path": "$.admission_dvr.all_publications[0].utc",
+        "raw": "2026-11-13T22:07:37.379977+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.379977+00:00"
+      },
+      {
+        "path": "$.admission_dvr.all_publications[1].utc",
+        "raw": "2026-11-13T22:08:02.136817+00:00",
+        "parsed_UTC": "2026-11-13T22:08:02.136817+00:00"
+      },
+      {
+        "path": "$.admission_dvr.all_publications[2].utc",
+        "raw": "2026-11-13T22:08:22.154972+00:00",
+        "parsed_UTC": "2026-11-13T22:08:22.154972+00:00"
+      },
+      {
+        "path": "$.admission_dvr.all_publications[3].body[0][2]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.admission_dvr.all_publications[3].body[0][3]",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.admission_dvr.all_publications[3].utc",
+        "raw": "2026-11-13T22:08:37.029797+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.029797+00:00"
+      },
+      {
+        "path": "$.recording_dispatch.decoded_body[0][2]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.recording_dispatch.decoded_body[0][3]",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.after_beat.utc",
+        "raw": "2026-11-13T22:08:37.341109+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.341109+00:00"
+      },
+      {
+        "path": "$.after_beat.channels[0].created_at",
+        "raw": "2026-11-13 22:07:34.579470+00:00",
+        "parsed_UTC": "2026-11-13T22:07:34.579470+00:00"
+      },
+      {
+        "path": "$.after_beat.channels[0].updated_at",
+        "raw": "2026-11-13 22:07:34.579474+00:00",
+        "parsed_UTC": "2026-11-13T22:07:34.579474+00:00"
+      },
+      {
+        "path": "$.after_beat.channels[1].created_at",
+        "raw": "2026-11-13 22:07:37.324783+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324783+00:00"
+      },
+      {
+        "path": "$.after_beat.channels[1].updated_at",
+        "raw": "2026-11-13 22:07:37.324789+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324789+00:00"
+      },
+      {
+        "path": "$.after_beat.recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.after_beat.recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[0].date_changed",
+        "raw": "2026-11-13 22:07:32.553226+00:00",
+        "parsed_UTC": "2026-11-13T22:07:32.553226+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[1].last_run_at",
+        "raw": "2026-11-13 22:08:37.029401+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.029401+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[1].date_changed",
+        "raw": "2026-11-13 22:08:37.096976+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.096976+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[2].date_changed",
+        "raw": "2026-11-13 22:07:42.050052+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.050052+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[3].date_changed",
+        "raw": "2026-11-13 22:07:42.076385+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.076385+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[4].last_run_at",
+        "raw": "2026-11-13 22:08:22.154623+00:00",
+        "parsed_UTC": "2026-11-13T22:08:22.154623+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[4].date_changed",
+        "raw": "2026-11-13 22:08:37.090668+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.090668+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[5].date_changed",
+        "raw": "2026-11-13 22:07:42.119675+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.119675+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[6].date_changed",
+        "raw": "2026-11-13 22:07:42.143142+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.143142+00:00"
+      },
+      {
+        "path": "$.after_beat.periodic[7].date_changed",
+        "raw": "2026-11-13 22:07:42.164267+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.164267+00:00"
+      },
+      {
+        "path": "$.after_beat.clocked[0].clocked_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.after_beat.sentinel[0].last_update",
+        "raw": "2026-11-13 22:07:42.165621+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.165621+00:00"
+      },
+      {
+        "path": "$.after_beat.plugin_repos[0].created_at",
+        "raw": "2026-11-13 22:07:33.754163+00:00",
+        "parsed_UTC": "2026-11-13T22:07:33.754163+00:00"
+      },
+      {
+        "path": "$.after_beat.plugin_repos[0].updated_at",
+        "raw": "2026-11-13 22:07:33.754169+00:00",
+        "parsed_UTC": "2026-11-13T22:07:33.754169+00:00"
+      },
+      {
+        "path": "$.after_beat.movies[0].created_at",
+        "raw": "2026-11-13 22:07:37.322976+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322976+00:00"
+      },
+      {
+        "path": "$.after_beat.movies[0].updated_at",
+        "raw": "2026-11-13 22:07:37.322984+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322984+00:00"
+      },
+      {
+        "path": "$.after_beat.backend.8c144ef0-fb5d-4ea5-b945-1b994c015176.metadata.date_done",
+        "raw": "2026-11-13T22:07:38.801544+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.801544+00:00"
+      },
+      {
+        "path": "$.unconsumed_Beat_siblings.rows_in_FIFO_order[0].publication_utc",
+        "raw": "2026-11-13T22:08:22.154972+00:00",
+        "parsed_UTC": "2026-11-13T22:08:22.154972+00:00"
+      },
+      {
+        "path": "$.unconsumed_Beat_siblings.rows_in_FIFO_order[1].publication_utc",
+        "raw": "2026-11-13T22:08:02.136817+00:00",
+        "parsed_UTC": "2026-11-13T22:08:02.136817+00:00"
+      },
+      {
+        "path": "$.unconsumed_Beat_siblings.actual_Beat_began_utc",
+        "raw": "2026-11-13T22:07:40.700744+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.700744+00:00"
+      },
+      {
+        "path": "$.unconsumed_Beat_siblings.actual_Beat_finished_utc",
+        "raw": "2026-11-13T22:08:37.330799+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.330799+00:00"
+      },
+      {
+        "path": "$.native_command_began_utc",
+        "raw": "2026-11-13T22:08:37.391710+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.391710+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[0].utc",
+        "raw": "2026-11-13T22:08:37.396866+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.396866+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[0].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[0].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[1].utc",
+        "raw": "2026-11-13T22:08:38.436198+00:00",
+        "parsed_UTC": "2026-11-13T22:08:38.436198+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[1].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[1].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[2].utc",
+        "raw": "2026-11-13T22:08:39.520664+00:00",
+        "parsed_UTC": "2026-11-13T22:08:39.520664+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[2].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[2].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[3].utc",
+        "raw": "2026-11-13T22:08:40.600833+00:00",
+        "parsed_UTC": "2026-11-13T22:08:40.600833+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[3].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[3].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[4].utc",
+        "raw": "2026-11-13T22:08:41.684509+00:00",
+        "parsed_UTC": "2026-11-13T22:08:41.684509+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[4].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[4].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[5].utc",
+        "raw": "2026-11-13T22:08:42.765597+00:00",
+        "parsed_UTC": "2026-11-13T22:08:42.765597+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[5].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[5].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[6].utc",
+        "raw": "2026-11-13T22:08:43.806059+00:00",
+        "parsed_UTC": "2026-11-13T22:08:43.806059+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[6].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[6].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[6].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[7].utc",
+        "raw": "2026-11-13T22:08:44.887091+00:00",
+        "parsed_UTC": "2026-11-13T22:08:44.887091+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[7].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[7].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[7].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[8].utc",
+        "raw": "2026-11-13T22:08:45.968600+00:00",
+        "parsed_UTC": "2026-11-13T22:08:45.968600+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[8].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[8].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[8].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[9].utc",
+        "raw": "2026-11-13T22:08:47.048050+00:00",
+        "parsed_UTC": "2026-11-13T22:08:47.048050+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[9].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[9].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[9].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[10].utc",
+        "raw": "2026-11-13T22:08:48.127036+00:00",
+        "parsed_UTC": "2026-11-13T22:08:48.127036+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[10].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[10].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[10].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[11].utc",
+        "raw": "2026-11-13T22:08:49.211057+00:00",
+        "parsed_UTC": "2026-11-13T22:08:49.211057+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[11].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[11].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[11].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[12].utc",
+        "raw": "2026-11-13T22:08:50.290828+00:00",
+        "parsed_UTC": "2026-11-13T22:08:50.290828+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[12].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[12].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[12].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[13].utc",
+        "raw": "2026-11-13T22:08:51.338561+00:00",
+        "parsed_UTC": "2026-11-13T22:08:51.338561+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[13].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[13].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[13].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[14].utc",
+        "raw": "2026-11-13T22:08:52.419932+00:00",
+        "parsed_UTC": "2026-11-13T22:08:52.419932+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[14].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[14].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[14].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[15].utc",
+        "raw": "2026-11-13T22:08:53.503266+00:00",
+        "parsed_UTC": "2026-11-13T22:08:53.503266+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[15].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[15].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[15].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[16].utc",
+        "raw": "2026-11-13T22:08:54.587599+00:00",
+        "parsed_UTC": "2026-11-13T22:08:54.587599+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[16].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[16].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[16].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[17].utc",
+        "raw": "2026-11-13T22:08:55.668468+00:00",
+        "parsed_UTC": "2026-11-13T22:08:55.668468+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[17].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[17].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[17].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[18].utc",
+        "raw": "2026-11-13T22:08:56.752515+00:00",
+        "parsed_UTC": "2026-11-13T22:08:56.752515+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[18].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[18].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[18].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[19].utc",
+        "raw": "2026-11-13T22:08:57.834536+00:00",
+        "parsed_UTC": "2026-11-13T22:08:57.834536+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[19].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[19].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[19].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[20].utc",
+        "raw": "2026-11-13T22:08:58.916950+00:00",
+        "parsed_UTC": "2026-11-13T22:08:58.916950+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[20].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[20].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[20].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[21].utc",
+        "raw": "2026-11-13T22:09:00.003022+00:00",
+        "parsed_UTC": "2026-11-13T22:09:00.003022+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[21].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[21].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[21].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[22].utc",
+        "raw": "2026-11-13T22:09:01.082349+00:00",
+        "parsed_UTC": "2026-11-13T22:09:01.082349+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[22].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[22].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[22].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[23].utc",
+        "raw": "2026-11-13T22:09:02.162127+00:00",
+        "parsed_UTC": "2026-11-13T22:09:02.162127+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[23].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[23].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[23].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[24].utc",
+        "raw": "2026-11-13T22:09:03.248667+00:00",
+        "parsed_UTC": "2026-11-13T22:09:03.248667+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[24].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[24].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[24].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[25].utc",
+        "raw": "2026-11-13T22:09:04.332155+00:00",
+        "parsed_UTC": "2026-11-13T22:09:04.332155+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[25].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[25].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[25].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[26].utc",
+        "raw": "2026-11-13T22:09:05.414164+00:00",
+        "parsed_UTC": "2026-11-13T22:09:05.414164+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[26].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[26].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[26].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[27].utc",
+        "raw": "2026-11-13T22:09:06.499318+00:00",
+        "parsed_UTC": "2026-11-13T22:09:06.499318+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[27].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[27].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[27].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[28].utc",
+        "raw": "2026-11-13T22:09:07.582432+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07.582432+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[28].recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[28].recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.native_functional_observations[28].recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.native_command_finished_utc",
+        "raw": "2026-11-13T22:09:08.516658+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.516658+00:00"
+      },
+      {
+        "path": "$.native_dvr.command_began_utc",
+        "raw": "2026-11-13T22:08:37.630122207Z",
+        "parsed_UTC": "2026-11-13T22:08:37.630122+00:00"
+      },
+      {
+        "path": "$.native_dvr.command_returned_utc",
+        "raw": "2026-11-13T22:09:08.460181683Z",
+        "parsed_UTC": "2026-11-13T22:09:08.460181+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.processes.rows[0].started_utc",
+        "raw": "2026-11-13T22:08:43.858799572Z",
+        "parsed_UTC": "2026-11-13T22:08:43.858799+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.processes.rows[0].settled_utc",
+        "raw": "2026-11-13T22:09:07.236963081Z",
+        "parsed_UTC": "2026-11-13T22:09:07.236963+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.processes.rows[1].started_utc",
+        "raw": "2026-11-13T22:09:07.237320340Z",
+        "parsed_UTC": "2026-11-13T22:09:07.237320+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.processes.rows[1].settled_utc",
+        "raw": "2026-11-13T22:09:07.262664216Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262664+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[0].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.917928029Z",
+        "parsed_UTC": "2026-11-13T22:08:38.917928+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[0].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.918266758Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918266+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[1].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.918354891Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918354+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[1].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.918646199Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918646+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[2].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.919017359Z",
+        "parsed_UTC": "2026-11-13T22:08:38.919017+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[2].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.919103642Z",
+        "parsed_UTC": "2026-11-13T22:08:38.919103+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[3].observation.before_utc",
+        "raw": "2026-11-13T22:08:58.859152323Z",
+        "parsed_UTC": "2026-11-13T22:08:58.859152+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[3].observation.after_utc",
+        "raw": "2026-11-13T22:08:58.859563175Z",
+        "parsed_UTC": "2026-11-13T22:08:58.859563+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[4].observation.before_utc",
+        "raw": "2026-11-13T22:09:07.262728438Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262728+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[4].observation.after_utc",
+        "raw": "2026-11-13T22:09:07.262931954Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262931+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[5].observation.before_utc",
+        "raw": "2026-11-13T22:09:08.450702960Z",
+        "parsed_UTC": "2026-11-13T22:09:08.450702+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_before_drain.active_observations[5].observation.after_utc",
+        "raw": "2026-11-13T22:09:08.450954137Z",
+        "parsed_UTC": "2026-11-13T22:09:08.450954+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.processes[0].started_utc",
+        "raw": "2026-11-13T22:08:43.858799572Z",
+        "parsed_UTC": "2026-11-13T22:08:43.858799+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.processes[0].settled_utc",
+        "raw": "2026-11-13T22:09:07.236963081Z",
+        "parsed_UTC": "2026-11-13T22:09:07.236963+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.processes[1].started_utc",
+        "raw": "2026-11-13T22:09:07.237320340Z",
+        "parsed_UTC": "2026-11-13T22:09:07.237320+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.processes[1].settled_utc",
+        "raw": "2026-11-13T22:09:07.262664216Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262664+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[0].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.917928029Z",
+        "parsed_UTC": "2026-11-13T22:08:38.917928+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[0].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.918266758Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918266+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[1].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.918354891Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918354+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[1].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.918646199Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918646+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[2].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.919017359Z",
+        "parsed_UTC": "2026-11-13T22:08:38.919017+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[2].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.919103642Z",
+        "parsed_UTC": "2026-11-13T22:08:38.919103+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[3].observation.before_utc",
+        "raw": "2026-11-13T22:08:58.859152323Z",
+        "parsed_UTC": "2026-11-13T22:08:58.859152+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[3].observation.after_utc",
+        "raw": "2026-11-13T22:08:58.859563175Z",
+        "parsed_UTC": "2026-11-13T22:08:58.859563+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[4].observation.before_utc",
+        "raw": "2026-11-13T22:09:07.262728438Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262728+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[4].observation.after_utc",
+        "raw": "2026-11-13T22:09:07.262931954Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262931+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[5].observation.before_utc",
+        "raw": "2026-11-13T22:09:08.450702960Z",
+        "parsed_UTC": "2026-11-13T22:09:08.450702+00:00"
+      },
+      {
+        "path": "$.native_dvr.actual_run.active_observations[5].observation.after_utc",
+        "raw": "2026-11-13T22:09:08.450954137Z",
+        "parsed_UTC": "2026-11-13T22:09:08.450954+00:00"
+      },
+      {
+        "path": "$.native_dvr.drain.returned_utc",
+        "raw": "2026-11-13T22:09:08.483621196Z",
+        "parsed_UTC": "2026-11-13T22:09:08.483621+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.processes.rows[0].started_utc",
+        "raw": "2026-11-13T22:08:43.858799572Z",
+        "parsed_UTC": "2026-11-13T22:08:43.858799+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.processes.rows[0].settled_utc",
+        "raw": "2026-11-13T22:09:07.236963081Z",
+        "parsed_UTC": "2026-11-13T22:09:07.236963+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.processes.rows[1].started_utc",
+        "raw": "2026-11-13T22:09:07.237320340Z",
+        "parsed_UTC": "2026-11-13T22:09:07.237320+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.processes.rows[1].settled_utc",
+        "raw": "2026-11-13T22:09:07.262664216Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262664+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[0].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.917928029Z",
+        "parsed_UTC": "2026-11-13T22:08:38.917928+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[0].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.918266758Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918266+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[1].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.918354891Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918354+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[1].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.918646199Z",
+        "parsed_UTC": "2026-11-13T22:08:38.918646+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[2].observation.before_utc",
+        "raw": "2026-11-13T22:08:38.919017359Z",
+        "parsed_UTC": "2026-11-13T22:08:38.919017+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[2].observation.after_utc",
+        "raw": "2026-11-13T22:08:38.919103642Z",
+        "parsed_UTC": "2026-11-13T22:08:38.919103+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[3].observation.before_utc",
+        "raw": "2026-11-13T22:08:58.859152323Z",
+        "parsed_UTC": "2026-11-13T22:08:58.859152+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[3].observation.after_utc",
+        "raw": "2026-11-13T22:08:58.859563175Z",
+        "parsed_UTC": "2026-11-13T22:08:58.859563+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[4].observation.before_utc",
+        "raw": "2026-11-13T22:09:07.262728438Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262728+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[4].observation.after_utc",
+        "raw": "2026-11-13T22:09:07.262931954Z",
+        "parsed_UTC": "2026-11-13T22:09:07.262931+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[5].observation.before_utc",
+        "raw": "2026-11-13T22:09:08.450702960Z",
+        "parsed_UTC": "2026-11-13T22:09:08.450702+00:00"
+      },
+      {
+        "path": "$.native_dvr.diagnostics_after_drain.active_observations[5].observation.after_utc",
+        "raw": "2026-11-13T22:09:08.450954137Z",
+        "parsed_UTC": "2026-11-13T22:09:08.450954+00:00"
+      },
+      {
+        "path": "$.native_dvr.completed_utc",
+        "raw": "2026-11-13T22:09:08.504458257Z",
+        "parsed_UTC": "2026-11-13T22:09:08.504458+00:00"
+      },
+      {
+        "path": "$.recording_task.raw_result.metadata.date_done",
+        "raw": "2026-11-13T22:09:08.451049+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.451049+00:00"
+      },
+      {
+        "path": "$.recording_task.publications[0].body[0][2]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.recording_task.publications[0].body[0][3]",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.recording_task.publications[0].utc",
+        "raw": "2026-11-13T22:08:37.029797+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.029797+00:00"
+      },
+      {
+        "path": "$.recording_task.Original_AsyncResult_get.began_utc",
+        "raw": "2026-11-13T22:09:08.572896+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.572896+00:00"
+      },
+      {
+        "path": "$.recording_task.Original_AsyncResult_get.finished_utc",
+        "raw": "2026-11-13T22:09:08.573324+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.573324+00:00"
+      },
+      {
+        "path": "$.final.utc",
+        "raw": "2026-11-13T22:09:08.573335+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.573335+00:00"
+      },
+      {
+        "path": "$.final.channels[0].created_at",
+        "raw": "2026-11-13 22:07:34.579470+00:00",
+        "parsed_UTC": "2026-11-13T22:07:34.579470+00:00"
+      },
+      {
+        "path": "$.final.channels[0].updated_at",
+        "raw": "2026-11-13 22:07:34.579474+00:00",
+        "parsed_UTC": "2026-11-13T22:07:34.579474+00:00"
+      },
+      {
+        "path": "$.final.channels[1].created_at",
+        "raw": "2026-11-13 22:07:37.324783+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324783+00:00"
+      },
+      {
+        "path": "$.final.channels[1].updated_at",
+        "raw": "2026-11-13 22:07:37.324789+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324789+00:00"
+      },
+      {
+        "path": "$.final.recordings[0].start_time",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.final.recordings[0].end_time",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.final.recordings[0].custom_properties.ended_at",
+        "raw": "2026-11-13 22:09:07.659886",
+        "parsed_UTC": "2026-11-13T22:09:07.659886+00:00"
+      },
+      {
+        "path": "$.final.recordings[0].custom_properties.started_at",
+        "raw": "2026-11-13 22:08:43.231220",
+        "parsed_UTC": "2026-11-13T22:08:43.231220+00:00"
+      },
+      {
+        "path": "$.final.periodic[0].date_changed",
+        "raw": "2026-11-13 22:07:32.553226+00:00",
+        "parsed_UTC": "2026-11-13T22:07:32.553226+00:00"
+      },
+      {
+        "path": "$.final.periodic[1].date_changed",
+        "raw": "2026-11-13 22:07:42.050052+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.050052+00:00"
+      },
+      {
+        "path": "$.final.periodic[2].date_changed",
+        "raw": "2026-11-13 22:07:42.076385+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.076385+00:00"
+      },
+      {
+        "path": "$.final.periodic[3].last_run_at",
+        "raw": "2026-11-13 22:08:22.154623+00:00",
+        "parsed_UTC": "2026-11-13T22:08:22.154623+00:00"
+      },
+      {
+        "path": "$.final.periodic[3].date_changed",
+        "raw": "2026-11-13 22:08:37.090668+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.090668+00:00"
+      },
+      {
+        "path": "$.final.periodic[4].date_changed",
+        "raw": "2026-11-13 22:07:42.119675+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.119675+00:00"
+      },
+      {
+        "path": "$.final.periodic[5].date_changed",
+        "raw": "2026-11-13 22:07:42.143142+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.143142+00:00"
+      },
+      {
+        "path": "$.final.periodic[6].date_changed",
+        "raw": "2026-11-13 22:07:42.164267+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.164267+00:00"
+      },
+      {
+        "path": "$.final.sentinel[0].last_update",
+        "raw": "2026-11-13 22:08:41.780591+00:00",
+        "parsed_UTC": "2026-11-13T22:08:41.780591+00:00"
+      },
+      {
+        "path": "$.final.system_events[0].timestamp",
+        "raw": "2026-11-13 22:08:43.066565+00:00",
+        "parsed_UTC": "2026-11-13T22:08:43.066565+00:00"
+      },
+      {
+        "path": "$.final.system_events[1].timestamp",
+        "raw": "2026-11-13 22:09:08.285577+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.285577+00:00"
+      },
+      {
+        "path": "$.final.system_events[1].details.end_time",
+        "raw": "2026-11-13T22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.final.system_events[1].details.start_time",
+        "raw": "2026-11-13T22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.final.plugin_repos[0].created_at",
+        "raw": "2026-11-13 22:07:33.754163+00:00",
+        "parsed_UTC": "2026-11-13T22:07:33.754163+00:00"
+      },
+      {
+        "path": "$.final.plugin_repos[0].updated_at",
+        "raw": "2026-11-13 22:07:33.754169+00:00",
+        "parsed_UTC": "2026-11-13T22:07:33.754169+00:00"
+      },
+      {
+        "path": "$.final.movies[0].created_at",
+        "raw": "2026-11-13 22:07:37.322976+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322976+00:00"
+      },
+      {
+        "path": "$.final.movies[0].updated_at",
+        "raw": "2026-11-13 22:07:37.322984+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322984+00:00"
+      },
+      {
+        "path": "$.final.backend.8c144ef0-fb5d-4ea5-b945-1b994c015176.metadata.date_done",
+        "raw": "2026-11-13T22:07:38.801544+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.801544+00:00"
+      },
+      {
+        "path": "$.final.backend.5e0244a4-253a-48d5-903c-ab8726c0dda7.metadata.date_done",
+        "raw": "2026-11-13T22:09:08.451049+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.451049+00:00"
+      },
+      {
+        "path": "$.all_publications[0].headers.eta",
+        "raw": "2026-11-13T22:07:38.372026+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.372026+00:00"
+      },
+      {
+        "path": "$.all_publications[0].utc",
+        "raw": "2026-11-13T22:07:37.379977+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.379977+00:00"
+      },
+      {
+        "path": "$.all_publications[1].utc",
+        "raw": "2026-11-13T22:08:02.136817+00:00",
+        "parsed_UTC": "2026-11-13T22:08:02.136817+00:00"
+      },
+      {
+        "path": "$.all_publications[2].utc",
+        "raw": "2026-11-13T22:08:22.154972+00:00",
+        "parsed_UTC": "2026-11-13T22:08:22.154972+00:00"
+      },
+      {
+        "path": "$.all_publications[3].body[0][2]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.all_publications[3].body[0][3]",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.all_publications[3].utc",
+        "raw": "2026-11-13T22:08:37.029797+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.029797+00:00"
+      },
+      {
+        "path": "$.all_prerun[0].utc",
+        "raw": "2026-11-13T22:07:38.772789+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.772789+00:00"
+      },
+      {
+        "path": "$.all_postrun[0].utc",
+        "raw": "2026-11-13T22:07:38.803042+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.803042+00:00"
+      },
+      {
+        "path": "$.all_SQL[11].params[1]",
+        "raw": "2026-11-13 22:07:37.302545+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.302545+00:00"
+      },
+      {
+        "path": "$.all_SQL[18].params[13]",
+        "raw": "2026-11-13 22:07:37.322976+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322976+00:00"
+      },
+      {
+        "path": "$.all_SQL[18].params[14]",
+        "raw": "2026-11-13 22:07:37.322984+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.322984+00:00"
+      },
+      {
+        "path": "$.all_SQL[19].params[17]",
+        "raw": "2026-11-13 22:07:37.324783+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324783+00:00"
+      },
+      {
+        "path": "$.all_SQL[19].params[18]",
+        "raw": "2026-11-13 22:07:37.324789+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.324789+00:00"
+      },
+      {
+        "path": "$.all_SQL[20].params[1]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.all_SQL[20].params[2]",
+        "raw": "2026-11-13 22:09:07+00:00",
+        "parsed_UTC": "2026-11-13T22:09:07+00:00"
+      },
+      {
+        "path": "$.all_SQL[21].params[0]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.all_SQL[22].params[0]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.all_SQL[25].params[0]",
+        "raw": "2026-11-13 22:07:37.330902+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.330902+00:00"
+      },
+      {
+        "path": "$.all_SQL[32].params[0]",
+        "raw": "2026-11-13 22:07:37.339792+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.339792+00:00"
+      },
+      {
+        "path": "$.all_SQL[34].params[20]",
+        "raw": "2026-11-13 22:07:37.344317+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.344317+00:00"
+      },
+      {
+        "path": "$.all_SQL[37].params[0]",
+        "raw": "2026-11-13 22:07:37.345718+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.345718+00:00"
+      },
+      {
+        "path": "$.all_SQL[60].params[0]",
+        "raw": "2026-11-13 22:08:37+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37+00:00"
+      },
+      {
+        "path": "$.all_SQL[124].params[0]",
+        "raw": "2026-11-13 22:12:42.023795+00:00",
+        "parsed_UTC": "2026-11-13T22:12:42.023795+00:00"
+      },
+      {
+        "path": "$.all_SQL[129].params[0]",
+        "raw": "2026-11-13 22:07:42.038482+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.038482+00:00"
+      },
+      {
+        "path": "$.all_SQL[135].params[0]",
+        "raw": "2026-11-13 22:07:42.045395+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.045395+00:00"
+      },
+      {
+        "path": "$.all_SQL[137].params[20]",
+        "raw": "2026-11-13 22:07:42.050052+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.050052+00:00"
+      },
+      {
+        "path": "$.all_SQL[140].params[0]",
+        "raw": "2026-11-13 22:07:42.051330+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.051330+00:00"
+      },
+      {
+        "path": "$.all_SQL[147].params[0]",
+        "raw": "2026-11-13 22:07:42.063867+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.063867+00:00"
+      },
+      {
+        "path": "$.all_SQL[153].params[0]",
+        "raw": "2026-11-13 22:07:42.070559+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.070559+00:00"
+      },
+      {
+        "path": "$.all_SQL[155].params[20]",
+        "raw": "2026-11-13 22:07:42.076385+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.076385+00:00"
+      },
+      {
+        "path": "$.all_SQL[158].params[0]",
+        "raw": "2026-11-13 22:07:42.078407+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.078407+00:00"
+      },
+      {
+        "path": "$.all_SQL[164].params[0]",
+        "raw": "2026-11-13 22:07:42.088290+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.088290+00:00"
+      },
+      {
+        "path": "$.all_SQL[170].params[0]",
+        "raw": "2026-11-13 22:07:42.094698+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.094698+00:00"
+      },
+      {
+        "path": "$.all_SQL[172].params[20]",
+        "raw": "2026-11-13 22:07:42.099537+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.099537+00:00"
+      },
+      {
+        "path": "$.all_SQL[175].params[0]",
+        "raw": "2026-11-13 22:07:42.100708+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.100708+00:00"
+      },
+      {
+        "path": "$.all_SQL[181].params[0]",
+        "raw": "2026-11-13 22:07:42.108686+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.108686+00:00"
+      },
+      {
+        "path": "$.all_SQL[187].params[0]",
+        "raw": "2026-11-13 22:07:42.114952+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.114952+00:00"
+      },
+      {
+        "path": "$.all_SQL[189].params[20]",
+        "raw": "2026-11-13 22:07:42.119675+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.119675+00:00"
+      },
+      {
+        "path": "$.all_SQL[192].params[0]",
+        "raw": "2026-11-13 22:07:42.120854+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.120854+00:00"
+      },
+      {
+        "path": "$.all_SQL[198].params[0]",
+        "raw": "2026-11-13 22:07:42.129252+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.129252+00:00"
+      },
+      {
+        "path": "$.all_SQL[204].params[0]",
+        "raw": "2026-11-13 22:07:42.135956+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.135956+00:00"
+      },
+      {
+        "path": "$.all_SQL[206].params[20]",
+        "raw": "2026-11-13 22:07:42.143142+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.143142+00:00"
+      },
+      {
+        "path": "$.all_SQL[209].params[0]",
+        "raw": "2026-11-13 22:07:42.144335+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.144335+00:00"
+      },
+      {
+        "path": "$.all_SQL[215].params[0]",
+        "raw": "2026-11-13 22:07:42.152873+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.152873+00:00"
+      },
+      {
+        "path": "$.all_SQL[221].params[0]",
+        "raw": "2026-11-13 22:07:42.159570+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.159570+00:00"
+      },
+      {
+        "path": "$.all_SQL[223].params[20]",
+        "raw": "2026-11-13 22:07:42.164267+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.164267+00:00"
+      },
+      {
+        "path": "$.all_SQL[226].params[0]",
+        "raw": "2026-11-13 22:07:42.165621+00:00",
+        "parsed_UTC": "2026-11-13T22:07:42.165621+00:00"
+      },
+      {
+        "path": "$.all_SQL[231].params[0]",
+        "raw": "2026-11-13 22:12:42.174933+00:00",
+        "parsed_UTC": "2026-11-13T22:12:42.174933+00:00"
+      },
+      {
+        "path": "$.all_SQL[1235].params[8]",
+        "raw": "2026-11-13 22:08:22.154623+00:00",
+        "parsed_UTC": "2026-11-13T22:08:22.154623+00:00"
+      },
+      {
+        "path": "$.all_SQL[1235].params[10]",
+        "raw": "2026-11-13 22:08:37.090668+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.090668+00:00"
+      },
+      {
+        "path": "$.all_SQL[1239].params[8]",
+        "raw": "2026-11-13 22:08:37.029401+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.029401+00:00"
+      },
+      {
+        "path": "$.all_SQL[1239].params[10]",
+        "raw": "2026-11-13 22:08:37.096976+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.096976+00:00"
+      },
+      {
+        "path": "$.all_subprocess[0].began_utc",
+        "raw": "2026-11-13T22:07:37.437299+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.437299+00:00"
+      },
+      {
+        "path": "$.all_subprocess[1].began_utc",
+        "raw": "2026-11-13T22:07:38.700888+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.700888+00:00"
+      },
+      {
+        "path": "$.all_subprocess[2].began_utc",
+        "raw": "2026-11-13T22:07:40.699101+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.699101+00:00"
+      },
+      {
+        "path": "$.all_subprocess[3].began_utc",
+        "raw": "2026-11-13T22:08:37.393616+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.393616+00:00"
+      },
+      {
+        "path": "$.subprocess_postrun[0].observation.rows[0].began_utc",
+        "raw": "2026-11-13T22:07:38.700888+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.700888+00:00"
+      },
+      {
+        "path": "$.subprocess_postrun[0].utc",
+        "raw": "2026-11-13T22:07:38.804770+00:00",
+        "parsed_UTC": "2026-11-13T22:07:38.804770+00:00"
+      },
+      {
+        "path": "$.guest_process_observer.rows[0].began_utc",
+        "raw": "2026-11-13T22:07:37.437299+00:00",
+        "parsed_UTC": "2026-11-13T22:07:37.437299+00:00"
+      },
+      {
+        "path": "$.guest_process_observer.rows[1].began_utc",
+        "raw": "2026-11-13T22:07:40.699101+00:00",
+        "parsed_UTC": "2026-11-13T22:07:40.699101+00:00"
+      },
+      {
+        "path": "$.guest_process_observer.rows[2].began_utc",
+        "raw": "2026-11-13T22:08:37.393616+00:00",
+        "parsed_UTC": "2026-11-13T22:08:37.393616+00:00"
+      },
+      {
+        "path": "$.media_commands[0].began_utc",
+        "raw": "2026-11-13T22:09:08.684422+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.684422+00:00"
+      },
+      {
+        "path": "$.media_commands[0].finished_utc",
+        "raw": "2026-11-13T22:09:08.714784+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.714784+00:00"
+      },
+      {
+        "path": "$.media_commands[1].began_utc",
+        "raw": "2026-11-13T22:09:08.751401+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.751401+00:00"
+      },
+      {
+        "path": "$.media_commands[1].finished_utc",
+        "raw": "2026-11-13T22:09:08.771613+00:00",
+        "parsed_UTC": "2026-11-13T22:09:08.771613+00:00"
+      }
+    ],
+    "explicit_temporal_policy": "unchanged before/after fields exact; fresh Native started/ended/audit/backend clocks in own actual command windows; seed schedule binds actual four-argument producer",
+    "raw_cache_scope": "key/type/changed-unchanged relations only; full arbitrary cache-value decoding parity OPEN",
+    "Source_reference_sha256": "323c396c00b88fa48459a61a63799c5f2529919554b529778aa3b7a221b0a7b8",
+    "media_policy": "same synthetic TS bytes/codec/dimensions/fps, complete decode0 and positive whole media duration within30s; own scheduling/start latency retained; no equal delivered duration/bytes or performance claim",
+    "actual_Source3_video_duration_seconds": 26.48,
+    "actual_Native_video_duration_seconds": 21.36,
+    "Native_duration_equals_Source_qualified": false,
+    "actual_cleanup": {
+      "actual_native_cleanup_groups": 3,
+      "actual_tracking_updates": 3,
+      "actual_FK_SET_NULL_updates": 2,
+      "actual_periodic_and_clocked_deletes": 2,
+      "actual_tracking_UTC": [
+        "2026-11-13T22:08:39.806586+00:00",
+        "2026-11-13T22:08:40.956641+00:00",
+        "2026-11-13T22:08:41.780591+00:00"
+      ],
+      "Source_grouping_authority": "pinned models/signals code plus actual Source3 query order; Source3 wrapper did not capture BEGIN/COMMIT packets",
+      "raw_native_PG_events_retained": true
+    }
+  }
+}
