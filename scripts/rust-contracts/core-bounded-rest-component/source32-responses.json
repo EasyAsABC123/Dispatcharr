@@ -1,0 +1,2808 @@
+{
+  "scope": "Actual Source32 framework/APIkey observations, semantic payload vectors only; no Native/SQL/HTTP acceptance",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "cases": [
+    {
+      "id": 1,
+      "name": "anonymous_create",
+      "role": "anonymous",
+      "method": "POST",
+      "target_alias": "collection",
+      "target_id": null,
+      "status": 401,
+      "json": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "response_body_hex": "7b2264657461696c223a2241757468656e7469636174696f6e2063726564656e7469616c732077657265206e6f742070726f76696465642e227d",
+      "body": "{}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "standard_create",
+      "role": "standard",
+      "method": "POST",
+      "target_alias": "collection",
+      "target_id": null,
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "response_body_hex": "7b2264657461696c223a22596f7520646f206e6f742068617665207065726d697373696f6e20746f20706572666f726d207468697320616374696f6e2e227d",
+      "body": "{}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "UI_denied_admin_create",
+      "role": "admin_denied",
+      "method": "POST",
+      "target_alias": "collection",
+      "target_id": null,
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "response_body_hex": "7b2264657461696c223a22596f7520646f206e6f742068617665207065726d697373696f6e20746f20706572666f726d207468697320616374696f6e2e227d",
+      "body": "{}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "required_key_name",
+      "role": "admin",
+      "method": "POST",
+      "target_alias": "collection",
+      "target_id": null,
+      "status": 400,
+      "json": {
+        "key": [
+          "This field is required."
+        ],
+        "name": [
+          "This field is required."
+        ]
+      },
+      "response_body_hex": "7b226b6579223a5b2254686973206669656c642069732072657175697265642e225d2c226e616d65223a5b2254686973206669656c642069732072657175697265642e225d7d",
+      "body": "{}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "create_default_value",
+      "role": "admin",
+      "method": "POST",
+      "target_alias": "collection",
+      "target_id": null,
+      "status": 201,
+      "json": {
+        "id": 1003,
+        "key": "owned.settings.new",
+        "name": "Owned new",
+        "value": {}
+      },
+      "response_body_hex": "7b226964223a313030332c226b6579223a226f776e65642e73657474696e67732e6e6577222c226e616d65223a224f776e6564206e6577222c2276616c7565223a7b7d7d",
+      "body": "{\"key\":\"owned.settings.new\",\"name\":\"Owned new\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {}
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "duplicate_key",
+      "role": "admin",
+      "method": "POST",
+      "target_alias": "collection",
+      "target_id": null,
+      "status": 400,
+      "json": {
+        "key": [
+          "core settings with this key already exists."
+        ]
+      },
+      "response_body_hex": "7b226b6579223a5b22636f72652073657474696e677320776974682074686973206b657920616c7265616479206578697374732e225d7d",
+      "body": "{\"key\":\"owned.settings.new\",\"name\":\"Duplicate\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {}
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {}
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "standard_retrieve",
+      "role": "standard",
+      "method": "GET",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 200,
+      "json": {
+        "id": 1003,
+        "key": "owned.settings.new",
+        "name": "Owned new",
+        "value": {}
+      },
+      "response_body_hex": "7b226964223a313030332c226b6579223a226f776e65642e73657474696e67732e6e6577222c226e616d65223a224f776e6564206e6577222c2276616c7565223a7b7d7d",
+      "body": "",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {}
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {}
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "typed_json_patch",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 200,
+      "json": {
+        "id": 1003,
+        "key": "owned.settings.new",
+        "name": "Owned new",
+        "value": {
+          "boolean": true,
+          "integer": 1,
+          "array": [
+            null,
+            false,
+            0
+          ],
+          "nested": {
+            "keep": "yes"
+          }
+        }
+      },
+      "response_body_hex": "7b226964223a313030332c226b6579223a226f776e65642e73657474696e67732e6e6577222c226e616d65223a224f776e6564206e6577222c2276616c7565223a7b22626f6f6c65616e223a747275652c22696e7465676572223a312c226172726179223a5b6e756c6c2c66616c73652c305d2c226e6573746564223a7b226b656570223a22796573227d7d7d",
+      "body": "{\"value\":{\"boolean\":true,\"integer\":1,\"array\":[null,false,0],\"nested\":{\"keep\":\"yes\"}}}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {}
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "PUT_required_key",
+      "role": "admin",
+      "method": "PUT",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 400,
+      "json": {
+        "key": [
+          "This field is required."
+        ]
+      },
+      "response_body_hex": "7b226b6579223a5b2254686973206669656c642069732072657175697265642e225d7d",
+      "body": "{\"name\":\"Only name\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "PUT_optional_value_retains",
+      "role": "admin",
+      "method": "PUT",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 200,
+      "json": {
+        "id": 1003,
+        "key": "owned.settings.new",
+        "name": "Renamed display",
+        "value": {
+          "array": [
+            null,
+            false,
+            0
+          ],
+          "nested": {
+            "keep": "yes"
+          },
+          "boolean": true,
+          "integer": 1
+        }
+      },
+      "response_body_hex": "7b226964223a313030332c226b6579223a226f776e65642e73657474696e67732e6e6577222c226e616d65223a2252656e616d656420646973706c6179222c2276616c7565223a7b226172726179223a5b6e756c6c2c66616c73652c305d2c226e6573746564223a7b226b656570223a22796573227d2c22626f6f6c65616e223a747275652c22696e7465676572223a317d7d",
+      "body": "{\"key\":\"owned.settings.new\",\"name\":\"Renamed display\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Owned new",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "readonly_unknown_ignored",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 200,
+      "json": {
+        "id": 1003,
+        "key": "owned.settings.new",
+        "name": "Renamed display",
+        "value": {
+          "array": [
+            null,
+            false,
+            0
+          ],
+          "nested": {
+            "keep": "yes"
+          },
+          "boolean": true,
+          "integer": 1
+        }
+      },
+      "response_body_hex": "7b226964223a313030332c226b6579223a226f776e65642e73657474696e67732e6e6577222c226e616d65223a2252656e616d656420646973706c6179222c2276616c7565223a7b226172726179223a5b6e756c6c2c66616c73652c305d2c226e6573746564223a7b226b656570223a22796573227d2c22626f6f6c65616e223a747275652c22696e7465676572223a317d7d",
+      "body": "{\"id\":999999,\"unknown\":\"ignored\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "rename_key_cache_boundary",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 200,
+      "json": {
+        "id": 1003,
+        "key": "owned.settings.renamed",
+        "name": "Renamed display",
+        "value": {
+          "array": [
+            null,
+            false,
+            0
+          ],
+          "nested": {
+            "keep": "yes"
+          },
+          "boolean": true,
+          "integer": 1
+        }
+      },
+      "response_body_hex": "7b226964223a313030332c226b6579223a226f776e65642e73657474696e67732e72656e616d6564222c226e616d65223a2252656e616d656420646973706c6179222c2276616c7565223a7b226172726179223a5b6e756c6c2c66616c73652c305d2c226e6573746564223a7b226b656570223a22796573227d2c22626f6f6c65616e223a747275652c22696e7465676572223a317d7d",
+      "body": "{\"key\":\"owned.settings.renamed\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.new",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.renamed",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "missing_lookup_before_bad_json",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "missing",
+      "target_id": "1000001002",
+      "status": 404,
+      "json": {
+        "detail": "No CoreSettings matches the given query."
+      },
+      "response_body_hex": "7b2264657461696c223a224e6f20436f726553657474696e6773206d6174636865732074686520676976656e2071756572792e227d",
+      "body": "{",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.renamed",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.renamed",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "missing_delete_ignores_body",
+      "role": "admin",
+      "method": "DELETE",
+      "target_alias": "missing",
+      "target_id": "1000001002",
+      "status": 404,
+      "json": {
+        "detail": "No CoreSettings matches the given query."
+      },
+      "response_body_hex": "7b2264657461696c223a224e6f20436f726553657474696e6773206d6174636865732074686520676976656e2071756572792e227d",
+      "body": "{",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.renamed",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.renamed",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "standard_delete_refusal",
+      "role": "standard",
+      "method": "DELETE",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "response_body_hex": "7b2264657461696c223a22596f7520646f206e6f742068617665207065726d697373696f6e20746f20706572666f726d207468697320616374696f6e2e227d",
+      "body": "",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.renamed",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.renamed",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "delete_created",
+      "role": "admin",
+      "method": "DELETE",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 204,
+      "json": null,
+      "response_body_hex": "",
+      "body": "",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1003,
+          "key": "owned.settings.renamed",
+          "name": "Renamed display",
+          "value": {
+            "array": [
+              null,
+              false,
+              0
+            ],
+            "nested": {
+              "keep": "yes"
+            },
+            "boolean": true,
+            "integer": 1
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "repeat_delete_missing",
+      "role": "admin",
+      "method": "DELETE",
+      "target_alias": "created",
+      "target_id": "1003",
+      "status": 404,
+      "json": {
+        "detail": "No CoreSettings matches the given query."
+      },
+      "response_body_hex": "7b2264657461696c223a224e6f20436f726553657474696e6773206d6174636865732074686520676976656e2071756572792e227d",
+      "body": "",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "create_array_value",
+      "role": "admin",
+      "method": "POST",
+      "target_alias": "collection",
+      "target_id": null,
+      "status": 201,
+      "json": {
+        "id": 1004,
+        "key": "owned.settings.array",
+        "name": "Array",
+        "value": [
+          true,
+          1,
+          null
+        ]
+      },
+      "response_body_hex": "7b226964223a313030342c226b6579223a226f776e65642e73657474696e67732e6172726179222c226e616d65223a224172726179222c2276616c7565223a5b747275652c312c6e756c6c5d7d",
+      "body": "{\"key\":\"owned.settings.array\",\"name\":\"Array\",\"value\":[true,1,null]}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": [
+            true,
+            1,
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "patch_scalar_value",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "array",
+      "target_id": "1004",
+      "status": 200,
+      "json": {
+        "id": 1004,
+        "key": "owned.settings.array",
+        "name": "Array",
+        "value": false
+      },
+      "response_body_hex": "7b226964223a313030342c226b6579223a226f776e65642e73657474696e67732e6172726179222c226e616d65223a224172726179222c2276616c7565223a66616c73657d",
+      "body": "{\"value\":false}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": [
+            true,
+            1,
+            null
+          ]
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "null_value_rejected",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "array",
+      "target_id": "1004",
+      "status": 400,
+      "json": {
+        "value": [
+          "This field may not be null."
+        ]
+      },
+      "response_body_hex": "7b2276616c7565223a5b2254686973206669656c64206d6179206e6f74206265206e756c6c2e225d7d",
+      "body": "{\"value\":null}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "blank_name_rejected",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "array",
+      "target_id": "1004",
+      "status": 400,
+      "json": {
+        "name": [
+          "This field may not be blank."
+        ]
+      },
+      "response_body_hex": "7b226e616d65223a5b2254686973206669656c64206d6179206e6f7420626520626c616e6b2e225d7d",
+      "body": "{\"name\":\"\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "rename_duplicate_rejected",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "array",
+      "target_id": "1004",
+      "status": 400,
+      "json": {
+        "key": [
+          "core settings with this key already exists."
+        ]
+      },
+      "response_body_hex": "7b226b6579223a5b22636f72652073657474696e677320776974682074686973206b657920616c7265616479206578697374732e225d7d",
+      "body": "{\"key\":\"owned.settings.foreign\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "create_epg_clamps",
+      "role": "admin",
+      "method": "POST",
+      "target_alias": "collection",
+      "target_id": null,
+      "status": 201,
+      "json": {
+        "id": 1005,
+        "key": "epg_settings",
+        "name": "EPG",
+        "value": {
+          "epg_history_max_days": 365,
+          "epg_history_min_days": 0,
+          "epg_default_prev_days": 365,
+          "epg_default_days": 0,
+          "keep": "epg"
+        }
+      },
+      "response_body_hex": "7b226964223a313030352c226b6579223a226570675f73657474696e6773222c226e616d65223a22455047222c2276616c7565223a7b226570675f686973746f72795f6d61785f64617973223a3336352c226570675f686973746f72795f6d696e5f64617973223a302c226570675f64656661756c745f707265765f64617973223a3336352c226570675f64656661756c745f64617973223a302c226b656570223a22657067227d7d",
+      "body": "{\"key\":\"epg_settings\",\"name\":\"EPG\",\"value\":{\"epg_history_max_days\":999,\"epg_history_min_days\":-1,\"epg_default_prev_days\":999,\"epg_default_days\":\"garbage\",\"keep\":\"epg\"}}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        },
+        {
+          "id": 1005,
+          "key": "epg_settings",
+          "name": "EPG",
+          "value": {
+            "keep": "epg",
+            "epg_default_days": 0,
+            "epg_history_max_days": 365,
+            "epg_history_min_days": 0,
+            "epg_default_prev_days": 365
+          }
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "name": "patch_epg_ordered_clamps",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "epg",
+      "target_id": "1005",
+      "status": 200,
+      "json": {
+        "id": 1005,
+        "key": "epg_settings",
+        "name": "EPG",
+        "value": {
+          "epg_history_max_days": 7,
+          "epg_history_min_days": 7,
+          "epg_default_prev_days": 7,
+          "epg_default_days": 365
+        }
+      },
+      "response_body_hex": "7b226964223a313030352c226b6579223a226570675f73657474696e6773222c226e616d65223a22455047222c2276616c7565223a7b226570675f686973746f72795f6d61785f64617973223a372c226570675f686973746f72795f6d696e5f64617973223a372c226570675f64656661756c745f707265765f64617973223a372c226570675f64656661756c745f64617973223a3336357d7d",
+      "body": "{\"value\":{\"epg_history_max_days\":\"7\",\"epg_history_min_days\":99,\"epg_default_prev_days\":99,\"epg_default_days\":999}}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        },
+        {
+          "id": 1005,
+          "key": "epg_settings",
+          "name": "EPG",
+          "value": {
+            "keep": "epg",
+            "epg_default_days": 0,
+            "epg_history_max_days": 365,
+            "epg_history_min_days": 0,
+            "epg_default_prev_days": 365
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        },
+        {
+          "id": 1005,
+          "key": "epg_settings",
+          "name": "EPG",
+          "value": {
+            "epg_default_days": 365,
+            "epg_history_max_days": 7,
+            "epg_history_min_days": 7,
+            "epg_default_prev_days": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "name": "patch_epg_array",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "epg",
+      "target_id": "1005",
+      "status": 200,
+      "json": {
+        "id": 1005,
+        "key": "epg_settings",
+        "name": "EPG",
+        "value": [
+          1,
+          true
+        ]
+      },
+      "response_body_hex": "7b226964223a313030352c226b6579223a226570675f73657474696e6773222c226e616d65223a22455047222c2276616c7565223a5b312c747275655d7d",
+      "body": "{\"value\":[1,true]}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        },
+        {
+          "id": 1005,
+          "key": "epg_settings",
+          "name": "EPG",
+          "value": {
+            "epg_default_days": 365,
+            "epg_history_max_days": 7,
+            "epg_history_min_days": 7,
+            "epg_default_prev_days": 7
+          }
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        },
+        {
+          "id": 1005,
+          "key": "epg_settings",
+          "name": "EPG",
+          "value": [
+            1,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "name": "empty_epg_patch",
+      "role": "admin",
+      "method": "PATCH",
+      "target_alias": "epg",
+      "target_id": "1005",
+      "status": 200,
+      "json": {
+        "id": 1005,
+        "key": "epg_settings",
+        "name": "EPG",
+        "value": [
+          1,
+          true
+        ]
+      },
+      "response_body_hex": "7b226964223a313030352c226b6579223a226570675f73657474696e6773222c226e616d65223a22455047222c2276616c7565223a5b312c747275655d7d",
+      "body": "{}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        },
+        {
+          "id": 1005,
+          "key": "epg_settings",
+          "name": "EPG",
+          "value": [
+            1,
+            true
+          ]
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        },
+        {
+          "id": 1005,
+          "key": "epg_settings",
+          "name": "EPG",
+          "value": [
+            1,
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "name": "delete_epg",
+      "role": "admin",
+      "method": "DELETE",
+      "target_alias": "epg",
+      "target_id": "1005",
+      "status": 204,
+      "json": null,
+      "response_body_hex": "",
+      "body": "",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        },
+        {
+          "id": 1005,
+          "key": "epg_settings",
+          "name": "EPG",
+          "value": [
+            1,
+            true
+          ]
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "name": "check_network_membership",
+      "role": "admin",
+      "method": "POST",
+      "target_alias": "check",
+      "target_id": null,
+      "status": 200,
+      "json": {
+        "UI": [],
+        "M3U": [
+          "192.0.2.0/24"
+        ],
+        "client_ip": "127.0.0.1"
+      },
+      "response_body_hex": "7b225549223a5b5d2c224d3355223a5b223139322e302e322e302f3234225d2c22636c69656e745f6970223a223132372e302e302e31227d",
+      "body": "{\"key\":\"network_access\",\"value\":{\"UI\":\"127.0.0.0/8\",\"M3U\":\"192.0.2.0/24\"}}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "name": "check_invalid_CIDR",
+      "role": "admin",
+      "method": "POST",
+      "target_alias": "check",
+      "target_id": null,
+      "status": 200,
+      "json": {
+        "error": true,
+        "message": "Invalid CIDR(s)",
+        "data": [
+          "bad"
+        ]
+      },
+      "response_body_hex": "7b226572726f72223a747275652c226d657373616765223a22496e76616c69642043494452287329222c2264617461223a5b22626164225d7d",
+      "body": "{\"key\":\"network_access\",\"value\":{\"UI\":\"bad,127.0.0.0/8\"}}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "name": "standard_check_refusal",
+      "role": "standard",
+      "method": "POST",
+      "target_alias": "check",
+      "target_id": null,
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "response_body_hex": "7b2264657461696c223a22596f7520646f206e6f742068617665207065726d697373696f6e20746f20706572666f726d207468697320616374696f6e2e227d",
+      "body": "{\"key\":\"network_access\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "name": "UI_denied_admin_check",
+      "role": "admin_denied",
+      "method": "POST",
+      "target_alias": "check",
+      "target_id": null,
+      "status": 403,
+      "json": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "response_body_hex": "7b2264657461696c223a22596f7520646f206e6f742068617665207065726d697373696f6e20746f20706572666f726d207468697320616374696f6e2e227d",
+      "body": "{\"key\":\"network_access\"}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "name": "check_unknown_key",
+      "role": "admin",
+      "method": "POST",
+      "target_alias": "check",
+      "target_id": null,
+      "status": 200,
+      "json": {},
+      "response_body_hex": "7b7d",
+      "body": "{\"key\":\"owned.unknown\",\"value\":{}}",
+      "before_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ],
+      "after_settings": [
+        {
+          "id": 1000,
+          "key": "network_access",
+          "name": "Owned network",
+          "value": {
+            "UI": "127.0.0.0/8"
+          }
+        },
+        {
+          "id": 1001,
+          "key": "system_settings",
+          "name": "Owned system",
+          "value": {
+            "time_zone": "UTC"
+          }
+        },
+        {
+          "id": 1002,
+          "key": "owned.settings.foreign",
+          "name": "Foreign sentinel",
+          "value": {
+            "untouched": true
+          }
+        },
+        {
+          "id": 1004,
+          "key": "owned.settings.array",
+          "name": "Array",
+          "value": false
+        }
+      ]
+    }
+  ]
+}

@@ -25,6 +25,8 @@ The [VOD HEAD authentication correction](rust-vod-head-authentication.md) passes
 
 The [plugin metadata evidence packet](../scripts/rust-pluginrepo-contracts/metadata-component/README.md) now reproduces four distinct capture epochs, preserving the original exception/JSON difference and the fresh two-case HTML correction. Root verifies 600 payloads, 15 controls, both Git reconstructions and 631,568 exact private projection nodes. Full M8 remains open.
 
+The [fresh Core bounded-reader replay](rust-core-bounded-rest-component.md) qualifies 32 exact response comparisons and six ownership/capacity cases on immutable `46b91d70`. Root verifies 100 published files, 55 corruption controls, exact private projections and 859-input reconstruction. New DB1 observations are explicit; earlier physical DB0 history observations are limited to DB0. Main/full M5 remains open.
+
 ## Progress ledger
 
 Statuses: **planned**, **in progress**, **blocked**, **passed**. A blocked runtime

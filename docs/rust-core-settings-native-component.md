@@ -32,3 +32,11 @@ last-two-case continuation. Strict ACL restoration uses the separately observed
 pinned Redis primitive; no runtime error classification was changed to satisfy
 controller expectations. Public `verify_physical.py` checks those selected traces
 without claiming that later audits fill the original missing default-after data.
+
+A later independent fixture review found that the historical physical Django
+history snapshots selected default Redis DB0, while Native authentication used
+DB1. Those history snapshots establish DB0 observations only; DB1 failed-login
+history invariance was unmeasured there. The original raw records and controller
+outcomes remain unchanged. The [fresh bounded-reader replay](rust-core-bounded-rest-component.md)
+separately attests Django and direct DB1, with its own source, observations and
+limitations. This correction adds no historical DB1 proof.
